@@ -3,6 +3,7 @@ package io.delilaheve
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.calculateValue
 import io.delilaheve.util.EnchantmentUtil.combineWith
+import io.delilaheve.util.EnchantmentUtil.hasConflicts
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isBook
@@ -75,14 +76,13 @@ class AnvilEventListener : Listener {
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        if (player.hasPermission(requirePermission)) {
-            val inventory = event.inventory as? AnvilInventory ?: return
-            if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
-            val output = inventory.getItem(2) ?: return
-            if (output.type == Material.AIR) { return }
-            if (player.level < inventory.repairCost) { return }
-            event.result = Event.Result.ALLOW
-        }
+        val inventory = event.inventory as? AnvilInventory ?: return
+        val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
+        if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) { return }
+        if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
+        if (output.type == Material.AIR) { return }
+        if (player.level < inventory.repairCost) { return }
+        event.result = Event.Result.ALLOW
     }
 
 }

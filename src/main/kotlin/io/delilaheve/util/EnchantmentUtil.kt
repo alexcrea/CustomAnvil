@@ -54,6 +54,21 @@ object EnchantmentUtil {
     }
 
     /**
+     * Check if a set of enchantments has any conflicts
+     */
+    fun Map<Enchantment, Int>.hasConflicts() : Boolean {
+        forEach { (enchantment1, _) ->
+            val hasConflict = any { (enchantment2, _) ->
+                enchantment2.conflictsWith(enchantment1)
+            }
+            if (hasConflict) {
+                return hasConflict
+            }
+        }
+        return false
+    }
+
+    /**
      * Calculate the value of a set of enchantments
      */
     fun Map<Enchantment, Int>.calculateValue(
