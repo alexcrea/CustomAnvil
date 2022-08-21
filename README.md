@@ -4,9 +4,10 @@ UnsafeEnchants is a fully configurable plugin for bukkit, spigot, and paper mine
 
 ---
 
-### Download Links:
+### Download Locations:
 
-WIP :D
+Direct: https://github.com/DelilahEve/UnsafeEnchants/releases/tag/v1.0.0
+Spigot: https://www.spigotmc.org/resources/unsafe-enchants.104708/
 
 ### Default Configuration:
 ```yml
