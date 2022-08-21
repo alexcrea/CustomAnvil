@@ -10,8 +10,12 @@ import kotlin.math.min
  */
 object EnchantmentUtil {
 
+    /**
+     * Enchantment name without namespace
+     */
     val Enchantment.enchantmentName: String
         get() = key.key
+
     /**
      * Combine 2 sets of enchantments according to our configuration
      */
