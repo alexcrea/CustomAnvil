@@ -1,6 +1,6 @@
 main: io.delilaheve.UnsafeEnchants
 name: UnsafeEnchants
-version: 1.0.0
+version: 1.0.1
 description: Allow all enchants to be combined
 api-version: 1.18
 load: POSTWORLD
