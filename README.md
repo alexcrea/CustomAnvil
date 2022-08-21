@@ -12,6 +12,11 @@ Spigot: https://www.spigotmc.org/resources/unsafe-enchants.104708/
 
 CurseForge: https://www.curseforge.com/minecraft/bukkit-plugins/unsafe-enchants/files/all
 
+### Permissions:
+```yml
+ue.unsafe: Allows combining of unsafe enchantments
+```
+
 ### Default Configuration:
 ```yml
 # Default limit to apply to any enchants missing from override_limits
