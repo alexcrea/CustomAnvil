@@ -1,0 +1,11 @@
+main: io.delilaheve.UnsafeEnchants
+name: UnsafeEnchants
+version: 1.0.0
+description: Allow all enchants to be combined
+api-version: 1.18
+load: POSTWORLD
+author: DelilahEve
+permissions:
+  ue.unsafe:
+    default: true
+    description: Allow player to combine "unsafe" enchants
