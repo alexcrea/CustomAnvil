@@ -10,6 +10,8 @@ Direct: https://github.com/DelilahEve/UnsafeEnchants/releases/tag/v1.0.0
 
 Spigot: https://www.spigotmc.org/resources/unsafe-enchants.104708/
 
+CurseForge: https://www.curseforge.com/minecraft/bukkit-plugins/unsafe-enchants/files/all
+
 ### Default Configuration:
 ```yml
 # Default limit to apply to any enchants missing from override_limits
