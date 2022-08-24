@@ -2,7 +2,6 @@ package io.delilaheve.util
 
 import io.delilaheve.UnsafeEnchants
 import io.delilaheve.util.EnchantmentUtil.calculateValue
-import io.delilaheve.util.ItemUtil.isBook
 import org.bukkit.Material.BOOK
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.enchantments.Enchantment
@@ -100,12 +99,14 @@ object ItemUtil {
         second: ItemStack
     ) {
         (itemMeta as? Damageable)?.let {
-            val maxDurability = type.maxDurability.toInt()
-            val firstDurability = (first.itemMeta as? Damageable)?.damage ?: 0
-            val secondDurability = (second.itemMeta as? Damageable)?.damage ?: 0
-            var newDurability = firstDurability + secondDurability
-            newDurability = min(maxDurability, newDurability)
-            it.damage = newDurability
+            val durability = type.maxDurability.toInt()
+            val firstDamage = (first.itemMeta as? Damageable)?.damage ?: 0
+            val firstDurability = durability - firstDamage
+            val secondDamage = (second.itemMeta as? Damageable)?.damage ?: 0
+            val secondDurability = durability - secondDamage
+            val combinedDurability = firstDurability + secondDurability
+            val newDurability = min(combinedDurability, durability)
+            it.damage = durability - newDurability
             itemMeta = it as ItemMeta
         }
     }
