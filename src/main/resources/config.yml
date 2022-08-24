@@ -11,8 +11,15 @@ default_limit: 10
 # i.e. Protection and Blast Protection can be on the same piece of armour
 allow_unsafe: true
 
-# Whether all anvil actions should be capped to the vanilla repair limit (40 levels)
+# Whether all anvil actions should be capped
+#
+# If true, all anvil repairs will max out at the value of limit_repair_value
 limit_repair_cost: true
+
+# Value to limit repair costs to when limit_repair_cost is true
+#
+# Valid range of 1 - 39 (vanilla will consider 40+ as "too expensive")
+limit_repair_value: 39
 
 # Whether the anvil's repair limit should be removed entirely
 #

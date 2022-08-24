@@ -19,8 +19,8 @@ object EnchantmentUtil {
     /**
      * Combine 2 sets of enchantments according to our configuration
      */
-    fun MutableMap<Enchantment, Int>.combineWith(
-        other: MutableMap<Enchantment, Int>
+    fun Map<Enchantment, Int>.combineWith(
+        other: Map<Enchantment, Int>
     ) = mutableMapOf<Enchantment, Int>().apply {
         putAll(this@combineWith)
         other.forEach { (enchantment, level) ->

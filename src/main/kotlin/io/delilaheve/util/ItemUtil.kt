@@ -1,16 +1,35 @@
 package io.delilaheve.util
 
 import io.delilaheve.UnsafeEnchants
+import io.delilaheve.util.EnchantmentUtil.calculateValue
+import io.delilaheve.util.ItemUtil.isBook
 import org.bukkit.Material.BOOK
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.inventory.meta.Repairable
+import kotlin.math.min
 
 /**
  * Item manipulation utilities
  */
 object ItemUtil {
+
+    /**
+     * Determine the value of an item for repair
+     *
+     * ToDo - use native repair cost
+     */
+    val ItemStack.repairCost: Int
+        get() {
+            val nativeCost = (itemMeta as? Repairable)?.repairCost
+            val pluginCost = findEnchantments().calculateValue(isBook())
+            UnsafeEnchants.log("Native Cost: $nativeCost; Plugin Cost: $pluginCost")
+            return nativeCost.takeIf { it != 0 } ?: pluginCost
+        }
 
     /**
      * Check if this [ItemStack] is a [BOOK] or [ENCHANTED_BOOK]
@@ -69,6 +88,25 @@ object ItemUtil {
         enchantments.forEach { (enchant, level) ->
             val added = addStoredEnchant(enchant, level, true)
             UnsafeEnchants.log("${enchant.key} added to item? $added")
+        }
+    }
+
+    /**
+     * Set this [ItemStack]s durability from a combination of the
+     * [first] and [second] item's durability values
+     */
+    fun ItemStack.repairFrom(
+        first: ItemStack,
+        second: ItemStack
+    ) {
+        (itemMeta as? Damageable)?.let {
+            val maxDurability = type.maxDurability.toInt()
+            val firstDurability = (first.itemMeta as? Damageable)?.damage ?: 0
+            val secondDurability = (second.itemMeta as? Damageable)?.damage ?: 0
+            var newDurability = firstDurability + secondDurability
+            newDurability = min(maxDurability, newDurability)
+            it.damage = newDurability
+            itemMeta = it as ItemMeta
         }
     }
 

@@ -1,22 +1,23 @@
 package io.delilaheve
 
 import io.delilaheve.util.ConfigOptions
-import io.delilaheve.util.EnchantmentUtil.calculateValue
 import io.delilaheve.util.EnchantmentUtil.combineWith
 import io.delilaheve.util.EnchantmentUtil.hasConflicts
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isBook
+import io.delilaheve.util.ItemUtil.repairCost
+import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority.HIGHEST
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
+import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.permissions.Permission
 import kotlin.math.min
 
@@ -26,8 +27,6 @@ import kotlin.math.min
 class AnvilEventListener : Listener {
 
     companion object {
-        // Vanilla repair cost limit
-        private const val VANILLA_REPAIR_LIMIT = 40
         // Anvil's output slot
         private const val ANVIL_OUTPUT_SLOT = 2
     }
@@ -39,34 +38,42 @@ class AnvilEventListener : Listener {
     /**
      * Event handler logic for when an anvil contains items to be combined
      */
-    @EventHandler
+    @EventHandler(priority = HIGHEST)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         val inventory = event.inventory
         val first = inventory.getItem(0) ?: return
         val second = inventory.getItem(1) ?: return
         if (first.canMergeWith(second)) {
-            val firstEnchants = first.findEnchantments().toMutableMap()
-            val secondEnchants = second.findEnchantments().toMutableMap()
-            if (ConfigOptions.removeRepairLimit) {
-                inventory.maximumRepairCost = Int.MAX_VALUE
-            }
-            val newEnchants = firstEnchants.combineWith(secondEnchants)
-            val enchantsString = newEnchants.map { "${it.key.key} ${it.value}" }.joinToString(", ")
-            UnsafeEnchants.log("New enchants for this item: $enchantsString")
+            val newEnchants = first.findEnchantments()
+                .combineWith(second.findEnchantments())
             val resultItem = first.clone()
+            resultItem.itemMeta?.let {
+                it.setDisplayName(inventory.renameText)
+                resultItem.itemMeta = it
+            }
             resultItem.setEnchantmentsUnsafe(newEnchants)
-            val firstValue = firstEnchants.calculateValue(first.isBook())
-            val secondValue = secondEnchants.calculateValue(second.isBook())
-            var repairCost = firstValue + secondValue
-            if (first.isBook() && second.isBook()) {
-                repairCost = firstEnchants.values.sum() + secondEnchants.values.sum()
+            if (!first.isBook() && !second.isBook()) {
+                // we only need to be concerned with repair when neither item is a book
+                resultItem.repairFrom(first, second)
             }
+            var repairCost = first.repairCost + second.repairCost
             if (ConfigOptions.limitRepairCost) {
-                repairCost = min(repairCost, VANILLA_REPAIR_LIMIT)
+                repairCost = min(repairCost, ConfigOptions.limitRepairValue)
             }
-            inventory.repairCost = repairCost
-            event.view.setProperty(InventoryView.Property.REPAIR_COST, repairCost)
             event.result = resultItem
+            /* Because Minecraft likes to have the final say in the repair cost displayed
+             * we need to wait for the event to end before overriding it, this ensures that
+             * we have the final say in the process. */
+            UnsafeEnchants.instance
+                .server
+                .scheduler
+                .runTask(UnsafeEnchants.instance, Runnable {
+                    if (ConfigOptions.removeRepairLimit) {
+                        inventory.maximumRepairCost = Int.MAX_VALUE
+                    }
+                    inventory.repairCost = repairCost
+                    event.view.setProperty(REPAIR_COST, repairCost)
+                })
         }
     }
 
@@ -80,8 +87,6 @@ class AnvilEventListener : Listener {
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) { return }
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
-        if (output.type == Material.AIR) { return }
-        if (player.level < inventory.repairCost) { return }
         event.result = Event.Result.ALLOW
     }
 
