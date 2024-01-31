@@ -34,6 +34,9 @@ class AnvilEventListener : Listener {
     // Permission node required for the plugin to take over enchantment combination
     private val requirePermission: Permission
         get() = Permission(UnsafeEnchants.unsafePermission)
+    // Permission node to bypass illegal group check
+    private val bypassPermission: Permission
+        get() = Permission(UnsafeEnchants.unsafeBypassPermission)
 
     /**
      * Event handler logic for when an anvil contains items to be combined
@@ -85,7 +88,10 @@ class AnvilEventListener : Listener {
         val player = event.whoClicked as? Player ?: return
         val inventory = event.inventory as? AnvilInventory ?: return
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
-        if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) { return }
+        if(!player.hasPermission(bypassPermission)){
+            if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) { return }
+
+        }
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
         event.result = Event.Result.ALLOW
     }

@@ -8,4 +8,7 @@ author: DelilahEve
 permissions:
   ue.unsafe:
     default: true
-    description: Allow player to combine "unsafe" enchants
+    description: Allow player to combine allowed "unsafe" enchants
+  ue.unsafe_all:
+    default: false
+    description: Allow player to combine every "unsafe" enchants

@@ -1,0 +1,27 @@
+# Please note this config use spigot material names.
+# It should match minecraft name in most case, maybe every case, but I can't be sure
+# In case there an issue with material name, you can found them here:
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+
+# An empty Exclude group exclude nothing, so it contain everything
+everything:
+  type: exclude
+
+# An empty include group will include nothing
+nothing:
+  type: include
+
+# This group is an example of a group including only stone and polished granite
+example_include:
+  type: include
+  items:
+    - stone
+    - polished_granite
+
+# This group contain everything except polished granite and elements of example_include
+example_exclude:
+  type: exclude
+  items:
+    - polished_granite
+  groups:
+    - example_include
