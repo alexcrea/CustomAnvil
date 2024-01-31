@@ -1,3 +1,6 @@
+This fork aim to add functionality to the base plugin.
+I will rework the readme later.
+
 # UnsafeEnchants
 
 UnsafeEnchants is a fully configurable plugin for bukkit, spigot, and paper minecraft servers allowing custom enchantment limits and removing combination restrictions.
