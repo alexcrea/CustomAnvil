@@ -5,9 +5,9 @@
 #   (exemple: protection can be applied to chestplate AND should not have other "protection")
 
 # These restriction are about not allowing enchantment on illegal items
-restriction_aqua_infinity:
-  enchantments: [aqua_infinity]
-  notAffectedGroups: [helmet]
+restriction_aqua_affinity:
+  enchantments: [aqua_affinity]
+  notAffectedGroups: [helmets]
 
 restriction_bane_of_arthropods:
   enchantments: [bane_of_arthropods]
@@ -86,7 +86,7 @@ restriction_lure:
   notAffectedGroups: [fishing_rod]
 
 restriction_mending:
-  enchantments: [ending]
+  enchantments: [mending]
   notAffectedGroups: [can_unbreak]
 
 restriction_multishot:
@@ -119,7 +119,7 @@ restriction_quick_charge:
 
 restriction_respiration:
   enchantments: [respiration]
-  notAffectedGroups: [helmet]
+  notAffectedGroups: [helmets]
 
 restriction_riptide:
   enchantments: [riptide]
@@ -145,6 +145,7 @@ restriction_sweeping:
   enchantments: [sweeping]
   notAffectedGroups: [swords]
 
+# Do not exist in 1.18 but future proof
 restriction_swift_sneak:
   enchantments: [swift_sneak]
   notAffectedGroups: [boots]

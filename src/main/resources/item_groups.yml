@@ -51,6 +51,7 @@ axes:
     - netherite_axe
 
 melee_weapons:
+  type: include
   groups:
     - swords
     - axes
@@ -64,7 +65,7 @@ helmets:
     - diamond_helmet
     - golden_helmet
     - netherite_helmet
-    - turtle_helme
+    - turtle_helmet
 
 chestplate:
   type: include
@@ -115,6 +116,7 @@ wearable:
     - player_head
     - creeper_head
     - dragon_head
+    # do not exist in 1.18 but exist in future update
     - piglin_head
   groups:
     - armors
@@ -176,6 +178,7 @@ can_unbreak:
     - shield
     - carrot_on_a_stick
     - warped_fungus_on_a_stick
+    # do not exist in 1.18 but exist in future update
     - brush
   groups:
     - melee_weapons
