@@ -102,6 +102,11 @@ class ItemGroupManager {
 
     }
 
+    // Get the selected group or return null if it doesn't exist
+    fun get(groupName: String): MaterialGroup? {
+        return groupMap[groupName]
+    }
+
 }
 
 enum class GroupType(private val groupID: String) {

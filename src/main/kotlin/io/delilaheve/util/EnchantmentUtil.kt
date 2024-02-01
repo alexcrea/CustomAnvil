@@ -62,7 +62,7 @@ object EnchantmentUtil {
                 enchantment2.conflictsWith(enchantment1)
             }
             if (hasConflict) {
-                return hasConflict
+                return true
             }
         }
         return false

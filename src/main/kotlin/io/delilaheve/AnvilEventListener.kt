@@ -9,6 +9,7 @@ import io.delilaheve.util.ItemUtil.isBook
 import io.delilaheve.util.ItemUtil.repairCost
 import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -18,6 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
+import org.bukkit.inventory.ItemStack
 import org.bukkit.permissions.Permission
 import kotlin.math.min
 
@@ -63,7 +65,17 @@ class AnvilEventListener : Listener {
             if (ConfigOptions.limitRepairCost) {
                 repairCost = min(repairCost, ConfigOptions.limitRepairValue)
             }
-            event.result = resultItem
+
+            // Try to find player
+            val player = event.view.player
+            // Set object only if allowed
+            if(itemAllowed(resultItem,player)){
+                event.result = resultItem
+            } else{
+                event.result = null
+                return
+            }
+
             /* Because Minecraft likes to have the final say in the repair cost displayed
              * we need to wait for the event to end before overriding it, this ensures that
              * we have the final say in the process. */
@@ -87,16 +99,27 @@ class AnvilEventListener : Listener {
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val inventory = event.inventory as? AnvilInventory ?: return
-        val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
-        if(!player.hasPermission(bypassPermission)){
-            if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) {
-
-
-                return
-            }
-        }
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
+        val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
+        // Should be true most of the time
+        // But if permissions change in the anvil it can be false
+        if(!itemAllowed(output,player)){
+            event.result = Event.Result.DENY
+            return
+        }
         event.result = Event.Result.ALLOW
     }
 
+
+    private fun itemAllowed(item: ItemStack, player: HumanEntity): Boolean{
+        if(!player.hasPermission(bypassPermission)){
+            if(player.hasPermission(requirePermission)){
+                if(UnsafeEnchants.conflictManager.isConflicting(item))
+                    return false
+
+            } else if(item.findEnchantments().hasConflicts())
+                return false
+        }
+        return true
+    }
 }

@@ -13,14 +13,12 @@ class EnchantConflictGroup(val cantConflict: MaterialGroup, val minBeforeBlock: 
     }
 
     fun allow(item: ItemStack) : Boolean{
-        if(enchantments.size > minBeforeBlock){
+        if(enchantments.size < minBeforeBlock){
             return true
         }
+
         if(cantConflict.contain(item.type)){
             return true
-        }
-        if(minBeforeBlock == 0){
-            return false
         }
 
         // Count the amount of enchantment that are in the list
@@ -34,6 +32,10 @@ class EnchantConflictGroup(val cantConflict: MaterialGroup, val minBeforeBlock: 
         }
 
         return true
+    }
+
+    fun isEnchantEmpty(): Boolean {
+        return enchantments.size == 0
     }
 
 
