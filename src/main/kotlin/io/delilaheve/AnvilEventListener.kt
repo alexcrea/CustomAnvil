@@ -89,8 +89,11 @@ class AnvilEventListener : Listener {
         val inventory = event.inventory as? AnvilInventory ?: return
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         if(!player.hasPermission(bypassPermission)){
-            if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) { return }
+            if (output.findEnchantments().hasConflicts() && !player.hasPermission(requirePermission)) {
 
+
+                return
+            }
         }
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
         event.result = Event.Result.ALLOW

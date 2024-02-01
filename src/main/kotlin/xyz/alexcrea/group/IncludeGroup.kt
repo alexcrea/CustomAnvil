@@ -1,15 +1,17 @@
 package xyz.alexcrea.group
 
 import org.bukkit.Material
+import java.util.EnumSet
 
 open class IncludeGroup(private val name: String): MaterialGroup{
-    private val includedMaterial = HashSet<Material>()
+    private val includedMaterial = EnumSet.noneOf(Material::class.java)
     private val includedGroup = HashSet<MaterialGroup>()
 
     override fun contain(mat: Material): Boolean {
         if(mat in includedMaterial){
             return true
         }
+
         for (materialGroup in includedGroup.iterator()) {
             if(materialGroup.contain(mat)){
                 return true

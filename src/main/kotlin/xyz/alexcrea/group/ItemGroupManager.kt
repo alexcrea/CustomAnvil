@@ -12,7 +12,9 @@ class ItemGroupManager {
     companion object {
         // Path for group type
         private const val GROUP_TYPE_PATH = "type"
+        // Path for included items list
         private const val MATERIAL_LIST_PATH = "items"
+        // Path for included groups list
         private const val GROUP_LIST_PATH = "groups"
     }
 
