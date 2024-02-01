@@ -1,10 +1,13 @@
 main: io.delilaheve.UnsafeEnchants
-name: UnsafeEnchants
-version: 1.0.3
-description: Allow all enchants to be combined
+name: UnsafeEnchantsPlus
+prefix: UnsafeEnchants+
+version: 1.1.0
+description: Allow custom illegal enchantment
 api-version: 1.18
 load: POSTWORLD
 author: DelilahEve
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
 permissions:
   ue.unsafe:
     default: true

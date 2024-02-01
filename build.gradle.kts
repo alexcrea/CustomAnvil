@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "io.delilaheve"
-version = "1.0.3"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
 
-    implementation(kotlin("stdlib"))
+    compileOnly(kotlin("stdlib"))
 
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
 
