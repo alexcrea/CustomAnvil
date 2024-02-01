@@ -145,8 +145,10 @@ restriction_sweeping:
   enchantments: [sweeping]
   notAffectedGroups: [swords]
 
-# Do not exist in 1.18 but future proof
+# Do not exist in 1.18, that mean useInFuture will be set to true
+# useInFuture set to true also mean it will not warn if there is an issue
 restriction_swift_sneak:
+  useInFuture: true
   enchantments: [swift_sneak]
   notAffectedGroups: [boots]
 

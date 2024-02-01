@@ -17,6 +17,9 @@ class EnchantConflictManager {
         private const val CONFLICT_GROUP_PATH = "notAffectedGroups"
         // Path for the maximum number of enchantment before validating the conflict
         private const val ENCH_MAX_PATH = "maxEnchantmentBeforeConflict"
+        // Path for a flag: if the enchantment will be used in the last supported version
+        // TODO maybe replace this system by a list of "future" enchantment.
+        private const val FUTURE_USE_PATH = "useInFuture"
         // Default name for an empty Material group
         private val DEFAULT_EMPTY_GROUP = IncludeGroup("empty")
         // Default name for a joining group
@@ -33,8 +36,9 @@ class EnchantConflictManager {
         for (key in keys) {
             val section = config.getConfigurationSection(key)!!
             val conflict = createConflict(section,itemManager,key)
-
-            conflictList.add(conflict)
+            if(conflict != null){
+                conflictList.add(conflict)
+            }
         }
 
     }
@@ -42,8 +46,9 @@ class EnchantConflictManager {
     // create and read a conflict from a yaml section
     private fun createConflict(section: ConfigurationSection,
                                itemManager: ItemGroupManager,
-                               conflictName: String): EnchantConflictGroup {
-
+                               conflictName: String): EnchantConflictGroup? {
+        // Is it planed for the future
+        val futureUse = section.getBoolean(FUTURE_USE_PATH,false)
         // Create conflict
         val conflict = createConflictObject(section,itemManager,conflictName)
         // Read and add enchantment to conflict
@@ -52,13 +57,18 @@ class EnchantConflictManager {
             val enchantKey = NamespacedKey.minecraft(enchantName)
             val enchant = Enchantment.getByKey(enchantKey)
             if(enchant == null){
-                UnsafeEnchants.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
+                if(!futureUse){
+                    UnsafeEnchants.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
+                }
                 continue
             }
             conflict.addEnchantment(enchant)
         }
         if(conflict.isEnchantEmpty()){
-            UnsafeEnchants.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not work")
+            if(!futureUse){
+                UnsafeEnchants.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not work")
+            }
+            return null
         }
 
         return conflict

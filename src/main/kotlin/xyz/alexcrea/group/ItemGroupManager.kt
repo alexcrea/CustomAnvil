@@ -16,6 +16,8 @@ class ItemGroupManager {
         private const val MATERIAL_LIST_PATH = "items"
         // Path for included groups list
         private const val GROUP_LIST_PATH = "groups"
+        // Temporary list of elements in default config that are use in future
+        private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD","BRUSH")
     }
 
     private lateinit var groupMap : HashMap<String,MaterialGroup>
@@ -66,8 +68,12 @@ class ItemGroupManager {
             val materialName = materialTemp.uppercase(Locale.getDefault())
             val material = Material.getMaterial(materialName)
             if(material == null){
-                UnsafeEnchants.instance.logger.warning(
-                    "Unknown material $materialTemp on group ${group.getName()}")
+                // Check if we should warn the user
+                if(materialName !in FUTURE_MATERIAL){
+                    UnsafeEnchants.instance.logger.warning(
+                        "Unknown material $materialTemp on group ${group.getName()}")
+
+                }
                 continue
             }
             group.addToPolicy(material)
