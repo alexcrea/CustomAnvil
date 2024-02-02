@@ -19,7 +19,10 @@ class UnsafeEnchants : JavaPlugin() {
         // Permission string required to use the plugin's features
         const val unsafePermission = "ue.unsafe"
         // Permission string required to bypass enchantment conflicts test
-        const val unsafeBypassPermission = "ue.bypass.fuse"
+        const val bypassFusePermission = "ue.bypass.fuse"
+        // Permission string required to bypass enchantment conflicts test
+        const val bypassLevelPermission = "ue.bypass.level"
+
         // Item Grouping Configuration file name
         const val itemGroupingConfigName = "item_groups.yml"
         // Conflict Configuration file name

@@ -15,3 +15,6 @@ permissions:
   ue.bypass.fuse:
     default: false
     description: Allow player to combine every "unsafe" enchants
+  ue.bypass.level:
+    default: false
+    description: Allow player to bypass max level limit

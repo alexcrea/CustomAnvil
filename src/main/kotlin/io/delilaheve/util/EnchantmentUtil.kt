@@ -2,6 +2,7 @@ package io.delilaheve.util
 
 import io.delilaheve.UnsafeEnchants
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.HumanEntity
 import kotlin.math.max
 import kotlin.math.min
 
@@ -20,7 +21,7 @@ object EnchantmentUtil {
      * Combine 2 sets of enchantments according to our configuration
      */
     fun Map<Enchantment, Int>.combineWith(
-        other: Map<Enchantment, Int>
+        other: Map<Enchantment, Int>, player: HumanEntity
     ) = mutableMapOf<Enchantment, Int>().apply {
         putAll(this@combineWith)
         other.forEach { (enchantment, level) ->
@@ -44,7 +45,11 @@ object EnchantmentUtil {
                     else -> {
                         // try to increase the enchantment level by 1
                         var newLevel = this[enchantment]?.plus(1) ?: 0
-                        val maxLevel = ConfigOptions.enchantLimit(enchantment)
+                        val maxLevel = if(player.hasPermission(UnsafeEnchants.bypassLevelPermission)){
+                            255
+                        }else{
+                            ConfigOptions.enchantLimit(enchantment)
+                        }
                         newLevel = min(newLevel, maxLevel)
                         if (newLevel > 0) { this[enchantment] = newLevel }
                     }

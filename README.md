@@ -26,7 +26,8 @@ Not yet uploaded. but fell free to compile it yourself.
 ### Permissions:
 ```yml
 ue.unsafe: Allows use of custom restriction rules
-ue.unsafe_all: bypass every enchantment restriction, including custom restriction
+ue.bypass.fuse: Bypass every enchantment restriction check. including custom restriction
+ue.bypass.level: Bypass max level check. including custom max level
 ```
 
 ### Default Configuration:

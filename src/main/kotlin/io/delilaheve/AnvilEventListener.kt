@@ -41,8 +41,11 @@ class AnvilEventListener : Listener {
         val first = inventory.getItem(0) ?: return
         val second = inventory.getItem(1) ?: return
         if (first.canMergeWith(second)) {
+            // Try to find player
+            val player = event.view.player
+
             val newEnchants = first.findEnchantments()
-                .combineWith(second.findEnchantments())
+                .combineWith(second.findEnchantments(),player)
             val resultItem = first.clone()
             resultItem.itemMeta?.let {
                 it.setDisplayName(inventory.renameText)
@@ -62,8 +65,6 @@ class AnvilEventListener : Listener {
                 repairCost = min(repairCost, ConfigOptions.limitRepairValue)
             }
 
-            // Try to find player
-            val player = event.view.player
             // Set object only if allowed
             if(itemAllowed(resultItem,player)){
                 event.result = resultItem
@@ -108,7 +109,7 @@ class AnvilEventListener : Listener {
 
 
     private fun itemAllowed(item: ItemStack, player: HumanEntity): Boolean{
-        if(player.hasPermission(UnsafeEnchants.unsafeBypassPermission)) return true
+        if(player.hasPermission(UnsafeEnchants.bypassFusePermission)) return true
 
         if(player.hasPermission(UnsafeEnchants.unsafePermission)){
             if(UnsafeEnchants.conflictManager.isConflicting(item))
