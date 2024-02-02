@@ -21,7 +21,9 @@ Unlike vanilla which  just get rid of illegal enchant and allow combining
 
 ### Download Locations:
 
-Not yet uploaded. but fell free to compile it yourself.
+the plugin can be downloaded on the 
+[Spigot site](https://www.spigotmc.org/resources/unsafe-enchants.114884/) 
+or [on GitHub](https://github.com/alexcrea/UnsafeEnchantsPlus/releases/latest)
 
 ### Permissions:
 ```yml
