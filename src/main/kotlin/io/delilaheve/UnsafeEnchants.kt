@@ -18,8 +18,8 @@ class UnsafeEnchants : JavaPlugin() {
     companion object {
         // Permission string required to use the plugin's features
         const val unsafePermission = "ue.unsafe"
-        // Permission string required to bypass illegal enchantment group
-        const val unsafeBypassPermission = "ue.unsafe_all"
+        // Permission string required to bypass enchantment conflicts test
+        const val unsafeBypassPermission = "ue.bypass.fuse"
         // Item Grouping Configuration file name
         const val itemGroupingConfigName = "item_groups.yml"
         // Conflict Configuration file name

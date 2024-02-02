@@ -20,7 +20,6 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
-import org.bukkit.permissions.Permission
 import kotlin.math.min
 
 /**
@@ -32,13 +31,6 @@ class AnvilEventListener : Listener {
         // Anvil's output slot
         private const val ANVIL_OUTPUT_SLOT = 2
     }
-
-    // Permission node required for the plugin to take over enchantment combination
-    private val requirePermission: Permission
-        get() = Permission(UnsafeEnchants.unsafePermission)
-    // Permission node to bypass illegal group check
-    private val bypassPermission: Permission
-        get() = Permission(UnsafeEnchants.unsafeBypassPermission)
 
     /**
      * Event handler logic for when an anvil contains items to be combined
@@ -116,13 +108,13 @@ class AnvilEventListener : Listener {
 
 
     private fun itemAllowed(item: ItemStack, player: HumanEntity): Boolean{
-        if(!player.hasPermission(bypassPermission)){
-            if(player.hasPermission(requirePermission)){
-                if(UnsafeEnchants.conflictManager.isConflicting(item))
-                    return false
+        if(player.hasPermission(UnsafeEnchants.unsafeBypassPermission)) return true
 
-            } else if(item.findEnchantments().hasConflicts())
+        if(player.hasPermission(UnsafeEnchants.unsafePermission)){
+            if(UnsafeEnchants.conflictManager.isConflicting(item))
                 return false
+        }else if (item.findEnchantments().hasConflicts()){
+            return false
         }
         return true
     }

@@ -12,6 +12,6 @@ permissions:
   ue.unsafe:
     default: true
     description: Allow player to combine allowed "unsafe" enchants
-  ue.unsafe_all:
+  ue.bypass.fuse:
     default: false
     description: Allow player to combine every "unsafe" enchants
