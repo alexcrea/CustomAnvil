@@ -1,175 +1,184 @@
 # material conflicts
 #
 # If you want to edit this file:
-# - You need to take into account that multiple conflict can be applied to an item
-#   (exemple: protection can be applied to chestplate AND should not have other "protection")
+# - A conflict will apply to every item except if in one of the notAffectedGroups group
+# - the conflict will count only if the user try to combine at least as
+#   many conflicting enchantment as "maxEnchantmentBeforeConflict"
+#
 
-# These restriction are about not allowing enchantment on illegal items
+# ----------------------------------------------------
+# These restriction are about not allowing enchantment
+# on illegal items
+# ----------------------------------------------------
+
 restriction_aqua_affinity:
   enchantments: [aqua_affinity]
-  notAffectedGroups: [helmets]
+  notAffectedGroups: [enchanted_book, helmets]
 
 restriction_bane_of_arthropods:
   enchantments: [bane_of_arthropods]
-  notAffectedGroups: [melee_weapons]
+  notAffectedGroups: [enchanted_book, melee_weapons]
 
 restriction_blast_protection:
   enchantments: [blast_protection]
-  notAffectedGroups: [armors]
+  notAffectedGroups: [enchanted_book, armors]
 
 restriction_channeling:
   enchantments: [channeling]
-  notAffectedGroups: [trident]
+  notAffectedGroups: [enchanted_book, trident]
 
 restriction_binding_curse:
   enchantments: [binding_curse]
-  notAffectedGroups: [wearable]
+  notAffectedGroups: [enchanted_book, wearable]
 
 restriction_vanishing_curse:
   enchantments: [vanishing_curse]
-  notAffectedGroups: [can_vanish]
+  notAffectedGroups: [enchanted_book, can_vanish]
 
 restriction_depth_strider:
   enchantments: [depth_strider]
-  notAffectedGroups: [boots]
+  notAffectedGroups: [enchanted_book, boots]
 
 restriction_efficiency:
   enchantments: [efficiency]
-  notAffectedGroups: [tools, shears]
+  notAffectedGroups: [enchanted_book, tools,  shears]
 
 restriction_feather_falling:
   enchantments: [feather_falling]
-  notAffectedGroups: [boots]
+  notAffectedGroups: [enchanted_book, boots]
 
 restriction_fire_aspect:
   enchantments: [fire_aspect]
-  notAffectedGroups: [swords]
+  notAffectedGroups: [enchanted_book, swords]
 
 restriction_fire_protection:
   enchantments: [fire_protection]
-  notAffectedGroups: [armors]
+  notAffectedGroups: [enchanted_book, armors]
 
 restriction_flame:
   enchantments: [flame]
-  notAffectedGroups: [bow]
+  notAffectedGroups: [enchanted_book, bow]
 
 restriction_fortune:
   enchantments: [fortune]
-  notAffectedGroups: [tools]
+  notAffectedGroups: [enchanted_book, tools]
 
 restriction_frost_walker:
   enchantments: [frost_walker]
-  notAffectedGroups: [boots]
+  notAffectedGroups: [enchanted_book, boots]
 
 restriction_impaling:
   enchantments: [impaling]
-  notAffectedGroups: [trident]
+  notAffectedGroups: [enchanted_book, trident]
 
 restriction_infinity:
   enchantments: [infinity]
-  notAffectedGroups: [bow]
+  notAffectedGroups: [enchanted_book, bow]
 
 restriction_knockback:
   enchantments: [knockback]
-  notAffectedGroups: [swords]
+  notAffectedGroups: [enchanted_book, swords]
 
 restriction_looting:
   enchantments: [looting]
-  notAffectedGroups: [swords]
+  notAffectedGroups: [enchanted_book, swords]
 
 restriction_loyalty:
   enchantments: [loyalty]
-  notAffectedGroups: [trident]
+  notAffectedGroups: [enchanted_book, trident]
 
 restriction_lure:
   enchantments: [lure]
-  notAffectedGroups: [fishing_rod]
+  notAffectedGroups: [enchanted_book, fishing_rod]
 
 restriction_mending:
   enchantments: [mending]
-  notAffectedGroups: [can_unbreak]
+  notAffectedGroups: [enchanted_book, can_unbreak]
 
 restriction_multishot:
   enchantments: [multishot]
-  notAffectedGroups: [crossbow]
+  notAffectedGroups: [enchanted_book, crossbow]
 
 restriction_piercing:
   enchantments: [piercing]
-  notAffectedGroups: [crossbow]
+  notAffectedGroups: [enchanted_book, crossbow]
 
 restriction_power:
   enchantments: [power]
-  notAffectedGroups: [bow]
+  notAffectedGroups: [enchanted_book, bow]
 
 restriction_projectile_protection:
   enchantments: [projectile_protection]
-  notAffectedGroups: [armors]
+  notAffectedGroups: [enchanted_book, armors]
 
 restriction_protection:
   enchantments: [protection]
-  notAffectedGroups: [armors]
+  notAffectedGroups: [enchanted_book, armors]
 
 restriction_punch:
   enchantments: [punch]
-  notAffectedGroups: [bow]
+  notAffectedGroups: [enchanted_book, bow]
 
 restriction_quick_charge:
   enchantments: [quick_charge]
-  notAffectedGroups: [crossbow]
+  notAffectedGroups: [enchanted_book, crossbow]
 
 restriction_respiration:
   enchantments: [respiration]
-  notAffectedGroups: [helmets]
+  notAffectedGroups: [enchanted_book, helmets]
 
 restriction_riptide:
   enchantments: [riptide]
-  notAffectedGroups: [trident]
+  notAffectedGroups: [enchanted_book, trident]
 
 restriction_sharpness:
   enchantments: [sharpness]
-  notAffectedGroups: [melee_weapons]
+  notAffectedGroups: [enchanted_book, melee_weapons]
 
 restriction_silk_touch:
   enchantments: [silk_touch]
-  notAffectedGroups: [tools]
+  notAffectedGroups: [enchanted_book, tools]
 
 restriction_smite:
   enchantments: [smite]
-  notAffectedGroups: [melee_weapons]
+  notAffectedGroups: [enchanted_book, melee_weapons]
 
 restriction_soul_speed:
   enchantments: [soul_speed]
-  notAffectedGroups: [boots]
+  notAffectedGroups: [enchanted_book, boots]
 
 restriction_sweeping:
   enchantments: [sweeping]
-  notAffectedGroups: [swords]
+  notAffectedGroups: [enchanted_book, swords]
 
-# Do not exist in 1.18, that mean useInFuture will be set to true
+# Do not exist in 1.18,  that mean useInFuture will be set to true
 # useInFuture set to true also mean it will not warn if there is an issue
 restriction_swift_sneak:
   useInFuture: true
   enchantments: [swift_sneak]
-  notAffectedGroups: [boots]
+  notAffectedGroups: [enchanted_book, boots]
 
 restriction_thorns:
   enchantments: [thorns]
-  notAffectedGroups: [chestplate]
+  notAffectedGroups: [enchanted_book, chestplate]
 
 restriction_unbreaking:
   enchantments: [unbreaking]
-  notAffectedGroups: [can_unbreak]
+  notAffectedGroups: [enchanted_book, can_unbreak]
 
-# Now we have Incompatibility
-# Because we have filtered before this step, we will use nothing as notAffectedGroups
-# We can an exclude group to exclude elements of group from the conflict
+# ----------------------------------------------------
+# Now we have conflicts about enchantment Incompatibility
+# We just filtered what item enchantments can be applied
+# We will now will use enchanted_book as notAffectedGroups
+# maxEnchantmentBeforeConflict is set to 1 to only have 1 on those enchantment available
+# ----------------------------------------------------
 
 sword_enchant_conflict:
   enchantments:
     - bane_of_arthropods
     - smite
     - sharpness
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 protection_enchant_conflict:
@@ -178,48 +187,48 @@ protection_enchant_conflict:
     - fire_protection
     - projectile_protection
     - protection
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 trident_conflict1:
   enchantments:
     - channeling
     - riptide
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 trident_conflict2:
   enchantments:
     - loyalty
     - riptide
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 boot_conflict:
   enchantments:
     - depth_strider
     - frost_walker
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 tool_conflict:
   enchantments:
     - fortune
     - silk_touch
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 bow_conflict:
   enchantments:
     - mending
     - infinity
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 
 crossbow_conflict:
   enchantments:
     - multishot
     - piercing
-  notAffectedGroups: [nothing]
+  notAffectedGroups: [enchanted_book]
   maxEnchantmentBeforeConflict: 1
 

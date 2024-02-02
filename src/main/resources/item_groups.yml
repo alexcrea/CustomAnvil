@@ -145,6 +145,11 @@ tools:
   groups:
     - axes
 
+enchanted_book:
+  type: include
+  items:
+    - enchanted_book
+
 trident:
   type: include
   items:
