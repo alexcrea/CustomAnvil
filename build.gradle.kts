@@ -32,7 +32,7 @@ val fatJar = tasks.register<Jar>("fatJar") {
     manifest {
         attributes.apply { put("Main-Class", "io.delilaheve.UnsafeEnchants") }
     }
-    archiveFileName.set("${rootProject.name}-${version}.jar")
+    archiveFileName.set("${rootProject.name}-${archiveVersion}.jar")
     exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     duplicatesStrategy = DuplicatesStrategy.WARN
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
