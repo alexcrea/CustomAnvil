@@ -57,11 +57,15 @@ class AnvilEventListener : Listener {
                 resultItem.itemMeta = it
             }
             resultItem.setEnchantmentsUnsafe(newEnchants)
+            var repairCost: Int
             if (!first.isBook() && !second.isBook()) {
+                repairCost = first.repairCost + second.repairCost
                 // we only need to be concerned with repair when neither item is a book
                 resultItem.repairFrom(first, second)
+            }else{
+                repairCost = resultItem.repairCost
             }
-            var repairCost = first.repairCost + second.repairCost
+
             if (ConfigOptions.limitRepairCost) {
                 repairCost = min(repairCost, ConfigOptions.limitRepairValue)
             }
