@@ -5,7 +5,7 @@ version: 1.1.0
 description: Allow custom illegal enchantment
 api-version: 1.18
 load: POSTWORLD
-author: DelilahEve
+authors: [DelilahEve, alexcrea]
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
 permissions:
