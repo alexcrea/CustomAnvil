@@ -1,6 +1,7 @@
 package xyz.alexcrea.group
 
 import io.delilaheve.UnsafeEnchants
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
@@ -26,21 +27,32 @@ class EnchantConflictManager {
         private const val DEFAULT_GROUP_NAME = "joinedGroup"
     }
 
-    private lateinit var conflictList: ArrayList<EnchantConflictGroup>
+    private lateinit var conflictMap: HashMap<Enchantment, ArrayList<EnchantConflictGroup>>
 
     // Read and prepare all conflict
     fun prepareConflicts(config: YamlConfiguration, itemManager: ItemGroupManager){
-        conflictList = ArrayList()
+        conflictMap = HashMap()
 
         val keys = config.getKeys(false)
         for (key in keys) {
             val section = config.getConfigurationSection(key)!!
             val conflict = createConflict(section,itemManager,key)
             if(conflict != null){
-                conflictList.add(conflict)
+                addToMap(conflict)
             }
+
         }
 
+    }
+
+    // Add the conflict to the map
+    private fun addToMap(conflict: EnchantConflictGroup){
+        conflict.getEnchants().forEach{ enchant ->
+            if(!conflictMap.containsKey(enchant)){
+                conflictMap[enchant] = ArrayList()
+            }
+            conflictMap[enchant]!!.add(conflict)
+        }
     }
 
     // create and read a conflict from a yaml section
@@ -64,7 +76,7 @@ class EnchantConflictManager {
             }
             conflict.addEnchantment(enchant)
         }
-        if(conflict.isEnchantEmpty()){
+        if(conflict.getEnchants().size == 0){
             if(!futureUse){
                 UnsafeEnchants.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not work")
             }
@@ -112,8 +124,27 @@ class EnchantConflictManager {
     }
 
     fun isConflicting(item: ItemStack): Boolean{
+        val toTest = HashSet<EnchantConflictGroup>()
+        item.enchantments.forEach{enchant ->
+            val conflictList = conflictMap[enchant.key]
+            if(conflictList != null){
+                toTest.addAll(conflictList)
+            }
+        }
+
+        for (conflict in toTest) {
+            if(!conflict.allowed(item)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): Boolean{
+        val conflictList = conflictMap[newEnchant] ?: return false
+
         for (conflict in conflictList) {
-            if(!conflict.allow(item)) {
+            if(!conflict.allowed(base,mat)) {
                 return true
             }
         }
