@@ -160,7 +160,7 @@ restriction_swift_sneak:
 
 restriction_thorns:
   enchantments: [thorns]
-  notAffectedGroups: [enchanted_book, chestplate]
+  notAffectedGroups: [enchanted_book, armors]
 
 restriction_unbreaking:
   enchantments: [unbreaking]
