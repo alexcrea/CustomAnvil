@@ -20,7 +20,7 @@ class ItemGroupManager {
         private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD","BRUSH")
     }
 
-    private lateinit var groupMap : HashMap<String,MaterialGroup>
+    private lateinit var groupMap : HashMap<String,AbstractMaterialGroup>
 
     // Read and create material groups
     fun prepareGroups(config: YamlConfiguration){
@@ -37,12 +37,12 @@ class ItemGroupManager {
     // Create group by key
     private fun createGroup(config: YamlConfiguration,
                             keys: Set<String>,
-                            key: String): MaterialGroup{
+                            key: String): AbstractMaterialGroup{
         val groupSection = config.getConfigurationSection(key)!!
         val groupType = groupSection.getString(GROUP_TYPE_PATH,null)
 
         // Create Material group according to the group type
-        val group: MaterialGroup
+        val group: AbstractMaterialGroup
         if(GroupType.EXCLUDE.equal(groupType)){
             group = ExcludeGroup(key)
         }else {
@@ -58,7 +58,7 @@ class ItemGroupManager {
     }
 
     // Read Group elements
-    private fun readGroup(group: MaterialGroup,
+    private fun readGroup(group: AbstractMaterialGroup,
                           groupSection: ConfigurationSection,
                           config: YamlConfiguration,
                           keys: Set<String>){
@@ -109,7 +109,7 @@ class ItemGroupManager {
     }
 
     // Get the selected group or return null if it doesn't exist
-    fun get(groupName: String): MaterialGroup? {
+    fun get(groupName: String): AbstractMaterialGroup? {
         return groupMap[groupName]
     }
 

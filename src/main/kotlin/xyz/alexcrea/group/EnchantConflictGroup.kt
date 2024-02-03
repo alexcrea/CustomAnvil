@@ -4,7 +4,7 @@ import io.delilaheve.util.ItemUtil.findEnchantments
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
-class EnchantConflictGroup(val cantConflict: MaterialGroup, val minBeforeBlock: Int){
+class EnchantConflictGroup(val cantConflict: AbstractMaterialGroup, val minBeforeBlock: Int){
 
     private val enchantments = HashSet<Enchantment>()
 

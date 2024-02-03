@@ -3,24 +3,14 @@ package xyz.alexcrea.group
 import org.bukkit.Material
 import java.util.EnumSet
 
-open class IncludeGroup(private val name: String): MaterialGroup{
-    private val includedMaterial = EnumSet.noneOf(Material::class.java)
-    private val includedGroup = HashSet<MaterialGroup>()
-
-    override fun contain(mat: Material): Boolean {
-        if(mat in includedMaterial){
-            return true
-        }
-
-        for (materialGroup in includedGroup.iterator()) {
-            if(materialGroup.contain(mat)){
-                return true
-            }
-        }
-        return false
+class IncludeGroup(name: String): AbstractMaterialGroup(name) {
+    override fun createDefaultSet(): EnumSet<Material> {
+        return EnumSet.noneOf(Material::class.java)
     }
 
-    override fun isReferencing(other: MaterialGroup): Boolean {
+    private val includedGroup = HashSet<AbstractMaterialGroup>()
+
+    override fun isReferencing(other: AbstractMaterialGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
             if((materialGroup == other) || (materialGroup.isReferencing(other))){
                 return true
@@ -33,12 +23,9 @@ open class IncludeGroup(private val name: String): MaterialGroup{
         includedMaterial.add(mat)
     }
 
-    override fun addToPolicy(other: MaterialGroup) {
+    override fun addToPolicy(other: AbstractMaterialGroup) {
         includedGroup.add(other)
-    }
-
-    override fun getName(): String {
-        return name
+        includedMaterial.addAll(other.getSet())
     }
 
 }

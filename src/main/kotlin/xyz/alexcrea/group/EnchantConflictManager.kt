@@ -86,7 +86,7 @@ class EnchantConflictManager {
         }
         // Find or create the selected group for the conflict
         val groupList = section.getStringList(CONFLICT_GROUP_PATH)
-        val finalGroup: MaterialGroup
+        val finalGroup: AbstractMaterialGroup
         if(groupList.size < 1){
             finalGroup = DEFAULT_EMPTY_GROUP
         }else if(groupList.size == 1){
@@ -101,7 +101,7 @@ class EnchantConflictManager {
         return EnchantConflictGroup(finalGroup, minBeforeBlock)
     }
 
-    private fun findGroup(groupName: String,itemManager: ItemGroupManager, conflictName: String): MaterialGroup {
+    private fun findGroup(groupName: String,itemManager: ItemGroupManager, conflictName: String): AbstractMaterialGroup {
         val group = itemManager.get(groupName)
         if(group == null){
             UnsafeEnchants.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
