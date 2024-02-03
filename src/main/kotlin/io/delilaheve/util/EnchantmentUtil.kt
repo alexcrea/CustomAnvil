@@ -89,16 +89,4 @@ object EnchantmentUtil {
         return false
     }
 
-    /**
-     * Calculate the value of a set of enchantments
-     */
-    fun Map<Enchantment, Int>.calculateValue(
-        fromBook: Boolean
-    ) = entries.sumOf { (enchantment, level) ->
-        val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment, fromBook)
-        val value = level * enchantmentMultiplier
-        UnsafeEnchants.log("Value for ${enchantment.enchantmentName} is $value")
-        value
-    }
-
 }

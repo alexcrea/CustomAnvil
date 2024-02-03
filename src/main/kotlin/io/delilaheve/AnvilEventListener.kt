@@ -2,15 +2,12 @@ package io.delilaheve
 
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.combineWith
-import io.delilaheve.util.EnchantmentUtil.hasConflicts
+import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isBook
-import io.delilaheve.util.ItemUtil.repairCost
 import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
-import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority.HIGHEST
@@ -20,6 +17,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Repairable
 import kotlin.math.min
 
 /**
@@ -43,20 +41,19 @@ class AnvilEventListener : Listener {
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT) ?: return
         if (first.canMergeWith(second)) {
-            // Try to find player
+            // Should find player
             val player = event.view.player
 
             val newEnchants = first.findEnchantments()
                 .combineWith(second.findEnchantments(), first.type, player)
             val resultItem = first.clone()
             resultItem.setEnchantmentsUnsafe(newEnchants)
-            var repairCost: Int
+
+            var anvilCost = calculateCost(first, second, resultItem, player.hasPermission(UnsafeEnchants.bypassFusePermission))
             if (!first.isBook() && !second.isBook()) {
-                repairCost = first.repairCost + second.repairCost
                 // we only need to be concerned with repair when neither item is a book
-                resultItem.repairFrom(first, second)
-            }else{
-                repairCost = resultItem.repairCost
+                val repaired = resultItem.repairFrom(first, second)
+                anvilCost += if(repaired) 2 else 0
             }
 
             // Test if nothing change and stop.
@@ -69,13 +66,13 @@ class AnvilEventListener : Listener {
             resultItem.itemMeta?.let {
                 if(!it.displayName.contentEquals(inventory.renameText)){
                     it.setDisplayName(inventory.renameText)
-                    resultItem.itemMeta = it
-                    repairCost += 1
+                    anvilCost += 1
                 }
+                resultItem.itemMeta = it
             }
 
             if (ConfigOptions.limitRepairCost) {
-                repairCost = min(repairCost, ConfigOptions.limitRepairValue)
+                anvilCost = min(anvilCost, ConfigOptions.limitRepairValue)
             }
 
             event.result = resultItem
@@ -90,8 +87,8 @@ class AnvilEventListener : Listener {
                     if (ConfigOptions.removeRepairLimit) {
                         inventory.maximumRepairCost = Int.MAX_VALUE
                     }
-                    inventory.repairCost = repairCost
-                    event.view.setProperty(REPAIR_COST, repairCost)
+                    inventory.repairCost = anvilCost
+                    event.view.setProperty(REPAIR_COST, anvilCost)
                 })
         }
     }
@@ -111,6 +108,60 @@ class AnvilEventListener : Listener {
             return
         }
         event.result = Event.Result.ALLOW
+    }
+
+    /**
+     * Function to calculate most of the xp requirement for the anvil fuse
+     * Change result work penalty for future use
+     */
+    private fun calculateCost(left: ItemStack, right: ItemStack, result: ItemStack, bypassFuse: Boolean): Int{
+        // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
+        // Calculate work penality
+        val leftPenality = (left.itemMeta as? Repairable)?.repairCost ?: 0
+        val rightPenality = (right.itemMeta as? Repairable)?.repairCost ?: 0
+
+        // Calculate right value and illegal enchant penalty
+        var rightValue = 0
+        var illegalPenalty = 0
+
+        val rightIsFormBook = right.isBook()
+        val resultEnchs = result.findEnchantments().keys
+
+        for (enchantment in right.findEnchantments()) {
+            // count enchant as illegal enchant if it conflicts with another enchant or not in result
+            if(!bypassFuse && (
+                        (enchantment.key !in resultEnchs) ||
+                        UnsafeEnchants.conflictManager.isConflicting(resultEnchs,result.type,enchantment.key)
+                        )){
+                // There may an issue when illegal enchant are trying to combine
+                // at least that what I think, but can't find why
+                illegalPenalty++
+                UnsafeEnchants.log("Conflict for ${enchantment.key.enchantmentName}, add 1 of value")
+                continue
+            }
+
+            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
+            val value = enchantment.value * enchantmentMultiplier
+            UnsafeEnchants.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value")
+            rightValue+=value
+
+        }
+
+        // Try to set work penality for the result item
+        result.itemMeta?.let {
+            (it as? Repairable)?.repairCost = leftPenality*2+1
+            result.itemMeta = it
+        }
+
+        UnsafeEnchants.log("Calculated cost: " +
+                "leftPenality: $leftPenality, " +
+                "rightPenality: $rightPenality, " +
+                "rightValue: $rightValue, " +
+                "illegalPenalty: $illegalPenalty," +
+                "result penality: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
+
+        // We are missing [Renaming Cost] + [Refilling Durability] but it will be handled later
+        return rightValue + leftPenality + rightPenality + illegalPenalty
     }
 
 }

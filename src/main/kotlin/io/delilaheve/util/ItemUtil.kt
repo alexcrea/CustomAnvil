@@ -1,7 +1,6 @@
 package io.delilaheve.util
 
 import io.delilaheve.UnsafeEnchants
-import io.delilaheve.util.EnchantmentUtil.calculateValue
 import org.bukkit.Material.BOOK
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.enchantments.Enchantment
@@ -9,26 +8,12 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
-import org.bukkit.inventory.meta.Repairable
 import kotlin.math.min
 
 /**
  * Item manipulation utilities
  */
 object ItemUtil {
-
-    /**
-     * Determine the value of an item for repair
-     *
-     * ToDo - use native repair cost
-     */
-    val ItemStack.repairCost: Int
-        get() {
-            val nativeCost = (itemMeta as? Repairable)?.repairCost
-            val pluginCost = findEnchantments().calculateValue(isBook())
-            UnsafeEnchants.log("Native Cost: $nativeCost; Plugin Cost: $pluginCost")
-            return nativeCost.takeIf { it != 0 } ?: pluginCost
-        }
 
     /**
      * Check if this [ItemStack] is a [BOOK] or [ENCHANTED_BOOK]
@@ -93,14 +78,17 @@ object ItemUtil {
     /**
      * Set this [ItemStack]s durability from a combination of the
      * [first] and [second] item's durability values
+     * @return if the item was repaired
      */
     fun ItemStack.repairFrom(
         first: ItemStack,
         second: ItemStack
-    ) {
+    ): Boolean {
         (itemMeta as? Damageable)?.let {
             val durability = type.maxDurability.toInt()
             val firstDamage = (first.itemMeta as? Damageable)?.damage ?: 0
+            if( firstDamage == 0) return false
+
             val firstDurability = durability - firstDamage
             val secondDamage = (second.itemMeta as? Damageable)?.damage ?: 0
             val secondDurability = durability - secondDamage
@@ -108,7 +96,9 @@ object ItemUtil {
             val newDurability = min(combinedDurability, durability)
             it.damage = durability - newDurability
             itemMeta = it as ItemMeta
+            return true
         }
+        return false
     }
 
     /**

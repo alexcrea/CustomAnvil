@@ -6,7 +6,6 @@ import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.ItemStack
 import kotlin.collections.ArrayList
 
 class EnchantConflictManager {
@@ -121,23 +120,6 @@ class EnchantConflictManager {
         }
 
         return group
-    }
-
-    fun isConflicting(item: ItemStack): Boolean{
-        val toTest = HashSet<EnchantConflictGroup>()
-        item.enchantments.forEach{enchant ->
-            val conflictList = conflictMap[enchant.key]
-            if(conflictList != null){
-                toTest.addAll(conflictList)
-            }
-        }
-
-        for (conflict in toTest) {
-            if(!conflict.allowed(item)) {
-                return true
-            }
-        }
-        return false
     }
 
     fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): Boolean{
