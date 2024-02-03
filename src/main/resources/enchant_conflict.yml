@@ -5,7 +5,7 @@
 # - the conflict will count only if the user try to combine at least as
 #   many conflicting enchantment as "maxEnchantmentBeforeConflict"
 #
-
+#
 # ----------------------------------------------------
 # These restriction are about not allowing enchantment
 # on illegal items
@@ -169,7 +169,7 @@ restriction_unbreaking:
 # ----------------------------------------------------
 # Now we have conflicts about enchantment Incompatibility
 # We just filtered what item enchantments can be applied
-# We will now will use enchanted_book as notAffectedGroups
+# notAffectedGroups is empty as we don't want anything to not respect theses rules
 # maxEnchantmentBeforeConflict is set to 1 to only have 1 on those enchantment available
 # ----------------------------------------------------
 
@@ -178,7 +178,7 @@ sword_enchant_conflict:
     - bane_of_arthropods
     - smite
     - sharpness
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 protection_enchant_conflict:
@@ -187,48 +187,48 @@ protection_enchant_conflict:
     - fire_protection
     - projectile_protection
     - protection
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 trident_conflict1:
   enchantments:
     - channeling
     - riptide
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 trident_conflict2:
   enchantments:
     - loyalty
     - riptide
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 boot_conflict:
   enchantments:
     - depth_strider
     - frost_walker
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 tool_conflict:
   enchantments:
     - fortune
     - silk_touch
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 bow_conflict:
   enchantments:
     - mending
     - infinity
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
 crossbow_conflict:
   enchantments:
     - multishot
     - piercing
-  notAffectedGroups: [enchanted_book]
+  notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
