@@ -14,9 +14,9 @@ allowing custom enchantment limits and customising combination restrictions.
 - Custom enchantment restriction configuration
 ---
 ### Know issue:
-- Sometimes, Anvil level price do not respect vanilla rules
-- Anvil do not allow illegal enchant to combine.
-Unlike vanilla which  just get rid of illegal enchant and allow combining
+There are some situations that may not look like vanilla. For example: wrong price with default config. If you find one that was bothering you, you can report the issue here or on GitHub.
+I strongly recommend having a reproducible situation or log with debug flag on.
+
 ---
 
 ### Download Locations:
@@ -28,8 +28,8 @@ or [on GitHub](https://github.com/alexcrea/UnsafeEnchantsPlus/releases/latest)
 ### Permissions:
 ```yml
 ue.unsafe: Allows use of custom restriction rules
-ue.bypass.fuse: Bypass every enchantment restriction check. including custom restriction
-ue.bypass.level: Bypass max level check. including custom max level
+ue.bypass.fuse: Bypass every enchantment restriction check. Including custom restrictions
+ue.bypass.level: Bypass max level check. Including custom max level
 ```
 
 ### Default Configuration:
