@@ -66,7 +66,7 @@ class AnvilEventListener : Listener {
             resultItem.itemMeta?.let {
                 if(!it.displayName.contentEquals(inventory.renameText)){
                     it.setDisplayName(inventory.renameText)
-                    anvilCost += 1
+                    anvilCost += ConfigOptions.itemRepairCost
                 }
                 resultItem.itemMeta = it
             }
@@ -135,8 +135,7 @@ class AnvilEventListener : Listener {
                         )){
                 // There may an issue when illegal enchant are trying to combine
                 // at least that what I think, but can't find why
-                illegalPenalty++
-                UnsafeEnchants.log("Conflict for ${enchantment.key.enchantmentName}, add 1 of value")
+                illegalPenalty += ConfigOptions.sacrificeIllegalCost
                 continue
             }
 

@@ -17,6 +17,10 @@ object ConfigOptions {
     private const val LIMIT_REPAIR_COST = "limit_repair_cost"
     // Path for repair value limit
     private const val LIMIT_REPAIR_VALUE = "limit_repair_value"
+    // Path for level cost on item repair
+    private const val ITEM_REPAIR_COST = "item_repair_cost"
+    // Path for level cost on illegal enchantment on sacrifice
+    private const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
     // Path for removing repair cost limits
     private const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
     // Root path for enchantment limits
@@ -30,15 +34,23 @@ object ConfigOptions {
     private const val DEBUG_LOGGING = "debug_log"
 
     // Default value for enchantment limits
-    private const val DEFAULT_ENCHANT_LIMIT = 10
+    private const val DEFAULT_ENCHANT_LIMIT = 5
     // Default value for allowing unsafe enchantments
     private const val DEFAULT_ALLOW_UNSAFE = true
     // Default value for limiting repair cost
     private const val DEFAULT_LIMIT_REPAIR = true
     // Default value for repair cost limit
     private const val DEFAULT_LIMIT_REPAIR_VALUE = 39
+    // Default value for level cost on item repair
+    private const val DEFAULT_ITEM_REPAIR_COST = 2
+    // Default value for level cost on illegal enchantment on sacrifice
+    private const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
     // Valid range for repair cost limit
     private val REPAIR_LIMIT_RANGE = 1..39
+    // Valid range for repair cost limit
+    private val ITEM_REPAIR_COST_RANGE = 0..255
+    // Valid range for repair cost limit
+    private val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
     // Default for removing repair cost limits
     private const val DEFAULT_REMOVE_LIMIT = false
     // Valid range for an enchantment limit
@@ -90,6 +102,29 @@ object ConfigOptions {
                 ?: DEFAULT_LIMIT_REPAIR_VALUE
         }
 
+    /**
+     * Value to limit repair costs to
+     */
+    val itemRepairCost: Int
+        get() {
+            return UnsafeEnchants.instance
+                .config
+                .getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
+                .takeIf { it in ITEM_REPAIR_COST_RANGE }
+                ?: DEFAULT_ITEM_REPAIR_COST
+        }
+
+    /**
+     * Value to limit repair costs to
+     */
+    val sacrificeIllegalCost: Int
+        get() {
+            return UnsafeEnchants.instance
+                .config
+                .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
+                .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
+                ?: DEFAULT_SACRIFICE_ILLEGAL_COST
+        }
     /**
      * Whether to remove repair cost limit
      */
