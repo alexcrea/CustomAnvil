@@ -4,6 +4,7 @@ import io.delilaheve.UnsafeEnchants
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
+import xyz.alexcrea.group.ConflictType
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,7 +35,7 @@ object EnchantmentUtil {
                     // Add the enchantment if it doesn't have conflicts, or, if player is allowed to bypass enchantment restrictions
                     this[enchantment] = level
                     if(!player.hasPermission(UnsafeEnchants.bypassFusePermission) &&
-                        UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment)){
+                        (UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
                         this.remove(enchantment)
                     }
                 }else if(!keys.any { enchantment.conflictsWith(it) }){
@@ -45,7 +46,7 @@ object EnchantmentUtil {
             // Enchantment already in result list
             else{
                 // ... and they are conflicting
-                if(UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment)
+                if((UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)
                     && !player.hasPermission(UnsafeEnchants.bypassFusePermission)){
                     return@forEach
                 }
@@ -71,22 +72,6 @@ object EnchantmentUtil {
                 }
             }
         }
-    }
-
-
-    /**
-     * Check if a set of enchantments has any conflicts
-     */
-    fun Map<Enchantment, Int>.hasConflicts() : Boolean {
-        forEach { (enchantment1, _) ->
-            val hasConflict = any { (enchantment2, _) ->
-                enchantment2.conflictsWith(enchantment1)
-            }
-            if (hasConflict) {
-                return true
-            }
-        }
-        return false
     }
 
 }

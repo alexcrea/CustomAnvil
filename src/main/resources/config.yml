@@ -18,7 +18,8 @@ remove_repair_limit: false
 # Valid range of 0 - 255
 item_repair_cost: 2
 
-# Value added to the anvil when the sacrifice try to add illegal enchant to the item
+# Value added to the anvil when a sacrifice enchantment conflict
+# with one of the left item enchantment
 #
 # Valid range of 0 - 255
 sacrifice_illegal_enchant_cost: 1

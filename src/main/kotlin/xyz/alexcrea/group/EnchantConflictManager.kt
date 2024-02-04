@@ -122,15 +122,28 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): Boolean{
-        val conflictList = conflictMap[newEnchant] ?: return false
+    fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): ConflictType{
+        val conflictList = conflictMap[newEnchant] ?: return ConflictType.NO_CONFLICT
 
+        var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
             if(!conflict.allowed(base,mat)) {
-                return true
+                if(conflict.getEnchants().size <= 1){
+                    result = ConflictType.SMALL_CONFLICT
+                }else{
+                    return ConflictType.BIG_CONFLICT
+                }
             }
         }
-        return false
+        return result
     }
+
+}
+
+enum class ConflictType(){
+    NO_CONFLICT,
+    SMALL_CONFLICT,
+    BIG_CONFLICT
+
 
 }

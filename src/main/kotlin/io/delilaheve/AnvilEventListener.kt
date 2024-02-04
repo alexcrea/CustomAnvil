@@ -18,6 +18,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
+import xyz.alexcrea.group.ConflictType
 import kotlin.math.min
 
 /**
@@ -49,7 +50,7 @@ class AnvilEventListener : Listener {
             val resultItem = first.clone()
             resultItem.setEnchantmentsUnsafe(newEnchants)
 
-            var anvilCost = calculateCost(first, second, resultItem, player.hasPermission(UnsafeEnchants.bypassFusePermission))
+            var anvilCost = calculateCost(first, second, resultItem)
             if (!first.isBook() && !second.isBook()) {
                 // we only need to be concerned with repair when neither item is a book
                 val repaired = resultItem.repairFrom(first, second)
@@ -114,7 +115,7 @@ class AnvilEventListener : Listener {
      * Function to calculate most of the xp requirement for the anvil fuse
      * Change result work penalty for future use
      */
-    private fun calculateCost(left: ItemStack, right: ItemStack, result: ItemStack, bypassFuse: Boolean): Int{
+    private fun calculateCost(left: ItemStack, right: ItemStack, result: ItemStack): Int{
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penality
         val leftPenality = (left.itemMeta as? Repairable)?.repairCost ?: 0
@@ -125,22 +126,26 @@ class AnvilEventListener : Listener {
         var illegalPenalty = 0
 
         val rightIsFormBook = right.isBook()
-        val resultEnchs = result.findEnchantments().keys
+        val resultEnchs = result.findEnchantments()
+        val resultEnchsKeys = HashSet(resultEnchs.keys)
 
         for (enchantment in right.findEnchantments()) {
             // count enchant as illegal enchant if it conflicts with another enchant or not in result
-            if(!bypassFuse && (
-                        (enchantment.key !in resultEnchs) ||
-                        UnsafeEnchants.conflictManager.isConflicting(resultEnchs,result.type,enchantment.key)
-                        )){
-                // There may an issue when illegal enchant are trying to combine
-                // at least that what I think, but can't find why
-                illegalPenalty += ConfigOptions.sacrificeIllegalCost
+            if((enchantment.key !in resultEnchsKeys)){
+                resultEnchsKeys.add(enchantment.key)
+                val conflictType = UnsafeEnchants.conflictManager.isConflicting(resultEnchsKeys,result.type,enchantment.key)
+                resultEnchsKeys.remove(enchantment.key)
+
+                if(ConflictType.BIG_CONFLICT == conflictType){
+                    illegalPenalty += ConfigOptions.sacrificeIllegalCost
+                }
                 continue
             }
+            // We know "enchantment.key in resultEnchs" true
+            val resultLevel = resultEnchs[enchantment.key]!!
 
             val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
-            val value = enchantment.value * enchantmentMultiplier
+            val value = resultLevel * enchantmentMultiplier
             UnsafeEnchants.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value")
             rightValue+=value
 
