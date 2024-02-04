@@ -14,8 +14,7 @@ allowing custom enchantment limits and customising combination restrictions.
 - Custom enchantment restriction configuration
 ---
 ### Know issue:
-There are some situations that may not look like vanilla. For example: wrong price with default config. If you find one that was bothering you, you can report the issue here or on GitHub.
-I strongly recommend having a reproducible situation or log with debug flag on.
+There is non known issue, if you find one please report the issue.
 
 ---
 
