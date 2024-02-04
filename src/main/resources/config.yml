@@ -1,17 +1,3 @@
-# Default limit to apply to any enchants missing from override_limits
-#
-# Valid range of 1 - 255
-default_limit: 5
-
-# Whether enchants should be combined without regard for conflicts by default
-#
-# This setting will override permissions, if a player has ue.unsafe but this is false
-# they will be unable to combine conflicting enchantments
-#
-# i.e. Protection and Blast Protection can be on the same piece of armour
-# Please note, this configuration should be set to true if you want custom conflicts rule
-allow_unsafe: true
-
 # Whether all anvil actions should be capped
 #
 # If true, all anvil repairs will max out at the value of limit_repair_value
@@ -21,6 +7,11 @@ limit_repair_cost: true
 #
 # Valid range of 1 - 39 (vanilla will consider 40+ as "too expensive")
 limit_repair_value: 39
+
+# Whether the anvil's repair limit should be removed entirely
+#
+# The anvil will still visually display "too expensive" however the action will be completable
+remove_repair_limit: false
 
 # Value added to the anvil when the item durability increase
 #
@@ -32,10 +23,10 @@ item_repair_cost: 2
 # Valid range of 0 - 255
 sacrifice_illegal_enchant_cost: 1
 
-# Whether the anvil's repair limit should be removed entirely
+# Default limit to apply to any enchants missing from override_limits
 #
-# The anvil will still visually display "too expensive" however the action will be completable
-remove_repair_limit: false
+# Valid range of 1 - 255
+default_limit: 5
 
 # Override limits for specific enchants
 #

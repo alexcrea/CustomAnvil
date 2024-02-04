@@ -11,8 +11,6 @@ object ConfigOptions {
 
     // Path for default enchantment limits
     private const val DEFAULT_LIMIT_PATH = "default_limit"
-    // Path for allowing unsafe enchants
-    private const val ALLOW_UNSAFE_PATH = "allow_unsafe"
     // Path for limiting repair cost
     private const val LIMIT_REPAIR_COST = "limit_repair_cost"
     // Path for repair value limit
@@ -35,8 +33,6 @@ object ConfigOptions {
 
     // Default value for enchantment limits
     private const val DEFAULT_ENCHANT_LIMIT = 5
-    // Default value for allowing unsafe enchantments
-    private const val DEFAULT_ALLOW_UNSAFE = true
     // Default value for limiting repair cost
     private const val DEFAULT_LIMIT_REPAIR = true
     // Default value for repair cost limit
@@ -68,16 +64,6 @@ object ConfigOptions {
             return UnsafeEnchants.instance
                 .config
                 .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
-        }
-
-    /**
-     * Whether to allow unsafe enchantments
-     */
-    val allowUnsafe: Boolean
-        get() {
-            return UnsafeEnchants.instance
-                .config
-                .getBoolean(ALLOW_UNSAFE_PATH, DEFAULT_ALLOW_UNSAFE)
         }
 
     /**
