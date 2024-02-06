@@ -6,6 +6,8 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.group.EnchantConflictManager
 import xyz.alexcrea.group.ItemGroupManager
+import xyz.alexcrea.group.util.Metrics
+import xyz.alexcrea.group.util.Metrics.SimplePie
 import java.io.File
 import java.io.FileReader
 
@@ -16,6 +18,9 @@ import java.io.FileReader
 class UnsafeEnchants : JavaPlugin() {
 
     companion object {
+        // bstats plugin id
+        private const val bstatsPluginId = 20923
+
         // Permission string required to use the plugin's features
         const val unsafePermission = "ue.unsafe"
         // Permission string required to bypass enchantment conflicts test
@@ -48,7 +53,11 @@ class UnsafeEnchants : JavaPlugin() {
      */
     override fun onEnable() {
         instance = this
+        // Load bstats
+        val metric = Metrics(this, bstatsPluginId)
         saveDefaultConfig()
+
+        addCustomMetric(metric)
 
         // Load material grouping config
         val itemGroupConfig = reloadResource(itemGroupingConfigName) ?: return
@@ -66,6 +75,22 @@ class UnsafeEnchants : JavaPlugin() {
             AnvilEventListener(),
             this
         )
+
+    }
+
+    private fun addCustomMetric(metric: Metrics) {
+        metric.addCustomChart(SimplePie("item_rename_cost") {
+            ConfigOptions.itemRenameCost.toString()
+        })
+        println("item_rename_cost: ${ConfigOptions.itemRenameCost}")
+        metric.addCustomChart(SimplePie("item_repair_cost") {
+            ConfigOptions.itemRepairCost.toString()
+        })
+        println("item_repair_cost: ${ConfigOptions.itemRepairCost}")
+        metric.addCustomChart(SimplePie("sacrifice_illegal_enchant_cost") {
+            ConfigOptions.sacrificeIllegalCost.toString()
+        })
+        println("sacrifice_illegal_enchant_cost: ${ConfigOptions.sacrificeIllegalCost}")
 
     }
 

@@ -3,8 +3,8 @@ plugins {
     java
 }
 
-group = "io.delilaheve"
-version = "1.1.4"
+group = "xyz.alexcrea"
+version = "1.1.5"
 
 repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ dependencies {
 
     compileOnly(kotlin("stdlib"))
 
-    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
