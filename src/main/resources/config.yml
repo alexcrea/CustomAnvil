@@ -18,6 +18,11 @@ remove_repair_limit: false
 # Valid range of 0 - 255
 item_repair_cost: 2
 
+# Value added to the anvil when the item is renamed
+#
+# Valid range of 0 - 255
+item_rename_cost: 1
+
 # Value added to the anvil when a sacrifice enchantment conflict
 # with one of the left item enchantment
 #

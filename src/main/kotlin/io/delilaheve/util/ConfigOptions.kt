@@ -17,6 +17,8 @@ object ConfigOptions {
     private const val LIMIT_REPAIR_VALUE = "limit_repair_value"
     // Path for level cost on item repair
     private const val ITEM_REPAIR_COST = "item_repair_cost"
+    // Path for level cost on item renaming
+    private const val ITEM_RENAME_COST = "item_rename_cost"
     // Path for level cost on illegal enchantment on sacrifice
     private const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
     // Path for removing repair cost limits
@@ -39,13 +41,17 @@ object ConfigOptions {
     private const val DEFAULT_LIMIT_REPAIR_VALUE = 39
     // Default value for level cost on item repair
     private const val DEFAULT_ITEM_REPAIR_COST = 2
+    // Default value for level cost on item renaming
+    private const val DEFAULT_ITEM_RENAME_COST = 1
     // Default value for level cost on illegal enchantment on sacrifice
     private const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
     // Valid range for repair cost limit
     private val REPAIR_LIMIT_RANGE = 1..39
-    // Valid range for repair cost limit
+    // Valid range for repair cost
     private val ITEM_REPAIR_COST_RANGE = 0..255
-    // Valid range for repair cost limit
+    // Valid range for rename cost
+    private val ITEM_RENAME_COST_RANGE = 0..255
+    // Valid range for illegal enchantment conflict cost
     private val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
     // Default for removing repair cost limits
     private const val DEFAULT_REMOVE_LIMIT = false
@@ -89,7 +95,7 @@ object ConfigOptions {
         }
 
     /**
-     * Value to limit repair costs to
+     * Value of an item repair
      */
     val itemRepairCost: Int
         get() {
@@ -101,7 +107,19 @@ object ConfigOptions {
         }
 
     /**
-     * Value to limit repair costs to
+     * Value of an item rename
+     */
+    val itemRenameCost: Int
+        get() {
+            return UnsafeEnchants.instance
+                .config
+                .getInt(ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST)
+                .takeIf { it in ITEM_RENAME_COST_RANGE }
+                ?: DEFAULT_ITEM_RENAME_COST
+        }
+
+    /**
+     * Value of illegal enchantment conflict
      */
     val sacrificeIllegalCost: Int
         get() {

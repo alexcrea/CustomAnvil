@@ -54,7 +54,7 @@ class AnvilEventListener : Listener {
             if (!first.isBook() && !second.isBook()) {
                 // we only need to be concerned with repair when neither item is a book
                 val repaired = resultItem.repairFrom(first, second)
-                anvilCost += if(repaired) 2 else 0
+                anvilCost += if(repaired) ConfigOptions.itemRepairCost else 0
             }
 
             // Test if nothing change and stop.
@@ -67,7 +67,7 @@ class AnvilEventListener : Listener {
             resultItem.itemMeta?.let {
                 if(!it.displayName.contentEquals(inventory.renameText)){
                     it.setDisplayName(inventory.renameText)
-                    anvilCost += ConfigOptions.itemRepairCost
+                    anvilCost += ConfigOptions.itemRenameCost
                 }
                 resultItem.itemMeta = it
             }
