@@ -26,13 +26,6 @@ object ItemUtil {
     private fun ItemStack.isEnchantedBook() = type == ENCHANTED_BOOK
 
     /**
-     * Determine if this [ItemStack] can hold enchants, this should be sufficient for
-     * detecting if an item is a tool/armour/etc... and not a carrot/potato/etc...
-     */
-    private fun ItemStack.canHoldEnchants() = Enchantment.values()
-        .any { it.canEnchantItem(this) }
-
-    /**
      * Find the enchantment map for this [ItemStack] and return it as a [MutableMap]
      */
     fun ItemStack.findEnchantments() = if (isBook()) {
@@ -108,5 +101,5 @@ object ItemUtil {
      */
     fun ItemStack.canMergeWith(
         other: ItemStack
-    ) = type == other.type || (canHoldEnchants() && other.isEnchantedBook())
+    ) = type == other.type || (other.isEnchantedBook())
 }

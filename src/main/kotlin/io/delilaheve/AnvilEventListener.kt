@@ -41,6 +41,8 @@ class AnvilEventListener : Listener {
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT) ?: return
+
+        var anvilCost = 0
         if (first.canMergeWith(second)) {
             // Should find player
             val player = event.view.player
@@ -50,7 +52,8 @@ class AnvilEventListener : Listener {
             val resultItem = first.clone()
             resultItem.setEnchantmentsUnsafe(newEnchants)
 
-            var anvilCost = calculateCost(first, second, resultItem)
+            anvilCost = calculatePenalty(first, second, resultItem)
+            anvilCost+= getRightValues(second, resultItem)
             if (!first.isBook() && !second.isBook()) {
                 // we only need to be concerned with repair when neither item is a book
                 val repaired = resultItem.repairFrom(first, second)
@@ -68,8 +71,8 @@ class AnvilEventListener : Listener {
                 if(!it.displayName.contentEquals(inventory.renameText)){
                     it.setDisplayName(inventory.renameText)
                     anvilCost += ConfigOptions.itemRenameCost
+                    resultItem.itemMeta = it
                 }
-                resultItem.itemMeta = it
             }
 
             if (ConfigOptions.limitRepairCost) {
@@ -112,18 +115,37 @@ class AnvilEventListener : Listener {
     }
 
     /**
-     * Function to calculate most of the xp requirement for the anvil fuse
-     * Change result work penalty for future use
+     * Function to calculate work penalty of anvil work
+     * Also change result work penalty
      */
-    private fun calculateCost(left: ItemStack, right: ItemStack, result: ItemStack): Int{
+    private fun calculatePenalty(left: ItemStack, right: ItemStack, result: ItemStack): Int{
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penality
         val leftPenality = (left.itemMeta as? Repairable)?.repairCost ?: 0
         val rightPenality = (right.itemMeta as? Repairable)?.repairCost ?: 0
 
+        // Try to set work penality for the result item
+        result.itemMeta?.let {
+            (it as? Repairable)?.repairCost = leftPenality*2+1
+            result.itemMeta = it
+        }
+
+        UnsafeEnchants.log("Calculated penality: " +
+                "leftPenality: $leftPenality, " +
+                "rightPenality: $rightPenality, " +
+                "result penality: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
+
+        return leftPenality + rightPenality
+    }
+
+    /**
+     * Function to calculate right enchantment values
+     * it include enchantment placed on final item and conflicting enchantment
+     */
+    private fun getRightValues(right: ItemStack, result:ItemStack) : Int {
         // Calculate right value and illegal enchant penalty
-        var rightValue = 0
         var illegalPenalty = 0
+        var rightValue = 0
 
         val rightIsFormBook = right.isBook()
         val resultEnchs = result.findEnchantments()
@@ -147,25 +169,14 @@ class AnvilEventListener : Listener {
             val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
             val value = resultLevel * enchantmentMultiplier
             UnsafeEnchants.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value")
-            rightValue+=value
+            rightValue += value
 
         }
-
-        // Try to set work penality for the result item
-        result.itemMeta?.let {
-            (it as? Repairable)?.repairCost = leftPenality*2+1
-            result.itemMeta = it
-        }
-
-        UnsafeEnchants.log("Calculated cost: " +
-                "leftPenality: $leftPenality, " +
-                "rightPenality: $rightPenality, " +
+        UnsafeEnchants.log("Calculated right values: " +
                 "rightValue: $rightValue, " +
-                "illegalPenalty: $illegalPenalty," +
-                "result penality: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
+                "illegalPenalty: $illegalPenalty")
 
-        // We are missing [Renaming Cost] + [Refilling Durability] but it will be handled later
-        return rightValue + leftPenality + rightPenality + illegalPenalty
+        return rightValue + illegalPenalty
     }
 
 }

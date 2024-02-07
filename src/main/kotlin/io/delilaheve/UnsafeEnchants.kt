@@ -6,8 +6,8 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.group.EnchantConflictManager
 import xyz.alexcrea.group.ItemGroupManager
-import xyz.alexcrea.group.util.Metrics
-import xyz.alexcrea.group.util.Metrics.SimplePie
+import xyz.alexcrea.util.Metrics
+import xyz.alexcrea.util.Metrics.SimplePie
 import java.io.File
 import java.io.FileReader
 
@@ -29,14 +29,19 @@ class UnsafeEnchants : JavaPlugin() {
         const val bypassLevelPermission = "ue.bypass.level"
 
         // Item Grouping Configuration file name
-        const val itemGroupingConfigName = "item_groups.yml"
+        const val itemGroupingConfigFilePath = "item_groups.yml"
         // Conflict Configuration file name
-        const val enchantConflicConfigName = "enchant_conflict.yml"
+        const val enchantConflicConfigFilePath = "enchant_conflict.yml"
+        // Unit Repair Configuration file name
+        const val unitRepairFilePath = "unit_repair_item.yml"
 
         // Current plugin instance
         lateinit var instance: UnsafeEnchants
         // Current item grouping configuration instance
         lateinit var conflictManager: EnchantConflictManager
+
+        // Configuration for unit repair
+        lateinit var unitRepairConfig: YamlConfiguration
 
         /**
          * Logging handler
@@ -60,16 +65,19 @@ class UnsafeEnchants : JavaPlugin() {
         addCustomMetric(metric)
 
         // Load material grouping config
-        val itemGroupConfig = reloadResource(itemGroupingConfigName) ?: return
+        val itemGroupConfig = reloadResource(itemGroupingConfigFilePath) ?: return
         // Read material groups from config
         val itemGroupsManager = ItemGroupManager()
         itemGroupsManager.prepareGroups(itemGroupConfig)
 
         // Load enchantment conflicts config
-        val conflictConfig = reloadResource(enchantConflicConfigName) ?: return
+        val conflictConfig = reloadResource(enchantConflicConfigFilePath) ?: return
         // Read conflicts from config and material group manager
         conflictManager = EnchantConflictManager()
         conflictManager.prepareConflicts(conflictConfig,itemGroupsManager)
+
+        // Load unit repair config
+        unitRepairConfig = reloadResource(unitRepairFilePath) ?: return
 
         server.pluginManager.registerEvents(
             AnvilEventListener(),
@@ -82,16 +90,12 @@ class UnsafeEnchants : JavaPlugin() {
         metric.addCustomChart(SimplePie("item_rename_cost") {
             ConfigOptions.itemRenameCost.toString()
         })
-        println("item_rename_cost: ${ConfigOptions.itemRenameCost}")
         metric.addCustomChart(SimplePie("item_repair_cost") {
             ConfigOptions.itemRepairCost.toString()
         })
-        println("item_repair_cost: ${ConfigOptions.itemRepairCost}")
         metric.addCustomChart(SimplePie("sacrifice_illegal_enchant_cost") {
             ConfigOptions.sacrificeIllegalCost.toString()
         })
-        println("sacrifice_illegal_enchant_cost: ${ConfigOptions.sacrificeIllegalCost}")
-
     }
 
     private fun reloadResource(resourceName: String,

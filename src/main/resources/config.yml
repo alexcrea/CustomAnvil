@@ -13,10 +13,16 @@ limit_repair_value: 39
 # The anvil will still visually display "too expensive" however the action will be completable
 remove_repair_limit: false
 
-# Value added to the anvil when the item durability increase
+# Value added to the anvil when the item is repaired by another item of the same type
 #
 # Valid range of 0 - 255
 item_repair_cost: 2
+
+# Value added to the anvil when the item is repaired by an "unit"
+# For example, a diamond on a diamond sword
+#
+# Valid range of 0 - 255
+unit_repair_cost: 1
 
 # Value added to the anvil when the item is renamed
 #
