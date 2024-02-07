@@ -8,6 +8,8 @@ object UnitRepairUtil {
 
     // Default value for user set default unit repair %
     private const val DEFAULT_DEFAULT_UNIT_REPAIR = 0.25
+    // Path to user default unit repair value
+    private const val UNIT_REPAIR_DEFAULT_PATH = "default_repair_amount"
 
     /**
      * Get the % of repair by unit [other] will do to this [ItemStack].
@@ -25,7 +27,7 @@ object UnitRepairUtil {
             if(section == null) return null
         }
         // Get repair amount
-        var userDefault = config.getDouble("default_repair_amount",DEFAULT_DEFAULT_UNIT_REPAIR)
+        var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH,DEFAULT_DEFAULT_UNIT_REPAIR)
         if(userDefault <= 0){
             userDefault = DEFAULT_DEFAULT_UNIT_REPAIR
         }

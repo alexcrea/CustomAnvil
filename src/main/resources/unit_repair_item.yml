@@ -1,1 +1,179 @@
-#TODO
+# Unit repair configuration
+#
+# This configuration is to make custom unit repair
+# A unit repair is, for example, a diamond to repair a diamond sword
+# In vanilla, a unit repair 25% of object durability
+# you can make a custom value here
+#
+# Item name should NOT combine caps and no caps (example: Stone)
+
+# Default value if the config is an invalid value (value <= 0 )
+# If value > 1 it will be treated as being = 1
+default_repair_amount: 0.25
+
+# Vanilla unit repair group is bellow
+
+diamond:
+  diamond_helmet: 0.25
+  diamond_chestplate: 0.25
+  diamond_leggings: 0.25
+  diamond_boots: 0.25
+  diamond_sword: 0.25
+  diamond_pickaxe: 0.25
+  diamond_axe: 0.25
+  diamond_shovel: 0.25
+  diamond_hoe: 0.25
+
+netherite_ingot:
+  netherite_helmet: 0.25
+  netherite_chestplate: 0.25
+  netherite_leggings: 0.25
+  netherite_boots: 0.25
+  netherite_sword: 0.25
+  netherite_pickaxe: 0.25
+  netherite_axe: 0.25
+  netherite_shovel: 0.25
+  netherite_hoe: 0.25
+
+gold_ingot:
+  golden_helmet: 0.25
+  golden_chestplate: 0.25
+  golden_leggings: 0.25
+  golden_boots: 0.25
+  golden_sword: 0.25
+  golden_pickaxe: 0.25
+  golden_axe: 0.25
+  golden_shovel: 0.25
+  golden_hoe: 0.25
+
+iron_ingot:
+  iron_helmet: 0.25
+  iron_chestplate: 0.25
+  iron_leggings: 0.25
+  iron_boots: 0.25
+  iron_sword: 0.25
+  iron_pickaxe: 0.25
+  iron_axe: 0.25
+  iron_shovel: 0.25
+  iron_hoe: 0.25
+
+cobblestone:
+  stone_sword: 0.25
+  stone_pickaxe: 0.25
+  stone_axe: 0.25
+  stone_shovel: 0.25
+  stone_hoe: 0.25
+
+cobbled_deepslate:
+  stone_sword: 0.25
+  stone_pickaxe: 0.25
+  stone_axe: 0.25
+  stone_shovel: 0.25
+  stone_hoe: 0.25
+
+blackstone:
+  stone_sword: 0.25
+  stone_pickaxe: 0.25
+  stone_axe: 0.25
+  stone_shovel: 0.25
+  stone_hoe: 0.25
+
+leather:
+  leather_helmet: 0.25
+  leather_chestplate: 0.25
+  leather_leggings: 0.25
+  leather_boots: 0.25
+
+phantom_membrane:
+  elytra: 0.25
+
+scute:
+  turtle_helmet: 0.25
+
+oak_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+spruce_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+birch_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+jungle_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+acacia_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+dark_oak_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+mangrove_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+cherry_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+bamboo_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+crimson_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
+
+warped_planks:
+  wooden_sword: 0.25
+  wooden_pickaxe: 0.25
+  wooden_axe: 0.25
+  wooden_shovel: 0.25
+  wooden_hoe: 0.25
+  shield: 0.25
