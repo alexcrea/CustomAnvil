@@ -11,8 +11,14 @@
 # If value > 1 it will be treated as being = 1
 default_repair_amount: 0.25
 
-# Vanilla unit repair group is bellow
+# You can add custom unit repair
+# The example bellow make a shield repaired by 10% by sticks
 
+#stick:
+#  shield: 0.10
+
+
+# Vanilla unit repair group is bellow
 diamond:
   diamond_helmet: 0.25
   diamond_chestplate: 0.25

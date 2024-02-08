@@ -5,9 +5,12 @@ import io.delilaheve.util.EnchantmentUtil.combineWith
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.findEnchantments
-import io.delilaheve.util.ItemUtil.isBook
+import io.delilaheve.util.ItemUtil.isEnchantedBook
 import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
+import io.delilaheve.util.ItemUtil.unitRepair
+import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority.HIGHEST
@@ -19,6 +22,7 @@ import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.group.ConflictType
+import xyz.alexcrea.util.UnitRepairUtil.getRepair
 import kotlin.math.min
 
 /**
@@ -40,61 +44,98 @@ class AnvilEventListener : Listener {
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
-        val second = inventory.getItem(ANVIL_INPUT_RIGHT) ?: return
+        val second = inventory.getItem(ANVIL_INPUT_RIGHT)
 
-        var anvilCost = 0
+        // Should find player
+        val player = event.view.player
+        if(!player.hasPermission(UnsafeEnchants.unsafePermission)) return
+
+        // Test rename lonely item
+        if(second == null){
+            val resultItem = first.clone()
+            var anvilCost = handleRename(resultItem, inventory)
+            anvilCost+= calculatePenalty(first,null,resultItem)
+
+            // Test/stop if nothing changed.
+            if(first == resultItem){
+                event.result = null
+                return
+            }
+            // We do set item here as vanilla do all of our job (renaming)
+
+            handleDisplayedXp(inventory, event, anvilCost)
+            return
+        }
+
+        // Test for merge
         if (first.canMergeWith(second)) {
-            // Should find player
-            val player = event.view.player
 
             val newEnchants = first.findEnchantments()
                 .combineWith(second.findEnchantments(), first.type, player)
             val resultItem = first.clone()
             resultItem.setEnchantmentsUnsafe(newEnchants)
 
-            anvilCost = calculatePenalty(first, second, resultItem)
+            var anvilCost = calculatePenalty(first, second, resultItem)
             anvilCost+= getRightValues(second, resultItem)
-            if (!first.isBook() && !second.isBook()) {
+            if (!first.isEnchantedBook() && !second.isEnchantedBook()) {
                 // we only need to be concerned with repair when neither item is a book
                 val repaired = resultItem.repairFrom(first, second)
                 anvilCost += if(repaired) ConfigOptions.itemRepairCost else 0
             }
 
-            // Test if nothing change and stop.
+            // Test/stop if nothing changed.
             if(first == resultItem){
                 event.result = null
                 return
             }
 
-            // Rename item and add renaming cost
-            resultItem.itemMeta?.let {
-                if(!it.displayName.contentEquals(inventory.renameText)){
-                    it.setDisplayName(inventory.renameText)
-                    anvilCost += ConfigOptions.itemRenameCost
-                    resultItem.itemMeta = it
-                }
-            }
+            anvilCost+= handleRename(resultItem, inventory)
 
             if (ConfigOptions.limitRepairCost) {
                 anvilCost = min(anvilCost, ConfigOptions.limitRepairValue)
             }
-
             event.result = resultItem
 
-            /* Because Minecraft likes to have the final say in the repair cost displayed
-             * we need to wait for the event to end before overriding it, this ensures that
-             * we have the final say in the process. */
-            UnsafeEnchants.instance
-                .server
-                .scheduler
-                .runTask(UnsafeEnchants.instance, Runnable {
-                    if (ConfigOptions.removeRepairLimit) {
-                        inventory.maximumRepairCost = Int.MAX_VALUE
-                    }
-                    inventory.repairCost = anvilCost
-                    event.view.setProperty(REPAIR_COST, anvilCost)
-                })
+            handleDisplayedXp(inventory, event, anvilCost)
+            return
         }
+
+        // Test for unit repair
+        val unitRepairAmount = first.getRepair(second)
+        if(unitRepairAmount != null){
+            val resultItem = first.clone()
+            var anvilCost = handleRename(resultItem, inventory)
+            // We do not care about right item penalty for unit repair
+            anvilCost+= calculatePenalty(first,null,resultItem)
+
+            val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
+            if(repairAmount > 0){
+                anvilCost += repairAmount*ConfigOptions.unitRepairCost
+            }
+
+            // Test/stop if nothing changed.
+            if(first == resultItem){
+                event.result = null
+                return
+            }
+            event.result = resultItem
+
+            handleDisplayedXp(inventory, event, anvilCost)
+        }else{
+            event.result = null
+        }
+    }
+
+    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int{
+        // Rename item and add renaming cost
+        resultItem.itemMeta?.let {
+            if(!it.displayName.contentEquals(inventory.renameText)){
+                it.setDisplayName(inventory.renameText)
+                resultItem.itemMeta = it
+                return ConfigOptions.itemRenameCost
+            }
+        }
+        return 0
     }
 
     /**
@@ -102,27 +143,89 @@ class AnvilEventListener : Listener {
      */
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
-        //val player = event.whoClicked as? Player ?: return
+        val player = event.whoClicked as? Player ?: return
+        if(!player.hasPermission(UnsafeEnchants.unsafePermission)) return
         val inventory = event.inventory as? AnvilInventory ?: return
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
-        // Is true if there was no change. probably when there are conflict
-        if(output == inventory.getItem(ANVIL_INPUT_LEFT)){
+        val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
+        val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
+
+        val canMerge = leftItem.canMergeWith(rightItem)
+        val unitRepairResult = leftItem.getRepair(rightItem)
+        val allowed = (rightItem == null)
+                || (canMerge)
+                || (unitRepairResult != null)
+        // True if there was no change or not allowed
+        if((output == inventory.getItem(ANVIL_INPUT_LEFT))
+            || !allowed){
+
             event.result = Event.Result.DENY
             return
         }
-        event.result = Event.Result.ALLOW
+        if(rightItem == null){
+            event.result = Event.Result.ALLOW
+            return
+        }
+        if(canMerge){
+            event.result = Event.Result.ALLOW
+        }else if(unitRepairResult != null){
+            val resultCopy = leftItem.clone()
+            val resultAmount = resultCopy.unitRepair(
+                rightItem.amount, unitRepairResult)
+
+            // To avoid vanilla, we cancel the event for unit repair
+            event.result = Event.Result.DENY
+            event.isCancelled = true
+            // And we give the item manually
+            // But first we check if we should give the item
+            if(player.itemOnCursor.type != Material.AIR) return
+            if(inventory.repairCost > player.level) return
+
+            // Get repairCost
+            var repairCost = 0
+            leftItem.itemMeta?.let { leftMeta ->
+                val leftName = leftMeta.displayName
+                output.itemMeta?.let {
+                    if(!leftName.contentEquals(it.displayName)){
+                        repairCost+= ConfigOptions.itemRenameCost
+                    }
+                }
+            }
+
+            repairCost+= calculatePenalty(leftItem,null,resultCopy)
+            repairCost+= resultAmount*ConfigOptions.unitRepairCost
+
+            if((inventory.maximumRepairCost < repairCost)
+                || (player.level < repairCost)) return
+
+            // We remove what should be removed
+            inventory.setItem(ANVIL_INPUT_LEFT,null)
+            rightItem.amount-= resultAmount
+            inventory.setItem(ANVIL_INPUT_RIGHT,rightItem)
+            inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            UnsafeEnchants.log("repair cost: $repairCost")
+            player.level-= repairCost
+
+            // Finally, we add the item to the player
+            player.setItemOnCursor(output)
+
+            return
+        }
     }
 
     /**
      * Function to calculate work penalty of anvil work
      * Also change result work penalty
      */
-    private fun calculatePenalty(left: ItemStack, right: ItemStack, result: ItemStack): Int{
+    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int{
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penality
         val leftPenality = (left.itemMeta as? Repairable)?.repairCost ?: 0
-        val rightPenality = (right.itemMeta as? Repairable)?.repairCost ?: 0
+        val rightPenality =
+            if(right == null){ 0 }
+            else{ (right.itemMeta as? Repairable)?.repairCost ?: 0 }
 
         // Try to set work penality for the result item
         result.itemMeta?.let {
@@ -147,7 +250,7 @@ class AnvilEventListener : Listener {
         var illegalPenalty = 0
         var rightValue = 0
 
-        val rightIsFormBook = right.isBook()
+        val rightIsFormBook = right.isEnchantedBook()
         val resultEnchs = result.findEnchantments()
         val resultEnchsKeys = HashSet(resultEnchs.keys)
 
@@ -177,6 +280,30 @@ class AnvilEventListener : Listener {
                 "illegalPenalty: $illegalPenalty")
 
         return rightValue + illegalPenalty
+    }
+
+    /**
+     * Display xp needed for the work on the anvil inventory
+     */
+    private fun handleDisplayedXp(inventory: AnvilInventory,
+                                  event: PrepareAnvilEvent,
+                                  anvilCost: Int){
+        inventory.maximumRepairCost = Int.MAX_VALUE
+        inventory.repairCost = anvilCost
+        /* Because Minecraft likes to have the final say in the repair cost displayed
+            * we need to wait for the event to end before overriding it, this ensures that
+            * we have the final say in the process. */
+        UnsafeEnchants.instance
+            .server
+            .scheduler
+            .runTask(UnsafeEnchants.instance, Runnable {
+                if (ConfigOptions.removeRepairLimit) {
+                    inventory.maximumRepairCost = Int.MAX_VALUE
+                }
+                inventory.repairCost = anvilCost
+
+                event.view.setProperty(REPAIR_COST, anvilCost)
+            })
     }
 
 }

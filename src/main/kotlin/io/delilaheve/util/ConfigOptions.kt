@@ -17,6 +17,8 @@ object ConfigOptions {
     private const val LIMIT_REPAIR_VALUE = "limit_repair_value"
     // Path for level cost on item repair
     private const val ITEM_REPAIR_COST = "item_repair_cost"
+    // Path for level cost on unit repair
+    private const val UNIT_REPAIR_COST = "unit_repair_cost"
     // Path for level cost on item renaming
     private const val ITEM_RENAME_COST = "item_rename_cost"
     // Path for level cost on illegal enchantment on sacrifice
@@ -41,6 +43,8 @@ object ConfigOptions {
     private const val DEFAULT_LIMIT_REPAIR_VALUE = 39
     // Default value for level cost on item repair
     private const val DEFAULT_ITEM_REPAIR_COST = 2
+    // Default value for level cost per unit repair
+    private const val DEFAULT_UNIT_REPAIR_COST = 1
     // Default value for level cost on item renaming
     private const val DEFAULT_ITEM_RENAME_COST = 1
     // Default value for level cost on illegal enchantment on sacrifice
@@ -48,7 +52,7 @@ object ConfigOptions {
     // Valid range for repair cost limit
     private val REPAIR_LIMIT_RANGE = 1..39
     // Valid range for repair cost
-    private val ITEM_REPAIR_COST_RANGE = 0..255
+    private val REPAIR_COST_RANGE = 0..255
     // Valid range for rename cost
     private val ITEM_RENAME_COST_RANGE = 0..255
     // Valid range for illegal enchantment conflict cost
@@ -102,8 +106,20 @@ object ConfigOptions {
             return UnsafeEnchants.instance
                 .config
                 .getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
-                .takeIf { it in ITEM_REPAIR_COST_RANGE }
+                .takeIf { it in REPAIR_COST_RANGE }
                 ?: DEFAULT_ITEM_REPAIR_COST
+        }
+
+    /**
+     * Value of an item repair
+     */
+    val unitRepairCost: Int
+        get() {
+            return UnsafeEnchants.instance
+                .config
+                .getInt(UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST)
+                .takeIf { it in REPAIR_COST_RANGE }
+                ?: DEFAULT_UNIT_REPAIR_COST
         }
 
     /**

@@ -16,15 +16,18 @@ object UnitRepairUtil {
      * null if can't unit repaired by [other]
      */
     fun ItemStack.getRepair(
-        other: ItemStack
+        other: ItemStack?
     ): Double? {
+        if(other == null) return null
         val config = UnsafeEnchants.unitRepairConfig
         // Get configuration section if exist
         val otherName = other.type.name.uppercase()
         var section = config.getConfigurationSection(otherName)
         if(section == null){
             section = config.getConfigurationSection(otherName.lowercase())
-            if(section == null) return null
+            if(section == null) {
+                return null
+            }
         }
         // Get repair amount
         var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH,DEFAULT_DEFAULT_UNIT_REPAIR)

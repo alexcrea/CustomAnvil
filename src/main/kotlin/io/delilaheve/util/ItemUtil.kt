@@ -1,13 +1,13 @@
 package io.delilaheve.util
 
 import io.delilaheve.UnsafeEnchants
-import org.bukkit.Material.BOOK
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
-import org.bukkit.inventory.meta.ItemMeta
+import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -16,19 +16,14 @@ import kotlin.math.min
 object ItemUtil {
 
     /**
-     * Check if this [ItemStack] is a [BOOK] or [ENCHANTED_BOOK]
-     */
-    fun ItemStack.isBook() = type in listOf(BOOK, ENCHANTED_BOOK)
-
-    /**
      * Check if this [ItemStack] is an [ENCHANTED_BOOK]
      */
-    private fun ItemStack.isEnchantedBook() = type == ENCHANTED_BOOK
+    fun ItemStack.isEnchantedBook() = type == ENCHANTED_BOOK
 
     /**
      * Find the enchantment map for this [ItemStack] and return it as a [MutableMap]
      */
-    fun ItemStack.findEnchantments() = if (isBook()) {
+    fun ItemStack.findEnchantments() = if (isEnchantedBook()) {
         (itemMeta as? EnchantmentStorageMeta)?.storedEnchants ?: emptyMap()
     } else {
         itemMeta?.enchants ?: emptyMap()
@@ -38,7 +33,7 @@ object ItemUtil {
      * Apply an [enchantments] map to this [ItemStack]
      */
     fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<Enchantment, Int>) {
-        if (isBook()) {
+        if (isEnchantedBook()) {
             /* For some god-forsaken reason, item meta is not mutable
              * so, we have to get the instance, modify it, then set it
              * back to the item... #BecauseMinecraft */
@@ -88,10 +83,32 @@ object ItemUtil {
             val combinedDurability = firstDurability + secondDurability
             val newDurability = min(combinedDurability, durability)
             it.damage = durability - newDurability
-            itemMeta = it as ItemMeta
+            itemMeta = it
             return true
         }
         return false
+    }
+
+    fun ItemStack.unitRepair(
+        unitAmount: Int,
+        percentPerUnit: Double
+    ): Int {
+        (itemMeta as? Damageable)?.let {
+            val durability = type.maxDurability.toInt()
+            val firstDamage = it.damage
+            if( firstDamage == 0) return 0
+            var unitCount = 0
+            var damage = firstDamage
+            while((unitCount < unitAmount) && (damage > 0)){
+                unitCount++
+                damage = ceil(firstDamage - durability*percentPerUnit*unitCount).toInt()
+            }
+
+            it.damage = max(damage, 0)
+            itemMeta = it
+            return unitCount
+        }
+        return 0
     }
 
     /**
@@ -100,6 +117,6 @@ object ItemUtil {
      * The two items should either be the same type, or, the [other] is a book
      */
     fun ItemStack.canMergeWith(
-        other: ItemStack
-    ) = type == other.type || (other.isEnchantedBook())
+        other: ItemStack?
+    ) = (other != null) && (type == other.type || (other.isEnchantedBook()))
 }

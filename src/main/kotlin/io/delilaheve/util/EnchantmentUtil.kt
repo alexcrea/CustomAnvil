@@ -31,17 +31,13 @@ object EnchantmentUtil {
         other.forEach { (enchantment, level) ->
             // Enchantment not yet in result list
             if (!containsKey(enchantment)) {
-                if(player.hasPermission(UnsafeEnchants.unsafePermission)){
-                    // Add the enchantment if it doesn't have conflicts, or, if player is allowed to bypass enchantment restrictions
-                    this[enchantment] = level
-                    if(!player.hasPermission(UnsafeEnchants.bypassFusePermission) &&
-                        (UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
-                        this.remove(enchantment)
-                    }
-                }else if(!keys.any { enchantment.conflictsWith(it) }){
-
-                    this[enchantment] = level
+                // Add the enchantment if it doesn't have conflicts, or, if player is allowed to bypass enchantment restrictions
+                this[enchantment] = level
+                if(!player.hasPermission(UnsafeEnchants.bypassFusePermission) &&
+                    (UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
+                    this.remove(enchantment)
                 }
+
             }
             // Enchantment already in result list
             else{
