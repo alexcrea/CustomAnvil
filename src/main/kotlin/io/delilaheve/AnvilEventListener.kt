@@ -9,6 +9,7 @@ import io.delilaheve.util.ItemUtil.isEnchantedBook
 import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -25,6 +26,7 @@ import xyz.alexcrea.group.ConflictType
 import xyz.alexcrea.util.UnitRepairUtil.getRepair
 import kotlin.math.min
 
+
 /**
  * Listener for anvil events
  */
@@ -35,6 +37,9 @@ class AnvilEventListener : Listener {
         private const val ANVIL_INPUT_LEFT = 0
         private const val ANVIL_INPUT_RIGHT = 1
         private const val ANVIL_OUTPUT_SLOT = 2
+        // static slot container
+        private val NO_SLOT = SlotContainer(SlotType.NO_SLOT,0)
+        private val CURSOR_SLOT = SlotContainer(SlotType.CURSOR,0)
     }
 
     /**
@@ -170,48 +175,100 @@ class AnvilEventListener : Listener {
         if(canMerge){
             event.result = Event.Result.ALLOW
         }else if(unitRepairResult != null){
-            val resultCopy = leftItem.clone()
-            val resultAmount = resultCopy.unitRepair(
-                rightItem.amount, unitRepairResult)
-
-            // To avoid vanilla, we cancel the event for unit repair
-            event.result = Event.Result.DENY
-            event.isCancelled = true
-            // And we give the item manually
-            // But first we check if we should give the item
-            if(player.itemOnCursor.type != Material.AIR) return
-            if(inventory.repairCost > player.level) return
-
-            // Get repairCost
-            var repairCost = 0
-            leftItem.itemMeta?.let { leftMeta ->
-                val leftName = leftMeta.displayName
-                output.itemMeta?.let {
-                    if(!leftName.contentEquals(it.displayName)){
-                        repairCost+= ConfigOptions.itemRenameCost
-                    }
-                }
-            }
-
-            repairCost+= calculatePenalty(leftItem,null,resultCopy)
-            repairCost+= resultAmount*ConfigOptions.unitRepairCost
-
-            if((inventory.maximumRepairCost < repairCost)
-                || (player.level < repairCost)) return
-
-            // We remove what should be removed
-            inventory.setItem(ANVIL_INPUT_LEFT,null)
-            rightItem.amount-= resultAmount
-            inventory.setItem(ANVIL_INPUT_RIGHT,rightItem)
-            inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            UnsafeEnchants.log("repair cost: $repairCost")
-            player.level-= repairCost
-
-            // Finally, we add the item to the player
-            player.setItemOnCursor(output)
+            onUnitRepairExtract(leftItem, rightItem, output,
+                unitRepairResult, event, player, inventory)
 
             return
+        }
+    }
+
+    private fun onUnitRepairExtract(leftItem: ItemStack,
+                                    rightItem: ItemStack,
+                                    output: ItemStack,
+                                    unitRepairResult: Double,
+                                    event: InventoryClickEvent,
+                                    player: Player,
+                                    inventory: AnvilInventory){
+        val resultCopy = leftItem.clone()
+        val resultAmount = resultCopy.unitRepair(
+            rightItem.amount, unitRepairResult)
+
+        // To avoid vanilla, we cancel the event for unit repair
+        event.result = Event.Result.DENY
+        event.isCancelled = true
+        // And we give the item manually
+        // But first we check if we should give the item
+        val slotDestination = getActionSlot(event,player)
+        if(slotDestination.type == SlotType.NO_SLOT) return
+        if(inventory.repairCost > player.level) return
+
+        // Get repairCost
+        var repairCost = 0
+        leftItem.itemMeta?.let { leftMeta ->
+            val leftName = leftMeta.displayName
+            output.itemMeta?.let {
+                if(!leftName.contentEquals(it.displayName)){
+                    repairCost+= ConfigOptions.itemRenameCost
+                }
+            }
+        }
+
+        repairCost+= calculatePenalty(leftItem,null,resultCopy)
+        repairCost+= resultAmount*ConfigOptions.unitRepairCost
+
+        val ignoreXpCost = player.gameMode == GameMode.CREATIVE
+        if((!ignoreXpCost) && ((inventory.maximumRepairCost < repairCost)
+            || (player.level < repairCost))) return
+
+        // We remove what should be removed
+        inventory.setItem(ANVIL_INPUT_LEFT,null)
+        rightItem.amount-= resultAmount
+        inventory.setItem(ANVIL_INPUT_RIGHT,rightItem)
+        inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+        if(!ignoreXpCost){
+            player.level-= repairCost
+        }
+
+        // Finally, we add the item to the player
+        if(slotDestination.type == SlotType.CURSOR){
+            player.setItemOnCursor(output)
+        }else{// We assume SlotType == SlotType.INVENTORY
+            player.inventory.setItem(slotDestination.slot,output)
+        }
+    }
+
+    /**
+     * Get the destination slot or "NO_SLOT" slot container if there is no slot available
+     */
+    private fun getActionSlot(event: InventoryClickEvent, player: Player): SlotContainer{
+        if(event.isShiftClick){
+            val inventory = player.inventory
+            val firstEmpty =  inventory.firstEmpty()
+            if(firstEmpty == -1){
+                return NO_SLOT
+            }
+            //check hotbare full
+            var slotIndex = 8
+            while(slotIndex >= 0 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)){
+                slotIndex--
+            }
+            if(slotIndex >= 0){
+                return SlotContainer(SlotType.INVENTORY,slotIndex)
+            }
+            slotIndex = 35 //4*9 - 1 (max of player inventory)
+            while(slotIndex >= 9 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)){
+                slotIndex--
+            }
+            if(slotIndex < 9){
+                return NO_SLOT
+            }
+            return SlotContainer(SlotType.INVENTORY,slotIndex)
+        }else{
+            if(player.itemOnCursor.type != Material.AIR){
+                return NO_SLOT
+            }
+            return CURSOR_SLOT
         }
     }
 
@@ -221,24 +278,24 @@ class AnvilEventListener : Listener {
      */
     private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int{
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
-        // Calculate work penality
-        val leftPenality = (left.itemMeta as? Repairable)?.repairCost ?: 0
-        val rightPenality =
+        // Calculate work penalty
+        val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
+        val rightPenalty =
             if(right == null){ 0 }
             else{ (right.itemMeta as? Repairable)?.repairCost ?: 0 }
 
-        // Try to set work penality for the result item
+        // Try to set work penalty for the result item
         result.itemMeta?.let {
-            (it as? Repairable)?.repairCost = leftPenality*2+1
+            (it as? Repairable)?.repairCost = leftPenalty*2+1
             result.itemMeta = it
         }
 
-        UnsafeEnchants.log("Calculated penality: " +
-                "leftPenality: $leftPenality, " +
-                "rightPenality: $rightPenality, " +
-                "result penality: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
+        UnsafeEnchants.log("Calculated penalty: " +
+                "leftPenalty: $leftPenalty, " +
+                "rightPenalty: $rightPenalty, " +
+                "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
 
-        return leftPenality + rightPenality
+        return leftPenalty + rightPenalty
     }
 
     /**
@@ -305,5 +362,14 @@ class AnvilEventListener : Listener {
                 event.view.setProperty(REPAIR_COST, anvilCost)
             })
     }
+
+}
+
+
+private class SlotContainer(val type: SlotType, val slot: Int)
+private enum class SlotType{
+    CURSOR,
+    INVENTORY,
+    NO_SLOT
 
 }
