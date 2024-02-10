@@ -8,6 +8,10 @@ load: POSTWORLD
 authors: [DelilahEve, alexcrea]
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
+commands:
+  reloadunsafeenchants:
+    description: Reload every config of this plugin
+    permission: ue.command.reload
 permissions:
   ue.unsafe:
     default: true
@@ -18,3 +22,6 @@ permissions:
   ue.bypass.level:
     default: false
     description: Allow player to bypass max level limit
+  ue.command.reload:
+    default: op
+    description: Allow administrator to reload the plugin's config

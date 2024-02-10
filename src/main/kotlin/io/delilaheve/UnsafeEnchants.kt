@@ -4,6 +4,7 @@ import io.delilaheve.util.ConfigOptions
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
+import xyz.alexcrea.command.ReloadExecutor
 import xyz.alexcrea.group.EnchantConflictManager
 import xyz.alexcrea.group.ItemGroupManager
 import xyz.alexcrea.util.Metrics
@@ -27,6 +28,11 @@ class UnsafeEnchants : JavaPlugin() {
         const val bypassFusePermission = "ue.bypass.fuse"
         // Permission string required to bypass enchantment conflicts test
         const val bypassLevelPermission = "ue.bypass.level"
+        // Permission string required to reload the config
+        const val commandReloadPermission = "ue.command.reload"
+
+        // Command Name to reload the config
+        const val commandReloadName = "reloadunsafeenchants"
 
         // Item Grouping Configuration file name
         const val itemGroupingConfigFilePath = "item_groups.yml"
@@ -60,9 +66,23 @@ class UnsafeEnchants : JavaPlugin() {
         instance = this
         // Load bstats
         val metric = Metrics(this, bstatsPluginId)
-        saveDefaultConfig()
 
+        reloadAllConfigs()
         addCustomMetric(metric)
+
+        // Add command to reload the plugin
+        val command = getCommand(commandReloadName)
+        command?.setExecutor(ReloadExecutor())
+
+        server.pluginManager.registerEvents(
+            AnvilEventListener(),
+            this
+        )
+
+    }
+
+    fun reloadAllConfigs(){
+        saveDefaultConfig()
 
         // Load material grouping config
         val itemGroupConfig = reloadResource(itemGroupingConfigFilePath) ?: return
@@ -73,17 +93,15 @@ class UnsafeEnchants : JavaPlugin() {
         // Load enchantment conflicts config
         val conflictConfig = reloadResource(enchantConflicConfigFilePath) ?: return
         // Read conflicts from config and material group manager
-        conflictManager = EnchantConflictManager()
+        val conflictManager = EnchantConflictManager()
         conflictManager.prepareConflicts(conflictConfig,itemGroupsManager)
 
         // Load unit repair config
-        unitRepairConfig = reloadResource(unitRepairFilePath) ?: return
+        val unitRepairConfig = reloadResource(unitRepairFilePath) ?: return
 
-        server.pluginManager.registerEvents(
-            AnvilEventListener(),
-            this
-        )
-
+        // Set the global variable
+        UnsafeEnchants.conflictManager = conflictManager
+        UnsafeEnchants.unitRepairConfig = unitRepairConfig
     }
 
     private fun addCustomMetric(metric: Metrics) {
@@ -96,6 +114,7 @@ class UnsafeEnchants : JavaPlugin() {
         metric.addCustomChart(SimplePie("sacrifice_illegal_enchant_cost") {
             ConfigOptions.sacrificeIllegalCost.toString()
         })
+
     }
 
     private fun reloadResource(resourceName: String,
