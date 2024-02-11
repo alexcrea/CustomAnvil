@@ -16,6 +16,7 @@ import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority.HIGHEST
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -200,33 +201,33 @@ class AnvilEventListener : Listener {
         // But first we check if we should give the item
         val slotDestination = getActionSlot(event,player)
         if(slotDestination.type == SlotType.NO_SLOT) return
-        if(inventory.repairCost > player.level) return
 
-        // Get repairCost
+        // Test repair cost
         var repairCost = 0
-        leftItem.itemMeta?.let { leftMeta ->
-            val leftName = leftMeta.displayName
-            output.itemMeta?.let {
-                if(!leftName.contentEquals(it.displayName)){
-                    repairCost+= ConfigOptions.itemRenameCost
+        if(player.gameMode != GameMode.CREATIVE){
+            // Get repairCost
+            leftItem.itemMeta?.let { leftMeta ->
+                val leftName = leftMeta.displayName
+                output.itemMeta?.let {
+                    if(!leftName.contentEquals(it.displayName)){
+                        repairCost+= ConfigOptions.itemRenameCost
+                    }
                 }
             }
+
+            repairCost+= calculatePenalty(leftItem,null,resultCopy)
+            repairCost+= resultAmount*ConfigOptions.unitRepairCost
+
+            if((inventory.maximumRepairCost < repairCost)
+                        || (player.level < repairCost)) return
         }
-
-        repairCost+= calculatePenalty(leftItem,null,resultCopy)
-        repairCost+= resultAmount*ConfigOptions.unitRepairCost
-
-        val ignoreXpCost = player.gameMode == GameMode.CREATIVE
-        if((!ignoreXpCost) && ((inventory.maximumRepairCost < repairCost)
-            || (player.level < repairCost))) return
-
-        // We remove what should be removed
-        inventory.setItem(ANVIL_INPUT_LEFT,null)
-        rightItem.amount-= resultAmount
-        inventory.setItem(ANVIL_INPUT_RIGHT,rightItem)
-        inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-        if(!ignoreXpCost){
+        // If not creative middle click...
+        if(event.click != ClickType.MIDDLE){
+            // We remove what should be removed
+            inventory.setItem(ANVIL_INPUT_LEFT,null)
+            rightItem.amount-= resultAmount
+            inventory.setItem(ANVIL_INPUT_RIGHT,rightItem)
+            inventory.setItem(ANVIL_OUTPUT_SLOT, null)
             player.level-= repairCost
         }
 
