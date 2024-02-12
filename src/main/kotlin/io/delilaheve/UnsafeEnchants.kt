@@ -8,7 +8,7 @@ import xyz.alexcrea.command.ReloadExecutor
 import xyz.alexcrea.group.EnchantConflictManager
 import xyz.alexcrea.group.ItemGroupManager
 import xyz.alexcrea.util.Metrics
-import xyz.alexcrea.util.Metrics.SimplePie
+import xyz.alexcrea.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
 
@@ -64,11 +64,11 @@ class UnsafeEnchants : JavaPlugin() {
      */
     override fun onEnable() {
         instance = this
-        // Load bstats
-        val metric = Metrics(this, bstatsPluginId)
 
         reloadAllConfigs()
-        addCustomMetric(metric)
+        // Load metrics
+        val metric = Metrics(this, bstatsPluginId)
+        MetricsUtil.addCustomMetric(metric)
 
         // Add command to reload the plugin
         val command = getCommand(commandReloadName)
@@ -102,19 +102,9 @@ class UnsafeEnchants : JavaPlugin() {
         // Set the global variable
         UnsafeEnchants.conflictManager = conflictManager
         UnsafeEnchants.unitRepairConfig = unitRepairConfig
-    }
 
-    private fun addCustomMetric(metric: Metrics) {
-        metric.addCustomChart(SimplePie("item_rename_cost") {
-            ConfigOptions.itemRenameCost.toString()
-        })
-        metric.addCustomChart(SimplePie("item_repair_cost") {
-            ConfigOptions.itemRepairCost.toString()
-        })
-        metric.addCustomChart(SimplePie("sacrifice_illegal_enchant_cost") {
-            ConfigOptions.sacrificeIllegalCost.toString()
-        })
-
+        // Test if default config
+        MetricsUtil.testIfConfigIsDefault(config, itemGroupConfig, conflictConfig, unitRepairConfig)
     }
 
     private fun reloadResource(resourceName: String,

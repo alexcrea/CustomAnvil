@@ -26,9 +26,9 @@ object ConfigOptions {
     // Path for removing repair cost limits
     private const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
     // Root path for enchantment limits
-    private const val ENCHANT_LIMIT_ROOT = "enchant_limits"
+    const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     // Root path for enchantment values
-    private const val ENCHANT_VALUES_ROOT = "enchant_values"
+    const val ENCHANT_VALUES_ROOT = "enchant_values"
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
@@ -193,5 +193,21 @@ object ConfigOptions {
             .takeIf { it >= DEFAULT_ENCHANT_VALUE }
             ?: DEFAULT_ENCHANT_VALUE
     }
+
+    /**
+     * Get an array of key of basic config options
+     */
+    fun getBasicConfigKeys(): Array<String>{
+        return arrayOf(DEFAULT_LIMIT_PATH,
+            LIMIT_REPAIR_COST,
+            LIMIT_REPAIR_VALUE,
+            ITEM_REPAIR_COST,
+            UNIT_REPAIR_COST,
+            ITEM_RENAME_COST,
+            SACRIFICE_ILLEGAL_COST,
+            REMOVE_REPAIR_LIMIT
+        )
+    }
+
 
 }
