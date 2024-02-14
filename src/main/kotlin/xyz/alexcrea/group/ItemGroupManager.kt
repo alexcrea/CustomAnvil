@@ -1,6 +1,6 @@
 package xyz.alexcrea.group
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
@@ -48,7 +48,7 @@ class ItemGroupManager {
         }else {
             group = IncludeGroup(key)
             if(!GroupType.INCLUDE.equal(groupType)){
-                UnsafeEnchants.instance.logger.warning("Group $key have an invalid group type. default to Include.")
+                CustomAnvil.instance.logger.warning("Group $key have an invalid group type. default to Include.")
             }
         }
 
@@ -70,7 +70,7 @@ class ItemGroupManager {
             if(material == null){
                 // Check if we should warn the user
                 if(materialName !in FUTURE_MATERIAL){
-                    UnsafeEnchants.instance.logger.warning(
+                    CustomAnvil.instance.logger.warning(
                         "Unknown material $materialTemp on group ${group.getName()}")
 
                 }
@@ -84,7 +84,7 @@ class ItemGroupManager {
         val groupList = groupSection.getStringList(GROUP_LIST_PATH)
         for (groupName in groupList) {
             if(groupName !in keys){
-                UnsafeEnchants.instance.logger.warning(
+                CustomAnvil.instance.logger.warning(
                     "Group $groupName do not exist but is included in group ${group.getName()}")
                 continue
             }
@@ -96,9 +96,9 @@ class ItemGroupManager {
             }
             // Avoid self reference or it will create an infinite loop
             if(otherGroup.isReferencing(group)){
-                UnsafeEnchants.instance.logger.warning(
+                CustomAnvil.instance.logger.warning(
                     "Group $groupName is on a reference loop with group ${group.getName()} !")
-                UnsafeEnchants.instance.logger.warning(
+                CustomAnvil.instance.logger.warning(
                     "Please fix it in your item_groups config or the plugin will probably not work as expected.")
                 continue
             }

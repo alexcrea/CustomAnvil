@@ -16,23 +16,23 @@ import java.io.FileReader
  * Bukkit/Spigot/Paper plugin to alter enchantment max
  * levels and allow unsafe enchantment combinations
  */
-class UnsafeEnchants : JavaPlugin() {
+class CustomAnvil : JavaPlugin() {
 
     companion object {
         // bstats plugin id
         private const val bstatsPluginId = 20923
 
         // Permission string required to use the plugin's features
-        const val unsafePermission = "ue.unsafe"
+        const val unsafePermission = "ca.unsafe"
         // Permission string required to bypass enchantment conflicts test
-        const val bypassFusePermission = "ue.bypass.fuse"
+        const val bypassFusePermission = "ca.bypass.fuse"
         // Permission string required to bypass enchantment conflicts test
-        const val bypassLevelPermission = "ue.bypass.level"
+        const val bypassLevelPermission = "ca.bypass.level"
         // Permission string required to reload the config
-        const val commandReloadPermission = "ue.command.reload"
+        const val commandReloadPermission = "ca.command.reload"
 
         // Command Name to reload the config
-        const val commandReloadName = "reloadunsafeenchants"
+        const val commandReloadName = "anvilconfigreload"
 
         // Item Grouping Configuration file name
         const val itemGroupingConfigFilePath = "item_groups.yml"
@@ -42,7 +42,7 @@ class UnsafeEnchants : JavaPlugin() {
         const val unitRepairFilePath = "unit_repair_item.yml"
 
         // Current plugin instance
-        lateinit var instance: UnsafeEnchants
+        lateinit var instance: CustomAnvil
         // Current item grouping configuration instance
         lateinit var conflictManager: EnchantConflictManager
 
@@ -65,6 +65,14 @@ class UnsafeEnchants : JavaPlugin() {
     override fun onEnable() {
         instance = this
 
+        // Disable old plugin name if exist
+        val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
+        if(potentialPlugin != null){
+            Bukkit.getPluginManager().disablePlugin(potentialPlugin)
+            logger.warning("An old version of this plugin was detected")
+            logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
+        }
+
         reloadAllConfigs()
         // Load metrics
         val metric = Metrics(this, bstatsPluginId)
@@ -78,7 +86,6 @@ class UnsafeEnchants : JavaPlugin() {
             AnvilEventListener(),
             this
         )
-
     }
 
     fun reloadAllConfigs(){
@@ -100,8 +107,8 @@ class UnsafeEnchants : JavaPlugin() {
         val unitRepairConfig = reloadResource(unitRepairFilePath) ?: return
 
         // Set the global variable
-        UnsafeEnchants.conflictManager = conflictManager
-        UnsafeEnchants.unitRepairConfig = unitRepairConfig
+        CustomAnvil.conflictManager = conflictManager
+        CustomAnvil.unitRepairConfig = unitRepairConfig
 
         // Test if default config
         MetricsUtil.testIfConfigIsDefault(config, itemGroupConfig, conflictConfig, unitRepairConfig)

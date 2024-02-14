@@ -54,7 +54,7 @@ class AnvilEventListener : Listener {
 
         // Should find player
         val player = event.view.player
-        if(!player.hasPermission(UnsafeEnchants.unsafePermission)) return
+        if(!player.hasPermission(CustomAnvil.unsafePermission)) return
 
         // Test rename lonely item
         if(second == null){
@@ -150,7 +150,7 @@ class AnvilEventListener : Listener {
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        if(!player.hasPermission(UnsafeEnchants.unsafePermission)) return
+        if(!player.hasPermission(CustomAnvil.unsafePermission)) return
         val inventory = event.inventory as? AnvilInventory ?: return
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
@@ -291,7 +291,7 @@ class AnvilEventListener : Listener {
             result.itemMeta = it
         }
 
-        UnsafeEnchants.log("Calculated penalty: " +
+        CustomAnvil.log("Calculated penalty: " +
                 "leftPenalty: $leftPenalty, " +
                 "rightPenalty: $rightPenalty, " +
                 "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
@@ -316,7 +316,7 @@ class AnvilEventListener : Listener {
             // count enchant as illegal enchant if it conflicts with another enchant or not in result
             if((enchantment.key !in resultEnchsKeys)){
                 resultEnchsKeys.add(enchantment.key)
-                val conflictType = UnsafeEnchants.conflictManager.isConflicting(resultEnchsKeys,result.type,enchantment.key)
+                val conflictType = CustomAnvil.conflictManager.isConflicting(resultEnchsKeys,result.type,enchantment.key)
                 resultEnchsKeys.remove(enchantment.key)
 
                 if(ConflictType.BIG_CONFLICT == conflictType){
@@ -329,11 +329,11 @@ class AnvilEventListener : Listener {
 
             val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
             val value = resultLevel * enchantmentMultiplier
-            UnsafeEnchants.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value")
+            CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value")
             rightValue += value
 
         }
-        UnsafeEnchants.log("Calculated right values: " +
+        CustomAnvil.log("Calculated right values: " +
                 "rightValue: $rightValue, " +
                 "illegalPenalty: $illegalPenalty")
 
@@ -351,10 +351,10 @@ class AnvilEventListener : Listener {
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that
             * we have the final say in the process. */
-        UnsafeEnchants.instance
+        CustomAnvil.instance
             .server
             .scheduler
-            .runTask(UnsafeEnchants.instance, Runnable {
+            .runTask(CustomAnvil.instance, Runnable {
                 if (ConfigOptions.removeRepairLimit) {
                     inventory.maximumRepairCost = Int.MAX_VALUE
                 }

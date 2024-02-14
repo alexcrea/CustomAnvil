@@ -1,6 +1,6 @@
 package io.delilaheve.util
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
@@ -59,7 +59,7 @@ object ItemUtil {
         }
         enchantments.forEach { (enchant, level) ->
             val added = addStoredEnchant(enchant, level, true)
-            UnsafeEnchants.log("${enchant.key} added to item? $added")
+            CustomAnvil.log("${enchant.key} added to item? $added")
         }
     }
 

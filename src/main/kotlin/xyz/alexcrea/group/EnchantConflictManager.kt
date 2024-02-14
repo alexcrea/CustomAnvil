@@ -1,6 +1,6 @@
 package xyz.alexcrea.group
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
@@ -69,7 +69,7 @@ class EnchantConflictManager {
             val enchant = Enchantment.getByKey(enchantKey)
             if(enchant == null){
                 if(!futureUse){
-                    UnsafeEnchants.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
+                    CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
                 }
                 continue
             }
@@ -77,7 +77,7 @@ class EnchantConflictManager {
         }
         if(conflict.getEnchants().size == 0){
             if(!futureUse){
-                UnsafeEnchants.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not work")
+                CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not work")
             }
             return null
         }
@@ -92,8 +92,8 @@ class EnchantConflictManager {
         var minBeforeBlock = section.getInt(ENCH_MAX_PATH,0)
         if(minBeforeBlock < 0){
             minBeforeBlock = 0
-            UnsafeEnchants.instance.logger.warning("Conflict $conflictName have an invalid value of $ENCH_MAX_PATH")
-            UnsafeEnchants.instance.logger.warning("It should be more or equal to 0. default to 0")
+            CustomAnvil.instance.logger.warning("Conflict $conflictName have an invalid value of $ENCH_MAX_PATH")
+            CustomAnvil.instance.logger.warning("It should be more or equal to 0. default to 0")
         }
         // Find or create the selected group for the conflict
         val groupList = section.getStringList(CONFLICT_GROUP_PATH)
@@ -115,7 +115,7 @@ class EnchantConflictManager {
     private fun findGroup(groupName: String,itemManager: ItemGroupManager, conflictName: String): AbstractMaterialGroup {
         val group = itemManager.get(groupName)
         if(group == null){
-            UnsafeEnchants.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
+            CustomAnvil.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
             return DEFAULT_EMPTY_GROUP
         }
 

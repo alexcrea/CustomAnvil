@@ -1,6 +1,6 @@
 package io.delilaheve.util
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import org.bukkit.enchantments.Enchantment
 
@@ -71,7 +71,7 @@ object ConfigOptions {
      */
     private val defaultEnchantLimit: Int
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
         }
@@ -81,7 +81,7 @@ object ConfigOptions {
      */
     val limitRepairCost: Boolean
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getBoolean(LIMIT_REPAIR_COST, DEFAULT_LIMIT_REPAIR)
         }
@@ -91,7 +91,7 @@ object ConfigOptions {
      */
     val limitRepairValue: Int
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getInt(LIMIT_REPAIR_VALUE, DEFAULT_LIMIT_REPAIR_VALUE)
                 .takeIf { it in REPAIR_LIMIT_RANGE }
@@ -103,7 +103,7 @@ object ConfigOptions {
      */
     val itemRepairCost: Int
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
@@ -115,7 +115,7 @@ object ConfigOptions {
      */
     val unitRepairCost: Int
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getInt(UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
@@ -127,7 +127,7 @@ object ConfigOptions {
      */
     val itemRenameCost: Int
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getInt(ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST)
                 .takeIf { it in ITEM_RENAME_COST_RANGE }
@@ -139,7 +139,7 @@ object ConfigOptions {
      */
     val sacrificeIllegalCost: Int
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
@@ -150,7 +150,7 @@ object ConfigOptions {
      */
     val removeRepairLimit: Boolean
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getBoolean(REMOVE_REPAIR_LIMIT, DEFAULT_REMOVE_LIMIT)
         }
@@ -160,7 +160,7 @@ object ConfigOptions {
      */
     val debugLog: Boolean
         get() {
-            return UnsafeEnchants.instance
+            return CustomAnvil.instance
                 .config
                 .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
         }
@@ -170,7 +170,7 @@ object ConfigOptions {
      */
     fun enchantLimit(enchantment: Enchantment): Int {
         val path = "${ENCHANT_LIMIT_ROOT}.${enchantment.enchantmentName}"
-        return UnsafeEnchants.instance
+        return CustomAnvil.instance
             .config
             .getInt(path, defaultEnchantLimit)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
@@ -187,7 +187,7 @@ object ConfigOptions {
     ): Int {
         val typeKey = if (isFromBook) KEY_BOOK else KEY_ITEM
         val path = "${ENCHANT_VALUES_ROOT}.${enchantment.enchantmentName}.$typeKey"
-        return UnsafeEnchants.instance
+        return CustomAnvil.instance
             .config
             .getInt(path, DEFAULT_ENCHANT_VALUE)
             .takeIf { it >= DEFAULT_ENCHANT_VALUE }

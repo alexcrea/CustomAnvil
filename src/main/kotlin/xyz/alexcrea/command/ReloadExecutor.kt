@@ -1,13 +1,13 @@
 package xyz.alexcrea.command
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
-        if(!sender.hasPermission(UnsafeEnchants.commandReloadPermission)) {
+        if(!sender.hasPermission(CustomAnvil.commandReloadPermission)) {
             sender.sendMessage("§cYou do not have permission to reload the config")
             return false
         }
@@ -26,9 +26,10 @@ class ReloadExecutor : CommandExecutor {
      */
     private fun commandBody(): Boolean{
         try {
-            UnsafeEnchants.instance.reloadAllConfigs()
+            CustomAnvil.instance.reloadAllConfigs()
             return true
-        }catch (ignored: Exception){
+        }catch (e: Exception){
+            e.printStackTrace()
             return false
         }
     }

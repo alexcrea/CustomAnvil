@@ -1,27 +1,36 @@
-main: io.delilaheve.UnsafeEnchants
-name: UnsafeEnchantsPlus
-prefix: UnsafeEnchants+
+main: io.delilaheve.CustomAnvil
+name: CustomAnvil
+prefix: "Custom Anvil"
 version: 1.2.0
-description: Allow custom illegal enchantment
+description: Allow to customise anvil mechanics
 api-version: 1.18
 load: POSTWORLD
 authors: [DelilahEve, alexcrea]
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
 commands:
-  reloadunsafeenchants:
+  anvilconfigreload:
     description: Reload every config of this plugin
-    permission: ue.command.reload
+    permission: ca.command.reload
+    aliases:
+      #- acreload # anvil config reload
+      #- careload # custom anvil reload
+      - carl # custom anvil reload
 permissions:
-  ue.unsafe:
+  ca.affected:
     default: true
-    description: Allow player to combine allowed "unsafe" enchants
-  ue.bypass.fuse:
+    description: Player with this permission will be affected by the plugin
+  ca.bypass.fuse:
     default: false
-    description: Allow player to combine every "unsafe" enchants
-  ue.bypass.level:
+    description: Allow player to combine every enchantments to every item (no custom limit)
+  ca.bypass.level:
     default: false
-    description: Allow player to bypass max level limit
-  ue.command.reload:
+    description: Allow player to bypass every level limit (no custom limit)
+  ca.command.reload:
     default: op
-    description: Allow administrator to reload the plugin's config
+    description: Allow administrator to reload the plugin's configs
+
+# soft depend on old name so I can disable it if it is on the same server
+# as it is the old name for this plugin
+softdepend:
+  - UnsafeEnchantsPlus

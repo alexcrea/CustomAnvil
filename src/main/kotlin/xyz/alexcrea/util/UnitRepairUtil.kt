@@ -1,6 +1,6 @@
 package xyz.alexcrea.util
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 
@@ -19,7 +19,7 @@ object UnitRepairUtil {
         other: ItemStack?
     ): Double? {
         if(other == null) return null
-        val config = UnsafeEnchants.unitRepairConfig
+        val config = CustomAnvil.unitRepairConfig
         // Get configuration section if exist
         val otherName = other.type.name.uppercase()
         var section = config.getConfigurationSection(otherName)

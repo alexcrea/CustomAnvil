@@ -1,6 +1,6 @@
 package xyz.alexcrea.util
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import org.bukkit.configuration.ConfigurationSection
 
@@ -85,12 +85,12 @@ object MetricsUtil {
         isDefaultUnitRepairItemConfig = unitRepairItemConfigHash == unitRepairConfig
         // If not default and debug flag active, print the hash.
         if(ConfigOptions.debugLog){
-            if(!isDefaultBaseConfig){UnsafeEnchants.log("baseConfig: $baseConfig")}
-            if(!isDefaultEnchantLimitsConfig){UnsafeEnchants.log("limitEnchantConfig: $limitEnchantConfig")}
-            if(!isDefaultEnchantValuesConfig){UnsafeEnchants.log("enchantValueConfig: $enchantValueConfig")}
-            if(!isDefaultEnchantConflictConfig){UnsafeEnchants.log("enchantConflictConfig: $enchantConflictConfig")}
-            if(!isDefaultItemGroupsConfig){UnsafeEnchants.log("itemGroupConfig: $itemGroupConfig")}
-            if(!isDefaultUnitRepairItemConfig){UnsafeEnchants.log("unitRepairConfig: $unitRepairConfig")}
+            if(!isDefaultBaseConfig){CustomAnvil.log("baseConfig: $baseConfig")}
+            if(!isDefaultEnchantLimitsConfig){CustomAnvil.log("limitEnchantConfig: $limitEnchantConfig")}
+            if(!isDefaultEnchantValuesConfig){CustomAnvil.log("enchantValueConfig: $enchantValueConfig")}
+            if(!isDefaultEnchantConflictConfig){CustomAnvil.log("enchantConflictConfig: $enchantConflictConfig")}
+            if(!isDefaultItemGroupsConfig){CustomAnvil.log("itemGroupConfig: $itemGroupConfig")}
+            if(!isDefaultUnitRepairItemConfig){CustomAnvil.log("unitRepairConfig: $unitRepairConfig")}
         }
 
     }

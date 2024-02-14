@@ -1,6 +1,6 @@
 package io.delilaheve.util
 
-import io.delilaheve.UnsafeEnchants
+import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
@@ -33,8 +33,8 @@ object EnchantmentUtil {
             if (!containsKey(enchantment)) {
                 // Add the enchantment if it doesn't have conflicts, or, if player is allowed to bypass enchantment restrictions
                 this[enchantment] = level
-                if(!player.hasPermission(UnsafeEnchants.bypassFusePermission) &&
-                    (UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
+                if(!player.hasPermission(CustomAnvil.bypassFusePermission) &&
+                    (CustomAnvil.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
                     this.remove(enchantment)
                 }
 
@@ -42,8 +42,8 @@ object EnchantmentUtil {
             // Enchantment already in result list
             else{
                 // ... and they are conflicting
-                if((UnsafeEnchants.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)
-                    && !player.hasPermission(UnsafeEnchants.bypassFusePermission)){
+                if((CustomAnvil.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)
+                    && !player.hasPermission(CustomAnvil.bypassFusePermission)){
                     return@forEach
                 }
 
@@ -58,7 +58,7 @@ object EnchantmentUtil {
                     // try to increase the enchantment level by 1
                     var newLevel = this[enchantment]!! +1
                     // Get max level or 255 if player can bypass
-                    val maxLevel = if(player.hasPermission(UnsafeEnchants.bypassLevelPermission)){
+                    val maxLevel = if(player.hasPermission(CustomAnvil.bypassLevelPermission)){
                         255
                     }else{
                         ConfigOptions.enchantLimit(enchantment)
