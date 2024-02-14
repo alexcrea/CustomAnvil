@@ -1,6 +1,6 @@
 # Custom Anvil
 
-**Custom Anvil** is a plugin to allow admin to customise evey aspect of the anvil's mechanics.
+**Custom Anvil** is a plugin that allows server administrators to customise every aspect of the anvil's mechanics. 
 It is expected to work on 1.18 to 1.20.4 minecraft servers running spigot or paper.
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
@@ -13,8 +13,8 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 ### Download Locations:
 
 the plugin can be downloaded on the
-[Spigot site](https://www.spigotmc.org/resources/unsafe-enchants.114884/)
-or [on GitHub](https://github.com/alexcrea/UnsafeEnchantsPlus/releases/latest)
+[Spigot site](https://www.spigotmc.org/resources/custom-anvil.114884)
+or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 ---
 **Custom Anvil** have the following features:
 - Vanilla like default configuration
@@ -39,10 +39,10 @@ anvilconfigreload or carl: Reload every config of this plugin
 ### Default Configuration:
 
 Default configuration can be found on following links:
-- [config.yml](https://github.com/alexcrea/UnsafeEnchantsPlus/blob/master/src/main/resources/config.yml)
-- [enchant_conflict.yml](https://github.com/alexcrea/UnsafeEnchantsPlus/blob/master/src/main/resources/enchant_conflict.yml)
-- [item_groups.yml](https://github.com/alexcrea/UnsafeEnchantsPlus/blob/master/src/main/resources/item_groups.yml)
-- [unit_repair_item.yml](https://github.com/alexcrea/UnsafeEnchantsPlus/blob/master/src/main/resources/unit_repair_item.yml)
+- [config.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/config.yml)
+- [enchant_conflict.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/enchant_conflict.yml)
+- [item_groups.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/item_groups.yml)
+- [unit_repair_item.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/unit_repair_item.yml)
 ---
 ### Know issue:
 There is non known issue, if you find one please report the issue.
