@@ -60,16 +60,18 @@ class AnvilEventListener : Listener {
         if(second == null){
             val resultItem = first.clone()
             var anvilCost = handleRename(resultItem, inventory)
-            anvilCost+= calculatePenalty(first,null,resultItem)
 
             // Test/stop if nothing changed.
             if(first == resultItem){
                 event.result = null
                 return
             }
-            // We do set item here as vanilla do all of our job (renaming)
+            // We don't manually set item here as vanilla do it (renaming)
+            //event.result = null
 
-            handleDisplayedXp(inventory, event, anvilCost)
+            anvilCost+= calculatePenalty(first,null,resultItem)
+
+            handleAnvilXp(inventory, event, anvilCost)
             return
         }
 
@@ -81,8 +83,9 @@ class AnvilEventListener : Listener {
             val resultItem = first.clone()
             resultItem.setEnchantmentsUnsafe(newEnchants)
 
-            var anvilCost = calculatePenalty(first, second, resultItem)
-            anvilCost+= getRightValues(second, resultItem)
+            // Calculate enchantment cost
+            var anvilCost = getRightValues(second, resultItem)
+            // Calculate repair cost
             if (!first.isEnchantedBook() && !second.isEnchantedBook()) {
                 // we only need to be concerned with repair when neither item is a book
                 val repaired = resultItem.repairFrom(first, second)
@@ -94,15 +97,15 @@ class AnvilEventListener : Listener {
                 event.result = null
                 return
             }
-
+            // As calculatePenalty edit result, we need to calculate penalty after checking equality
+            anvilCost+= calculatePenalty(first, second, resultItem)
+            // Calculate rename cost
             anvilCost+= handleRename(resultItem, inventory)
 
-            if (ConfigOptions.limitRepairCost) {
-                anvilCost = min(anvilCost, ConfigOptions.limitRepairValue)
-            }
+            // Finally, we set result
             event.result = resultItem
 
-            handleDisplayedXp(inventory, event, anvilCost)
+            handleAnvilXp(inventory, event, anvilCost)
             return
         }
 
@@ -111,13 +114,13 @@ class AnvilEventListener : Listener {
         if(unitRepairAmount != null){
             val resultItem = first.clone()
             var anvilCost = handleRename(resultItem, inventory)
-            // We do not care about right item penalty for unit repair
-            anvilCost+= calculatePenalty(first,null,resultItem)
 
             val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
             if(repairAmount > 0){
                 anvilCost += repairAmount*ConfigOptions.unitRepairCost
             }
+            // We do not care about right item penalty for unit repair
+            anvilCost+= calculatePenalty(first,null,resultItem)
 
             // Test/stop if nothing changed.
             if(first == resultItem){
@@ -126,7 +129,7 @@ class AnvilEventListener : Listener {
             }
             event.result = resultItem
 
-            handleDisplayedXp(inventory, event, anvilCost)
+            handleAnvilXp(inventory, event, anvilCost)
         }else{
             event.result = null
         }
@@ -162,6 +165,7 @@ class AnvilEventListener : Listener {
         val allowed = (rightItem == null)
                 || (canMerge)
                 || (unitRepairResult != null)
+
         // True if there was no change or not allowed
         if((output == inventory.getItem(ANVIL_INPUT_LEFT))
             || !allowed){
@@ -343,11 +347,17 @@ class AnvilEventListener : Listener {
     /**
      * Display xp needed for the work on the anvil inventory
      */
-    private fun handleDisplayedXp(inventory: AnvilInventory,
-                                  event: PrepareAnvilEvent,
-                                  anvilCost: Int){
-        inventory.maximumRepairCost = Int.MAX_VALUE
-        inventory.repairCost = anvilCost
+    private fun handleAnvilXp(inventory: AnvilInventory,
+                              event: PrepareAnvilEvent,
+                              anvilCost: Int){
+        // Test repair cost limit
+        val finalAnvilCost: Int
+        if (ConfigOptions.limitRepairCost) {
+            finalAnvilCost = min(anvilCost, ConfigOptions.limitRepairValue)
+        }else{
+            finalAnvilCost = anvilCost
+        }
+
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that
             * we have the final say in the process. */
@@ -358,7 +368,7 @@ class AnvilEventListener : Listener {
                 if (ConfigOptions.removeRepairLimit) {
                     inventory.maximumRepairCost = Int.MAX_VALUE
                 }
-                inventory.repairCost = anvilCost
+                inventory.repairCost = finalAnvilCost
 
                 event.view.setProperty(REPAIR_COST, anvilCost)
             })
