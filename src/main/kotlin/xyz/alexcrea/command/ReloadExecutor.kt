@@ -12,11 +12,15 @@ class ReloadExecutor : CommandExecutor {
             return false
         }
         sender.sendMessage("§eReloading config...")
-        val commandSuccess = commandBody()
+        val hardfail = args.isNotEmpty() && ("hard".equals(args[0],true))
+        val commandSuccess = commandBody(hardfail)
         if(commandSuccess){
             sender.sendMessage("§aConfig reloaded !")
         }else{
             sender.sendMessage("§cConfig was not able to be reloaded...")
+            if(hardfail){
+                sender.sendMessage("§4Hard fail, plugin disabled")
+            }
         }
         return commandSuccess
     }
@@ -24,10 +28,9 @@ class ReloadExecutor : CommandExecutor {
     /**
      * Execute the command, return true if success or false otherwise
      */
-    private fun commandBody(): Boolean{
+    private fun commandBody(hardfail: Boolean): Boolean{
         try {
-            CustomAnvil.instance.reloadAllConfigs()
-            return true
+            return CustomAnvil.instance.reloadAllConfigs(hardfail)
         }catch (e: Exception){
             e.printStackTrace()
             return false

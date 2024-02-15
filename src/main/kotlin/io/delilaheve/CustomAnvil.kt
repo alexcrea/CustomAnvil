@@ -73,7 +73,9 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
-        reloadAllConfigs()
+        val success = reloadAllConfigs(true)
+        if(!success) return
+
         // Load metrics
         val metric = Metrics(this, bstatsPluginId)
         MetricsUtil.addCustomMetric(metric)
@@ -88,30 +90,31 @@ class CustomAnvil : JavaPlugin() {
         )
     }
 
-    fun reloadAllConfigs(){
+    fun reloadAllConfigs(hardFailSafe: Boolean): Boolean{
         saveDefaultConfig()
 
         // Load material grouping config
-        val itemGroupConfig = reloadResource(itemGroupingConfigFilePath) ?: return
+        val itemGroupConfig = reloadResource(itemGroupingConfigFilePath, hardFailSafe) ?: return false
         // Read material groups from config
         val itemGroupsManager = ItemGroupManager()
         itemGroupsManager.prepareGroups(itemGroupConfig)
 
         // Load enchantment conflicts config
-        val conflictConfig = reloadResource(enchantConflicConfigFilePath) ?: return
+        val conflictConfig = reloadResource(enchantConflicConfigFilePath, hardFailSafe) ?: return false
         // Read conflicts from config and material group manager
         val conflictManager = EnchantConflictManager()
         conflictManager.prepareConflicts(conflictConfig,itemGroupsManager)
 
         // Load unit repair config
-        val unitRepairConfig = reloadResource(unitRepairFilePath) ?: return
+        val unitRepairConfig = reloadResource(unitRepairFilePath, hardFailSafe) ?: return false
 
         // Set the global variable
         CustomAnvil.conflictManager = conflictManager
         CustomAnvil.unitRepairConfig = unitRepairConfig
 
-        // Test if default config
+        // Test if is default config
         MetricsUtil.testIfConfigIsDefault(config, itemGroupConfig, conflictConfig, unitRepairConfig)
+        return true
     }
 
     private fun reloadResource(resourceName: String,
