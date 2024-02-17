@@ -92,6 +92,7 @@ class CustomAnvil : JavaPlugin() {
 
     fun reloadAllConfigs(hardFailSafe: Boolean): Boolean{
         saveDefaultConfig()
+        reloadConfig()
 
         // Load material grouping config
         val itemGroupConfig = reloadResource(itemGroupingConfigFilePath, hardFailSafe) ?: return false
