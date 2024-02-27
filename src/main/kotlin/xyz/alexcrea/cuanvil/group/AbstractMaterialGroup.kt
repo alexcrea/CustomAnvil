@@ -1,4 +1,4 @@
-package xyz.alexcrea.group
+package xyz.alexcrea.cuanvil.group
 
 import org.bukkit.Material
 import java.util.EnumSet

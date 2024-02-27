@@ -1,4 +1,4 @@
-package xyz.alexcrea.command
+package xyz.alexcrea.cuanvil.command
 
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

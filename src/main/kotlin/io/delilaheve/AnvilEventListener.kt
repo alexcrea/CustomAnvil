@@ -23,8 +23,8 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
-import xyz.alexcrea.group.ConflictType
-import xyz.alexcrea.util.UnitRepairUtil.getRepair
+import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import kotlin.math.min
 
 

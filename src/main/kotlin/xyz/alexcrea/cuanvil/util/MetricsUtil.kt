@@ -1,9 +1,8 @@
-package xyz.alexcrea.util
+package xyz.alexcrea.cuanvil.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import org.bukkit.configuration.ConfigurationSection
-import xyz.alexcrea.cuanvil.util.Metrics
 
 object MetricsUtil {
 
@@ -73,7 +72,7 @@ object MetricsUtil {
         // Calculate hash of config
         val baseConfig = testBaseConfig(defaultConfig)
         val limitEnchantConfig = getHashFromKey(defaultConfig, ConfigOptions.ENCHANT_LIMIT_ROOT)
-        val enchantValueConfig =getHashFromKey(defaultConfig, ConfigOptions.ENCHANT_VALUES_ROOT)
+        val enchantValueConfig = getHashFromKey(defaultConfig, ConfigOptions.ENCHANT_VALUES_ROOT)
         val enchantConflictConfig2 = getConfigurationHash(enchantConflictConfig)
         val itemGroupConfig = getConfigurationHash(itemGroupsConfig)
         val unitRepairConfig = getConfigurationHash(unitRepairItemConfig)

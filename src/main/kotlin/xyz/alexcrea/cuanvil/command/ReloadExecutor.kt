@@ -1,4 +1,4 @@
-package xyz.alexcrea.command
+package xyz.alexcrea.cuanvil.command
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.command.Command
