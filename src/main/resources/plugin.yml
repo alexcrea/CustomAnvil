@@ -18,6 +18,9 @@ commands:
       #- acreload # anvil config reload
       #- careload # custom anvil reload
       - carl # custom anvil reload
+  test:
+    description: test cmd
+
 permissions:
   ca.affected:
     default: true
