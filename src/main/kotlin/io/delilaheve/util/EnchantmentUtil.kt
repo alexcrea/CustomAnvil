@@ -4,7 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
-import xyz.alexcrea.group.ConflictType
+import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max
 import kotlin.math.min
 

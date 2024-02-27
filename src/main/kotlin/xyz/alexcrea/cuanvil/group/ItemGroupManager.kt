@@ -1,4 +1,4 @@
-package xyz.alexcrea.group
+package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
@@ -20,7 +20,7 @@ class ItemGroupManager {
         private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD","BRUSH")
     }
 
-    private lateinit var groupMap : HashMap<String,AbstractMaterialGroup>
+    private lateinit var groupMap : HashMap<String, AbstractMaterialGroup>
 
     // Read and create material groups
     fun prepareGroups(config: YamlConfiguration){
@@ -37,7 +37,7 @@ class ItemGroupManager {
     // Create group by key
     private fun createGroup(config: YamlConfiguration,
                             keys: Set<String>,
-                            key: String): AbstractMaterialGroup{
+                            key: String): AbstractMaterialGroup {
         val groupSection = config.getConfigurationSection(key)!!
         val groupType = groupSection.getString(GROUP_TYPE_PATH,null)
 

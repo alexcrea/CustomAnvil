@@ -4,12 +4,12 @@ import io.delilaheve.util.ConfigOptions
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
-import xyz.alexcrea.command.ReloadExecutor
-import xyz.alexcrea.command.TestExecutor
+import xyz.alexcrea.cuanvil.command.ReloadExecutor
+import xyz.alexcrea.cuanvil.command.TestExecutor
 import xyz.alexcrea.cuanvil.util.Metrics
-import xyz.alexcrea.group.EnchantConflictManager
-import xyz.alexcrea.group.ItemGroupManager
-import xyz.alexcrea.util.MetricsUtil
+import xyz.alexcrea.cuanvil.group.EnchantConflictManager
+import xyz.alexcrea.cuanvil.group.ItemGroupManager
+import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
 
@@ -147,7 +147,7 @@ class CustomAnvil : JavaPlugin() {
         return yamlConfig
     }
 
-    fun prepareCommand(): Unit {
+    fun prepareCommand() {
         var command = getCommand(commandReloadName)
         command?.setExecutor(ReloadExecutor())
 

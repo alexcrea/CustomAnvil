@@ -1,4 +1,4 @@
-package xyz.alexcrea.group
+package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
@@ -86,8 +86,8 @@ class EnchantConflictManager {
     }
 
     private fun createConflictObject(section: ConfigurationSection,
-                               itemManager: ItemGroupManager,
-                               conflictName: String): EnchantConflictGroup {
+                                     itemManager: ItemGroupManager,
+                                     conflictName: String): EnchantConflictGroup {
         // Get the maximum number of enchantment before validating the conflict
         var minBeforeBlock = section.getInt(ENCH_MAX_PATH,0)
         if(minBeforeBlock < 0){
@@ -112,7 +112,7 @@ class EnchantConflictManager {
         return EnchantConflictGroup(finalGroup, minBeforeBlock)
     }
 
-    private fun findGroup(groupName: String,itemManager: ItemGroupManager, conflictName: String): AbstractMaterialGroup {
+    private fun findGroup(groupName: String, itemManager: ItemGroupManager, conflictName: String): AbstractMaterialGroup {
         val group = itemManager.get(groupName)
         if(group == null){
             CustomAnvil.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
@@ -122,7 +122,7 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): ConflictType{
+    fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): ConflictType {
         val conflictList = conflictMap[newEnchant] ?: return ConflictType.NO_CONFLICT
 
         var result = ConflictType.NO_CONFLICT

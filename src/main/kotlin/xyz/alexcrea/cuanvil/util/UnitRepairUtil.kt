@@ -1,4 +1,4 @@
-package xyz.alexcrea.util
+package xyz.alexcrea.cuanvil.util
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
@@ -30,7 +30,7 @@ object UnitRepairUtil {
             }
         }
         // Get repair amount
-        var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH,DEFAULT_DEFAULT_UNIT_REPAIR)
+        var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)
         if(userDefault <= 0){
             userDefault = DEFAULT_DEFAULT_UNIT_REPAIR
         }
