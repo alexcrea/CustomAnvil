@@ -17,6 +17,10 @@ dependencies {
 
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
+    // Gui library
+    compileOnly("com.github.stefvanschie.inventoryframework:IF:0.10.13")
+
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
@@ -30,7 +34,7 @@ tasks.getByName<Test>("test") {
 // Fat-jar builder
 val fatJar = tasks.register<Jar>("fatJar") {
     manifest {
-        attributes.apply { put("Main-Class", "io.delilaheve.UnsafeEnchants") }
+        attributes.apply { put("Main-Class", "io.delilaheve.CustomAnvil") }
     }
     archiveFileName.set("${rootProject.name}-${archiveVersion}.jar")
     exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
