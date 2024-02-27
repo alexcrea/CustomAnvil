@@ -5,9 +5,10 @@ import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.command.ReloadExecutor
+import xyz.alexcrea.command.TestExecutor
+import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.group.EnchantConflictManager
 import xyz.alexcrea.group.ItemGroupManager
-import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
@@ -33,6 +34,8 @@ class CustomAnvil : JavaPlugin() {
 
         // Command Name to reload the config
         const val commandReloadName = "anvilconfigreload"
+        // Test command name
+        const val commandTestName = "test"
 
         // Item Grouping Configuration file name
         const val itemGroupingConfigFilePath = "item_groups.yml"
@@ -80,9 +83,8 @@ class CustomAnvil : JavaPlugin() {
         val metric = Metrics(this, bstatsPluginId)
         MetricsUtil.addCustomMetric(metric)
 
-        // Add command to reload the plugin
-        val command = getCommand(commandReloadName)
-        command?.setExecutor(ReloadExecutor())
+        // Add commands to reload the plugin
+        prepareCommand()
 
         server.pluginManager.registerEvents(
             AnvilEventListener(),
@@ -143,6 +145,14 @@ class CustomAnvil : JavaPlugin() {
             return null
         }
         return yamlConfig
+    }
+
+    fun prepareCommand(): Unit {
+        var command = getCommand(commandReloadName)
+        command?.setExecutor(ReloadExecutor())
+
+        command = getCommand(commandTestName)
+        command?.setExecutor(TestExecutor())
     }
 
 }
