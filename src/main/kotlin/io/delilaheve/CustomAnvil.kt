@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.command.ReloadExecutor
 import xyz.alexcrea.group.EnchantConflictManager
 import xyz.alexcrea.group.ItemGroupManager
-import xyz.alexcrea.util.Metrics
+import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.util.MetricsUtil
 import java.io.File
 import java.io.FileReader

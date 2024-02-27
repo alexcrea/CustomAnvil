@@ -12,7 +12,7 @@
  *
  * Violations will result in a ban of your plugin and account from bStats.
  */
-package xyz.alexcrea.util;
+package xyz.alexcrea.cuanvil.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
