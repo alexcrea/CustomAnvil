@@ -4,7 +4,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
-import xyz.alexcrea.cuanvil.gui.gui.MainConfigGui
+import xyz.alexcrea.cuanvil.gui.MainConfigGui
 
 class TestExecutor : CommandExecutor {
 

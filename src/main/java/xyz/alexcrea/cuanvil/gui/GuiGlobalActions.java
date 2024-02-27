@@ -1,7 +1,8 @@
-package xyz.alexcrea.cuanvil.gui.gui;
+package xyz.alexcrea.cuanvil.gui;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -12,10 +13,10 @@ public class GuiGlobalActions {
     public static Consumer<InventoryClickEvent> stayInPlace = (event) -> event.setCancelled(true);
 
 
-    public static Consumer<InventoryClickEvent> openGuiFactory(
-            Class<? extends Gui> clazz,
-            Class<?>[] argClass,
-            Object... args){
+    public static @NotNull Consumer<InventoryClickEvent> openGuiFactory(
+            @NotNull Class<? extends Gui> clazz,
+            @NotNull Class<?>[] argClass,
+            @NotNull Object... args){
         return event -> {
             event.setCancelled(true);
             try {
@@ -31,12 +32,12 @@ public class GuiGlobalActions {
         };
     }
 
-    public static Consumer<InventoryClickEvent> openGuiFactory(
-            Class<? extends Gui> clazz){
+    public static @NotNull Consumer<InventoryClickEvent> openGuiFactory(
+            @NotNull Class<? extends Gui> clazz){
         return openGuiFactory(clazz, new Class<?>[0]);
     }
 
-    public static Consumer<InventoryClickEvent> openGuiFactory(Gui goal) {
+    public static @NotNull Consumer<InventoryClickEvent> openGuiFactory(@NotNull Gui goal) {
         return event -> {
             event.setCancelled(true);
             goal.show(event.getWhoClicked());
