@@ -3,6 +3,7 @@ package xyz.alexcrea.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import org.bukkit.configuration.ConfigurationSection
+import xyz.alexcrea.cuanvil.util.Metrics
 
 object MetricsUtil {
 
