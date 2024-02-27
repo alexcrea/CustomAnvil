@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.gui;
+package xyz.alexcrea.cuanvil.gui;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -7,29 +7,30 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import xyz.alexcrea.cuanvil.gui.gui.config.BasicConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
 
 public class MainConfigGui extends ChestGui {
 
     public final static MainConfigGui INSTANCE = new MainConfigGui();
 
+    static {
+        INSTANCE.init();
+    }
     private MainConfigGui() {
-        super(3, "§8Anvil Config", CustomAnvil.instance);
+        super(3, "\u00A7cAnvil Config", CustomAnvil.instance);
 
+    }
+
+    private void init(){
         Pattern pattern = new Pattern(
-                "111111111",
-                "112345611",
-                "111111111"
+                "000000000",
+                "001234500",
+                "000000000"
         );
         PatternPane pane = new PatternPane(0, 0, 9, 3, pattern);
         addPane(pane);
 
-        ItemStack backgroundBukkit = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-
-        GuiItem background = new GuiItem(backgroundBukkit,GuiGlobalActions.stayInPlace, CustomAnvil.instance);
-
-
-        pane.bindItem('1', background);
+        GuiGlobalItems.addBackgroundItem(pane);
 
 
         ItemStack stonePlaceholder = new ItemStack(Material.STONE);
