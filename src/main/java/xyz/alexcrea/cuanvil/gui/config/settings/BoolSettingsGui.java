@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.function.Consumer;
 
 public class BoolSettingsGui extends AbstractSettingGui{
@@ -56,7 +55,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
         ItemStack valueItemStack = new ItemStack(displayedMat);
         ItemMeta valueMeta = valueItemStack.getItemMeta();
         valueMeta.setDisplayName(displayedName);
-        valueMeta.setLore(Collections.singletonList("\u00A77Click Here to change the value"));
+        valueMeta.setLore(AbstractSettingGui.CLICK_LORE);
         valueItemStack.setItemMeta(valueMeta);
         GuiItem resultItem = new GuiItem(valueItemStack, inverseNowConsumer(), CustomAnvil.instance);
 

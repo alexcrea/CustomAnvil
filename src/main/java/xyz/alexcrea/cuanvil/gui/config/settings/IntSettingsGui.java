@@ -52,7 +52,8 @@ public class IntSettingsGui extends AbstractSettingGui{
             int planned = Math.max(holder.min, now - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(planned + " (-"+(now-planned)+")"); //TODO add color
+            meta.setDisplayName("\u00A7e"+planned + " \u00A7r(\u00A7c-"+(now-planned)+"\u00A7r)");
+            meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -68,7 +69,8 @@ public class IntSettingsGui extends AbstractSettingGui{
             int planned = Math.min(holder.max, now + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(planned + " (+"+(planned-now)+")"); //TODO add color
+            meta.setDisplayName("\u00A7e"+planned + " \u00A7r(\u00A7a+"+(planned-now)+"\u00A7r)");
+            meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -80,7 +82,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         // "result" display
         ItemStack resultPaper = new ItemStack(Material.PAPER);
         ItemMeta resultMeta = resultPaper.getItemMeta();
-        resultMeta.setDisplayName(""+now); //TODO color and text
+        resultMeta.setDisplayName("\u00A7e"+now);
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 

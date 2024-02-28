@@ -7,6 +7,7 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
 
 public class MainConfigGui extends ChestGui {
@@ -49,6 +50,10 @@ public class MainConfigGui extends ChestGui {
 
         // quit item
         ItemStack quitItemstack = new ItemStack(Material.BARRIER);
+        ItemMeta quitMeta = quitItemstack.getItemMeta();
+        quitMeta.setDisplayName("\u00A7cQuit");
+        quitItemstack.setItemMeta(quitMeta);
+
         GuiItem quitItem = new GuiItem(quitItemstack, event -> {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();

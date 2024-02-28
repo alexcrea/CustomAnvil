@@ -10,7 +10,12 @@ import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.GuiGlobalItems;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class AbstractSettingGui extends ChestGui {
+
+    protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here to change the value");
 
     public AbstractSettingGui(int rows, @NotNull TextHolder title, Gui parent) {
         super(rows, title, CustomAnvil.instance);
