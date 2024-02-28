@@ -8,13 +8,14 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 
 // maybe use builder patern ?
 public class GuiGlobalItems {
 
     // return
     public static GuiItem toGuiItem(@NotNull ItemStack item, @NotNull Gui goal){
-        return new GuiItem(item, GuiGlobalActions.openGuiFactory(goal), CustomAnvil.instance);
+        return new GuiItem(item, GuiGlobalActions.openGuiAction(goal), CustomAnvil.instance);
     }
 
     // statically create back itemstack
@@ -51,6 +52,27 @@ public class GuiGlobalItems {
     }
     public static void addBackgroundItem(@NotNull PatternPane target){
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
+    }
+
+    private static final Material DEFAULT_SAVE_ITEM = Material.LIME_TERRACOTTA;
+    public static GuiItem saveItem(
+            @NotNull AbstractSettingGui setting,
+            @NotNull Gui goal){
+
+        ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("\u00A7aSave");
+        item.setItemMeta(meta);
+        return new GuiItem(item,
+                GuiGlobalActions.saveSettingAction(setting, goal),
+                CustomAnvil.instance);
+    }
+
+    public static GuiItem openSettingGuiItem(
+            @NotNull ItemStack item,
+            @NotNull AbstractSettingGui.SettingGuiFactory factory
+    ){
+        return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
 
 }
