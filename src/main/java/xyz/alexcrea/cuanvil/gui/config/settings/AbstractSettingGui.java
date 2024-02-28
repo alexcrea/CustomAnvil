@@ -7,6 +7,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.GuiGlobalItems;
 
@@ -50,6 +51,23 @@ public abstract class AbstractSettingGui extends ChestGui {
 
 
     public abstract static class SettingGuiFactory{
+        protected String configPath;
+        protected ConfigurationSection section;
+
+        protected SettingGuiFactory(String configPath, ConfigurationSection section){
+            this.configPath = configPath;
+            this.section = section;
+        }
+
+        public String getConfigPath() {
+            return configPath;
+        }
+
+        public ConfigurationSection getSection() {
+            return section;
+        }
+
+
         public abstract AbstractSettingGui create();
-    };
+    }
 }

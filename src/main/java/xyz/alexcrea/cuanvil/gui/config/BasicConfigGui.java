@@ -43,9 +43,8 @@ public class BasicConfigGui extends ChestGui {
         GuiItem setting1 = GuiGlobalItems.openSettingGuiItem(setting1Item, factory1);
         pane.bindItem('1', setting1);
 
-        ItemStack setting2Item = new ItemStack(Material.STONE);
-        AbstractSettingGui.SettingGuiFactory factory2 = BoolSettingsGui.factory("Test Gui bool",this, "test2", CustomAnvil.instance.getConfig(), false);
-        GuiItem setting2 = GuiGlobalItems.openSettingGuiItem(setting2Item, factory2);
+        BoolSettingsGui.BoolSettingFactory factory2 = BoolSettingsGui.factory("Test Gui bool",this, "test2", CustomAnvil.instance.getConfig(), false);
+        GuiItem setting2 = GuiGlobalItems.boolSettingGuiItem(factory2);
         pane.bindItem('2', setting2);
     }
 
