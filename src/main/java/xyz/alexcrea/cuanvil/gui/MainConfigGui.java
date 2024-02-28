@@ -25,7 +25,7 @@ public class MainConfigGui extends ChestGui {
         Pattern pattern = new Pattern(
                 "000000000",
                 "001234500",
-                "000000000"
+                "Q00000000"
         );
         PatternPane pane = new PatternPane(0, 0, 9, 3, pattern);
         addPane(pane);
@@ -41,14 +41,20 @@ public class MainConfigGui extends ChestGui {
         GuiItem placeholder5 = new GuiItem(stonePlaceholder,CustomAnvil.instance);
 
 
-        pane.bindItem('2', placeholder1);
-        pane.bindItem('3', placeholder2);
-        pane.bindItem('4', placeholder3);
-        pane.bindItem('5', placeholder4);
-        pane.bindItem('6', placeholder5);
+        pane.bindItem('1', placeholder1);
+        pane.bindItem('2', placeholder2);
+        pane.bindItem('3', placeholder3);
+        pane.bindItem('4', placeholder4);
+        pane.bindItem('5', placeholder5);
+
+        // quit item
+        ItemStack quitItemstack = new ItemStack(Material.BARRIER);
+        GuiItem quitItem = new GuiItem(quitItemstack, event -> {
+            event.setCancelled(true);
+            event.getWhoClicked().closeInventory();
+        },CustomAnvil.instance);
+        pane.bindItem('Q', quitItem);
 
     }
-
-
 
 }
