@@ -9,6 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
+
+import java.util.Collections;
 
 // maybe use builder patern ?
 public class GuiGlobalItems {
@@ -75,4 +78,39 @@ public class GuiGlobalItems {
         return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
 
+    private static final String SETTING_ITEM_LORE_PREFIX = "\u00A77value: ";
+    public static GuiItem boolSettingGuiItem(
+            @NotNull BoolSettingsGui.BoolSettingFactory factory
+    ){
+        // Get item properties
+        boolean value = factory.getConfiguredValue();
+
+        Material itemMat;
+        StringBuilder itemName = new StringBuilder("\u00A7");
+        if(value){
+            itemMat = Material.GREEN_TERRACOTTA;
+            itemName.append("a");
+        }else{
+            itemMat = Material.RED_TERRACOTTA;
+            itemName.append("c");
+        }
+        itemName.append(getConfigNameFromPath(factory.getConfigPath()));
+
+        // Create item
+        ItemStack item = new ItemStack(itemMat);
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(itemName.toString());
+        itemMeta.setLore(Collections.singletonList(SETTING_ITEM_LORE_PREFIX+value));
+
+        item.setItemMeta(itemMeta);
+        return openSettingGuiItem(item, factory);
+    }
+
+    public static String getConfigNameFromPath(String path){
+        int indexOfDot = path.indexOf(".");
+        //if(indexOfDot == -1) return path;
+        // indexOfDot == -1 (not fond) imply indexOfDot+1 = 0. substring will keep the full path as expected
+        return path.substring(indexOfDot+1);
+    }
 }

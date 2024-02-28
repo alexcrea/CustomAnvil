@@ -118,27 +118,29 @@ public class IntSettingsGui extends AbstractSettingGui{
 
     public static class IntSettingFactory extends SettingGuiFactory{
         @NotNull String title; Gui parent;
-        String configPath; ConfigurationSection section;
         int min; int max; int defaultVal; int[] steps;
 
         private IntSettingFactory(@NotNull String title, Gui parent,
                                   String configPath, ConfigurationSection section,
                                   int min, int max, int defaultVal, int... steps){
+            super(configPath, section);
             this.title = title;
             this.parent = parent;
-            this.configPath = configPath;
-            this.section = section;
             this.min = min;
             this.max = max;
             this.defaultVal = defaultVal;
             this.steps = steps;
         }
 
+        public int getConfiguredValue(){
+            return this.section.getInt(this.configPath, this.defaultVal);
+        }
+
         @Override
         public AbstractSettingGui create() {
             // Get value or default
             //TODO maybe get section dynamically (and maybe same for save ?)
-            int now = section.getInt(this.configPath, this.defaultVal);
+            int now = getConfiguredValue();
             // create new gui
             return new IntSettingsGui(this, now);
         }

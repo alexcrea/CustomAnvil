@@ -79,7 +79,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
     }
 
-    public static SettingGuiFactory factory(@NotNull String title, Gui parent,
+    public static BoolSettingFactory factory(@NotNull String title, Gui parent,
                                             String configPath, ConfigurationSection section,
                                             boolean defaultVal){
         return new BoolSettingFactory(
@@ -91,24 +91,27 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
     public static class BoolSettingFactory extends SettingGuiFactory{
         @NotNull String title; Gui parent;
-        String configPath; ConfigurationSection section;
         boolean defaultVal;
 
         private BoolSettingFactory(@NotNull String title, Gui parent,
                                   String configPath, ConfigurationSection section,
                                   boolean defaultVal){
+            super(configPath, section);
             this.title = title;
             this.parent = parent;
-            this.configPath = configPath;
-            this.section = section;
+
             this.defaultVal = defaultVal;
+        }
+
+        public boolean getConfiguredValue(){
+            return this.section.getBoolean(this.configPath, this.defaultVal);
         }
 
         @Override
         public AbstractSettingGui create() {
             // Get value or default
             //TODO maybe get section dynamically (and maybe same for save ?)
-            boolean now = section.getBoolean(this.configPath, this.defaultVal);
+            boolean now = getConfiguredValue();
             // create new gui
             return new BoolSettingsGui(this, now);
         }
