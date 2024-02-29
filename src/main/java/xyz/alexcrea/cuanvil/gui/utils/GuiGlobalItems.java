@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui;
+package xyz.alexcrea.cuanvil.gui.utils;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 
@@ -60,7 +61,7 @@ public class GuiGlobalItems {
     private static final Material DEFAULT_SAVE_ITEM = Material.LIME_TERRACOTTA;
     public static GuiItem saveItem(
             @NotNull AbstractSettingGui setting,
-            @NotNull Gui goal){
+            @NotNull ValueUpdatableGui goal){
 
         ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
         ItemMeta meta = item.getItemMeta();

@@ -3,13 +3,13 @@ package xyz.alexcrea.cuanvil.gui.config.settings;
 import com.github.stefvanschie.inventoryframework.adventuresupport.StringHolder;
 import com.github.stefvanschie.inventoryframework.adventuresupport.TextHolder;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
+import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,17 +18,18 @@ public abstract class AbstractSettingGui extends ChestGui {
 
     protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here to change the value");
 
-    public AbstractSettingGui(int rows, @NotNull TextHolder title, Gui parent) {
+    private PatternPane pane;
+
+    public AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
         super(rows, title, CustomAnvil.instance);
         initBase(parent);
     }
 
-    public AbstractSettingGui(int rows, @NotNull String title, Gui parent) {
+    public AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
         this(rows, StringHolder.of(title), parent);
     }
 
-    private PatternPane pane;
-    private void initBase(Gui parent){
+    private void initBase(ValueUpdatableGui parent){
         Pattern pattern = getGuiPattern();
         pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
         addPane(pane);

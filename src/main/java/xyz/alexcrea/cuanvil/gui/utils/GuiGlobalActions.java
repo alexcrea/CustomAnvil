@@ -1,8 +1,9 @@
-package xyz.alexcrea.cuanvil.gui;
+package xyz.alexcrea.cuanvil.gui.utils;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 
 import java.lang.reflect.Constructor;
@@ -55,11 +56,13 @@ public class GuiGlobalActions {
 
     public static @NotNull Consumer<InventoryClickEvent> saveSettingAction(
             @NotNull AbstractSettingGui setting,
-            @NotNull Gui goal) {
+            @NotNull ValueUpdatableGui goal) {
         return event -> {
             event.setCancelled(true);
             // Save setting
             setting.onSave();
+            // Update gui for the one who have it open
+            goal.updateGuiValues();
             // Then show
             goal.show(event.getWhoClicked());
         };

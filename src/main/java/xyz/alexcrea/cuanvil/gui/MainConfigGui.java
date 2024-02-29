@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
+import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
 
 public class MainConfigGui extends ChestGui {
 
