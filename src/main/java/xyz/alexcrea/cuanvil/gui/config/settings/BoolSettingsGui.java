@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.gui.config.settings;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -11,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 
 import java.util.function.Consumer;
 
@@ -79,7 +79,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
     }
 
-    public static BoolSettingFactory factory(@NotNull String title, Gui parent,
+    public static BoolSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
                                             String configPath, ConfigurationSection section,
                                             boolean defaultVal){
         return new BoolSettingFactory(
@@ -90,10 +90,10 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
 
     public static class BoolSettingFactory extends SettingGuiFactory{
-        @NotNull String title; Gui parent;
+        @NotNull String title; ValueUpdatableGui parent;
         boolean defaultVal;
 
-        private BoolSettingFactory(@NotNull String title, Gui parent,
+        private BoolSettingFactory(@NotNull String title, ValueUpdatableGui parent,
                                   String configPath, ConfigurationSection section,
                                   boolean defaultVal){
             super(configPath, section);

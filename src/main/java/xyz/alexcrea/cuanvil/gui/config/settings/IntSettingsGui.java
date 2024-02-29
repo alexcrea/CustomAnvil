@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.gui.config.settings;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -11,8 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
+import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
 
 import java.util.function.Consumer;
 
@@ -106,7 +106,7 @@ public class IntSettingsGui extends AbstractSettingGui{
 
     }
 
-    public static SettingGuiFactory factory(@NotNull String title, Gui parent,
+    public static SettingGuiFactory factory(@NotNull String title, ValueUpdatableGui parent,
                                             String configPath, ConfigurationSection section,
                                             int min, int max, int defaultVal, int... steps){
         return new IntSettingFactory(
@@ -117,10 +117,10 @@ public class IntSettingsGui extends AbstractSettingGui{
 
 
     public static class IntSettingFactory extends SettingGuiFactory{
-        @NotNull String title; Gui parent;
+        @NotNull String title; ValueUpdatableGui parent;
         int min; int max; int defaultVal; int[] steps;
 
-        private IntSettingFactory(@NotNull String title, Gui parent,
+        private IntSettingFactory(@NotNull String title, ValueUpdatableGui parent,
                                   String configPath, ConfigurationSection section,
                                   int min, int max, int defaultVal, int... steps){
             super(configPath, section);
