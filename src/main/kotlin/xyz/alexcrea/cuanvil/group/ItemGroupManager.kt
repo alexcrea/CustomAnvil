@@ -3,9 +3,7 @@ package xyz.alexcrea.cuanvil.group
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.configuration.file.YamlConfiguration
 import java.util.*
-import kotlin.collections.HashMap
 
 class ItemGroupManager {
 
@@ -23,7 +21,7 @@ class ItemGroupManager {
     private lateinit var groupMap : HashMap<String, AbstractMaterialGroup>
 
     // Read and create material groups
-    fun prepareGroups(config: YamlConfiguration){
+    fun prepareGroups(config: ConfigurationSection){
         groupMap = HashMap()
 
         val keys = config.getKeys(false)
@@ -35,7 +33,7 @@ class ItemGroupManager {
     }
 
     // Create group by key
-    private fun createGroup(config: YamlConfiguration,
+    private fun createGroup(config: ConfigurationSection,
                             keys: Set<String>,
                             key: String): AbstractMaterialGroup {
         val groupSection = config.getConfigurationSection(key)!!
@@ -60,7 +58,7 @@ class ItemGroupManager {
     // Read Group elements
     private fun readGroup(group: AbstractMaterialGroup,
                           groupSection: ConfigurationSection,
-                          config: YamlConfiguration,
+                          config: ConfigurationSection,
                           keys: Set<String>){
         // Read material to include in this group policy
         val materialList = groupSection.getStringList(MATERIAL_LIST_PATH)

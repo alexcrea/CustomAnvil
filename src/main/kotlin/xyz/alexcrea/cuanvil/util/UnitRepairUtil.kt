@@ -1,8 +1,8 @@
 package xyz.alexcrea.cuanvil.util
 
-import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 object UnitRepairUtil {
 
@@ -19,15 +19,14 @@ object UnitRepairUtil {
         other: ItemStack?
     ): Double? {
         if(other == null) return null
-        val config = CustomAnvil.unitRepairConfig
+        val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
         // Get configuration section if exist
         val otherName = other.type.name.uppercase()
         var section = config.getConfigurationSection(otherName)
         if(section == null){
             section = config.getConfigurationSection(otherName.lowercase())
-            if(section == null) {
-                return null
-            }
+            if(section == null) return null
+
         }
         // Get repair amount
         var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)

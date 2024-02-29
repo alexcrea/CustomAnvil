@@ -3,6 +3,7 @@ package io.delilaheve.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import org.bukkit.enchantments.Enchantment
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 /**
  * Config option accessors
@@ -71,7 +72,7 @@ object ConfigOptions {
      */
     private val defaultEnchantLimit: Int
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
         }
@@ -81,7 +82,7 @@ object ConfigOptions {
      */
     val limitRepairCost: Boolean
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(LIMIT_REPAIR_COST, DEFAULT_LIMIT_REPAIR)
         }
@@ -91,7 +92,7 @@ object ConfigOptions {
      */
     val limitRepairValue: Int
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(LIMIT_REPAIR_VALUE, DEFAULT_LIMIT_REPAIR_VALUE)
                 .takeIf { it in REPAIR_LIMIT_RANGE }
@@ -103,7 +104,7 @@ object ConfigOptions {
      */
     val itemRepairCost: Int
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
@@ -115,7 +116,7 @@ object ConfigOptions {
      */
     val unitRepairCost: Int
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
@@ -127,7 +128,7 @@ object ConfigOptions {
      */
     val itemRenameCost: Int
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST)
                 .takeIf { it in ITEM_RENAME_COST_RANGE }
@@ -139,7 +140,7 @@ object ConfigOptions {
      */
     val sacrificeIllegalCost: Int
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
@@ -150,7 +151,7 @@ object ConfigOptions {
      */
     val removeRepairLimit: Boolean
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(REMOVE_REPAIR_LIMIT, DEFAULT_REMOVE_LIMIT)
         }
@@ -160,7 +161,7 @@ object ConfigOptions {
      */
     val debugLog: Boolean
         get() {
-            return CustomAnvil.instance
+            return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
         }
