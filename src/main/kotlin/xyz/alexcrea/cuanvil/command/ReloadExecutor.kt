@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -30,7 +31,7 @@ class ReloadExecutor : CommandExecutor {
      */
     private fun commandBody(hardfail: Boolean): Boolean{
         try {
-            return CustomAnvil.instance.reloadAllConfigs(hardfail)
+            return ConfigHolder.reloadAllFromDisk(hardfail);
         }catch (e: Exception){
             e.printStackTrace()
             return false

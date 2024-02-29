@@ -4,9 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.enchantments.Enchantment
-import kotlin.collections.ArrayList
 
 class EnchantConflictManager {
 
@@ -29,7 +27,7 @@ class EnchantConflictManager {
     private lateinit var conflictMap: HashMap<Enchantment, ArrayList<EnchantConflictGroup>>
 
     // Read and prepare all conflict
-    fun prepareConflicts(config: YamlConfiguration, itemManager: ItemGroupManager){
+    fun prepareConflicts(config: ConfigurationSection, itemManager: ItemGroupManager){
         conflictMap = HashMap()
 
         val keys = config.getKeys(false)
@@ -140,7 +138,7 @@ class EnchantConflictManager {
 
 }
 
-enum class ConflictType(){
+enum class ConflictType{
     NO_CONFLICT,
     SMALL_CONFLICT,
     BIG_CONFLICT

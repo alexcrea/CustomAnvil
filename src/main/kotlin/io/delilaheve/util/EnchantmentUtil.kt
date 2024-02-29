@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.HumanEntity
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max
 import kotlin.math.min
@@ -34,7 +35,7 @@ object EnchantmentUtil {
                 // Add the enchantment if it doesn't have conflicts, or, if player is allowed to bypass enchantment restrictions
                 this[enchantment] = level
                 if(!player.hasPermission(CustomAnvil.bypassFusePermission) &&
-                    (CustomAnvil.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
+                    (ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
                     this.remove(enchantment)
                 }
 
@@ -42,7 +43,7 @@ object EnchantmentUtil {
             // Enchantment already in result list
             else{
                 // ... and they are conflicting
-                if((CustomAnvil.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)
+                if((ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)
                     && !player.hasPermission(CustomAnvil.bypassFusePermission)){
                     return@forEach
                 }

@@ -6,9 +6,8 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.command.TestExecutor
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.util.Metrics
-import xyz.alexcrea.cuanvil.group.EnchantConflictManager
-import xyz.alexcrea.cuanvil.group.ItemGroupManager
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
@@ -37,17 +36,8 @@ class CustomAnvil : JavaPlugin() {
         // Test command name
         const val commandTestName = "test"
 
-        // Item Grouping Configuration file name
-        const val itemGroupingConfigFilePath = "item_groups.yml"
-        // Conflict Configuration file name
-        const val enchantConflicConfigFilePath = "enchant_conflict.yml"
-        // Unit Repair Configuration file name
-        const val unitRepairFilePath = "unit_repair_item.yml"
-
         // Current plugin instance
         lateinit var instance: CustomAnvil
-        // Current item grouping configuration instance
-        lateinit var conflictManager: EnchantConflictManager
 
         // Configuration for unit repair
         lateinit var unitRepairConfig: YamlConfiguration
@@ -76,7 +66,9 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
-        val success = reloadAllConfigs(true)
+        // Load config
+
+        val success = ConfigHolder.loadConfig();
         if(!success) return
 
         // Load metrics
@@ -92,36 +84,8 @@ class CustomAnvil : JavaPlugin() {
         )
     }
 
-    fun reloadAllConfigs(hardFailSafe: Boolean): Boolean{
-        saveDefaultConfig()
-        reloadConfig()
-
-        // Load material grouping config
-        val itemGroupConfig = reloadResource(itemGroupingConfigFilePath, hardFailSafe) ?: return false
-        // Read material groups from config
-        val itemGroupsManager = ItemGroupManager()
-        itemGroupsManager.prepareGroups(itemGroupConfig)
-
-        // Load enchantment conflicts config
-        val conflictConfig = reloadResource(enchantConflicConfigFilePath, hardFailSafe) ?: return false
-        // Read conflicts from config and material group manager
-        val conflictManager = EnchantConflictManager()
-        conflictManager.prepareConflicts(conflictConfig,itemGroupsManager)
-
-        // Load unit repair config
-        val unitRepairConfig = reloadResource(unitRepairFilePath, hardFailSafe) ?: return false
-
-        // Set the global variable
-        CustomAnvil.conflictManager = conflictManager
-        CustomAnvil.unitRepairConfig = unitRepairConfig
-
-        // Test if is default config
-        MetricsUtil.testIfConfigIsDefault(config, itemGroupConfig, conflictConfig, unitRepairConfig)
-        return true
-    }
-
-    private fun reloadResource(resourceName: String,
-                               hardFailSafe:Boolean = true): YamlConfiguration?{
+    fun reloadResource(resourceName: String,
+                       hardFailSafe:Boolean = true): YamlConfiguration?{
         // Save default resource
         val file = File(dataFolder,resourceName)
         if(!file.exists()){

@@ -23,6 +23,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import kotlin.math.min
@@ -320,7 +321,7 @@ class AnvilEventListener : Listener {
             // count enchant as illegal enchant if it conflicts with another enchant or not in result
             if((enchantment.key !in resultEnchsKeys)){
                 resultEnchsKeys.add(enchantment.key)
-                val conflictType = CustomAnvil.conflictManager.isConflicting(resultEnchsKeys,result.type,enchantment.key)
+                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(resultEnchsKeys,result.type,enchantment.key)
                 resultEnchsKeys.remove(enchantment.key)
 
                 if(ConflictType.BIG_CONFLICT == conflictType){
