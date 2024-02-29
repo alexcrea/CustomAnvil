@@ -6,8 +6,8 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
 
@@ -15,6 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractSettingGui extends ChestGui {
+
+    // Temporary values, until I get something better.
+    public static final boolean TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE = true;
+    public static final boolean TEMPORARY_DO_BACKUP_EVERY_SAVE = true;
 
     protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here to change the value");
 
@@ -48,26 +52,25 @@ public abstract class AbstractSettingGui extends ChestGui {
     // S, b, 0 is used by: save, back, background
     protected abstract Pattern getGuiPattern();
 
-    public abstract void onSave();
+    public abstract boolean onSave();
 
 
     public abstract static class SettingGuiFactory{
         protected String configPath;
-        protected ConfigurationSection section;
+        protected ConfigHolder config;
 
-        protected SettingGuiFactory(String configPath, ConfigurationSection section){
+        protected SettingGuiFactory(String configPath, ConfigHolder config){
             this.configPath = configPath;
-            this.section = section;
+            this.config = config;
         }
 
         public String getConfigPath() {
             return configPath;
         }
 
-        public ConfigurationSection getSection() {
-            return section;
+        public ConfigHolder getConfigHolder() {
+            return config;
         }
-
 
         public abstract AbstractSettingGui create();
     }

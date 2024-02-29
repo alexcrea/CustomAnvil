@@ -39,9 +39,6 @@ class CustomAnvil : JavaPlugin() {
         // Current plugin instance
         lateinit var instance: CustomAnvil
 
-        // Configuration for unit repair
-        lateinit var unitRepairConfig: YamlConfiguration
-
         /**
          * Logging handler
          */
@@ -68,7 +65,7 @@ class CustomAnvil : JavaPlugin() {
 
         // Load config
 
-        val success = ConfigHolder.loadConfig();
+        val success = ConfigHolder.loadConfig()
         if(!success) return
 
         // Load metrics

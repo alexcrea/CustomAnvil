@@ -72,7 +72,7 @@ public abstract class ConfigHolder {
 
     // Save logic
     public boolean saveToDisk(boolean doBackup){
-        if(!doBackup){
+        if(doBackup){
             if(!saveBackup()){
                 CustomAnvil.instance.getLogger().severe("Could not save backup. see above.");
                 return false;
@@ -93,11 +93,10 @@ public abstract class ConfigHolder {
             return false;
         }
 
-
         return true;
     }
 
-    public boolean saveBackup(){
+    protected boolean saveBackup(){
         File base = getConfigFile();
         if(!base.exists()) return true; // We did back up everything we had to (nothing in this case)
         boolean sufficientSuccess = false;

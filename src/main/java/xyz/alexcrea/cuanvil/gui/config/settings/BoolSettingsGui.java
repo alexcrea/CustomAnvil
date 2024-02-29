@@ -5,11 +5,11 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 
 import java.util.function.Consumer;
@@ -73,18 +73,20 @@ public class BoolSettingsGui extends AbstractSettingGui{
     }
 
     @Override
-    public void onSave() {
-        holder.section.set(holder.configPath, now);
-        // TODO SAVE (also backup before)
-
+    public boolean onSave() {
+        holder.config.getConfig().set(holder.configPath, now);
+        if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+            return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        }
+        return true;
     }
 
     public static BoolSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
-                                            String configPath, ConfigurationSection section,
+                                            String configPath, ConfigHolder config,
                                             boolean defaultVal){
         return new BoolSettingFactory(
                 title,parent,
-                configPath, section,
+                configPath, config,
                 defaultVal);
     }
 
@@ -94,9 +96,9 @@ public class BoolSettingsGui extends AbstractSettingGui{
         boolean defaultVal;
 
         private BoolSettingFactory(@NotNull String title, ValueUpdatableGui parent,
-                                  String configPath, ConfigurationSection section,
+                                  String configPath, ConfigHolder config,
                                   boolean defaultVal){
-            super(configPath, section);
+            super(configPath, config);
             this.title = title;
             this.parent = parent;
 
@@ -104,13 +106,12 @@ public class BoolSettingsGui extends AbstractSettingGui{
         }
 
         public boolean getConfiguredValue(){
-            return this.section.getBoolean(this.configPath, this.defaultVal);
+            return this.config.getConfig().getBoolean(this.configPath, this.defaultVal);
         }
 
         @Override
         public AbstractSettingGui create() {
             // Get value or default
-            //TODO maybe get section dynamically (and maybe same for save ?)
             boolean now = getConfiguredValue();
             // create new gui
             return new BoolSettingsGui(this, now);
