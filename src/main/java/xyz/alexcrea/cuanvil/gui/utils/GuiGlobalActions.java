@@ -60,7 +60,9 @@ public class GuiGlobalActions {
         return event -> {
             event.setCancelled(true);
             // Save setting
-            setting.onSave();
+            if(!setting.onSave()){
+                event.getWhoClicked().sendMessage("\u00A7cSomething wrong happen while saving the change of value.");
+            }
             // Update gui for the one who have it open
             goal.updateGuiValues();
             // Then show

@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
@@ -46,11 +47,11 @@ public class BasicConfigGui extends ValueUpdatableGui {
     public void updateGuiValues() {
         // Update item with value
         ItemStack setting1Item = new ItemStack(Material.STONE);
-        AbstractSettingGui.SettingGuiFactory factory1 = IntSettingsGui.factory( "Test GUI", this, "test", CustomAnvil.instance.getConfig(), 0,42,2,1);
+        AbstractSettingGui.SettingGuiFactory factory1 = IntSettingsGui.factory( "Test GUI", this, "test", ConfigHolder.DEFAULT_CONFIG, 0,42,2,1);
         GuiItem setting1 = GuiGlobalItems.openSettingGuiItem(setting1Item, factory1);
         pane.bindItem('1', setting1);
 
-        BoolSettingsGui.BoolSettingFactory factory2 = BoolSettingsGui.factory("Test Gui bool",this, "test2", CustomAnvil.instance.getConfig(), false);
+        BoolSettingsGui.BoolSettingFactory factory2 = BoolSettingsGui.factory("Test Gui bool",this, "test2", ConfigHolder.DEFAULT_CONFIG, false);
         GuiItem setting2 = GuiGlobalItems.boolSettingGuiItem(factory2);
         pane.bindItem('2', setting2);
 

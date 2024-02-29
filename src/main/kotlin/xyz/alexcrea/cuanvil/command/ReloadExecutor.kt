@@ -30,11 +30,11 @@ class ReloadExecutor : CommandExecutor {
      * Execute the command, return true if success or false otherwise
      */
     private fun commandBody(hardfail: Boolean): Boolean{
-        try {
-            return ConfigHolder.reloadAllFromDisk(hardfail);
+        return try {
+            ConfigHolder.reloadAllFromDisk(hardfail)
         }catch (e: Exception){
             e.printStackTrace()
-            return false
+            false
         }
     }
 }

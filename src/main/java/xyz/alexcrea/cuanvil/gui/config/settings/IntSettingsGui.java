@@ -5,11 +5,11 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
@@ -100,18 +100,20 @@ public class IntSettingsGui extends AbstractSettingGui{
     }
 
     @Override
-    public void onSave() {
-        holder.section.set(holder.configPath, now);
-        // TODO SAVE (also backup before)
-
+    public boolean onSave() {
+        if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+            holder.config.getConfig().set(holder.configPath, now);
+            return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        }
+        return true;
     }
 
     public static SettingGuiFactory factory(@NotNull String title, ValueUpdatableGui parent,
-                                            String configPath, ConfigurationSection section,
+                                            String configPath, ConfigHolder config,
                                             int min, int max, int defaultVal, int... steps){
         return new IntSettingFactory(
                 title,parent,
-                configPath, section,
+                configPath, config,
                 min, max, defaultVal, steps);
     }
 
@@ -121,9 +123,9 @@ public class IntSettingsGui extends AbstractSettingGui{
         int min; int max; int defaultVal; int[] steps;
 
         private IntSettingFactory(@NotNull String title, ValueUpdatableGui parent,
-                                  String configPath, ConfigurationSection section,
+                                  String configPath, ConfigHolder config,
                                   int min, int max, int defaultVal, int... steps){
-            super(configPath, section);
+            super(configPath, config);
             this.title = title;
             this.parent = parent;
             this.min = min;
@@ -133,13 +135,12 @@ public class IntSettingsGui extends AbstractSettingGui{
         }
 
         public int getConfiguredValue(){
-            return this.section.getInt(this.configPath, this.defaultVal);
+            return this.config.getConfig().getInt(this.configPath, this.defaultVal);
         }
 
         @Override
         public AbstractSettingGui create() {
             // Get value or default
-            //TODO maybe get section dynamically (and maybe same for save ?)
             int now = getConfiguredValue();
             // create new gui
             return new IntSettingsGui(this, now);
