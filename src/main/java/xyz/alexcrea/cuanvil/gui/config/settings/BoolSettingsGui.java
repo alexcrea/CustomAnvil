@@ -17,11 +17,13 @@ import java.util.function.Consumer;
 public class BoolSettingsGui extends AbstractSettingGui{
 
     private final BoolSettingFactory holder;
+    private final boolean before;
     private boolean now;
 
     private BoolSettingsGui(BoolSettingFactory holder, boolean now) {
         super(3, holder.title, holder.parent);
         this.holder = holder;
+        this.before = now;
         this.now = now;
 
         updateValueDisplay();
@@ -33,7 +35,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
         return new Pattern(
                 "000000000",
                 "00-0v0+00",
-                "B0000000S"
+                "BD000000S"
         );
     }
 
@@ -79,6 +81,11 @@ public class BoolSettingsGui extends AbstractSettingGui{
             return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
+    }
+
+    @Override
+    public boolean hadChange() {
+        return now != before;
     }
 
     public static BoolSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,

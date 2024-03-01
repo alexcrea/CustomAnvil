@@ -59,7 +59,8 @@ public class GuiGlobalItems {
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
     }
 
-    private static final Material DEFAULT_SAVE_ITEM = Material.LIME_TERRACOTTA;
+    private static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
+    private static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
     public static GuiItem saveItem(
             @NotNull AbstractSettingGui setting,
             @NotNull ValueUpdatableGui goal){
@@ -71,6 +72,19 @@ public class GuiGlobalItems {
         return new GuiItem(item,
                 GuiGlobalActions.saveSettingAction(setting, goal),
                 CustomAnvil.instance);
+    }
+
+    private static final GuiItem NO_CHANGE_ITEM;
+    static {
+        ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("\u00A77No change. can't save.");
+        item.setItemMeta(meta);
+        NO_CHANGE_ITEM = new GuiItem(item,GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+    }
+
+    public static GuiItem noChangeItem(){
+        return NO_CHANGE_ITEM;
     }
 
     public static GuiItem openSettingGuiItem(

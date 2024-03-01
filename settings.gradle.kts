@@ -1,2 +1,2 @@
-rootProject.name = "UnsafeEnchants"
+rootProject.name = "CustomAnvil"
 
