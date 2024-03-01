@@ -179,7 +179,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         return true;
     }
 
-    public static SettingGuiFactory factory(@NotNull String title, ValueUpdatableGui parent,
+    public static IntSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
                                             String configPath, ConfigHolder config,
                                             int min, int max, int defaultVal, int... steps){
         return new IntSettingFactory(
