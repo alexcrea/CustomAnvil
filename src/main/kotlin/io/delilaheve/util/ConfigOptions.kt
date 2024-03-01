@@ -13,19 +13,19 @@ object ConfigOptions {
     // Path for default enchantment limits
     private const val DEFAULT_LIMIT_PATH = "default_limit"
     // Path for limiting repair cost
-    private const val LIMIT_REPAIR_COST = "limit_repair_cost"
+    const val LIMIT_REPAIR_COST = "limit_repair_cost"
     // Path for repair value limit
-    private const val LIMIT_REPAIR_VALUE = "limit_repair_value"
+    const val LIMIT_REPAIR_VALUE = "limit_repair_value"
     // Path for level cost on item repair
-    private const val ITEM_REPAIR_COST = "item_repair_cost"
+    const val ITEM_REPAIR_COST = "item_repair_cost"
     // Path for level cost on unit repair
-    private const val UNIT_REPAIR_COST = "unit_repair_cost"
+    const val UNIT_REPAIR_COST = "unit_repair_cost"
     // Path for level cost on item renaming
-    private const val ITEM_RENAME_COST = "item_rename_cost"
+    const val ITEM_RENAME_COST = "item_rename_cost"
     // Path for level cost on illegal enchantment on sacrifice
-    private const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
+    const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
     // Path for removing repair cost limits
-    private const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
+    const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
     // Root path for enchantment limits
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     // Root path for enchantment values
@@ -39,29 +39,34 @@ object ConfigOptions {
     // Default value for enchantment limits
     private const val DEFAULT_ENCHANT_LIMIT = 5
     // Default value for limiting repair cost
-    private const val DEFAULT_LIMIT_REPAIR = true
+    const val DEFAULT_LIMIT_REPAIR = true
     // Default value for repair cost limit
-    private const val DEFAULT_LIMIT_REPAIR_VALUE = 39
+    const val DEFAULT_LIMIT_REPAIR_VALUE = 39
     // Default value for level cost on item repair
-    private const val DEFAULT_ITEM_REPAIR_COST = 2
+    const val DEFAULT_ITEM_REPAIR_COST = 2
     // Default value for level cost per unit repair
-    private const val DEFAULT_UNIT_REPAIR_COST = 1
+    const val DEFAULT_UNIT_REPAIR_COST = 1
     // Default value for level cost on item renaming
-    private const val DEFAULT_ITEM_RENAME_COST = 1
+    const val DEFAULT_ITEM_RENAME_COST = 1
     // Default value for level cost on illegal enchantment on sacrifice
-    private const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
+    const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
     // Valid range for repair cost limit
-    private val REPAIR_LIMIT_RANGE = 1..39
+    @JvmField
+    val REPAIR_LIMIT_RANGE = 1..39
     // Valid range for repair cost
-    private val REPAIR_COST_RANGE = 0..255
+    @JvmField
+    val REPAIR_COST_RANGE = 0..255
     // Valid range for rename cost
-    private val ITEM_RENAME_COST_RANGE = 0..255
+    @JvmField
+    val ITEM_RENAME_COST_RANGE = 0..255
     // Valid range for illegal enchantment conflict cost
-    private val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
+    @JvmField
+    val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
     // Default for removing repair cost limits
-    private const val DEFAULT_REMOVE_LIMIT = false
+    const val DEFAULT_REMOVE_LIMIT = false
     // Valid range for an enchantment limit
-    private val ENCHANT_LIMIT_RANGE = 1..255
+    @JvmField
+    val ENCHANT_LIMIT_RANGE = 1..255
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
     // Default value for debug logging
