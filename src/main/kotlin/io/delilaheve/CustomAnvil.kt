@@ -5,7 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
-import xyz.alexcrea.cuanvil.command.TestExecutor
+import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.cuanvil.util.MetricsUtil
@@ -30,11 +30,13 @@ class CustomAnvil : JavaPlugin() {
         const val bypassLevelPermission = "ca.bypass.level"
         // Permission string required to reload the config
         const val commandReloadPermission = "ca.command.reload"
+        // Permission string required to edit the plugin's config
+        const val editConfigPermission = "ca.config.edit"
 
         // Command Name to reload the config
         const val commandReloadName = "anvilconfigreload"
         // Test command name
-        const val commandTestName = "test"
+        const val commandTestName = "customanvilconfig"
 
         // Current plugin instance
         lateinit var instance: CustomAnvil
@@ -113,7 +115,7 @@ class CustomAnvil : JavaPlugin() {
         command?.setExecutor(ReloadExecutor())
 
         command = getCommand(commandTestName)
-        command?.setExecutor(TestExecutor())
+        command?.setExecutor(EditConfigExecutor())
     }
 
 }
