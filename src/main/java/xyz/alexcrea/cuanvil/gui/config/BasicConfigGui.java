@@ -68,13 +68,13 @@ public class BasicConfigGui extends ValueUpdatableGui {
         this.repairCostFactory = IntSettingsGui.factory("\u00A78Repair Cost Limit", this,
                 ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_LIMIT_REPAIR_VALUE,
-                1, 5, 10, 50, 100);
+                1, 5, 10);
 
         // rename cost not needed
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName("\u00A7cRepair Cost Limit");
+        meta.setDisplayName("\u00A7cRepair Cost Value");
         meta.setLore(Collections.singletonList("\u00A77Please, enable repair cost limit for this variable to be editable."));
         item.setItemMeta(meta);
         this.notNeededLimitValueItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -88,7 +88,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
         this.itemRepairCost = IntSettingsGui.factory("\u00A78Item repair cost", this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
-                1, 5, 10);
+                1, 5, 10, 50, 100);
 
         // unit repair cost
         this.unitRepairCost = IntSettingsGui.factory("\u00A78Unit repair cost", this,
