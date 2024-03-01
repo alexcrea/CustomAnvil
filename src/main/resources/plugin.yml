@@ -1,7 +1,7 @@
 main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
-version: 1.3
+version: 1.3.0-alpha-1
 description: Allow to customise anvil mechanics
 api-version: 1.18
 load: POSTWORLD
@@ -18,8 +18,11 @@ commands:
       #- acreload # anvil config reload
       #- careload # custom anvil reload
       - carl # custom anvil reload
-  test:
-    description: test cmd
+  customanvilconfig:
+    description: open a menu for administrator to edit plugin's config in game
+    permission: ca.config.edit
+    aliases:
+      - configanvil
 
 permissions:
   ca.affected:
@@ -34,6 +37,9 @@ permissions:
   ca.command.reload:
     default: op
     description: Allow administrator to reload the plugin's configs
+  ca.config.edit:
+    default: op
+    description: Allow administrator to reload the plugin's configs in game
 
 # soft depend on old name so I can disable it if it is on the same server
 # as it is the old name for this plugin

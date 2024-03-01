@@ -30,10 +30,12 @@ ca.affected: Player with this permission will be affected by the plugin
 ca.bypass.fuse: Allow player to combine every enchantments to every item (no custom limit)
 ca.bypass.level: Allow player to bypass every level limit (no custom limit)
 ca.command.reload: Allow administrator to reload the plugin's configs
+ca.config.edit: Allow administrator to reload the plugin's configs in game
 ```
 ### Commands
 ```yml
 anvilconfigreload or carl: Reload every config of this plugin
+customanvilconfig: open a menu for administrator to edit plugin's config in game
 ```
 ---
 ### Default Configuration:
