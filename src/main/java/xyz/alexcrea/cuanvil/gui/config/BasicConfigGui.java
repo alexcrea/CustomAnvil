@@ -47,7 +47,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
     public void updateGuiValues() {
         // Update item with value
         ItemStack setting1Item = new ItemStack(Material.STONE);
-        AbstractSettingGui.SettingGuiFactory factory1 = IntSettingsGui.factory( "Test GUI", this, "test", ConfigHolder.DEFAULT_CONFIG, 0,42,2,1);
+        AbstractSettingGui.SettingGuiFactory factory1 = IntSettingsGui.factory( "Test GUI", this, "test", ConfigHolder.DEFAULT_CONFIG, 0,255,2,1, 5, 10, 50, 100);
         GuiItem setting1 = GuiGlobalItems.openSettingGuiItem(setting1Item, factory1);
         pane.bindItem('1', setting1);
 

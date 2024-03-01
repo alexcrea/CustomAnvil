@@ -14,6 +14,8 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class IntSettingsGui extends AbstractSettingGui{
@@ -30,13 +32,14 @@ public class IntSettingsGui extends AbstractSettingGui{
         this.step = holder.steps[0];
 
         updateValueDisplay();
+        initStepsValue();
     }
 
 
     @Override
     public Pattern getGuiPattern() {
         return new Pattern(
-                "000000000",
+                "abcdefghi",
                 "00-0v0+00",
                 "B0000000S"
         );
@@ -58,7 +61,7 @@ public class IntSettingsGui extends AbstractSettingGui{
 
             minusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
         }else{
-            minusItem = GuiGlobalItems.backgroundItem();
+            minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
         pane.bindItem('-', minusItem);
 
@@ -75,7 +78,7 @@ public class IntSettingsGui extends AbstractSettingGui{
 
             plusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
         }else{
-            plusItem = GuiGlobalItems.backgroundItem();
+            plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
         pane.bindItem('+', plusItem);
 
@@ -94,6 +97,74 @@ public class IntSettingsGui extends AbstractSettingGui{
         return event->{
             event.setCancelled(true);
             now = planned;
+            updateValueDisplay();
+            update();
+        };
+    }
+
+    protected void initStepsValue(){
+        // Put background glass on the background of 'a' to 'b'
+        GuiItem background = GuiGlobalItems.backgroundItem();
+        PatternPane pane = getPane();
+
+        for (char i = 'a'; i < 'a'+9; i++) {
+            pane.bindItem(i, background);
+        }
+        // Then update legit step values
+        updateStepValue();
+    }
+    protected void updateStepValue(){
+        if(holder.steps.length <= 1) return;
+        // We assume steps have a length of 2k+1 cause its more pretty
+        char val = 'e'; // e is the middle, maybe rework this part to remove magic number.
+        // Offset
+        val -= (char) ((holder.steps.length-1)/2);
+
+        // Then place items
+        PatternPane pane = getPane();
+        for (int i = 0; i < holder.steps.length; i++) {
+            pane.bindItem(val+i, stepGuiItem(i));
+        }
+
+    }
+
+    protected GuiItem stepGuiItem(int stepIndex){
+        int stepValue = holder.steps[stepIndex];
+
+        // Get material properties
+        Material stepMat;
+        StringBuilder stepName = new StringBuilder("\u00A7");
+        List<String> stepLore;
+        Consumer<InventoryClickEvent> clickEvent;
+        if(stepValue == step){
+            stepMat = Material.GREEN_STAINED_GLASS_PANE;
+            stepName.append('a');
+            stepLore = Collections.singletonList("\u00A77Value is changing by a step of "+stepValue);
+            clickEvent = GuiGlobalActions.stayInPlace;
+        }else{
+            stepMat = Material.RED_STAINED_GLASS_PANE;
+            stepName.append('c');
+            stepLore = Collections.singletonList("\u00A77Click here to change the value of a step by "+stepValue);
+            clickEvent = updateStepValue(stepValue);
+        }
+        stepName.append("Step of: ").append(stepValue);
+
+        // Create item stack then gui item
+        ItemStack item = new ItemStack(stepMat);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(stepName.toString());
+        meta.setLore(stepLore);
+        item.setItemMeta(meta);
+
+        return new GuiItem(item, clickEvent, CustomAnvil.instance);
+    }
+
+    protected Consumer<InventoryClickEvent> updateStepValue(int stepValue){
+        return event -> {
+            event.setCancelled(true);
+            this.step = stepValue;
+            updateStepValue();
             updateValueDisplay();
             update();
         };
