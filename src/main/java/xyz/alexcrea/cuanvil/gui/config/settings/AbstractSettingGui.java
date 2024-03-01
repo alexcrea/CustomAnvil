@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.settings;
 
 import com.github.stefvanschie.inventoryframework.adventuresupport.StringHolder;
 import com.github.stefvanschie.inventoryframework.adventuresupport.TextHolder;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
@@ -33,6 +34,8 @@ public abstract class AbstractSettingGui extends ChestGui {
         this(rows, StringHolder.of(title), parent);
     }
 
+    protected GuiItem saveItem;
+    protected GuiItem noChangeItem;
     private void initBase(ValueUpdatableGui parent){
         Pattern pattern = getGuiPattern();
         pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
@@ -41,8 +44,17 @@ public abstract class AbstractSettingGui extends ChestGui {
         GuiGlobalItems.addBackItem(pane, parent);
         GuiGlobalItems.addBackgroundItem(pane);
 
-        pane.bindItem('S', GuiGlobalItems.saveItem(this, parent));
+        saveItem = GuiGlobalItems.saveItem(this, parent);
+        noChangeItem = GuiGlobalItems.noChangeItem();
 
+        pane.bindItem('S', noChangeItem);
+
+    }
+
+    @Override
+    public void update() {
+        pane.bindItem('S', hadChange() ? saveItem : noChangeItem);
+        super.update();
     }
 
     protected PatternPane getPane() {
@@ -53,6 +65,8 @@ public abstract class AbstractSettingGui extends ChestGui {
     protected abstract Pattern getGuiPattern();
 
     public abstract boolean onSave();
+
+    public abstract boolean hadChange();
 
 
     public abstract static class SettingGuiFactory{

@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 public class IntSettingsGui extends AbstractSettingGui{
 
     private final IntSettingFactory holder;
+    private final int before;
     private int now;
     private int step;
 
@@ -28,6 +29,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         super(3, holder.title, holder.parent);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
+        this.before =now;
         this.now = now;
         this.step = holder.steps[0];
 
@@ -41,7 +43,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         return new Pattern(
                 "abcdefghi",
                 "00-0v0+00",
-                "B0000000S"
+                "BD000000S"
         );
     }
 
@@ -55,7 +57,7 @@ public class IntSettingsGui extends AbstractSettingGui{
             int planned = Math.max(holder.min, now - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("\u00A7e"+planned + " \u00A7r(\u00A7c-"+(now-planned)+"\u00A7r)");
+            meta.setDisplayName("\u00A7e"+now+" -> "+planned + " \u00A7r(\u00A7c-"+(now-planned)+"\u00A7r)");
             meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
 
@@ -72,7 +74,7 @@ public class IntSettingsGui extends AbstractSettingGui{
             int planned = Math.min(holder.max, now + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("\u00A7e"+planned + " \u00A7r(\u00A7a+"+(planned-now)+"\u00A7r)");
+            meta.setDisplayName("\u00A7e"+now+" -> "+planned + " \u00A7r(\u00A7a+"+(planned-now)+"\u00A7r)");
             meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
 
@@ -85,7 +87,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         // "result" display
         ItemStack resultPaper = new ItemStack(Material.PAPER);
         ItemMeta resultMeta = resultPaper.getItemMeta();
-        resultMeta.setDisplayName("\u00A7e"+now);
+        resultMeta.setDisplayName("\u00A7eValue: "+now);
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -177,6 +179,11 @@ public class IntSettingsGui extends AbstractSettingGui{
             return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
+    }
+
+    @Override
+    public boolean hadChange() {
+        return now != before;
     }
 
     public static IntSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
