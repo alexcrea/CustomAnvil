@@ -33,6 +33,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         this.now = now;
         this.step = holder.steps[0];
 
+        prepareReturnToDefault();
         updateValueDisplay();
         initStepsValue();
     }
@@ -42,9 +43,25 @@ public class IntSettingsGui extends AbstractSettingGui{
     public Pattern getGuiPattern() {
         return new Pattern(
                 "abcdefghi",
-                "00-0v0+00",
-                "BD000000S"
+                "D0-0v0+00",
+                "B0000000S"
         );
+    }
+
+    GuiItem returnToDefault;
+    protected void prepareReturnToDefault(){
+        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName("\u00A7eReset to default value");
+        meta.setLore(Collections.singletonList("\u00A77Default value is: "+holder.defaultVal));
+        item.setItemMeta(meta);
+        returnToDefault = new GuiItem(item, event -> {
+            event.setCancelled(true);
+            now = holder.defaultVal;
+            updateValueDisplay();
+            update();
+            }, CustomAnvil.instance);
     }
 
     protected void updateValueDisplay(){
@@ -92,6 +109,16 @@ public class IntSettingsGui extends AbstractSettingGui{
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         pane.bindItem('v', resultItem);
+
+        // reset to default
+        GuiItem returnToDefault;
+        if(now != holder.defaultVal){
+            returnToDefault = this.returnToDefault;
+        }else{
+            returnToDefault = GuiGlobalItems.backgroundItem();
+        }
+        pane.bindItem('D', returnToDefault);
+
 
     }
 
