@@ -19,7 +19,7 @@ import java.util.Collections;
 public class GuiGlobalItems {
 
     // return
-    public static GuiItem toGuiItem(@NotNull ItemStack item, @NotNull Gui goal){
+    public static GuiItem goToGuiItem(@NotNull ItemStack item, @NotNull Gui goal){
         return new GuiItem(item, GuiGlobalActions.openGuiAction(goal), CustomAnvil.instance);
     }
 
@@ -33,7 +33,7 @@ public class GuiGlobalItems {
     }
     public static GuiItem backItem(@NotNull Gui goal){
         // simple go back item
-        return toGuiItem(BACK_ITEM, goal);
+        return goToGuiItem(BACK_ITEM, goal);
     }
     public static void addBackItem(@NotNull PatternPane target,
                                    @NotNull Gui goal){

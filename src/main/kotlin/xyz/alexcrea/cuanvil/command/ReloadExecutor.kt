@@ -32,11 +32,11 @@ class ReloadExecutor : CommandExecutor {
      */
     private fun commandBody(hardfail: Boolean): Boolean{
         try {
-            if(!ConfigHolder.reloadAllFromDisk(hardfail)) return false;
+            if(!ConfigHolder.reloadAllFromDisk(hardfail)) return false
 
             // Then update all global gui containing value from config
-            BasicConfigGui.INSTANCE.updateGuiValues();
-            return true;
+            BasicConfigGui.INSTANCE.updateGuiValues()
+            return true
         }catch (e: Exception){
             e.printStackTrace()
             return false
