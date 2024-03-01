@@ -5,11 +5,9 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
@@ -46,9 +44,8 @@ public class BasicConfigGui extends ValueUpdatableGui {
     @Override
     public void updateGuiValues() {
         // Update item with value
-        ItemStack setting1Item = new ItemStack(Material.STONE);
-        AbstractSettingGui.SettingGuiFactory factory1 = IntSettingsGui.factory( "Test GUI", this, "test", ConfigHolder.DEFAULT_CONFIG, 0,255,2,1, 5, 10, 50, 100);
-        GuiItem setting1 = GuiGlobalItems.openSettingGuiItem(setting1Item, factory1);
+        IntSettingsGui.IntSettingFactory factory1 = IntSettingsGui.factory( "Test GUI", this, "test", ConfigHolder.DEFAULT_CONFIG, 0,255,2,1, 5, 10, 50, 100);
+        GuiItem setting1 = GuiGlobalItems.intSettingGuiItem(factory1, Material.COMMAND_BLOCK);
         pane.bindItem('1', setting1);
 
         BoolSettingsGui.BoolSettingFactory factory2 = BoolSettingsGui.factory("Test Gui bool",this, "test2", ConfigHolder.DEFAULT_CONFIG, false);

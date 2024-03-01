@@ -5,6 +5,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -30,11 +31,15 @@ class ReloadExecutor : CommandExecutor {
      * Execute the command, return true if success or false otherwise
      */
     private fun commandBody(hardfail: Boolean): Boolean{
-        return try {
-            ConfigHolder.reloadAllFromDisk(hardfail)
+        try {
+            if(!ConfigHolder.reloadAllFromDisk(hardfail)) return false;
+
+            // Then update all global gui containing value from config
+            BasicConfigGui.INSTANCE.updateGuiValues();
+            return true;
         }catch (e: Exception){
             e.printStackTrace()
-            false
+            return false
         }
     }
 }
