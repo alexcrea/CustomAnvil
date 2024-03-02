@@ -39,9 +39,9 @@ permissions:
     description: Allow administrator to reload the plugin's configs
   ca.config.edit:
     default: op
-    description: Allow administrator to reload the plugin's configs in game
+    description: Allow administrator to edit the plugin's config in game
 
-# soft depend on old name so I can disable it if it is on the same server
+# soft depend on old name, so I can disable it if it is on the same server
 # as it is the old name for this plugin
 softdepend:
   - UnsafeEnchantsPlus
