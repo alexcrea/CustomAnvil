@@ -23,6 +23,7 @@ or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds)
 - Custom XP cost for every aspect of the anvil
 - Permissions to bypass level limit or enchantment restriction.
+- Gui to configure the plugin in game (in alpha: can only edit basic config. next versions will focus on this feature)
 ---
 ### Permissions:
 ```yml
