@@ -28,7 +28,7 @@ public class MainConfigGui extends ChestGui {
 
     private void init(){
         Pattern pattern = new Pattern(
-                "000000000",
+                "I00000000",
                 "012304560",
                 "Q00000000"
         );
@@ -78,6 +78,17 @@ public class MainConfigGui extends ChestGui {
             event.getWhoClicked().closeInventory();
         },CustomAnvil.instance);
         pane.bindItem('Q', quitItem);
+
+        // create & bind "info" item
+        ItemStack infoItemstack = new ItemStack(Material.PAPER);
+        ItemMeta infoMeta = infoItemstack.getItemMeta();
+
+        infoMeta.setDisplayName("\u00A7eThis is a alpha version of the gui !");
+        infoMeta.setLore(Collections.singletonList("\u00A77If you have feedback or idea you can send them to the dev !"));
+        infoItemstack.setItemMeta(infoMeta);
+
+        GuiItem infoItem = new GuiItem(infoItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        pane.bindItem('I', infoItem);
 
     }
 
