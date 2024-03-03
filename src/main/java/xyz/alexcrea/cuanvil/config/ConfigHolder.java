@@ -138,6 +138,7 @@ public abstract class ConfigHolder {
 
         @Override
         public boolean reloadFromDisk(boolean hardFail) {
+            CustomAnvil.instance.saveDefaultConfig();
             CustomAnvil.instance.reloadConfig();
             this.configuration = CustomAnvil.instance.getConfig();
             return true;
