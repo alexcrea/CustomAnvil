@@ -4,8 +4,8 @@ import io.delilaheve.util.ConfigOptions
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
-import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
+import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.cuanvil.util.MetricsUtil

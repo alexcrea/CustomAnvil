@@ -65,14 +65,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
         enchantments.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
 
         for (Enchantment enchant : enchantments) {
-            //String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
-            //String prettyKey = StringUtil.snakeToUpperSpacedCase(key);
-
             T factory = getFactoryFromEnchant(enchant);
-                    /*IntSettingsGui.factory(prettyKey, this,
-                    SECTION_NAME+'.'+key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
-                    enchant.getMaxLevel(),
-                    1, 5, 10, 50, 100);*/
 
             bookItemFactoryList.add(factory);
         }
@@ -86,11 +79,8 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
         this.filledEnchant.clear();
 
         for (T inventoryFactory : this.bookItemFactoryList) {
-
             GuiItem item = getItemFromFactory(inventoryFactory);
-                    /*GuiGlobalItems.intSettingGuiItem(inventoryFactory,
-                    Material.ENCHANTED_BOOK,
-                    inventoryFactory.getTitle());*/
+
             this.filledEnchant.addItem(item);
         }
 

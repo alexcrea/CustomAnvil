@@ -2,7 +2,6 @@ package xyz.alexcrea.cuanvil.group
 
 import org.bukkit.Material
 import java.util.*
-import kotlin.collections.HashSet
 
 class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
     override fun createDefaultSet(): EnumSet<Material> {

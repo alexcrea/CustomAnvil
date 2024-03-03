@@ -16,7 +16,6 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.Consumer;
 
 public class EnchantCostSettingsGui extends IntSettingsGui {

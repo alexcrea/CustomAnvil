@@ -1,7 +1,7 @@
 package xyz.alexcrea.cuanvil.group
 
 import org.bukkit.Material
-import java.util.EnumSet
+import java.util.*
 
 class IncludeGroup(name: String): AbstractMaterialGroup(name) {
     override fun createDefaultSet(): EnumSet<Material> {

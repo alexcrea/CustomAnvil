@@ -1,7 +1,7 @@
 package xyz.alexcrea.cuanvil.group
 
 import org.bukkit.Material
-import java.util.EnumSet
+import java.util.*
 
 abstract class AbstractMaterialGroup(private val name: String) {
     protected val includedMaterial by lazy {createDefaultSet()}
