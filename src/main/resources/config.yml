@@ -1,7 +1,7 @@
 # Whether all anvil actions should be capped
 #
 # If true, all anvil repairs will max out at the value of limit_repair_value
-limit_repair_cost: true
+limit_repair_cost: false
 
 # Value to limit repair costs to when limit_repair_cost is true
 #

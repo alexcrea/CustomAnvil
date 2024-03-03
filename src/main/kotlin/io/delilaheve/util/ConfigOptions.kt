@@ -39,7 +39,7 @@ object ConfigOptions {
     // Default value for enchantment limits
     private const val DEFAULT_ENCHANT_LIMIT = 5
     // Default value for limiting repair cost
-    const val DEFAULT_LIMIT_REPAIR = true
+    const val DEFAULT_LIMIT_REPAIR = false
     // Default value for repair cost limit
     const val DEFAULT_LIMIT_REPAIR_VALUE = 39
     // Default value for level cost on item repair

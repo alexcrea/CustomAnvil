@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection
 
 object MetricsUtil {
 
-    private const val baseConfigHash = -1527723485
+    private const val baseConfigHash = -1592940914
     private const val enchantLimitsConfigHash = 781312397
     private const val enchantValuesConfigHash = 1072574774
     private const val enchantConflictConfigHash = 1406650190
