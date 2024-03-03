@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.EnchantCostConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.EnchantLimitConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -60,18 +61,27 @@ public class MainConfigGui extends ChestGui {
         GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, EnchantLimitConfigGui.INSTANCE);
         pane.bindItem('2', enchantLimitItem);
 
+        // enchant cost item
+        ItemStack enchantCostItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta enchantCostMeta = enchantCostItemstack.getItemMeta();
+
+        enchantCostMeta.setDisplayName("\u00A7aEnchantment Cost");
+        enchantCostMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment costs menu"));
+        enchantCostItemstack.setItemMeta(enchantCostMeta);
+
+        GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, EnchantCostConfigGui.INSTANCE);
+        pane.bindItem('3', enchantCostItem);
+
         // WIP configuration items
         ItemStack wipItemstack = new ItemStack(Material.BARRIER);
         ItemMeta wipMeta = wipItemstack.getItemMeta();
         wipMeta.setDisplayName("\u00A7cWIP");
         wipItemstack.setItemMeta(wipMeta);
 
-        GuiItem wip3 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip4 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip5 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip6 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        pane.bindItem('3', wip3);
         pane.bindItem('4', wip4);
         pane.bindItem('5', wip5);
         pane.bindItem('6', wip6);

@@ -95,7 +95,7 @@ public class GuiGlobalItems {
         return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
 
-    private static final String SETTING_ITEM_LORE_PREFIX = "\u00A77value: ";
+    public static final String SETTING_ITEM_LORE_PREFIX = "\u00A77value: ";
 
     public static GuiItem boolSettingGuiItem(
             @NotNull BoolSettingsGui.BoolSettingFactory factory,

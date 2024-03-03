@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class EnchantCostSettingsGui extends IntSettingsGui {
@@ -33,18 +35,41 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         this.step = holder.steps[0];
 
-        updateValueDisplay();
-        initStepsValue();
+        initStaticItem();
     }
-
 
     @Override
     public Pattern getGuiPattern() {
         return new Pattern(
-                "abc1bMVP0",
-                "D001s-v+0",
+                "abc12MVP0",
+                "D0013-v+0",
                 "B0010000S"
         );
+    }
+
+    private void initStaticItem() {
+        PatternPane pane = getPane();
+
+        // book display
+        ItemStack bookItemstack = new ItemStack(Material.BOOK);
+        ItemMeta bookMeta = bookItemstack.getItemMeta();
+
+        bookMeta.setDisplayName("\u00A7aEnchantment by Book Cost");
+        bookMeta.setLore(Collections.singletonList("\u00A77Value on the right represent cost of enchantment for every level if combined by a book"));
+        bookItemstack.setItemMeta(bookMeta);
+
+        // sword display
+        ItemStack swordItemstack = new ItemStack(Material.WOODEN_SWORD);
+        ItemMeta swordMeta = swordItemstack.getItemMeta();
+        swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        swordMeta.setDisplayName("\u00A7aEnchantment by Sword Cost");
+        swordMeta.setLore(Collections.singletonList("\u00A77Value on the right represent cost of enchantment for every level if combined by an item other than a book"));
+        swordItemstack.setItemMeta(swordMeta);
+
+        pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
+        pane.bindItem('2', new GuiItem(bookItemstack,  GuiGlobalActions.stayInPlace, CustomAnvil.instance));
+        pane.bindItem('3', new GuiItem(swordItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
 
     @Override
@@ -153,9 +178,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
+        System.out.println("ON SAVE");
         if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
             holder.config.getConfig().set(holder.configPath+ITEM_PATH, now);
-            holder.config.getConfig().set(holder.configPath+BOOK_PATH, now);
+            holder.config.getConfig().set(holder.configPath+BOOK_PATH, nowBook);
             return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
@@ -166,10 +192,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         return super.hadChange() || nowBook != beforeBook;
     }
 
-    public static EnchantCostSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
-                                                    String configPath, ConfigHolder config,
-                                                    int min, int max, int defaultItemVal, int defaultBookVal,
-                                                    int... steps){
+    public static EnchantCostSettingFactory enchFactory(@NotNull String title, ValueUpdatableGui parent,
+                                                        String configPath, ConfigHolder config,
+                                                        int min, int max, int defaultItemVal, int defaultBookVal,
+                                                        int... steps){
         return new EnchantCostSettingFactory(
                 title,parent,
                 configPath, config,
@@ -212,7 +238,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             // Get value or default
             int nowItem = getConfiguredValue();
             // Get value or default
-            int nowBook = getConfiguredValue();
+            int nowBook = getConfiguredBookValue();
             // create new gui
             return new EnchantCostSettingsGui(this, nowItem, nowBook);
         }

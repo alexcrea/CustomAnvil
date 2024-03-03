@@ -115,9 +115,9 @@ public class BoolSettingsGui extends AbstractSettingGui{
         return now != before;
     }
 
-    public static BoolSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
-                                            String configPath, ConfigHolder config,
-                                            boolean defaultVal){
+    public static BoolSettingFactory boolFactory(@NotNull String title, ValueUpdatableGui parent,
+                                                 String configPath, ConfigHolder config,
+                                                 boolean defaultVal){
         return new BoolSettingFactory(
                 title,parent,
                 configPath, config,
