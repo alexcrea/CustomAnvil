@@ -22,7 +22,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
     private final boolean before;
     private boolean now;
 
-    private BoolSettingsGui(BoolSettingFactory holder, boolean now) {
+    protected BoolSettingsGui(BoolSettingFactory holder, boolean now) {
         super(3, holder.title, holder.parent);
         this.holder = holder;
         this.before = now;
@@ -129,9 +129,10 @@ public class BoolSettingsGui extends AbstractSettingGui{
         @NotNull String title; ValueUpdatableGui parent;
         boolean defaultVal;
 
-        private BoolSettingFactory(@NotNull String title, ValueUpdatableGui parent,
-                                  String configPath, ConfigHolder config,
-                                  boolean defaultVal){
+        protected BoolSettingFactory(
+                @NotNull String title, ValueUpdatableGui parent,
+                String configPath, ConfigHolder config,
+                boolean defaultVal){
             super(configPath, config);
             this.title = title;
             this.parent = parent;
