@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.utils;
+package xyz.alexcrea.cuanvil.gui.util;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.util.StringUtil;
 
 import java.util.Collections;
 
@@ -97,21 +98,44 @@ public class GuiGlobalItems {
     private static final String SETTING_ITEM_LORE_PREFIX = "\u00A77value: ";
 
     public static GuiItem boolSettingGuiItem(
-            @NotNull BoolSettingsGui.BoolSettingFactory factory
+            @NotNull BoolSettingsGui.BoolSettingFactory factory,
+            @NotNull String name
     ){
         // Get item properties
         boolean value = factory.getConfiguredValue();
 
         Material itemMat;
-        StringBuilder partOfItemName = new StringBuilder("\u00A7");
+        StringBuilder itemName = new StringBuilder("\u00A7");
         if(value){
             itemMat = Material.GREEN_TERRACOTTA;
-            partOfItemName.append("a");
+            itemName.append("a");
         }else{
             itemMat = Material.RED_TERRACOTTA;
-            partOfItemName.append("c");
+            itemName.append("c");
         }
-        return createGuiItemFromProperties(factory, itemMat, partOfItemName, value);
+        itemName.append(name);
+
+        return createGuiItemFromProperties(factory, itemMat, itemName, value);
+    }
+
+    public static GuiItem boolSettingGuiItem(
+            @NotNull BoolSettingsGui.BoolSettingFactory factory
+    ){
+        String configPath = getConfigNameFromPath(factory.getConfigPath());
+        return boolSettingGuiItem(factory, StringUtil.snakeToUpperSpacedCase(configPath));
+    }
+
+
+    public static GuiItem intSettingGuiItem(
+            @NotNull IntSettingsGui.IntSettingFactory factory,
+            @NotNull Material itemMat,
+            @NotNull String name
+    ){
+        // Get item properties
+        int value = factory.getConfiguredValue();
+        StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
+
+        return createGuiItemFromProperties(factory, itemMat, itemName, value);
     }
 
 
@@ -119,26 +143,20 @@ public class GuiGlobalItems {
             @NotNull IntSettingsGui.IntSettingFactory factory,
             @NotNull Material itemMat
     ){
-        // Get item properties
-        int value = factory.getConfiguredValue();
-        StringBuilder partOfItemName = new StringBuilder("\u00A7a");
-
-        return createGuiItemFromProperties(factory, itemMat, partOfItemName, value);
+        String configPath = getConfigNameFromPath(factory.getConfigPath());
+        return intSettingGuiItem(factory, itemMat, StringUtil.snakeToUpperSpacedCase(configPath));
     }
-
     private static GuiItem createGuiItemFromProperties(
             @NotNull AbstractSettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
-            @NotNull StringBuilder partOfItemName,
+            @NotNull StringBuilder itemName,
             @NotNull Object value
     ){
-        partOfItemName.append(getConfigNameFromPath(factory.getConfigPath()));
-
         // Create item
         ItemStack item = new ItemStack(itemMat);
         ItemMeta itemMeta = item.getItemMeta();
 
-        itemMeta.setDisplayName(partOfItemName.toString());
+        itemMeta.setDisplayName(itemName.toString());
         itemMeta.setLore(Collections.singletonList(SETTING_ITEM_LORE_PREFIX+value));
 
         item.setItemMeta(itemMeta);
@@ -151,4 +169,5 @@ public class GuiGlobalItems {
         // indexOfDot == -1 (not fond) imply indexOfDot+1 = 0. substring will keep the full path as expected
         return path.substring(indexOfDot+1);
     }
+
 }

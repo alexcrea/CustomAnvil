@@ -14,8 +14,8 @@ import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 
@@ -28,7 +28,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
     }
 
     private BasicConfigGui(){
-        super(3, "\u00A78Basic Config GUI", CustomAnvil.instance);
+        super(3, "\u00A78Basic Config", CustomAnvil.instance);
 
     }
 
@@ -85,13 +85,13 @@ public class BasicConfigGui extends ValueUpdatableGui {
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
-        this.itemRepairCost = IntSettingsGui.factory("\u00A78Item repair cost", this,
+        this.itemRepairCost = IntSettingsGui.factory("\u00A78Item Repair Cost", this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // unit repair cost
-        this.unitRepairCost = IntSettingsGui.factory("\u00A78Unit repair cost", this,
+        this.unitRepairCost = IntSettingsGui.factory("\u00A78Unit Repair Cost", this,
                 ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
                 1, 5, 10, 50, 100);
@@ -105,11 +105,10 @@ public class BasicConfigGui extends ValueUpdatableGui {
 
         // sacrifice illegal enchant cost
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
-        this.sacrificeIllegalEnchantCost = IntSettingsGui.factory("\u00A78Sacrifice Illegal enchant Cost", this,
+        this.sacrificeIllegalEnchantCost = IntSettingsGui.factory("\u00A78Sacrifice Illegal Enchant Cost", this,
                 ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
-
 
     }
 

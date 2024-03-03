@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 import java.util.function.Consumer;
@@ -137,6 +137,11 @@ public class BoolSettingsGui extends AbstractSettingGui{
             this.parent = parent;
 
             this.defaultVal = defaultVal;
+        }
+
+        @NotNull
+        public String getTitle() {
+            return title;
         }
 
         public boolean getConfiguredValue(){

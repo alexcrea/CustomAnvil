@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.utils;
+package xyz.alexcrea.cuanvil.gui.util;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;

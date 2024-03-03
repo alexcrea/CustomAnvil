@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.gui.MainConfigGui
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 
 class EditConfigExecutor : CommandExecutor {
 

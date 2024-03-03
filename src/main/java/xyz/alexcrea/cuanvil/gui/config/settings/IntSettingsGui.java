@@ -11,8 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 import java.util.List;
@@ -168,12 +168,12 @@ public class IntSettingsGui extends AbstractSettingGui{
         if(stepValue == step){
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
-            stepLore = Collections.singletonList("\u00A77Value is changing by a step of "+stepValue);
+            stepLore = Collections.singletonList("\u00A77Value is changing by "+stepValue);
             clickEvent = GuiGlobalActions.stayInPlace;
         }else{
             stepMat = Material.RED_STAINED_GLASS_PANE;
             stepName.append('c');
-            stepLore = Collections.singletonList("\u00A77Click here to change the value of a step by "+stepValue);
+            stepLore = Collections.singletonList("\u00A77Click here to change the value by "+stepValue);
             clickEvent = updateStepValue(stepValue);
         }
         stepName.append("Step of: ").append(stepValue);
@@ -237,6 +237,11 @@ public class IntSettingsGui extends AbstractSettingGui{
             this.max = max;
             this.defaultVal = defaultVal;
             this.steps = steps;
+        }
+
+        @NotNull
+        public String getTitle() {
+            return title;
         }
 
         public int getConfiguredValue(){

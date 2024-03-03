@@ -9,8 +9,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.config.EnchantLimitConfigGui;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 
@@ -45,8 +46,19 @@ public class MainConfigGui extends ChestGui {
         basicConfigMeta.setLore(Collections.singletonList("\u00A77Click here to open basic config menu"));
         basicConfigItemstack.setItemMeta(basicConfigMeta);
 
-        GuiItem placeholder1 = GuiGlobalItems.goToGuiItem(basicConfigItemstack, BasicConfigGui.INSTANCE);
-        pane.bindItem('1', placeholder1);
+        GuiItem basicConfigItem = GuiGlobalItems.goToGuiItem(basicConfigItemstack, BasicConfigGui.INSTANCE);
+        pane.bindItem('1', basicConfigItem);
+
+        // enchant level limit item
+        ItemStack enchantLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemMeta enchantLimitMeta = enchantLimitItemstack.getItemMeta();
+
+        enchantLimitMeta.setDisplayName("\u00A7aEnchantment Level Limit");
+        enchantLimitMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment level limit menu"));
+        enchantLimitItemstack.setItemMeta(enchantLimitMeta);
+
+        GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, EnchantLimitConfigGui.INSTANCE);
+        pane.bindItem('2', enchantLimitItem);
 
         // WIP configuration items
         ItemStack wipItemstack = new ItemStack(Material.BARRIER);
@@ -54,14 +66,11 @@ public class MainConfigGui extends ChestGui {
         wipMeta.setDisplayName("\u00A7cWIP");
         wipItemstack.setItemMeta(wipMeta);
 
-        GuiItem wip2 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip3 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip4 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip5 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip6 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-
-        pane.bindItem('2', wip2);
         pane.bindItem('3', wip3);
         pane.bindItem('4', wip4);
         pane.bindItem('5', wip5);
