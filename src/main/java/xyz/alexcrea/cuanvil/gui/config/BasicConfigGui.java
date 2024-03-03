@@ -14,8 +14,8 @@ import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 
@@ -28,7 +28,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
     }
 
     private BasicConfigGui(){
-        super(3, "\u00A78Basic Config GUI", CustomAnvil.instance);
+        super(3, "\u00A78Basic Config", CustomAnvil.instance);
 
     }
 
@@ -60,12 +60,12 @@ public class BasicConfigGui extends ValueUpdatableGui {
 
     protected void prepareValues(){
         // limit repair item
-        this.limitRepairFactory = BoolSettingsGui.factory("\u00A78Limit Repair Cost ?",this,
+        this.limitRepairFactory = BoolSettingsGui.boolFactory("\u00A78Limit Repair Cost ?",this,
                 ConfigOptions.LIMIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_LIMIT_REPAIR);
 
         // rename cost item
         IntRange range = ConfigOptions.REPAIR_LIMIT_RANGE;
-        this.repairCostFactory = IntSettingsGui.factory("\u00A78Repair Cost Limit", this,
+        this.repairCostFactory = IntSettingsGui.intFactory("\u00A78Repair Cost Limit", this,
                 ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_LIMIT_REPAIR_VALUE,
                 1, 5, 10);
@@ -80,36 +80,35 @@ public class BasicConfigGui extends ValueUpdatableGui {
         this.notNeededLimitValueItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // remove repair limit item
-        this.removeRepairLimit = BoolSettingsGui.factory("\u00A78Remove Repair Limit ?",this,
+        this.removeRepairLimit = BoolSettingsGui.boolFactory("\u00A78Remove Repair Limit ?",this,
                 ConfigOptions.REMOVE_REPAIR_LIMIT, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_REMOVE_LIMIT);
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
-        this.itemRepairCost = IntSettingsGui.factory("\u00A78Item repair cost", this,
+        this.itemRepairCost = IntSettingsGui.intFactory("\u00A78Item Repair Cost", this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // unit repair cost
-        this.unitRepairCost = IntSettingsGui.factory("\u00A78Unit repair cost", this,
+        this.unitRepairCost = IntSettingsGui.intFactory("\u00A78Unit Repair Cost", this,
                 ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // item rename cost
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
-        this.itemRenameCost = IntSettingsGui.factory("\u00A78Rename Cost", this,
+        this.itemRenameCost = IntSettingsGui.intFactory("\u00A78Rename Cost", this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
                 1, 5, 10, 50, 100);
 
         // sacrifice illegal enchant cost
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
-        this.sacrificeIllegalEnchantCost = IntSettingsGui.factory("\u00A78Sacrifice Illegal enchant Cost", this,
+        this.sacrificeIllegalEnchantCost = IntSettingsGui.intFactory("\u00A78Sacrifice Illegal Enchant Cost", this,
                 ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
-
 
     }
 

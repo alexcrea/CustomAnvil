@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 import java.util.function.Consumer;
@@ -22,7 +22,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
     private final boolean before;
     private boolean now;
 
-    private BoolSettingsGui(BoolSettingFactory holder, boolean now) {
+    protected BoolSettingsGui(BoolSettingFactory holder, boolean now) {
         super(3, holder.title, holder.parent);
         this.holder = holder;
         this.before = now;
@@ -115,9 +115,9 @@ public class BoolSettingsGui extends AbstractSettingGui{
         return now != before;
     }
 
-    public static BoolSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
-                                            String configPath, ConfigHolder config,
-                                            boolean defaultVal){
+    public static BoolSettingFactory boolFactory(@NotNull String title, ValueUpdatableGui parent,
+                                                 String configPath, ConfigHolder config,
+                                                 boolean defaultVal){
         return new BoolSettingFactory(
                 title,parent,
                 configPath, config,
@@ -129,14 +129,20 @@ public class BoolSettingsGui extends AbstractSettingGui{
         @NotNull String title; ValueUpdatableGui parent;
         boolean defaultVal;
 
-        private BoolSettingFactory(@NotNull String title, ValueUpdatableGui parent,
-                                  String configPath, ConfigHolder config,
-                                  boolean defaultVal){
+        protected BoolSettingFactory(
+                @NotNull String title, ValueUpdatableGui parent,
+                String configPath, ConfigHolder config,
+                boolean defaultVal){
             super(configPath, config);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
+        }
+
+        @NotNull
+        public String getTitle() {
+            return title;
         }
 
         public boolean getConfiguredValue(){

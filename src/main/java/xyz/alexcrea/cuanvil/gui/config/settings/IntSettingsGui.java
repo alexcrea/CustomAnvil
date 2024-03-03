@@ -11,8 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.utils.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,22 +20,22 @@ import java.util.function.Consumer;
 
 public class IntSettingsGui extends AbstractSettingGui{
 
-    private final IntSettingFactory holder;
-    private final int before;
-    private int now;
-    private int step;
+    protected final IntSettingFactory holder;
+    protected final int before;
+    protected int now;
+    protected int step;
 
-    private IntSettingsGui(IntSettingFactory holder, int now) {
+    protected IntSettingsGui(IntSettingFactory holder, int now) {
         super(3, holder.title, holder.parent);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
-        this.before =now;
+        this.before = now;
         this.now = now;
         this.step = holder.steps[0];
 
+        initStepsValue();
         prepareReturnToDefault();
         updateValueDisplay();
-        initStepsValue();
     }
 
 
@@ -48,7 +48,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         );
     }
 
-    GuiItem returnToDefault;
+    protected GuiItem returnToDefault;
     protected void prepareReturnToDefault(){
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
@@ -136,7 +136,7 @@ public class IntSettingsGui extends AbstractSettingGui{
         GuiItem background = GuiGlobalItems.backgroundItem();
         PatternPane pane = getPane();
 
-        for (char i = 'a'; i < 'a'+9; i++) {
+        for (char i = 'a'; i < (getMidStepChar()-'a')*2+1; i++) {
             pane.bindItem(i, background);
         }
         // Then update legit step values
@@ -145,7 +145,7 @@ public class IntSettingsGui extends AbstractSettingGui{
     protected void updateStepValue(){
         if(holder.steps.length <= 1) return;
         // We assume steps have a length of 2k+1 cause its more pretty
-        char val = 'e'; // e is the middle, maybe rework this part to remove magic number.
+        char val = getMidStepChar();
         // Offset
         val -= (char) ((holder.steps.length-1)/2);
 
@@ -155,6 +155,10 @@ public class IntSettingsGui extends AbstractSettingGui{
             pane.bindItem(val+i, stepGuiItem(i));
         }
 
+    }
+
+    protected char getMidStepChar(){
+        return 'e';
     }
 
     protected GuiItem stepGuiItem(int stepIndex){
@@ -168,12 +172,12 @@ public class IntSettingsGui extends AbstractSettingGui{
         if(stepValue == step){
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
-            stepLore = Collections.singletonList("\u00A77Value is changing by a step of "+stepValue);
+            stepLore = Collections.singletonList("\u00A77Value is changing by "+stepValue);
             clickEvent = GuiGlobalActions.stayInPlace;
         }else{
             stepMat = Material.RED_STAINED_GLASS_PANE;
             stepName.append('c');
-            stepLore = Collections.singletonList("\u00A77Click here to change the value of a step by "+stepValue);
+            stepLore = Collections.singletonList("\u00A77Click here to change the value by "+stepValue);
             clickEvent = updateStepValue(stepValue);
         }
         stepName.append("Step of: ").append(stepValue);
@@ -213,9 +217,9 @@ public class IntSettingsGui extends AbstractSettingGui{
         return now != before;
     }
 
-    public static IntSettingFactory factory(@NotNull String title, ValueUpdatableGui parent,
-                                            String configPath, ConfigHolder config,
-                                            int min, int max, int defaultVal, int... steps){
+    public static IntSettingFactory intFactory(@NotNull String title, ValueUpdatableGui parent,
+                                               String configPath, ConfigHolder config,
+                                               int min, int max, int defaultVal, int... steps){
         return new IntSettingFactory(
                 title,parent,
                 configPath, config,
@@ -227,9 +231,10 @@ public class IntSettingsGui extends AbstractSettingGui{
         @NotNull String title; ValueUpdatableGui parent;
         int min; int max; int defaultVal; int[] steps;
 
-        private IntSettingFactory(@NotNull String title, ValueUpdatableGui parent,
-                                  String configPath, ConfigHolder config,
-                                  int min, int max, int defaultVal, int... steps){
+        protected IntSettingFactory(
+                @NotNull String title, ValueUpdatableGui parent,
+                String configPath, ConfigHolder config,
+                int min, int max, int defaultVal, int... steps){
             super(configPath, config);
             this.title = title;
             this.parent = parent;
@@ -237,6 +242,11 @@ public class IntSettingsGui extends AbstractSettingGui{
             this.max = max;
             this.defaultVal = defaultVal;
             this.steps = steps;
+        }
+
+        @NotNull
+        public String getTitle() {
+            return title;
         }
 
         public int getConfiguredValue(){
