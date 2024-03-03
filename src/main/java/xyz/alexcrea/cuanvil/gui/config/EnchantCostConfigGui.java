@@ -6,6 +6,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.StringUtil;
@@ -30,12 +32,18 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
 
     @Override
     public EnchantCostSettingsGui.EnchantCostSettingFactory getFactoryFromEnchant(Enchantment enchant) {
-        String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
+        String key = enchant.getKey().getKey().toLowerCase(Locale.ENGLISH);
         String prettyKey = StringUtil.snakeToUpperSpacedCase(key);
+
+        // try to find rarity. default to 0 if not found
+        EnchantmentRarity rarity = EnchantmentRarity.NO_RARITY;
+        try {
+            rarity = EnchantmentProperties.valueOf(key.toUpperCase(Locale.ENGLISH)).getRarity();
+        }catch (IllegalArgumentException ignored){}
 
         return EnchantCostSettingsGui.enchFactory(prettyKey+" Level Cost", this,
                 SECTION_NAME+'.'+key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
-                enchant.getMaxLevel(),4,
+                rarity.getItemValue(), rarity.getBookValue(),
                 1, 10, 50);
     }
 
