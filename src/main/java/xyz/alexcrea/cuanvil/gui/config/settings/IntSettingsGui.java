@@ -33,9 +33,9 @@ public class IntSettingsGui extends AbstractSettingGui{
         this.now = now;
         this.step = holder.steps[0];
 
+        initStepsValue();
         prepareReturnToDefault();
         updateValueDisplay();
-        initStepsValue();
     }
 
 

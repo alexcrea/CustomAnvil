@@ -24,18 +24,24 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     protected final static String ITEM_PATH = ".item";
     protected final static String BOOK_PATH = ".book";
 
-    private int beforeBook = -1;
-    private int nowBook = -1;
+    private int beforeBook;
+    private int nowBook;
 
-    protected EnchantCostSettingsGui(EnchantCostSettingFactory holder, int nowItem, int nowBook) {
+    protected EnchantCostSettingsGui(EnchantCostSettingFactory holder, int nowItem) {
         super(holder, nowItem);
-
-        this.beforeBook = nowBook;
-        this.nowBook = nowBook;
 
         this.step = holder.steps[0];
 
         initStaticItem();
+    }
+
+    @Override
+    protected void initStepsValue() {
+        super.initStepsValue();
+
+        int nowBook = ((EnchantCostSettingFactory)this.holder).getConfiguredBookValue();
+        this.beforeBook = nowBook;
+        this.nowBook = nowBook;
     }
 
     @Override
@@ -102,12 +108,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // assume holder is an instance of EnchantCostSettingFactory
         EnchantCostSettingFactory holder = ((EnchantCostSettingFactory) this.holder);
 
-        int nowBook;
-        if(this.nowBook == -1){
-            nowBook = holder.getConfiguredBookValue();
-        }else{
-            nowBook = this.nowBook;
-        }
+        int nowBook = this.nowBook;
 
         // minus item
         GuiItem minusItem;
@@ -178,7 +179,6 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
-        System.out.println("ON SAVE");
         if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
             holder.config.getConfig().set(holder.configPath+ITEM_PATH, now);
             holder.config.getConfig().set(holder.configPath+BOOK_PATH, nowBook);
@@ -237,10 +237,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         public AbstractSettingGui create() {
             // Get value or default
             int nowItem = getConfiguredValue();
-            // Get value or default
-            int nowBook = getConfiguredBookValue();
             // create new gui
-            return new EnchantCostSettingsGui(this, nowItem, nowBook);
+            return new EnchantCostSettingsGui(this, nowItem);
         }
 
     }
