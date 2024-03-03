@@ -60,8 +60,8 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Edit name and lore
         itemMeta.setDisplayName(itemName.toString());
         itemMeta.setLore(Arrays.asList(
-                "\u00A77Book Cost: " + bookCost,
-                "\u00A77Item Cost: " + itemCost));
+                "\u00A77Item  Cost: " + itemCost,
+                "\u00A77Book Cost: " + bookCost));
 
         item.setItemMeta(itemMeta);
 

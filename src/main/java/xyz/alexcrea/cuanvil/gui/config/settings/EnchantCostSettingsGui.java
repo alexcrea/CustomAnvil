@@ -47,8 +47,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     @Override
     public Pattern getGuiPattern() {
         return new Pattern(
-                "abc12MVP0",
-                "D0013-v+0",
+                "abc13-v+0",
+                "D0012MVP0",
                 "B0010000S"
         );
     }
@@ -60,17 +60,20 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemStack bookItemstack = new ItemStack(Material.BOOK);
         ItemMeta bookMeta = bookItemstack.getItemMeta();
 
-        bookMeta.setDisplayName("\u00A7aEnchantment by Book Cost");
-        bookMeta.setLore(Collections.singletonList("\u00A77Value on the right represent cost of enchantment for every level if combined by a book"));
-        bookItemstack.setItemMeta(bookMeta);
+        bookMeta.setDisplayName("\u00A7aCost of an Enchantment by Book");
+        bookMeta.setLore(Arrays.asList(
+                "\u00A77Cost per result item level of an sacrifice enchantment",
+                "\u00A77Only apply if sacrificed item \u00A7cis \u00A77a book"));bookItemstack.setItemMeta(bookMeta);
 
         // sword display
         ItemStack swordItemstack = new ItemStack(Material.WOODEN_SWORD);
         ItemMeta swordMeta = swordItemstack.getItemMeta();
         swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-        swordMeta.setDisplayName("\u00A7aEnchantment by Sword Cost");
-        swordMeta.setLore(Collections.singletonList("\u00A77Value on the right represent cost of enchantment for every level if combined by an item other than a book"));
+        swordMeta.setDisplayName("\u00A7aCost of an Enchantment by Item");
+        swordMeta.setLore(Arrays.asList(
+                "\u00A77Cost per result item level of an sacrifice enchantment",
+                "\u00A77Only apply if sacrificed item \u00A7cis not \u00A77a book"));
         swordItemstack.setItemMeta(swordMeta);
 
         pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
@@ -88,8 +91,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         meta.setDisplayName("\u00A7eReset to default value");
         meta.setLore(Arrays.asList(
-                "\u00A77Default book value is: " + holder.defaultBookVal,
-                "\u00A77Default item value is: " + holder.defaultVal));
+                "\u00A77Default item  value is: " + holder.defaultVal,
+                "\u00A77Default book value is: " + holder.defaultBookVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
