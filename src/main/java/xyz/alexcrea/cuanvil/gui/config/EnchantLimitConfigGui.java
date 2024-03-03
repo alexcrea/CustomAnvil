@@ -16,9 +16,7 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class EnchantLimitConfigGui extends ValueUpdatableGui {
 
@@ -70,7 +68,10 @@ public class EnchantLimitConfigGui extends ValueUpdatableGui {
     protected void prepareValues(){
         bookItemFactoryList = new ArrayList<>();
 
-        for (Enchantment enchant : Enchantment.values()) {
+        List<Enchantment> enchantments = Arrays.asList(Enchantment.values());
+        enchantments.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
+
+        for (Enchantment enchant : enchantments) {
             String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
             String prettyKey = StringUtil.snakeToUpperSpacedCase(key);
 
