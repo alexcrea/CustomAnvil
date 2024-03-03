@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -181,9 +182,11 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
+        holder.config.getConfig().set(holder.configPath+ITEM_PATH, now);
+        holder.config.getConfig().set(holder.configPath+BOOK_PATH, nowBook);
+
+        MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
         if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
-            holder.config.getConfig().set(holder.configPath+ITEM_PATH, now);
-            holder.config.getConfig().set(holder.configPath+BOOK_PATH, nowBook);
             return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;

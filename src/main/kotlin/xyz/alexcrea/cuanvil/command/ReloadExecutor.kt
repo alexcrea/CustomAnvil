@@ -6,6 +6,9 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui
+import xyz.alexcrea.cuanvil.gui.config.EnchantCostConfigGui
+import xyz.alexcrea.cuanvil.gui.config.EnchantLimitConfigGui
+import xyz.alexcrea.cuanvil.util.MetricsUtil
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -36,6 +39,12 @@ class ReloadExecutor : CommandExecutor {
 
             // Then update all global gui containing value from config
             BasicConfigGui.INSTANCE.updateGuiValues()
+            EnchantCostConfigGui.INSTANCE.updateGuiValues()
+            EnchantLimitConfigGui.INSTANCE.updateGuiValues()
+
+            // & update metric
+            MetricsUtil.testIfConfigIsDefault()
+
             return true
         }catch (e: Exception){
             e.printStackTrace()

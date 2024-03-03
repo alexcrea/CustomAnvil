@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +25,11 @@ public abstract class ConfigHolder {
         CONFLICT_HOLDER = new ConflictConfigHolder();
         UNIT_REPAIR_HOLDER = new UnitRepairHolder();
 
-        return reloadAllFromDisk(true);
+        boolean result = reloadAllFromDisk(true);
+        if(result){
+            MetricsUtil.INSTANCE.testIfConfigIsDefault();
+        }
+        return result;
     }
 
     public static boolean reloadAllFromDisk(boolean hardfail){

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Collections;
 import java.util.function.Consumer;
@@ -104,6 +105,8 @@ public class BoolSettingsGui extends AbstractSettingGui{
     @Override
     public boolean onSave() {
         holder.config.getConfig().set(holder.configPath, now);
+
+        MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
         if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
             return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }

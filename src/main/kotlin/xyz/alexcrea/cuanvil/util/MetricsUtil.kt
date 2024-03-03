@@ -3,14 +3,15 @@ package xyz.alexcrea.cuanvil.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import org.bukkit.configuration.ConfigurationSection
+import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 object MetricsUtil {
 
     private const val baseConfigHash = -1592940914
-    private const val enchantLimitsConfigHash = 781312397
+    private const val enchantLimitsConfigHash = -1014133828
     private const val enchantValuesConfigHash = 1072574774
     private const val enchantConflictConfigHash = 1406650190
-    private const val itemGroupsConfigHash = -1014133828
+    private const val itemGroupsConfigHash = 1406650190
     private const val unitRepairItemConfigHash = 536871958
     private const val baseConfigPieName = "isDefaultBaseConfig"
     private const val enchantLimitsConfigPieName = "isDefaultEnchantLimitsConfig"
@@ -65,22 +66,19 @@ object MetricsUtil {
     /**
      * Test if the used configuration is the default config
      */
-    fun testIfConfigIsDefault(defaultConfig: ConfigurationSection,
-                            enchantConflictConfig: ConfigurationSection,
-                            itemGroupsConfig: ConfigurationSection,
-                            unitRepairItemConfig: ConfigurationSection){
+    fun testIfConfigIsDefault(){
         // Calculate hash of config
-        val baseConfig = testBaseConfig(defaultConfig)
-        val limitEnchantConfig = getHashFromKey(defaultConfig, ConfigOptions.ENCHANT_LIMIT_ROOT)
-        val enchantValueConfig = getHashFromKey(defaultConfig, ConfigOptions.ENCHANT_VALUES_ROOT)
-        val enchantConflictConfig2 = getConfigurationHash(enchantConflictConfig)
-        val itemGroupConfig = getConfigurationHash(itemGroupsConfig)
-        val unitRepairConfig = getConfigurationHash(unitRepairItemConfig)
+        val baseConfig = testBaseConfig(ConfigHolder.DEFAULT_CONFIG.config)
+        val limitEnchantConfig = getHashFromKey(ConfigHolder.DEFAULT_CONFIG.config, ConfigOptions.ENCHANT_LIMIT_ROOT)
+        val enchantValueConfig = getHashFromKey(ConfigHolder.DEFAULT_CONFIG.config, ConfigOptions.ENCHANT_VALUES_ROOT)
+        val enchantConflictConfig = getConfigurationHash(ConfigHolder.CONFLICT_HOLDER.config)
+        val itemGroupConfig = getConfigurationHash(ConfigHolder.ITEM_GROUP_HOLDER.config)
+        val unitRepairConfig = getConfigurationHash(ConfigHolder.UNIT_REPAIR_HOLDER.config)
         // Test if default
         isDefaultBaseConfig = baseConfigHash == baseConfig
         isDefaultEnchantLimitsConfig = enchantLimitsConfigHash == limitEnchantConfig
         isDefaultEnchantValuesConfig = enchantValuesConfigHash  == enchantValueConfig
-        isDefaultEnchantConflictConfig = enchantConflictConfigHash == enchantConflictConfig2
+        isDefaultEnchantConflictConfig = enchantConflictConfigHash == enchantConflictConfig
         isDefaultItemGroupsConfig = itemGroupsConfigHash == itemGroupConfig
         isDefaultUnitRepairItemConfig = unitRepairItemConfigHash == unitRepairConfig
         // If not default and debug flag active, print the hash.
@@ -93,6 +91,24 @@ object MetricsUtil {
             if(!isDefaultUnitRepairItemConfig){CustomAnvil.log("unitRepairConfig: $unitRepairConfig")}
         }
 
+    }
+
+    fun notifyChange(holder: ConfigHolder, path: String){
+        if(ConfigHolder.DEFAULT_CONFIG.equals(holder)){
+            if(path.startsWith(ConfigOptions.ENCHANT_LIMIT_ROOT+".")){
+                isDefaultEnchantLimitsConfig = false;
+            }else if(path.startsWith(ConfigOptions.ENCHANT_VALUES_ROOT+".")){
+                isDefaultEnchantValuesConfig = false;
+            }else{
+                isDefaultBaseConfig = false;
+            }
+        }else if(ConfigHolder.CONFLICT_HOLDER.equals(holder)){
+            isDefaultEnchantConflictConfig = false;
+        }else if(ConfigHolder.ITEM_GROUP_HOLDER.equals(holder)){
+            isDefaultItemGroupsConfig = false;
+        }else if(ConfigHolder.UNIT_REPAIR_HOLDER.equals(holder)){
+            isDefaultUnitRepairItemConfig = false;
+        }
     }
 
     fun addCustomMetric(metric: Metrics) {
