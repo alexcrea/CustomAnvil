@@ -19,6 +19,10 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+/**
+ * An instance of a gui used to edit an enchantment cost setting.
+ * May be considered as a 2 int setting.
+ */
 public class EnchantCostSettingsGui extends IntSettingsGui {
 
     protected final static String ITEM_PATH = ".item";
@@ -27,6 +31,11 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     private int beforeBook;
     private int nowBook;
 
+    /**
+     * Create an enchantment cost setting config gui.
+     * @param holder Configuration factory of this setting.
+     * @param nowItem The defined value of this setting item's value.
+     */
     protected EnchantCostSettingsGui(EnchantCostSettingFactory holder, int nowItem) {
         super(holder, nowItem);
 
@@ -35,6 +44,11 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         initStaticItem();
     }
 
+    /**
+     * Initialise step items.
+     * Also bypassed init sequence to initialise books value
+     * as it used as one of the first call from the init sequence of the gui
+     */
     @Override
     protected void initStepsValue() {
         super.initStepsValue();
@@ -53,6 +67,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         );
     }
 
+    /**
+     * Initialise item that should not be updated late.
+     */
     private void initStaticItem() {
         PatternPane pane = getPane();
 
@@ -166,6 +183,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     }
 
+    /**
+     * @param planned Value to change current book cost setting to.
+     * @return A consumer to update the current book cost setting's value.
+     */
     protected Consumer<InventoryClickEvent> updateNowBookConsumer(int planned){
         return event->{
             event.setCancelled(true);
@@ -197,21 +218,55 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         return super.hadChange() || nowBook != beforeBook;
     }
 
-    public static EnchantCostSettingFactory enchFactory(@NotNull String title, ValueUpdatableGui parent,
-                                                        String configPath, ConfigHolder config,
-                                                        int min, int max, int defaultItemVal, int defaultBookVal,
-                                                        int... steps){
+    /**
+     * Create an int setting factory from setting's parameters.
+     * @param title The title of the gui.
+     * @param parent Parent gui to go back when completed.
+     * @param configPath Configuration path of this setting.
+     * @param config Configuration holder of this setting.
+     * @param min Minimum value of this setting.
+     * @param max Maximum value of this setting.
+     * @param defaultItemVal Default item value if not found on the config.
+     * @param defaultBookVal Default book value if not found on the config.
+     * @param steps List of step the value can increment/decrement.
+     *              List's size should be between 1 (included) and 3 (included).
+     *              it is visually preferable to have an odd number of step.
+     *              If step only contain 1 value, no step item should be displayed.
+     * @return A factory for an enchant cost setting gui.
+     */
+    public static EnchantCostSettingFactory enchentCostFactory(
+            @NotNull String title, ValueUpdatableGui parent,
+            String configPath, ConfigHolder config,
+            int min, int max, int defaultItemVal, int defaultBookVal,
+            int... steps){
         return new EnchantCostSettingFactory(
                 title,parent,
                 configPath, config,
                 min, max, defaultItemVal, defaultBookVal, steps);
     }
 
-
+    /**
+     * A factory for an enchantment cost setting gui that hold setting's information.
+     */
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
         int defaultBookVal;
 
+        /**
+         * Constructor for an enchantment cost setting gui factory.
+         * @param title The title of the gui.
+         * @param parent Parent gui to go back when completed.
+         * @param configPath Configuration path of this setting.
+         * @param config Configuration holder of this setting.
+         * @param min Minimum value of this setting.
+         * @param max Maximum value of this setting.
+         * @param defaultItemVal Default item value if not found on the config.
+         * @param defaultBookVal Default book value if not found on the config.
+         * @param steps List of step the value can increment/decrement.
+         *              List's size should be between 1 (included) and 3 (included).
+         *              it is visually preferable to have an odd number of step.
+         *              If step only contain 1 value, no step item should be displayed.
+         */
         protected EnchantCostSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
@@ -224,16 +279,17 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             this.defaultBookVal = defaultBookVal;
         }
 
-        @NotNull
-        public String getTitle() {
-            return title;
-        }
-
+        /**
+         * @return The configured value for the enchant setting item value.
+         */
         @Override
         public int getConfiguredValue() {
             return this.config.getConfig().getInt(this.configPath+ITEM_PATH, this.defaultVal);
         }
 
+        /**
+         * @return The configured value for the enchant setting book value.
+         */
         public int getConfiguredBookValue(){
             return this.config.getConfig().getInt(this.configPath+BOOK_PATH, this.defaultBookVal);
         }
@@ -249,4 +305,3 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     }
 
 }
-
