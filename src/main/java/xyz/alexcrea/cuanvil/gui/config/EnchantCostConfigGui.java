@@ -15,6 +15,9 @@ import xyz.alexcrea.cuanvil.util.StringUtil;
 import java.util.Arrays;
 import java.util.Locale;
 
+/**
+ * Global Config gui for enchantment cost settings.
+ */
 public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSettingsGui.EnchantCostSettingFactory> {
 
     private final static String SECTION_NAME = "enchant_values";
@@ -25,6 +28,9 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         INSTANCE.init();
     }
 
+    /**
+     * Constructor of this Global gui for enchantment cost settings.
+     */
     private EnchantCostConfigGui() {
         super("\u00A78Enchantment Level Limit");
 
