@@ -10,7 +10,7 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
-import xyz.alexcrea.cuanvil.util.StringUtil;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -39,7 +39,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
     @Override
     public EnchantCostSettingsGui.EnchantCostSettingFactory getFactoryFromEnchant(Enchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ENGLISH);
-        String prettyKey = StringUtil.snakeToUpperSpacedCase(key);
+        String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
         // try to find rarity. default to 0 if not found
         EnchantmentRarity rarity = EnchantmentRarity.NO_RARITY;
@@ -47,7 +47,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
             rarity = EnchantmentProperties.valueOf(key.toUpperCase(Locale.ENGLISH)).getRarity();
         }catch (IllegalArgumentException ignored){}
 
-        return EnchantCostSettingsGui.enchentCostFactory(prettyKey+" Level Cost", this,
+        return EnchantCostSettingsGui.enchantCostFactory(prettyKey+" Level Cost", this,
                 SECTION_NAME+'.'+key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
                 rarity.getItemValue(), rarity.getBookValue(),
                 1, 10, 50);

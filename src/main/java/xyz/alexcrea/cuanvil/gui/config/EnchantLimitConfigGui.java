@@ -6,7 +6,7 @@ import org.bukkit.enchantments.Enchantment;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
-import xyz.alexcrea.cuanvil.util.StringUtil;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Locale;
 
@@ -34,7 +34,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     @Override
     public IntSettingsGui.IntSettingFactory getFactoryFromEnchant(Enchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
-        String prettyKey = StringUtil.snakeToUpperSpacedCase(key);
+        String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
         return IntSettingsGui.intFactory(prettyKey+" Level Limit", this,
                 SECTION_NAME+'.'+key, ConfigHolder.DEFAULT_CONFIG, 0, 255,

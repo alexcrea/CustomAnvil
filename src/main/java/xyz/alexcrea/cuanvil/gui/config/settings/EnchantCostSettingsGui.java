@@ -234,7 +234,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      *              If step only contain 1 value, no step item should be displayed.
      * @return A factory for an enchant cost setting gui.
      */
-    public static EnchantCostSettingFactory enchentCostFactory(
+    public static EnchantCostSettingFactory enchantCostFactory(
             @NotNull String title, ValueUpdatableGui parent,
             String configPath, ConfigHolder config,
             int min, int max, int defaultItemVal, int defaultBookVal,
