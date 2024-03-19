@@ -23,7 +23,7 @@ class CustomAnvil : JavaPlugin() {
         private const val bstatsPluginId = 20923
 
         // Permission string required to use the plugin's features
-        const val unsafePermission = "ca.unsafe"
+        const val affectedByPluginPermission = "ca.affected"
         // Permission string required to bypass enchantment conflicts test
         const val bypassFusePermission = "ca.bypass.fuse"
         // Permission string required to bypass enchantment conflicts test

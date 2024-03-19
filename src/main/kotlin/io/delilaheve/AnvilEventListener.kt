@@ -55,7 +55,7 @@ class AnvilEventListener : Listener {
 
         // Should find player
         val player = event.view.player
-        if(!player.hasPermission(CustomAnvil.unsafePermission)) return
+        if(!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         // Test rename lonely item
         if(second == null){
@@ -154,7 +154,7 @@ class AnvilEventListener : Listener {
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        if(!player.hasPermission(CustomAnvil.unsafePermission)) return
+        if(!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
         val inventory = event.inventory as? AnvilInventory ?: return
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
