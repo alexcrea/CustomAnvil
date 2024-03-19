@@ -17,14 +17,22 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil;
 import java.util.Collections;
 import java.util.function.Consumer;
 
+/**
+ * An instance of a gui used to edit a boolean setting.
+ */
 public class BoolSettingsGui extends AbstractSettingGui{
 
     private final BoolSettingFactory holder;
     private final boolean before;
     private boolean now;
 
+    /**
+     * Create a boolean setting config gui.
+     * @param holder Configuration factory of this setting.
+     * @param now The defined value of this setting.
+     */
     protected BoolSettingsGui(BoolSettingFactory holder, boolean now) {
-        super(3, holder.title, holder.parent);
+        super(3, holder.getTitle(), holder.parent);
         this.holder = holder;
         this.before = now;
         this.now = now;
@@ -42,7 +50,12 @@ public class BoolSettingsGui extends AbstractSettingGui{
                 "B0000000S"
         );
     }
-    GuiItem returnToDefault;
+
+    protected GuiItem returnToDefault;
+
+    /**
+     * Prepare "return to default value" gui item.
+     */
     protected void prepareReturnToDefault(){
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
@@ -58,8 +71,10 @@ public class BoolSettingsGui extends AbstractSettingGui{
         }, CustomAnvil.instance);
     }
 
+    /**
+     * Update item using the setting value to match the new value
+     */
     protected void updateValueDisplay(){
-
         PatternPane pane = getPane();
 
         // Get displayed value for this config.
@@ -93,6 +108,9 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
     }
 
+    /**
+     * @return A consumer to update the current setting's value.
+     */
     protected Consumer<InventoryClickEvent> inverseNowConsumer(){
         return event->{
             event.setCancelled(true);
@@ -118,6 +136,15 @@ public class BoolSettingsGui extends AbstractSettingGui{
         return now != before;
     }
 
+    /**
+     * Create a bool setting factory from setting's parameters.
+     * @param title The title of the gui.
+     * @param parent Parent gui to go back when completed.
+     * @param configPath Configuration path of this setting.
+     * @param config Configuration holder of this setting.
+     * @param defaultVal Default value if not found on the config.
+     * @return A factory for a boolean setting gui.
+     */
     public static BoolSettingFactory boolFactory(@NotNull String title, ValueUpdatableGui parent,
                                                  String configPath, ConfigHolder config,
                                                  boolean defaultVal){
@@ -127,11 +154,21 @@ public class BoolSettingsGui extends AbstractSettingGui{
                 defaultVal);
     }
 
-
+    /**
+     * A factory for a boolean setting gui that hold setting's information.
+     */
     public static class BoolSettingFactory extends SettingGuiFactory{
         @NotNull String title; ValueUpdatableGui parent;
         boolean defaultVal;
 
+        /**
+         * Constructor for a boolean setting gui factory.
+         * @param title The title of the gui.
+         * @param parent Parent gui to go back when completed.
+         * @param configPath Configuration path of this setting.
+         * @param config Configuration holder of this setting.
+         * @param defaultVal Default value if not found on the config.
+         */
         protected BoolSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
@@ -143,18 +180,24 @@ public class BoolSettingsGui extends AbstractSettingGui{
             this.defaultVal = defaultVal;
         }
 
+        /**
+         * @return Get setting's gui title.
+         */
         @NotNull
         public String getTitle() {
             return title;
         }
 
+        /**
+         * @return The configured value for the associated setting.
+         */
         public boolean getConfiguredValue(){
             return this.config.getConfig().getBoolean(this.configPath, this.defaultVal);
         }
 
         @Override
         public AbstractSettingGui create() {
-            // Get value or default
+            // Get current value or default
             boolean now = getConfiguredValue();
             // create new gui
             return new BoolSettingsGui(this, now);

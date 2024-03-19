@@ -19,6 +19,9 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
 import java.util.Collections;
 
+/**
+ * Global config to edit basic basic settings.
+ */
 public class BasicConfigGui extends ValueUpdatableGui {
 
     public final static BasicConfigGui INSTANCE = new BasicConfigGui();
@@ -27,12 +30,18 @@ public class BasicConfigGui extends ValueUpdatableGui {
         INSTANCE.init();
     }
 
+    /**
+     * Constructor of this Global gui for basic settings.
+     */
     private BasicConfigGui(){
         super(3, "\u00A78Basic Config", CustomAnvil.instance);
-
     }
 
     PatternPane pane;
+
+    /**
+     * Initialise Basic gui
+     */
     private void init(){
         Pattern pattern = new Pattern(
                 "000000000",
@@ -58,6 +67,9 @@ public class BasicConfigGui extends ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory itemRenameCost;
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost;
 
+    /**
+     * Prepare basic gui displayed items factory and static items..
+     */
     protected void prepareValues(){
         // limit repair item
         this.limitRepairFactory = BoolSettingsGui.boolFactory("\u00A78Limit Repair Cost ?",this,

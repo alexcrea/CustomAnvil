@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * An instance of a gui used to edit an int setting.
+ */
 public class IntSettingsGui extends AbstractSettingGui{
 
     protected final IntSettingFactory holder;
@@ -26,8 +29,13 @@ public class IntSettingsGui extends AbstractSettingGui{
     protected int now;
     protected int step;
 
+    /**
+     * Create an int setting config gui.
+     * @param holder Configuration factory of this setting.
+     * @param now The defined value of this setting.
+     */
     protected IntSettingsGui(IntSettingFactory holder, int now) {
-        super(3, holder.title, holder.parent);
+        super(3, holder.getTitle(), holder.parent);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
         this.before = now;
@@ -50,6 +58,9 @@ public class IntSettingsGui extends AbstractSettingGui{
     }
 
     protected GuiItem returnToDefault;
+    /**
+     * Prepare "return to default value" gui item.
+     */
     protected void prepareReturnToDefault(){
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
@@ -65,6 +76,9 @@ public class IntSettingsGui extends AbstractSettingGui{
             }, CustomAnvil.instance);
     }
 
+    /**
+     * Update item using the setting value to match the new value.
+     */
     protected void updateValueDisplay(){
 
         PatternPane pane = getPane();
@@ -123,6 +137,10 @@ public class IntSettingsGui extends AbstractSettingGui{
 
     }
 
+    /**
+     * @param planned Value to change current setting to.
+     * @return A consumer to update the current setting's value.
+     */
     protected Consumer<InventoryClickEvent> updateNowConsumer(int planned){
         return event->{
             event.setCancelled(true);
@@ -132,6 +150,9 @@ public class IntSettingsGui extends AbstractSettingGui{
         };
     }
 
+    /**
+     * Initialise step items.
+     */
     protected void initStepsValue(){
         // Put background glass on the background of 'a' to 'b'
         GuiItem background = GuiGlobalItems.backgroundItem();
@@ -143,11 +164,15 @@ public class IntSettingsGui extends AbstractSettingGui{
         // Then update legit step values
         updateStepValue();
     }
+
+    /**
+     * Update steps items value.
+     */
     protected void updateStepValue(){
         if(holder.steps.length <= 1) return;
         // We assume steps have a length of 2k+1 cause its more pretty
         char val = getMidStepChar();
-        // Offset
+        // Offset to start (not the best way to do it)
         val -= (char) ((holder.steps.length-1)/2);
 
         // Then place items
@@ -158,10 +183,19 @@ public class IntSettingsGui extends AbstractSettingGui{
 
     }
 
+    /**
+     * Step use lower case character from 'a' to a certain char.
+     * @return The middle value of the character set for steps.
+     */
     protected char getMidStepChar(){
         return 'e';
     }
 
+    /**
+     * Create a step item from a step value.
+     * @param stepIndex the index of the step item.
+     * @return A step item corresponding to its index value.
+     */
     protected GuiItem stepGuiItem(int stepIndex){
         int stepValue = holder.steps[stepIndex];
 
@@ -194,6 +228,10 @@ public class IntSettingsGui extends AbstractSettingGui{
         return new GuiItem(item, clickEvent, CustomAnvil.instance);
     }
 
+    /**
+     * @param stepValue Value to change current step to.
+     * @return A consumer to update the current step of this setting.
+     */
     protected Consumer<InventoryClickEvent> updateStepValue(int stepValue){
         return event -> {
             event.setCancelled(true);
@@ -220,6 +258,21 @@ public class IntSettingsGui extends AbstractSettingGui{
         return now != before;
     }
 
+    /**
+     * Create an int setting factory from setting's parameters.
+     * @param title The title of the gui.
+     * @param parent Parent gui to go back when completed.
+     * @param configPath Configuration path of this setting.
+     * @param config Configuration holder of this setting.
+     * @param min Minimum value of this setting.
+     * @param max Maximum value of this setting.
+     * @param defaultVal Default value if not found on the config.
+     * @param steps List of step the value can increment/decrement.
+     *              List's size should be between 1 (included) and 5 (included).
+     *              it is visually preferable to have an odd number of step.
+     *              If step only contain 1 value, no step item should be displayed.
+     * @return A factory for an int setting gui.
+     */
     public static IntSettingFactory intFactory(@NotNull String title, ValueUpdatableGui parent,
                                                String configPath, ConfigHolder config,
                                                int min, int max, int defaultVal, int... steps){
@@ -229,11 +282,27 @@ public class IntSettingsGui extends AbstractSettingGui{
                 min, max, defaultVal, steps);
     }
 
-
+    /**
+     * A factory for an int setting gui that hold setting's information.
+     */
     public static class IntSettingFactory extends SettingGuiFactory{
         @NotNull String title; ValueUpdatableGui parent;
         int min; int max; int defaultVal; int[] steps;
 
+        /**
+         * Constructor for an int setting gui factory.
+         * @param title The title of the gui.
+         * @param parent Parent gui to go back when completed.
+         * @param configPath Configuration path of this setting.
+         * @param config Configuration holder of this setting.
+         * @param min Minimum value of this setting.
+         * @param max Maximum value of this setting.
+         * @param defaultVal Default value if not found on the config.
+         * @param steps List of step the value can increment/decrement.
+         *              List's size should be between 1 (included) and 5 (included).
+         *              it is visually preferable to have an odd number of step.
+         *              If step only contain 1 value, no step item should be displayed.
+         */
         protected IntSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
@@ -247,11 +316,17 @@ public class IntSettingsGui extends AbstractSettingGui{
             this.steps = steps;
         }
 
+        /**
+         * @return Get setting's gui title
+         */
         @NotNull
         public String getTitle() {
             return title;
         }
 
+        /**
+         * @return The configured value for the associated setting.
+         */
         public int getConfiguredValue(){
             return this.config.getConfig().getInt(this.configPath, this.defaultVal);
         }
