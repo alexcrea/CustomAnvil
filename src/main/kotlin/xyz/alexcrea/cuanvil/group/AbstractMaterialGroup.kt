@@ -5,6 +5,7 @@ import java.util.*
 
 abstract class AbstractMaterialGroup(private val name: String) {
     protected val includedMaterial by lazy {createDefaultSet()}
+    protected var groupChangeNotified = false
 
     /**
      * Get the group default set
@@ -34,6 +35,11 @@ abstract class AbstractMaterialGroup(private val name: String) {
     abstract fun addToPolicy(other : AbstractMaterialGroup)
 
     /**
+     * Get the group as a set
+     */
+    abstract fun getMaterials(): MutableSet<Material>
+
+    /**
      * Get the group name in case something is wrong
      */
     fun getName(): String {
@@ -41,10 +47,13 @@ abstract class AbstractMaterialGroup(private val name: String) {
     }
 
     /**
-     * Get the group as a set
+     * Update the contained groups of this group
      */
-    fun getSet(): Set<Material> {
-        return includedMaterial
-    }
+    abstract fun setGroups(groups: MutableSet<AbstractMaterialGroup>)
+
+    /**
+     * Get the contained group of this material group
+     */
+    abstract fun getGroups(): MutableSet<AbstractMaterialGroup>
 
 }

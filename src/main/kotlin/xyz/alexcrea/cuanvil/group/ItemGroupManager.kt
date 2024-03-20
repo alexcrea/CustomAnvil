@@ -18,7 +18,7 @@ class ItemGroupManager {
         private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD","BRUSH")
     }
 
-    private lateinit var groupMap : HashMap<String, AbstractMaterialGroup>
+    lateinit var groupMap : HashMap<String, AbstractMaterialGroup>
 
     // Read and create material groups
     fun prepareGroups(config: ConfigurationSection){

@@ -7,8 +7,9 @@ import java.util.Set;
 
 public interface SelectGroupContainer {
 
-    List<AbstractMaterialGroup> getSelectedGroups();
-    void setSelectedGroups(List<AbstractMaterialGroup> groups);
+    Set<AbstractMaterialGroup> getSelectedGroups();
+
+    boolean setSelectedGroups(Set<AbstractMaterialGroup> groups);
 
     Set<AbstractMaterialGroup> illegalGroups();
 

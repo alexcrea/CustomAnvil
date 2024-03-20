@@ -9,7 +9,8 @@ import java.util.Set;
 public interface SelectEnchantmentContainer {
 
     List<Enchantment> getSelectedEnchantments();
-    void setSelectedEnchantments(List<Enchantment> enchantments);
+
+    boolean setSelectedEnchantments(List<Enchantment> enchantments);
 
     Set<Enchantment> illegalEnchantments();
 

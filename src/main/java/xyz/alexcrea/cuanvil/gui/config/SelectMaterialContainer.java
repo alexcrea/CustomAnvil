@@ -1,16 +1,15 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
-import javafx.scene.paint.Material;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import org.bukkit.Material;
 
-import java.util.List;
-import java.util.Set;
+import java.util.EnumSet;
 
 public interface SelectMaterialContainer {
 
-    List<Material> getSelectedMaterials();
-    void setSelectedMaterials(List<Material> materials);
+    EnumSet<Material> getSelectedMaterials();
 
-    Set<Material> illegalMaterials();
+    boolean setSelectedMaterials(EnumSet<Material> materials);
+
+    EnumSet<Material> illegalMaterials();
 
 }
