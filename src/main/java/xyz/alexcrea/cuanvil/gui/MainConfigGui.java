@@ -8,9 +8,9 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.EnchantCostConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.EnchantLimitConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.openable.BasicConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.openable.EnchantCostConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.openable.EnchantLimitConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 

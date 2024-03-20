@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config;
+package xyz.alexcrea.cuanvil.gui.config.openable;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;

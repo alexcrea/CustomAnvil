@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config;
+package xyz.alexcrea.cuanvil.gui.config.openable;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
+import xyz.alexcrea.cuanvil.gui.config.AbstractEnchantConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;

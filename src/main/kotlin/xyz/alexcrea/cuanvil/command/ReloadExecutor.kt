@@ -5,9 +5,9 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui
-import xyz.alexcrea.cuanvil.gui.config.EnchantCostConfigGui
-import xyz.alexcrea.cuanvil.gui.config.EnchantLimitConfigGui
+import xyz.alexcrea.cuanvil.gui.config.openable.BasicConfigGui
+import xyz.alexcrea.cuanvil.gui.config.openable.EnchantCostConfigGui
+import xyz.alexcrea.cuanvil.gui.config.openable.EnchantLimitConfigGui
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 
 class ReloadExecutor : CommandExecutor {
