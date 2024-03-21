@@ -9,7 +9,7 @@ class IncludeGroup(name: String): AbstractMaterialGroup(name) {
     }
 
     private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
-    private val groupItems: MutableSet<Material> by lazy {createDefaultSet()}
+    private val groupItems by lazy {createDefaultSet()}
 
     override fun isReferencing(other: AbstractMaterialGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
@@ -27,19 +27,30 @@ class IncludeGroup(name: String): AbstractMaterialGroup(name) {
 
     override fun addToPolicy(other: AbstractMaterialGroup) {
         includedGroup.add(other)
-        groupItems.addAll(other.getMaterials());
+        groupItems.addAll(other.getMaterials())
     }
 
     override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {
-        groupItems.clear();
+        groupItems.clear()
         groupItems.addAll(includedMaterial)
 
-        includedGroup.clear();
+        includedGroup.clear()
         groups.forEach { group ->
             if(!group.isReferencing(this)){
-                includedGroup.add(group);
+                includedGroup.add(group)
                 groupItems.addAll(group.getMaterials())
             }
+        }
+    }
+
+    override fun setNonGroupInheritedMaterials(materials: EnumSet<Material>) {
+        super.setNonGroupInheritedMaterials(materials)
+        // Update group items
+        groupItems.clear()
+        groupItems.addAll(includedMaterial)
+
+        includedGroup.forEach { group ->
+            groupItems.addAll(group.getMaterials())
         }
     }
 
@@ -47,7 +58,7 @@ class IncludeGroup(name: String): AbstractMaterialGroup(name) {
         return includedGroup
     }
 
-    override fun getMaterials(): MutableSet<Material> {
+    override fun getMaterials(): EnumSet<Material> {
         return groupItems
     }
 

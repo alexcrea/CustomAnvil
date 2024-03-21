@@ -19,10 +19,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class GroupSelectSettingGui extends AbstractSettingGui{
@@ -30,7 +27,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
     SelectGroupContainer groupContainer;
     int page;
 
-    HashSet<AbstractMaterialGroup> selectedGroups;
+    Set<AbstractMaterialGroup> selectedGroups;
 
     public GroupSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
         super(6, title, parent);
@@ -63,13 +60,13 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
         Set<AbstractMaterialGroup> illegalGroup = this.groupContainer.illegalGroups();
-        ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().forEach((name, group)->{
+        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
             if(illegalGroup.contains(group)) {
                 return;
             }
             filledEnchant.addItem(getGuiItemFromGroup(group));
+        }
 
-        });
         addPane(filledEnchant);
 
     }
@@ -77,7 +74,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
     private GuiItem getGuiItemFromGroup(AbstractMaterialGroup group){
         boolean isIn = this.selectedGroups.contains(group);
 
-        Material usedMaterial = Material.PAPER;
+        Material usedMaterial = group.getRepresentativeMaterial();
         ItemStack item = new ItemStack(usedMaterial);
 
         setGroupItemMeta(item, group.getName(), isIn);
@@ -92,6 +89,14 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
 
     public void setGroupItemMeta(ItemStack item, String name, boolean isIn){
         ItemMeta meta = item.getItemMeta();
+
+        if(meta == null){
+            CustomAnvil.instance.getLogger().warning("Could not create item for group: "+name+":\n" +
+                    "Item do not gave item meta: "+item+". Using placeholder instead");
+            item.setType(Material.PAPER);
+            meta = item.getItemMeta();
+            assert meta != null;
+        }
 
         meta.setDisplayName("\u00A7"+(isIn ? 'a' : 'c')+ CasedStringUtil.snakeToUpperSpacedCase(name));
         if(isIn){

@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class ItemGroupManager {
 
@@ -18,11 +19,11 @@ class ItemGroupManager {
         private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD","BRUSH")
     }
 
-    lateinit var groupMap : HashMap<String, AbstractMaterialGroup>
+    lateinit var groupMap : LinkedHashMap<String, AbstractMaterialGroup>
 
     // Read and create material groups
     fun prepareGroups(config: ConfigurationSection){
-        groupMap = HashMap()
+        groupMap = LinkedHashMap()
 
         val keys = config.getKeys(false)
         for (key in keys) {

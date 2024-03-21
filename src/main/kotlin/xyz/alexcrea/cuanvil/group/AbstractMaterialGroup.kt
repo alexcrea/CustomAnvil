@@ -5,7 +5,6 @@ import java.util.*
 
 abstract class AbstractMaterialGroup(private val name: String) {
     protected val includedMaterial by lazy {createDefaultSet()}
-    protected var groupChangeNotified = false
 
     /**
      * Get the group default set
@@ -15,7 +14,7 @@ abstract class AbstractMaterialGroup(private val name: String) {
     /**
      * Get if a material is allowed following the group policy
      */
-    fun contain(mat : Material): Boolean {
+    open fun contain(mat : Material): Boolean {
         return mat in includedMaterial
     }
 
@@ -35,14 +34,28 @@ abstract class AbstractMaterialGroup(private val name: String) {
     abstract fun addToPolicy(other : AbstractMaterialGroup)
 
     /**
-     * Get the group as a set
+     * Get the group contained material as a set
      */
-    abstract fun getMaterials(): MutableSet<Material>
+    abstract fun getMaterials(): EnumSet<Material>
+
+    /**
+     * Get the group non-inherited material as a set
+     */
+    open fun getNonGroupInheritedMaterials(): EnumSet<Material> {
+        return includedMaterial
+    }
+    /**
+     * Get the group non-inherited material as a set
+     */
+    open fun setNonGroupInheritedMaterials(materials: EnumSet<Material>) {
+        this.includedMaterial.clear()
+        this.includedMaterial.addAll(materials)
+    }
 
     /**
      * Get the group name in case something is wrong
      */
-    fun getName(): String {
+    open fun getName(): String {
         return name
     }
 
@@ -55,5 +68,23 @@ abstract class AbstractMaterialGroup(private val name: String) {
      * Get the contained group of this material group
      */
     abstract fun getGroups(): MutableSet<AbstractMaterialGroup>
+
+    open fun getRepresentativeMaterial() : Material {
+        // Test inner material
+        val matIterator = includedMaterial.iterator()
+        while(matIterator.hasNext()){
+            val material = matIterator.next();
+            if(material.isAir) continue
+            return material;
+        }
+        // Test included group representative material
+        val groupIterator = getGroups().iterator()
+        while (groupIterator.hasNext()){
+            val groupMat = groupIterator.next().getRepresentativeMaterial()
+            if(groupMat.isAir) continue
+            return groupMat;
+        }
+        return Material.PAPER;
+    }
 
 }

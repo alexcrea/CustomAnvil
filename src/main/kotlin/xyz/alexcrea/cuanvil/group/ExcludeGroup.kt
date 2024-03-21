@@ -9,7 +9,7 @@ class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
     }
 
     private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
-    private val groupItems: MutableSet<Material> by lazy {createDefaultSet()}
+    private val groupItems by lazy {createDefaultSet()}
 
     override fun isReferencing(other: AbstractMaterialGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
@@ -27,28 +27,28 @@ class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
 
     override fun addToPolicy(other: AbstractMaterialGroup) {
         includedGroup.add(other)
-        groupItems.removeAll(other.getMaterials());
+        groupItems.removeAll(other.getMaterials())
     }
 
     override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {
         groupItems.clear()
         groupItems.addAll(includedMaterial)
 
-        includedGroup.clear();
+        includedGroup.clear()
         groups.forEach { group ->
             if(!group.isReferencing(this)) {
-                includedGroup.add(group);
+                includedGroup.add(group)
                 groupItems.removeAll(group.getMaterials())
             }
         }
     }
 
     override fun getGroups(): MutableSet<AbstractMaterialGroup> {
-        return includedGroup;
+        return includedGroup
     }
 
-    override fun getMaterials(): MutableSet<Material> {
-        return groupItems;
+    override fun getMaterials(): EnumSet<Material> {
+        return groupItems
     }
 
 
