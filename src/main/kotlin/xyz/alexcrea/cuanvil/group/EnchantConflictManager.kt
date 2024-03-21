@@ -10,11 +10,11 @@ class EnchantConflictManager {
 
     companion object {
         // Path for the enchantments list
-        private const val ENCH_LIST_PATH = "enchantments"
+        const val ENCH_LIST_PATH = "enchantments"
         // Path for group list related to the conflict
-        private const val CONFLICT_GROUP_PATH = "notAffectedGroups"
+        const val CONFLICT_GROUP_PATH = "notAffectedGroups"
         // Path for the maximum number of enchantment before validating the conflict
-        private const val ENCH_MAX_PATH = "maxEnchantmentBeforeConflict"
+        const val ENCH_MAX_PATH = "maxEnchantmentBeforeConflict"
         // Path for a flag: if the enchantment will be used in the last supported version
         // TODO maybe replace this system by a list of "future" enchantment.
         private const val FUTURE_USE_PATH = "useInFuture"
@@ -25,10 +25,12 @@ class EnchantConflictManager {
     }
 
     private lateinit var conflictMap: HashMap<Enchantment, ArrayList<EnchantConflictGroup>>
+    lateinit var conflictList: ArrayList<EnchantConflictGroup>
 
     // Read and prepare all conflict
     fun prepareConflicts(config: ConfigurationSection, itemManager: ItemGroupManager){
         conflictMap = HashMap()
+        conflictList = ArrayList()
 
         val keys = config.getKeys(false)
         for (key in keys) {
@@ -36,6 +38,7 @@ class EnchantConflictManager {
             val conflict = createConflict(section,itemManager,key)
             if(conflict != null){
                 addToMap(conflict)
+                conflictList.add(conflict)
             }
 
         }
@@ -45,11 +48,19 @@ class EnchantConflictManager {
     // Add the conflict to the map
     private fun addToMap(conflict: EnchantConflictGroup){
         conflict.getEnchants().forEach{ enchant ->
-            if(!conflictMap.containsKey(enchant)){
-                conflictMap[enchant] = ArrayList()
-            }
-            conflictMap[enchant]!!.add(conflict)
+            addConflictToConflictMap(enchant, conflict);
         }
+    }
+
+    fun addConflictToConflictMap(enchant: Enchantment, conflict: EnchantConflictGroup){
+        if(!conflictMap.containsKey(enchant)){
+            conflictMap[enchant] = ArrayList()
+        }
+        conflictMap[enchant]!!.add(conflict)
+    }
+
+    fun removeConflictFromMap(enchant: Enchantment, conflict: EnchantConflictGroup): Boolean{
+        return conflictMap[enchant]!!.remove(conflict)
     }
 
     // create and read a conflict from a yaml section
@@ -107,7 +118,7 @@ class EnchantConflictManager {
             }
         }
         // Return conflict
-        return EnchantConflictGroup(finalGroup, minBeforeBlock)
+        return EnchantConflictGroup(conflictName, finalGroup, minBeforeBlock)
     }
 
     private fun findGroup(groupName: String, itemManager: ItemGroupManager, conflictName: String): AbstractMaterialGroup {

@@ -3,12 +3,18 @@ package xyz.alexcrea.cuanvil.group
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 
-class EnchantConflictGroup(private val cantConflict: AbstractMaterialGroup, private val minBeforeBlock: Int){
+class EnchantConflictGroup(
+    val name: String,
+    private val cantConflict: AbstractMaterialGroup,
+    private val minBeforeBlock: Int){
 
     private val enchantments = HashSet<Enchantment>()
 
-    fun addEnchantment(ench: Enchantment){
-        enchantments.add(ench)
+    fun addEnchantment(enchant: Enchantment){
+        enchantments.add(enchant)
+    }
+    fun removeEnchantment(enchant: Enchantment){
+        enchantments.remove(enchant)
     }
     fun allowed(enchants: Set<Enchantment>, mat: Material) : Boolean{
         if(enchantments.size < minBeforeBlock){

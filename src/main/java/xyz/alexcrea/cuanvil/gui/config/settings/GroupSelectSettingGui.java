@@ -47,11 +47,11 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
     @Override
     protected Pattern getGuiPattern() {
         return new Pattern(
-                "000000000",
-                "000000000",
-                "000000000",
-                "000000000",
-                "000000000",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "B1111111S"
         );
     }

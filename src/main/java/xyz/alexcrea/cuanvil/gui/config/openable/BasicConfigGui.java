@@ -16,6 +16,7 @@ import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Collections;
 
@@ -44,7 +45,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
      */
     private void init(){
         Pattern pattern = new Pattern(
-                "000000000",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "012345670",
                 "B00000000"
         );

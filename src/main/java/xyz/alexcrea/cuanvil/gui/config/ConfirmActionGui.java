@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
-import com.github.stefvanschie.inventoryframework.adventuresupport.TextHolder;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
@@ -14,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,13 +39,14 @@ public class ConfirmActionGui extends ChestGui {
         CONFIRM_ITEM.setItemMeta(meta);
     }
 
-    public ConfirmActionGui(@NotNull TextHolder title, String actionDescription, Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm) {
+    public ConfirmActionGui(@NotNull String title, String actionDescription,
+                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm) {
         super(3, title, CustomAnvil.instance);
 
         Pattern pattern = new Pattern(
-                "000000000",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "00B0I0S00",
-                "000000000"
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE
         );
         PatternPane pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
         addPane(pane);

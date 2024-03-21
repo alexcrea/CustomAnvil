@@ -59,13 +59,13 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Get item properties
         int itemCost = factory.getConfiguredValue();
         int bookCost = factory.getConfiguredBookValue();
-        StringBuilder itemName = new StringBuilder("\u00A7a").append(factory.getTitle());
+        String itemName = "\u00A7a" + factory.getTitle();
         // Create item
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = item.getItemMeta();
 
         // Edit name and lore
-        itemMeta.setDisplayName(itemName.toString());
+        itemMeta.setDisplayName(itemName);
         itemMeta.setLore(Arrays.asList(
                 "\u00A77Item  Cost: " + itemCost,
                 "\u00A77Book Cost: " + bookCost));

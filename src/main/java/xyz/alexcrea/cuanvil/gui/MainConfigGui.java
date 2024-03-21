@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.openable.BasicConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.openable.EnchantConflictGui;
 import xyz.alexcrea.cuanvil.gui.config.openable.EnchantCostConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.openable.EnchantLimitConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
@@ -72,17 +73,26 @@ public class MainConfigGui extends ChestGui {
         GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, EnchantCostConfigGui.INSTANCE);
         pane.bindItem('3', enchantCostItem);
 
+        // Enchantment Conflicts
+        ItemStack EnchantConflictItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta enchantConflictMeta = EnchantConflictItemstack.getItemMeta();
+
+        enchantConflictMeta.setDisplayName("\u00A7aEnchantment Conflict");
+        enchantConflictMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment conflict menu"));
+        EnchantConflictItemstack.setItemMeta(enchantConflictMeta);
+
+        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(EnchantConflictItemstack, EnchantConflictGui.INSTANCE);
+        pane.bindItem('4', enchantConflictItem);
+
         // WIP configuration items
         ItemStack wipItemstack = new ItemStack(Material.BARRIER);
         ItemMeta wipMeta = wipItemstack.getItemMeta();
         wipMeta.setDisplayName("\u00A7cWIP");
         wipItemstack.setItemMeta(wipMeta);
 
-        GuiItem wip4 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip5 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip6 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        pane.bindItem('4', wip4);
         pane.bindItem('5', wip5);
         pane.bindItem('6', wip6);
 

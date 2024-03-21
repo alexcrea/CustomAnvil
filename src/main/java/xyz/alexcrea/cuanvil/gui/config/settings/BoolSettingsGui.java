@@ -46,7 +46,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
     @Override
     public Pattern getGuiPattern() {
         return new Pattern(
-                "000000000",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "D0-0v0+00",
                 "B0000000S"
         );
