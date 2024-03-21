@@ -13,11 +13,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.AbstractEnchantConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 

@@ -73,18 +73,18 @@ abstract class AbstractMaterialGroup(private val name: String) {
         // Test inner material
         val matIterator = includedMaterial.iterator()
         while(matIterator.hasNext()){
-            val material = matIterator.next();
+            val material = matIterator.next()
             if(material.isAir) continue
-            return material;
+            return material
         }
         // Test included group representative material
         val groupIterator = getGroups().iterator()
         while (groupIterator.hasNext()){
             val groupMat = groupIterator.next().getRepresentativeMaterial()
             if(groupMat.isAir) continue
-            return groupMat;
+            return groupMat
         }
-        return Material.PAPER;
+        return Material.PAPER
     }
 
 }
