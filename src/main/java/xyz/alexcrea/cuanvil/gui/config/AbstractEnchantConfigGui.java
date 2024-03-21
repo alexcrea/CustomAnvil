@@ -26,6 +26,12 @@ import java.util.List;
  */
 public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ValueUpdatableGui {
 
+    public static final List<Enchantment> SORTED_ENCHANTMENT_LIST;
+    static {
+        SORTED_ENCHANTMENT_LIST = Arrays.asList(Enchantment.values());
+        SORTED_ENCHANTMENT_LIST.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
+    }
+
     private final static Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
 
     private final Gui backGui;
@@ -90,10 +96,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
     protected void prepareValues(){
         bookItemFactoryList = new ArrayList<>();
 
-        List<Enchantment> enchantments = Arrays.asList(Enchantment.values());
-        enchantments.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
-
-        for (Enchantment enchant : enchantments) {
+        for (Enchantment enchant : SORTED_ENCHANTMENT_LIST) {
             T factory = getFactoryFromEnchant(enchant);
 
             bookItemFactoryList.add(factory);

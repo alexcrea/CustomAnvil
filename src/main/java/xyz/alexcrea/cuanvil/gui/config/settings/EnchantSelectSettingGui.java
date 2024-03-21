@@ -13,29 +13,32 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
+import xyz.alexcrea.cuanvil.gui.config.AbstractEnchantConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
-public class GroupSelectSettingGui extends AbstractSettingGui{
+public class EnchantSelectSettingGui extends AbstractSettingGui{
 
-    SelectGroupContainer groupContainer;
+    SelectEnchantmentContainer enchantContainer;
     int page;
 
-    Set<AbstractMaterialGroup> selectedGroups;
+    Set<Enchantment> selectedEnchant;
 
-    public GroupSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
+    public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer, int page) {
         super(6, title, parent);
-        this.groupContainer = groupContainer;
-        //Not used but planned
+        this.enchantContainer = enchantContainer;
+        // Not used and not planned rn
         this.page = page;
 
-        this.selectedGroups = new HashSet<>(groupContainer.getSelectedGroups());
+        this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());
 
         initGroups();
     }
@@ -59,39 +62,45 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
         filledEnchant.align(OutlinePane.Alignment.BEGIN);
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
-        Set<AbstractMaterialGroup> illegalGroup = this.groupContainer.illegalGroups();
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if(illegalGroup.contains(group)) {
+        Set<Enchantment> illegalEnchant = this.enchantContainer.illegalEnchantments();
+        for (Enchantment enchant : AbstractEnchantConfigGui.SORTED_ENCHANTMENT_LIST) {
+            if(illegalEnchant.contains(enchant)) {
                 return;
             }
-            filledEnchant.addItem(getGuiItemFromGroup(group));
+            filledEnchant.addItem(getGuiItemFromEnchant(enchant));
         }
 
         addPane(filledEnchant);
 
     }
 
-    private GuiItem getGuiItemFromGroup(AbstractMaterialGroup group){
-        boolean isIn = this.selectedGroups.contains(group);
+    private GuiItem getGuiItemFromEnchant(Enchantment enchantment){
+        boolean isIn = this.selectedEnchant.contains(enchantment);
 
-        Material usedMaterial = group.getRepresentativeMaterial();
+        Material usedMaterial;
+        if(isIn){
+            usedMaterial = Material.ENCHANTED_BOOK;
+        }else{
+            usedMaterial = Material.BOOK;
+        }
         ItemStack item = new ItemStack(usedMaterial);
 
-        setGroupItemMeta(item, group.getName(), isIn);
+        setEnchantItemMeta(item, enchantment.getKey().getKey(), isIn);
 
         GuiItem guiItem = new GuiItem(item, CustomAnvil.instance);
-        guiItem.setAction(getGroupItemConsumer(group, guiItem));
+        guiItem.setAction(getEnchantItemConsumer(enchantment, guiItem));
         return guiItem;
     }
+
 
     private static final List<String> TRUE_LORE = Collections.singletonList("\u00A77Value: \u00A7aSelected");
     private static final List<String> FALSE_LORE = Collections.singletonList("\u00A77Value: \u00A7cNot Selected");
 
-    public void setGroupItemMeta(ItemStack item, String name, boolean isIn){
+    public void setEnchantItemMeta(ItemStack item, String name, boolean isIn){
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null){
-            CustomAnvil.instance.getLogger().warning("Could not create item for group: "+name+":\n" +
+            CustomAnvil.instance.getLogger().warning("Could not create item for enchantment: "+name+":\n" +
                     "Item do not gave item meta: "+item+". Using placeholder instead");
             item.setType(Material.PAPER);
             meta = item.getItemMeta();
@@ -111,19 +120,22 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
         item.setItemMeta(meta);
     }
 
-    private Consumer<InventoryClickEvent> getGroupItemConsumer(AbstractMaterialGroup group, GuiItem guiItem){
+    private Consumer<InventoryClickEvent> getEnchantItemConsumer(Enchantment enchant, GuiItem guiItem){
         return event -> {
             event.setCancelled(true);
 
-            boolean isIn = this.selectedGroups.contains(group);
+            ItemStack item = guiItem.getItem();
+
+            boolean isIn = this.selectedEnchant.contains(enchant);
             if(isIn){
-                this.selectedGroups.remove(group);
+                this.selectedEnchant.remove(enchant);
+                item.setType(Material.BOOK);
             }else{
-                this.selectedGroups.add(group);
+                this.selectedEnchant.add(enchant);
+                item.setType(Material.ENCHANTED_BOOK);
             }
 
-            ItemStack item = guiItem.getItem();
-            setGroupItemMeta(item, group.getName(), !isIn);
+            setEnchantItemMeta(item, enchant.getKey().getKey(), !isIn);
             guiItem.setItem(item);// Just in case
 
             update();
@@ -132,14 +144,14 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
 
     @Override
     public boolean onSave() {
-        return this.groupContainer.setSelectedGroups(this.selectedGroups);
+        return this.enchantContainer.setSelectedEnchantments(this.selectedEnchant);
     }
 
     @Override
     public boolean hadChange() {
-        Set<AbstractMaterialGroup> baseGroup = this.groupContainer.getSelectedGroups();
-        return baseGroup.size() != this.selectedGroups.size() ||
-                !baseGroup.containsAll(this.selectedGroups);
+        Set<Enchantment> baseGroup = this.enchantContainer.getSelectedEnchantments();
+        return baseGroup.size() != this.selectedEnchant.size() ||
+                !baseGroup.containsAll(this.selectedEnchant);
     }
 
 }
