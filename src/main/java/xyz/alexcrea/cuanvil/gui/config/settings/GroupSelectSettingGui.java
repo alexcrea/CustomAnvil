@@ -17,6 +17,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.*;
@@ -36,6 +37,9 @@ public class GroupSelectSettingGui extends AbstractSettingGui{
         this.page = page;
 
         this.selectedGroups = new HashSet<>(groupContainer.getSelectedGroups());
+
+        // Add secondary background item
+        this.getPane().bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
 
         initGroups();
     }

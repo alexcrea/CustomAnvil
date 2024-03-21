@@ -17,6 +17,8 @@ import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.AbstractEnchantConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collections;
@@ -39,6 +41,9 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
         this.page = page;
 
         this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());
+
+        // Add secondary background item
+        this.getPane().bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
 
         initGroups();
     }
@@ -63,7 +68,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
         Set<Enchantment> illegalEnchant = this.enchantContainer.illegalEnchantments();
-        for (Enchantment enchant : AbstractEnchantConfigGui.SORTED_ENCHANTMENT_LIST) {
+        for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
             if(illegalEnchant.contains(enchant)) {
                 return;
             }

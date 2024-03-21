@@ -20,10 +20,6 @@ import java.util.List;
  */
 public abstract class AbstractSettingGui extends ChestGui {
 
-    // Temporary values, until I get something better.
-    public static final boolean TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE = true;
-    public static final boolean TEMPORARY_DO_BACKUP_EVERY_SAVE = true;
-
     protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here to change the value");
 
     private PatternPane pane;

@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,14 +26,6 @@ import java.util.List;
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
 public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ValueUpdatableGui {
-
-    public static final List<Enchantment> SORTED_ENCHANTMENT_LIST;
-    static {
-        SORTED_ENCHANTMENT_LIST = Arrays.asList(Enchantment.values());
-        SORTED_ENCHANTMENT_LIST.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
-    }
-
-    private final static Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
 
     private final Gui backGui;
 
@@ -76,7 +69,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
         GuiGlobalItems.addBackItem(this.backgroundItems, this.backGui);
 
         GuiGlobalItems.addBackgroundItem(this.backgroundItems);
-        this.backgroundItems.bindItem('1', GuiGlobalItems.backgroundItem(SECONDARY_BACKGROUND_MATERIAL));
+        this.backgroundItems.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
 
         // enchant item panel
         this.filledEnchant = new OutlinePane(0, 0, 9, 5);
@@ -96,7 +89,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
     protected void prepareValues(){
         bookItemFactoryList = new ArrayList<>();
 
-        for (Enchantment enchant : SORTED_ENCHANTMENT_LIST) {
+        for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
             T factory = getFactoryFromEnchant(enchant);
 
             bookItemFactoryList.add(factory);
