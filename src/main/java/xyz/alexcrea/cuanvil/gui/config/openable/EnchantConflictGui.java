@@ -2,7 +2,6 @@ package xyz.alexcrea.cuanvil.gui.config.openable;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import io.delilaheve.CustomAnvil;
@@ -10,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
-import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.subsetting.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;

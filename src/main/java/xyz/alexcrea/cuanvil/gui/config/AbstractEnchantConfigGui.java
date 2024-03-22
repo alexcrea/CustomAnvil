@@ -1,12 +1,10 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.enchantments.Enchantment;
-import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;

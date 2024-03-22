@@ -37,6 +37,10 @@ class EnchantConflictGroup(
         return true
     }
 
+    fun getCantConflictGroup(): AbstractMaterialGroup{
+        return this.cantConflict;
+    }
+
     fun getEnchants(): HashSet<Enchantment> {
         return enchantments
     }

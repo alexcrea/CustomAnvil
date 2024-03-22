@@ -11,21 +11,27 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.ConfirmActionGui;
+import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
+import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.openable.EnchantConflictGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.EnchantSelectSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Collections;
+import java.util.*;
 import java.util.function.Supplier;
 
-public class EnchantConflictSubSettingGui extends ValueUpdatableGui {
+public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements SelectEnchantmentContainer, SelectGroupContainer {
 
     private final EnchantConflictGui parent;
     private final EnchantConflictGroup enchantConflict;
@@ -35,7 +41,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui {
     public EnchantConflictSubSettingGui(
             @NotNull EnchantConflictGui parent,
             @NotNull EnchantConflictGroup enchantConflict) {
-        super(3, "\u00A7aConfig for \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()), CustomAnvil.instance);
+        super(3, "\u00A72Config for \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()), CustomAnvil.instance);
         this.parent = parent;
         this.enchantConflict = enchantConflict;
 
@@ -48,8 +54,11 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui {
         addPane(this.pane);
 
         prepareStaticValues();
-        //updateGuiValues();
     }
+
+    private GuiItem enchantSettingItem;
+    private GuiItem groupSettingItem;
+    private IntSettingsGui.IntSettingFactory minBeforeActiveSettingFactory;
 
     private void prepareStaticValues() {
 
@@ -65,6 +74,35 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui {
 
         deleteItem.setItemMeta(deleteMeta);
         pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
+
+        // Displayed item will be updated later
+
+        enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), (event)->{
+            event.setCancelled(true);
+            EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
+                    "\u00A7eEnchantments for \u00A78" +CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()),
+                    this, this, 0);
+            enchantGui.show(event.getWhoClicked());
+        }, CustomAnvil.instance);
+
+        groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), (event)->{
+            event.setCancelled(true);
+            GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
+                    "\u00A7eGroups for \u00A78" +CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()),
+                    this, this, 0);
+            enchantGui.show(event.getWhoClicked());
+        }, CustomAnvil.instance);
+
+        minBeforeActiveSettingFactory = IntSettingsGui.intFactory("\u00A7eMinimum enchantment before conflict is active", this,
+                enchantConflict.getName()+".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
+                0, 255, 0, 1
+                );
+
+        pane.bindItem('E', enchantSettingItem);
+        pane.bindItem('G', groupSettingItem);
+
+        // Now we update the items
+        updateLocal();
 
     }
 
@@ -105,7 +143,40 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui {
     public void updateLocal(){
         if(!this.canOpen) return;
 
+        // Prepare enchantment lore
+        ArrayList<String> enchantLore = new ArrayList<>();
+        enchantLore.add("\u00A77Allow you to select a list of \u00A75Enchantments \u00A77that this conflict should include");
+        Set<Enchantment> enchants = getSelectedEnchantments();
+        if(enchants.isEmpty()){
+            enchantLore.add("\u00A77There is no enchantment for this conflict.");
+        }else{
+            enchantLore.add("\u00A77List of included enchantment for this conflict:");
+            Iterator<Enchantment> enchantIterator = enchants.iterator();
 
+            int maxindex = (enchants.size() > 5 ? 4 : enchants.size());
+            for (int i = 0; i < maxindex; i++) {
+                // format string like "- Fire Protection"
+                enchantLore.add("\u00A77- \u00A75"+CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey()));
+            }
+        }
+
+        // Configure enchant setting item
+        ItemStack enchantItem = enchantSettingItem.getItem();
+        ItemMeta enchantMeta = enchantItem.getItemMeta();
+
+        enchantMeta.setDisplayName("\u00A7aSelect \u00A75Enchantments \u00A7aSettings");
+        enchantMeta.setLore(enchantLore);
+
+        enchantItem.setItemMeta(enchantMeta);
+
+        enchantSettingItem.setItem(enchantItem); // Just in case
+
+
+        //todo: groupSettingItem
+
+
+        pane.bindItem('M', GuiGlobalItems.intSettingGuiItem(minBeforeActiveSettingFactory, Material.COMMAND_BLOCK));
+        update();
     }
 
     public void cleanUnused(){
@@ -127,7 +198,49 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui {
         if(this.canOpen){
             super.show(humanEntity);
         }else{
-            parent.show(humanEntity);
+            this.parent.show(humanEntity);
         }
+    }
+
+    // Select enchantment container methods
+
+    @Override
+    public Set<Enchantment> getSelectedEnchantments() {
+        return this.enchantConflict.getEnchants();
+    }
+
+    @Override
+    public boolean setSelectedEnchantments(Set<Enchantment> enchantments) {
+        return false;
+    }
+
+    @Override
+    public Set<Enchantment> illegalEnchantments() {
+        return new HashSet<>();
+    }
+
+    // Select group container methods
+
+    @Override
+    public Set<AbstractMaterialGroup> getSelectedGroups() {
+        return this.enchantConflict.getCantConflictGroup().getGroups();
+    }
+
+    @Override
+    public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
+        // Set live configuration
+        this.enchantConflict.getCantConflictGroup().setGroups(groups);
+
+        // Save on file configuration
+
+        // Save file configuration to disk
+
+        return false;
+    }
+
+    @Override
+    public Set<AbstractMaterialGroup> illegalGroups() {
+
+        return new HashSet<>();
     }
 }
