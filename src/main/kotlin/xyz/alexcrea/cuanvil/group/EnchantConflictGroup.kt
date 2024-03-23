@@ -13,9 +13,7 @@ class EnchantConflictGroup(
     fun addEnchantment(enchant: Enchantment){
         enchantments.add(enchant)
     }
-    fun removeEnchantment(enchant: Enchantment){
-        enchantments.remove(enchant)
-    }
+
     fun allowed(enchants: Set<Enchantment>, mat: Material) : Boolean{
         if(enchantments.size < minBeforeBlock){
             return true
@@ -43,6 +41,11 @@ class EnchantConflictGroup(
 
     fun getEnchants(): HashSet<Enchantment> {
         return enchantments
+    }
+
+    fun setEnchants(enchants: Set<Enchantment>) {
+        enchantments.clear()
+        enchantments.addAll(enchants)
     }
 
 }

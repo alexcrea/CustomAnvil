@@ -18,12 +18,11 @@ import java.util.HashMap;
 public class EnchantConflictGui extends ChestGui {
 
     public final static EnchantConflictGui INSTANCE = new EnchantConflictGui();
-
-
-    private final HashMap<EnchantConflictGroup, EnchantConflictSubSettingGui> conflictGuiMap;
     static {
         INSTANCE.init();
     }
+
+    private final HashMap<EnchantConflictGroup, EnchantConflictSubSettingGui> conflictGuiMap;
 
     private EnchantConflictGui() {
         super(6, "§eConflict Config", CustomAnvil.instance);
@@ -50,24 +49,54 @@ public class EnchantConflictGui extends ChestGui {
         this.conflictGuiMap.clear();
         this.filledEnchant.clear();
 
-        // Create new sub setting gui
         for (EnchantConflictGroup conflict : ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList()) {
-            EnchantConflictSubSettingGui conflictGui = new EnchantConflictSubSettingGui(this, conflict);
+            updateValueForConflict(conflict, false);
+        }
 
-            // Temporaire, il faut faire un item avec le conflict et donc un generateur arbitraire
+        update();
+    }
 
-            ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
-            filledEnchant.addItem(new GuiItem(item, GuiGlobalActions.openGuiAction(conflictGui), CustomAnvil.instance));
+    public ItemStack createItemForConflict(EnchantConflictGroup conflict){
+        ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
+        //TODO item
+
+        return item;
+    }
+
+    public void updateValueForConflict(EnchantConflictGroup conflict, boolean shouldUpdate){
+        EnchantConflictSubSettingGui gui = this.conflictGuiMap.get(conflict);
+        ItemStack item = createItemForConflict(conflict);
+
+        GuiItem guiItem;
+        if(gui == null){
+            // Create new sub setting gui
+            guiItem = new GuiItem(item, CustomAnvil.instance);
+            gui = new EnchantConflictSubSettingGui(this, conflict, guiItem);
+
+            guiItem.setAction(GuiGlobalActions.openGuiAction(gui));
+
+            this.conflictGuiMap.put(conflict, gui);
+            this.filledEnchant.addItem(guiItem);
+        }else{
+            // replace item with the updated one
+            guiItem = gui.getParentItemForThisGui();
+            guiItem.setItem(item);
+        }
+
+        gui.updateLocal();
+        if(shouldUpdate){
+            update();
         }
 
     }
 
-    public void updateValueForConflict(EnchantConflictGroup conflict){
-
-    }
-
     public void removeConflict(EnchantConflictGroup conflict){
+        EnchantConflictSubSettingGui gui = this.conflictGuiMap.get(conflict);
+        if(gui == null) return;
 
+        this.filledEnchant.removeItem(gui.getParentItemForThisGui());
+        this.conflictGuiMap.remove(conflict);
+        update();
     }
 
 }
