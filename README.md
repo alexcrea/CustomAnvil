@@ -10,6 +10,8 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 [GitHub](https://github.com/DelilahEve/UnsafeEnchants/releases/latest), 
 [Spigot](https://www.spigotmc.org/resources/unsafe-enchants.104708/) or
 [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/unsafe-enchants/files/all)
+
+/!\ version under 1.3.1 may not work from an issue in the main permission.
 ### Download Locations:
 
 the plugin can be downloaded on the
