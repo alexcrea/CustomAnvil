@@ -371,7 +371,7 @@ class AnvilEventListener : Listener {
                 }
                 inventory.repairCost = finalAnvilCost
 
-                event.view.setProperty(REPAIR_COST, anvilCost)
+                event.view.setProperty(REPAIR_COST, finalAnvilCost)
             })
     }
 
