@@ -11,7 +11,6 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 [Spigot](https://www.spigotmc.org/resources/unsafe-enchants.104708/) or
 [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/unsafe-enchants/files/all)
 
-/!\ version under 1.3.1 may not work from an issue in the main permission.
 ### Download Locations:
 
 the plugin can be downloaded on the
@@ -35,6 +34,9 @@ ca.bypass.level: Allow player to bypass every level limit (no custom limit)
 ca.command.reload: Allow administrator to reload the plugin's configs
 ca.config.edit: Allow administrator to edit the plugin's config in game
 ```
+/!\ version under 1.3.1 use other permission. from 1.2.0 to 1.3.1-A1 use ua.unsafe instead of ca.affected
+under 1.2.0 replace ca prefix by ue and use ue.unsafe. some permission/features may not exist before the last version.
+
 ### Commands
 ```yml
 anvilconfigreload or carl: Reload every config of this plugin
