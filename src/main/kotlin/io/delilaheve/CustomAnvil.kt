@@ -49,6 +49,15 @@ class CustomAnvil : JavaPlugin() {
                 instance.logger.info(message)
             }
         }
+
+        /**
+         * Vebose Logging handler
+         */
+        fun verboseLog(message: String) {
+            if (ConfigOptions.verboseDebugLog) {
+                instance.logger.info(message)
+            }
+        }
     }
 
     /**

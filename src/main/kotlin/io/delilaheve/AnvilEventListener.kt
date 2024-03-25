@@ -64,6 +64,7 @@ class AnvilEventListener : Listener {
 
             // Test/stop if nothing changed.
             if(first == resultItem){
+                CustomAnvil.log("no right item, But input is same as output")
                 event.result = null
                 return
             }
@@ -95,6 +96,7 @@ class AnvilEventListener : Listener {
 
             // Test/stop if nothing changed.
             if(first == resultItem){
+                CustomAnvil.log("Mergable with second, But input is same as output")
                 event.result = null
                 return
             }
@@ -125,6 +127,7 @@ class AnvilEventListener : Listener {
 
             // Test/stop if nothing changed.
             if(first == resultItem){
+                CustomAnvil.log("unit repair, But input is same as output")
                 event.result = null
                 return
             }
@@ -132,6 +135,7 @@ class AnvilEventListener : Listener {
 
             handleAnvilXp(inventory, event, anvilCost)
         }else{
+            CustomAnvil.log("no anvil fuse type found")
             event.result = null
         }
     }

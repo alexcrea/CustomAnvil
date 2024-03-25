@@ -32,10 +32,12 @@ object EnchantmentUtil {
         other.forEach { (enchantment, level) ->
             // Enchantment not yet in result list
             if (!containsKey(enchantment)) {
-                // Add the enchantment if it doesn't have conflicts, or, if player is allowed to bypass enchantment restrictions
+                // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
                 this[enchantment] = level
+                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys,mat,enchantment);
                 if(!player.hasPermission(CustomAnvil.bypassFusePermission) &&
-                    (ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)){
+                    (conflictType != ConflictType.NO_CONFLICT)){
+                    CustomAnvil.verboseLog("Enchantment not yet in result list, but there is conflict (${enchantment.key}, conflict: $conflictType)")
                     this.remove(enchantment)
                 }
 
@@ -43,8 +45,10 @@ object EnchantmentUtil {
             // Enchantment already in result list
             else{
                 // ... and they are conflicting
-                if((ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys,mat,enchantment) != ConflictType.NO_CONFLICT)
+                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys,mat,enchantment)
+                if((conflictType != ConflictType.NO_CONFLICT)
                     && !player.hasPermission(CustomAnvil.bypassFusePermission)){
+                    CustomAnvil.verboseLog("Enchantment already in result list, and they are conflicting (${enchantment.key}, conflict: $conflictType)")
                     return@forEach
                 }
 
@@ -52,6 +56,7 @@ object EnchantmentUtil {
                 if(this[enchantment] != other[enchantment]){
                     val newLevel = max(this[enchantment] ?: 0, other[enchantment] ?: 0)
                     // apply the greater of the two if non-zero
+
                     if (newLevel > 0) { this[enchantment] = newLevel }
                 }
                 // ... and they're the same level

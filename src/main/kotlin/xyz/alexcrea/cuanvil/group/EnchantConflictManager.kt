@@ -132,13 +132,19 @@ class EnchantConflictManager {
     }
 
     fun isConflicting(base: Set<Enchantment>,mat: Material, newEnchant: Enchantment): ConflictType {
+        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
         val conflictList = conflictMap[newEnchant] ?: return ConflictType.NO_CONFLICT
+        CustomAnvil.verboseLog("Did not get skipped")
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
-            if(!conflict.allowed(base,mat)) {
+            CustomAnvil.verboseLog("Is against ${conflict.name}")
+            val conflicting = conflict.allowed(base,mat)
+            CustomAnvil.verboseLog("Was against ${conflict.name} and conflicting: $conflicting ")
+            if(!conflicting) {
                 if(conflict.getEnchants().size <= 1){
                     result = ConflictType.SMALL_CONFLICT
+                    CustomAnvil.verboseLog("Small conflict, continuing")
                 }else{
                     return ConflictType.BIG_CONFLICT
                 }

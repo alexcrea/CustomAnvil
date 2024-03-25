@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.group
 
+import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 
@@ -27,6 +28,7 @@ class EnchantConflictGroup(
         var enchantAmount = 0
         for (enchantment in enchants) {
             if(enchantment !in enchantments) continue
+            CustomAnvil.verboseLog("Enchant ${enchantment.key} is in: ${enchantAmount + 1}/$minBeforeBlock ")
             if(++enchantAmount > minBeforeBlock){
                 return false
             }

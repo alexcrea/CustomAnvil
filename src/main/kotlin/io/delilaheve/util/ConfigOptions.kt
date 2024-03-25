@@ -35,6 +35,8 @@ object ConfigOptions {
     private const val KEY_ITEM = "item"
     // Debug logging toggle path
     private const val DEBUG_LOGGING = "debug_log"
+    // Debug verbose logging toggle path
+    private const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
 
     // Default value for enchantment limits
     private const val DEFAULT_ENCHANT_LIMIT = 5
@@ -71,6 +73,8 @@ object ConfigOptions {
     private const val DEFAULT_ENCHANT_VALUE = 0
     // Default value for debug logging
     private const val DEFAULT_DEBUG_LOG = false
+    // Default value for debug logging
+    private const val DEFAULT_VERBOSE_DEBUG_LOG = false
 
     /**
      * Default enchantment limit
@@ -169,6 +173,16 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
+        }
+
+    /**
+     * Whether to show verbose debug logging
+     */
+    val verboseDebugLog: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
         }
 
     /**
