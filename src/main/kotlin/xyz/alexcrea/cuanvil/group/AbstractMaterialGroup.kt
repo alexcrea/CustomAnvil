@@ -15,7 +15,7 @@ abstract class AbstractMaterialGroup(private val name: String) {
      * Get if a material is allowed following the group policy
      */
     open fun contain(mat : Material): Boolean {
-        return mat in includedMaterial
+        return mat in getMaterials()
     }
 
     /**
