@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.openable;
+package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;

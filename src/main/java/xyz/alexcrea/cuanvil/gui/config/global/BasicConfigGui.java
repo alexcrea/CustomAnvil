@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.openable;
+package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;

@@ -18,7 +18,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
-import xyz.alexcrea.cuanvil.gui.config.openable.EnchantConflictGui;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;

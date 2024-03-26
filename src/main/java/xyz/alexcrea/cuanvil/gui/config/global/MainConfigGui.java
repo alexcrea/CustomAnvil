@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui;
+package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -8,10 +8,6 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.gui.config.openable.BasicConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.openable.EnchantConflictGui;
-import xyz.alexcrea.cuanvil.gui.config.openable.EnchantCostConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.openable.EnchantLimitConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
