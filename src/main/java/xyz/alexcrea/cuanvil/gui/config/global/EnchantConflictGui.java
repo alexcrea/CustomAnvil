@@ -20,8 +20,10 @@ import xyz.alexcrea.cuanvil.gui.config.settings.subsetting.EnchantConflictSubSet
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -54,21 +56,21 @@ public class EnchantConflictGui extends ChestGui {
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "B11L1R11C"
         );
-        backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
+        this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
 
-        GuiGlobalItems.addBackItem(backgroundPane, MainConfigGui.INSTANCE);
+        GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.INSTANCE);
 
-        GuiGlobalItems.addBackgroundItem(backgroundPane);
-        backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
-        backgroundPane.bindItem('C', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
-        addPane(backgroundPane);
+        GuiGlobalItems.addBackgroundItem(this.backgroundPane);
+        this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
+        this.backgroundPane.bindItem('C', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
+        addPane(this.backgroundPane);
 
         // Page init
         this.pages = new ArrayList<>();
         this.pageMap = new HashMap<>();
 
         // enchant item panel
-        this.firstPage = creatEmptyPage();
+        this.firstPage = createEmptyPage();
         this.pages.add(this.firstPage);
 
         prepareOtherValues();
@@ -83,7 +85,7 @@ public class EnchantConflictGui extends ChestGui {
         this.goLeftItem = new GuiItem(new ItemStack(Material.PAPER), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
-            int page =this.pageMap.getOrDefault(playerUUID, 0);
+            int page = this.pageMap.getOrDefault(playerUUID, 0);
             this.pageMap.put(playerUUID, page-1);
 
             ItemStack cursor = viewer.getItemOnCursor();
@@ -112,7 +114,7 @@ public class EnchantConflictGui extends ChestGui {
 
     }
 
-    private OutlinePane creatEmptyPage(){
+    private OutlinePane createEmptyPage(){
         OutlinePane page = new OutlinePane(0, 0, 9, 5);
         page.align(OutlinePane.Alignment.BEGIN);
         page.setOrientation(Orientable.Orientation.HORIZONTAL);
@@ -135,11 +137,16 @@ public class EnchantConflictGui extends ChestGui {
     }
 
     public ItemStack createItemForConflict(EnchantConflictGroup conflict){
-        ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
-        //TODO item
+        ItemStack item = new ItemStack(conflict.getRepresentativeMaterial());
+
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(conflict.getName());
+        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.getName()) + " \u00A7rConflict");
+        meta.setLore(Arrays.asList(
+                "\u00A77Enchantment count:      \u00A7e"+conflict.getEnchants().size(),
+                "\u00A77Group count:            \u00A7e"+conflict.getCantConflictGroup().getGroups().size(),
+                "\u00A77Min enchantments count: \u00A7e"+conflict.getMinBeforeBlock()
+        ));
 
         item.setItemMeta(meta);
         return item;
@@ -186,7 +193,7 @@ public class EnchantConflictGui extends ChestGui {
         // Get first available page or create one
         OutlinePane page = this.pages.get(this.pages.size()-1);
         if(page.getItems().size() >= 5*9){
-            page = creatEmptyPage();
+            page = createEmptyPage();
             this.pages.add(page);
         }
 

@@ -28,4 +28,30 @@ public class CasedStringUtil {
         return result.substring(1);
     }
 
+    public static String camelCaseToUpperSpaceCase(String camelCasedString){
+        if(camelCasedString.isEmpty()) return camelCasedString;
+        StringBuilder stb = new StringBuilder();
+
+        char[] chars = camelCasedString.toCharArray();
+        stb.append(chars[0]);
+        for (int i = 1; i < chars.length; i++) {
+            char chr = chars[i];
+            if(Character.isUpperCase(chr)){
+                stb.append(" ");
+            }
+            stb.append(chr);
+        }
+
+        return stb.toString();
+    }
+
+    public static String detectToUpperSpacedCase(String toDetect){
+        //not advanced detection
+        if(toDetect.contains("_")){
+            return snakeToUpperSpacedCase(toDetect);
+        }else{
+            return camelCaseToUpperSpaceCase(toDetect);
+        }
+    }
+
 }

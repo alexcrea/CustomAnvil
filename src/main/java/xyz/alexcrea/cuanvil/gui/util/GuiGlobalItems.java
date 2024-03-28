@@ -244,7 +244,7 @@ public class GuiGlobalItems {
             @NotNull Material itemMat
     ){
         String configPath = getConfigNameFromPath(factory.getConfigPath());
-        return intSettingGuiItem(factory, itemMat, CasedStringUtil.snakeToUpperSpacedCase(configPath));
+        return intSettingGuiItem(factory, itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
     }
 
     /**

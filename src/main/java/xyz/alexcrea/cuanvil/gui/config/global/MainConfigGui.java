@@ -70,7 +70,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('3', enchantCostItem);
 
         // Enchantment Conflicts
-        ItemStack EnchantConflictItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemStack EnchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
         ItemMeta enchantConflictMeta = EnchantConflictItemstack.getItemMeta();
 
         enchantConflictMeta.setDisplayName("\u00A7aEnchantment Conflict");

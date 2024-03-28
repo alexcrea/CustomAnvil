@@ -7,7 +7,7 @@ import org.bukkit.enchantments.Enchantment
 class EnchantConflictGroup(
     val name: String,
     private val cantConflict: AbstractMaterialGroup,
-    private val minBeforeBlock: Int){
+    val minBeforeBlock: Int){
 
     private val enchantments = HashSet<Enchantment>()
 
@@ -48,6 +48,17 @@ class EnchantConflictGroup(
     fun setEnchants(enchants: Set<Enchantment>) {
         enchantments.clear()
         enchantments.addAll(enchants)
+    }
+
+    fun getRepresentativeMaterial(): Material {
+        val groups = getCantConflictGroup().getGroups()
+        val groupIterator = groups.iterator()
+        while (groupIterator.hasNext()){
+            val mat = groupIterator.next().getRepresentativeMaterial()
+            if(mat != Material.ENCHANTED_BOOK) return mat
+
+        }
+        return Material.ENCHANTED_BOOK
     }
 
 }
