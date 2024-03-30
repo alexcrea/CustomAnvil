@@ -3,17 +3,17 @@ package xyz.alexcrea.cuanvil.group
 import org.bukkit.Material
 import java.util.*
 
-class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
+class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
     override fun createDefaultSet(): EnumSet<Material> {
         return EnumSet.allOf(Material::class.java)
     }
 
     private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
-    private val groupItems by lazy {createDefaultSet()}
+    private val groupItems by lazy { createDefaultSet() }
 
     override fun isReferencing(other: AbstractMaterialGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
-            if((materialGroup == other) || (materialGroup.isReferencing(other))){
+            if ((materialGroup == other) || (materialGroup.isReferencing(other))) {
                 return true
             }
         }
@@ -36,7 +36,7 @@ class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
 
         includedGroup.clear()
         groups.forEach { group ->
-            if(!group.isReferencing(this)) {
+            if (!group.isReferencing(this)) {
                 includedGroup.add(group)
                 groupItems.removeAll(group.getMaterials())
             }

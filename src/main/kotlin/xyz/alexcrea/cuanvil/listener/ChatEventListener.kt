@@ -11,7 +11,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
 
-class ChatEventListener : Listener{
+class ChatEventListener : Listener {
 
     private val playerListenMap: ConcurrentHashMap<UUID, Consumer<String?>> = ConcurrentHashMap()
 

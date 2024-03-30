@@ -26,8 +26,9 @@ public abstract class AbstractSettingGui extends ChestGui {
 
     /**
      * Prepare necessary object for a setting gui.
-     * @param rows Number of row for this gui.
-     * @param title Title of this gui.
+     *
+     * @param rows   Number of row for this gui.
+     * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
     public AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
@@ -37,8 +38,9 @@ public abstract class AbstractSettingGui extends ChestGui {
 
     /**
      * Prepare necessary object for a setting gui.
-     * @param rows Number of row for this gui.
-     * @param title Title of this gui.
+     *
+     * @param rows   Number of row for this gui.
+     * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
     public AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
@@ -50,9 +52,10 @@ public abstract class AbstractSettingGui extends ChestGui {
 
     /**
      * Initialise and prepare value for this gui.
+     *
      * @param parent Parent gui to go back when completed.
      */
-    private void initBase(ValueUpdatableGui parent){
+    private void initBase(ValueUpdatableGui parent) {
         Pattern pattern = getGuiPattern();
         pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
         addPane(pane);
@@ -75,6 +78,7 @@ public abstract class AbstractSettingGui extends ChestGui {
 
     /**
      * Get main pane for this setting gui.
+     *
      * @return Main pattern pain of this gui.
      */
     protected PatternPane getPane() {
@@ -89,12 +93,14 @@ public abstract class AbstractSettingGui extends ChestGui {
      * <li><b>B</b>: "back to previous gui" button.</li>
      * <li><b>0</b>: default background item.</li>
      * </ul>
+     *
      * @return The gui's pattern.
      */
     protected abstract Pattern getGuiPattern();
 
     /**
      * Called when the associated setting need to be saved.
+     *
      * @return true if the save was successful. false otherwise
      */
     public abstract boolean onSave();
@@ -102,6 +108,7 @@ public abstract class AbstractSettingGui extends ChestGui {
     /**
      * If this function return true
      * the gui assume the associated setting can be saved.
+     *
      * @return true if there is a change to the setting. false otherwise
      */
     public abstract boolean hadChange();
@@ -111,16 +118,17 @@ public abstract class AbstractSettingGui extends ChestGui {
      * <p>
      * It is better to keep a factory that hold setting data than find what parameters to use every time.
      */
-    public abstract static class SettingGuiFactory{
+    public abstract static class SettingGuiFactory {
         protected String configPath;
         protected ConfigHolder config;
 
         /**
          * Constructor for settings gui factory
+         *
          * @param configPath Configuration path of this setting.
-         * @param config Configuration holder of this setting.
+         * @param config     Configuration holder of this setting.
          */
-        protected SettingGuiFactory(String configPath, ConfigHolder config){
+        protected SettingGuiFactory(String configPath, ConfigHolder config) {
             this.configPath = configPath;
             this.config = config;
         }
@@ -141,6 +149,7 @@ public abstract class AbstractSettingGui extends ChestGui {
 
         /**
          * Create a gui using setting parameters and current setting value.
+         *
          * @return A new instance of the implemented setting gui.
          */
         public abstract AbstractSettingGui create();

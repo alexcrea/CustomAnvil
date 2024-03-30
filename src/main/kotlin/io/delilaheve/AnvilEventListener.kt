@@ -39,9 +39,10 @@ class AnvilEventListener : Listener {
         private const val ANVIL_INPUT_LEFT = 0
         private const val ANVIL_INPUT_RIGHT = 1
         private const val ANVIL_OUTPUT_SLOT = 2
+
         // static slot container
-        private val NO_SLOT = SlotContainer(SlotType.NO_SLOT,0)
-        private val CURSOR_SLOT = SlotContainer(SlotType.CURSOR,0)
+        private val NO_SLOT = SlotContainer(SlotType.NO_SLOT, 0)
+        private val CURSOR_SLOT = SlotContainer(SlotType.CURSOR, 0)
     }
 
     /**
@@ -55,15 +56,15 @@ class AnvilEventListener : Listener {
 
         // Should find player
         val player = event.view.player
-        if(!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
+        if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         // Test rename lonely item
-        if(second == null){
+        if (second == null) {
             val resultItem = first.clone()
             var anvilCost = handleRename(resultItem, inventory)
 
             // Test/stop if nothing changed.
-            if(first == resultItem){
+            if (first == resultItem) {
                 CustomAnvil.log("no right item, But input is same as output")
                 event.result = null
                 return
@@ -71,7 +72,7 @@ class AnvilEventListener : Listener {
             // We don't manually set item here as vanilla do it (renaming)
             //event.result = null
 
-            anvilCost+= calculatePenalty(first,null,resultItem)
+            anvilCost += calculatePenalty(first, null, resultItem)
 
             handleAnvilXp(inventory, event, anvilCost)
             return
@@ -91,19 +92,19 @@ class AnvilEventListener : Listener {
             if (!first.isEnchantedBook() && !second.isEnchantedBook()) {
                 // we only need to be concerned with repair when neither item is a book
                 val repaired = resultItem.repairFrom(first, second)
-                anvilCost += if(repaired) ConfigOptions.itemRepairCost else 0
+                anvilCost += if (repaired) ConfigOptions.itemRepairCost else 0
             }
 
             // Test/stop if nothing changed.
-            if(first == resultItem){
+            if (first == resultItem) {
                 CustomAnvil.log("Mergable with second, But input is same as output")
                 event.result = null
                 return
             }
             // As calculatePenalty edit result, we need to calculate penalty after checking equality
-            anvilCost+= calculatePenalty(first, second, resultItem)
+            anvilCost += calculatePenalty(first, second, resultItem)
             // Calculate rename cost
-            anvilCost+= handleRename(resultItem, inventory)
+            anvilCost += handleRename(resultItem, inventory)
 
             // Finally, we set result
             event.result = resultItem
@@ -114,19 +115,19 @@ class AnvilEventListener : Listener {
 
         // Test for unit repair
         val unitRepairAmount = first.getRepair(second)
-        if(unitRepairAmount != null){
+        if (unitRepairAmount != null) {
             val resultItem = first.clone()
             var anvilCost = handleRename(resultItem, inventory)
 
             val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
-            if(repairAmount > 0){
-                anvilCost += repairAmount*ConfigOptions.unitRepairCost
+            if (repairAmount > 0) {
+                anvilCost += repairAmount * ConfigOptions.unitRepairCost
             }
             // We do not care about right item penalty for unit repair
-            anvilCost+= calculatePenalty(first,null,resultItem)
+            anvilCost += calculatePenalty(first, null, resultItem)
 
             // Test/stop if nothing changed.
-            if(first == resultItem){
+            if (first == resultItem) {
                 CustomAnvil.log("unit repair, But input is same as output")
                 event.result = null
                 return
@@ -134,16 +135,16 @@ class AnvilEventListener : Listener {
             event.result = resultItem
 
             handleAnvilXp(inventory, event, anvilCost)
-        }else{
+        } else {
             CustomAnvil.log("no anvil fuse type found")
             event.result = null
         }
     }
 
-    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int{
+    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int {
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
-            if(!it.displayName.contentEquals(inventory.renameText)){
+            if (!it.displayName.contentEquals(inventory.renameText)) {
                 it.setDisplayName(inventory.renameText)
                 resultItem.itemMeta = it
                 return ConfigOptions.itemRenameCost
@@ -158,9 +159,11 @@ class AnvilEventListener : Listener {
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        if(!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
+        if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
         val inventory = event.inventory as? AnvilInventory ?: return
-        if (event.rawSlot != ANVIL_OUTPUT_SLOT) { return }
+        if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
+            return
+        }
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
@@ -172,110 +175,117 @@ class AnvilEventListener : Listener {
                 || (unitRepairResult != null)
 
         // True if there was no change or not allowed
-        if((output == inventory.getItem(ANVIL_INPUT_LEFT))
-            || !allowed){
+        if ((output == inventory.getItem(ANVIL_INPUT_LEFT))
+            || !allowed
+        ) {
 
             event.result = Event.Result.DENY
             return
         }
-        if(rightItem == null){
+        if (rightItem == null) {
             event.result = Event.Result.ALLOW
             return
         }
-        if(canMerge){
+        if (canMerge) {
             event.result = Event.Result.ALLOW
-        }else if(unitRepairResult != null){
-            onUnitRepairExtract(leftItem, rightItem, output,
-                unitRepairResult, event, player, inventory)
+        } else if (unitRepairResult != null) {
+            onUnitRepairExtract(
+                leftItem, rightItem, output,
+                unitRepairResult, event, player, inventory
+            )
 
             return
         }
     }
 
-    private fun onUnitRepairExtract(leftItem: ItemStack,
-                                    rightItem: ItemStack,
-                                    output: ItemStack,
-                                    unitRepairResult: Double,
-                                    event: InventoryClickEvent,
-                                    player: Player,
-                                    inventory: AnvilInventory){
+    private fun onUnitRepairExtract(
+        leftItem: ItemStack,
+        rightItem: ItemStack,
+        output: ItemStack,
+        unitRepairResult: Double,
+        event: InventoryClickEvent,
+        player: Player,
+        inventory: AnvilInventory
+    ) {
         val resultCopy = leftItem.clone()
         val resultAmount = resultCopy.unitRepair(
-            rightItem.amount, unitRepairResult)
+            rightItem.amount, unitRepairResult
+        )
 
         // To avoid vanilla, we cancel the event for unit repair
         event.result = Event.Result.DENY
         event.isCancelled = true
         // And we give the item manually
         // But first we check if we should give the item
-        val slotDestination = getActionSlot(event,player)
-        if(slotDestination.type == SlotType.NO_SLOT) return
+        val slotDestination = getActionSlot(event, player)
+        if (slotDestination.type == SlotType.NO_SLOT) return
 
         // Test repair cost
         var repairCost = 0
-        if(player.gameMode != GameMode.CREATIVE){
+        if (player.gameMode != GameMode.CREATIVE) {
             // Get repairCost
             leftItem.itemMeta?.let { leftMeta ->
                 val leftName = leftMeta.displayName
                 output.itemMeta?.let {
-                    if(!leftName.contentEquals(it.displayName)){
-                        repairCost+= ConfigOptions.itemRenameCost
+                    if (!leftName.contentEquals(it.displayName)) {
+                        repairCost += ConfigOptions.itemRenameCost
                     }
                 }
             }
 
-            repairCost+= calculatePenalty(leftItem,null,resultCopy)
-            repairCost+= resultAmount*ConfigOptions.unitRepairCost
+            repairCost += calculatePenalty(leftItem, null, resultCopy)
+            repairCost += resultAmount * ConfigOptions.unitRepairCost
 
-            if((inventory.maximumRepairCost < repairCost)
-                        || (player.level < repairCost)) return
+            if ((inventory.maximumRepairCost < repairCost)
+                || (player.level < repairCost)
+            ) return
         }
         // If not creative middle click...
-        if(event.click != ClickType.MIDDLE){
+        if (event.click != ClickType.MIDDLE) {
             // We remove what should be removed
-            inventory.setItem(ANVIL_INPUT_LEFT,null)
-            rightItem.amount-= resultAmount
-            inventory.setItem(ANVIL_INPUT_RIGHT,rightItem)
+            inventory.setItem(ANVIL_INPUT_LEFT, null)
+            rightItem.amount -= resultAmount
+            inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
             inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-            player.level-= repairCost
+            player.level -= repairCost
         }
 
         // Finally, we add the item to the player
-        if(slotDestination.type == SlotType.CURSOR){
+        if (slotDestination.type == SlotType.CURSOR) {
             player.setItemOnCursor(output)
-        }else{// We assume SlotType == SlotType.INVENTORY
-            player.inventory.setItem(slotDestination.slot,output)
+        } else {// We assume SlotType == SlotType.INVENTORY
+            player.inventory.setItem(slotDestination.slot, output)
         }
     }
 
     /**
      * Get the destination slot or "NO_SLOT" slot container if there is no slot available
      */
-    private fun getActionSlot(event: InventoryClickEvent, player: Player): SlotContainer{
-        if(event.isShiftClick){
+    private fun getActionSlot(event: InventoryClickEvent, player: Player): SlotContainer {
+        if (event.isShiftClick) {
             val inventory = player.inventory
-            val firstEmpty =  inventory.firstEmpty()
-            if(firstEmpty == -1){
+            val firstEmpty = inventory.firstEmpty()
+            if (firstEmpty == -1) {
                 return NO_SLOT
             }
             //check hotbare full
             var slotIndex = 8
-            while(slotIndex >= 0 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)){
+            while (slotIndex >= 0 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)) {
                 slotIndex--
             }
-            if(slotIndex >= 0){
-                return SlotContainer(SlotType.INVENTORY,slotIndex)
+            if (slotIndex >= 0) {
+                return SlotContainer(SlotType.INVENTORY, slotIndex)
             }
             slotIndex = 35 //4*9 - 1 (max of player inventory)
-            while(slotIndex >= 9 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)){
+            while (slotIndex >= 9 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)) {
                 slotIndex--
             }
-            if(slotIndex < 9){
+            if (slotIndex < 9) {
                 return NO_SLOT
             }
-            return SlotContainer(SlotType.INVENTORY,slotIndex)
-        }else{
-            if(player.itemOnCursor.type != Material.AIR){
+            return SlotContainer(SlotType.INVENTORY, slotIndex)
+        } else {
+            if (player.itemOnCursor.type != Material.AIR) {
                 return NO_SLOT
             }
             return CURSOR_SLOT
@@ -286,24 +296,29 @@ class AnvilEventListener : Listener {
      * Function to calculate work penalty of anvil work
      * Also change result work penalty
      */
-    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int{
+    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penalty
         val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
         val rightPenalty =
-            if(right == null){ 0 }
-            else{ (right.itemMeta as? Repairable)?.repairCost ?: 0 }
+            if (right == null) {
+                0
+            } else {
+                (right.itemMeta as? Repairable)?.repairCost ?: 0
+            }
 
         // Try to set work penalty for the result item
         result.itemMeta?.let {
-            (it as? Repairable)?.repairCost = leftPenalty*2+1
+            (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
             result.itemMeta = it
         }
 
-        CustomAnvil.log("Calculated penalty: " +
-                "leftPenalty: $leftPenalty, " +
-                "rightPenalty: $rightPenalty, " +
-                "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}")
+        CustomAnvil.log(
+            "Calculated penalty: " +
+                    "leftPenalty: $leftPenalty, " +
+                    "rightPenalty: $rightPenalty, " +
+                    "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}"
+        )
 
         return leftPenalty + rightPenalty
     }
@@ -312,7 +327,7 @@ class AnvilEventListener : Listener {
      * Function to calculate right enchantment values
      * it include enchantment placed on final item and conflicting enchantment
      */
-    private fun getRightValues(right: ItemStack, result:ItemStack) : Int {
+    private fun getRightValues(right: ItemStack, result: ItemStack): Int {
         // Calculate right value and illegal enchant penalty
         var illegalPenalty = 0
         var rightValue = 0
@@ -323,12 +338,16 @@ class AnvilEventListener : Listener {
 
         for (enchantment in right.findEnchantments()) {
             // count enchant as illegal enchant if it conflicts with another enchant or not in result
-            if((enchantment.key !in resultEnchsKeys)){
+            if ((enchantment.key !in resultEnchsKeys)) {
                 resultEnchsKeys.add(enchantment.key)
-                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(resultEnchsKeys,result.type,enchantment.key)
+                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(
+                    resultEnchsKeys,
+                    result.type,
+                    enchantment.key
+                )
                 resultEnchsKeys.remove(enchantment.key)
 
-                if(ConflictType.BIG_CONFLICT == conflictType){
+                if (ConflictType.BIG_CONFLICT == conflictType) {
                     illegalPenalty += ConfigOptions.sacrificeIllegalCost
                 }
                 continue
@@ -342,9 +361,11 @@ class AnvilEventListener : Listener {
             rightValue += value
 
         }
-        CustomAnvil.log("Calculated right values: " +
-                "rightValue: $rightValue, " +
-                "illegalPenalty: $illegalPenalty")
+        CustomAnvil.log(
+            "Calculated right values: " +
+                    "rightValue: $rightValue, " +
+                    "illegalPenalty: $illegalPenalty"
+        )
 
         return rightValue + illegalPenalty
     }
@@ -352,15 +373,16 @@ class AnvilEventListener : Listener {
     /**
      * Display xp needed for the work on the anvil inventory
      */
-    private fun handleAnvilXp(inventory: AnvilInventory,
-                              event: PrepareAnvilEvent,
-                              anvilCost: Int){
+    private fun handleAnvilXp(
+        inventory: AnvilInventory,
+        event: PrepareAnvilEvent,
+        anvilCost: Int
+    ) {
         // Test repair cost limit
-        val finalAnvilCost: Int
-        if (ConfigOptions.limitRepairCost) {
-            finalAnvilCost = min(anvilCost, ConfigOptions.limitRepairValue)
-        }else{
-            finalAnvilCost = anvilCost
+        val finalAnvilCost = if (ConfigOptions.limitRepairCost) {
+            min(anvilCost, ConfigOptions.limitRepairValue)
+        } else {
+            anvilCost
         }
 
         /* Because Minecraft likes to have the final say in the repair cost displayed
@@ -383,7 +405,7 @@ class AnvilEventListener : Listener {
 
 
 private class SlotContainer(val type: SlotType, val slot: Int)
-private enum class SlotType{
+private enum class SlotType {
     CURSOR,
     INVENTORY,
     NO_SLOT

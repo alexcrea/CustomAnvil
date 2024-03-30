@@ -75,7 +75,7 @@ object ItemUtil {
         (itemMeta as? Damageable)?.let {
             val durability = type.maxDurability.toInt()
             val firstDamage = (first.itemMeta as? Damageable)?.damage ?: 0
-            if( firstDamage == 0) return false
+            if (firstDamage == 0) return false
 
             val firstDurability = durability - firstDamage
             val secondDamage = (second.itemMeta as? Damageable)?.damage ?: 0
@@ -96,12 +96,12 @@ object ItemUtil {
         (itemMeta as? Damageable)?.let {
             val durability = type.maxDurability.toInt()
             val firstDamage = it.damage
-            if( firstDamage == 0) return 0
+            if (firstDamage == 0) return 0
             var unitCount = 0
             var damage = firstDamage
-            while((unitCount < unitAmount) && (damage > 0)){
+            while ((unitCount < unitAmount) && (damage > 0)) {
                 unitCount++
-                damage = ceil(firstDamage - durability*percentPerUnit*unitCount).toInt()
+                damage = ceil(firstDamage - durability * percentPerUnit * unitCount).toInt()
             }
 
             it.damage = max(damage, 0)

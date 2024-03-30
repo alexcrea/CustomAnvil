@@ -4,49 +4,53 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import java.util.*
-import kotlin.collections.LinkedHashMap
 
 class ItemGroupManager {
 
     companion object {
         // Path for group type
         private const val GROUP_TYPE_PATH = "type"
+
         // Path for included items list
         private const val MATERIAL_LIST_PATH = "items"
+
         // Path for included groups list
         private const val GROUP_LIST_PATH = "groups"
+
         // Temporary list of elements in default config that are use in future
-        private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD","BRUSH")
+        private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD", "BRUSH")
     }
 
-    lateinit var groupMap : LinkedHashMap<String, AbstractMaterialGroup>
+    lateinit var groupMap: LinkedHashMap<String, AbstractMaterialGroup>
 
     // Read and create material groups
-    fun prepareGroups(config: ConfigurationSection){
+    fun prepareGroups(config: ConfigurationSection) {
         groupMap = LinkedHashMap()
 
         val keys = config.getKeys(false)
         for (key in keys) {
-            if(groupMap.containsKey(key))
+            if (groupMap.containsKey(key))
                 continue
             createGroup(config, keys, key)
         }
     }
 
     // Create group by key
-    private fun createGroup(config: ConfigurationSection,
-                            keys: Set<String>,
-                            key: String): AbstractMaterialGroup {
+    private fun createGroup(
+        config: ConfigurationSection,
+        keys: Set<String>,
+        key: String
+    ): AbstractMaterialGroup {
         val groupSection = config.getConfigurationSection(key)!!
-        val groupType = groupSection.getString(GROUP_TYPE_PATH,null)
+        val groupType = groupSection.getString(GROUP_TYPE_PATH, null)
 
         // Create Material group according to the group type
         val group: AbstractMaterialGroup
-        if(GroupType.EXCLUDE.equal(groupType)){
+        if (GroupType.EXCLUDE.equal(groupType)) {
             group = ExcludeGroup(key)
-        }else {
+        } else {
             group = IncludeGroup(key)
-            if(!GroupType.INCLUDE.equal(groupType)){
+            if (!GroupType.INCLUDE.equal(groupType)) {
                 CustomAnvil.instance.logger.warning("Group $key have an invalid group type. default to Include.")
             }
         }
@@ -57,20 +61,23 @@ class ItemGroupManager {
     }
 
     // Read Group elements
-    private fun readGroup(group: AbstractMaterialGroup,
-                          groupSection: ConfigurationSection,
-                          config: ConfigurationSection,
-                          keys: Set<String>){
+    private fun readGroup(
+        group: AbstractMaterialGroup,
+        groupSection: ConfigurationSection,
+        config: ConfigurationSection,
+        keys: Set<String>
+    ) {
         // Read material to include in this group policy
         val materialList = groupSection.getStringList(MATERIAL_LIST_PATH)
         for (materialTemp in materialList) {
             val materialName = materialTemp.uppercase(Locale.getDefault())
             val material = Material.getMaterial(materialName)
-            if(material == null){
+            if (material == null) {
                 // Check if we should warn the user
-                if(materialName !in FUTURE_MATERIAL){
+                if (materialName !in FUTURE_MATERIAL) {
                     CustomAnvil.instance.logger.warning(
-                        "Unknown material $materialTemp on group ${group.getName()}")
+                        "Unknown material $materialTemp on group ${group.getName()}"
+                    )
 
                 }
                 continue
@@ -82,23 +89,26 @@ class ItemGroupManager {
         // please note the group name is case-sensitive.
         val groupList = groupSection.getStringList(GROUP_LIST_PATH)
         for (groupName in groupList) {
-            if(groupName !in keys){
+            if (groupName !in keys) {
                 CustomAnvil.instance.logger.warning(
-                    "Group $groupName do not exist but is included in group ${group.getName()}")
+                    "Group $groupName do not exist but is included in group ${group.getName()}"
+                )
                 continue
             }
             // Get other group or create it if not yet created
-            val otherGroup = if(!groupMap.containsKey(groupName)){
-                createGroup(config,keys,groupName)
-            }else{
+            val otherGroup = if (!groupMap.containsKey(groupName)) {
+                createGroup(config, keys, groupName)
+            } else {
                 groupMap[groupName]!!
             }
             // Avoid self reference or it will create an infinite loop
-            if(otherGroup.isReferencing(group)){
+            if (otherGroup.isReferencing(group)) {
                 CustomAnvil.instance.logger.warning(
-                    "Group $groupName is on a reference loop with group ${group.getName()} !")
+                    "Group $groupName is on a reference loop with group ${group.getName()} !"
+                )
                 CustomAnvil.instance.logger.warning(
-                    "Please fix it in your item_groups config or the plugin will probably not work as expected.")
+                    "Please fix it in your item_groups config or the plugin will probably not work as expected."
+                )
                 continue
             }
 
@@ -121,10 +131,10 @@ enum class GroupType(private val groupID: String) {
     ;
 
     // Test if string is equal to the groupID of this enum
-    fun equal(toTest: String?): Boolean{
-        if(toTest == null)
+    fun equal(toTest: String?): Boolean {
+        if (toTest == null)
             return false
-        return  groupID.contentEquals(toTest.lowercase(Locale.getDefault()))
+        return groupID.contentEquals(toTest.lowercase(Locale.getDefault()))
     }
 
 }

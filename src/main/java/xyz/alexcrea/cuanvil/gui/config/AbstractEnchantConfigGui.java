@@ -14,15 +14,17 @@ import java.util.List;
 
 /**
  * Abstract Global Config gui for enchantment setting configuration.
+ *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
 public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ValueUpdatableGui {
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.
+     *
      * @param title Title of the gui.
      */
-    protected AbstractEnchantConfigGui(String title){
+    protected AbstractEnchantConfigGui(String title) {
         super(6, title, CustomAnvil.instance);
     }
 
@@ -30,8 +32,8 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
 
     /**
      * Initialise value updatable gui pattern
-      */
-    protected void init(){
+     */
+    protected void init() {
         // Back item panel
         addPane(GuiSharedConstant.BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE);
 
@@ -50,7 +52,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
     /**
      * Prepare enchantment config gui displayed items factory.
      */
-    protected void prepareValues(){
+    protected void prepareValues() {
         bookItemFactoryList = new ArrayList<>();
 
         for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {

@@ -20,12 +20,13 @@ public class MainConfigGui extends ChestGui {
     static {
         INSTANCE.init();
     }
+
     private MainConfigGui() {
         super(3, "\u00A78Anvil Config", CustomAnvil.instance);
 
     }
 
-    private void init(){
+    private void init() {
         Pattern pattern = new Pattern(
                 "I00000000",
                 "012304560",
@@ -101,7 +102,7 @@ public class MainConfigGui extends ChestGui {
         GuiItem quitItem = new GuiItem(quitItemstack, event -> {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
-        },CustomAnvil.instance);
+        }, CustomAnvil.instance);
         pane.bindItem('Q', quitItem);
 
         // create & bind "info" item

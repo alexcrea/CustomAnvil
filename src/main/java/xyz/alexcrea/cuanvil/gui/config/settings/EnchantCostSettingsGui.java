@@ -34,7 +34,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     /**
      * Create an enchantment cost setting config gui.
-     * @param holder Configuration factory of this setting.
+     *
+     * @param holder  Configuration factory of this setting.
      * @param nowItem The defined value of this setting item's value.
      */
     protected EnchantCostSettingsGui(EnchantCostSettingFactory holder, int nowItem) {
@@ -54,7 +55,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     protected void initStepsValue() {
         super.initStepsValue();
 
-        int nowBook = ((EnchantCostSettingFactory)this.holder).getConfiguredBookValue();
+        int nowBook = ((EnchantCostSettingFactory) this.holder).getConfiguredBookValue();
         this.beforeBook = nowBook;
         this.nowBook = nowBook;
     }
@@ -81,7 +82,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         bookMeta.setDisplayName("\u00A7aCost of an Enchantment by Book");
         bookMeta.setLore(Arrays.asList(
                 "\u00A77Cost per result item level of an sacrifice enchantment",
-                "\u00A77Only apply if sacrificed item \u00A7cis \u00A77a book"));bookItemstack.setItemMeta(bookMeta);
+                "\u00A77Only apply if sacrificed item \u00A7cis \u00A77a book"));
+        bookItemstack.setItemMeta(bookMeta);
 
         // sword display
         ItemStack swordItemstack = new ItemStack(Material.WOODEN_SWORD);
@@ -95,12 +97,12 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         swordItemstack.setItemMeta(swordMeta);
 
         pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
-        pane.bindItem('2', new GuiItem(bookItemstack,  GuiGlobalActions.stayInPlace, CustomAnvil.instance));
+        pane.bindItem('2', new GuiItem(bookItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
         pane.bindItem('3', new GuiItem(swordItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
 
     @Override
-    protected void prepareReturnToDefault(){
+    protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
 
@@ -118,11 +120,11 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             now = holder.defaultVal;
             updateValueDisplay();
             update();
-            }, CustomAnvil.instance);
+        }, CustomAnvil.instance);
     }
 
     @Override
-    protected void updateValueDisplay(){
+    protected void updateValueDisplay() {
         super.updateValueDisplay();
         PatternPane pane = getPane();
 
@@ -133,32 +135,32 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         // minus item
         GuiItem minusItem;
-        if(nowBook > holder.min){
+        if (nowBook > holder.min) {
             int planned = Math.max(holder.min, nowBook - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("\u00A7e"+nowBook+" -> "+planned + " \u00A7r(\u00A7c-"+(nowBook-planned)+"\u00A7r)");
+            meta.setDisplayName("\u00A7e" + nowBook + " -> " + planned + " \u00A7r(\u00A7c-" + (nowBook - planned) + "\u00A7r)");
             meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
-        }else{
+        } else {
             minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
         pane.bindItem('M', minusItem);
 
         //plus item
         GuiItem plusItem;
-        if(nowBook < holder.max){
+        if (nowBook < holder.max) {
             int planned = Math.min(holder.max, nowBook + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("\u00A7e"+nowBook+" -> "+planned + " \u00A7r(\u00A7a+"+(planned-nowBook)+"\u00A7r)");
+            meta.setDisplayName("\u00A7e" + nowBook + " -> " + planned + " \u00A7r(\u00A7a+" + (planned - nowBook) + "\u00A7r)");
             meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
-        }else{
+        } else {
             plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
         pane.bindItem('P', plusItem);
@@ -166,7 +168,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // "result" display
         ItemStack resultPaper = new ItemStack(Material.PAPER);
         ItemMeta resultMeta = resultPaper.getItemMeta();
-        resultMeta.setDisplayName("\u00A7eValue: "+nowBook);
+        resultMeta.setDisplayName("\u00A7eValue: " + nowBook);
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -174,9 +176,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if(now != holder.defaultVal || nowBook != holder.defaultBookVal){
+        if (now != holder.defaultVal || nowBook != holder.defaultBookVal) {
             returnToDefault = this.returnToDefault;
-        }else{
+        } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
         }
         pane.bindItem('D', returnToDefault);
@@ -188,8 +190,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      * @param planned Value to change current book cost setting to.
      * @return A consumer to update the current book cost setting's value.
      */
-    protected Consumer<InventoryClickEvent> updateNowBookConsumer(int planned){
-        return event->{
+    protected Consumer<InventoryClickEvent> updateNowBookConsumer(int planned) {
+        return event -> {
             event.setCancelled(true);
             nowBook = planned;
             updateValueDisplay();
@@ -204,11 +206,11 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath+ITEM_PATH, now);
-        holder.config.getConfig().set(holder.configPath+BOOK_PATH, nowBook);
+        holder.config.getConfig().set(holder.configPath + ITEM_PATH, now);
+        holder.config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
 
         MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
@@ -221,27 +223,28 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     /**
      * Create an int setting factory from setting's parameters.
-     * @param title The title of the gui.
-     * @param parent Parent gui to go back when completed.
-     * @param configPath Configuration path of this setting.
-     * @param config Configuration holder of this setting.
-     * @param min Minimum value of this setting.
-     * @param max Maximum value of this setting.
+     *
+     * @param title          The title of the gui.
+     * @param parent         Parent gui to go back when completed.
+     * @param configPath     Configuration path of this setting.
+     * @param config         Configuration holder of this setting.
+     * @param min            Minimum value of this setting.
+     * @param max            Maximum value of this setting.
      * @param defaultItemVal Default item value if not found on the config.
      * @param defaultBookVal Default book value if not found on the config.
-     * @param steps List of step the value can increment/decrement.
-     *              List's size should be between 1 (included) and 3 (included).
-     *              it is visually preferable to have an odd number of step.
-     *              If step only contain 1 value, no step item should be displayed.
+     * @param steps          List of step the value can increment/decrement.
+     *                       List's size should be between 1 (included) and 3 (included).
+     *                       it is visually preferable to have an odd number of step.
+     *                       If step only contain 1 value, no step item should be displayed.
      * @return A factory for an enchant cost setting gui.
      */
     public static EnchantCostSettingFactory enchantCostFactory(
             @NotNull String title, ValueUpdatableGui parent,
             String configPath, ConfigHolder config,
             int min, int max, int defaultItemVal, int defaultBookVal,
-            int... steps){
+            int... steps) {
         return new EnchantCostSettingFactory(
-                title,parent,
+                title, parent,
                 configPath, config,
                 min, max, defaultItemVal, defaultBookVal, steps);
     }
@@ -255,26 +258,27 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         /**
          * Constructor for an enchantment cost setting gui factory.
-         * @param title The title of the gui.
-         * @param parent Parent gui to go back when completed.
-         * @param configPath Configuration path of this setting.
-         * @param config Configuration holder of this setting.
-         * @param min Minimum value of this setting.
-         * @param max Maximum value of this setting.
+         *
+         * @param title          The title of the gui.
+         * @param parent         Parent gui to go back when completed.
+         * @param configPath     Configuration path of this setting.
+         * @param config         Configuration holder of this setting.
+         * @param min            Minimum value of this setting.
+         * @param max            Maximum value of this setting.
          * @param defaultItemVal Default item value if not found on the config.
          * @param defaultBookVal Default book value if not found on the config.
-         * @param steps List of step the value can increment/decrement.
-         *              List's size should be between 1 (included) and 3 (included).
-         *              it is visually preferable to have an odd number of step.
-         *              If step only contain 1 value, no step item should be displayed.
+         * @param steps          List of step the value can increment/decrement.
+         *                       List's size should be between 1 (included) and 3 (included).
+         *                       it is visually preferable to have an odd number of step.
+         *                       If step only contain 1 value, no step item should be displayed.
          */
         protected EnchantCostSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
                 int min, int max, int defaultItemVal, int defaultBookVal,
-                int... steps){
+                int... steps) {
 
-            super(title,parent,
+            super(title, parent,
                     configPath, config,
                     min, max, defaultItemVal, steps);
             this.defaultBookVal = defaultBookVal;
@@ -285,14 +289,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          */
         @Override
         public int getConfiguredValue() {
-            return this.config.getConfig().getInt(this.configPath+ITEM_PATH, this.defaultVal);
+            return this.config.getConfig().getInt(this.configPath + ITEM_PATH, this.defaultVal);
         }
 
         /**
          * @return The configured value for the enchant setting book value.
          */
-        public int getConfiguredBookValue(){
-            return this.config.getConfig().getInt(this.configPath+BOOK_PATH, this.defaultBookVal);
+        public int getConfiguredBookValue() {
+            return this.config.getConfig().getInt(this.configPath + BOOK_PATH, this.defaultBookVal);
         }
 
         @Override

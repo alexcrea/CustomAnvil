@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class EnchantSelectSettingGui extends AbstractSettingGui{
+public class EnchantSelectSettingGui extends AbstractSettingGui {
 
     SelectEnchantmentContainer enchantContainer;
     int page;
@@ -57,7 +57,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
         );
     }
 
-    protected void initGroups(){
+    protected void initGroups() {
         // Add enchantment gui item
         OutlinePane filledEnchant = new OutlinePane(0, 0, 9, 5);
         filledEnchant.setPriority(Pane.Priority.HIGH);
@@ -66,7 +66,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
 
         Set<Enchantment> illegalEnchant = this.enchantContainer.illegalEnchantments();
         for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
-            if(illegalEnchant.contains(enchant)) {
+            if (illegalEnchant.contains(enchant)) {
                 return;
             }
             filledEnchant.addItem(getGuiItemFromEnchant(enchant));
@@ -76,13 +76,13 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
 
     }
 
-    private GuiItem getGuiItemFromEnchant(Enchantment enchantment){
+    private GuiItem getGuiItemFromEnchant(Enchantment enchantment) {
         boolean isIn = this.selectedEnchant.contains(enchantment);
 
         Material usedMaterial;
-        if(isIn){
+        if (isIn) {
             usedMaterial = Material.ENCHANTED_BOOK;
-        }else{
+        } else {
             usedMaterial = Material.BOOK;
         }
         ItemStack item = new ItemStack(usedMaterial);
@@ -98,22 +98,22 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
     private static final List<String> TRUE_LORE = Collections.singletonList("\u00A77Value: \u00A7aSelected");
     private static final List<String> FALSE_LORE = Collections.singletonList("\u00A77Value: \u00A7cNot Selected");
 
-    public void setEnchantItemMeta(ItemStack item, String name, boolean isIn){
+    public void setEnchantItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
 
-        if(meta == null){
-            CustomAnvil.instance.getLogger().warning("Could not create item for enchantment: "+name+":\n" +
-                    "Item do not gave item meta: "+item+". Using placeholder instead");
+        if (meta == null) {
+            CustomAnvil.instance.getLogger().warning("Could not create item for enchantment: " + name + ":\n" +
+                    "Item do not gave item meta: " + item + ". Using placeholder instead");
             item.setType(Material.PAPER);
             meta = item.getItemMeta();
             assert meta != null;
         }
 
-        meta.setDisplayName("\u00A7"+(isIn ? 'a' : 'c')+ CasedStringUtil.snakeToUpperSpacedCase(name));
-        if(isIn){
+        meta.setDisplayName("\u00A7" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
+        if (isIn) {
             meta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
             meta.setLore(TRUE_LORE);
-        }else{
+        } else {
             meta.removeEnchant(Enchantment.DAMAGE_UNDEAD);
             meta.setLore(FALSE_LORE);
         }
@@ -122,17 +122,17 @@ public class EnchantSelectSettingGui extends AbstractSettingGui{
         item.setItemMeta(meta);
     }
 
-    private Consumer<InventoryClickEvent> getEnchantItemConsumer(Enchantment enchant, GuiItem guiItem){
+    private Consumer<InventoryClickEvent> getEnchantItemConsumer(Enchantment enchant, GuiItem guiItem) {
         return event -> {
             event.setCancelled(true);
 
             ItemStack item = guiItem.getItem();
 
             boolean isIn = this.selectedEnchant.contains(enchant);
-            if(isIn){
+            if (isIn) {
                 this.selectedEnchant.remove(enchant);
                 item.setType(Material.BOOK);
-            }else{
+            } else {
                 this.selectedEnchant.add(enchant);
                 item.setType(Material.ENCHANTED_BOOK);
             }

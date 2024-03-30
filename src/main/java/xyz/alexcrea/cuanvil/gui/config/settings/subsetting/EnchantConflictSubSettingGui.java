@@ -85,7 +85,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
         // Displayed item will be updated later
 
-        this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), (event)->{
+        this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), (event) -> {
             event.setCancelled(true);
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
                     "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + " \u00A75Enchantments",
@@ -93,7 +93,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
-        this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), (event)->{
+        this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), (event) -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
                     "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.getName()) + " \u00A73Groups",
@@ -103,9 +103,9 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
         this.minBeforeActiveSettingFactory = IntSettingsGui.intFactory(
                 "\u00A78Minimum enchantment count",
-                this, this.enchantConflict.getName()+".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
+                this, this.enchantConflict.getName() + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
                 0, 255, 0, 1
-                );
+        );
 
         this.pane.bindItem('E', this.enchantSettingItem);
         this.pane.bindItem('G', this.groupSettingItem);
@@ -116,7 +116,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
     }
 
     private ConfirmActionGui createDeleteGui() {
-        Supplier<Boolean> deleteSupplier = () ->{
+        Supplier<Boolean> deleteSupplier = () -> {
             EnchantConflictManager manager = ConfigHolder.CONFLICT_HOLDER.getConflictManager();
 
             // Remove from manager
@@ -136,17 +136,17 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
             // Save
             boolean success = true;
-            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+            if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
                 success = ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
             }
 
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e"+CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName())+"\u00A7c?",
+        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + "\u00A7c?",
                 "\u00A77Confirm that you want to delete this conflict.",
                 this, this.parent, deleteSupplier
-                );
+        );
     }
 
     @Override
@@ -155,16 +155,16 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
         // Parent should call updateLocal
     }
 
-    public void updateLocal(){
-        if(!this.shouldWorld) return;
+    public void updateLocal() {
+        if (!this.shouldWorld) return;
 
         // Prepare enchantment lore
         ArrayList<String> enchantLore = new ArrayList<>();
         enchantLore.add("\u00A77Allow you to select a list of \u00A75Enchantments \u00A77that this conflict should include");
         Set<Enchantment> enchants = getSelectedEnchantments();
-        if(enchants.isEmpty()){
+        if (enchants.isEmpty()) {
             enchantLore.add("\u00A77There is no included enchantment for this conflict.");
-        }else{
+        } else {
             enchantLore.add("\u00A77List of included enchantment for this conflict:");
             Iterator<Enchantment> enchantIterator = enchants.iterator();
 
@@ -175,8 +175,8 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
                 String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
                 enchantLore.add("\u00A77- \u00A75" + formattedName);
             }
-            if(greaterThanMax){
-                enchantLore.add("\u00A77And "+(enchants.size()-4)+" more...");
+            if (greaterThanMax) {
+                enchantLore.add("\u00A77And " + (enchants.size() - 4) + " more...");
             }
 
         }
@@ -185,9 +185,9 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
         ArrayList<String> groupLore = new ArrayList<>();
         groupLore.add("\u00A77Allow you to select a list of \u00A73Groups \u00A77that this conflict should include");
         Set<AbstractMaterialGroup> grouos = getSelectedGroups();
-        if(grouos.isEmpty()){
+        if (grouos.isEmpty()) {
             groupLore.add("\u00A77There is no excluded groups for this conflict.");
-        }else{
+        } else {
             groupLore.add("\u00A77List of excluded groups for this conflict:");
             Iterator<AbstractMaterialGroup> groupIterator = grouos.iterator();
 
@@ -199,8 +199,8 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
                 groupLore.add("\u00A77- \u00A73" + formattedName);
 
             }
-            if(greaterThanMax){
-                groupLore.add("\u00A77And "+(grouos.size()-4)+" more...");
+            if (greaterThanMax) {
+                groupLore.add("\u00A77And " + (grouos.size() - 4) + " more...");
             }
         }
 
@@ -231,7 +231,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
         update();
     }
 
-    public void cleanUnused(){
+    public void cleanUnused() {
         for (HumanEntity viewer : getViewers()) {
             this.parent.show(viewer);
         }
@@ -247,9 +247,9 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public void show(@NotNull HumanEntity humanEntity) {
-        if(this.shouldWorld){
+        if (this.shouldWorld) {
             super.show(humanEntity);
-        }else{
+        } else {
             this.parent.show(humanEntity);
         }
     }
@@ -267,8 +267,8 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public boolean setSelectedEnchantments(Set<Enchantment> enchantments) {
-        if(!this.shouldWorld) {
-            CustomAnvil.instance.getLogger().info("Trying to save "+enchantConflict.getName()+" enchants but sub config is destroyed");
+        if (!this.shouldWorld) {
+            CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.getName() + " enchants but sub config is destroyed");
             return false;
         }
 
@@ -281,17 +281,17 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
         for (Enchantment enchantment : enchantments) {
             enchantKeys[index++] = enchantment.getKey().getKey();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict.getName()+".enchantments", enchantKeys);
+        ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict.getName() + ".enchantments", enchantKeys);
 
         try {
             updateGuiValues();
-        }catch (Exception e){
-            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating enchants for "+this.enchantConflict.getName(), e);
+        } catch (Exception e) {
+            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating enchants for " + this.enchantConflict.getName(), e);
         }
 
 
         // Save file configuration to disk
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
 
@@ -312,8 +312,8 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
-        if(!this.shouldWorld) {
-            CustomAnvil.instance.getLogger().info("Trying to save "+enchantConflict.getName()+" groups but sub config is destroyed");
+        if (!this.shouldWorld) {
+            CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.getName() + " groups but sub config is destroyed");
             return false;
         }
 
@@ -326,16 +326,16 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
         for (AbstractMaterialGroup group : groups) {
             groupsNames[index++] = group.getName();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.getName()+".notAffectedGroups", groupsNames);
+        ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.getName() + ".notAffectedGroups", groupsNames);
 
         try {
             updateGuiValues();
-        }catch (Exception e){
-            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for "+this.enchantConflict.getName(), e);
+        } catch (Exception e) {
+            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for " + this.enchantConflict.getName(), e);
         }
 
         // Save file configuration to disk
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
 

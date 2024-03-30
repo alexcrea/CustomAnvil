@@ -33,7 +33,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
     /**
      * Constructor of this Global gui for basic settings.
      */
-    private BasicConfigGui(){
+    private BasicConfigGui() {
         super(3, "\u00A78Basic Config", CustomAnvil.instance);
     }
 
@@ -42,7 +42,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
     /**
      * Initialise Basic gui
      */
-    private void init(){
+    private void init() {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "012345670",
@@ -70,15 +70,15 @@ public class BasicConfigGui extends ValueUpdatableGui {
     /**
      * Prepare basic gui displayed items factory and static items..
      */
-    protected void prepareValues(){
+    protected void prepareValues() {
         // limit repair item
-        this.limitRepairFactory = BoolSettingsGui.boolFactory("\u00A78Limit Repair Cost ?",this,
+        this.limitRepairFactory = BoolSettingsGui.boolFactory("\u00A78Limit Repair Cost ?", this,
                 ConfigOptions.LIMIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_LIMIT_REPAIR);
 
         // rename cost item
         IntRange range = ConfigOptions.REPAIR_LIMIT_RANGE;
         this.repairCostFactory = IntSettingsGui.intFactory("\u00A78Repair Cost Limit", this,
-                ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
+                ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_LIMIT_REPAIR_VALUE,
                 1, 5, 10);
 
@@ -92,33 +92,33 @@ public class BasicConfigGui extends ValueUpdatableGui {
         this.notNeededLimitValueItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // remove repair limit item
-        this.removeRepairLimit = BoolSettingsGui.boolFactory("\u00A78Remove Repair Limit ?",this,
+        this.removeRepairLimit = BoolSettingsGui.boolFactory("\u00A78Remove Repair Limit ?", this,
                 ConfigOptions.REMOVE_REPAIR_LIMIT, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_REMOVE_LIMIT);
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
         this.itemRepairCost = IntSettingsGui.intFactory("\u00A78Item Repair Cost", this,
-                ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
+                ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // unit repair cost
         this.unitRepairCost = IntSettingsGui.intFactory("\u00A78Unit Repair Cost", this,
-                ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
+                ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // item rename cost
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
         this.itemRenameCost = IntSettingsGui.intFactory("\u00A78Rename Cost", this,
-                ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
+                ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
                 1, 5, 10, 50, 100);
 
         // sacrifice illegal enchant cost
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
         this.sacrificeIllegalEnchantCost = IntSettingsGui.intFactory("\u00A78Sacrifice Illegal Enchant Cost", this,
-                ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(),range.getLast(),
+                ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
 
@@ -132,9 +132,9 @@ public class BasicConfigGui extends ValueUpdatableGui {
 
         // rename cost item
         GuiItem limitRepairValueItem;
-        if(this.limitRepairFactory.getConfiguredValue()){
+        if (this.limitRepairFactory.getConfiguredValue()) {
             limitRepairValueItem = GuiGlobalItems.intSettingGuiItem(this.repairCostFactory, Material.EXPERIENCE_BOTTLE);
-        }else{
+        } else {
             limitRepairValueItem = this.notNeededLimitValueItem;
         }
         pane.bindItem('2', limitRepairValueItem);

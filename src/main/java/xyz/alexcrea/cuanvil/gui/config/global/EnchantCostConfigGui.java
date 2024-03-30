@@ -46,10 +46,11 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         EnchantmentRarity rarity = EnchantmentRarity.NO_RARITY;
         try {
             rarity = EnchantmentProperties.valueOf(key.toUpperCase(Locale.ENGLISH)).getRarity();
-        }catch (IllegalArgumentException ignored){}
+        } catch (IllegalArgumentException ignored) {
+        }
 
-        return EnchantCostSettingsGui.enchantCostFactory(prettyKey+" Level Cost", this,
-                SECTION_NAME+'.'+key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
+        return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
                 rarity.getItemValue(), rarity.getBookValue(),
                 1, 10, 50);
     }

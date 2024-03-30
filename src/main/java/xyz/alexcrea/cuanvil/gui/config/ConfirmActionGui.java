@@ -24,6 +24,7 @@ public class ConfirmActionGui extends ChestGui {
 
     private static final ItemStack CANCEL_ITEM;
     private static final ItemStack CONFIRM_ITEM;
+
     static {
         CANCEL_ITEM = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta meta = CANCEL_ITEM.getItemMeta();
@@ -58,21 +59,21 @@ public class ConfirmActionGui extends ChestGui {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
 
-            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
                 return;
             }
 
             boolean success;
-            try{
+            try {
                 success = onConfirm.get();
-            }catch (Exception e){
+            } catch (Exception e) {
                 CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not process confirmation supplier.", e);
                 success = false;
             }
 
-            if(!success){
+            if (!success) {
                 event.getWhoClicked().sendMessage("\u00A7cAction could not be completed. ");
             }
             backOnConfirm.show(player);

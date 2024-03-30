@@ -31,12 +31,11 @@ object MetricsUtil {
      */
     private fun getHashFromKey(section: ConfigurationSection, key: String): Int {
         // Key is assumend to exist
-        val resultHash: Int
-        if(section.isConfigurationSection(key)){
+        val resultHash = if (section.isConfigurationSection(key)) {
             val sectionResult = getConfigurationHash(section.getConfigurationSection(key)!!)
-            resultHash = key.hashCode() xor sectionResult
-        }else{
-            resultHash = key.hashCode() xor section.getString(key).hashCode()
+            key.hashCode() xor sectionResult
+        } else {
+            key.hashCode() xor section.getString(key).hashCode()
         }
         return resultHash.hashCode()
     }
@@ -47,7 +46,7 @@ object MetricsUtil {
     private fun getConfigurationHash(section: ConfigurationSection): Int {
         var resultHash = 0
         for (key in section.getKeys(false)) {
-            resultHash = resultHash xor getHashFromKey(section,key)
+            resultHash = resultHash xor getHashFromKey(section, key)
         }
         return resultHash
     }
@@ -55,10 +54,10 @@ object MetricsUtil {
     /**
      * Get hash value of the default config
      */
-    private fun testBaseConfig(defaultConfig: ConfigurationSection): Int{
+    private fun testBaseConfig(defaultConfig: ConfigurationSection): Int {
         var result = 0
         for (key in ConfigOptions.getBasicConfigKeys()) {
-            result = result xor getHashFromKey(defaultConfig,key)
+            result = result xor getHashFromKey(defaultConfig, key)
         }
         return result
     }
@@ -66,7 +65,7 @@ object MetricsUtil {
     /**
      * Test if the used configuration is the default config
      */
-    fun testIfConfigIsDefault(){
+    fun testIfConfigIsDefault() {
         // Calculate hash of config
         val baseConfig = testBaseConfig(ConfigHolder.DEFAULT_CONFIG.config)
         val limitEnchantConfig = getHashFromKey(ConfigHolder.DEFAULT_CONFIG.config, ConfigOptions.ENCHANT_LIMIT_ROOT)
@@ -77,37 +76,49 @@ object MetricsUtil {
         // Test if default
         isDefaultBaseConfig = baseConfigHash == baseConfig
         isDefaultEnchantLimitsConfig = enchantLimitsConfigHash == limitEnchantConfig
-        isDefaultEnchantValuesConfig = enchantValuesConfigHash  == enchantValueConfig
+        isDefaultEnchantValuesConfig = enchantValuesConfigHash == enchantValueConfig
         isDefaultEnchantConflictConfig = enchantConflictConfigHash == enchantConflictConfig
         isDefaultItemGroupsConfig = itemGroupsConfigHash == itemGroupConfig
         isDefaultUnitRepairItemConfig = unitRepairItemConfigHash == unitRepairConfig
         // If not default and debug flag active, print the hash.
-        if(ConfigOptions.debugLog){
-            if(!isDefaultBaseConfig){CustomAnvil.log("baseConfig: $baseConfig")}
-            if(!isDefaultEnchantLimitsConfig){CustomAnvil.log("limitEnchantConfig: $limitEnchantConfig")}
-            if(!isDefaultEnchantValuesConfig){CustomAnvil.log("enchantValueConfig: $enchantValueConfig")}
-            if(!isDefaultEnchantConflictConfig){CustomAnvil.log("enchantConflictConfig: $enchantConflictConfig")}
-            if(!isDefaultItemGroupsConfig){CustomAnvil.log("itemGroupConfig: $itemGroupConfig")}
-            if(!isDefaultUnitRepairItemConfig){CustomAnvil.log("unitRepairConfig: $unitRepairConfig")}
+        if (ConfigOptions.debugLog) {
+            if (!isDefaultBaseConfig) {
+                CustomAnvil.log("baseConfig: $baseConfig")
+            }
+            if (!isDefaultEnchantLimitsConfig) {
+                CustomAnvil.log("limitEnchantConfig: $limitEnchantConfig")
+            }
+            if (!isDefaultEnchantValuesConfig) {
+                CustomAnvil.log("enchantValueConfig: $enchantValueConfig")
+            }
+            if (!isDefaultEnchantConflictConfig) {
+                CustomAnvil.log("enchantConflictConfig: $enchantConflictConfig")
+            }
+            if (!isDefaultItemGroupsConfig) {
+                CustomAnvil.log("itemGroupConfig: $itemGroupConfig")
+            }
+            if (!isDefaultUnitRepairItemConfig) {
+                CustomAnvil.log("unitRepairConfig: $unitRepairConfig")
+            }
         }
 
     }
 
-    fun notifyChange(holder: ConfigHolder, path: String){
-        if(ConfigHolder.DEFAULT_CONFIG.equals(holder)){
-            if(path.startsWith(ConfigOptions.ENCHANT_LIMIT_ROOT+".")){
-                isDefaultEnchantLimitsConfig = false;
-            }else if(path.startsWith(ConfigOptions.ENCHANT_VALUES_ROOT+".")){
-                isDefaultEnchantValuesConfig = false;
-            }else{
-                isDefaultBaseConfig = false;
+    fun notifyChange(holder: ConfigHolder, path: String) {
+        if (ConfigHolder.DEFAULT_CONFIG.equals(holder)) {
+            if (path.startsWith(ConfigOptions.ENCHANT_LIMIT_ROOT + ".")) {
+                isDefaultEnchantLimitsConfig = false
+            } else if (path.startsWith(ConfigOptions.ENCHANT_VALUES_ROOT + ".")) {
+                isDefaultEnchantValuesConfig = false
+            } else {
+                isDefaultBaseConfig = false
             }
-        }else if(ConfigHolder.CONFLICT_HOLDER.equals(holder)){
-            isDefaultEnchantConflictConfig = false;
-        }else if(ConfigHolder.ITEM_GROUP_HOLDER.equals(holder)){
-            isDefaultItemGroupsConfig = false;
-        }else if(ConfigHolder.UNIT_REPAIR_HOLDER.equals(holder)){
-            isDefaultUnitRepairItemConfig = false;
+        } else if (ConfigHolder.CONFLICT_HOLDER.equals(holder)) {
+            isDefaultEnchantConflictConfig = false
+        } else if (ConfigHolder.ITEM_GROUP_HOLDER.equals(holder)) {
+            isDefaultItemGroupsConfig = false
+        } else if (ConfigHolder.UNIT_REPAIR_HOLDER.equals(holder)) {
+            isDefaultUnitRepairItemConfig = false
         }
     }
 
