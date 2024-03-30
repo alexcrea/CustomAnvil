@@ -62,6 +62,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
 
     @Override
     public void updateGuiValues() {
+
         // probably not the most efficient but hey ! it do the work
         // TODO optimise one day.. maybe
 

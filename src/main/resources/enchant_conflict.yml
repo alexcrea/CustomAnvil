@@ -232,3 +232,7 @@ crossbow_conflict:
   notAffectedGroups: []
   maxEnchantmentBeforeConflict: 1
 
+# ----------------------------------------------------
+# Bellow is for custom conflicts.
+# This is also where conflict create from the gui will be placed.
+# ----------------------------------------------------

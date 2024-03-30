@@ -84,9 +84,8 @@ class EnchantConflictManager {
         }
         if(conflict.getEnchants().size == 0){
             if(!futureUse){
-                CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not work")
+                CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not do anything")
             }
-            return null
         }
 
         return conflict

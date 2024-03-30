@@ -81,8 +81,8 @@ public class EnchantConflictGui extends ChestGui {
     private GuiItem goLeftItem;
     private GuiItem goRightItem;
     private void prepareOtherValues() {
-        //TODO item x2
-        this.goLeftItem = new GuiItem(new ItemStack(Material.PAPER), event -> {
+        // Left item creation for consumer & bind
+        this.goLeftItem = new GuiItem(new ItemStack(Material.RED_TERRACOTTA), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
             int page = this.pageMap.getOrDefault(playerUUID, 0);
@@ -91,13 +91,13 @@ public class EnchantConflictGui extends ChestGui {
             ItemStack cursor = viewer.getItemOnCursor();
             viewer.setItemOnCursor(new ItemStack(Material.AIR));
 
-            viewer.closeInventory();// Hacky trick to make the inventory update properly
             show(viewer);
 
             viewer.setItemOnCursor(cursor);
         }, CustomAnvil.instance);
 
-        this.goRightItem = new GuiItem(new ItemStack(Material.PAPER), event -> {
+        // Right item creation for consumer & bind
+        this.goRightItem = new GuiItem(new ItemStack(Material.GREEN_TERRACOTTA), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
             int page = pageMap.getOrDefault(playerUUID, 0);
@@ -106,15 +106,21 @@ public class EnchantConflictGui extends ChestGui {
             ItemStack cursor = viewer.getItemOnCursor();
             viewer.setItemOnCursor(new ItemStack(Material.AIR));
 
-            viewer.closeInventory();// Hacky trick to make the inventory update properly
             show(viewer);
 
             viewer.setItemOnCursor(cursor);
         }, CustomAnvil.instance);
 
         // Create new conflict item
-        ItemStack createItem = new ItemStack(Material.GREEN_TERRACOTTA);
+        ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
+
+        createMeta.setDisplayName("\u00A7aCreate new conflict");
+        createMeta.setLore(Arrays.asList(
+                "\u00A77Create a new anvil restriction.",
+                "\u00A77You will be asked to name the conflict in chat.",
+                "\u00A77Then, you should edit the conflict config as you need"
+        ));
 
         createItem.setItemMeta(createMeta);
 
@@ -145,12 +151,12 @@ public class EnchantConflictGui extends ChestGui {
 
             message = message.toLowerCase(Locale.ROOT);
             if("cancel".equalsIgnoreCase(message)) {
-                player.sendMessage("cancelled...");
+                player.sendMessage("conflict creation cancelled...");
                 show(player);
                 return;
             }
 
-            message = message.replace('_', ' ');
+            message = message.replace(' ', '_');
 
             // Try to find if it already exists in a for loop
             // Not the most efficient on large number of conflict, but it should not run often.
@@ -220,7 +226,7 @@ public class EnchantConflictGui extends ChestGui {
 
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.getName()) + " \u00A7rConflict");
+        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.getName()) + " \u00A7fConflict");
         meta.setLore(Arrays.asList(
                 "\u00A77Enchantment count:      \u00A7e"+conflict.getEnchants().size(),
                 "\u00A77Group count:            \u00A7e"+conflict.getCantConflictGroup().getGroups().size(),
@@ -246,7 +252,7 @@ public class EnchantConflictGui extends ChestGui {
             this.conflictGuiMap.put(conflict, gui);
             addToPage(guiItem);
         }else{
-            // replace item with the updated one
+            // Replace item with the updated one
             guiItem = gui.getParentItemForThisGui();
             guiItem.setItem(item);
         }
@@ -284,11 +290,12 @@ public class EnchantConflictGui extends ChestGui {
         OutlinePane page = null;
         int pageID = 0;
         while(pageID < this.pages.size()){
-            OutlinePane tempPage = this.pages.get(pageID++);
+            OutlinePane tempPage = this.pages.get(pageID);
             if(tempPage.getItems().contains(guiItem)){
                 page = tempPage;
                 break;
             }
+            pageID++;
         }
 
         if(page == null){// Why...
@@ -301,10 +308,14 @@ public class EnchantConflictGui extends ChestGui {
         page.removeItem(guiItem);
 
         // There is now a slot available, let fill it if possible
-        if(pageID < this.pages.size() - 1){
+        if(pageID < (this.pages.size() - 1)){
             OutlinePane newPage = this.pages.get(pageID+1);
-            GuiItem newItem = newPage.getItems().get(0);
-            removeFromPage(newPage, pageID+1, newItem);
+            GuiItem nextPageItem = newPage.getItems().get(0);
+
+            removeFromPage(newPage, pageID+1, nextPageItem);
+
+            OutlinePane thisPage = this.pages.get(pageID);
+            thisPage.addItem(nextPageItem);
         }else if(pageID > 0 && page.getItems().isEmpty()){
             this.pages.remove(pageID);
         }
@@ -319,10 +330,21 @@ public class EnchantConflictGui extends ChestGui {
         return pageId;
     }
 
-    public void placeArrow(int page){
+    public void placeArrow(int page, boolean customise){
+
         // Place left arrow
         addPane(this.backgroundPane);
         if(page > 0){
+            if(customise){
+                ItemStack leftItem = this.goLeftItem.getItem();
+                ItemMeta leftMeta = leftItem.getItemMeta();
+
+                leftMeta.setDisplayName("\u00A7eReturn to page " +(page));
+
+                leftItem.setItemMeta(leftMeta);
+                this.goLeftItem.setItem(leftItem);
+            }
+
             this.backgroundPane.bindItem('L', this.goLeftItem);
         }else{
             this.backgroundPane.bindItem('L', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
@@ -330,6 +352,16 @@ public class EnchantConflictGui extends ChestGui {
 
         // Place right arrow
         if(page < pages.size()-1){
+            if(customise){
+                ItemStack rightItem = this.goRightItem.getItem();
+                ItemMeta rightMeta = rightItem.getItemMeta();
+
+                rightMeta.setDisplayName("\u00A7eGo to page " +(page+2));
+
+                rightItem.setItemMeta(rightMeta);
+                this.goRightItem.setItem(rightItem);
+            }
+
             this.backgroundPane.bindItem('R', this.goRightItem);
         }else{
             this.backgroundPane.bindItem('R', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
@@ -344,9 +376,12 @@ public class EnchantConflictGui extends ChestGui {
         getPanes().clear();
 
         // display the page arrow pane
-        placeArrow(pageID);
+        placeArrow(pageID, true);
         // and add actual page
         addPane(page);
+
+        // set title
+        setTitle("Conflict Config ("+(pageID+1)+"/"+(pages.size())+")");
 
         super.show(humanEntity);
 
@@ -360,7 +395,7 @@ public class EnchantConflictGui extends ChestGui {
         getPanes().clear();
 
         // set the page arrow pane
-        placeArrow(pageID);
+        placeArrow(pageID, false);
         // and add actual page
         addPane(page);
 
