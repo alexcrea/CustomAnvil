@@ -9,6 +9,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,16 +17,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
+import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.gui.config.settings.subsetting.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class EnchantConflictGui extends ChestGui {
 
@@ -62,7 +63,6 @@ public class EnchantConflictGui extends ChestGui {
 
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
         this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
-        this.backgroundPane.bindItem('C', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
         addPane(this.backgroundPane);
 
         // Page init
@@ -112,6 +112,85 @@ public class EnchantConflictGui extends ChestGui {
             viewer.setItemOnCursor(cursor);
         }, CustomAnvil.instance);
 
+        // Create new conflict item
+        ItemStack createItem = new ItemStack(Material.GREEN_TERRACOTTA);
+        ItemMeta createMeta = createItem.getItemMeta();
+
+        createItem.setItemMeta(createMeta);
+
+        this.backgroundPane.bindItem('C', new GuiItem(createItem, (clickEvent)->{
+            clickEvent.setCancelled(true);
+            HumanEntity player = clickEvent.getWhoClicked();
+
+            // check permission
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+                player.closeInventory();
+                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                return;
+            }
+            player.closeInventory();
+
+            player.sendMessage("\u00A7eWrite the conflict you want to create in the chat.\n" +
+                    "\u00A7eOr write \u00A7ccancel \u00A7eto go back to conflict config menu");
+
+            CustomAnvil.Companion.getChatListener().setListenedCallback(player, prepareCreateItemConsumer(player));
+
+        }, CustomAnvil.instance));
+    }
+
+    private Consumer<String> prepareCreateItemConsumer(HumanEntity player) {
+        AtomicReference<Consumer<String>> selfRef = new AtomicReference<>();
+        Consumer<String> selfCallback = (message) -> {
+            if(message == null) return;
+
+            message = message.toLowerCase(Locale.ROOT);
+            if("cancel".equalsIgnoreCase(message)) {
+                player.sendMessage("cancelled...");
+                show(player);
+                return;
+            }
+
+            message = message.replace('_', ' ');
+
+            // Try to find if it already exists in a for loop
+            // Not the most efficient on large number of conflict, but it should not run often.
+            for (EnchantConflictGroup conflict : ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList()) {
+                if(conflict.getName().equalsIgnoreCase(message)){
+                    player.sendMessage("\u00A7cPlease enter a conflict name that do not already exist...");
+                    // wait next message.
+                    CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
+                    return;
+                }
+            }
+
+            // Create new empty conflict and display it to the admin
+            EnchantConflictGroup conflict = new EnchantConflictGroup(
+                    message,
+                    new IncludeGroup("new_group"),
+                    0);
+
+            ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList().add(conflict);
+            updateValueForConflict(conflict, true);
+
+            // save empty conflict in config
+            String[] emptyStringArray = new String[0];
+
+            FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+            config.set(message+".enchantments", emptyStringArray);
+            config.set(message+".notAffectedGroups", emptyStringArray);
+            config.set(message+".maxEnchantmentBeforeConflict", 0);
+
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
+                ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
+
+            // show the new conflict config to the player
+            this.conflictGuiMap.get(conflict).show(player);
+
+        };
+
+        selfRef.set(selfCallback);
+        return selfCallback;
     }
 
     private OutlinePane createEmptyPage(){
@@ -136,7 +215,7 @@ public class EnchantConflictGui extends ChestGui {
         update();
     }
 
-    public ItemStack createItemForConflict(EnchantConflictGroup conflict){
+    public static ItemStack createItemForConflict(EnchantConflictGroup conflict){
         ItemStack item = new ItemStack(conflict.getRepresentativeMaterial());
 
         ItemMeta meta = item.getItemMeta();

@@ -18,8 +18,6 @@ class EnchantConflictManager {
         // Path for a flag: if the enchantment will be used in the last supported version
         // TODO maybe replace this system by a list of "future" enchantment.
         private const val FUTURE_USE_PATH = "useInFuture"
-        // Default name for an empty Material group
-        private val DEFAULT_EMPTY_GROUP = IncludeGroup("empty")
         // Default name for a joining group
         private const val DEFAULT_GROUP_NAME = "joinedGroup"
     }
@@ -106,17 +104,11 @@ class EnchantConflictManager {
         }
         // Find or create the selected group for the conflict
         val groupList = section.getStringList(CONFLICT_GROUP_PATH)
-        val finalGroup: AbstractMaterialGroup
-        if(groupList.size < 1){
-            finalGroup = DEFAULT_EMPTY_GROUP
-        }else if(groupList.size == 1){
-            finalGroup = findGroup(groupList[0], itemManager, conflictName)
-        }else{
-            finalGroup = IncludeGroup(DEFAULT_GROUP_NAME)
-            for (groupName in groupList) {
-                finalGroup.addToPolicy(findGroup(groupName, itemManager, conflictName))
-            }
+        val finalGroup = IncludeGroup(DEFAULT_GROUP_NAME)
+        for (groupName in groupList) {
+            finalGroup.addToPolicy(findGroup(groupName, itemManager, conflictName))
         }
+
         // Return conflict
         return EnchantConflictGroup(conflictName, finalGroup, minBeforeBlock)
     }
@@ -125,7 +117,7 @@ class EnchantConflictManager {
         val group = itemManager.get(groupName)
         if(group == null){
             CustomAnvil.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
-            return DEFAULT_EMPTY_GROUP
+            return IncludeGroup("error_placeholder")
         }
 
         return group

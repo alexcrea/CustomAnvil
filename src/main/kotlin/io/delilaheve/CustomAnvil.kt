@@ -7,14 +7,14 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.listener.ChatEventListener
 import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
 
 /**
- * Bukkit/Spigot/Paper plugin to alter enchantment max
- * levels and allow unsafe enchantment combinations
+ * Bukkit/Spigot/Paper plugin to alter anvil feature
  */
 class CustomAnvil : JavaPlugin() {
 
@@ -40,6 +40,9 @@ class CustomAnvil : JavaPlugin() {
 
         // Current plugin instance
         lateinit var instance: CustomAnvil
+
+        // Chat message listener
+        lateinit var chatListener: ChatEventListener
 
         /**
          * Logging handler
@@ -74,8 +77,11 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
-        // Load config
+        // Load chat listener
+        chatListener = ChatEventListener()
+        Bukkit.getPluginManager().registerEvents(chatListener, this)
 
+        // Load config
         val success = ConfigHolder.loadConfig()
         if(!success) return
 

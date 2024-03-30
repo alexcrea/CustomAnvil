@@ -41,6 +41,7 @@ class ReloadExecutor : CommandExecutor {
             BasicConfigGui.INSTANCE.updateGuiValues()
             EnchantCostConfigGui.INSTANCE.updateGuiValues()
             EnchantLimitConfigGui.INSTANCE.updateGuiValues()
+            EnchantCostConfigGui.INSTANCE.updateGuiValues()
 
             // & update metric
             MetricsUtil.testIfConfigIsDefault()
