@@ -220,3 +220,6 @@ enchant_values:
 
 # Whether to show debug logging
 debug_log: false
+
+# Whether to show verbose debug logging
+debug_log_verbose: false

@@ -3,16 +3,17 @@ package xyz.alexcrea.cuanvil.group
 import org.bukkit.Material
 import java.util.*
 
-class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
+class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
     override fun createDefaultSet(): EnumSet<Material> {
         return EnumSet.allOf(Material::class.java)
     }
 
-    private val includedGroup = HashSet<AbstractMaterialGroup>()
+    private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
+    private val groupItems by lazy { createDefaultSet() }
 
     override fun isReferencing(other: AbstractMaterialGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
-            if((materialGroup == other) || (materialGroup.isReferencing(other))){
+            if ((materialGroup == other) || (materialGroup.isReferencing(other))) {
                 return true
             }
         }
@@ -21,11 +22,33 @@ class ExcludeGroup(name: String): AbstractMaterialGroup(name) {
 
     override fun addToPolicy(mat: Material) {
         includedMaterial.remove(mat)
+        groupItems.remove(mat)
     }
 
     override fun addToPolicy(other: AbstractMaterialGroup) {
         includedGroup.add(other)
-        includedMaterial.removeAll(other.getSet())
+        groupItems.removeAll(other.getMaterials())
+    }
+
+    override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {
+        groupItems.clear()
+        groupItems.addAll(includedMaterial)
+
+        includedGroup.clear()
+        groups.forEach { group ->
+            if (!group.isReferencing(this)) {
+                includedGroup.add(group)
+                groupItems.removeAll(group.getMaterials())
+            }
+        }
+    }
+
+    override fun getGroups(): MutableSet<AbstractMaterialGroup> {
+        return includedGroup
+    }
+
+    override fun getMaterials(): EnumSet<Material> {
+        return groupItems
     }
 
 

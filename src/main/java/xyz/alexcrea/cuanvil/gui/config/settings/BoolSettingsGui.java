@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Collections;
@@ -20,7 +21,7 @@ import java.util.function.Consumer;
 /**
  * An instance of a gui used to edit a boolean setting.
  */
-public class BoolSettingsGui extends AbstractSettingGui{
+public class BoolSettingsGui extends AbstractSettingGui {
 
     private final BoolSettingFactory holder;
     private final boolean before;
@@ -28,8 +29,9 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
     /**
      * Create a boolean setting config gui.
+     *
      * @param holder Configuration factory of this setting.
-     * @param now The defined value of this setting.
+     * @param now    The defined value of this setting.
      */
     protected BoolSettingsGui(BoolSettingFactory holder, boolean now) {
         super(3, holder.getTitle(), holder.parent);
@@ -45,7 +47,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
     @Override
     public Pattern getGuiPattern() {
         return new Pattern(
-                "000000000",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "D0-0v0+00",
                 "B0000000S"
         );
@@ -56,12 +58,12 @@ public class BoolSettingsGui extends AbstractSettingGui{
     /**
      * Prepare "return to default value" gui item.
      */
-    protected void prepareReturnToDefault(){
+    protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is: "+holder.defaultVal));
+        meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -74,16 +76,16 @@ public class BoolSettingsGui extends AbstractSettingGui{
     /**
      * Update item using the setting value to match the new value
      */
-    protected void updateValueDisplay(){
+    protected void updateValueDisplay() {
         PatternPane pane = getPane();
 
         // Get displayed value for this config.
         String displayedName;
         Material displayedMat;
-        if(now){
+        if (now) {
             displayedName = "\u00A7aTrue";
             displayedMat = Material.GREEN_TERRACOTTA;
-        }else{
+        } else {
             displayedName = "\u00A7cFalse";
             displayedMat = Material.RED_TERRACOTTA;
         }
@@ -99,9 +101,9 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
         // reset to default
         GuiItem returnToDefault;
-        if(now != holder.defaultVal){
+        if (now != holder.defaultVal) {
             returnToDefault = this.returnToDefault;
-        }else{
+        } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
         }
         pane.bindItem('D', returnToDefault);
@@ -111,8 +113,8 @@ public class BoolSettingsGui extends AbstractSettingGui{
     /**
      * @return A consumer to update the current setting's value.
      */
-    protected Consumer<InventoryClickEvent> inverseNowConsumer(){
-        return event->{
+    protected Consumer<InventoryClickEvent> inverseNowConsumer() {
+        return event -> {
             event.setCancelled(true);
             now = !now;
             updateValueDisplay();
@@ -125,8 +127,8 @@ public class BoolSettingsGui extends AbstractSettingGui{
         holder.config.getConfig().set(holder.configPath, now);
 
         MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
-        if(TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE){
-            return holder.config.saveToDisk(TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
     }
@@ -138,18 +140,19 @@ public class BoolSettingsGui extends AbstractSettingGui{
 
     /**
      * Create a bool setting factory from setting's parameters.
-     * @param title The title of the gui.
-     * @param parent Parent gui to go back when completed.
+     *
+     * @param title      The title of the gui.
+     * @param parent     Parent gui to go back when completed.
      * @param configPath Configuration path of this setting.
-     * @param config Configuration holder of this setting.
+     * @param config     Configuration holder of this setting.
      * @param defaultVal Default value if not found on the config.
      * @return A factory for a boolean setting gui.
      */
     public static BoolSettingFactory boolFactory(@NotNull String title, ValueUpdatableGui parent,
                                                  String configPath, ConfigHolder config,
-                                                 boolean defaultVal){
+                                                 boolean defaultVal) {
         return new BoolSettingFactory(
-                title,parent,
+                title, parent,
                 configPath, config,
                 defaultVal);
     }
@@ -157,22 +160,25 @@ public class BoolSettingsGui extends AbstractSettingGui{
     /**
      * A factory for a boolean setting gui that hold setting's information.
      */
-    public static class BoolSettingFactory extends SettingGuiFactory{
-        @NotNull String title; ValueUpdatableGui parent;
+    public static class BoolSettingFactory extends SettingGuiFactory {
+        @NotNull
+        String title;
+        ValueUpdatableGui parent;
         boolean defaultVal;
 
         /**
          * Constructor for a boolean setting gui factory.
-         * @param title The title of the gui.
-         * @param parent Parent gui to go back when completed.
+         *
+         * @param title      The title of the gui.
+         * @param parent     Parent gui to go back when completed.
          * @param configPath Configuration path of this setting.
-         * @param config Configuration holder of this setting.
+         * @param config     Configuration holder of this setting.
          * @param defaultVal Default value if not found on the config.
          */
         protected BoolSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
-                boolean defaultVal){
+                boolean defaultVal) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
@@ -191,7 +197,7 @@ public class BoolSettingsGui extends AbstractSettingGui{
         /**
          * @return The configured value for the associated setting.
          */
-        public boolean getConfiguredValue(){
+        public boolean getConfiguredValue() {
             return this.config.getConfig().getBoolean(this.configPath, this.defaultVal);
         }
 

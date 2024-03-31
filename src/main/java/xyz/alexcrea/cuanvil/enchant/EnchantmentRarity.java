@@ -7,19 +7,18 @@ public enum EnchantmentRarity {
     COMMON(1),
     UNCOMMON(2),
     RARE(4),
-    VERY_RARE(8)
-
-    ;
+    VERY_RARE(8);
 
     private final int itemValue;
     private final int bookValue;
 
-    EnchantmentRarity(int itemValue, int bookValue){
+    EnchantmentRarity(int itemValue, int bookValue) {
         this.itemValue = itemValue;
         this.bookValue = bookValue;
     }
-    EnchantmentRarity(int itemValue){
-        this(itemValue, Math.max(1,itemValue/2));
+
+    EnchantmentRarity(int itemValue) {
+        this(itemValue, Math.max(1, itemValue / 2));
     }
 
     public int getBookValue() {

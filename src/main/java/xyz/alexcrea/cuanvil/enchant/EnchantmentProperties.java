@@ -41,12 +41,11 @@ public enum EnchantmentProperties {
     SWEEPING(EnchantmentRarity.RARE),
     THORNS(EnchantmentRarity.VERY_RARE),
     UNBREAKING(EnchantmentRarity.UNCOMMON),
-    VANISHING_CURSE(EnchantmentRarity.VERY_RARE)
-
-    ;
+    VANISHING_CURSE(EnchantmentRarity.VERY_RARE);
 
     private final EnchantmentRarity rarity;
-    EnchantmentProperties(EnchantmentRarity rarity){
+
+    EnchantmentProperties(EnchantmentRarity rarity) {
         this.rarity = rarity;
     }
 

@@ -27,21 +27,22 @@ public class GuiGlobalActions {
     /**
      * Create a consumer to create and open a new GUI.
      * Used with InventoryClickEvent as the consumer argument as it is planned to be used on click on an GuiItem.
-     * @param clazz The class of the gui to open.
-     *              It is assumed this class contain a constructor requiring arguments of argClass in the same order as argClass array.
+     *
+     * @param clazz    The class of the gui to open.
+     *                 It is assumed this class contain a constructor requiring arguments of argClass in the same order as argClass array.
      * @param argClass Classes of the argument that will be passed to the constructor of the GUI class.
-     * @param args Arguments for the constructor the GUI class.
+     * @param args     Arguments for the constructor the GUI class.
      * @return A consumer to create a new gui and open it.
      */
     public static @NotNull Consumer<InventoryClickEvent> openGuiAction(
             @NotNull Class<? extends Gui> clazz,
             @NotNull Class<?>[] argClass,
-            @NotNull Object... args){
+            @NotNull Object... args) {
         return event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to open inventory if player do not have edit configuration permission
-            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 player.sendMessage(NO_EDIT_PERM);
                 return;
@@ -62,22 +63,24 @@ public class GuiGlobalActions {
     /**
      * Create a consumer to create and open a new GUI.
      * Used with InventoryClickEvent as the consumer argument as it is planned to be used on click on an GuiItem.
+     *
      * @param clazz The class of the gui to open.
      *              It is assumed this class contain a constructor with no argument.
      * @return A consumer to create a new gui and open it.
      */
     public static @NotNull Consumer<InventoryClickEvent> openGuiAction(
-            @NotNull Class<? extends Gui> clazz){
+            @NotNull Class<? extends Gui> clazz) {
         return openGuiAction(clazz, new Class<?>[0]);
     }
 
     /**
      * Create a consumer to open a setting gui from a setting GUI factory.
      * Used with InventoryClickEvent as the consumer argument as it is planned to be used on click on an GuiItem.
+     *
      * @param factory The setting gui factory.
      * @return A consumer to create and open a new setting GUI.
      */
-    public static @NotNull Consumer<InventoryClickEvent> openSettingGuiAction(AbstractSettingGui.SettingGuiFactory factory){
+    public static @NotNull Consumer<InventoryClickEvent> openSettingGuiAction(AbstractSettingGui.SettingGuiFactory factory) {
         return event -> {
             event.setCancelled(true);
             Gui gui = factory.create();
@@ -88,6 +91,7 @@ public class GuiGlobalActions {
     /**
      * Create a consumer to open a global GUI.
      * Used with InventoryClickEvent as the consumer argument as it is planned to be used on click on an GuiItem.
+     *
      * @param goal The gui to open when consumer is run.
      * @return A consumer to open a global GUI.
      */
@@ -95,7 +99,7 @@ public class GuiGlobalActions {
         return event -> {
             HumanEntity player = event.getWhoClicked();
             // Do not allow to open inventory if player do not have edit configuration permission
-            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 player.sendMessage(NO_EDIT_PERM);
                 return;
@@ -109,8 +113,9 @@ public class GuiGlobalActions {
      * Create a consumer to update and open an updatable GUI.
      * Used with InventoryClickEvent as the consumer argument as it is planned to be used on click on an GuiItem.
      * This consumer check if the player who interacted with the item have the permission to save before saving.
+     *
      * @param setting The gui that contain the modified setting.
-     * @param goal The gui to update and open when consumer is run.
+     * @param goal    The gui to update and open when consumer is run.
      * @return A consumer to open a global GUI.
      */
     public static @NotNull Consumer<InventoryClickEvent> saveSettingAction(
@@ -120,14 +125,14 @@ public class GuiGlobalActions {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to save configuration if player do not have edit configuration permission
-            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 player.sendMessage(NO_EDIT_PERM);
                 return;
             }
 
             // Save setting
-            if(!setting.onSave()){
+            if (!setting.onSave()) {
                 player.sendMessage("\u00A7cSomething went wrong while saving the change of value.");
             }
             // Update gui for those who have it open.

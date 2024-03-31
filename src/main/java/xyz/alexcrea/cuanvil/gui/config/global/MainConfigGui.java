@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui;
+package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -8,9 +8,6 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.gui.config.BasicConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.EnchantCostConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.EnchantLimitConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
@@ -23,12 +20,13 @@ public class MainConfigGui extends ChestGui {
     static {
         INSTANCE.init();
     }
+
     private MainConfigGui() {
         super(3, "\u00A78Anvil Config", CustomAnvil.instance);
 
     }
 
-    private void init(){
+    private void init() {
         Pattern pattern = new Pattern(
                 "I00000000",
                 "012304560",
@@ -72,17 +70,26 @@ public class MainConfigGui extends ChestGui {
         GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, EnchantCostConfigGui.INSTANCE);
         pane.bindItem('3', enchantCostItem);
 
+        // Enchantment Conflicts
+        ItemStack EnchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
+        ItemMeta enchantConflictMeta = EnchantConflictItemstack.getItemMeta();
+
+        enchantConflictMeta.setDisplayName("\u00A7aEnchantment Conflict");
+        enchantConflictMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment conflict menu"));
+        EnchantConflictItemstack.setItemMeta(enchantConflictMeta);
+
+        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(EnchantConflictItemstack, EnchantConflictGui.INSTANCE);
+        pane.bindItem('4', enchantConflictItem);
+
         // WIP configuration items
         ItemStack wipItemstack = new ItemStack(Material.BARRIER);
         ItemMeta wipMeta = wipItemstack.getItemMeta();
         wipMeta.setDisplayName("\u00A7cWIP");
         wipItemstack.setItemMeta(wipMeta);
 
-        GuiItem wip4 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip5 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
         GuiItem wip6 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        pane.bindItem('4', wip4);
         pane.bindItem('5', wip5);
         pane.bindItem('6', wip6);
 
@@ -95,7 +102,7 @@ public class MainConfigGui extends ChestGui {
         GuiItem quitItem = new GuiItem(quitItemstack, event -> {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
-        },CustomAnvil.instance);
+        }, CustomAnvil.instance);
         pane.bindItem('Q', quitItem);
 
         // create & bind "info" item

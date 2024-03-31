@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config;
+package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
+import xyz.alexcrea.cuanvil.gui.config.AbstractEnchantConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -45,10 +46,11 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         EnchantmentRarity rarity = EnchantmentRarity.NO_RARITY;
         try {
             rarity = EnchantmentProperties.valueOf(key.toUpperCase(Locale.ENGLISH)).getRarity();
-        }catch (IllegalArgumentException ignored){}
+        } catch (IllegalArgumentException ignored) {
+        }
 
-        return EnchantCostSettingsGui.enchantCostFactory(prettyKey+" Level Cost", this,
-                SECTION_NAME+'.'+key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
+        return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
                 rarity.getItemValue(), rarity.getBookValue(),
                 1, 10, 50);
     }
@@ -58,13 +60,13 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Get item properties
         int itemCost = factory.getConfiguredValue();
         int bookCost = factory.getConfiguredBookValue();
-        StringBuilder itemName = new StringBuilder("\u00A7a").append(factory.getTitle());
+        String itemName = "\u00A7a" + factory.getTitle();
         // Create item
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = item.getItemMeta();
 
         // Edit name and lore
-        itemMeta.setDisplayName(itemName.toString());
+        itemMeta.setDisplayName(itemName);
         itemMeta.setLore(Arrays.asList(
                 "\u00A77Item  Cost: " + itemCost,
                 "\u00A77Book Cost: " + bookCost));

@@ -1,76 +1,41 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import com.github.stefvanschie.inventoryframework.pane.Pane;
-import com.github.stefvanschie.inventoryframework.pane.PatternPane;
-import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import xyz.alexcrea.cuanvil.gui.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Abstract Global Config gui for enchantment setting configuration.
+ *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
 public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ValueUpdatableGui {
 
-    private final static Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
-
-    private final Gui backGui;
-
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.
+     *
      * @param title Title of the gui.
-     * @param backGui Gui to go back on click on the "back" button.
      */
-    protected AbstractEnchantConfigGui(String title, Gui backGui){
+    protected AbstractEnchantConfigGui(String title) {
         super(6, title, CustomAnvil.instance);
-        this.backGui = backGui;
-    }
-    /**
-     * Constructor for a gui displaying available enchantment to edit a enchantment setting.
-     * @param title Title of the gui.
-     */
-    protected AbstractEnchantConfigGui(String title){
-        this(title, MainConfigGui.INSTANCE);
     }
 
-    PatternPane backgroundItems;
-    OutlinePane filledEnchant;
+    private OutlinePane filledEnchant;
 
-    // Why is called like it is rn
     /**
      * Initialise value updatable gui pattern
-      */
-    protected void init(){
+     */
+    protected void init() {
         // Back item panel
-        Pattern pattern = new Pattern(
-                "000000000",
-                "000000000",
-                "000000000",
-                "000000000",
-                "000000000",
-                "B11111111"
-        );
-        this.backgroundItems = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
-        addPane(this.backgroundItems);
-
-        GuiGlobalItems.addBackItem(this.backgroundItems, this.backGui);
-
-        GuiGlobalItems.addBackgroundItem(this.backgroundItems);
-        this.backgroundItems.bindItem('1', GuiGlobalItems.backgroundItem(SECONDARY_BACKGROUND_MATERIAL));
+        addPane(GuiSharedConstant.BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE);
 
         // enchant item panel
         this.filledEnchant = new OutlinePane(0, 0, 9, 5);
@@ -87,13 +52,10 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
     /**
      * Prepare enchantment config gui displayed items factory.
      */
-    protected void prepareValues(){
+    protected void prepareValues() {
         bookItemFactoryList = new ArrayList<>();
 
-        List<Enchantment> enchantments = Arrays.asList(Enchantment.values());
-        enchantments.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
-
-        for (Enchantment enchant : enchantments) {
+        for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
             T factory = getFactoryFromEnchant(enchant);
 
             bookItemFactoryList.add(factory);
@@ -102,6 +64,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
 
     @Override
     public void updateGuiValues() {
+
         // probably not the most efficient but hey ! it do the work
         // TODO optimise one day.. maybe
 

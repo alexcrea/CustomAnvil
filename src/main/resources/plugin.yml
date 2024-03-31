@@ -1,11 +1,11 @@
 main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
-version: 1.3.2-A1
+version: 1.3.2-A2
 description: Allow to customise anvil mechanics
 api-version: 1.18
 load: POSTWORLD
-authors: [DelilahEve, alexcrea]
+authors: [ DelilahEve, alexcrea ]
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
   - com.github.stefvanschie.inventoryframework:IF:0.10.13

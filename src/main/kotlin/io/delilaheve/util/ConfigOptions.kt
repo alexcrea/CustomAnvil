@@ -12,65 +12,96 @@ object ConfigOptions {
 
     // Path for default enchantment limits
     private const val DEFAULT_LIMIT_PATH = "default_limit"
+
     // Path for limiting repair cost
     const val LIMIT_REPAIR_COST = "limit_repair_cost"
+
     // Path for repair value limit
     const val LIMIT_REPAIR_VALUE = "limit_repair_value"
+
     // Path for level cost on item repair
     const val ITEM_REPAIR_COST = "item_repair_cost"
+
     // Path for level cost on unit repair
     const val UNIT_REPAIR_COST = "unit_repair_cost"
+
     // Path for level cost on item renaming
     const val ITEM_RENAME_COST = "item_rename_cost"
+
     // Path for level cost on illegal enchantment on sacrifice
     const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
+
     // Path for removing repair cost limits
     const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
+
     // Root path for enchantment limits
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
+
     // Root path for enchantment values
     const val ENCHANT_VALUES_ROOT = "enchant_values"
+
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
+
     // Debug logging toggle path
     private const val DEBUG_LOGGING = "debug_log"
 
+    // Debug verbose logging toggle path
+    private const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
+
     // Default value for enchantment limits
     private const val DEFAULT_ENCHANT_LIMIT = 5
+
     // Default value for limiting repair cost
     const val DEFAULT_LIMIT_REPAIR = false
+
     // Default value for repair cost limit
     const val DEFAULT_LIMIT_REPAIR_VALUE = 39
+
     // Default value for level cost on item repair
     const val DEFAULT_ITEM_REPAIR_COST = 2
+
     // Default value for level cost per unit repair
     const val DEFAULT_UNIT_REPAIR_COST = 1
+
     // Default value for level cost on item renaming
     const val DEFAULT_ITEM_RENAME_COST = 1
+
     // Default value for level cost on illegal enchantment on sacrifice
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
+
     // Valid range for repair cost limit
     @JvmField
     val REPAIR_LIMIT_RANGE = 1..39
+
     // Valid range for repair cost
     @JvmField
     val REPAIR_COST_RANGE = 0..255
+
     // Valid range for rename cost
     @JvmField
     val ITEM_RENAME_COST_RANGE = 0..255
+
     // Valid range for illegal enchantment conflict cost
     @JvmField
     val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
+
     // Default for removing repair cost limits
     const val DEFAULT_REMOVE_LIMIT = false
+
     // Valid range for an enchantment limit
     @JvmField
     val ENCHANT_LIMIT_RANGE = 1..255
+
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
+
     // Default value for debug logging
     private const val DEFAULT_DEBUG_LOG = false
+
+    // Default value for debug logging
+    private const val DEFAULT_VERBOSE_DEBUG_LOG = false
 
     /**
      * Default enchantment limit
@@ -151,6 +182,7 @@ object ConfigOptions {
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
                 ?: DEFAULT_SACRIFICE_ILLEGAL_COST
         }
+
     /**
      * Whether to remove repair cost limit
      */
@@ -169,6 +201,16 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
+        }
+
+    /**
+     * Whether to show verbose debug logging
+     */
+    val verboseDebugLog: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
         }
 
     /**
@@ -203,8 +245,9 @@ object ConfigOptions {
     /**
      * Get an array of key of basic config options
      */
-    fun getBasicConfigKeys(): Array<String>{
-        return arrayOf(DEFAULT_LIMIT_PATH,
+    fun getBasicConfigKeys(): Array<String> {
+        return arrayOf(
+            DEFAULT_LIMIT_PATH,
             LIMIT_REPAIR_COST,
             LIMIT_REPAIR_VALUE,
             ITEM_REPAIR_COST,
