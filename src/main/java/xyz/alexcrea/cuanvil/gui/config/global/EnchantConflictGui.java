@@ -151,6 +151,12 @@ public class EnchantConflictGui extends ChestGui {
         Consumer<String> selfCallback = (message) -> {
             if (message == null) return;
 
+            // check permission
+            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                return;
+            }
+
             message = message.toLowerCase(Locale.ROOT);
             if ("cancel".equalsIgnoreCase(message)) {
                 player.sendMessage("conflict creation cancelled...");
