@@ -151,7 +151,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public void updateGuiValues() {
-        this.parent.updateValueForConflict(this.enchantConflict, true);
+        this.parent.updateValueForGeneric(this.enchantConflict, true);
         // Parent should call updateLocal
     }
 
