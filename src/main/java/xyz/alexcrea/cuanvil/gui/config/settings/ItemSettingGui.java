@@ -41,19 +41,48 @@ public class ItemSettingGui extends AbstractSettingGui {
         this.before = now;
         this.now = now;
 
-        prepareReturnToDefault();
+        prepareStaticItems();
         updateValueDisplay();
     }
-
 
     @Override
     public Pattern getGuiPattern() {
         return new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "D0-0v0+00",
+                "D0-0v0+0s",
                 "B0000000S"
         );
     }
+
+
+    public void prepareStaticItems(){
+        prepareReturnToDefault();
+
+        ItemStack item = new ItemStack(Material.YELLOW_TERRACOTTA);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName("\u00A7eTemporary close this menu");
+        meta.setLore(Collections.singletonList("\u00A77Allow you to chose other item then return here."));
+        item.setItemMeta(meta);
+        GuiItem guiItem = new GuiItem(item, event -> {
+            event.setCancelled(true);
+
+            HumanEntity player = event.getWhoClicked();
+
+            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
+
+                if(message != null) return;
+                show(player);
+
+            });
+
+            player.sendMessage("\u00A7eWrite something in chat to return to the item config menu.");
+            player.closeInventory();
+        }, CustomAnvil.instance);
+
+        getPane().bindItem('s', guiItem);
+    }
+
 
     protected GuiItem returnToDefault;
 
@@ -91,7 +120,7 @@ public class ItemSettingGui extends AbstractSettingGui {
             displayedItem = new ItemStack(Material.BARRIER);
             ItemMeta valueMeta = displayedItem.getItemMeta();
 
-            valueMeta.setDisplayName("§4NO ITEM SET");
+            valueMeta.setDisplayName("\u00A74NO ITEM SET");
             valueMeta.setLore(CLICK_LORE);
 
             displayedItem.setItemMeta(valueMeta);
