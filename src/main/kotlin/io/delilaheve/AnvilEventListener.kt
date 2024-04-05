@@ -11,6 +11,7 @@ import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -25,6 +26,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import kotlin.math.min
 
@@ -57,6 +59,25 @@ class AnvilEventListener : Listener {
         // Should find player
         val player = event.view.player
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
+
+        // Test custom recipe
+        val recipe = getCustomRecipe(first, second)
+        if(recipe != null){
+            val amount = getCustomRecipeAmount(recipe, first, second)
+
+            val resultItem: ItemStack
+            if(amount <= 1){
+                resultItem = recipe.resultItem!!
+            }else{
+                resultItem = recipe.resultItem!!.clone()
+                resultItem.amount *= amount
+            }
+
+            event.result = resultItem
+            handleAnvilXp(inventory, event, recipe.xpCostPerCraft * amount, true)
+
+            return
+        }
 
         // Test rename lonely item
         if (second == null) {
@@ -139,6 +160,7 @@ class AnvilEventListener : Listener {
             CustomAnvil.log("no anvil fuse type found")
             event.result = null
         }
+
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int {
@@ -167,6 +189,13 @@ class AnvilEventListener : Listener {
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
+
+        // Test custom craft
+        val recipe = getCustomRecipe(leftItem, rightItem)
+        if(recipe != null){
+            event.result = Event.Result.ALLOW
+            return
+        }
 
         val canMerge = leftItem.canMergeWith(rightItem)
         val unitRepairResult = leftItem.getRepair(rightItem)
@@ -370,16 +399,50 @@ class AnvilEventListener : Listener {
         return rightValue + illegalPenalty
     }
 
+    private fun getCustomRecipe (
+        leftItem: ItemStack,
+        rightItem: ItemStack?) : AnvilCustomRecipe? {
+
+        val recipeList = ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.recipeByMat[leftItem.type] ?: return null
+
+        for (recipe in recipeList) {
+            if(recipe.testItem(leftItem, rightItem)){
+                return recipe
+            }
+        }
+
+        return null
+    }
+
+    private fun getCustomRecipeAmount(
+        recipe: AnvilCustomRecipe,
+        leftItem: ItemStack,
+        rightItem: ItemStack?
+    ): Int{
+        return if(recipe.exactCount) { 1 }
+        else {
+            // test amount
+            val resultItem = recipe.resultItem!! // we know exist as the recipe was returned to us
+            val maxResultAmount = resultItem.type.maxStackSize/resultItem.amount
+            val maxLeftAmount = leftItem.amount/recipe.leftItem!!.amount
+            val maxRightAmount = if(rightItem == null){ 1 } else{ rightItem.amount/recipe.rightItem!!.amount }
+
+            min(min(maxResultAmount, maxLeftAmount), maxRightAmount)
+        }
+    }
+
+
     /**
      * Display xp needed for the work on the anvil inventory
      */
     private fun handleAnvilXp(
         inventory: AnvilInventory,
         event: PrepareAnvilEvent,
-        anvilCost: Int
+        anvilCost: Int,
+        ignoreRules: Boolean = false
     ) {
         // Test repair cost limit
-        val finalAnvilCost = if (ConfigOptions.limitRepairCost) {
+        val finalAnvilCost = if (ConfigOptions.limitRepairCost && !ignoreRules) {
             min(anvilCost, ConfigOptions.limitRepairValue)
         } else {
             anvilCost
@@ -392,8 +455,10 @@ class AnvilEventListener : Listener {
             .server
             .scheduler
             .runTask(CustomAnvil.instance, Runnable {
-                if (ConfigOptions.removeRepairLimit) {
+                if (ConfigOptions.removeRepairLimit || ignoreRules) {
                     inventory.maximumRepairCost = Int.MAX_VALUE
+                } else{
+                    inventory.maximumRepairCost = 40 // minecraft default
                 }
                 inventory.repairCost = finalAnvilCost
 

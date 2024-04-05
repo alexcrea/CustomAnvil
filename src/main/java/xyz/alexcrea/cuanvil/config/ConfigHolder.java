@@ -262,11 +262,15 @@ public abstract class ConfigHolder {
 
     // Class for custom anvil craft
     public static class CustomAnvilCraftHolder extends ResourceConfigHolder {
-        private final static String CUSTOM_CRAFT_FILE_NAME = "custom_recipes";
+        private final static String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
         CustomAnvilRecipeManager recipeManager;
 
         private CustomAnvilCraftHolder() {
-            super(CUSTOM_CRAFT_FILE_NAME);
+            super(CUSTOM_RECIPE_FILE_NAME);
+        }
+
+        public CustomAnvilRecipeManager getRecipeManager() {
+            return recipeManager;
         }
 
         @Override
@@ -274,7 +278,6 @@ public abstract class ConfigHolder {
             this.recipeManager = new CustomAnvilRecipeManager();
             this.recipeManager.prepareRecipes(this.configuration);
         }
-
     }
 
 
