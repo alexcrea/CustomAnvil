@@ -4,9 +4,10 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
+import xyz.alexcrea.cuanvil.interfaces.Named
 
 class AnvilCustomRecipe(
-    val name: String,
+    private val name: String,
     var exactCount: Boolean,
     //var exactLeft: Boolean,
     //var exactRight: Boolean,
@@ -16,7 +17,7 @@ class AnvilCustomRecipe(
     var leftItem: ItemStack?,
     var rightItem: ItemStack?,
     var resultItem: ItemStack?,
-) {
+): Named {
 
     // Static config name
     companion object {
@@ -37,9 +38,9 @@ class AnvilCustomRecipe(
 
         val DEFAULT_XP_COST_CONFIG = 1
 
-        val DEFAULT_LEFT_ITEM_CONFIG = null
-        val DEFAULT_RIGHT_ITEM_CONFIG = null
-        val DEFAULT_RESULT_ITEM_CONFIG = null
+        val DEFAULT_LEFT_ITEM_CONFIG: ItemStack? = null
+        val DEFAULT_RIGHT_ITEM_CONFIG: ItemStack? = null
+        val DEFAULT_RESULT_ITEM_CONFIG: ItemStack? = null;
 
         val XP_COST_CONFIG_RANGE = 0..255
 
@@ -113,6 +114,10 @@ class AnvilCustomRecipe(
         }else if(item2!!.amount < rightItem!!.amount) return false // test if it has at least the amount we ask
 
         return true
+    }
+
+    override fun getName(): String {
+        return name
     }
 
 

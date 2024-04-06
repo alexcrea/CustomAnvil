@@ -139,9 +139,9 @@ class EnchantConflictManager {
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
-            CustomAnvil.verboseLog("Is against ${conflict.name}")
+            CustomAnvil.verboseLog("Is against ${conflict.getName()}")
             val conflicting = conflict.allowed(base, mat)
-            CustomAnvil.verboseLog("Was against ${conflict.name} and conflicting: $conflicting ")
+            CustomAnvil.verboseLog("Was against ${conflict.getName()} and conflicting: $conflicting ")
             if (!conflicting) {
                 if (conflict.getEnchants().size <= 1) {
                     result = ConflictType.SMALL_CONFLICT

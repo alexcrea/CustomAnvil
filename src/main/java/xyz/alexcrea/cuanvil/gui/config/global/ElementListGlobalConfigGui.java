@@ -25,8 +25,8 @@ import java.util.UUID;
 public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui {
 
 
-    public ElementListGlobalConfigGui(int rows, @NotNull String title) {
-        super(rows, title, CustomAnvil.instance);
+    public ElementListGlobalConfigGui(@NotNull String title) {
+        super(6, title, CustomAnvil.instance);
     }
 
 
@@ -265,7 +265,7 @@ public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui 
 
     }
 
-    public void removeConflict(T generic) {
+    public void removeGeneric(T generic) {
         GuiItem item = findGuiItemForRemoval(generic);
         if(item == null) return;
         removeFromPage(item);

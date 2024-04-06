@@ -4,34 +4,37 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.inventory.ItemStack
-import java.util.LinkedHashMap
 
 class CustomAnvilRecipeManager {
 
-    lateinit var recipeMap: LinkedHashMap<String, AnvilCustomRecipe>
+    lateinit var recipeList: ArrayList<AnvilCustomRecipe>
 
     lateinit var recipeByMat: LinkedHashMap<Material, ArrayList<AnvilCustomRecipe>>
 
     fun prepareRecipes(config: FileConfiguration) {
-        recipeMap = LinkedHashMap()
+        recipeList = ArrayList()
         recipeByMat = LinkedHashMap()
 
         // read all configs
         val keys = config.getKeys(false)
         for (key in keys) {
-            if (recipeMap.containsKey(key))
-                continue
             val recipe = AnvilCustomRecipe.getFromConfig(key)
             if(recipe == null){
                 CustomAnvil.log("Can't load recipe $key")
                 continue
             }
 
-            recipeMap[key] = recipe
-            val leftItem = recipe.leftItem
-            if(leftItem != null){
-                addToMap(recipe, leftItem)
-            }
+            cleanAddNew(recipe)
+        }
+
+    }
+
+
+    fun cleanAddNew(recipe: AnvilCustomRecipe){
+        recipeList.add(recipe)
+        val leftItem = recipe.leftItem
+        if(leftItem != null){
+            addToMatMap(recipe, leftItem)
         }
 
     }
@@ -46,19 +49,26 @@ class CustomAnvilRecipeManager {
             test!!.remove(recipe)
         }
         if(leftItem != null){
-            addToMap(recipe, leftItem)
+            addToMatMap(recipe, leftItem)
         }
 
         recipe.leftItem = leftItem
     }
 
-    fun addToMap(recipe: AnvilCustomRecipe, leftItem: ItemStack){
+    private fun addToMatMap(recipe: AnvilCustomRecipe, leftItem: ItemStack){
         var recipeList = recipeByMat[leftItem.type]
         if(recipeList == null){
             recipeList = ArrayList()
             recipeByMat[leftItem.type] = recipeList
         }
         recipeList.add(recipe)
+
+    }
+
+    fun cleanRemove(recipe: AnvilCustomRecipe) {
+
+        recipeList.remove(recipe)
+        cleanSetLeftItem(recipe, null)
 
     }
 
