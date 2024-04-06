@@ -89,6 +89,7 @@ public abstract class ConfigHolder {
 
     // Save logic
     public boolean saveToDisk(boolean doBackup) {
+        CustomAnvil.Companion.log("Saving "+getConfigFileName());
         if (doBackup) {
             if (!saveBackup()) {
                 CustomAnvil.instance.getLogger().severe("Could not save backup. see above.");
@@ -110,6 +111,7 @@ public abstract class ConfigHolder {
             return false;
         }
 
+        CustomAnvil.Companion.log(getConfigFileName()+" saved successfully");
         return true;
     }
 

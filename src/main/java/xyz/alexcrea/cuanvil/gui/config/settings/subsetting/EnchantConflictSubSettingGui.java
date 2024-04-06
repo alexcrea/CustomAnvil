@@ -148,8 +148,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
     @Override
     public void updateGuiValues() {
+        // update value from config to conflict
+        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.getName()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
+        this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
+
+        // Parent should call updateLocal with this call
         this.parent.updateValueForGeneric(this.enchantConflict, true);
-        // Parent should call updateLocal
     }
 
     @Override

@@ -89,8 +89,36 @@ class AnvilCustomRecipe(
 
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
+    }
+
+    fun updateFromFile(){
+        this.exactCount = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getBoolean(
+            "$name.$EXACT_COUNT_CONFIG",
+            DEFAULT_EXACT_COUNT_CONFIG
+        )
+
+        this.xpCostPerCraft = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getInt(
+            "$name.$XP_COST_CONFIG",
+            DEFAULT_XP_COST_CONFIG
+        )
+
+        // Update items
+        this.leftItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+            "$name.$LEFT_ITEM_CONFIG",
+            DEFAULT_LEFT_ITEM_CONFIG
+        )
+
+        this.rightItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+            "$name.$RIGHT_ITEM_CONFIG",
+            DEFAULT_RIGHT_ITEM_CONFIG
+        )
+
+        this.resultItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+            "$name.$RESULT_ITEM_CONFIG",
+            DEFAULT_RESULT_ITEM_CONFIG
+        )
     }
 
     fun testItem(item1: ItemStack, item2: ItemStack?): Boolean {

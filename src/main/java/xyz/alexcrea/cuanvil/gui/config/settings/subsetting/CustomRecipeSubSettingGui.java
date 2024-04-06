@@ -37,7 +37,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             @NotNull CustomRecipeConfigGui parent,
             @NotNull AnvilCustomRecipe anvilRecipe,
             @NotNull GuiItem parentItemForThisGui) {
-        super(parentItemForThisGui, 3, "title");
+        super(parentItemForThisGui, 3, "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.getName()) + " \u00A78Config");
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
 
@@ -76,24 +76,24 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         // Displayed item will be updated later
 
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
-        exactCountFactory = BoolSettingsGui.boolFactory("title", this,
+        this.exactCountFactory = BoolSettingsGui.boolFactory("\u00A78Exact count ?", this,
                 this.anvilRecipe.getName()+"."+AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_EXACT_COUNT_CONFIG());
 
-        xpCostFactory = IntSettingsGui.intFactory("title", this,
+        this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
                 this.anvilRecipe.getName()+"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(), 1, 5, 10);
 
 
-        leftItemFactory = ItemSettingGui.itemFactory("title", this,
+        this.leftItemFactory = ItemSettingGui.itemFactory("\u00A78Recipe \u00A7eLeft \u00A78Item", this,
                 this.anvilRecipe.getName()+"."+AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG());
 
-        rightItemFactory = ItemSettingGui.itemFactory("title", this,
+        this.rightItemFactory = ItemSettingGui.itemFactory("\u00A78Recipe \u00A7eLeft \u00A78Item", this,
                 this.anvilRecipe.getName()+"."+AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG());
 
-        resultItemFactory = ItemSettingGui.itemFactory("title", this,
+        this.resultItemFactory = ItemSettingGui.itemFactory("\u00A78Recipe \u00A7aResult \u00A78Item", this,
                 this.anvilRecipe.getName()+"."+AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
     }
@@ -131,83 +131,23 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
     @Override
     public void updateGuiValues() {
+        // update value from config to conflict
+        this.anvilRecipe.updateFromFile();
+
+        // Parent should call updateLocal with this call
         this.parent.updateValueForGeneric(this.anvilRecipe, true);
-        // Parent should call updateLocal
     }
 
     public void updateLocal() {
         if (!this.shouldWork) return;
 
-        /*// Prepare enchantment lore
-        ArrayList<String> enchantLore = new ArrayList<>();
-        enchantLore.add("\u00A77Allow you to select a list of \u00A75Enchantments \u00A77that this conflict should include");
-        Set<Enchantment> enchants = getSelectedEnchantments();
-        if (enchants.isEmpty()) {
-            enchantLore.add("\u00A77There is no included enchantment for this conflict.");
-        } else {
-            enchantLore.add("\u00A77List of included enchantment for this conflict:");
-            Iterator<Enchantment> enchantIterator = enchants.iterator();
+        GuiItem exactCountItem = GuiGlobalItems.boolSettingGuiItem(this.exactCountFactory);
+        pane.bindItem('1', exactCountItem);
 
-            boolean greaterThanMax = enchants.size() > 5;
-            int maxindex = (greaterThanMax ? 4 : enchants.size());
-            for (int i = 0; i < maxindex; i++) {
-                // format string like "- Fire Protection"
-                String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
-                enchantLore.add("\u00A77- \u00A75" + formattedName);
-            }
-            if (greaterThanMax) {
-                enchantLore.add("\u00A77And " + (enchants.size() - 4) + " more...");
-            }
-
-        }
-
-        // Prepare group lore
-        ArrayList<String> groupLore = new ArrayList<>();
-        groupLore.add("\u00A77Allow you to select a list of \u00A73Groups \u00A77that this conflict should include");
-        Set<AbstractMaterialGroup> grouos = getSelectedGroups();
-        if (grouos.isEmpty()) {
-            groupLore.add("\u00A77There is no excluded groups for this conflict.");
-        } else {
-            groupLore.add("\u00A77List of excluded groups for this conflict:");
-            Iterator<AbstractMaterialGroup> groupIterator = grouos.iterator();
-
-            boolean greaterThanMax = grouos.size() > 5;
-            int maxindex = (greaterThanMax ? 4 : grouos.size());
-            for (int i = 0; i < maxindex; i++) {
-                // format string like "- Melee Weapons"
-                String formattedName = CasedStringUtil.snakeToUpperSpacedCase(groupIterator.next().getName());
-                groupLore.add("\u00A77- \u00A73" + formattedName);
-
-            }
-            if (greaterThanMax) {
-                groupLore.add("\u00A77And " + (grouos.size() - 4) + " more...");
-            }
-        }
-
-        // Configure enchant setting item
-        ItemStack enchantItem = this.enchantSettingItem.getItem();
-        ItemMeta enchantMeta = enchantItem.getItemMeta();
-
-        enchantMeta.setDisplayName("\u00A7aSelect included \u00A75Enchantments \u00A7aSettings");
-        enchantMeta.setLore(enchantLore);
-
-        enchantItem.setItemMeta(enchantMeta);
-
-        this.enchantSettingItem.setItem(enchantItem); // Just in case
-
-        // Configure group setting item
-        ItemStack groupItem = this.groupSettingItem.getItem();
-        ItemMeta groupMeta = groupItem.getItemMeta();
-
-        groupMeta.setDisplayName("\u00A7aSelect excluded \u00A73Groups \u00A7aSettings");
-        groupMeta.setLore(groupLore);
-
-        groupItem.setItemMeta(groupMeta);
-
-        this.groupSettingItem.setItem(groupItem); // Just in case
+        GuiItem xpCostItem = GuiGlobalItems.intSettingGuiItem(this.xpCostFactory, Material.EXPERIENCE_BOTTLE);
+        pane.bindItem('2', xpCostItem);
 
 
-        this.pane.bindItem('M', GuiGlobalItems.intSettingGuiItem(this.minBeforeActiveSettingFactory, Material.COMMAND_BLOCK));*/
         update();
     }
 

@@ -22,7 +22,7 @@ public class CustomRecipeConfigGui extends MappedElementListConfigGui<AnvilCusto
     }
 
     private CustomRecipeConfigGui() {
-        super("title");
+        super("Custom Recipe Config");
 
     }
 
@@ -41,8 +41,14 @@ public class CustomRecipeConfigGui extends MappedElementListConfigGui<AnvilCusto
         ItemMeta meta = displaydItem.getItemMeta();
 
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.getName()) + " \u00A7fCustom recipe");
+
+        boolean shouldWork = recipe.validate();
+
         meta.setLore(Arrays.asList(
-                "TODO"
+                "\u00A77Should work:    \u00A7"+(shouldWork ? "aYes" : "cNo"),
+                "\u00A77Exact count:    \u00A7"+(recipe.getExactCount() ? "aYes" : "cNo"),
+                "\u00A77Recipe Xp Cost: \u00A7e"+recipe.getXpCostPerCraft()
+
         ));
 
         displaydItem.setItemMeta(meta);

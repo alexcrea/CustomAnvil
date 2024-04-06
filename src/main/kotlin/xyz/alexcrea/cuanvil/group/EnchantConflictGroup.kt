@@ -8,7 +8,7 @@ import xyz.alexcrea.cuanvil.interfaces.Named
 class EnchantConflictGroup(
     private val name: String,
     private val cantConflict: AbstractMaterialGroup,
-    val minBeforeBlock: Int
+    var minBeforeBlock: Int
 ): Named {
 
     private val enchantments = HashSet<Enchantment>()

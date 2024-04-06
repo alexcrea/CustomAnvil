@@ -24,9 +24,11 @@ import java.util.UUID;
 
 public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui {
 
+    private final String namePrefix;
 
     public ElementListGlobalConfigGui(@NotNull String title) {
         super(6, title, CustomAnvil.instance);
+        this.namePrefix = title;
     }
 
 
@@ -229,7 +231,12 @@ public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui 
         addPane(page);
 
         // set title
-        setTitle("Conflict Config (" + (pageID + 1) + "/" + (pages.size()) + ")");
+        StringBuilder title = new StringBuilder(this.namePrefix);
+        int pagesSize = this.pages.size();
+        if(pagesSize > 1){
+            title.append(" (").append(pageID + 1).append('/').append(pagesSize).append(')');
+        }
+        setTitle(title.toString());
 
         super.show(humanEntity);
 
