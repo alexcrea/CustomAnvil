@@ -29,7 +29,7 @@ public class MainConfigGui extends ChestGui {
     private void init() {
         Pattern pattern = new Pattern(
                 "I00000000",
-                "012304560",
+                "012304567",
                 "Q00000000"
         );
         PatternPane pane = new PatternPane(0, 0, 9, 3, pattern);
@@ -70,7 +70,7 @@ public class MainConfigGui extends ChestGui {
         GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, EnchantCostConfigGui.INSTANCE);
         pane.bindItem('3', enchantCostItem);
 
-        // Enchantment Conflicts
+        // Enchantment Conflicts item
         ItemStack EnchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
         ItemMeta enchantConflictMeta = EnchantConflictItemstack.getItemMeta();
 
@@ -92,6 +92,17 @@ public class MainConfigGui extends ChestGui {
 
         pane.bindItem('5', wip5);
         pane.bindItem('6', wip6);
+
+        // Custom recipe item
+        ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);
+        ItemMeta customRecipeMeta = EnchantConflictItemstack.getItemMeta();
+
+        customRecipeMeta.setDisplayName("\u00A7aCustom recipes");
+        customRecipeMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil custom recipe menu"));
+        customRecipeItemstack.setItemMeta(customRecipeMeta);
+
+        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.INSTANCE);
+        pane.bindItem('7', customRecipeItem);
 
         // quit item
         ItemStack quitItemstack = new ItemStack(Material.BARRIER);

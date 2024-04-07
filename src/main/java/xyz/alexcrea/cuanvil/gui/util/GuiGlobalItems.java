@@ -12,8 +12,10 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.ItemSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
+import java.nio.charset.MalformedInputException;
 import java.util.Collections;
 
 /**
@@ -262,6 +264,48 @@ public class GuiGlobalItems {
     ) {
         String configPath = getConfigNameFromPath(factory.getConfigPath());
         return intSettingGuiItem(factory, itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
+    }
+
+    /**
+     * Create a new item setting GuiItem.
+     * This item will create and open an item setting GUI from the factory.
+     * Item's name will be the factory set title.
+     *
+     * @param factory The setting's GUI factory.
+     * @param name    Name of the item.
+     * @return A formatted GuiItem that will create and open a GUI for the item setting.
+     */
+    public static GuiItem itemSettingGuiItem(
+            @NotNull ItemSettingGui.ItemSettingFactory factory,
+            @NotNull String name
+    ) {
+        ItemStack item = factory.getConfiguredValue();
+        if(item == null || item.getType().isAir()){
+            item = new ItemStack(Material.BARRIER);
+        }else{
+            item = item.clone();
+        }
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("\u00A7a" + name);
+
+        item.setItemMeta(meta);
+
+        return openSettingGuiItem(item, factory);
+    }
+
+    /**
+     * Create a new item setting GuiItem.
+     * This item will create and open an item setting GUI from the factory.
+     * Item's name will be the factory set title.
+     *
+     * @param factory The setting's GUI factory.
+     * @return A formatted GuiItem that will create and open a GUI for the item setting.
+     */
+    public static GuiItem itemSettingGuiItem(
+            @NotNull ItemSettingGui.ItemSettingFactory factory
+    ) {
+        String configPath = getConfigNameFromPath(factory.getConfigPath());
+        return itemSettingGuiItem(factory, CasedStringUtil.detectToUpperSpacedCase(configPath));
     }
 
     /**

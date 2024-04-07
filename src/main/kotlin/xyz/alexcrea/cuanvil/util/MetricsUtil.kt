@@ -13,18 +13,21 @@ object MetricsUtil {
     private const val enchantConflictConfigHash = 1406650190
     private const val itemGroupsConfigHash = 1406650190
     private const val unitRepairItemConfigHash = 536871958
+    private const val customAnvilCraftConfigHash = 0
     private const val baseConfigPieName = "isDefaultBaseConfig"
     private const val enchantLimitsConfigPieName = "isDefaultEnchantLimitsConfig"
     private const val enchantValuesConfigPieName = "isDefaultEnchantValuesConfig"
     private const val enchantConflictConfigPieName = "isDefaultEnchantConflictConfig"
     private const val itemGroupsConfigPieName = "isDefaultItemGroupsConfig"
     private const val unitRepairItemConfigPieName = "isDefaultUnitRepairItemConfig"
+    private const val customAnvilCraftConfigPieName = "isDefaultCustomAnvilCraftConfig"
     private var isDefaultBaseConfig = true
     private var isDefaultEnchantLimitsConfig = true
     private var isDefaultEnchantValuesConfig = true
     private var isDefaultEnchantConflictConfig = true
     private var isDefaultItemGroupsConfig = true
     private var isDefaultUnitRepairItemConfig = true
+    private var isDefaultCustomAnvilCraftConfig = true
 
     /**
      * Get hash of a key, value a pair of a configuration section
@@ -73,6 +76,7 @@ object MetricsUtil {
         val enchantConflictConfig = getConfigurationHash(ConfigHolder.CONFLICT_HOLDER.config)
         val itemGroupConfig = getConfigurationHash(ConfigHolder.ITEM_GROUP_HOLDER.config)
         val unitRepairConfig = getConfigurationHash(ConfigHolder.UNIT_REPAIR_HOLDER.config)
+        val customRecipeConfig = getConfigurationHash(ConfigHolder.CUSTOM_RECIPE_HOLDER.config)
         // Test if default
         isDefaultBaseConfig = baseConfigHash == baseConfig
         isDefaultEnchantLimitsConfig = enchantLimitsConfigHash == limitEnchantConfig
@@ -80,6 +84,7 @@ object MetricsUtil {
         isDefaultEnchantConflictConfig = enchantConflictConfigHash == enchantConflictConfig
         isDefaultItemGroupsConfig = itemGroupsConfigHash == itemGroupConfig
         isDefaultUnitRepairItemConfig = unitRepairItemConfigHash == unitRepairConfig
+        isDefaultCustomAnvilCraftConfig = customAnvilCraftConfigHash == customRecipeConfig
         // If not default and debug flag active, print the hash.
         if (ConfigOptions.debugLog) {
             if (!isDefaultBaseConfig) {
@@ -99,6 +104,9 @@ object MetricsUtil {
             }
             if (!isDefaultUnitRepairItemConfig) {
                 CustomAnvil.log("unitRepairConfig: $unitRepairConfig")
+            }
+            if (!isDefaultCustomAnvilCraftConfig) {
+                CustomAnvil.log("customRecipeConfig: $customRecipeConfig")
             }
         }
 
@@ -140,6 +148,9 @@ object MetricsUtil {
         })
         metric.addCustomChart(Metrics.SimplePie(unitRepairItemConfigPieName) {
             isDefaultUnitRepairItemConfig.toString()
+        })
+        metric.addCustomChart(Metrics.SimplePie(customAnvilCraftConfigPieName) {
+            isDefaultCustomAnvilCraftConfig.toString()
         })
 
     }

@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
+import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.io.File;
@@ -18,12 +19,14 @@ public abstract class ConfigHolder {
     public static ItemGroupConfigHolder ITEM_GROUP_HOLDER;
     public static ConflictConfigHolder CONFLICT_HOLDER;
     public static UnitRepairHolder UNIT_REPAIR_HOLDER;
+    public static CustomAnvilCraftHolder CUSTOM_RECIPE_HOLDER;
 
     public static boolean loadConfig() {
         DEFAULT_CONFIG = new DefaultConfigHolder();
         ITEM_GROUP_HOLDER = new ItemGroupConfigHolder();
         CONFLICT_HOLDER = new ConflictConfigHolder();
         UNIT_REPAIR_HOLDER = new UnitRepairHolder();
+        CUSTOM_RECIPE_HOLDER = new CustomAnvilCraftHolder();
 
         boolean result = reloadAllFromDisk(true);
         if (result) {
@@ -41,6 +44,9 @@ public abstract class ConfigHolder {
         sucess = CONFLICT_HOLDER.reloadFromDisk(hardfail);
         if (!sucess) return false;
         sucess = UNIT_REPAIR_HOLDER.reloadFromDisk(hardfail);
+        if (!sucess) return false;
+        sucess = CUSTOM_RECIPE_HOLDER.reloadFromDisk(hardfail);
+
         return sucess;
     }
 
@@ -83,6 +89,7 @@ public abstract class ConfigHolder {
 
     // Save logic
     public boolean saveToDisk(boolean doBackup) {
+        CustomAnvil.Companion.log("Saving "+getConfigFileName());
         if (doBackup) {
             if (!saveBackup()) {
                 CustomAnvil.instance.getLogger().severe("Could not save backup. see above.");
@@ -104,6 +111,7 @@ public abstract class ConfigHolder {
             return false;
         }
 
+        CustomAnvil.Companion.log(getConfigFileName()+" saved successfully");
         return true;
     }
 
@@ -242,6 +250,7 @@ public abstract class ConfigHolder {
     public static class UnitRepairHolder extends ResourceConfigHolder {
         private final static String ITEM_GROUP_FILE_NAME = "unit_repair_item";
 
+
         private UnitRepairHolder() {
             super(ITEM_GROUP_FILE_NAME);
         }
@@ -250,6 +259,27 @@ public abstract class ConfigHolder {
         public void reload() {
         } // Do nothing
 
+    }
+
+
+    // Class for custom anvil craft
+    public static class CustomAnvilCraftHolder extends ResourceConfigHolder {
+        private final static String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
+        CustomAnvilRecipeManager recipeManager;
+
+        private CustomAnvilCraftHolder() {
+            super(CUSTOM_RECIPE_FILE_NAME);
+        }
+
+        public CustomAnvilRecipeManager getRecipeManager() {
+            return recipeManager;
+        }
+
+        @Override
+        public void reload() {
+            this.recipeManager = new CustomAnvilRecipeManager();
+            this.recipeManager.prepareRecipes(this.configuration);
+        }
     }
 
 

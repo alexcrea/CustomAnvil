@@ -14,7 +14,6 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
-import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
@@ -34,24 +33,22 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements SelectEnchantmentContainer, SelectGroupContainer {
+public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui implements SelectEnchantmentContainer, SelectGroupContainer {
 
     private final EnchantConflictGui parent;
     private final EnchantConflictGroup enchantConflict;
-    private final GuiItem parentItemForThisGui;
     private final PatternPane pane;
-    private boolean shouldWorld = true;
+    private boolean shouldWork = true;
 
     public EnchantConflictSubSettingGui(
             @NotNull EnchantConflictGui parent,
             @NotNull EnchantConflictGroup enchantConflict,
             @NotNull GuiItem parentItemForThisGui) {
-        super(3,
-                "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + " \u00A78Config",
-                CustomAnvil.instance);
+        super(parentItemForThisGui,
+                3,
+                "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + " \u00A78Config");
         this.parent = parent;
         this.enchantConflict = enchantConflict;
-        this.parentItemForThisGui = parentItemForThisGui;
 
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
@@ -126,7 +123,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
             manager.conflictList.remove(this.enchantConflict);
 
             // Remove from parent
-            this.parent.removeConflict(this.enchantConflict);
+            this.parent.removeGeneric(this.enchantConflict);
 
             // Remove self
             cleanUnused();
@@ -143,7 +140,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + "\u00A7c?",
+        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.getName()) + "\u00A7c?",
                 "\u00A77Confirm that you want to delete this conflict.",
                 this, this.parent, deleteSupplier
         );
@@ -151,12 +148,17 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public void updateGuiValues() {
-        this.parent.updateValueForConflict(this.enchantConflict, true);
-        // Parent should call updateLocal
+        // update value from config to conflict
+        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.getName()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
+        this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
+
+        // Parent should call updateLocal with this call
+        this.parent.updateValueForGeneric(this.enchantConflict, true);
     }
 
+    @Override
     public void updateLocal() {
-        if (!this.shouldWorld) return;
+        if (!this.shouldWork) return;
 
         // Prepare enchantment lore
         ArrayList<String> enchantLore = new ArrayList<>();
@@ -231,11 +233,12 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
         update();
     }
 
+    @Override
     public void cleanUnused() {
         for (HumanEntity viewer : getViewers()) {
             this.parent.show(viewer);
         }
-        this.shouldWorld = false;
+        this.shouldWork = false;
 
         // Just in case something is extremely wrong
         GuiItem background = GuiGlobalItems.backgroundItem();
@@ -247,15 +250,11 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public void show(@NotNull HumanEntity humanEntity) {
-        if (this.shouldWorld) {
+        if (this.shouldWork) {
             super.show(humanEntity);
         } else {
             this.parent.show(humanEntity);
         }
-    }
-
-    public GuiItem getParentItemForThisGui() {
-        return parentItemForThisGui;
     }
 
     // Select enchantment container methods
@@ -267,7 +266,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public boolean setSelectedEnchantments(Set<Enchantment> enchantments) {
-        if (!this.shouldWorld) {
+        if (!this.shouldWork) {
             CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.getName() + " enchants but sub config is destroyed");
             return false;
         }
@@ -312,7 +311,7 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
     @Override
     public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
-        if (!this.shouldWorld) {
+        if (!this.shouldWork) {
             CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.getName() + " groups but sub config is destroyed");
             return false;
         }
@@ -347,4 +346,5 @@ public class EnchantConflictSubSettingGui extends ValueUpdatableGui implements S
 
         return Collections.emptySet();
     }
+
 }
