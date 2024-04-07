@@ -43,7 +43,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "01230450D",
+                "01203450D",
                 "B00000000"
         );
         this.pane = new PatternPane(0, 0, 9, 3, pattern);
@@ -85,16 +85,16 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(), 1, 5, 10);
 
 
-        this.leftItemFactory = ItemSettingGui.itemFactory("\u00A78Recipe \u00A7eLeft \u00A78Item", this,
+        this.leftItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Left \u00A78Item", this,
                 this.anvilRecipe.getName()+"."+AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG());
 
-        this.rightItemFactory = ItemSettingGui.itemFactory("\u00A78Recipe \u00A7eLeft \u00A78Item", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+        this.rightItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Right \u00A78Item", this,
+                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG());
 
-        this.resultItemFactory = ItemSettingGui.itemFactory("\u00A78Recipe \u00A7aResult \u00A78Item", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+        this.resultItemFactory = ItemSettingGui.itemFactory("\u00A7aRecipe Result \u00A78Item", this,
+                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
     }
 
@@ -142,12 +142,20 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         if (!this.shouldWork) return;
 
         GuiItem exactCountItem = GuiGlobalItems.boolSettingGuiItem(this.exactCountFactory);
-        pane.bindItem('1', exactCountItem);
+        this.pane.bindItem('1', exactCountItem);
 
         GuiItem xpCostItem = GuiGlobalItems.intSettingGuiItem(this.xpCostFactory, Material.EXPERIENCE_BOTTLE);
-        pane.bindItem('2', xpCostItem);
+        this.pane.bindItem('2', xpCostItem);
 
+        GuiItem leftGuiItem = GuiGlobalItems.itemSettingGuiItem(this.leftItemFactory);
+        this.pane.bindItem('3', leftGuiItem);
 
+        GuiItem rightGuiItem = GuiGlobalItems.itemSettingGuiItem(this.rightItemFactory);
+        this.pane.bindItem('4', rightGuiItem);
+
+        GuiItem resultGuiItem = GuiGlobalItems.itemSettingGuiItem(this.resultItemFactory);
+        this.pane.bindItem('5', resultGuiItem);
+        
         update();
     }
 

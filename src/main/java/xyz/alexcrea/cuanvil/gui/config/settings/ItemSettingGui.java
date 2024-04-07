@@ -71,7 +71,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
             CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
 
-                if(message != null) return;
+                if(message == null) return;
                 show(player);
 
             });
@@ -152,7 +152,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
             if(cursor.getType().isAir()) return;
 
-            now = cursor;
+            this.now = cursor;
 
             updateValueDisplay();
             update();

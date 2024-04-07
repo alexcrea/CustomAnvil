@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -41,6 +42,7 @@ public class CustomRecipeConfigGui extends MappedElementListConfigGui<AnvilCusto
         ItemMeta meta = displaydItem.getItemMeta();
 
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.getName()) + " \u00A7fCustom recipe");
+        meta.addItemFlags(ItemFlag.values());
 
         boolean shouldWork = recipe.validate();
 
