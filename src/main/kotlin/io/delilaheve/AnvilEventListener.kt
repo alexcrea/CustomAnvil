@@ -263,7 +263,8 @@ class AnvilEventListener : Listener {
             // Then we try to find the new values for the anvil
             val newAmount = getCustomRecipeAmount(recipe, leftItem, rightItem)
 
-            if(newAmount <= 0){
+            CustomAnvil.verboseLog("new amount is $newAmount")
+            if(newAmount <= 0 || recipe.exactCount){
                 inventory.setItem(ANVIL_OUTPUT_SLOT, null)
             }else{
                 val resultItem: ItemStack = recipe.resultItem!!.clone()
@@ -481,7 +482,15 @@ class AnvilEventListener : Listener {
         leftItem: ItemStack,
         rightItem: ItemStack?
     ): Int{
-        return if(recipe.exactCount) { 1 }
+        return if(recipe.exactCount) {
+            if(leftItem.amount != recipe.leftItem!!.amount){
+                0
+            }else if(rightItem != null && rightItem.amount != recipe.rightItem!!.amount){
+                0
+            }else{
+                1
+            }
+        }
         else {
             // test amount
             val resultItem = recipe.resultItem!! // we know exist as the recipe was returned to us
