@@ -20,11 +20,12 @@ or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 **Custom Anvil** have the following features:
 - Vanilla like default configuration
 - Custom enchantment level limit
+- Custom anvil recipes
 - Custom enchant restrictions (allow unsafe enchantment only for a group of item or create new restriction)
 - Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds)
 - Custom XP cost for every aspect of the anvil
 - Permissions to bypass level limit or enchantment restriction.
-- Gui to configure the plugin in game (in alpha: can only edit basic config. next versions will focus on this feature)
+- Gui to configure the plugin in game (in alpha: can only edit 5/7 configs. next versions will focus on this feature)
 ---
 ### Permissions:
 ```yml
@@ -52,4 +53,4 @@ Default configuration can be found on following links:
 - [unit_repair_item.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/unit_repair_item.yml)
 ---
 ### Know issue:
-There is non known issue, if you find one please report the issue.
+- On anvil recipe that do not exist in vanilla, trying to rename an item may make the result item disappear. 
