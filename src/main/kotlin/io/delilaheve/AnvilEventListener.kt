@@ -11,7 +11,6 @@ import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
 import org.bukkit.Material
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -62,16 +61,12 @@ class AnvilEventListener : Listener {
 
         // Test custom recipe
         val recipe = getCustomRecipe(first, second)
+        CustomAnvil.verboseLog("custom recipe not null? ${recipe != null}")
         if(recipe != null){
             val amount = getCustomRecipeAmount(recipe, first, second)
 
-            val resultItem: ItemStack
-            if(amount <= 1){
-                resultItem = recipe.resultItem!!
-            }else{
-                resultItem = recipe.resultItem!!.clone()
-                resultItem.amount *= amount
-            }
+            val resultItem: ItemStack = recipe.resultItem!!.clone()
+            resultItem.amount *= amount
 
             event.result = resultItem
             handleAnvilXp(inventory, event, recipe.xpCostPerCraft * amount, true)
@@ -190,10 +185,13 @@ class AnvilEventListener : Listener {
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
 
-        // Test custom craft
+        // Test custom recipe
         val recipe = getCustomRecipe(leftItem, rightItem)
         if(recipe != null){
             event.result = Event.Result.ALLOW
+            onCustomCraft(
+                event, recipe, player,
+                leftItem, rightItem, output, inventory)
             return
         }
 
@@ -225,6 +223,69 @@ class AnvilEventListener : Listener {
 
             return
         }
+    }
+
+    private fun onCustomCraft(event: InventoryClickEvent,
+                              recipe: AnvilCustomRecipe,
+                              player: Player,
+                              leftItem: ItemStack,
+                              rightItem: ItemStack?,
+                              output: ItemStack,
+                              inventory: AnvilInventory) {
+        event.result = Event.Result.DENY
+
+        if(recipe.leftItem == null) return // in case it changed
+
+        val amount = getCustomRecipeAmount(recipe, leftItem, rightItem)
+        val xpCost = amount * recipe.xpCostPerCraft
+
+        if ((player.gameMode != GameMode.CREATIVE) && (player.level < xpCost)) return
+
+        // We give the item manually
+        // But first we check if we should give the item
+        val slotDestination = getActionSlot(event, player)
+        if (slotDestination.type == SlotType.NO_SLOT) return
+
+        // If not creative middle click...
+        if (event.click != ClickType.MIDDLE) {
+            // We remove what should be removed
+            leftItem.amount -= amount * recipe.leftItem!!.amount
+            inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
+
+            if(rightItem != null){
+                if(recipe.rightItem == null) return // in case it changed
+
+                rightItem.amount -= amount * recipe.rightItem!!.amount
+                inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
+            }
+            player.level -= amount
+
+            // Then we try to find the new values for the anvil
+            val newAmount = getCustomRecipeAmount(recipe, leftItem, rightItem)
+
+            if(newAmount <= 0){
+                inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+            }else{
+                val resultItem: ItemStack = recipe.resultItem!!.clone()
+                resultItem.amount *= newAmount
+
+                val newXp = newAmount * newAmount
+
+                inventory.repairCost = newXp
+                event.view.setProperty(REPAIR_COST, newXp)
+
+                inventory.setItem(ANVIL_OUTPUT_SLOT, resultItem)
+            }
+        }
+
+        // Finally, we add the item to the player
+        if (slotDestination.type == SlotType.CURSOR) {
+            player.setItemOnCursor(output)
+        } else {// We assume SlotType == SlotType.INVENTORY
+            player.inventory.setItem(slotDestination.slot, output)
+        }
+
+
     }
 
     private fun onUnitRepairExtract(
@@ -405,6 +466,7 @@ class AnvilEventListener : Listener {
 
         val recipeList = ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.recipeByMat[leftItem.type] ?: return null
 
+        CustomAnvil.verboseLog("Testing " + recipeList.size+" recipe...")
         for (recipe in recipeList) {
             if(recipe.testItem(leftItem, rightItem)){
                 return recipe
@@ -425,7 +487,9 @@ class AnvilEventListener : Listener {
             val resultItem = recipe.resultItem!! // we know exist as the recipe was returned to us
             val maxResultAmount = resultItem.type.maxStackSize/resultItem.amount
             val maxLeftAmount = leftItem.amount/recipe.leftItem!!.amount
-            val maxRightAmount = if(rightItem == null){ 1 } else{ rightItem.amount/recipe.rightItem!!.amount }
+            val maxRightAmount = if(rightItem == null){ maxLeftAmount } else{ rightItem.amount/recipe.rightItem!!.amount }
+
+            CustomAnvil.verboseLog("resultItem: $resultItem, maxResultAmount: $maxResultAmount, maxLeftAmount: $maxLeftAmount, maxRightAmount: $maxRightAmount")
 
             min(min(maxResultAmount, maxLeftAmount), maxRightAmount)
         }

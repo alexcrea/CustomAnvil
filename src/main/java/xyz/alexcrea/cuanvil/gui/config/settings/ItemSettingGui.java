@@ -115,7 +115,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         // Get displayed value for this config.
         ItemStack displayedItem;
         if(this.now != null){
-            displayedItem = this.now;
+            displayedItem = this.now.clone();
         }else{
             displayedItem = new ItemStack(Material.BARRIER);
             ItemMeta valueMeta = displayedItem.getItemMeta();
@@ -161,7 +161,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, now);
+        holder.config.getConfig().set(holder.configPath, this.now);
 
         MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
@@ -172,7 +172,11 @@ public class ItemSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean hadChange() {
-        return now != before;
+        if(now == null) {
+            return before != null;
+        }
+
+        return !now.equals(before);
     }
 
     /**

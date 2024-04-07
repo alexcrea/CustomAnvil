@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.recipe
 
+import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
@@ -105,7 +106,7 @@ class AnvilCustomRecipe(
         )
 
         // Update items
-        this.leftItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        val leftItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
             "$name.$LEFT_ITEM_CONFIG",
             DEFAULT_LEFT_ITEM_CONFIG
         )
@@ -119,27 +120,44 @@ class AnvilCustomRecipe(
             "$name.$RESULT_ITEM_CONFIG",
             DEFAULT_RESULT_ITEM_CONFIG
         )
+
+        // Update material map
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.cleanSetLeftItem(this, leftItem)
+
     }
 
     fun testItem(item1: ItemStack, item2: ItemStack?): Boolean {
+        CustomAnvil.verboseLog("Testing $name $leftItem")
         // We assume this function can be call only if leftItem != null
 
         // Test is valid
         if(!validate()) return false
 
+        val leftSimilar = leftItem!!.isSimilar(item1)
+        CustomAnvil.verboseLog("Validated test !")
+
         // test of left item
-        if(!leftItem!!.isSimilar(item1)) return false // Test similar
+        if(!leftSimilar) return false // Test similar
         if(exactCount){
             if((leftItem!!.amount != item1.amount)) return false // test exact amount
         }else if(item1.amount < leftItem!!.amount) return false // test if it has at least the amount we ask
 
+        CustomAnvil.verboseLog("Left item passed !")
+
         // we don't know if right item can be
         if(rightItem == null){ // null test
             if(item2 != null) return false
-        }else if(!rightItem!!.isSimilar(item2)) return false // test if similar when not null
-        else if(exactCount) {
-            if (rightItem!!.amount != item2!!.amount) return false // test exact amount
-        }else if(item2!!.amount < rightItem!!.amount) return false // test if it has at least the amount we ask
+        }else {
+            val rightSimilar = rightItem!!.isSimilar(item2)
+            CustomAnvil.verboseLog("Right similar: $rightSimilar")
+            if(!rightSimilar) return false // test if similar when not null
+
+            if(exactCount) {
+                if (rightItem!!.amount != item2!!.amount) return false // test exact amount
+            }else if(item2!!.amount < rightItem!!.amount) return false // test if it has at least the amount we ask
+        }
+
+        CustomAnvil.verboseLog("Right item passed !")
 
         return true
     }
