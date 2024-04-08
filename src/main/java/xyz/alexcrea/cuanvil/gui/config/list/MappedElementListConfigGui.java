@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.global;
+package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.CustomAnvil;
@@ -7,9 +7,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.config.settings.subsetting.MappedToListSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.interfaces.Named;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +15,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public abstract class MappedElementListConfigGui< T extends Named, S extends MappedToListSubSettingGui> extends ElementListGlobalConfigGui< T > {
+public abstract class MappedElementListConfigGui< T, S extends ElementMappedToListGui> extends ElementListConfigGui< T > {
 
 
     protected final HashMap<T, S> elementGuiMap;
@@ -72,34 +70,34 @@ public abstract class MappedElementListConfigGui< T extends Named, S extends Map
 
     @Override
     protected void updateGeneric(T generic, ItemStack usedItem) {
-        S gui = this.elementGuiMap.get(generic);
+        S mapElement = this.elementGuiMap.get(generic);
 
         GuiItem guiItem;
-        if (gui == null) {
-            // Create new sub setting gui
+        if (mapElement == null) {
+            // Create new sub setting mapElement
             guiItem = new GuiItem(usedItem, CustomAnvil.instance);
-            gui = newInstanceOfGui(generic, guiItem);
+            mapElement = newInstanceOfGui(generic, guiItem);
 
-            guiItem.setAction(GuiGlobalActions.openGuiAction(gui));
+            guiItem.setAction(GuiGlobalActions.openGuiAction(mapElement.getMappedGui()));
 
-            this.elementGuiMap.put(generic, gui);
+            this.elementGuiMap.put(generic, mapElement);
             addToPage(guiItem);
         } else {
             // Replace item with the updated one
-            guiItem = gui.getParentItemForThisGui();
+            guiItem = mapElement.getParentItemForThisGui();
             guiItem.setItem(usedItem);
         }
-        gui.updateLocal();
+        mapElement.updateLocal();
 
     }
 
     @Override
     protected GuiItem findGuiItemForRemoval(T generic) {
-        S gui = this.elementGuiMap.get(generic);
-        if (gui == null) return null;
+        S mapElement = this.elementGuiMap.get(generic);
+        if (mapElement == null) return null;
 
         this.elementGuiMap.remove(generic);
-        return gui.getParentItemForThisGui();
+        return mapElement.getParentItemForThisGui();
     }
 
     protected Consumer<String> prepareCreateItemConsumer(HumanEntity player){
@@ -125,7 +123,7 @@ public abstract class MappedElementListConfigGui< T extends Named, S extends Map
             // Try to find if it already exists in a for loop
             // Not the most efficient on large number of conflict, but it should not run often.
             for (T generic : getEveryDisplayableInstanceOfGeneric()) {
-                if (generic.getName().equalsIgnoreCase(message)) {
+                if (generic.toString().equalsIgnoreCase(message)) {
                     player.sendMessage("\u00A7cPlease enter a "+genericDisplayedName()+" name that do not already exist...");
                     // wait next message.
                     CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
@@ -138,7 +136,7 @@ public abstract class MappedElementListConfigGui< T extends Named, S extends Map
             updateValueForGeneric(generic, true);
 
             // show the new conflict config to the player
-            this.elementGuiMap.get(generic).show(player);
+            this.elementGuiMap.get(generic).getMappedGui().show(player);
 
             update();
         };

@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.global;
+package xyz.alexcrea.cuanvil.gui.config;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -8,6 +8,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.alexcrea.cuanvil.gui.config.global.*;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 

@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.global;
+package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
@@ -22,11 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui {
+public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
 
     private final String namePrefix;
 
-    public ElementListGlobalConfigGui(@NotNull String title) {
+    public ElementListConfigGui(@NotNull String title) {
         super(6, title, CustomAnvil.instance);
         this.namePrefix = title;
     }

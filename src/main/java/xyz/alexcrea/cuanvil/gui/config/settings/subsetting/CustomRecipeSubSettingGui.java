@@ -37,7 +37,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             @NotNull CustomRecipeConfigGui parent,
             @NotNull AnvilCustomRecipe anvilRecipe,
             @NotNull GuiItem parentItemForThisGui) {
-        super(parentItemForThisGui, 3, "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.getName()) + " \u00A78Config");
+        super(parentItemForThisGui, 3, "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " \u00A78Config");
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
 
@@ -77,24 +77,24 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = BoolSettingsGui.boolFactory("\u00A78Exact count ?", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_EXACT_COUNT_CONFIG());
 
         this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(), 1, 5, 10);
 
 
         this.leftItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Left \u00A78Item", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG());
 
         this.rightItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Right \u00A78Item", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG());
 
         this.resultItemFactory = ItemSettingGui.itemFactory("\u00A7aRecipe Result \u00A78Item", this,
-                this.anvilRecipe.getName()+"."+AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
     }
 
@@ -112,7 +112,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             cleanUnused();
 
             // Update config file storage
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(this.anvilRecipe.getName(), null);
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(this.anvilRecipe.toString(), null);
 
             // Save
             boolean success = true;
@@ -123,7 +123,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.getName()) + "\u00A7c?",
+        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString()) + "\u00A7c?",
                 "\u00A77Confirm that you want to delete this conflict.",
                 this, this.parent, deleteSupplier
         );

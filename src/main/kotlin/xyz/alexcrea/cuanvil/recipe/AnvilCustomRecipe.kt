@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
-import xyz.alexcrea.cuanvil.interfaces.Named
 
 class AnvilCustomRecipe(
     private val name: String,
@@ -18,7 +17,7 @@ class AnvilCustomRecipe(
     var leftItem: ItemStack?,
     var rightItem: ItemStack?,
     var resultItem: ItemStack?,
-): Named {
+) {
 
     // Static config name
     companion object {
@@ -162,7 +161,7 @@ class AnvilCustomRecipe(
         return true
     }
 
-    override fun getName(): String {
+    override fun toString(): String {
         return name
     }
 
