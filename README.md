@@ -53,4 +53,4 @@ Default configuration can be found on following links:
 - [unit_repair_item.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/unit_repair_item.yml)
 ---
 ### Know issue:
-- On anvil recipe that do not exist in vanilla, trying to rename an item may make the result item disappear. 
+There is non known issue, if you find one please report the issue.

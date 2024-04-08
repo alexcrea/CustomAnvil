@@ -276,6 +276,8 @@ class AnvilEventListener : Listener {
                 event.view.setProperty(REPAIR_COST, newXp)
 
                 inventory.setItem(ANVIL_OUTPUT_SLOT, resultItem)
+
+                player.updateInventory()
             }
         }
 
@@ -536,6 +538,11 @@ class AnvilEventListener : Listener {
                 inventory.repairCost = finalAnvilCost
 
                 event.view.setProperty(REPAIR_COST, finalAnvilCost)
+
+                val player = event.view.player
+                if(player is Player){
+                    player.updateInventory()
+                }
             })
     }
 
