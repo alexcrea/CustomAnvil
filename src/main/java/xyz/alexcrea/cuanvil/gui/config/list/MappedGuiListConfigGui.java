@@ -12,7 +12,6 @@ import java.util.function.Consumer;
 
 public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGui> extends MappedElementListConfigGui< T, S > {
 
-
     public MappedGuiListConfigGui(@NotNull String title) {
         super(title);
 
