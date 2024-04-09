@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.settings.subsetting;
+package xyz.alexcrea.cuanvil.gui.config.list.elements;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
@@ -109,7 +109,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             this.parent.removeGeneric(this.anvilRecipe);
 
             // Remove self
-            cleanUnused();
+            cleanAndBeUnusable();
 
             // Update config file storage
             ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(this.anvilRecipe.toString(), null);
@@ -159,7 +159,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         update();
     }
 
-    public void cleanUnused() {
+    public void cleanAndBeUnusable() {
         for (HumanEntity viewer : getViewers()) {
             this.parent.show(viewer);
         }

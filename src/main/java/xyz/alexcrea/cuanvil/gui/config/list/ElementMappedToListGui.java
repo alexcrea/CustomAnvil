@@ -9,7 +9,7 @@ public interface ElementMappedToListGui {
 
     void updateLocal();
 
-    void cleanUnused();
+    void cleanAndBeUnusable();
 
     Gui getMappedGui();
 

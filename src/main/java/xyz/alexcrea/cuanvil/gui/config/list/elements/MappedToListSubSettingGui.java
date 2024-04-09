@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.settings.subsetting;
+package xyz.alexcrea.cuanvil.gui.config.list.elements;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;

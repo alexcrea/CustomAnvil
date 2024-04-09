@@ -6,15 +6,15 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.subsetting.CustomRecipeSubSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CustomRecipeConfigGui extends MappedElementListConfigGui<AnvilCustomRecipe, CustomRecipeSubSettingGui> {
+public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe, CustomRecipeSubSettingGui> {
 
 
     public final static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();

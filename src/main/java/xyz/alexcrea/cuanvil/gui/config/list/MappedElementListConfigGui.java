@@ -11,12 +11,9 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public abstract class MappedElementListConfigGui< T, S extends ElementMappedToListGui> extends ElementListConfigGui< T > {
-
+public abstract class MappedElementListConfigGui< T, S > extends ElementListConfigGui< T > {
 
     protected final HashMap<T, S> elementGuiMap;
     public MappedElementListConfigGui(@NotNull String title) {
@@ -61,94 +58,47 @@ public abstract class MappedElementListConfigGui< T, S extends ElementMappedToLi
     }
 
     @Override
-    public void reloadValues() {
-        this.elementGuiMap.forEach((conflict, gui) -> gui.cleanUnused());
-        this.elementGuiMap.clear();
-
-        super.reloadValues();
-    }
-
-    @Override
     protected void updateGeneric(T generic, ItemStack usedItem) {
-        S mapElement = this.elementGuiMap.get(generic);
+        S element = this.elementGuiMap.get(generic);
 
         GuiItem guiItem;
-        if (mapElement == null) {
-            // Create new sub setting mapElement
+        if (element == null) {
+            // Create new sub setting element
             guiItem = new GuiItem(usedItem, CustomAnvil.instance);
-            mapElement = newInstanceOfGui(generic, guiItem);
 
-            guiItem.setAction(GuiGlobalActions.openGuiAction(mapElement.getMappedGui()));
+            element = newElementRequested(generic, guiItem);
 
-            this.elementGuiMap.put(generic, mapElement);
+            this.elementGuiMap.put(generic, element);
+
             addToPage(guiItem);
         } else {
             // Replace item with the updated one
-            guiItem = mapElement.getParentItemForThisGui();
+            guiItem = findItemFromElement(generic, element);
             guiItem.setItem(usedItem);
         }
-        mapElement.updateLocal();
+        updateElement(generic, element);
 
     }
+
+    protected abstract void updateElement(T generic, S element);
+
+    protected abstract S newElementRequested(T generic, GuiItem newItem);
+
+    protected abstract GuiItem findItemFromElement(T generic, S element);
 
     @Override
     protected GuiItem findGuiItemForRemoval(T generic) {
-        S mapElement = this.elementGuiMap.get(generic);
-        if (mapElement == null) return null;
+        S element = this.elementGuiMap.get(generic);
+        if (element == null) return null;
 
         this.elementGuiMap.remove(generic);
-        return mapElement.getParentItemForThisGui();
+        return findGuiItemForRemoval(generic, element);
     }
 
-    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player){
-        AtomicReference<Consumer<String>> selfRef = new AtomicReference<>();
-        Consumer<String> selfCallback = (message) -> {
-            if (message == null) return;
+    protected abstract GuiItem findGuiItemForRemoval(T generic, S element);
 
-            // check permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
-                return;
-            }
-
-            message = message.toLowerCase(Locale.ROOT);
-            if ("cancel".equalsIgnoreCase(message)) {
-                player.sendMessage(genericDisplayedName()+" creation cancelled...");
-                show(player);
-                return;
-            }
-
-            message = message.replace(' ', '_');
-
-            // Try to find if it already exists in a for loop
-            // Not the most efficient on large number of conflict, but it should not run often.
-            for (T generic : getEveryDisplayableInstanceOfGeneric()) {
-                if (generic.toString().equalsIgnoreCase(message)) {
-                    player.sendMessage("\u00A7cPlease enter a "+genericDisplayedName()+" name that do not already exist...");
-                    // wait next message.
-                    CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
-                    return;
-                }
-            }
-
-            T generic = createAndSaveNewEmptyGeneric(message);
-
-            updateValueForGeneric(generic, true);
-
-            // show the new conflict config to the player
-            this.elementGuiMap.get(generic).getMappedGui().show(player);
-
-            update();
-        };
-
-        selfRef.set(selfCallback);
-        return selfCallback;
-    }
-
-    protected abstract S newInstanceOfGui(T generic, GuiItem item);
+    protected abstract Consumer<String> prepareCreateItemConsumer(HumanEntity player);
 
     protected abstract String genericDisplayedName();
-
-    protected abstract T createAndSaveNewEmptyGeneric(String name);
 
 }

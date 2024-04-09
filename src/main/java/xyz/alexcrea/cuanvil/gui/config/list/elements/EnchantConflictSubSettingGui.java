@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.settings.subsetting;
+package xyz.alexcrea.cuanvil.gui.config.list.elements;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
@@ -126,7 +126,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             this.parent.removeGeneric(this.enchantConflict);
 
             // Remove self
-            cleanUnused();
+            cleanAndBeUnusable();
 
             // Update config file storage
             ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.toString(), null);
@@ -234,7 +234,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     }
 
     @Override
-    public void cleanUnused() {
+    public void cleanAndBeUnusable() {
         for (HumanEntity viewer : getViewers()) {
             this.parent.show(viewer);
         }
