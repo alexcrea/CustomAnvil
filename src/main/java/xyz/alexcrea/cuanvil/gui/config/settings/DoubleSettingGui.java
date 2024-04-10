@@ -29,6 +29,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     protected final DoubleSettingFactory holder;
     protected final boolean asPercentage;
+    protected final boolean nullOnZero;
     @NotNull
     protected final BigDecimal before;
     @NotNull
@@ -38,14 +39,18 @@ public class DoubleSettingGui extends AbstractSettingGui {
     /**
      * Create a double setting config gui.
      *
-     * @param holder Configuration factory of this setting.
-     * @param now    The defined value of this setting.
+     * @param holder       Configuration factory of this setting.
+     * @param now          The defined value of this setting.
+     * @param asPercentage If the value represent a %
+     * @param nullOnZero   If the value should be set as null on zero
      */
-    protected DoubleSettingGui(DoubleSettingFactory holder, @NotNull BigDecimal now, boolean asPercentage) {
+    protected DoubleSettingGui(DoubleSettingFactory holder, @NotNull BigDecimal now,
+                               boolean asPercentage, boolean nullOnZero) {
         super(3, holder.getTitle(), holder.parent);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
         this.asPercentage = asPercentage;
+        this.nullOnZero = nullOnZero;
 
         this.before = now;
         this.now = now;
@@ -127,7 +132,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if (!now.equals(holder.defaultVal)) {
+        if (now.compareTo(holder.defaultVal) != 0) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -217,7 +222,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         StringBuilder stepName = new StringBuilder("\u00A7");
         List<String> stepLore;
         Consumer<InventoryClickEvent> clickEvent;
-        if (Objects.equals(stepValue, step)) {
+        if (stepValue.compareTo(step) == 0) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
             stepLore = Collections.singletonList("\u00A77Value is changing by " + displayValue(stepValue));
@@ -257,7 +262,11 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, now.doubleValue());
+        if(this.nullOnZero && (this.now.compareTo(BigDecimal.ZERO) == 0)){
+            this.holder.config.getConfig().set(this.holder.configPath, null);
+        }else{
+            this.holder.config.getConfig().set(this.holder.configPath, now.doubleValue());
+        }
 
         MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
@@ -268,7 +277,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean hadChange() {
-        return !now.equals(before);
+        return now.compareTo(before) != 0;
     }
 
     private static final BigDecimal PERCENTAGE_OFFSET = BigDecimal.valueOf(100);
@@ -292,6 +301,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
      * @param config       Configuration holder of this setting.
      * @param scale        The scale of the decimal.
      * @param asPercentage If we should display the value as a %.
+     * @param nullOnZero   Set the value as null (deleting it) when equal to 0
      * @param min          Minimum value of this setting.
      * @param max          Maximum value of this setting.
      * @param defaultVal   Default value if not found on the config.
@@ -303,12 +313,12 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     public static DoubleSettingFactory doubleFactory(@NotNull String title, ValueUpdatableGui parent,
                                                      String configPath, ConfigHolder config,
-                                                     int scale, boolean asPercentage,
+                                                     int scale, boolean asPercentage, boolean nullOnZero,
                                                      double min, double max, double defaultVal, double... steps) {
         return new DoubleSettingFactory(
                 title, parent,
                 configPath, config,
-                scale, asPercentage,
+                scale, asPercentage, nullOnZero,
                 min, max, defaultVal, steps);
     }
 
@@ -322,6 +332,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
         int scale;
         boolean asPercentage;
+        boolean nullOnZero;
         BigDecimal min;
         BigDecimal max;
         BigDecimal defaultVal;
@@ -336,6 +347,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
          * @param config       Configuration holder of this setting.
          * @param scale        The scale of the decimal.
          * @param asPercentage If we should display the value as a %.
+         * @param nullOnZero   Set the value as null (deleting it) when equal to 0
          * @param min          Minimum value of this setting.
          * @param max          Maximum value of this setting.
          * @param defaultVal   Default value if not found on the config.
@@ -347,13 +359,14 @@ public class DoubleSettingGui extends AbstractSettingGui {
         protected DoubleSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
-                int scale, boolean asPercentage,
+                int scale, boolean asPercentage, boolean nullOnZero,
                 double min, double max, double defaultVal, double... steps) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
             this.scale = scale;
             this.asPercentage = asPercentage;
+            this.nullOnZero = nullOnZero;
             this.min = BigDecimal.valueOf(min).setScale(scale, RoundingMode.HALF_UP);
             this.max = BigDecimal.valueOf(max).setScale(scale, RoundingMode.HALF_UP);
             this.defaultVal = BigDecimal.valueOf(defaultVal).setScale(scale, RoundingMode.HALF_UP);
@@ -388,7 +401,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
             // Get value or default
             BigDecimal now = getConfiguredValue();
             // create new gui
-            return new DoubleSettingGui(this, now, this.asPercentage);
+            return new DoubleSettingGui(this, now, this.asPercentage, this.nullOnZero);
         }
 
 
