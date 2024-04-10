@@ -28,7 +28,7 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
         ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
 
-        createMeta.setDisplayName("\u00A7aCreate new " + genericDisplayedName());
+        createMeta.setDisplayName(createItemName());
         createMeta.setLore(getCreateItemLore());
 
         createItem.setItemMeta(createMeta);
@@ -41,7 +41,7 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
         if(factory == null){
             // Create new item & factory
             factory = createFactory(generic);
-            GuiItem newItem = itemFromFactory(factory);
+            GuiItem newItem = itemFromFactory(generic, factory);
 
             addToPage(newItem);
             this.guiItemMap.put(generic, newItem);
@@ -50,7 +50,7 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
             // Update old item
             GuiItem oldItem = this.guiItemMap.get(generic);
 
-            GuiItem newItem = itemFromFactory(factory);
+            GuiItem newItem = itemFromFactory(generic, factory);
             updateGuiItem(oldItem, newItem);
         }
 
@@ -86,10 +86,10 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
 
     protected abstract List<String> getCreateItemLore();
     protected abstract Consumer<InventoryClickEvent> getCreateClickConsumer();
-    protected abstract String genericDisplayedName();
+    protected abstract String createItemName();
 
     protected abstract S createFactory(T generic);
-    protected abstract GuiItem itemFromFactory(S factory);
+    protected abstract GuiItem itemFromFactory(T generic, S factory);
 
 
 }

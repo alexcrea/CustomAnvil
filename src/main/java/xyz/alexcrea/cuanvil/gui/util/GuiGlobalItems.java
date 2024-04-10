@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,6 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.ItemSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.nio.charset.MalformedInputException;
 import java.util.Collections;
 
 /**
@@ -331,6 +331,7 @@ public class GuiGlobalItems {
 
         itemMeta.setDisplayName(itemName.toString());
         itemMeta.setLore(Collections.singletonList(SETTING_ITEM_LORE_PREFIX + value));
+        itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);
         // Create GuiItem
