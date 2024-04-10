@@ -319,7 +319,7 @@ public class GuiGlobalItems {
      *                 Will not update automatically, if the setting's value change, the item need to be created again.
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
-    private static GuiItem createGuiItemFromProperties(
+    public static GuiItem createGuiItemFromProperties(
             @NotNull AbstractSettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
             @NotNull StringBuilder itemName,
