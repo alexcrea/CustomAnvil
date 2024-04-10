@@ -1,9 +1,7 @@
-package xyz.alexcrea.cuanvil.gui.config;
+package xyz.alexcrea.cuanvil.gui.config.ask;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
-import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
@@ -12,50 +10,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-public class ConfirmActionGui extends ChestGui {
-
-    private static final ItemStack CANCEL_ITEM;
-    private static final ItemStack CONFIRM_ITEM;
-
-    static {
-        CANCEL_ITEM = new ItemStack(Material.RED_TERRACOTTA);
-        ItemMeta meta = CANCEL_ITEM.getItemMeta();
-        meta.setDisplayName("\u00A7cCancel");
-        meta.setLore(Collections.singletonList("\u00A77Cancel current action and return to previous menu."));
-        CANCEL_ITEM.setItemMeta(meta);
-
-        CONFIRM_ITEM = new ItemStack(Material.GREEN_TERRACOTTA);
-        meta = CONFIRM_ITEM.getItemMeta();
-        meta.setDisplayName("\u00A7aConfirm");
-        meta.setLore(Arrays.asList("\u00A77Confirm current action.",
-                "\u00A74Cation: This action can't be canceled."));
-        CONFIRM_ITEM.setItemMeta(meta);
-    }
+public class ConfirmActionGui extends AbstractAskGui {
 
     public ConfirmActionGui(@NotNull String title, String actionDescription,
                             Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm) {
-        super(3, title, CustomAnvil.instance);
+        super(3, title, backOnCancel);
 
-        Pattern pattern = new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "00B0I0S00",
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE
-        );
-        PatternPane pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
-        addPane(pane);
-
-        pane.bindItem('0', GuiGlobalItems.backgroundItem());
-
-        pane.bindItem('B', new GuiItem(CANCEL_ITEM, GuiGlobalActions.openGuiAction(backOnCancel), CustomAnvil.instance));
-        pane.bindItem('S', new GuiItem(CONFIRM_ITEM, event -> {
+        // Save item
+        this.pane.bindItem('S', new GuiItem(GuiSharedConstant.CONFIRM_ITEM, event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
 
@@ -80,6 +48,7 @@ public class ConfirmActionGui extends ChestGui {
 
         }, CustomAnvil.instance));
 
+        // Info item
         ItemStack infoItem = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItem.getItemMeta();
 
@@ -89,6 +58,15 @@ public class ConfirmActionGui extends ChestGui {
         infoItem.setItemMeta(infoMeta);
 
         pane.bindItem('I', new GuiItem(infoItem, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
+    }
+
+    @Override
+    protected Pattern getGuiPattern() {
+        return new Pattern(
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                "00B0I0S00",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE
+        );
     }
 
 }

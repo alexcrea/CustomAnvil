@@ -6,9 +6,12 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -49,5 +52,24 @@ public class GuiSharedConstant {
         BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
 
     }
+
+    public static final ItemStack CANCEL_ITEM;
+    public static final ItemStack CONFIRM_ITEM;
+
+    static {
+        CANCEL_ITEM = new ItemStack(Material.RED_TERRACOTTA);
+        ItemMeta meta = CANCEL_ITEM.getItemMeta();
+        meta.setDisplayName("\u00A7cCancel");
+        meta.setLore(Collections.singletonList("\u00A77Cancel current action and return to previous menu."));
+        CANCEL_ITEM.setItemMeta(meta);
+
+        CONFIRM_ITEM = new ItemStack(Material.GREEN_TERRACOTTA);
+        meta = CONFIRM_ITEM.getItemMeta();
+        meta.setDisplayName("\u00A7aConfirm");
+        meta.setLore(Arrays.asList("\u00A77Confirm current action.",
+                "\u00A74Cation: This action can't be canceled."));
+        CONFIRM_ITEM.setItemMeta(meta);
+    }
+
 
 }
