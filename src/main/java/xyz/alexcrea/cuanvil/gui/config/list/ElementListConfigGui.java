@@ -27,18 +27,12 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
 
     private final String namePrefix;
 
+    protected PatternPane backgroundPane;
+
     public ElementListConfigGui(@NotNull String title) {
         super(6, title, CustomAnvil.instance);
         this.namePrefix = title;
-    }
 
-
-    protected OutlinePane firstPage;
-    protected ArrayList<OutlinePane> pages;
-    protected HashMap<UUID, Integer> pageMap;
-    protected PatternPane backgroundPane;
-
-    public void init() {
         // Back item panel
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
@@ -49,9 +43,16 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
                 "B11L1R11C"
         );
         this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
-
         GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.INSTANCE);
 
+    }
+
+
+    protected OutlinePane firstPage;
+    protected ArrayList<OutlinePane> pages;
+    protected HashMap<UUID, Integer> pageMap;
+
+    public void init() { // Why I'm using an init function ?
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
         this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
         addPane(this.backgroundPane);

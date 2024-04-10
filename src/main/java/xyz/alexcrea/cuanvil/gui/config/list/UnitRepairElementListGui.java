@@ -9,14 +9,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, DoubleSettingGui.DoubleSettingFactory> implements ElementMappedToListGui {
@@ -28,12 +28,15 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     private final Material material;
     private final String materialName;
 
-    public UnitRepairElementListGui(@NotNull Material material, GuiItem parentItem) {
+    public UnitRepairElementListGui(@NotNull Material material,
+                                    @NotNull Gui parentGui,
+                                    @NotNull GuiItem parentItem) {
         super("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()) + " \u00A7rUnit repair config");
         this.parentItem = parentItem;
         this.material = material;
         this.materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
 
+        GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
     }
 
     // SettingGuiListConfigGui methods
