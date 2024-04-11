@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.global;
+package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
@@ -22,22 +23,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui {
+public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
 
     private final String namePrefix;
 
-    public ElementListGlobalConfigGui(@NotNull String title) {
-        super(6, title, CustomAnvil.instance);
-        this.namePrefix = title;
-    }
-
-
-    protected OutlinePane firstPage;
-    protected ArrayList<OutlinePane> pages;
-    protected HashMap<UUID, Integer> pageMap;
     protected PatternPane backgroundPane;
 
-    public void init() {
+    public ElementListConfigGui(@NotNull String title) {
+        super(6, title, CustomAnvil.instance);
+        this.namePrefix = title;
+
         // Back item panel
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
@@ -48,9 +43,16 @@ public abstract class ElementListGlobalConfigGui< T > extends ValueUpdatableGui 
                 "B11L1R11C"
         );
         this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
-
         GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.INSTANCE);
 
+    }
+
+
+    protected OutlinePane firstPage;
+    protected ArrayList<OutlinePane> pages;
+    protected HashMap<UUID, Integer> pageMap;
+
+    public void init() { // Why I'm using an init function ?
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
         this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
         addPane(this.backgroundPane);

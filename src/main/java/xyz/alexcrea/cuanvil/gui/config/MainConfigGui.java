@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.global;
+package xyz.alexcrea.cuanvil.gui.config;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -8,6 +8,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.alexcrea.cuanvil.gui.config.global.*;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
@@ -87,11 +88,20 @@ public class MainConfigGui extends ChestGui {
         wipMeta.setDisplayName("\u00A7cWIP");
         wipItemstack.setItemMeta(wipMeta);
 
-        GuiItem wip5 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
-        GuiItem wip6 = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        GuiItem wip = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        pane.bindItem('5', wip5);
-        pane.bindItem('6', wip6);
+        pane.bindItem('5', wip);
+
+        // Unit repair item
+        ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);
+        ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
+
+        unitRepairMeta.setDisplayName("\u00A7aUnit Repair");
+        unitRepairMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil custom recipe menu"));
+        unirRepairItemstack.setItemMeta(unitRepairMeta);
+
+        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.INSTANCE);
+        pane.bindItem('6', unitRepairItem);
 
         // Custom recipe item
         ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);

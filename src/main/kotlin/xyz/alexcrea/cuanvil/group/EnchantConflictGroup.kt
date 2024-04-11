@@ -3,13 +3,12 @@ package xyz.alexcrea.cuanvil.group
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
-import xyz.alexcrea.cuanvil.interfaces.Named
 
 class EnchantConflictGroup(
     private val name: String,
     private val cantConflict: AbstractMaterialGroup,
     var minBeforeBlock: Int
-): Named {
+) {
 
     private val enchantments = HashSet<Enchantment>()
 
@@ -63,7 +62,7 @@ class EnchantConflictGroup(
         return Material.ENCHANTED_BOOK
     }
 
-    override fun getName(): String {
+    override fun toString(): String {
         return name
     }
 

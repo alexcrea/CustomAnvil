@@ -5,6 +5,8 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +17,6 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.ItemSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.nio.charset.MalformedInputException;
 import java.util.Collections;
 
 /**
@@ -318,7 +319,7 @@ public class GuiGlobalItems {
      *                 Will not update automatically, if the setting's value change, the item need to be created again.
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
-    private static GuiItem createGuiItemFromProperties(
+    public static GuiItem createGuiItemFromProperties(
             @NotNull AbstractSettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
             @NotNull StringBuilder itemName,
@@ -330,6 +331,7 @@ public class GuiGlobalItems {
 
         itemMeta.setDisplayName(itemName.toString());
         itemMeta.setLore(Collections.singletonList(SETTING_ITEM_LORE_PREFIX + value));
+        itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);
         // Create GuiItem
@@ -348,6 +350,31 @@ public class GuiGlobalItems {
         int indexOfDot = path.indexOf(".");
         // when indexOfDot == -1 (not fond), it is implied that indexOfDot+1 = 0. substring will keep the full path as expected
         return path.substring(indexOfDot + 1);
+    }
+
+    public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack){
+        ItemStack item = new ItemStack(itemMaterial);
+        ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName("\u00A7eTemporary close this menu");
+        meta.setLore(Collections.singletonList("\u00A77Allow you to chose other item then return here."));
+        item.setItemMeta(meta);
+
+        return new GuiItem(item, event -> {
+            event.setCancelled(true);
+
+            HumanEntity player = event.getWhoClicked();
+
+            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
+
+                if(message == null) return;
+                openBack.show(player);
+
+            });
+
+            player.sendMessage("\u00A7eWrite something in chat to return to the item config menu.");
+            player.closeInventory();
+        }, CustomAnvil.instance);
     }
 
 }

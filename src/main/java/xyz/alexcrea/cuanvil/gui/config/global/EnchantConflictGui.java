@@ -7,14 +7,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
-import xyz.alexcrea.cuanvil.gui.config.settings.subsetting.EnchantConflictSubSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.elements.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class EnchantConflictGui extends MappedElementListConfigGui<EnchantConflictGroup, EnchantConflictSubSettingGui> {
+public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup, EnchantConflictSubSettingGui> {
 
     public final static EnchantConflictGui INSTANCE = new EnchantConflictGui();
 
@@ -57,7 +58,7 @@ public class EnchantConflictGui extends MappedElementListConfigGui<EnchantConfli
 
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.getName()) + " \u00A7fConflict");
+        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " \u00A7fConflict");
         meta.setLore(Arrays.asList(
                 "\u00A77Enchantment count:      \u00A7e" + conflict.getEnchants().size(),
                 "\u00A77Group count:            \u00A7e" + conflict.getCantConflictGroup().getGroups().size(),

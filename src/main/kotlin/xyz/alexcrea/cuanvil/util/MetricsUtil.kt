@@ -127,7 +127,10 @@ object MetricsUtil {
             isDefaultItemGroupsConfig = false
         } else if (ConfigHolder.UNIT_REPAIR_HOLDER.equals(holder)) {
             isDefaultUnitRepairItemConfig = false
+        } else if (ConfigHolder.CUSTOM_RECIPE_HOLDER.equals(holder)) {
+            isDefaultCustomAnvilCraftConfig = false
         }
+
     }
 
     fun addCustomMetric(metric: Metrics) {

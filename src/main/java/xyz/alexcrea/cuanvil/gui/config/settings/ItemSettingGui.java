@@ -58,29 +58,8 @@ public class ItemSettingGui extends AbstractSettingGui {
     public void prepareStaticItems(){
         prepareReturnToDefault();
 
-        ItemStack item = new ItemStack(Material.YELLOW_TERRACOTTA);
-        ItemMeta meta = item.getItemMeta();
-
-        meta.setDisplayName("\u00A7eTemporary close this menu");
-        meta.setLore(Collections.singletonList("\u00A77Allow you to chose other item then return here."));
-        item.setItemMeta(meta);
-        GuiItem guiItem = new GuiItem(item, event -> {
-            event.setCancelled(true);
-
-            HumanEntity player = event.getWhoClicked();
-
-            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
-
-                if(message == null) return;
-                show(player);
-
-            });
-
-            player.sendMessage("\u00A7eWrite something in chat to return to the item config menu.");
-            player.closeInventory();
-        }, CustomAnvil.instance);
-
-        getPane().bindItem('s', guiItem);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_TERRACOTTA, this);
+        getPane().bindItem('s', temporaryLeave);
     }
 
 

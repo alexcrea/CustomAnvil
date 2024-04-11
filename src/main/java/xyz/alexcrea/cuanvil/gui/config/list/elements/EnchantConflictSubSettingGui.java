@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.gui.config.settings.subsetting;
+package xyz.alexcrea.cuanvil.gui.config.list.elements;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
@@ -14,9 +14,9 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
-import xyz.alexcrea.cuanvil.gui.config.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
+import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
@@ -46,7 +46,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             @NotNull GuiItem parentItemForThisGui) {
         super(parentItemForThisGui,
                 3,
-                "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + " \u00A78Config");
+                "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + " \u00A78Config");
         this.parent = parent;
         this.enchantConflict = enchantConflict;
 
@@ -85,7 +85,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), (event) -> {
             event.setCancelled(true);
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
-                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.getName()) + " \u00A75Enchantments",
+                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + " \u00A75Enchantments",
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
@@ -93,14 +93,14 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), (event) -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
-                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.getName()) + " \u00A73Groups",
+                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + " \u00A73Groups",
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
         this.minBeforeActiveSettingFactory = IntSettingsGui.intFactory(
                 "\u00A78Minimum enchantment count",
-                this, this.enchantConflict.getName() + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
+                this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
                 0, 255, 0, 1
         );
 
@@ -126,10 +126,10 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             this.parent.removeGeneric(this.enchantConflict);
 
             // Remove self
-            cleanUnused();
+            cleanAndBeUnusable();
 
             // Update config file storage
-            ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.getName(), null);
+            ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.toString(), null);
 
             // Save
             boolean success = true;
@@ -140,7 +140,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.getName()) + "\u00A7c?",
+        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + "\u00A7c?",
                 "\u00A77Confirm that you want to delete this conflict.",
                 this, this.parent, deleteSupplier
         );
@@ -149,7 +149,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     @Override
     public void updateGuiValues() {
         // update value from config to conflict
-        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.getName()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
+        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.toString()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
         this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
 
         // Parent should call updateLocal with this call
@@ -234,7 +234,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     }
 
     @Override
-    public void cleanUnused() {
+    public void cleanAndBeUnusable() {
         for (HumanEntity viewer : getViewers()) {
             this.parent.show(viewer);
         }
@@ -267,7 +267,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     @Override
     public boolean setSelectedEnchantments(Set<Enchantment> enchantments) {
         if (!this.shouldWork) {
-            CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.getName() + " enchants but sub config is destroyed");
+            CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict + " enchants but sub config is destroyed");
             return false;
         }
 
@@ -280,12 +280,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         for (Enchantment enchantment : enchantments) {
             enchantKeys[index++] = enchantment.getKey().getKey();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict.getName() + ".enchantments", enchantKeys);
+        ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict + ".enchantments", enchantKeys);
 
         try {
             updateGuiValues();
         } catch (Exception e) {
-            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating enchants for " + this.enchantConflict.getName(), e);
+            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating enchants for " + this.enchantConflict, e);
         }
 
 
@@ -312,7 +312,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     @Override
     public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
         if (!this.shouldWork) {
-            CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.getName() + " groups but sub config is destroyed");
+            CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.toString() + " groups but sub config is destroyed");
             return false;
         }
 
@@ -325,12 +325,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         for (AbstractMaterialGroup group : groups) {
             groupsNames[index++] = group.getName();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.getName() + ".notAffectedGroups", groupsNames);
+        ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict + ".notAffectedGroups", groupsNames);
 
         try {
             updateGuiValues();
         } catch (Exception e) {
-            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for " + this.enchantConflict.getName(), e);
+            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for " + this.enchantConflict, e);
         }
 
         // Save file configuration to disk
