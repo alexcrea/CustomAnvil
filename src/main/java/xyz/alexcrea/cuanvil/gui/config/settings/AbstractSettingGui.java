@@ -55,7 +55,7 @@ public abstract class AbstractSettingGui extends ChestGui {
      *
      * @param parent Parent gui to go back when completed.
      */
-    private void initBase(ValueUpdatableGui parent) {
+    protected void initBase(ValueUpdatableGui parent) {
         Pattern pattern = getGuiPattern();
         pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
         addPane(pane);

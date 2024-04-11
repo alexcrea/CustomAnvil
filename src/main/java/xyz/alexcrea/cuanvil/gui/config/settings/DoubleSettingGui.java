@@ -20,9 +20,9 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class DoubleSettingGui extends AbstractSettingGui {
@@ -61,6 +61,43 @@ public class DoubleSettingGui extends AbstractSettingGui {
         updateValueDisplay();
     }
 
+    private static final ItemStack DELETE_ITEM_STACK = new ItemStack(Material.RED_TERRACOTTA);
+    static {
+        ItemMeta meta = DELETE_ITEM_STACK.getItemMeta();
+
+        meta.setDisplayName("\u00A7cDisable item being repaired ?");
+        meta.setLore(Arrays.asList("\u00A77Confirm disabling unit repair for this item..",
+                "\u00A74Cation: This action can't be canceled."));
+
+        DELETE_ITEM_STACK.setItemMeta(meta);
+    }
+
+    private GuiItem askDelete;
+
+    @Override
+    protected void initBase(ValueUpdatableGui parent) {
+        super.initBase(parent);
+
+        this.askDelete = new GuiItem(DELETE_ITEM_STACK,
+                GuiGlobalActions.saveSettingAction(this, parent),
+                CustomAnvil.instance);
+    }
+
+    @Override
+    public void update() {
+        boolean shouldDelete = isNull() && hadChange();
+
+        GuiItem tempSaveItem = this.saveItem;
+        if(shouldDelete){
+            this.saveItem = this.askDelete;
+        }
+
+        super.update();
+
+        if(shouldDelete){
+            this.saveItem = tempSaveItem;
+        }
+    }
 
     @Override
     public Pattern getGuiPattern() {
@@ -81,7 +118,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is: " + displayValue(holder.defaultVal)));
+        meta.setLore(Collections.singletonList("\u00A77Default value is " + displayValue(holder.defaultVal)));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -97,7 +134,6 @@ public class DoubleSettingGui extends AbstractSettingGui {
     protected void updateValueDisplay() {
 
         PatternPane pane = getPane();
-
 
         //minus item
         GuiItem minusItem;
@@ -138,7 +174,6 @@ public class DoubleSettingGui extends AbstractSettingGui {
             returnToDefault = GuiGlobalItems.backgroundItem();
         }
         pane.bindItem('D', returnToDefault);
-
 
     }
 
@@ -262,7 +297,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        if(this.nullOnZero && (this.now.compareTo(BigDecimal.ZERO) == 0)){
+        if(isNull()){
             this.holder.config.getConfig().set(this.holder.configPath, null);
         }else{
             this.holder.config.getConfig().set(this.holder.configPath, now.doubleValue());
@@ -278,6 +313,10 @@ public class DoubleSettingGui extends AbstractSettingGui {
     @Override
     public boolean hadChange() {
         return now.compareTo(before) != 0;
+    }
+
+    public boolean isNull(){
+        return this.nullOnZero && (this.now.compareTo(BigDecimal.ZERO) == 0);
     }
 
     private static final BigDecimal PERCENTAGE_OFFSET = BigDecimal.valueOf(100);
