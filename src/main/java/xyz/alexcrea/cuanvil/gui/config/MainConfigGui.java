@@ -97,7 +97,7 @@ public class MainConfigGui extends ChestGui {
         ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
 
         unitRepairMeta.setDisplayName("\u00A7aUnit Repair");
-        unitRepairMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil custom recipe menu"));
+        unitRepairMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil unit repair menu"));
         unirRepairItemstack.setItemMeta(unitRepairMeta);
 
         GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.INSTANCE);
