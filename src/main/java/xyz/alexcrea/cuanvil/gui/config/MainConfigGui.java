@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
@@ -83,12 +84,14 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('4', enchantConflictItem);
 
         // Group config items
-        ItemStack wipItemstack = new ItemStack(Material.BARRIER);
-        ItemMeta wipMeta = wipItemstack.getItemMeta();
-        wipMeta.setDisplayName("\u00A7cWIP");
-        wipItemstack.setItemMeta(wipMeta);
+        ItemStack groupItemstack = new ItemStack(Material.CHEST);
 
-        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(wipItemstack, GroupConfigGui.INSTANCE);
+        ItemMeta groupMeta = groupItemstack.getItemMeta();
+        groupMeta.setDisplayName("\u00A7aMaterial Groups");
+        groupMeta.setLore(Collections.singletonList("\u00A77Click here to open material group menu"));
+        groupItemstack.setItemMeta(groupMeta);
+
+        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.INSTANCE);
 
         pane.bindItem('5', groupConfigItem);
 

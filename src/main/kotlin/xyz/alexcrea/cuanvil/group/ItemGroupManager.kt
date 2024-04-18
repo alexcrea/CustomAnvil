@@ -9,13 +9,13 @@ class ItemGroupManager {
 
     companion object {
         // Path for group type
-        private const val GROUP_TYPE_PATH = "type"
+        const val GROUP_TYPE_PATH = "type"
 
         // Path for included items list
-        private const val MATERIAL_LIST_PATH = "items"
+        const val MATERIAL_LIST_PATH = "items"
 
         // Path for included groups list
-        private const val GROUP_LIST_PATH = "groups"
+        const val GROUP_LIST_PATH = "groups"
 
         // Temporary list of elements in default config that are use in future
         private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD", "BRUSH")
@@ -35,6 +35,15 @@ class ItemGroupManager {
         }
     }
 
+    // Create group with existing groups
+    fun createGroup(
+        config: ConfigurationSection,
+        name: String
+    ): AbstractMaterialGroup{
+        return createGroup(config, groupMap.keys, name)
+    }
+
+
     // Create group by key
     private fun createGroup(
         config: ConfigurationSection,
@@ -46,7 +55,7 @@ class ItemGroupManager {
 
         // Create Material group according to the group type
         val group: AbstractMaterialGroup
-        if (GroupType.EXCLUDE.equal(groupType)) {
+        if (groupType != null && GroupType.EXCLUDE.equal(groupType)) {
             group = ExcludeGroup(key)
         } else {
             group = IncludeGroup(key)
@@ -124,7 +133,7 @@ class ItemGroupManager {
 
 }
 
-enum class GroupType(private val groupID: String) {
+enum class GroupType(val groupID: String) {
 
     INCLUDE("include"),
     EXCLUDE("exclude")

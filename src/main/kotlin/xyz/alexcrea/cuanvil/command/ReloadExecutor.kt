@@ -5,11 +5,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.gui.config.global.BasicConfigGui
-import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui
-import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui
-import xyz.alexcrea.cuanvil.gui.config.global.EnchantLimitConfigGui
-import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui
+import xyz.alexcrea.cuanvil.gui.config.global.*
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 
 class ReloadExecutor : CommandExecutor {
@@ -43,7 +39,9 @@ class ReloadExecutor : CommandExecutor {
             BasicConfigGui.INSTANCE.updateGuiValues()
             EnchantCostConfigGui.INSTANCE.updateGuiValues()
             EnchantLimitConfigGui.INSTANCE.updateGuiValues()
+
             EnchantConflictGui.INSTANCE.reloadValues()
+            GroupConfigGui.INSTANCE.reloadValues()
             UnitRepairConfigGui.INSTANCE.reloadValues()
 
             // & update metric

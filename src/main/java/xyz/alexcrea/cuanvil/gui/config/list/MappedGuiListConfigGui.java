@@ -81,7 +81,10 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
             }
 
             T generic = createAndSaveNewEmptyGeneric(message);
-            if(generic == null) return;// we don't know what to do
+            if(generic == null) {// we don't know what to do. so we back up by opening this gui.
+                this.show(player);
+                return;
+            }
 
             updateValueForGeneric(generic, true);
 

@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.gui.config.list.elements;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -20,20 +19,19 @@ import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
-import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ConflictSubSettingGui extends MappedToListSubSettingGui {
+public class GroupConfigSubSettingGui extends MappedToListSubSettingGui {
 
     private final GroupConfigGui parent;
     private final AbstractMaterialGroup group;
     private final PatternPane pane;
 
-    public ConflictSubSettingGui(
+    public GroupConfigSubSettingGui(
             @NotNull GroupConfigGui parent,
             @NotNull AbstractMaterialGroup group,
             @NotNull GuiItem item) {

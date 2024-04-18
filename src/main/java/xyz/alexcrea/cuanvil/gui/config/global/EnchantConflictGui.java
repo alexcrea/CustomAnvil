@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -58,6 +59,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
         ItemMeta meta = item.getItemMeta();
 
+        meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " \u00A7fConflict");
         meta.setLore(Arrays.asList(
                 "\u00A77Enchantment count:      \u00A7e" + conflict.getEnchants().size(),
