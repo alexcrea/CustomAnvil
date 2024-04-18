@@ -82,15 +82,15 @@ public class MainConfigGui extends ChestGui {
         GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(EnchantConflictItemstack, EnchantConflictGui.INSTANCE);
         pane.bindItem('4', enchantConflictItem);
 
-        // WIP configuration items
+        // Group config items
         ItemStack wipItemstack = new ItemStack(Material.BARRIER);
         ItemMeta wipMeta = wipItemstack.getItemMeta();
         wipMeta.setDisplayName("\u00A7cWIP");
         wipItemstack.setItemMeta(wipMeta);
 
-        GuiItem wip = new GuiItem(wipItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(wipItemstack, GroupConfigGui.INSTANCE);
 
-        pane.bindItem('5', wip);
+        pane.bindItem('5', groupConfigItem);
 
         // Unit repair item
         ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);

@@ -81,6 +81,7 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
             }
 
             T generic = createAndSaveNewEmptyGeneric(message);
+            if(generic == null) return;// we don't know what to do
 
             updateValueForGeneric(generic, true);
 
