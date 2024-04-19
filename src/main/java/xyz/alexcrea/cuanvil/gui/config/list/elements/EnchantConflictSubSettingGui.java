@@ -26,10 +26,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -81,7 +78,6 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
 
         // Displayed item will be updated later
-
         this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), (event) -> {
             event.setCancelled(true);
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
@@ -184,27 +180,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         }
 
         // Prepare group lore
-        ArrayList<String> groupLore = new ArrayList<>();
-        groupLore.add("\u00A77Allow you to select a list of \u00A73Groups \u00A77that this conflict should include");
-        Set<AbstractMaterialGroup> grouos = getSelectedGroups();
-        if (grouos.isEmpty()) {
-            groupLore.add("\u00A77There is no excluded groups for this conflict.");
-        } else {
-            groupLore.add("\u00A77List of excluded groups for this conflict:");
-            Iterator<AbstractMaterialGroup> groupIterator = grouos.iterator();
-
-            boolean greaterThanMax = grouos.size() > 5;
-            int maxindex = (greaterThanMax ? 4 : grouos.size());
-            for (int i = 0; i < maxindex; i++) {
-                // format string like "- Melee Weapons"
-                String formattedName = CasedStringUtil.snakeToUpperSpacedCase(groupIterator.next().getName());
-                groupLore.add("\u00A77- \u00A73" + formattedName);
-
-            }
-            if (greaterThanMax) {
-                groupLore.add("\u00A77And " + (grouos.size() - 4) + " more...");
-            }
-        }
+        List<String> groupLore = SelectGroupContainer.getGroupLore(this, "conflict", "exclude");
 
         // Configure enchant setting item
         ItemStack enchantItem = this.enchantSettingItem.getItem();
@@ -287,7 +263,6 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         } catch (Exception e) {
             CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating enchants for " + this.enchantConflict, e);
         }
-
 
         // Save file configuration to disk
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {

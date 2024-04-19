@@ -69,7 +69,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         Set<AbstractMaterialGroup> illegalGroup = this.groupContainer.illegalGroups();
         for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
             if (illegalGroup.contains(group)) {
-                return;
+                continue;
             }
             filledEnchant.addItem(getGuiItemFromGroup(group));
         }
@@ -113,7 +113,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             meta.removeEnchant(Enchantment.DAMAGE_UNDEAD);
             meta.setLore(FALSE_LORE);
         }
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+        meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);
     }
