@@ -45,17 +45,21 @@ class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
 
     override fun setNonGroupInheritedMaterials(materials: EnumSet<Material>) {
         super.setNonGroupInheritedMaterials(materials)
-        // Update group items
+
+        updateMaterials()
+    }
+
+    override fun getGroups(): MutableSet<AbstractMaterialGroup> {
+        return includedGroup
+    }
+
+    override fun updateMaterials() {
         groupItems.clear()
         groupItems.addAll(includedMaterial)
 
         includedGroup.forEach { group ->
             groupItems.addAll(group.getMaterials())
         }
-    }
-
-    override fun getGroups(): MutableSet<AbstractMaterialGroup> {
-        return includedGroup
     }
 
     override fun getMaterials(): EnumSet<Material> {

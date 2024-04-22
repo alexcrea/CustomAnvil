@@ -14,8 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.*;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
+import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.MaterialSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -26,7 +28,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implements SelectGroupContainer {
+public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implements SelectGroupContainer, SelectMaterialContainer {
 
     private final GroupConfigGui parent;
     private final IncludeGroup group;
@@ -36,7 +38,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             @NotNull GroupConfigGui parent,
             @NotNull IncludeGroup group,
             @NotNull GuiItem item) {
-        super(item, 3, group.getName());
+        super(item, 3,
+                CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " Config");
         this.parent = parent;
         this.group = group;
 
@@ -71,12 +74,17 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.materialSelection = new GuiItem(new ItemStack(Material.DIAMOND_SWORD), (event) -> {
             event.setCancelled(true);
 
+            MaterialSelectSettingGui selectGui = new MaterialSelectSettingGui(this,
+                    CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " Materials"
+                    , this);
+            selectGui.show(event.getWhoClicked());
+
         }, CustomAnvil.instance);
 
         this.groupSelection = new GuiItem(new ItemStack(Material.CHEST), (event) -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
-                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.toString()) + " \u00A7rGroups",
+                    CasedStringUtil.snakeToUpperSpacedCase(this.group.getName()) + " Groups",
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
@@ -193,15 +201,18 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public void updateLocal() {
+        // Prepare material lore
+        List<String> matLore = SelectMaterialContainer.getMaterialLore(this, "group", "include");
+
         // Prepare group lore
         List<String> groupLore = SelectGroupContainer.getGroupLore(this, "group", "include");
 
-        // Configure enchant setting item
+        // Configure included material setting item
         ItemStack matSelectItem = this.materialSelection.getItem();
         ItemMeta matSelectMeta = matSelectItem.getItemMeta();
 
         matSelectMeta.setDisplayName("\u00A7aSelect included \u00A7eMaterials \u00A7aSettings");
-        matSelectMeta.setLore(Collections.emptyList()); // temporary
+        matSelectMeta.setLore(matLore);
         matSelectMeta.addItemFlags(ItemFlag.values());
 
         matSelectItem.setItemMeta(matSelectMeta);
@@ -226,7 +237,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     // ----------------------------
-    // SelectGroupContainer methods
+    // SelectGroupContainer related methods
     // ----------------------------
 
     @Override
@@ -259,22 +270,12 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             groupNames[index++] = otherGroup.getName();
         }
 
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName()+"."+ItemGroupManager.GROUP_LIST_PATH, groupNames);
+        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(group.getName()+"."+ItemGroupManager.GROUP_LIST_PATH, groupNames);
 
         // Try to update referencing group. kind of expensive operation in some case.
-        for (AbstractMaterialGroup otherGroup : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if(otherGroup.getGroups().contains(group)){
-                Set<AbstractMaterialGroup> groupClone = new HashSet<>(otherGroup.getGroups());
-                updateGroup(otherGroup, groupClone);
-            }
-        }
+        updateDirectReferencingGroups(group);
 
-        // Update parent & local by extension
-        if(group instanceof IncludeGroup){
-            this.parent.updateValueForGeneric((IncludeGroup) group, true);
-        }
-
-        // We assume a backup & save call we be done soon after
+        // We assume a backup & save call will be done soon after
     }
 
     @Override
@@ -290,4 +291,94 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         return illegal;
     }
+
+    // ----------------------------
+    // End of SelectGroupContainer related methods
+    // SelectGroupContainer related methods
+    // ----------------------------
+
+    @Override
+    public EnumSet<Material> getSelectedMaterials() {
+        return this.group.getNonGroupInheritedMaterials();
+    }
+
+    @Override
+    public boolean setSelectedMaterials(EnumSet<Material> materials) {
+        this.group.setNonGroupInheritedMaterials(materials);
+
+        // Write to file configuration
+        String[] groupNames = new String[materials.size()];
+        int index = 0;
+        for (Material otherGroup : materials) {
+            groupNames[index++] = otherGroup.name().toLowerCase();
+        }
+
+        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName()+"."+ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
+
+        // update referencing groups
+        updateDirectReferencingGroups(this.group);
+
+        // Save file configuration to disk
+        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+            return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        }
+        return true;
+    }
+
+    @Override
+    public EnumSet<Material> illegalMaterials() {
+        return EnumSet.noneOf(Material.class);
+    }
+
+    // ----------------------------
+    // End of SelectGroupContainer related methods
+    // ----------------------------
+
+    private void updateDirectReferencingGroups(AbstractMaterialGroup referenceTo){
+        Collection<AbstractMaterialGroup> everyStoredGroups = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values();
+        List<EnchantConflictGroup> everyConflicts = ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
+
+        HashSet<AbstractMaterialGroup> toUpdate = new HashSet<>();
+        HashSet<AbstractMaterialGroup> updateFuture = new HashSet<>();
+        HashSet<AbstractMaterialGroup> conflictGroupPlanned = new HashSet<>();
+
+        updateFuture.add(referenceTo);
+        while (!updateFuture.isEmpty()){
+            HashSet<AbstractMaterialGroup> temp = updateFuture;
+            updateFuture = toUpdate;
+            updateFuture.clear();
+            toUpdate = temp;
+
+            for (AbstractMaterialGroup testGroup : toUpdate) {
+                // Update other stored group
+                for (AbstractMaterialGroup otherGroup : everyStoredGroups) {
+                    if(otherGroup.getGroups().contains(testGroup)){
+                        otherGroup.updateMaterials();
+                        toUpdate.add(otherGroup);
+                    }
+                }
+
+                // plan update for conflict groups
+                for (EnchantConflictGroup everyConflict : everyConflicts) {
+                    AbstractMaterialGroup conflictGroup = everyConflict.getCantConflictGroup();
+                    if(conflictGroup.getGroups().contains(testGroup)){
+                        conflictGroupPlanned.add(conflictGroup);
+                    }
+                }
+
+                // Update parent & local by extension
+                if(testGroup instanceof IncludeGroup){
+                    this.parent.updateValueForGeneric((IncludeGroup) testGroup, false);
+                }
+            }
+        }
+        this.parent.update();
+
+        // Update conflict group
+        for (AbstractMaterialGroup conflictGroup : conflictGroupPlanned) {
+            conflictGroup.updateMaterials();
+        }
+
+    }
+
 }

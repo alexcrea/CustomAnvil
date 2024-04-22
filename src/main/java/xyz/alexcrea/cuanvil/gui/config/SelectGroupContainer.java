@@ -22,7 +22,7 @@ public interface SelectGroupContainer {
         groupLore.add("\u00A77Allow you to select a list of \u00A73Groups \u00A77that this " + containerType + " should " + groupAction);
         Set<AbstractMaterialGroup> grouos = container.getSelectedGroups();
         if (grouos.isEmpty()) {
-            groupLore.add("\u00A77There is no "+groupAction+"d groups for this "+containerType+".");
+            groupLore.add("\u00A77There is no "+groupAction+"d group for this "+containerType+".");
         } else {
             groupLore.add("\u00A77List of "+groupAction+"d groups for this "+containerType+":");
             Iterator<AbstractMaterialGroup> groupIterator = grouos.iterator();

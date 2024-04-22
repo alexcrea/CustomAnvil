@@ -123,7 +123,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     /**
      * @return A consumer to update the current setting's value.
      */
-    protected Consumer<InventoryClickEvent> setItemAsCursor() { //TODO redo consumer
+    protected Consumer<InventoryClickEvent> setItemAsCursor() {
         return event -> {
             event.setCancelled(true);
 

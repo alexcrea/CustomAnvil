@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 
 import java.util.Locale;

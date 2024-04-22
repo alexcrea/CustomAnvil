@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;

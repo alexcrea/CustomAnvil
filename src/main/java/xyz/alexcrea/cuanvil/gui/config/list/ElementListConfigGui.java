@@ -34,7 +34,14 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
         this.namePrefix = title;
 
         // Back item panel
-        Pattern pattern = new Pattern(
+        Pattern pattern = getBackgroundPattern();
+        this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
+        GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.INSTANCE);
+
+    }
+
+    protected Pattern getBackgroundPattern(){
+        return new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
@@ -42,11 +49,7 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "B11L1R11C"
         );
-        this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
-        GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.INSTANCE);
-
     }
-
 
     protected OutlinePane firstPage;
     protected ArrayList<OutlinePane> pages;
@@ -103,7 +106,10 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
             viewer.setItemOnCursor(cursor);
         }, CustomAnvil.instance);
 
-        this.backgroundPane.bindItem('C', prepareCreateNewItem());
+        GuiItem createNew = prepareCreateNewItem();
+        if(createNew != null){
+            this.backgroundPane.bindItem('C', createNew);
+        }
     }
     protected void reloadValues(){
         this.firstPage.clear();

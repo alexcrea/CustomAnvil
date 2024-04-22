@@ -92,4 +92,6 @@ abstract class AbstractMaterialGroup(private val name: String) {
         return Material.PAPER
     }
 
+    abstract fun updateMaterials()
+
 }
