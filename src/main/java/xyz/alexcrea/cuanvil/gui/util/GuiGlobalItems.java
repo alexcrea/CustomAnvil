@@ -288,6 +288,7 @@ public class GuiGlobalItems {
         }
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("\u00A7a" + name);
+        meta.setLore(factory.getDisplayLore());
 
         item.setItemMeta(meta);
 

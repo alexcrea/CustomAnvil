@@ -16,6 +16,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -161,20 +162,22 @@ public class ItemSettingGui extends AbstractSettingGui {
     /**
      * Create aa item setting factory from setting's parameters.
      *
-     * @param title      The title of the gui.
-     * @param parent     Parent gui to go back when completed.
-     * @param configPath Configuration path of this setting.
-     * @param config     Configuration holder of this setting.
-     * @param defaultVal Default value if not found on the config.
+     * @param title       The title of the gui.
+     * @param parent      Parent gui to go back when completed.
+     * @param configPath  Configuration path of this setting.
+     * @param config      Configuration holder of this setting.
+     * @param defaultVal  Default value if not found on the config.
+     * @param displayLore Gui display item lore.
      * @return A factory for an item setting gui.
      */
     public static ItemSettingGui.ItemSettingFactory itemFactory(@NotNull String title, ValueUpdatableGui parent,
                                                                  String configPath, ConfigHolder config,
-                                                                ItemStack defaultVal) {
+                                                                ItemStack defaultVal,
+                                                                String... displayLore) {
         return new ItemSettingGui.ItemSettingFactory(
                 title, parent,
                 configPath, config,
-                defaultVal);
+                defaultVal, displayLore);
     }
 
     /**
@@ -185,25 +188,29 @@ public class ItemSettingGui extends AbstractSettingGui {
         String title;
         ValueUpdatableGui parent;
         ItemStack defaultVal;
+        List<String> displayLore;
 
         /**
          * Constructor for an item setting gui factory.
          *
-         * @param title      The title of the gui.
-         * @param parent     Parent gui to go back when completed.
-         * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
-         * @param defaultVal Default value if not found on the config.
+         * @param title       The title of the gui.
+         * @param parent      Parent gui to go back when completed.
+         * @param configPath  Configuration path of this setting.
+         * @param config      Configuration holder of this setting.
+         * @param defaultVal  Default value if not found on the config.
+         * @param displayLore Gui display item lore.
          */
         protected ItemSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 String configPath, ConfigHolder config,
-                ItemStack defaultVal) {
+                ItemStack defaultVal,
+                String... displayLore) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
+            this.displayLore = Arrays.asList(displayLore);
         }
 
         /**
@@ -219,6 +226,10 @@ public class ItemSettingGui extends AbstractSettingGui {
          */
         public ItemStack getConfiguredValue() {
             return this.config.getConfig().getItemStack(this.configPath, this.defaultVal);
+        }
+
+        public List<String> getDisplayLore() {
+            return displayLore;
         }
 
         @Override

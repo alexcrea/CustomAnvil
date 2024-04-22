@@ -87,15 +87,21 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         this.leftItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Left \u00A78Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
+                "\u00A77Set the left item of the custom craft",
+                "\u00A77\u25A0 + \u25A1 = \u25A1");
 
         this.rightItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Right \u00A78Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
+                "\u00A77Set the right item of the custom craft",
+                "\u00A77\u25A1 + \u25A0 = \u25A1");
 
         this.resultItemFactory = ItemSettingGui.itemFactory("\u00A7aRecipe Result \u00A78Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
+                "\u00A77Set the result item of the custom craft",
+                "\u00A77\u25A1 + \u25A1 = \u25A0");
     }
 
     private ConfirmActionGui createDeleteGui() {
