@@ -9,6 +9,7 @@ import io.delilaheve.util.ItemUtil.isEnchantedBook
 import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
+import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -161,7 +162,9 @@ class AnvilEventListener : Listener {
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int {
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
-            if (!it.displayName.contentEquals(inventory.renameText)) {
+            val displayName = ChatColor.stripColor(it.displayName)
+            val inventoryName = ChatColor.stripColor(inventory.renameText)
+            if (!displayName.contentEquals(inventoryName)) {
                 it.setDisplayName(inventory.renameText)
                 resultItem.itemMeta = it
                 return ConfigOptions.itemRenameCost
