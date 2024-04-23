@@ -156,7 +156,7 @@ restriction_sweeping:
 restriction_swift_sneak:
   useInFuture: true
   enchantments: [ swift_sneak ]
-  notAffectedGroups: [ enchanted_book, boots ]
+  notAffectedGroups: [ enchanted_book, leggings ]
 
 restriction_thorns:
   enchantments: [ thorns ]
