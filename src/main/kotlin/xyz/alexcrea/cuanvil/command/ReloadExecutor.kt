@@ -43,6 +43,7 @@ class ReloadExecutor : CommandExecutor {
             EnchantConflictGui.INSTANCE.reloadValues()
             GroupConfigGui.INSTANCE.reloadValues()
             UnitRepairConfigGui.INSTANCE.reloadValues()
+            CustomRecipeConfigGui.INSTANCE.reloadValues()
 
             // & update metric
             MetricsUtil.testIfConfigIsDefault()
