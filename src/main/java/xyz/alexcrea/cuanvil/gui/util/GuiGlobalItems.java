@@ -117,8 +117,8 @@ public class GuiGlobalItems {
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
     }
 
-    private static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
-    private static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
+    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
+    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
 
     /**
      * Create a new save setting GuiItem.

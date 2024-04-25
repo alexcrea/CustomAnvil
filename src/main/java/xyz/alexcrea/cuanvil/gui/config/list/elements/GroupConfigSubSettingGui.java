@@ -17,8 +17,8 @@ import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.list.MaterialSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.MaterialSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -233,7 +233,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public void cleanAndBeUnusable() {
-
+        //TODO
     }
 
     // ----------------------------
@@ -294,6 +294,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     // ----------------------------
     // End of SelectGroupContainer related methods
+    // ----------------------------
     // SelectGroupContainer related methods
     // ----------------------------
 
@@ -320,14 +321,14 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         // Save file configuration to disk
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            return ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
     }
 
     @Override
     public EnumSet<Material> illegalMaterials() {
-        return EnumSet.noneOf(Material.class);
+        return EnumSet.of(Material.AIR);
     }
 
     // ----------------------------
