@@ -33,6 +33,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     private final GroupConfigGui parent;
     private final IncludeGroup group;
     private final PatternPane pane;
+    private boolean usable = true;
 
     public GroupConfigSubSettingGui(
             @NotNull GroupConfigGui parent,
@@ -194,6 +195,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public void updateGuiValues() {
+        if(!this.usable) return;
         // Parent should call updateLocal with this call
         this.parent.updateValueForGeneric(this.group, true);
 
@@ -201,6 +203,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public void updateLocal() {
+        if(!this.usable) return;
         // Prepare material lore
         List<String> matLore = SelectMaterialContainer.getMaterialLore(this, "group", "include");
 
@@ -233,7 +236,20 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public void cleanAndBeUnusable() {
-        //TODO
+        this.usable = false;
+        this.pane.bindItem('1', GuiGlobalItems.backgroundItem());
+        this.pane.bindItem('2', GuiGlobalItems.backgroundItem());
+        this.pane.bindItem('D', GuiGlobalItems.backgroundItem());
+
+    }
+
+    @Override
+    public void show(@NotNull HumanEntity player) {
+        if(!this.usable) {
+            this.parent.show(player);
+            return;
+        }
+        super.show(player);
     }
 
     // ----------------------------
