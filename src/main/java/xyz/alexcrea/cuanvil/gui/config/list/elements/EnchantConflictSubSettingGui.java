@@ -205,7 +205,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.groupSettingItem.setItem(groupItem); // Just in case
 
 
-        this.pane.bindItem('M', GuiGlobalItems.intSettingGuiItem(this.minBeforeActiveSettingFactory, Material.COMMAND_BLOCK));
+        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(Material.COMMAND_BLOCK));
         update();
     }
 

@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Locale;
@@ -44,7 +43,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
 
     @Override
     public GuiItem getItemFromFactory(IntSettingsGui.IntSettingFactory inventoryFactory) {
-        return GuiGlobalItems.intSettingGuiItem(inventoryFactory,
+        return inventoryFactory.getItem(
                 Material.ENCHANTED_BOOK,
                 inventoryFactory.getTitle());
     }

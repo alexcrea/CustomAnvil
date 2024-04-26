@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Arrays;
@@ -238,6 +239,42 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemStack now = getConfiguredValue();
             // create new gui
             return new ItemSettingGui(this, now);
+        }
+
+        /**
+         * Create a new item setting GuiItem.
+         * This item will create and open an item setting GUI from the factory.
+         * Item's name will be the factory set title.
+         *
+         * @param name Name of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the item setting.
+         */
+        public GuiItem getItem(@NotNull String name) {
+            ItemStack item = getConfiguredValue();
+            if(item == null || item.getType().isAir()){
+                item = new ItemStack(Material.BARRIER);
+            }else{
+                item = item.clone();
+            }
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName("\u00A7a" + name);
+            meta.setLore(getDisplayLore());
+
+            item.setItemMeta(meta);
+
+            return GuiGlobalItems.openSettingGuiItem(item, this);
+        }
+
+        /**
+         * Create a new item setting GuiItem.
+         * This item will create and open an item setting GUI from the factory.
+         * Item's name will be the factory set title.
+         *
+         * @return A formatted GuiItem that will create and open a GUI for the item setting.
+         */
+        public GuiItem getItem() {
+            String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
+            return getItem(CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

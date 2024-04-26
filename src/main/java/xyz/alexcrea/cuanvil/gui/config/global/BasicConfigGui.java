@@ -128,36 +128,36 @@ public class BasicConfigGui extends ValueUpdatableGui {
     @Override
     public void updateGuiValues() {
         // limit repair item
-        GuiItem limitRepairItem = GuiGlobalItems.boolSettingGuiItem(this.limitRepairFactory);
+        GuiItem limitRepairItem = this.limitRepairFactory.getItem();
         pane.bindItem('1', limitRepairItem);
 
         // rename cost item
         GuiItem limitRepairValueItem;
         if (this.limitRepairFactory.getConfiguredValue()) {
-            limitRepairValueItem = GuiGlobalItems.intSettingGuiItem(this.repairCostFactory, Material.EXPERIENCE_BOTTLE);
+            limitRepairValueItem = this.repairCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
         } else {
             limitRepairValueItem = this.notNeededLimitValueItem;
         }
         pane.bindItem('2', limitRepairValueItem);
 
         // remove repair limit item
-        GuiItem removeRepairLimitItem = GuiGlobalItems.boolSettingGuiItem(this.removeRepairLimit);
+        GuiItem removeRepairLimitItem = this.removeRepairLimit.getItem();
         pane.bindItem('3', removeRepairLimitItem);
 
         // item repair cost
-        GuiItem itemRepairCostItem = GuiGlobalItems.intSettingGuiItem(this.itemRepairCost, Material.ANVIL);
+        GuiItem itemRepairCostItem = this.itemRepairCost.getItem(Material.ANVIL);
         pane.bindItem('4', itemRepairCostItem);
 
         // unit repair cost
-        GuiItem unitRepairCostItem = GuiGlobalItems.intSettingGuiItem(this.unitRepairCost, Material.DIAMOND);
+        GuiItem unitRepairCostItem = this.unitRepairCost.getItem(Material.DIAMOND);
         pane.bindItem('5', unitRepairCostItem);
 
         // item rename cost
-        GuiItem itemRenameCost = GuiGlobalItems.intSettingGuiItem(this.itemRenameCost, Material.NAME_TAG);
+        GuiItem itemRenameCost = this.itemRenameCost.getItem(Material.NAME_TAG);
         pane.bindItem('6', itemRenameCost);
 
         // sacrifice illegal enchant cost
-        GuiItem illegalCostItem = GuiGlobalItems.intSettingGuiItem(this.sacrificeIllegalEnchantCost, Material.ENCHANTED_BOOK);
+        GuiItem illegalCostItem = this.sacrificeIllegalEnchantCost.getItem(Material.ENCHANTED_BOOK);
         pane.bindItem('7', illegalCostItem);
 
         update();

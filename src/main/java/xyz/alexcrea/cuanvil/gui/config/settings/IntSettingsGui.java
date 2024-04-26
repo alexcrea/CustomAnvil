@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Collections;
@@ -349,6 +350,42 @@ public class IntSettingsGui extends AbstractSettingGui {
             int now = getConfiguredValue();
             // create new gui
             return new IntSettingsGui(this, now);
+        }
+
+        /**
+         * Create a new int setting GuiItem.
+         * This item will create and open an int setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         *
+         * @param itemMat Displayed material of the item.
+         * @param name    Name of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the int setting.
+         */
+        public GuiItem getItem(
+                @NotNull Material itemMat,
+                @NotNull String name
+        ) {
+            // Get item properties
+            int value = getConfiguredValue();
+            StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
+
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, value);
+        }
+
+        /**
+         * Create a new int setting GuiItem.
+         * This item will create and open an int setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         * Item's name will be the factory set title.
+         *
+         * @param itemMat Displayed material of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the int setting.
+         */
+        public GuiItem getItem(
+                @NotNull Material itemMat
+        ) {
+            String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
+            return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

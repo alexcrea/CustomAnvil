@@ -147,19 +147,19 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     public void updateLocal() {
         if (!this.shouldWork) return;
 
-        GuiItem exactCountItem = GuiGlobalItems.boolSettingGuiItem(this.exactCountFactory);
+        GuiItem exactCountItem = this.exactCountFactory.getItem();
         this.pane.bindItem('1', exactCountItem);
 
-        GuiItem xpCostItem = GuiGlobalItems.intSettingGuiItem(this.xpCostFactory, Material.EXPERIENCE_BOTTLE);
+        GuiItem xpCostItem = this.xpCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
         this.pane.bindItem('2', xpCostItem);
 
-        GuiItem leftGuiItem = GuiGlobalItems.itemSettingGuiItem(this.leftItemFactory);
+        GuiItem leftGuiItem = this.leftItemFactory.getItem();
         this.pane.bindItem('3', leftGuiItem);
 
-        GuiItem rightGuiItem = GuiGlobalItems.itemSettingGuiItem(this.rightItemFactory);
+        GuiItem rightGuiItem = this.rightItemFactory.getItem();
         this.pane.bindItem('4', rightGuiItem);
 
-        GuiItem resultGuiItem = GuiGlobalItems.itemSettingGuiItem(this.resultItemFactory);
+        GuiItem resultGuiItem = this.resultItemFactory.getItem();
         this.pane.bindItem('5', resultGuiItem);
         
         update();

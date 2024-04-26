@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Collections;
@@ -207,6 +208,47 @@ public class BoolSettingsGui extends AbstractSettingGui {
             boolean now = getConfiguredValue();
             // create new gui
             return new BoolSettingsGui(this, now);
+        }
+
+        /**
+         * Create a new Boolean setting GuiItem.
+         * This item will create and open a boolean setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         *
+         * @param name Name of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
+         */
+        public GuiItem getItem(String name){
+            // Get item properties
+            boolean value = getConfiguredValue();
+
+            Material itemMat;
+            StringBuilder itemName = new StringBuilder("\u00A7");
+            if (value) {
+                itemMat = Material.GREEN_TERRACOTTA;
+                itemName.append("a");
+            } else {
+                itemMat = Material.RED_TERRACOTTA;
+                itemName.append("c");
+            }
+            itemName.append(name);
+
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, value);
+        }
+
+        /**
+         * Create a new boolean setting GuiItem.
+         * This item will create and open a boolean setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         * Item's name will be the factory set title.
+         *
+         * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
+         */
+        public GuiItem getItem(){
+            // Get item properties
+            String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
+
+            return getItem(CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }
