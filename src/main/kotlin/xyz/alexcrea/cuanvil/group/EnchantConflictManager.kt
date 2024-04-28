@@ -24,6 +24,12 @@ class EnchantConflictManager {
 
         // Default name for a joining group
         private const val DEFAULT_GROUP_NAME = "joinedGroup"
+
+        // 1.20.5 compatibility TODO better update system
+        private val SWEEPING_EDGE_ENCHANT =
+            Enchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
+            Enchantment.SWEEPING_EDGE
+
     }
 
     private lateinit var conflictMap: HashMap<Enchantment, ArrayList<EnchantConflictGroup>>
@@ -76,8 +82,7 @@ class EnchantConflictManager {
         // Read and add enchantment to conflict
         val enchantList = section.getStringList(ENCH_LIST_PATH)
         for (enchantName in enchantList) {
-            val enchantKey = NamespacedKey.minecraft(enchantName)
-            val enchant = Enchantment.getByKey(enchantKey)
+            val enchant = getEnchantByName(enchantName);
             if (enchant == null) {
                 if (!futureUse) {
                     CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
@@ -94,6 +99,20 @@ class EnchantConflictManager {
 
         return conflict
     }
+
+    private fun getEnchantByName(enchantName: String): Enchantment? {
+
+        // Teporary solution for 1.20.5
+        when(enchantName){
+            "sweeping", "sweeping_edge" -> {
+                return SWEEPING_EDGE_ENCHANT
+            }
+        }
+
+        val enchantKey = NamespacedKey.minecraft(enchantName)
+        return Enchantment.getByKey(enchantKey);
+    }
+
 
     private fun createConflictObject(
         section: ConfigurationSection,

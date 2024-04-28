@@ -8,9 +8,9 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 object MetricsUtil {
 
     private const val baseConfigHash = -1592940914
-    private const val enchantLimitsConfigHash = -1014133828
-    private const val enchantValuesConfigHash = 1072574774
-    private const val enchantConflictConfigHash = 1406650190
+    private const val enchantLimitsConfigHash = -275034280
+    private const val enchantValuesConfigHash = -17048020
+    private const val enchantConflictConfigHash = 546475833
     private const val itemGroupsConfigHash = 1406650190
     private const val unitRepairItemConfigHash = 536871958
     private const val customAnvilCraftConfigHash = 0

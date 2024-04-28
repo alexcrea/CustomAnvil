@@ -217,7 +217,7 @@ object ConfigOptions {
      * Get the given [enchantment]'s limit
      */
     fun enchantLimit(enchantment: Enchantment): Int {
-        val path = "${ENCHANT_LIMIT_ROOT}.${enchantment.enchantmentName}"
+        val path = "${ENCHANT_LIMIT_ROOT}.${getEnchantKey(enchantment)}"
         return CustomAnvil.instance
             .config
             .getInt(path, defaultEnchantLimit)
@@ -234,7 +234,7 @@ object ConfigOptions {
         isFromBook: Boolean
     ): Int {
         val typeKey = if (isFromBook) KEY_BOOK else KEY_ITEM
-        val path = "${ENCHANT_VALUES_ROOT}.${enchantment.enchantmentName}.$typeKey"
+        val path = "${ENCHANT_VALUES_ROOT}.${getEnchantKey(enchantment)}.$typeKey"
         return CustomAnvil.instance
             .config
             .getInt(path, DEFAULT_ENCHANT_VALUE)
@@ -242,6 +242,13 @@ object ConfigOptions {
             ?: DEFAULT_ENCHANT_VALUE
     }
 
+    fun getEnchantKey(enchantment: Enchantment) : String{
+        val enchantKey = enchantment.enchantmentName
+        if(enchantKey == "sweeping_edge"){ // compatibility with 1.20.5. TODO better update system
+            return "sweeping"
+        }
+        return enchantKey
+    }
     /**
      * Get an array of key of basic config options
      */
