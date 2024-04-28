@@ -80,6 +80,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // book display
         ItemStack bookItemstack = new ItemStack(Material.BOOK);
         ItemMeta bookMeta = bookItemstack.getItemMeta();
+        assert bookMeta != null;
 
         bookMeta.setDisplayName("\u00A7aCost of an Enchantment by Book");
         bookMeta.setLore(Arrays.asList(
@@ -90,8 +91,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // sword display
         ItemStack swordItemstack = new ItemStack(Material.WOODEN_SWORD);
         ItemMeta swordMeta = swordItemstack.getItemMeta();
-        swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        assert swordMeta != null;
 
+        swordMeta.addItemFlags(ItemFlag.values());
         swordMeta.setDisplayName("\u00A7aCost of an Enchantment by Item");
         swordMeta.setLore(Arrays.asList(
                 "\u00A77Cost per result item level of an sacrifice enchantment",
@@ -107,6 +109,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         // assume holder is an instance of EnchantCostSettingFactory
         EnchantCostSettingFactory holder = (EnchantCostSettingFactory) this.holder;
@@ -141,6 +144,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             int planned = Math.max(holder.min, nowBook - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
+            assert meta != null;
+
             meta.setDisplayName("\u00A7e" + nowBook + " -> " + planned + " \u00A7r(\u00A7c-" + (nowBook - planned) + "\u00A7r)");
             meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
@@ -157,6 +162,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             int planned = Math.min(holder.max, nowBook + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
+            assert meta != null;
+
             meta.setDisplayName("\u00A7e" + nowBook + " -> " + planned + " \u00A7r(\u00A7a+" + (planned - nowBook) + "\u00A7r)");
             meta.setLore(AbstractSettingGui.CLICK_LORE);
             item.setItemMeta(meta);
@@ -170,8 +177,11 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // "result" display
         ItemStack resultPaper = new ItemStack(Material.PAPER);
         ItemMeta resultMeta = resultPaper.getItemMeta();
+        assert resultMeta != null;
+
         resultMeta.setDisplayName("\u00A7eValue: " + nowBook);
         resultPaper.setItemMeta(resultMeta);
+
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         pane.bindItem('V', resultItem);

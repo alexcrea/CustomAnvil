@@ -34,6 +34,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupCo
     protected ItemStack createItemForGeneric(IncludeGroup group) {
         ItemStack item = new ItemStack(group.getRepresentativeMaterial());
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " \u00A7fGroup");

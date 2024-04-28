@@ -28,6 +28,8 @@ public class GuiGlobalItems {
     static {
         BACK_ITEM = new ItemStack(Material.BARRIER);
         ItemMeta meta = BACK_ITEM.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7cBack");
         BACK_ITEM.setItemMeta(meta);
     }
@@ -78,6 +80,8 @@ public class GuiGlobalItems {
     public static GuiItem backgroundItem(Material backgroundMat) {
         ItemStack item = new ItemStack(backgroundMat);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7c");
         item.setItemMeta(meta);
         return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -133,6 +137,8 @@ public class GuiGlobalItems {
 
         ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7aSave");
         item.setItemMeta(meta);
         return new GuiItem(item,
@@ -146,6 +152,8 @@ public class GuiGlobalItems {
     static {
         ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A77No change. can't save.");
         item.setItemMeta(meta);
         NO_CHANGE_ITEM = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -205,6 +213,7 @@ public class GuiGlobalItems {
         // Create & initialise item
         ItemStack item = new ItemStack(itemMat);
         ItemMeta itemMeta = item.getItemMeta();
+        assert itemMeta != null;
 
         itemMeta.setDisplayName(itemName.toString());
         itemMeta.setLore(lore);
@@ -232,6 +241,7 @@ public class GuiGlobalItems {
     public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack){
         ItemStack item = new ItemStack(itemMaterial);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eTemporary close this menu");
         meta.setLore(Collections.singletonList("\u00A77Allow you to chose other item then return here."));

@@ -65,6 +65,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Create item
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = item.getItemMeta();
+        assert itemMeta != null;
 
         // Edit name and lore
         itemMeta.setDisplayName(itemName);

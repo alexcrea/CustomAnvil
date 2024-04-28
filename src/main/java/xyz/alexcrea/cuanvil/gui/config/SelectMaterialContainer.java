@@ -1,8 +1,6 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
 import org.bukkit.Material;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
-import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.*;

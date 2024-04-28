@@ -64,6 +64,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
     protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
         meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
@@ -95,6 +96,8 @@ public class BoolSettingsGui extends AbstractSettingGui {
 
         ItemStack valueItemStack = new ItemStack(displayedMat);
         ItemMeta valueMeta = valueItemStack.getItemMeta();
+        assert valueMeta != null;
+
         valueMeta.setDisplayName(displayedName);
         valueMeta.setLore(AbstractSettingGui.CLICK_LORE);
         valueItemStack.setItemMeta(valueMeta);

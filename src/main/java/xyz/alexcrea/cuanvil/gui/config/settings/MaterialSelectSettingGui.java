@@ -83,6 +83,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         // Select new mat item
         ItemStack selectItem = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
         ItemMeta selectMeta = selectItem.getItemMeta();
+        assert selectMeta != null;
 
         selectMeta.setDisplayName("\u00A7aAdd Item");
         selectMeta.setLore(Arrays.asList(
@@ -102,6 +103,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         // Instant Remove On item
         ItemStack instantRemoveOnItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta instantRemoveOnMeta = instantRemoveOnItem.getItemMeta();
+        assert instantRemoveOnMeta != null;
 
         instantRemoveOnMeta.setDisplayName("\u00A7eInstant remove is \u00A7aEnabled \u00A7e!");
         instantRemoveOnMeta.setLore(
@@ -112,6 +114,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         // Instant Remove Off item
         ItemStack instantRemoveOffItem = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta instantRemoveOffMeta = instantRemoveOffItem.getItemMeta();
+        assert instantRemoveOffMeta != null;
 
         instantRemoveOffMeta.setDisplayName("\u00A7eInstant remove is \u00A7cDisabled \u00A7e!");
         instantRemoveOffMeta.setLore(
@@ -138,6 +141,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     private GuiItem prepareSaveItem() {
         ItemStack saveItemStack = new ItemStack(GuiGlobalItems.DEFAULT_SAVE_ITEM);
         ItemMeta saveMeta = saveItemStack.getItemMeta();
+        assert saveMeta != null;
 
         saveMeta.setDisplayName("\u00A7aSave");
 
@@ -153,7 +157,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
                 player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
                 return;
             }
-            if(!testCanSave()) return;
+            if(testCantSave()) return;
 
 
             // Save setting
@@ -274,7 +278,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     private void setSaveItem() {
-        if(!testCanSave()){
+        if(testCantSave()){
             this.backgroundPane.bindItem('S', this.noChangeItem);
         }else{
             this.backgroundPane.bindItem('S', this.saveItem);
@@ -282,8 +286,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
 
     }
 
-    private boolean testCanSave() {
-        return this.defaultMaterialHash != this.nowMaterialHash;
+    private boolean testCantSave() {
+        return this.defaultMaterialHash == this.nowMaterialHash;
     }
 
 

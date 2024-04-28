@@ -32,20 +32,20 @@ class AnvilCustomRecipe(
         const val RESULT_ITEM_CONFIG = "result_item"
 
 
-        val DEFAULT_EXACT_COUNT_CONFIG = true
+        const val DEFAULT_EXACT_COUNT_CONFIG = true
         //val DEFAULT_EXACT_LEFT_CONFIG = true
         //val DEFAULT_EXACT_RIGHT_CONFIG = true
 
-        val DEFAULT_XP_COST_CONFIG = 1
+        const val DEFAULT_XP_COST_CONFIG = 1
 
         val DEFAULT_LEFT_ITEM_CONFIG: ItemStack? = null
         val DEFAULT_RIGHT_ITEM_CONFIG: ItemStack? = null
-        val DEFAULT_RESULT_ITEM_CONFIG: ItemStack? = null;
+        val DEFAULT_RESULT_ITEM_CONFIG: ItemStack? = null
 
         val XP_COST_CONFIG_RANGE = 0..255
 
         fun getFromConfig(name: String, configSection: ConfigurationSection?): AnvilCustomRecipe? {
-            if(configSection == null) return null;
+            if(configSection == null) return null
             return AnvilCustomRecipe(
                 name,
                 configSection.getBoolean(EXACT_COUNT_CONFIG, DEFAULT_EXACT_COUNT_CONFIG),
@@ -89,7 +89,7 @@ class AnvilCustomRecipe(
 
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE)
         }
     }
 

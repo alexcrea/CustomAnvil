@@ -27,6 +27,7 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
     protected GuiItem prepareCreateNewItem() {
         ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
+        assert createMeta != null;
 
         createMeta.setDisplayName(createItemName());
         createMeta.setLore(getCreateItemLore());

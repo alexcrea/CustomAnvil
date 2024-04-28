@@ -41,6 +41,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
         // edit displayed item
         ItemMeta meta = displaydItem.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " \u00A7fCustom recipe");
         meta.addItemFlags(ItemFlag.values());
@@ -73,8 +74,8 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         // Create new empty conflict and display it to the admin
         AnvilCustomRecipe recipe = new AnvilCustomRecipe(
                 name,
-                AnvilCustomRecipe.Companion.getDEFAULT_EXACT_COUNT_CONFIG(),
-                AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(),
+                AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG,
+                AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());

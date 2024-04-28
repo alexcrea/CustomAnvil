@@ -41,6 +41,7 @@ public class MainConfigGui extends ChestGui {
         // Basic config item
         ItemStack basicConfigItemstack = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta basicConfigMeta = basicConfigItemstack.getItemMeta();
+        assert basicConfigMeta != null;
 
         basicConfigMeta.setDisplayName("\u00A7aBasic Config Menu");
         basicConfigMeta.setLore(Collections.singletonList("\u00A77Click here to open basic config menu"));
@@ -52,6 +53,7 @@ public class MainConfigGui extends ChestGui {
         // enchant level limit item
         ItemStack enchantLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta enchantLimitMeta = enchantLimitItemstack.getItemMeta();
+        assert enchantLimitMeta != null;
 
         enchantLimitMeta.setDisplayName("\u00A7aEnchantment Level Limit");
         enchantLimitMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment level limit menu"));
@@ -63,6 +65,7 @@ public class MainConfigGui extends ChestGui {
         // enchant cost item
         ItemStack enchantCostItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
         ItemMeta enchantCostMeta = enchantCostItemstack.getItemMeta();
+        assert enchantCostMeta != null;
 
         enchantCostMeta.setDisplayName("\u00A7aEnchantment Cost");
         enchantCostMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment costs menu"));
@@ -72,20 +75,22 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('3', enchantCostItem);
 
         // Enchantment Conflicts item
-        ItemStack EnchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
-        ItemMeta enchantConflictMeta = EnchantConflictItemstack.getItemMeta();
+        ItemStack enchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
+        ItemMeta enchantConflictMeta = enchantConflictItemstack.getItemMeta();
+        assert enchantConflictMeta != null;
 
         enchantConflictMeta.setDisplayName("\u00A7aEnchantment Conflict");
         enchantConflictMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment conflict menu"));
-        EnchantConflictItemstack.setItemMeta(enchantConflictMeta);
+        enchantConflictItemstack.setItemMeta(enchantConflictMeta);
 
-        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(EnchantConflictItemstack, EnchantConflictGui.INSTANCE);
+        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, EnchantConflictGui.INSTANCE);
         pane.bindItem('4', enchantConflictItem);
 
         // Group config items
         ItemStack groupItemstack = new ItemStack(Material.CHEST);
-
         ItemMeta groupMeta = groupItemstack.getItemMeta();
+        assert groupMeta != null;
+
         groupMeta.setDisplayName("\u00A7aGroups");
         groupMeta.setLore(Collections.singletonList("\u00A77Click here to open material group menu"));
         groupItemstack.setItemMeta(groupMeta);
@@ -97,6 +102,7 @@ public class MainConfigGui extends ChestGui {
         // Unit repair item
         ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);
         ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
+        assert unitRepairMeta != null;
 
         unitRepairMeta.setDisplayName("\u00A7aUnit Repair");
         unitRepairMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil unit repair menu"));
@@ -107,7 +113,8 @@ public class MainConfigGui extends ChestGui {
 
         // Custom recipe item
         ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);
-        ItemMeta customRecipeMeta = EnchantConflictItemstack.getItemMeta();
+        ItemMeta customRecipeMeta = customRecipeItemstack.getItemMeta();
+        assert customRecipeMeta != null;
 
         customRecipeMeta.setDisplayName("\u00A7aCustom recipes");
         customRecipeMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil custom recipe menu"));
@@ -119,6 +126,8 @@ public class MainConfigGui extends ChestGui {
         // quit item
         ItemStack quitItemstack = new ItemStack(Material.BARRIER);
         ItemMeta quitMeta = quitItemstack.getItemMeta();
+        assert quitMeta != null;
+
         quitMeta.setDisplayName("\u00A7cQuit");
         quitItemstack.setItemMeta(quitMeta);
 
@@ -131,6 +140,7 @@ public class MainConfigGui extends ChestGui {
         // create & bind "info" item
         ItemStack infoItemstack = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItemstack.getItemMeta();
+        assert infoMeta != null;
 
         infoMeta.setDisplayName("\u00A7eThis is a alpha version of the gui !");
         infoMeta.setLore(Collections.singletonList("\u00A77If you have feedback or idea you can send them to the dev !"));

@@ -27,6 +27,7 @@ public abstract class MappedElementListConfigGui< T, S > extends ElementListConf
         // Create new conflict item
         ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
+        assert createMeta != null;
 
         createMeta.setDisplayName("\u00A7aCreate new "+genericDisplayedName());
         createMeta.setLore(Arrays.asList(

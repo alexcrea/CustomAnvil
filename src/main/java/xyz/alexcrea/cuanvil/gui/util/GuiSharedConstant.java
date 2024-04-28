@@ -60,18 +60,24 @@ public class GuiSharedConstant {
     static {
         CANCEL_ITEM = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta meta = CANCEL_ITEM.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7cCancel");
         meta.setLore(Collections.singletonList("\u00A77Cancel current action and return to previous menu."));
         CANCEL_ITEM.setItemMeta(meta);
 
         CONFIRM_ITEM = new ItemStack(Material.GREEN_TERRACOTTA);
         meta = CONFIRM_ITEM.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7aConfirm");
         meta.setLore(Collections.singletonList("\u00A77Confirm current action."));
         CONFIRM_ITEM.setItemMeta(meta);
 
         CONFIRM_PERMANENT_ITEM = new ItemStack(Material.GREEN_TERRACOTTA);
         meta = CONFIRM_PERMANENT_ITEM.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7aConfirm");
         meta.setLore(Arrays.asList("\u00A77Confirm current action.",
                 "\u00A74Cation: This action can't be canceled."));

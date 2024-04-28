@@ -66,6 +66,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         // Delete item
         ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta deleteMeta = deleteItem.getItemMeta();
+        assert deleteMeta != null;
 
         deleteMeta.setDisplayName("\u00A74DELETE RECIPE");
         deleteMeta.setLore(Collections.singletonList("\u00A7cCaution with this button !"));
@@ -78,12 +79,12 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = BoolSettingsGui.boolFactory("\u00A78Exact count ?", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_EXACT_COUNT_CONFIG());
+                AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
         this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
                 this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
-                costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(), 1, 5, 10);
+                costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG, 1, 5, 10);
 
 
         this.leftItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Left \u00A78Item", this,

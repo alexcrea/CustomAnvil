@@ -88,6 +88,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
         // rename cost not needed
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7cRepair Cost Value");
         meta.setLore(Collections.singletonList("\u00A77Please, enable repair cost limit for this variable to be editable."));

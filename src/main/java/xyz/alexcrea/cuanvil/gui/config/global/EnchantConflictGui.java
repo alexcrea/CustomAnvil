@@ -58,6 +58,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         ItemStack item = new ItemStack(conflict.getRepresentativeMaterial());
 
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " \u00A7fConflict");

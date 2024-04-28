@@ -65,6 +65,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
     private static final ItemStack DELETE_ITEM_STACK = new ItemStack(Material.RED_TERRACOTTA);
     static {
         ItemMeta meta = DELETE_ITEM_STACK.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7cDisable item being repaired ?");
         meta.setLore(Arrays.asList("\u00A77Confirm disabling unit repair for this item..",
@@ -117,6 +118,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
     protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
         meta.setLore(Collections.singletonList("\u00A77Default value is " + displayValue(holder.defaultVal)));
@@ -161,6 +163,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
         // "result" display
         ItemStack resultPaper = new ItemStack(Material.PAPER);
         ItemMeta resultMeta = resultPaper.getItemMeta();
+        assert resultMeta != null;
+
         resultMeta.setDisplayName("\u00A7eValue: " + displayValue(now));
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -181,6 +185,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
     private GuiItem getSetValueItem(Material mat, BigDecimal planned, String numberPrefix){
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7e" + displayValue(now) + " -> " + displayValue(planned)
                 + " \u00A7r(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "\u00A7r)"));
         meta.setLore(AbstractSettingGui.CLICK_LORE);
@@ -274,6 +280,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName(stepName.toString());
         meta.setLore(stepLore);

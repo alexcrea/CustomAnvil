@@ -70,6 +70,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         // Delete item
         ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta deleteMeta = deleteItem.getItemMeta();
+        assert deleteMeta != null;
 
         deleteMeta.setDisplayName("\u00A74DELETE CONFLICT");
         deleteMeta.setLore(Collections.singletonList("\u00A7cCaution with this button !"));
@@ -186,6 +187,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         // Configure enchant setting item
         ItemStack enchantItem = this.enchantSettingItem.getItem();
         ItemMeta enchantMeta = enchantItem.getItemMeta();
+        assert enchantMeta != null;
 
         enchantMeta.setDisplayName("\u00A7aSelect included \u00A75Enchantments \u00A7aSettings");
         enchantMeta.setLore(enchantLore);
@@ -197,6 +199,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         // Configure group setting item
         ItemStack groupItem = this.groupSettingItem.getItem();
         ItemMeta groupMeta = groupItem.getItemMeta();
+        assert groupMeta != null;
 
         groupMeta.setDisplayName("\u00A7aSelect excluded \u00A73Groups \u00A7aSettings");
         groupMeta.setLore(groupLore);

@@ -74,6 +74,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
         meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
@@ -101,6 +102,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         }else{
             displayedItem = new ItemStack(Material.BARRIER);
             ItemMeta valueMeta = displayedItem.getItemMeta();
+            assert valueMeta != null;
 
             valueMeta.setDisplayName("\u00A74NO ITEM SET");
             valueMeta.setLore(CLICK_LORE);
@@ -262,6 +264,8 @@ public class ItemSettingGui extends AbstractSettingGui {
                 item = item.clone();
             }
             ItemMeta meta = item.getItemMeta();
+            assert meta != null;
+
             meta.setDisplayName("\u00A7a" + name);
             meta.setLore(getDisplayLore());
 
