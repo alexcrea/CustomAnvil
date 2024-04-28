@@ -102,7 +102,7 @@ class EnchantConflictManager {
 
     private fun getEnchantByName(enchantName: String): Enchantment? {
 
-        // Teporary solution for 1.20.5
+        // Temporary solution for 1.20.5
         when(enchantName){
             "sweeping", "sweeping_edge" -> {
                 return SWEEPING_EDGE_ENCHANT
