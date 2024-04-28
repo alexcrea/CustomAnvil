@@ -1,7 +1,7 @@
 # Custom Anvil
 
 **Custom Anvil** is a plugin that allows server administrators to customise every aspect of the anvil's mechanics. 
-It is expected to work on 1.18 to 1.20.4 minecraft servers running spigot or paper.
+It is expected to work on 1.18 to 1.20.5 minecraft servers running spigot or paper.
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
 It was renamed because it now affects every anvil aspect and not only unsafe enchants
@@ -53,5 +53,13 @@ Default configuration can be found on following links:
 - [unit_repair_item.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/unit_repair_item.yml)
 - [custom_recipes.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/custom_recipes.yml)
 ---
-### Know issue:
-There is non known issue, if you find one please report the issue.
+### Known issue:
+- Custom recipe config GUI is not reloaded on reload config command. (this should not impact a lot of admin, Custom recipe config should be edited manually only in rare occasion)
+
+### Planned:
+- Finish the config gui
+- Semi manual config update on pluign or minecraft update
+- Check unknow registered enchantment & warn
+- Warn admin on unsuported minecraft version 
+
+
