@@ -49,7 +49,9 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         }
 
         return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+                null,
+                0, 255,
                 rarity.getItemValue(), rarity.getBookValue(),
                 1, 10, 50);
     }

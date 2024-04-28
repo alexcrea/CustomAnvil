@@ -116,6 +116,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
                 this,
                 material.name().toLowerCase()+"."+materialName,
                 ConfigHolder.UNIT_REPAIR_HOLDER,
+                null,
                 2,
                 true, true,
                 0,

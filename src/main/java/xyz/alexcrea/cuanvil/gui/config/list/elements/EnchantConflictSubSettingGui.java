@@ -97,6 +97,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.minBeforeActiveSettingFactory = IntSettingsGui.intFactory(
                 "\u00A78Minimum enchantment count",
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
+                null,
                 0, 255, 0, 1
         );
 

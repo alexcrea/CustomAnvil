@@ -82,6 +82,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
                 this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(), 1, 5, 10);
 
 

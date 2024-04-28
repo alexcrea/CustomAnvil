@@ -79,7 +79,9 @@ public class BasicConfigGui extends ValueUpdatableGui {
         // rename cost item
         IntRange range = ConfigOptions.REPAIR_LIMIT_RANGE;
         this.repairCostFactory = IntSettingsGui.intFactory("\u00A78Repair Cost Limit", this,
-                ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
+                ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG,
+                null,
+                range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_LIMIT_REPAIR_VALUE,
                 1, 5, 10);
 
@@ -99,27 +101,35 @@ public class BasicConfigGui extends ValueUpdatableGui {
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
         this.itemRepairCost = IntSettingsGui.intFactory("\u00A78Item Repair Cost", this,
-                ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
+                ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
+                null,
+                range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // unit repair cost
         this.unitRepairCost = IntSettingsGui.intFactory("\u00A78Unit Repair Cost", this,
-                ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
+                ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
+                null,
+                range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
                 1, 5, 10, 50, 100);
 
         // item rename cost
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
         this.itemRenameCost = IntSettingsGui.intFactory("\u00A78Rename Cost", this,
-                ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
+                ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
+                null,
+                range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
                 1, 5, 10, 50, 100);
 
         // sacrifice illegal enchant cost
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
         this.sacrificeIllegalEnchantCost = IntSettingsGui.intFactory("\u00A78Sacrifice Illegal Enchant Cost", this,
-                ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG, range.getFirst(), range.getLast(),
+                ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG,
+                null,
+                range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
 

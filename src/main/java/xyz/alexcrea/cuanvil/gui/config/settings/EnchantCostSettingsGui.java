@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
@@ -18,6 +19,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -228,6 +230,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      * @param parent         Parent gui to go back when completed.
      * @param configPath     Configuration path of this setting.
      * @param config         Configuration holder of this setting.
+     * @param displayLore    Gui display item lore.
      * @param min            Minimum value of this setting.
      * @param max            Maximum value of this setting.
      * @param defaultItemVal Default item value if not found on the config.
@@ -239,13 +242,15 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      * @return A factory for an enchant cost setting gui.
      */
     public static EnchantCostSettingFactory enchantCostFactory(
-            @NotNull String title, ValueUpdatableGui parent,
-            String configPath, ConfigHolder config,
+            @NotNull String title, @NotNull ValueUpdatableGui parent,
+            @NotNull String configPath, @NotNull ConfigHolder config,
+            @Nullable List<String> displayLore,
             int min, int max, int defaultItemVal, int defaultBookVal,
             int... steps) {
         return new EnchantCostSettingFactory(
                 title, parent,
                 configPath, config,
+                displayLore,
                 min, max, defaultItemVal, defaultBookVal, steps);
     }
 
@@ -263,6 +268,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          * @param parent         Parent gui to go back when completed.
          * @param configPath     Configuration path of this setting.
          * @param config         Configuration holder of this setting.
+         * @param displayLore    Gui display item lore.
          * @param min            Minimum value of this setting.
          * @param max            Maximum value of this setting.
          * @param defaultItemVal Default item value if not found on the config.
@@ -274,12 +280,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          */
         protected EnchantCostSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
+                @NotNull String configPath, @NotNull ConfigHolder config,
+                @Nullable List<String> displayLore,
                 int min, int max, int defaultItemVal, int defaultBookVal,
                 int... steps) {
 
             super(title, parent,
                     configPath, config,
+                    displayLore,
                     min, max, defaultItemVal, steps);
             this.defaultBookVal = defaultBookVal;
         }

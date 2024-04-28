@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
@@ -338,6 +339,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
      * @param parent       Parent gui to go back when completed.
      * @param configPath   Configuration path of this setting.
      * @param config       Configuration holder of this setting.
+     * @param displayLore  Gui display item lore.
      * @param scale        The scale of the decimal.
      * @param asPercentage If we should display the value as a %.
      * @param nullOnZero   Set the value as null (deleting it) when equal to 0
@@ -350,13 +352,16 @@ public class DoubleSettingGui extends AbstractSettingGui {
      *                     If step only contain 1 value, no step item should be displayed.
      * @return A factory for a double setting gui.
      */
-    public static DoubleSettingFactory doubleFactory(@NotNull String title, ValueUpdatableGui parent,
-                                                     String configPath, ConfigHolder config,
+    @NotNull
+    public static DoubleSettingFactory doubleFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
+                                                     @NotNull String configPath, @NotNull ConfigHolder config,
+                                                     @Nullable List<String> displayLore,
                                                      int scale, boolean asPercentage, boolean nullOnZero,
                                                      double min, double max, double defaultVal, double... steps) {
         return new DoubleSettingFactory(
                 title, parent,
                 configPath, config,
+                displayLore,
                 scale, asPercentage, nullOnZero,
                 min, max, defaultVal, steps);
     }
@@ -367,6 +372,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
     public static class DoubleSettingFactory extends SettingGuiFactory {
         @NotNull
         String title;
+        @NotNull
         ValueUpdatableGui parent;
 
         int scale;
@@ -377,6 +383,9 @@ public class DoubleSettingGui extends AbstractSettingGui {
         BigDecimal defaultVal;
         BigDecimal[] steps;
 
+        @NotNull
+        List<String> displayLore;
+
         /**
          * Constructor for a double setting gui factory.
          *
@@ -384,6 +393,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
          * @param parent       Parent gui to go back when completed.
          * @param configPath   Configuration path of this setting.
          * @param config       Configuration holder of this setting.
+         * @param displayLore  Gui display item lore.
          * @param scale        The scale of the decimal.
          * @param asPercentage If we should display the value as a %.
          * @param nullOnZero   Set the value as null (deleting it) when equal to 0
@@ -396,8 +406,9 @@ public class DoubleSettingGui extends AbstractSettingGui {
          *                     If step only contain 1 value, no step item should be displayed.
          */
         protected DoubleSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
+                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull String configPath, @NotNull ConfigHolder config,
+                @Nullable List<String> displayLore,
                 int scale, boolean asPercentage, boolean nullOnZero,
                 double min, double max, double defaultVal, double... steps) {
             super(configPath, config);
@@ -413,6 +424,12 @@ public class DoubleSettingGui extends AbstractSettingGui {
             this.steps = new BigDecimal[steps.length];
             for (int i = 0; i < steps.length; i++) {
                 this.steps[i] = BigDecimal.valueOf(steps[i]).setScale(scale, RoundingMode.HALF_UP);
+            }
+
+            if(displayLore == null){
+                this.displayLore = Collections.emptyList();
+            }else {
+                this.displayLore = displayLore;
             }
         }
 
@@ -449,7 +466,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
             BigDecimal value = getConfiguredValue();
             StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, displayValue(value, this.asPercentage));
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, displayValue(value, this.asPercentage), this.displayLore);
         }
 
         public GuiItem getItem(Material itemMat){

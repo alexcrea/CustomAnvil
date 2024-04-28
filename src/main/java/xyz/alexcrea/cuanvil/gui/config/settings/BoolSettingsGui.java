@@ -16,7 +16,9 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -142,20 +144,22 @@ public class BoolSettingsGui extends AbstractSettingGui {
     /**
      * Create a bool setting factory from setting's parameters.
      *
-     * @param title      The title of the gui.
-     * @param parent     Parent gui to go back when completed.
-     * @param configPath Configuration path of this setting.
-     * @param config     Configuration holder of this setting.
-     * @param defaultVal Default value if not found on the config.
+     * @param title        The title of the gui.
+     * @param parent       Parent gui to go back when completed.
+     * @param configPath   Configuration path of this setting.
+     * @param config       Configuration holder of this setting.
+     * @param defaultVal   Default value if not found on the config.
+     * @param displayLore  Gui display item lore.
      * @return A factory for a boolean setting gui.
      */
-    public static BoolSettingFactory boolFactory(@NotNull String title, ValueUpdatableGui parent,
-                                                 String configPath, ConfigHolder config,
-                                                 boolean defaultVal) {
+    public static BoolSettingFactory boolFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
+                                                 @NotNull String configPath, @NotNull ConfigHolder config,
+                                                 boolean defaultVal,
+                                                 String... displayLore) {
         return new BoolSettingFactory(
                 title, parent,
                 configPath, config,
-                defaultVal);
+                defaultVal, displayLore);
     }
 
     /**
@@ -164,27 +168,33 @@ public class BoolSettingsGui extends AbstractSettingGui {
     public static class BoolSettingFactory extends SettingGuiFactory {
         @NotNull
         String title;
+        @NotNull
         ValueUpdatableGui parent;
         boolean defaultVal;
+
+        @NotNull
+        List<String> displayLore;
 
         /**
          * Constructor for a boolean setting gui factory.
          *
-         * @param title      The title of the gui.
-         * @param parent     Parent gui to go back when completed.
-         * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
-         * @param defaultVal Default value if not found on the config.
+         * @param title        The title of the gui.
+         * @param parent       Parent gui to go back when completed.
+         * @param configPath   Configuration path of this setting.
+         * @param config       Configuration holder of this setting.
+         * @param defaultVal   Default value if not found on the config.
+         * @param displayLore  Gui display item lore.
          */
         protected BoolSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
-                boolean defaultVal) {
+                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull String configPath, @NotNull ConfigHolder config,
+                boolean defaultVal, String... displayLore) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
+            this.displayLore = Arrays.asList(displayLore);
         }
 
         /**
@@ -233,7 +243,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
             }
             itemName.append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, value);
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, value, this.displayLore);
         }
 
         /**

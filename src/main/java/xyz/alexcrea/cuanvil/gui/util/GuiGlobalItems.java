@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A utility class to store function that create generic GUI item.
@@ -180,25 +182,32 @@ public class GuiGlobalItems {
     /**
      * Create an arbitrary GuiItem from a unique setting and item's property.
      *
-     * @param factory  The setting's GUI factory.
-     * @param itemMat  Displayed material of the item.
-     * @param itemName Name of the item.
-     * @param value    Value of the setting when the item is created.
-     *                 Will not update automatically, if the setting's value change, the item need to be created again.
+     * @param factory     The setting's GUI factory.
+     * @param itemMat     Displayed material of the item.
+     * @param itemName    Name of the item.
+     * @param value       Value of the setting when the item is created.
+     *                    Will not update automatically, if the setting's value change, the item need to be created again.
+     * @param displayLore Gui display item lore.
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem createGuiItemFromProperties(
             @NotNull AbstractSettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
             @NotNull StringBuilder itemName,
-            @NotNull Object value
+            @NotNull Object value,
+            @NotNull List<String> displayLore
     ) {
+        // Prepare lore
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(SETTING_ITEM_LORE_PREFIX + value);
+        lore.addAll(displayLore);
+
         // Create & initialise item
         ItemStack item = new ItemStack(itemMat);
         ItemMeta itemMeta = item.getItemMeta();
 
         itemMeta.setDisplayName(itemName.toString());
-        itemMeta.setLore(Collections.singletonList(SETTING_ITEM_LORE_PREFIX + value));
+        itemMeta.setLore(lore);
         itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);

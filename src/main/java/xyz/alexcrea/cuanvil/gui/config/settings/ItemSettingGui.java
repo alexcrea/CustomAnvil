@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -171,9 +172,9 @@ public class ItemSettingGui extends AbstractSettingGui {
      * @param displayLore Gui display item lore.
      * @return A factory for an item setting gui.
      */
-    public static ItemSettingGui.ItemSettingFactory itemFactory(@NotNull String title, ValueUpdatableGui parent,
-                                                                 String configPath, ConfigHolder config,
-                                                                ItemStack defaultVal,
+    public static ItemSettingGui.ItemSettingFactory itemFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
+                                                                @NotNull String configPath, @NotNull ConfigHolder config,
+                                                                @Nullable ItemStack defaultVal,
                                                                 String... displayLore) {
         return new ItemSettingGui.ItemSettingFactory(
                 title, parent,
@@ -187,8 +188,11 @@ public class ItemSettingGui extends AbstractSettingGui {
     public static class ItemSettingFactory extends SettingGuiFactory {
         @NotNull
         String title;
+        @NotNull
         ValueUpdatableGui parent;
+        @Nullable
         ItemStack defaultVal;
+        @NotNull
         List<String> displayLore;
 
         /**
@@ -202,9 +206,9 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param displayLore Gui display item lore.
          */
         protected ItemSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
-                ItemStack defaultVal,
+                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull String configPath, @NotNull ConfigHolder config,
+                @Nullable ItemStack defaultVal,
                 String... displayLore) {
             super(configPath, config);
             this.title = title;
@@ -229,8 +233,9 @@ public class ItemSettingGui extends AbstractSettingGui {
             return this.config.getConfig().getItemStack(this.configPath, this.defaultVal);
         }
 
+        @NotNull
         public List<String> getDisplayLore() {
-            return displayLore;
+            return this.displayLore;
         }
 
         @Override
