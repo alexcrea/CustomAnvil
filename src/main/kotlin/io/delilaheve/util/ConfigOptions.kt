@@ -217,12 +217,32 @@ object ConfigOptions {
      * Get the given [enchantment]'s limit
      */
     fun enchantLimit(enchantment: Enchantment): Int {
-        val path = "${ENCHANT_LIMIT_ROOT}.${enchantment.enchantmentName}"
+        return enchantLimit(enchantment.enchantmentName)
+    }
+
+    /**
+     * Get the given [enchantmentName]'s limit
+     */
+    private fun enchantLimit(enchantmentName: String): Int {
+        val default = getDefaultLevel(enchantmentName)
+
+        val path = "${ENCHANT_LIMIT_ROOT}.$enchantmentName"
         return CustomAnvil.instance
             .config
-            .getInt(path, defaultEnchantLimit)
+            .getInt(path, default)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
-            ?: defaultEnchantLimit
+            ?: default
+    }
+
+    /**
+     * Get default value if enchantment do not exist on config
+     */
+    private fun getDefaultLevel(enchantmentName: String, // compatibility with 1.20.5. TODO better update system
+        ) : Int {
+        if(enchantmentName == "sweeping_edge"){
+            return enchantLimit("sweeping")
+        }
+        return defaultEnchantLimit
     }
 
     /**
@@ -233,13 +253,37 @@ object ConfigOptions {
         enchantment: Enchantment,
         isFromBook: Boolean
     ): Int {
+        return enchantmentValue(enchantment.enchantmentName, isFromBook)
+    }
+
+    /**
+     * Get the appropriate [enchantmentName]'s value dependent on whether
+     * it's source [isFromBook]
+     */
+    private fun enchantmentValue(
+        enchantmentName: String,
+        isFromBook: Boolean
+    ): Int {
+        val default = getDefaultValue(enchantmentName, isFromBook)
+
         val typeKey = if (isFromBook) KEY_BOOK else KEY_ITEM
-        val path = "${ENCHANT_VALUES_ROOT}.${enchantment.enchantmentName}.$typeKey"
+        val path = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$typeKey"
         return CustomAnvil.instance
             .config
-            .getInt(path, DEFAULT_ENCHANT_VALUE)
+            .getInt(path, default)
             .takeIf { it >= DEFAULT_ENCHANT_VALUE }
             ?: DEFAULT_ENCHANT_VALUE
+    }
+
+    /**
+     * Get default value if enchantment do not exist on config
+     */
+    private fun getDefaultValue(enchantmentName: String, // compatibility with 1.20.5. TODO better update system
+                                isFromBook: Boolean) : Int {
+        if(enchantmentName == "sweeping_edge"){
+            return enchantmentValue("sweeping", isFromBook)
+        }
+        return DEFAULT_ENCHANT_VALUE
     }
 
     /**

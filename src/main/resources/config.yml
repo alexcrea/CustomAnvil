@@ -72,6 +72,7 @@ enchant_limits:
   fire_aspect: 2
   looting: 3
   sweeping: 3
+  sweeping_edge: 3
   efficiency: 5
   unbreaking: 3
   fortune: 3
@@ -208,6 +209,9 @@ enchant_values:
   sweeping:
     item: 4
     book: 2
+  sweeping_edge:
+    item: 4
+    book: 2
   thorns:
     item: 8
     book: 4
@@ -223,3 +227,5 @@ debug_log: false
 
 # Whether to show verbose debug logging
 debug_log_verbose: false
+
+configVersion: 1.4.3

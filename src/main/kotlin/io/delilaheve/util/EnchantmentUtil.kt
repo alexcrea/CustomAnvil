@@ -30,10 +30,17 @@ object EnchantmentUtil {
     ) = mutableMapOf<Enchantment, Int>().apply {
         putAll(this@combineWith)
         other.forEach { (enchantment, level) ->
+            // Get max level or 255 if player can bypass
+            val maxLevel = if (player.hasPermission(CustomAnvil.bypassLevelPermission))
+            { 255 } else
+            { ConfigOptions.enchantLimit(enchantment) }
+
+            val cappedLevel = min(level, maxLevel)
+
             // Enchantment not yet in result list
             if (!containsKey(enchantment)) {
                 // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
-                this[enchantment] = level
+                this[enchantment] = cappedLevel
                 val conflictType =
                     ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys, mat, enchantment)
                 if (!player.hasPermission(CustomAnvil.bypassFusePermission) &&
@@ -46,6 +53,8 @@ object EnchantmentUtil {
             }
             // Enchantment already in result list
             else {
+                val oldLevel = this[enchantment]!! // should be true, see the comment above
+
                 // ... and they are conflicting
                 val conflictType =
                     ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys, mat, enchantment)
@@ -57,28 +66,18 @@ object EnchantmentUtil {
                 }
 
                 // ... and they're not the same level
-                if (this[enchantment] != other[enchantment]) {
-                    val newLevel = max(this[enchantment] ?: 0, other[enchantment] ?: 0)
-                    // apply the greater of the two if non-zero
+                if (oldLevel != cappedLevel) {
+                    // apply the greater of the two or left one if right is above max
+                    this[enchantment] = max(oldLevel, cappedLevel)
 
-                    if (newLevel > 0) {
-                        this[enchantment] = newLevel
-                    }
                 }
                 // ... and they're the same level
                 else {
                     // try to increase the enchantment level by 1
-                    var newLevel = this[enchantment]!! + 1
-                    // Get max level or 255 if player can bypass
-                    val maxLevel = if (player.hasPermission(CustomAnvil.bypassLevelPermission)) {
-                        255
-                    } else {
-                        ConfigOptions.enchantLimit(enchantment)
-                    }
-                    newLevel = min(newLevel, maxLevel)
-                    if (newLevel > 0) {
-                        this[enchantment] = newLevel
-                    }
+                    var newLevel = oldLevel + 1
+                    newLevel = max(min(newLevel, maxLevel), oldLevel)
+                    this[enchantment] = newLevel
+
                 }
             }
         }

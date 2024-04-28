@@ -39,6 +39,7 @@ public enum EnchantmentProperties {
     SOUL_SPEED(EnchantmentRarity.VERY_RARE),
     SWIFT_SNEAK(EnchantmentRarity.VERY_RARE),
     SWEEPING(EnchantmentRarity.RARE),
+    SWEEPING_EDGE(EnchantmentRarity.RARE),
     THORNS(EnchantmentRarity.VERY_RARE),
     UNBREAKING(EnchantmentRarity.UNCOMMON),
     VANISHING_CURSE(EnchantmentRarity.VERY_RARE);

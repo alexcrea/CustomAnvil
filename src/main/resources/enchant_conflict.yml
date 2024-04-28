@@ -147,8 +147,8 @@ restriction_soul_speed:
   enchantments: [ soul_speed ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_sweeping:
-  enchantments: [ sweeping ]
+restriction_sweeping_edge:
+  enchantments: [ sweeping, sweeping_edge ]
   notAffectedGroups: [ enchanted_book, swords ]
 
 # Do not exist in 1.18,  that mean useInFuture will be set to true
@@ -156,7 +156,7 @@ restriction_sweeping:
 restriction_swift_sneak:
   useInFuture: true
   enchantments: [ swift_sneak ]
-  notAffectedGroups: [ enchanted_book, boots ]
+  notAffectedGroups: [ enchanted_book, leggings ]
 
 restriction_thorns:
   enchantments: [ thorns ]
