@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -74,36 +75,52 @@ public class BasicConfigGui extends ValueUpdatableGui {
     protected void prepareValues() {
         // limit repair item
         this.limitRepairFactory = BoolSettingsGui.boolFactory("\u00A78Limit Repair Cost ?", this,
-                ConfigOptions.LIMIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_LIMIT_REPAIR);
+                ConfigOptions.LIMIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_LIMIT_REPAIR,
+                "",
+                "\u00A77Whether all anvil actions cost should be capped.",
+                "\u00A77If true, all anvil repairs will max out at the value of \u00A7aLimit Repair Value\u00A77.");
 
-        // rename cost item
+        // repair cost item
         IntRange range = ConfigOptions.REPAIR_LIMIT_RANGE;
         this.repairCostFactory = IntSettingsGui.intFactory("\u00A78Repair Cost Limit", this,
                 ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG,
-                null,
+                Arrays.asList(
+                        "",
+                        "\u00A77Value to limit repair costs to when \u00A7aLimit Repair Value\u00A77 is true.",
+                        "\u00A77Valid values include \u00A7e1 \u00A77to \u00A7e39\u00A77: " +
+                                "vanilla would display \u00A7e40+\u00A77 as \u00A7ctoo expensive\u00A77."
+                ),
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_LIMIT_REPAIR_VALUE,
                 1, 5, 10);
 
-        // rename cost not needed
+        // repair cost not needed
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7cRepair Cost Value");
-        meta.setLore(Collections.singletonList("\u00A77Please, enable repair cost limit for this variable to be editable."));
+        meta.setDisplayName("\u00A7cLimit Repair Value");
+        meta.setLore(Collections.singletonList("\u00A77This config need \u00A7cLimit Repair Cost\u00A77 enabled."));
         item.setItemMeta(meta);
         this.notNeededLimitValueItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // remove repair limit item
         this.removeRepairLimit = BoolSettingsGui.boolFactory("\u00A78Remove Repair Limit ?", this,
-                ConfigOptions.REMOVE_REPAIR_LIMIT, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_REMOVE_LIMIT);
+                ConfigOptions.REMOVE_REPAIR_LIMIT, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_REMOVE_LIMIT,
+                "",
+                "\u00A77Whether the anvil's repair limit should be removed entirely.",
+                "\u00A77The anvil will still visually display \u00A7ctoo expensive\u00A77.",
+                "\u00A77However the action will be completable.");
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
         this.itemRepairCost = IntSettingsGui.intFactory("\u00A78Item Repair Cost", this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
-                null,
+                Arrays.asList(
+                        "",
+                        "\u00A77XP Level amount added to the anvil when the item",
+                        "\u00A77is repaired by another item of the same type."
+                ),
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
                 1, 5, 10, 50, 100);
@@ -111,7 +128,12 @@ public class BasicConfigGui extends ValueUpdatableGui {
         // unit repair cost
         this.unitRepairCost = IntSettingsGui.intFactory("\u00A78Unit Repair Cost", this,
                 ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
-                null,
+                Arrays.asList(
+                        "",
+                        "\u00A77XP Level amount added to the anvil when the item is repaired by an \u00A7eunit\u00A77.",
+                        "\u00A77For example: a Diamond on a Diamond Sword.",
+                        "\u00A77What's considered unit for what can be edited on the unit repair configuration."
+                ),
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
                 1, 5, 10, 50, 100);
@@ -120,7 +142,10 @@ public class BasicConfigGui extends ValueUpdatableGui {
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
         this.itemRenameCost = IntSettingsGui.intFactory("\u00A78Rename Cost", this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
-                null,
+                Arrays.asList(
+                        "",
+                        "\u00A77XP Level amount added to the anvil when the item is renamed."
+                ),
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
                 1, 5, 10, 50, 100);
@@ -129,7 +154,11 @@ public class BasicConfigGui extends ValueUpdatableGui {
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
         this.sacrificeIllegalEnchantCost = IntSettingsGui.intFactory("\u00A78Sacrifice Illegal Enchant Cost", this,
                 ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG,
-                null,
+                Arrays.asList(
+                        "",
+                        "\u00A77XP Level amount added to the anvil when a sacrifice enchantment",
+                        "\u00A77conflict With one of the left item enchantment"
+                ),
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
