@@ -19,6 +19,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -146,8 +147,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + nowBook + " -> " + planned + " \u00A7r(\u00A7c-" + (nowBook - planned) + "\u00A7r)");
-            meta.setLore(AbstractSettingGui.CLICK_LORE);
+            meta.setDisplayName("\u00A7e" + nowBook + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7c-" + (nowBook - planned) + "\u00A7r)");
+            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -164,8 +165,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + nowBook + " -> " + planned + " \u00A7r(\u00A7a+" + (planned - nowBook) + "\u00A7r)");
-            meta.setLore(AbstractSettingGui.CLICK_LORE);
+            meta.setDisplayName("\u00A7e" + nowBook + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7a+" + (planned - nowBook) + "\u00A7r)");
+            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -174,15 +175,19 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         }
         pane.bindItem('P', plusItem);
 
-        // "result" display
-        ItemStack resultPaper = new ItemStack(Material.PAPER);
-        ItemMeta resultMeta = resultPaper.getItemMeta();
-        assert resultMeta != null;
+        // now value display
+        ItemStack nowPaper = new ItemStack(Material.PAPER);
+        ItemMeta nowMeta = nowPaper.getItemMeta();
+        assert nowMeta != null;
 
-        resultMeta.setDisplayName("\u00A7eValue: " + nowBook);
-        resultPaper.setItemMeta(resultMeta);
+        nowMeta.setDisplayName("\u00A7fValue: \u00A7e" + nowBook);
+        if(!holder.displayLore.isEmpty()){
+            nowMeta.setLore(holder.displayLore);
+        }
 
-        GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        nowPaper.setItemMeta(nowMeta);
+
+        GuiItem resultItem = new GuiItem(nowPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         pane.bindItem('V', resultItem);
 

@@ -16,6 +16,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -62,12 +63,21 @@ public class BoolSettingsGui extends AbstractSettingGui {
      * Prepare "return to default value" gui item.
      */
     protected void prepareReturnToDefault() {
+        // Prepare default Value text
+        String defaultValueLore;
+        if(holder.defaultVal){
+            defaultValueLore = "\u00A7aYes \u00A77Is the default value";
+        }else{
+            defaultValueLore = "\u00A7cNo \u00A77Is the default value";
+        }
+
+        // Create reset to default item
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
+        meta.setLore(Collections.singletonList(defaultValueLore));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -87,19 +97,27 @@ public class BoolSettingsGui extends AbstractSettingGui {
         String displayedName;
         Material displayedMat;
         if (now) {
-            displayedName = "\u00A7aTrue";
+            displayedName = "\u00A7aYes";
             displayedMat = Material.GREEN_TERRACOTTA;
         } else {
-            displayedName = "\u00A7cFalse";
+            displayedName = "\u00A7cNo";
             displayedMat = Material.RED_TERRACOTTA;
         }
+
+        // create & set Value item
+        ArrayList<String> valueLore = new ArrayList<>();
+        if(!holder.displayLore.isEmpty()){
+            valueLore.addAll(holder.displayLore);
+            valueLore.add("");
+        }
+        valueLore.add(AbstractSettingGui.CLICK_LORE);
 
         ItemStack valueItemStack = new ItemStack(displayedMat);
         ItemMeta valueMeta = valueItemStack.getItemMeta();
         assert valueMeta != null;
 
         valueMeta.setDisplayName(displayedName);
-        valueMeta.setLore(AbstractSettingGui.CLICK_LORE);
+        valueMeta.setLore(valueLore);
         valueItemStack.setItemMeta(valueMeta);
         GuiItem resultItem = new GuiItem(valueItemStack, inverseNowConsumer(), CustomAnvil.instance);
 
@@ -236,17 +254,18 @@ public class BoolSettingsGui extends AbstractSettingGui {
             boolean value = getConfiguredValue();
 
             Material itemMat;
-            StringBuilder itemName = new StringBuilder("\u00A7");
+            StringBuilder itemName = new StringBuilder("\u00A7e");
+            String finalValue;
             if (value) {
                 itemMat = Material.GREEN_TERRACOTTA;
-                itemName.append("a");
+                finalValue = "\u00A7aYes";
             } else {
                 itemMat = Material.RED_TERRACOTTA;
-                itemName.append("c");
+                finalValue = "\u00A7cNo";
             }
             itemName.append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, value, this.displayLore);
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, finalValue, this.displayLore, false);
         }
 
         /**

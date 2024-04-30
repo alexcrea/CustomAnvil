@@ -12,15 +12,12 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * An instance gui used to edit a setting.
  */
 public abstract class AbstractSettingGui extends ChestGui {
 
-    protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here to change the value");
+    protected final static String CLICK_LORE = "\u00A77Click Here to change the value";
 
     private PatternPane pane;
 

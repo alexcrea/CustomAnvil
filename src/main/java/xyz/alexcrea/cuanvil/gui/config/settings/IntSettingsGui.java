@@ -97,8 +97,8 @@ public class IntSettingsGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + now + " -> " + planned + " \u00A7r(\u00A7c-" + (now - planned) + "\u00A7r)");
-            meta.setLore(AbstractSettingGui.CLICK_LORE);
+            meta.setDisplayName("\u00A7e" + now + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7c-" + (now - planned) + "\u00A7r)");
+            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -116,8 +116,8 @@ public class IntSettingsGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + now + " -> " + planned + " \u00A7r(\u00A7a+" + (planned - now) + "\u00A7r)");
-            meta.setLore(AbstractSettingGui.CLICK_LORE);
+            meta.setDisplayName("\u00A7e" + now + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7a+" + (planned - now) + "\u00A7r)");
+            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -131,8 +131,11 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("\u00A7eValue: " + now);
+        resultMeta.setDisplayName("\u00A7fValue: \u00A7e" + now);
+        resultMeta.setLore(holder.displayLore);
+
         resultPaper.setItemMeta(resultMeta);
+
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         pane.bindItem('v', resultItem);
@@ -229,7 +232,7 @@ public class IntSettingsGui extends AbstractSettingGui {
             stepLore = Collections.singletonList("\u00A77Click here to change the value by " + stepValue);
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of: ").append(stepValue);
+        stepName.append("Step of: \u00A7e").append(stepValue);
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
@@ -393,7 +396,9 @@ public class IntSettingsGui extends AbstractSettingGui {
             int value = getConfiguredValue();
             StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, value, this.displayLore);
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
+                    "\u00A7e" + value,
+                    this.displayLore, true);
         }
 
         /**

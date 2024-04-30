@@ -40,7 +40,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupCo
         meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " \u00A7fGroup");
         meta.setLore(Arrays.asList(
                 "\u00A77Number of selected groups : " + group.getGroups().size(),
-                "\u00A77Number of included material: " + group.getNonGroupInheritedMaterials().size(),
+                "\u00A77Number of included material : " + group.getNonGroupInheritedMaterials().size(),
                 "",
                 "\u00A77Total number of included material "+group.getMaterials().size()));
 

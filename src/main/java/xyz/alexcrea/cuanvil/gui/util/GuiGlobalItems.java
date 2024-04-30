@@ -203,12 +203,16 @@ public class GuiGlobalItems {
             @NotNull Material itemMat,
             @NotNull StringBuilder itemName,
             @NotNull Object value,
-            @NotNull List<String> displayLore
+            @NotNull List<String> displayLore,
+            boolean displayValuePrefix
     ) {
         // Prepare lore
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(SETTING_ITEM_LORE_PREFIX + value);
-        lore.addAll(displayLore);
+        lore.add((displayValuePrefix ? SETTING_ITEM_LORE_PREFIX  : "") + value);
+        if(!displayLore.isEmpty()){
+            lore.add("");
+            lore.addAll(displayLore);
+        }
 
         // Create & initialise item
         ItemStack item = new ItemStack(itemMat);

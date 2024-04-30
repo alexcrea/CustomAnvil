@@ -7,6 +7,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -268,6 +269,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
             meta.setDisplayName("\u00A7a" + name);
             meta.setLore(getDisplayLore());
+            meta.addItemFlags(ItemFlag.values());
 
             item.setItemMeta(meta);
 

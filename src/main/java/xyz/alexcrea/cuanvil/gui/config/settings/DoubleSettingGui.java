@@ -21,6 +21,7 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -165,7 +166,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("\u00A7eValue: " + displayValue(now));
+        resultMeta.setDisplayName("\u00A7fValue: \u00A7e" + displayValue(now));
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -183,13 +184,22 @@ public class DoubleSettingGui extends AbstractSettingGui {
     }
 
     private GuiItem getSetValueItem(Material mat, BigDecimal planned, String numberPrefix){
+        // Create set item lore
+        ArrayList<String> setLoreItem = new ArrayList<>();
+        if(!holder.displayLore.isEmpty()){
+            setLoreItem.addAll(holder.displayLore);
+            setLoreItem.add("");
+        }
+        setLoreItem.add(AbstractSettingGui.CLICK_LORE);
+
+        // Create & return set value item
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7e" + displayValue(now) + " -> " + displayValue(planned)
+        meta.setDisplayName("\u00A7e" + displayValue(now) + " \u00A7f-> \u00A7e" + displayValue(planned)
                 + " \u00A7r(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "\u00A7r)"));
-        meta.setLore(AbstractSettingGui.CLICK_LORE);
+        meta.setLore(setLoreItem);
         item.setItemMeta(meta);
 
         return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -275,7 +285,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
             stepLore = Collections.singletonList("\u00A77Click here to change the value by " + displayValue(stepValue));
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of ").append(displayValue(stepValue));
+        stepName.append("Step of \u00A7e").append(displayValue(stepValue));
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
@@ -473,7 +483,9 @@ public class DoubleSettingGui extends AbstractSettingGui {
             BigDecimal value = getConfiguredValue();
             StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, displayValue(value, this.asPercentage), this.displayLore);
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
+                    "\u00A7e" + displayValue(value, this.asPercentage),
+                    this.displayLore, true);
         }
 
         public GuiItem getItem(Material itemMat){

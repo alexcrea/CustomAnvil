@@ -32,7 +32,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     private EnchantCostConfigGui() {
-        super("\u00A78Enchantment Level Limit");
+        super("\u00A78Enchantment Level Cost");
 
     }
 
@@ -70,8 +70,8 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Edit name and lore
         itemMeta.setDisplayName(itemName);
         itemMeta.setLore(Arrays.asList(
-                "\u00A77Item  Cost: " + itemCost,
-                "\u00A77Book Cost: " + bookCost));
+                "\u00A77Item  Cost: \u00A7e" + itemCost,
+                "\u00A77Book Cost: \u00A7e" + bookCost));
 
         item.setItemMeta(itemMeta);
 
