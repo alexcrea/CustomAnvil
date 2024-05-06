@@ -117,8 +117,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         meta.setDisplayName("\u00A7eReset to default value");
         meta.setLore(Arrays.asList(
-                "\u00A77Default item  value is: " + holder.defaultVal,
-                "\u00A77Default book value is: " + holder.defaultBookVal));
+                "\u00A77Default item  value is: \u00A7e" + holder.defaultVal,
+                "\u00A77Default book value is: \u00A7e" + holder.defaultBookVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -330,6 +330,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             return new EnchantCostSettingsGui(this, nowItem);
         }
 
+        public List<String> getDisplayLore() {
+            return this.displayLore;
+        }
     }
 
 }

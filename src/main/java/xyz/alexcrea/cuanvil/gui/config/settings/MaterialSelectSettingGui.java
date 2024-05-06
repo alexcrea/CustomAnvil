@@ -206,7 +206,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null) return item;
-        meta.setDisplayName("\u00A7f" + CasedStringUtil.snakeToUpperSpacedCase(material.name()));
+        meta.setDisplayName("\u00A7a" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()));
         meta.setLore(Collections.singletonList("\u00A77Click here to remove this material from the list"));
         meta.addItemFlags(ItemFlag.values());
 

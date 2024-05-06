@@ -98,7 +98,10 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.minBeforeActiveSettingFactory = IntSettingsGui.intFactory(
                 "\u00A78Minimum enchantment count",
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
-                null,
+                Arrays.asList(
+                        "\u00A77Minimum enchantment count set to X mean only X enchantment can be put",
+                        "\u00A77on an item before the conflict is active."
+                ),
                 0, 255, 0, 1
         );
 
@@ -201,15 +204,15 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta groupMeta = groupItem.getItemMeta();
         assert groupMeta != null;
 
-        groupMeta.setDisplayName("\u00A7aSelect excluded \u00A73Groups \u00A7aSettings");
+        groupMeta.setDisplayName("\u00A7aSelect Excluded \u00A73Groups \u00A7aSettings");
         groupMeta.setLore(groupLore);
 
         groupItem.setItemMeta(groupMeta);
 
         this.groupSettingItem.setItem(groupItem); // Just in case
 
-
-        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(Material.COMMAND_BLOCK));
+        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(Material.COMMAND_BLOCK,
+                "Minimum Enchantment Count"));
         update();
     }
 

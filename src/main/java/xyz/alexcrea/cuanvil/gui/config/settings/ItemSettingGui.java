@@ -78,7 +78,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
+        meta.setLore(Collections.singletonList("\u00A77Default value is \u00A7e" + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
