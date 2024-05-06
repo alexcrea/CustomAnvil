@@ -60,6 +60,10 @@ abstract class AbstractMaterialGroup(private val name: String) {
         return name
     }
 
+    override fun toString(): String {
+        return name
+    }
+
     /**
      * Update the contained groups of this group
      */
@@ -87,5 +91,7 @@ abstract class AbstractMaterialGroup(private val name: String) {
         }
         return Material.PAPER
     }
+
+    abstract fun updateMaterials()
 
 }

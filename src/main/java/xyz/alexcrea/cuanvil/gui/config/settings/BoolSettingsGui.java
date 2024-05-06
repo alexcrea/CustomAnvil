@@ -13,9 +13,13 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -59,11 +63,21 @@ public class BoolSettingsGui extends AbstractSettingGui {
      * Prepare "return to default value" gui item.
      */
     protected void prepareReturnToDefault() {
+        // Prepare default Value text
+        String defaultValueLore;
+        if(holder.defaultVal){
+            defaultValueLore = "\u00A7aYes \u00A77Is the default value";
+        }else{
+            defaultValueLore = "\u00A7cNo \u00A77Is the default value";
+        }
+
+        // Create reset to default item
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
+        meta.setLore(Collections.singletonList(defaultValueLore));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -83,17 +97,27 @@ public class BoolSettingsGui extends AbstractSettingGui {
         String displayedName;
         Material displayedMat;
         if (now) {
-            displayedName = "\u00A7aTrue";
+            displayedName = "\u00A7aYes";
             displayedMat = Material.GREEN_TERRACOTTA;
         } else {
-            displayedName = "\u00A7cFalse";
+            displayedName = "\u00A7cNo";
             displayedMat = Material.RED_TERRACOTTA;
         }
 
+        // create & set Value item
+        ArrayList<String> valueLore = new ArrayList<>();
+        if(!holder.displayLore.isEmpty()){
+            valueLore.addAll(holder.displayLore);
+            valueLore.add("");
+        }
+        valueLore.add(AbstractSettingGui.CLICK_LORE);
+
         ItemStack valueItemStack = new ItemStack(displayedMat);
         ItemMeta valueMeta = valueItemStack.getItemMeta();
+        assert valueMeta != null;
+
         valueMeta.setDisplayName(displayedName);
-        valueMeta.setLore(AbstractSettingGui.CLICK_LORE);
+        valueMeta.setLore(valueLore);
         valueItemStack.setItemMeta(valueMeta);
         GuiItem resultItem = new GuiItem(valueItemStack, inverseNowConsumer(), CustomAnvil.instance);
 
@@ -141,20 +165,22 @@ public class BoolSettingsGui extends AbstractSettingGui {
     /**
      * Create a bool setting factory from setting's parameters.
      *
-     * @param title      The title of the gui.
-     * @param parent     Parent gui to go back when completed.
-     * @param configPath Configuration path of this setting.
-     * @param config     Configuration holder of this setting.
-     * @param defaultVal Default value if not found on the config.
+     * @param title        The title of the gui.
+     * @param parent       Parent gui to go back when completed.
+     * @param configPath   Configuration path of this setting.
+     * @param config       Configuration holder of this setting.
+     * @param defaultVal   Default value if not found on the config.
+     * @param displayLore  Gui display item lore.
      * @return A factory for a boolean setting gui.
      */
-    public static BoolSettingFactory boolFactory(@NotNull String title, ValueUpdatableGui parent,
-                                                 String configPath, ConfigHolder config,
-                                                 boolean defaultVal) {
+    public static BoolSettingFactory boolFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
+                                                 @NotNull String configPath, @NotNull ConfigHolder config,
+                                                 boolean defaultVal,
+                                                 String... displayLore) {
         return new BoolSettingFactory(
                 title, parent,
                 configPath, config,
-                defaultVal);
+                defaultVal, displayLore);
     }
 
     /**
@@ -163,27 +189,33 @@ public class BoolSettingsGui extends AbstractSettingGui {
     public static class BoolSettingFactory extends SettingGuiFactory {
         @NotNull
         String title;
+        @NotNull
         ValueUpdatableGui parent;
         boolean defaultVal;
+
+        @NotNull
+        List<String> displayLore;
 
         /**
          * Constructor for a boolean setting gui factory.
          *
-         * @param title      The title of the gui.
-         * @param parent     Parent gui to go back when completed.
-         * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
-         * @param defaultVal Default value if not found on the config.
+         * @param title        The title of the gui.
+         * @param parent       Parent gui to go back when completed.
+         * @param configPath   Configuration path of this setting.
+         * @param config       Configuration holder of this setting.
+         * @param defaultVal   Default value if not found on the config.
+         * @param displayLore  Gui display item lore.
          */
         protected BoolSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
-                boolean defaultVal) {
+                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull String configPath, @NotNull ConfigHolder config,
+                boolean defaultVal, String... displayLore) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
+            this.displayLore = Arrays.asList(displayLore);
         }
 
         /**
@@ -207,6 +239,48 @@ public class BoolSettingsGui extends AbstractSettingGui {
             boolean now = getConfiguredValue();
             // create new gui
             return new BoolSettingsGui(this, now);
+        }
+
+        /**
+         * Create a new Boolean setting GuiItem.
+         * This item will create and open a boolean setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         *
+         * @param name Name of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
+         */
+        public GuiItem getItem(String name){
+            // Get item properties
+            boolean value = getConfiguredValue();
+
+            Material itemMat;
+            StringBuilder itemName = new StringBuilder("\u00A7e");
+            String finalValue;
+            if (value) {
+                itemMat = Material.GREEN_TERRACOTTA;
+                finalValue = "\u00A7aYes";
+            } else {
+                itemMat = Material.RED_TERRACOTTA;
+                finalValue = "\u00A7cNo";
+            }
+            itemName.append(name);
+
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, finalValue, this.displayLore, false);
+        }
+
+        /**
+         * Create a new boolean setting GuiItem.
+         * This item will create and open a boolean setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         * Item's name will be the factory set title.
+         *
+         * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
+         */
+        public GuiItem getItem(){
+            // Get item properties
+            String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
+
+            return getItem(CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

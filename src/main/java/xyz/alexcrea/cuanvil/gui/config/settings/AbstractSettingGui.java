@@ -12,15 +12,12 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * An instance gui used to edit a setting.
  */
 public abstract class AbstractSettingGui extends ChestGui {
 
-    protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here to change the value");
+    protected final static String CLICK_LORE = "\u00A77Click Here to change the value";
 
     private PatternPane pane;
 
@@ -119,7 +116,9 @@ public abstract class AbstractSettingGui extends ChestGui {
      * It is better to keep a factory that hold setting data than find what parameters to use every time.
      */
     public abstract static class SettingGuiFactory {
+        @NotNull
         protected String configPath;
+        @NotNull
         protected ConfigHolder config;
 
         /**
@@ -128,7 +127,7 @@ public abstract class AbstractSettingGui extends ChestGui {
          * @param configPath Configuration path of this setting.
          * @param config     Configuration holder of this setting.
          */
-        protected SettingGuiFactory(String configPath, ConfigHolder config) {
+        protected SettingGuiFactory(@NotNull String configPath, @NotNull ConfigHolder config) {
             this.configPath = configPath;
             this.config = config;
         }
@@ -136,6 +135,7 @@ public abstract class AbstractSettingGui extends ChestGui {
         /**
          * @return Configuration path of this setting.
          */
+        @NotNull
         public String getConfigPath() {
             return configPath;
         }
@@ -143,6 +143,7 @@ public abstract class AbstractSettingGui extends ChestGui {
         /**
          * @return Configuration holder of this setting.
          */
+        @NotNull
         public ConfigHolder getConfigHolder() {
             return config;
         }

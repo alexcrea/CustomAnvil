@@ -97,6 +97,7 @@ public class GuiGlobalActions {
      */
     public static @NotNull Consumer<InventoryClickEvent> openGuiAction(@NotNull Gui goal) {
         return event -> {
+            event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to open inventory if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
@@ -104,7 +105,6 @@ public class GuiGlobalActions {
                 player.sendMessage(NO_EDIT_PERM);
                 return;
             }
-            event.setCancelled(true);
             goal.show(player);
         };
     }

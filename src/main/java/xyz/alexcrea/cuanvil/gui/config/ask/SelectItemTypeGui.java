@@ -16,7 +16,6 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class SelectItemTypeGui extends AbstractAskGui {
 

@@ -19,11 +19,14 @@ import java.util.logging.Level;
 public class ConfirmActionGui extends AbstractAskGui {
 
     public ConfirmActionGui(@NotNull String title, String actionDescription,
-                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm) {
+                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
+                            boolean permanent) {
         super(3, title, backOnCancel);
 
         // Save item
-        this.pane.bindItem('S', new GuiItem(GuiSharedConstant.CONFIRM_ITEM, event -> {
+        this.pane.bindItem('S', new GuiItem(
+                (permanent ? GuiSharedConstant.CONFIRM_PERMANENT_ITEM : GuiSharedConstant.CONFIRM_ITEM),
+                event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
 
@@ -53,12 +56,19 @@ public class ConfirmActionGui extends AbstractAskGui {
         ItemMeta infoMeta = infoItem.getItemMeta();
 
         infoMeta.setDisplayName("\u00A7eAre you sure ?");
-        infoMeta.setLore(Arrays.asList(actionDescription.split("\n")));
+        if(actionDescription != null){
+            infoMeta.setLore(Arrays.asList(actionDescription.split("\n")));
+        }
 
         infoItem.setItemMeta(infoMeta);
 
         pane.bindItem('I', new GuiItem(infoItem, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
+    public ConfirmActionGui(@NotNull String title, String actionDescription,
+                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm){
+        this(title, actionDescription, backOnCancel, backOnConfirm, onConfirm, true);
+    }
+
 
     @Override
     protected Pattern getGuiPattern() {

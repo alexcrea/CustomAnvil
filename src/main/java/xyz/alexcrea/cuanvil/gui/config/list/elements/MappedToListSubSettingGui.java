@@ -5,7 +5,6 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.list.ElementMappedToListGui;
 
 public abstract class MappedToListSubSettingGui extends ValueUpdatableGui implements ElementMappedToListGui {
 

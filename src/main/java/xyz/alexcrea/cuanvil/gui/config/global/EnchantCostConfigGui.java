@@ -12,7 +12,9 @@ import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -32,7 +34,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     private EnchantCostConfigGui() {
-        super("\u00A78Enchantment Level Limit");
+        super("\u00A78Enchantment Level Cost");
 
     }
 
@@ -49,7 +51,12 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         }
 
         return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+                Arrays.asList(
+                        "\u00A77How many level should " + prettyKey,
+                        "\u00A77cost when applied by book or by another item."
+                ),
+                0, 255,
                 rarity.getItemValue(), rarity.getBookValue(),
                 1, 10, 50);
     }
@@ -63,12 +70,22 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Create item
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = item.getItemMeta();
+        assert itemMeta != null;
+
+        // Prepare lore
+        List<String> lore = new ArrayList<>();
+        lore.add("\u00A77Item  Cost: \u00A7e" + itemCost);
+        lore.add("\u00A77Book Cost: \u00A7e" + bookCost);
+
+        List<String> displayLore = factory.getDisplayLore();
+        if(!displayLore.isEmpty()){
+            lore.add("");
+            lore.addAll(displayLore);
+        }
 
         // Edit name and lore
         itemMeta.setDisplayName(itemName);
-        itemMeta.setLore(Arrays.asList(
-                "\u00A77Item  Cost: " + itemCost,
-                "\u00A77Book Cost: " + bookCost));
+        itemMeta.setLore(lore);
 
         item.setItemMeta(itemMeta);
 

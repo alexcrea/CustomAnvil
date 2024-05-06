@@ -12,12 +12,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.ItemSettingGui;
-import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A utility class to store function that create generic GUI item.
@@ -30,6 +28,8 @@ public class GuiGlobalItems {
     static {
         BACK_ITEM = new ItemStack(Material.BARRIER);
         ItemMeta meta = BACK_ITEM.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7cBack");
         BACK_ITEM.setItemMeta(meta);
     }
@@ -80,6 +80,8 @@ public class GuiGlobalItems {
     public static GuiItem backgroundItem(Material backgroundMat) {
         ItemStack item = new ItemStack(backgroundMat);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7c");
         item.setItemMeta(meta);
         return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -117,8 +119,8 @@ public class GuiGlobalItems {
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
     }
 
-    private static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
-    private static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
+    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
+    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
 
     /**
      * Create a new save setting GuiItem.
@@ -135,6 +137,8 @@ public class GuiGlobalItems {
 
         ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A7aSave");
         item.setItemMeta(meta);
         return new GuiItem(item,
@@ -148,6 +152,8 @@ public class GuiGlobalItems {
     static {
         ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
         meta.setDisplayName("\u00A77No change. can't save.");
         item.setItemMeta(meta);
         NO_CHANGE_ITEM = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -182,155 +188,39 @@ public class GuiGlobalItems {
     public static final String SETTING_ITEM_LORE_PREFIX = "\u00A77value: ";
 
     /**
-     * Create a new Boolean setting GuiItem.
-     * This item will create and open a boolean setting GUI from the factory.
-     * The item will have its value written in the lore part of the item.
-     *
-     * @param factory The setting's GUI factory.
-     * @param name    Name of the item.
-     * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
-     */
-    public static GuiItem boolSettingGuiItem(
-            @NotNull BoolSettingsGui.BoolSettingFactory factory,
-            @NotNull String name
-    ) {
-        // Get item properties
-        boolean value = factory.getConfiguredValue();
-
-        Material itemMat;
-        StringBuilder itemName = new StringBuilder("\u00A7");
-        if (value) {
-            itemMat = Material.GREEN_TERRACOTTA;
-            itemName.append("a");
-        } else {
-            itemMat = Material.RED_TERRACOTTA;
-            itemName.append("c");
-        }
-        itemName.append(name);
-
-        return createGuiItemFromProperties(factory, itemMat, itemName, value);
-    }
-
-    /**
-     * Create a new boolean setting GuiItem.
-     * This item will create and open a boolean setting GUI from the factory.
-     * The item will have its value written in the lore part of the item.
-     * Item's name will be the factory set title.
-     *
-     * @param factory The setting's GUI factory.
-     * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
-     */
-    public static GuiItem boolSettingGuiItem(
-            @NotNull BoolSettingsGui.BoolSettingFactory factory
-    ) {
-        String configPath = getConfigNameFromPath(factory.getConfigPath());
-        return boolSettingGuiItem(factory, CasedStringUtil.snakeToUpperSpacedCase(configPath));
-    }
-
-    /**
-     * Create a new int setting GuiItem.
-     * This item will create and open an int setting GUI from the factory.
-     * The item will have its value written in the lore part of the item.
-     *
-     * @param factory The setting's GUI factory.
-     * @param itemMat Displayed material of the item.
-     * @param name    Name of the item.
-     * @return A formatted GuiItem that will create and open a GUI for the int setting.
-     */
-    public static GuiItem intSettingGuiItem(
-            @NotNull IntSettingsGui.IntSettingFactory factory,
-            @NotNull Material itemMat,
-            @NotNull String name
-    ) {
-        // Get item properties
-        int value = factory.getConfiguredValue();
-        StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
-
-        return createGuiItemFromProperties(factory, itemMat, itemName, value);
-    }
-
-    /**
-     * Create a new int setting GuiItem.
-     * This item will create and open an int setting GUI from the factory.
-     * The item will have its value written in the lore part of the item.
-     * Item's name will be the factory set title.
-     *
-     * @param factory The setting's GUI factory.
-     * @param itemMat Displayed material of the item.
-     * @return A formatted GuiItem that will create and open a GUI for the int setting.
-     */
-    public static GuiItem intSettingGuiItem(
-            @NotNull IntSettingsGui.IntSettingFactory factory,
-            @NotNull Material itemMat
-    ) {
-        String configPath = getConfigNameFromPath(factory.getConfigPath());
-        return intSettingGuiItem(factory, itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
-    }
-
-    /**
-     * Create a new item setting GuiItem.
-     * This item will create and open an item setting GUI from the factory.
-     * Item's name will be the factory set title.
-     *
-     * @param factory The setting's GUI factory.
-     * @param name    Name of the item.
-     * @return A formatted GuiItem that will create and open a GUI for the item setting.
-     */
-    public static GuiItem itemSettingGuiItem(
-            @NotNull ItemSettingGui.ItemSettingFactory factory,
-            @NotNull String name
-    ) {
-        ItemStack item = factory.getConfiguredValue();
-        if(item == null || item.getType().isAir()){
-            item = new ItemStack(Material.BARRIER);
-        }else{
-            item = item.clone();
-        }
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("\u00A7a" + name);
-
-        item.setItemMeta(meta);
-
-        return openSettingGuiItem(item, factory);
-    }
-
-    /**
-     * Create a new item setting GuiItem.
-     * This item will create and open an item setting GUI from the factory.
-     * Item's name will be the factory set title.
-     *
-     * @param factory The setting's GUI factory.
-     * @return A formatted GuiItem that will create and open a GUI for the item setting.
-     */
-    public static GuiItem itemSettingGuiItem(
-            @NotNull ItemSettingGui.ItemSettingFactory factory
-    ) {
-        String configPath = getConfigNameFromPath(factory.getConfigPath());
-        return itemSettingGuiItem(factory, CasedStringUtil.detectToUpperSpacedCase(configPath));
-    }
-
-    /**
      * Create an arbitrary GuiItem from a unique setting and item's property.
      *
-     * @param factory  The setting's GUI factory.
-     * @param itemMat  Displayed material of the item.
-     * @param itemName Name of the item.
-     * @param value    Value of the setting when the item is created.
-     *                 Will not update automatically, if the setting's value change, the item need to be created again.
+     * @param factory     The setting's GUI factory.
+     * @param itemMat     Displayed material of the item.
+     * @param itemName    Name of the item.
+     * @param value       Value of the setting when the item is created.
+     *                    Will not update automatically, if the setting's value change, the item need to be created again.
+     * @param displayLore Gui display item lore.
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem createGuiItemFromProperties(
             @NotNull AbstractSettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
             @NotNull StringBuilder itemName,
-            @NotNull Object value
+            @NotNull Object value,
+            @NotNull List<String> displayLore,
+            boolean displayValuePrefix
     ) {
+        // Prepare lore
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add((displayValuePrefix ? SETTING_ITEM_LORE_PREFIX  : "") + value);
+        if(!displayLore.isEmpty()){
+            lore.add("");
+            lore.addAll(displayLore);
+        }
+
         // Create & initialise item
         ItemStack item = new ItemStack(itemMat);
         ItemMeta itemMeta = item.getItemMeta();
+        assert itemMeta != null;
 
         itemMeta.setDisplayName(itemName.toString());
-        itemMeta.setLore(Collections.singletonList(SETTING_ITEM_LORE_PREFIX + value));
+        itemMeta.setLore(lore);
         itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);
@@ -355,6 +245,7 @@ public class GuiGlobalItems {
     public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack){
         ItemStack item = new ItemStack(itemMaterial);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eTemporary close this menu");
         meta.setLore(Collections.singletonList("\u00A77Allow you to chose other item then return here."));

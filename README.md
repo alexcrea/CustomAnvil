@@ -6,10 +6,7 @@ It is expected to work on 1.18 to 1.20.5 minecraft servers running spigot or pap
 **Custom Anvil** was previously named **Unsafe Enchants+**.
 It was renamed because it now affects every anvil aspect and not only unsafe enchants
 
-**Custom Anvil** is based on [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants) by  DelilahEve. You can find it on 
-[GitHub](https://github.com/DelilahEve/UnsafeEnchants/releases/latest), 
-[Spigot](https://www.spigotmc.org/resources/unsafe-enchants.104708/) or
-[CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/unsafe-enchants/files/all)
+**Custom Anvil** is based on [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants) by  DelilahEve.
 
 ### Download Locations:
 
@@ -25,7 +22,7 @@ or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds)
 - Custom XP cost for every aspect of the anvil
 - Permissions to bypass level limit or enchantment restriction.
-- Gui to configure the plugin in game (in alpha: can only edit 6/7 configs. next versions will focus on this feature)
+- Gui to configure the plugin in game
 ---
 ### Permissions:
 ```yml
@@ -54,10 +51,9 @@ Default configuration can be found on following links:
 - [custom_recipes.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/custom_recipes.yml)
 ---
 ### Known issue:
-- Custom recipe config GUI is not reloaded on reload config command. (this should not impact a lot of admin, Custom recipe config should be edited manually only in rare occasion)
+There is non known issue, if you find one please report the issue.
 
 ### Planned:
-- Finish the config gui
 - Semi manual config update on pluign or minecraft update
 - Check unknow registered enchantment & warn
 - Warn admin on unsuported minecraft version 

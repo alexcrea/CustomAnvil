@@ -66,6 +66,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         // Delete item
         ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta deleteMeta = deleteItem.getItemMeta();
+        assert deleteMeta != null;
 
         deleteMeta.setDisplayName("\u00A74DELETE RECIPE");
         deleteMeta.setLore(Collections.singletonList("\u00A7cCaution with this button !"));
@@ -78,24 +79,31 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = BoolSettingsGui.boolFactory("\u00A78Exact count ?", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_EXACT_COUNT_CONFIG());
+                AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
         this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
                 this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.Companion.getDEFAULT_XP_COST_CONFIG(), 1, 5, 10);
+                null,
+                costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG, 1, 5, 10);
 
 
         this.leftItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Left \u00A78Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
+                "\u00A77Set the left item of the custom craft",
+                "\u00A77\u25A0 + \u25A1 = \u25A1");
 
         this.rightItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Right \u00A78Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
+                "\u00A77Set the right item of the custom craft",
+                "\u00A77\u25A1 + \u25A0 = \u25A1");
 
         this.resultItemFactory = ItemSettingGui.itemFactory("\u00A7aRecipe Result \u00A78Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
+                "\u00A77Set the result item of the custom craft",
+                "\u00A77\u25A1 + \u25A1 = \u25A0");
     }
 
     private ConfirmActionGui createDeleteGui() {
@@ -141,19 +149,19 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     public void updateLocal() {
         if (!this.shouldWork) return;
 
-        GuiItem exactCountItem = GuiGlobalItems.boolSettingGuiItem(this.exactCountFactory);
+        GuiItem exactCountItem = this.exactCountFactory.getItem();
         this.pane.bindItem('1', exactCountItem);
 
-        GuiItem xpCostItem = GuiGlobalItems.intSettingGuiItem(this.xpCostFactory, Material.EXPERIENCE_BOTTLE);
+        GuiItem xpCostItem = this.xpCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
         this.pane.bindItem('2', xpCostItem);
 
-        GuiItem leftGuiItem = GuiGlobalItems.itemSettingGuiItem(this.leftItemFactory);
+        GuiItem leftGuiItem = this.leftItemFactory.getItem();
         this.pane.bindItem('3', leftGuiItem);
 
-        GuiItem rightGuiItem = GuiGlobalItems.itemSettingGuiItem(this.rightItemFactory);
+        GuiItem rightGuiItem = this.rightItemFactory.getItem();
         this.pane.bindItem('4', rightGuiItem);
 
-        GuiItem resultGuiItem = GuiGlobalItems.itemSettingGuiItem(this.resultItemFactory);
+        GuiItem resultGuiItem = this.resultItemFactory.getItem();
         this.pane.bindItem('5', resultGuiItem);
         
         update();

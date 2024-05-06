@@ -82,7 +82,7 @@ class EnchantConflictManager {
         // Read and add enchantment to conflict
         val enchantList = section.getStringList(ENCH_LIST_PATH)
         for (enchantName in enchantList) {
-            val enchant = getEnchantByName(enchantName);
+            val enchant = getEnchantByName(enchantName)
             if (enchant == null) {
                 if (!futureUse) {
                     CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
@@ -110,7 +110,7 @@ class EnchantConflictManager {
         }
 
         val enchantKey = NamespacedKey.minecraft(enchantName)
-        return Enchantment.getByKey(enchantKey);
+        return Enchantment.getByKey(enchantKey)
     }
 
 

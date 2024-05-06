@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -26,19 +27,19 @@ import java.util.function.Consumer;
 public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, DoubleSettingGui.DoubleSettingFactory> implements ElementMappedToListGui {
 
     private final GuiItem parentItem;
-    private final Material material;
+    private final Material parentMaterial;
     private final UnitRepairConfigGui parentGui;
     private final String materialName;
 
     private boolean shouldWork = true;
-    public UnitRepairElementListGui(@NotNull Material material,
+    public UnitRepairElementListGui(@NotNull Material parentMaterial,
                                     @NotNull UnitRepairConfigGui parentGui,
                                     @NotNull GuiItem parentItem) {
-        super("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()) + " \u00A7rUnit repair");
+        super("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.name().toLowerCase()) + " \u00A7rUnit repair");
         this.parentItem = parentItem;
-        this.material = material;
+        this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
-        this.materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
+        this.materialName = CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.name().toLowerCase());
 
         GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
     }
@@ -74,7 +75,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
                             player.sendMessage("\u00A7cThis item can't be damaged, so it can't be repaired.");
                             return;
                         }
-                        if(type == this.material){
+                        if(type == this.parentMaterial){
                             player.sendMessage("\u00A7cItem can't repair something of the same type.");
                             return;
                         }
@@ -82,7 +83,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
                         String materialName = type.name().toLowerCase();
 
                         // Add new material
-                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(material.name().toLowerCase()+"."+materialName,0.25);
+                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.name().toLowerCase()+"."+materialName,0.25);
 
                         MetricsUtil.INSTANCE.notifyChange(ConfigHolder.UNIT_REPAIR_HOLDER, "");
                         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
@@ -91,7 +92,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
 
                         // Update gui
                         updateValueForGeneric(materialName, true);
-                        this.parentGui.updateValueForGeneric(this.material, true);
+                        this.parentGui.updateValueForGeneric(this.parentMaterial, true);
 
 
                         // Display material edit setting
@@ -110,11 +111,17 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
 
     @Override
     protected DoubleSettingGui.DoubleSettingFactory createFactory(String materialName) {
+        String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(materialName);
+
         return DoubleSettingGui.doubleFactory(
-                "\u00A70%\u00A78" +CasedStringUtil.snakeToUpperSpacedCase(materialName)+" Repair",
+                "\u00A70%\u00A78" + materialDisplayName +" Repair",
                 this,
-                material.name().toLowerCase()+"."+materialName,
+                this.parentMaterial.name().toLowerCase()+"."+materialName,
                 ConfigHolder.UNIT_REPAIR_HOLDER,
+                Arrays.asList(
+                        "\u00A77Click here to change how many \u00A7e% \u00A77of \u00A7a" + materialDisplayName,
+                        "\u00A77Should get repaired by \u00A7e"+this.materialName
+                ),
                 2,
                 true, true,
                 0,
@@ -137,7 +144,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
             return keys;
         }
 
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(material.name().toLowerCase());
+        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(parentMaterial.name().toLowerCase());
         if(materialSection == null){
             return keys;
         }
@@ -154,7 +161,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     @Override
     public void updateGuiValues() {
         super.updateGuiValues();
-        this.parentGui.updateValueForGeneric(this.material, true);
+        this.parentGui.updateValueForGeneric(this.parentMaterial, true);
     }
 
     // ElementMappedToListGui methods

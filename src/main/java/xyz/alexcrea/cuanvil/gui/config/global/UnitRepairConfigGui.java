@@ -48,6 +48,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
 
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eRepaired by " +materialName);
         meta.setLore(Arrays.asList(
@@ -78,6 +79,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
         // Create new conflict item
         ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
+        assert createMeta != null;
 
         createMeta.setDisplayName("\u00A7aSelect a new unit material");
         createMeta.setLore(Arrays.asList(

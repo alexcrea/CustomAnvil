@@ -47,6 +47,15 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         return includedGroup
     }
 
+    override fun updateMaterials() {
+        groupItems.clear()
+        groupItems.addAll(includedMaterial)
+
+        includedGroup.forEach { group ->
+            groupItems.addAll(group.getMaterials())
+        }
+    }
+
     override fun getMaterials(): EnumSet<Material> {
         return groupItems
     }

@@ -9,11 +9,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Collections;
@@ -67,9 +69,10 @@ public class IntSettingsGui extends AbstractSettingGui {
     protected void prepareReturnToDefault() {
         ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is: " + holder.defaultVal));
+        meta.setLore(Collections.singletonList("\u00A77Default value is \u00A7e" + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -92,8 +95,10 @@ public class IntSettingsGui extends AbstractSettingGui {
             int planned = Math.max(holder.min, now - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("\u00A7e" + now + " -> " + planned + " \u00A7r(\u00A7c-" + (now - planned) + "\u00A7r)");
-            meta.setLore(AbstractSettingGui.CLICK_LORE);
+            assert meta != null;
+
+            meta.setDisplayName("\u00A7e" + now + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7c-" + (now - planned) + "\u00A7r)");
+            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -109,8 +114,10 @@ public class IntSettingsGui extends AbstractSettingGui {
             int planned = Math.min(holder.max, now + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("\u00A7e" + now + " -> " + planned + " \u00A7r(\u00A7a+" + (planned - now) + "\u00A7r)");
-            meta.setLore(AbstractSettingGui.CLICK_LORE);
+            assert meta != null;
+
+            meta.setDisplayName("\u00A7e" + now + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7a+" + (planned - now) + "\u00A7r)");
+            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -122,8 +129,13 @@ public class IntSettingsGui extends AbstractSettingGui {
         // "result" display
         ItemStack resultPaper = new ItemStack(Material.PAPER);
         ItemMeta resultMeta = resultPaper.getItemMeta();
-        resultMeta.setDisplayName("\u00A7eValue: " + now);
+        assert resultMeta != null;
+
+        resultMeta.setDisplayName("\u00A7fValue: \u00A7e" + now);
+        resultMeta.setLore(holder.displayLore);
+
         resultPaper.setItemMeta(resultMeta);
+
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         pane.bindItem('v', resultItem);
@@ -220,11 +232,12 @@ public class IntSettingsGui extends AbstractSettingGui {
             stepLore = Collections.singletonList("\u00A77Click here to change the value by " + stepValue);
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of: ").append(stepValue);
+        stepName.append("Step of: \u00A7e").append(stepValue);
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
         meta.setDisplayName(stepName.toString());
         meta.setLore(stepLore);
@@ -266,25 +279,28 @@ public class IntSettingsGui extends AbstractSettingGui {
     /**
      * Create an int setting factory from setting's parameters.
      *
-     * @param title      The title of the gui.
-     * @param parent     Parent gui to go back when completed.
-     * @param configPath Configuration path of this setting.
-     * @param config     Configuration holder of this setting.
-     * @param min        Minimum value of this setting.
-     * @param max        Maximum value of this setting.
-     * @param defaultVal Default value if not found on the config.
-     * @param steps      List of step the value can increment/decrement.
-     *                   List's size should be between 1 (included) and 5 (included).
-     *                   it is visually preferable to have an odd number of step.
-     *                   If step only contain 1 value, no step item should be displayed.
+     * @param title       The title of the gui.
+     * @param parent      Parent gui to go back when completed.
+     * @param configPath  Configuration path of this setting.
+     * @param config      Configuration holder of this setting.
+     * @param displayLore Gui display item lore.
+     * @param min         Minimum value of this setting.
+     * @param max         Maximum value of this setting.
+     * @param defaultVal  Default value if not found on the config.
+     * @param steps       List of step the value can increment/decrement.
+     *                    List's size should be between 1 (included) and 5 (included).
+     *                    it is visually preferable to have an odd number of step.
+     *                    If step only contain 1 value, no step item should be displayed.
      * @return A factory for an int setting gui.
      */
     public static IntSettingFactory intFactory(@NotNull String title, ValueUpdatableGui parent,
                                                String configPath, ConfigHolder config,
+                                               @Nullable List<String> displayLore,
                                                int min, int max, int defaultVal, int... steps) {
         return new IntSettingFactory(
                 title, parent,
                 configPath, config,
+                displayLore,
                 min, max, defaultVal, steps);
     }
 
@@ -294,30 +310,36 @@ public class IntSettingsGui extends AbstractSettingGui {
     public static class IntSettingFactory extends SettingGuiFactory {
         @NotNull
         String title;
+        @NotNull
         ValueUpdatableGui parent;
         int min;
         int max;
         int defaultVal;
         int[] steps;
 
+        @NotNull
+        List<String> displayLore;
+
         /**
          * Constructor for an int setting gui factory.
          *
-         * @param title      The title of the gui.
-         * @param parent     Parent gui to go back when completed.
-         * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
-         * @param min        Minimum value of this setting.
-         * @param max        Maximum value of this setting.
-         * @param defaultVal Default value if not found on the config.
-         * @param steps      List of step the value can increment/decrement.
-         *                   List's size should be between 1 (included) and 5 (included).
-         *                   it is visually preferable to have an odd number of step.
-         *                   If step only contain 1 value, no step item should be displayed.
+         * @param title       The title of the gui.
+         * @param parent      Parent gui to go back when completed.
+         * @param configPath  Configuration path of this setting.
+         * @param config      Configuration holder of this setting.
+         * @param displayLore Gui display item lore.
+         * @param min         Minimum value of this setting.
+         * @param max         Maximum value of this setting.
+         * @param defaultVal  Default value if not found on the config.
+         * @param steps       List of step the value can increment/decrement.
+         *                    List's size should be between 1 (included) and 5 (included).
+         *                    it is visually preferable to have an odd number of step.
+         *                    If step only contain 1 value, no step item should be displayed.
          */
         protected IntSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
+                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull String configPath, @NotNull ConfigHolder config,
+                @Nullable List<String> displayLore,
                 int min, int max, int defaultVal, int... steps) {
             super(configPath, config);
             this.title = title;
@@ -326,6 +348,12 @@ public class IntSettingsGui extends AbstractSettingGui {
             this.max = max;
             this.defaultVal = defaultVal;
             this.steps = steps;
+
+            if(displayLore == null){
+                this.displayLore = Collections.emptyList();
+            }else {
+                this.displayLore = displayLore;
+            }
         }
 
         /**
@@ -349,6 +377,44 @@ public class IntSettingsGui extends AbstractSettingGui {
             int now = getConfiguredValue();
             // create new gui
             return new IntSettingsGui(this, now);
+        }
+
+        /**
+         * Create a new int setting GuiItem.
+         * This item will create and open an int setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         *
+         * @param itemMat Displayed material of the item.
+         * @param name    Name of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the int setting.
+         */
+        public GuiItem getItem(
+                @NotNull Material itemMat,
+                @NotNull String name
+        ) {
+            // Get item properties
+            int value = getConfiguredValue();
+            StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
+
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
+                    "\u00A7e" + value,
+                    this.displayLore, true);
+        }
+
+        /**
+         * Create a new int setting GuiItem.
+         * This item will create and open an int setting GUI from the factory.
+         * The item will have its value written in the lore part of the item.
+         * Item's name will be the factory set title.
+         *
+         * @param itemMat Displayed material of the item.
+         * @return A formatted GuiItem that will create and open a GUI for the int setting.
+         */
+        public GuiItem getItem(
+                @NotNull Material itemMat
+        ) {
+            String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
+            return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

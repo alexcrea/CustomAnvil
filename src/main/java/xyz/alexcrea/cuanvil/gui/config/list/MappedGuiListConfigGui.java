@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 
 import java.util.Locale;
@@ -81,6 +82,10 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
             }
 
             T generic = createAndSaveNewEmptyGeneric(message);
+            if(generic == null) {// we don't know what to do. so we back up by opening this gui.
+                this.show(player);
+                return;
+            }
 
             updateValueForGeneric(generic, true);
 

@@ -5,9 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -37,14 +37,18 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
         return IntSettingsGui.intFactory(prettyKey + " Level Limit", this,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG, 0, 255,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+                Collections.singletonList(
+                        "\u00A77Maximum applied level of " + prettyKey
+                ),
+                0, 255,
                 enchant.getMaxLevel(),
                 1, 5, 10, 50, 100);
     }
 
     @Override
     public GuiItem getItemFromFactory(IntSettingsGui.IntSettingFactory inventoryFactory) {
-        return GuiGlobalItems.intSettingGuiItem(inventoryFactory,
+        return inventoryFactory.getItem(
                 Material.ENCHANTED_BOOK,
                 inventoryFactory.getTitle());
     }
