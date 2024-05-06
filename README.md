@@ -6,10 +6,7 @@ It is expected to work on 1.18 to 1.20.5 minecraft servers running spigot or pap
 **Custom Anvil** was previously named **Unsafe Enchants+**.
 It was renamed because it now affects every anvil aspect and not only unsafe enchants
 
-**Custom Anvil** is based on [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants) by  DelilahEve. You can find it on 
-[GitHub](https://github.com/DelilahEve/UnsafeEnchants/releases/latest), 
-[Spigot](https://www.spigotmc.org/resources/unsafe-enchants.104708/) or
-[CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/unsafe-enchants/files/all)
+**Custom Anvil** is based on [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants) by  DelilahEve.
 
 ### Download Locations:
 
@@ -57,7 +54,6 @@ Default configuration can be found on following links:
 There is non known issue, if you find one please report the issue.
 
 ### Planned:
-- Finish the config gui
 - Semi manual config update on pluign or minecraft update
 - Check unknow registered enchantment & warn
 - Warn admin on unsuported minecraft version 
