@@ -546,8 +546,8 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
                 val player = event.view.player
                 if(player is Player){
-                    if(player.gameMode != GameMode.CREATIVE){
-                        packetManager.setInstantBuild(player, finalAnvilCost >= 40)
+                    if(player.gameMode != GameMode.CREATIVE ){
+                        packetManager.setInstantBuild(player, (ConfigOptions.replaceToExpensive) && (finalAnvilCost >= 40))
                     }
                     player.updateInventory()
 

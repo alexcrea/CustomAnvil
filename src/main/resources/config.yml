@@ -5,18 +5,33 @@ limit_repair_cost: false
 
 # Value to limit repair costs to when limit_repair_cost is true
 #
-# Valid values include 1 to 39 (vanilla will consider 40+ as "too expensive")
+# Valid values include 1 to 255 (anvil will display cost above 39 as "too expensive" if "replace_to_expensive" is false)
 limit_repair_value: 39
 
 # Whether the anvil's repair limit should be removed entirely
 #
-# The anvil will still visually display "too expensive" however the action will be completable
+# The anvil will still visually display "too expensive" if "replace_to_expensive" is false.
+# However, the action will be completable if xp requirement is meet.
 remove_repair_limit: false
+
+# Whenever anvil cost is above 39 should display the true price and not "to expensive".
+#
+# However, when cost is above 39, anvil price will be displayed a green, 
+# even if player do not have the required xp level.
+# But the action will not be completable.
+#
+# Require ProtocoLib.
+replace_to_expensive: false
 
 # XP Level amount added to the anvil when the item is repaired by another item of the same type
 #
 # Valid values include 0 to 255
 item_repair_cost: 2
+
+# XP Level amount added to the anvil when the item is renamed
+#
+# Valid values include 0 to 255
+item_rename_cost: 1
 
 # XP Level amount added to the anvil when the item is repaired by an "unit"
 # For example: a Diamond on a Diamond Sword
@@ -24,11 +39,6 @@ item_repair_cost: 2
 #
 # Valid values include 0 to 255
 unit_repair_cost: 1
-
-# XP Level amount added to the anvil when the item is renamed
-#
-# Valid values include 0 to 255
-item_rename_cost: 1
 
 # XP Level amount added to the anvil when a sacrifice enchantment
 # conflict with one of the left item enchantment
@@ -229,4 +239,4 @@ debug_log: false
 # Whether to show verbose debug logging
 debug_log_verbose: false
 
-configVersion: 1.4.3
+configVersion: 1.4.4

@@ -10,14 +10,17 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
  */
 object ConfigOptions {
 
-    // Path for default enchantment limits
-    private const val DEFAULT_LIMIT_PATH = "default_limit"
-
     // Path for limiting repair cost
     const val LIMIT_REPAIR_COST = "limit_repair_cost"
 
     // Path for repair value limit
     const val LIMIT_REPAIR_VALUE = "limit_repair_value"
+
+    // Path for removing repair cost limits
+    const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
+
+    // Path for removing repair cost limits
+    const val REPLACE_TO_EXPENSIVE = "replace_to_expensive"
 
     // Path for level cost on item repair
     const val ITEM_REPAIR_COST = "item_repair_cost"
@@ -31,11 +34,13 @@ object ConfigOptions {
     // Path for level cost on illegal enchantment on sacrifice
     const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
 
-    // Path for removing repair cost limits
-    const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
+    // Path for default enchantment limits
+    private const val DEFAULT_LIMIT_PATH = "default_limit"
+
 
     // Root path for enchantment limits
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
+
 
     // Root path for enchantment values
     const val ENCHANT_VALUES_ROOT = "enchant_values"
@@ -44,20 +49,25 @@ object ConfigOptions {
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
 
+
     // Debug logging toggle path
     private const val DEBUG_LOGGING = "debug_log"
 
     // Debug verbose logging toggle path
     private const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
 
-    // Default value for enchantment limits
-    private const val DEFAULT_ENCHANT_LIMIT = 5
 
     // Default value for limiting repair cost
     const val DEFAULT_LIMIT_REPAIR = false
 
     // Default value for repair cost limit
     const val DEFAULT_LIMIT_REPAIR_VALUE = 39
+
+    // Default for removing repair cost limits
+    const val DEFAULT_REMOVE_LIMIT = false
+
+    // Default for removing repair cost limits
+    const val DEFAULT_REPLACE_TO_EXPENSIVE = false
 
     // Default value for level cost on item repair
     const val DEFAULT_ITEM_REPAIR_COST = 2
@@ -71,9 +81,20 @@ object ConfigOptions {
     // Default value for level cost on illegal enchantment on sacrifice
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
 
+
+    // Default value for enchantment limits
+    private const val DEFAULT_ENCHANT_LIMIT = 5
+
+    // Default value for debug logging
+    private const val DEFAULT_DEBUG_LOG = false
+
+    // Default value for debug logging
+    private const val DEFAULT_VERBOSE_DEBUG_LOG = false
+
+
     // Valid range for repair cost limit
     @JvmField
-    val REPAIR_LIMIT_RANGE = 1..39
+    val REPAIR_LIMIT_RANGE = 1..255
 
     // Valid range for repair cost
     @JvmField
@@ -87,31 +108,13 @@ object ConfigOptions {
     @JvmField
     val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
 
-    // Default for removing repair cost limits
-    const val DEFAULT_REMOVE_LIMIT = false
-
     // Valid range for an enchantment limit
     @JvmField
     val ENCHANT_LIMIT_RANGE = 1..255
 
+
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
-
-    // Default value for debug logging
-    private const val DEFAULT_DEBUG_LOG = false
-
-    // Default value for debug logging
-    private const val DEFAULT_VERBOSE_DEBUG_LOG = false
-
-    /**
-     * Default enchantment limit
-     */
-    private val defaultEnchantLimit: Int
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
-        }
 
     /**
      * Whether to limit repair costs to the vanilla limit
@@ -133,6 +136,26 @@ object ConfigOptions {
                 .getInt(LIMIT_REPAIR_VALUE, DEFAULT_LIMIT_REPAIR_VALUE)
                 .takeIf { it in REPAIR_LIMIT_RANGE }
                 ?: DEFAULT_LIMIT_REPAIR_VALUE
+        }
+
+    /**
+     * Whether to remove repair cost limit
+     */
+    val removeRepairLimit: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(REMOVE_REPAIR_LIMIT, DEFAULT_REMOVE_LIMIT)
+        }
+
+    /**
+     * Whether to remove repair cost limit
+     */
+    val replaceToExpensive: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(REPLACE_TO_EXPENSIVE, DEFAULT_REPLACE_TO_EXPENSIVE)
         }
 
     /**
@@ -184,13 +207,13 @@ object ConfigOptions {
         }
 
     /**
-     * Whether to remove repair cost limit
+     * Default enchantment limit
      */
-    val removeRepairLimit: Boolean
+    private val defaultEnchantLimit: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
-                .getBoolean(REMOVE_REPAIR_LIMIT, DEFAULT_REMOVE_LIMIT)
+                .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
         }
 
     /**
