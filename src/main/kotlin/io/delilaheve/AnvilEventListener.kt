@@ -19,6 +19,7 @@ import org.bukkit.event.EventPriority.HIGHEST
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.packet.PacketManager
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import kotlin.math.min
@@ -34,7 +36,7 @@ import kotlin.math.min
 /**
  * Listener for anvil events
  */
-class AnvilEventListener : Listener {
+class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     companion object {
         // Anvil's output slot
@@ -544,12 +546,28 @@ class AnvilEventListener : Listener {
 
                 val player = event.view.player
                 if(player is Player){
+                    if(player.gameMode != GameMode.CREATIVE){
+                        packetManager.setInstantBuild(player, finalAnvilCost >= 40)
+                    }
                     player.updateInventory()
+
                 }
             })
     }
 
+    @EventHandler
+    fun onAnvilClose(event: InventoryCloseEvent){
+        val player = event.player
+        if(event.inventory !is AnvilInventory) return
+        if(player is Player && GameMode.CREATIVE != player.gameMode){
+            packetManager.setInstantBuild(player, false)
+        }
+
+    }
+
 }
+
+
 
 
 private class SlotContainer(val type: SlotType, val slot: Int)

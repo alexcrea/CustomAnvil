@@ -1,7 +1,7 @@
 main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
-version: 1.4.4
+version: 1.4.5
 description: Allow to customise anvil mechanics
 api-version: 1.18
 load: POSTWORLD
@@ -45,3 +45,4 @@ permissions:
 # as it is the old name for this plugin
 softdepend:
   - UnsafeEnchantsPlus
+  - ProtocolLib
