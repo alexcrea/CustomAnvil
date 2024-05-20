@@ -16,7 +16,7 @@ remove_repair_limit: false
 
 # Whenever anvil cost is above 39 should display the true price and not "to expensive".
 #
-# However, when cost is above 39, anvil price will be displayed a green, 
+# However, when cost is above 39, anvil price will be displayed as green,
 # even if player do not have the required xp level.
 # But the action will not be completable.
 #

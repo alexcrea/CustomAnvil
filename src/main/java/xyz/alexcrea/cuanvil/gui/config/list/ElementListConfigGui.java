@@ -36,7 +36,7 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
         // Back item panel
         Pattern pattern = getBackgroundPattern();
         this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
-        GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.INSTANCE);
+        GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.getInstance());
 
     }
 

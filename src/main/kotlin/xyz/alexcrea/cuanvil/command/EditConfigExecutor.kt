@@ -16,7 +16,7 @@ class EditConfigExecutor : CommandExecutor {
             return false
         }
         if (sender !is HumanEntity) return false
-        MainConfigGui.INSTANCE.show(sender)
+        MainConfigGui.getInstance().show(sender)
 
         return true
     }

@@ -9,25 +9,26 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.packet.PacketManager;
 
 import java.util.Collections;
 
 public class MainConfigGui extends ChestGui {
 
-    public final static MainConfigGui INSTANCE = new MainConfigGui();
+    private final static MainConfigGui INSTANCE = new MainConfigGui();
 
-    static {
-        INSTANCE.init();
+    public static MainConfigGui getInstance() {
+        return INSTANCE;
     }
 
     private MainConfigGui() {
         super(3, "\u00A78Anvil Config", CustomAnvil.instance);
 
+        init(CustomAnvil.instance.packetManager);
     }
 
-    private void init() {
+    private void init(PacketManager packetManager) {
         Pattern pattern = new Pattern(
                 "000000000",
                 "012304567",
@@ -47,7 +48,7 @@ public class MainConfigGui extends ChestGui {
         basicConfigMeta.setLore(Collections.singletonList("\u00A77Click here to open basic config menu"));
         basicConfigItemstack.setItemMeta(basicConfigMeta);
 
-        GuiItem basicConfigItem = GuiGlobalItems.goToGuiItem(basicConfigItemstack, BasicConfigGui.INSTANCE);
+        GuiItem basicConfigItem = GuiGlobalItems.goToGuiItem(basicConfigItemstack, new BasicConfigGui(packetManager));
         pane.bindItem('1', basicConfigItem);
 
         // enchant level limit item

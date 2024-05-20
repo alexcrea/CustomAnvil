@@ -46,7 +46,7 @@ public class GuiSharedConstant {
         );
         BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
 
-        GuiGlobalItems.addBackItem(BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE, MainConfigGui.INSTANCE);
+        GuiGlobalItems.addBackItem(BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE, MainConfigGui.getInstance());
 
         GuiGlobalItems.addBackgroundItem(BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE);
         BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
