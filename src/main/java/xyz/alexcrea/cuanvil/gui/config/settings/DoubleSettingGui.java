@@ -354,8 +354,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
      *
      * @param title        The title of the gui.
      * @param parent       Parent gui to go back when completed.
-     * @param configPath   Configuration path of this setting.
      * @param config       Configuration holder of this setting.
+     * @param configPath   Configuration path of this setting.
      * @param displayLore  Gui display item lore.
      * @param scale        The scale of the decimal.
      * @param asPercentage If we should display the value as a %.
@@ -371,13 +371,15 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     @NotNull
     public static DoubleSettingFactory doubleFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
-                                                     @NotNull String configPath, @NotNull ConfigHolder config,
+                                                     @NotNull ConfigHolder config,
+                                                     @NotNull String configPath,
                                                      @Nullable List<String> displayLore,
                                                      int scale, boolean asPercentage, boolean nullOnZero,
                                                      double min, double max, double defaultVal, double... steps) {
         return new DoubleSettingFactory(
                 title, parent,
-                configPath, config,
+                config,
+                configPath,
                 displayLore,
                 scale, asPercentage, nullOnZero,
                 min, max, defaultVal, steps);
@@ -408,8 +410,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
          *
          * @param title        The title of the gui.
          * @param parent       Parent gui to go back when completed.
-         * @param configPath   Configuration path of this setting.
          * @param config       Configuration holder of this setting.
+         * @param configPath   Configuration path of this setting.
          * @param displayLore  Gui display item lore.
          * @param scale        The scale of the decimal.
          * @param asPercentage If we should display the value as a %.
@@ -424,7 +426,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
          */
         protected DoubleSettingFactory(
                 @NotNull String title, @NotNull ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config,
+                @NotNull ConfigHolder config,
+                @NotNull String configPath,
                 @Nullable List<String> displayLore,
                 int scale, boolean asPercentage, boolean nullOnZero,
                 double min, double max, double defaultVal, double... steps) {

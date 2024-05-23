@@ -522,8 +522,11 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         ignoreRules: Boolean = false
     ) {
         // Test repair cost limit
-        val finalAnvilCost = if (ConfigOptions.limitRepairCost && !ignoreRules) {
-            min(anvilCost, ConfigOptions.limitRepairValue)
+        val finalAnvilCost = if (
+            !ignoreRules &&
+            !ConfigOptions.doRemoveCostLimit &&
+            ConfigOptions.doCapCost) {
+            min(anvilCost, ConfigOptions.maxAnvilCost)
         } else {
             anvilCost
         }
@@ -535,22 +538,26 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             .server
             .scheduler
             .runTask(CustomAnvil.instance, Runnable {
-                if (ConfigOptions.removeRepairLimit || ignoreRules) {
-                    inventory.maximumRepairCost = Int.MAX_VALUE
-                } else{
-                    inventory.maximumRepairCost = 40 // minecraft default
-                }
-                inventory.repairCost = finalAnvilCost
+                inventory.maximumRepairCost =
+                    if (ConfigOptions.doRemoveCostLimit || ignoreRules)
+                { Int.MAX_VALUE }
+                    else
+                { ConfigOptions.maxAnvilCost + 1 }
 
+                inventory.repairCost = finalAnvilCost
                 event.view.setProperty(REPAIR_COST, finalAnvilCost)
 
                 val player = event.view.player
                 if(player is Player){
                     if(player.gameMode != GameMode.CREATIVE ){
-                        packetManager.setInstantBuild(player, (ConfigOptions.replaceToExpensive) && (finalAnvilCost >= 40))
-                    }
-                    player.updateInventory()
+                        val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
+                                (finalAnvilCost >= 40) &&
+                                finalAnvilCost < inventory.maximumRepairCost
 
+                        packetManager.setInstantBuild(player, bypassToExpensive)
+                    }
+
+                    player.updateInventory()
                 }
             })
     }

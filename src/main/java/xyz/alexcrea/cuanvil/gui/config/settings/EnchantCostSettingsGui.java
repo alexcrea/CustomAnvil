@@ -243,8 +243,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      *
      * @param title          The title of the gui.
      * @param parent         Parent gui to go back when completed.
-     * @param configPath     Configuration path of this setting.
      * @param config         Configuration holder of this setting.
+     * @param configPath     Configuration path of this setting.
      * @param displayLore    Gui display item lore.
      * @param min            Minimum value of this setting.
      * @param max            Maximum value of this setting.
@@ -258,7 +258,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      */
     public static EnchantCostSettingFactory enchantCostFactory(
             @NotNull String title, @NotNull ValueUpdatableGui parent,
-            @NotNull String configPath, @NotNull ConfigHolder config,
+            @NotNull ConfigHolder config, @NotNull String configPath,
             @Nullable List<String> displayLore,
             int min, int max, int defaultItemVal, int defaultBookVal,
             int... steps) {

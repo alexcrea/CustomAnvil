@@ -1,27 +1,31 @@
-# Whether all anvil actions cost should be capped
+# All anvil cost will be capped to limit_repair_value if enabled.
 #
-# If true, all anvil repairs will max out at the value of limit_repair_value
+# In other words:
+# For any anvil cost greater than limit_repair_value, Cost will be set to limit_repair_value.
 limit_repair_cost: false
 
-# Value to limit repair costs to when limit_repair_cost is true
+# Max cost value the Anvil can get to.
 #
-# Valid values include 1 to 255 (anvil will display cost above 39 as "too expensive" if "replace_to_expensive" is false)
+# Valid values include 1 to 255.
+# Cost will be displayed as "Too Expensive":
+# - If Cost is above 39
+# - And replace_too_expensive is disabled (false)
 limit_repair_value: 39
 
-# Whether the anvil's repair limit should be removed entirely
+# Whether the anvil's cost limit should be removed entirely.
 #
-# The anvil will still visually display "too expensive" if "replace_to_expensive" is false.
+# The anvil will still visually display "Too Expensive" if "replace_too_expensive" is disabled
 # However, the action will be completable if xp requirement is meet.
 remove_repair_limit: false
 
-# Whenever anvil cost is above 39 should display the true price and not "to expensive".
+# Whenever anvil cost is above 39 should display the true price and not "Too Expensive".
 #
-# However, when cost is above 39, anvil price will be displayed as green,
-# even if player do not have the required xp level.
-# But the action will not be completable.
+# However, when bypassing "Too Expensive", anvil price will be displayed as Green.
+# If the action is not completable, the cost will still be displayed as "Too expensive".
+# That mean you also need to change other settings like remove_repair_limit or limit_repair_cost.
 #
 # Require ProtocoLib.
-replace_to_expensive: false
+replace_too_expensive: false
 
 # XP Level amount added to the anvil when the item is repaired by another item of the same type
 #
@@ -239,4 +243,4 @@ debug_log: false
 # Whether to show verbose debug logging
 debug_log_verbose: false
 
-configVersion: 1.4.4
+configVersion: 1.4.5

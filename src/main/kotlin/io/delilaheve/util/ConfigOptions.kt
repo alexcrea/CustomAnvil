@@ -10,17 +10,17 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
  */
 object ConfigOptions {
 
-    // Path for limiting repair cost
-    const val LIMIT_REPAIR_COST = "limit_repair_cost"
+    // Path for limiting anvil cost
+    const val CAP_ANVIL_COST = "limit_repair_cost"
 
-    // Path for repair value limit
-    const val LIMIT_REPAIR_VALUE = "limit_repair_value"
+    // Path for max anvil cost value
+    const val MAX_ANVIL_COST = "limit_repair_value"
 
-    // Path for removing repair cost limits
-    const val REMOVE_REPAIR_LIMIT = "remove_repair_limit"
+    // Path for removing anvil cost limits
+    const val REMOVE_ANVIL_COST_LIMIT = "remove_repair_limit"
 
-    // Path for removing repair cost limits
-    const val REPLACE_TO_EXPENSIVE = "replace_to_expensive"
+    // Path for removing too expensive when unused
+    const val REPLACE_TOO_EXPENSIVE = "replace_too_expensive"
 
     // Path for level cost on item repair
     const val ITEM_REPAIR_COST = "item_repair_cost"
@@ -58,16 +58,16 @@ object ConfigOptions {
 
 
     // Default value for limiting repair cost
-    const val DEFAULT_LIMIT_REPAIR = false
+    const val DEFAULT_CAP_ANVIL_COST = false
 
     // Default value for repair cost limit
-    const val DEFAULT_LIMIT_REPAIR_VALUE = 39
+    const val DEFAULT_MAX_ANVIL_COST = 39
 
     // Default for removing repair cost limits
-    const val DEFAULT_REMOVE_LIMIT = false
+    const val DEFAULT_REMOVE_ANVIL_COST_LIMIT = false
 
     // Default for removing repair cost limits
-    const val DEFAULT_REPLACE_TO_EXPENSIVE = false
+    const val DEFAULT_REPLACE_TOO_EXPENSIVE = false
 
     // Default value for level cost on item repair
     const val DEFAULT_ITEM_REPAIR_COST = 2
@@ -94,7 +94,7 @@ object ConfigOptions {
 
     // Valid range for repair cost limit
     @JvmField
-    val REPAIR_LIMIT_RANGE = 1..255
+    val MAX_ANVIL_COST_RANGE = 1..255
 
     // Valid range for repair cost
     @JvmField
@@ -117,45 +117,45 @@ object ConfigOptions {
     private const val DEFAULT_ENCHANT_VALUE = 0
 
     /**
-     * Whether to limit repair costs to the vanilla limit
+     * Whether to cap anvil costs
      */
-    val limitRepairCost: Boolean
+    val doCapCost: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
-                .getBoolean(LIMIT_REPAIR_COST, DEFAULT_LIMIT_REPAIR)
+                .getBoolean(CAP_ANVIL_COST, DEFAULT_CAP_ANVIL_COST)
         }
 
     /**
-     * Value to limit repair costs to
+     * Value to limit anvil costs to
      */
-    val limitRepairValue: Int
+    val maxAnvilCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
-                .getInt(LIMIT_REPAIR_VALUE, DEFAULT_LIMIT_REPAIR_VALUE)
-                .takeIf { it in REPAIR_LIMIT_RANGE }
-                ?: DEFAULT_LIMIT_REPAIR_VALUE
+                .getInt(MAX_ANVIL_COST, DEFAULT_MAX_ANVIL_COST)
+                .takeIf { it in MAX_ANVIL_COST_RANGE }
+                ?: DEFAULT_MAX_ANVIL_COST
+        }
+
+    /**
+     * Whether to remove anvil cost limit
+     */
+    val doRemoveCostLimit: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(REMOVE_ANVIL_COST_LIMIT, DEFAULT_REMOVE_ANVIL_COST_LIMIT)
         }
 
     /**
      * Whether to remove repair cost limit
      */
-    val removeRepairLimit: Boolean
+    val doReplaceTooExpensive: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
-                .getBoolean(REMOVE_REPAIR_LIMIT, DEFAULT_REMOVE_LIMIT)
-        }
-
-    /**
-     * Whether to remove repair cost limit
-     */
-    val replaceToExpensive: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(REPLACE_TO_EXPENSIVE, DEFAULT_REPLACE_TO_EXPENSIVE)
+                .getBoolean(REPLACE_TOO_EXPENSIVE, DEFAULT_REPLACE_TOO_EXPENSIVE)
         }
 
     /**
@@ -315,13 +315,14 @@ object ConfigOptions {
     fun getBasicConfigKeys(): Array<String> {
         return arrayOf(
             DEFAULT_LIMIT_PATH,
-            LIMIT_REPAIR_COST,
-            LIMIT_REPAIR_VALUE,
+            CAP_ANVIL_COST,
+            MAX_ANVIL_COST,
+            REPLACE_TOO_EXPENSIVE,
             ITEM_REPAIR_COST,
             UNIT_REPAIR_COST,
             ITEM_RENAME_COST,
             SACRIFICE_ILLEGAL_COST,
-            REMOVE_REPAIR_LIMIT
+            REMOVE_ANVIL_COST_LIMIT
         )
     }
 
