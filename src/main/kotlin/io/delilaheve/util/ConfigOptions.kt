@@ -94,19 +94,19 @@ object ConfigOptions {
 
     // Valid range for repair cost limit
     @JvmField
-    val MAX_ANVIL_COST_RANGE = 1..255
+    val MAX_ANVIL_COST_RANGE = 0..1000
 
     // Valid range for repair cost
     @JvmField
-    val REPAIR_COST_RANGE = 0..255
+    val REPAIR_COST_RANGE = 0..1000
 
     // Valid range for rename cost
     @JvmField
-    val ITEM_RENAME_COST_RANGE = 0..255
+    val ITEM_RENAME_COST_RANGE = 0..1000
 
     // Valid range for illegal enchantment conflict cost
     @JvmField
-    val SACRIFICE_ILLEGAL_COST_RANGE = 0..255
+    val SACRIFICE_ILLEGAL_COST_RANGE = 0..1000
 
     // Valid range for an enchantment limit
     @JvmField

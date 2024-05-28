@@ -6,7 +6,7 @@ limit_repair_cost: false
 
 # Max cost value the Anvil can get to.
 #
-# Valid values include 1 to 255.
+# Valid values include 0 to 1000.
 # Cost will be displayed as "Too Expensive":
 # - If Cost is above 39
 # - And replace_too_expensive is disabled (false)
@@ -29,30 +29,30 @@ replace_too_expensive: false
 
 # XP Level amount added to the anvil when the item is repaired by another item of the same type
 #
-# Valid values include 0 to 255
+# Valid values include 0 to 1000
 item_repair_cost: 2
 
 # XP Level amount added to the anvil when the item is renamed
 #
-# Valid values include 0 to 255
+# Valid values include 0 to 1000
 item_rename_cost: 1
 
 # XP Level amount added to the anvil when the item is repaired by an "unit"
 # For example: a Diamond on a Diamond Sword
 # What's considered unit for what can be edited on the unit repair configuration.
 #
-# Valid values include 0 to 255
+# Valid values include 0 to 1000
 unit_repair_cost: 1
 
 # XP Level amount added to the anvil when a sacrifice enchantment
 # conflict with one of the left item enchantment
 #
-# Valid values include 0 to 255
+# Valid values include 0 to 1000
 sacrifice_illegal_enchant_cost: 1
 
 # Default limit to apply to any enchants missing from override_limits
 #
-# Valid values include 1 to 255
+# Valid values include 1 to 1000
 default_limit: 5
 
 # Override limits for specific enchants
