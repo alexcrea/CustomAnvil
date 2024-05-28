@@ -110,7 +110,7 @@ public class BasicConfigGui extends ValueUpdatableGui {
                 ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "\u00A77Max cost the Anvil can get to.",
-                        "\u00A77Valid values include \u00A7e1 \u00A77to \u00A7e255\u00A77.",
+                        "\u00A77Valid values include \u00A7e0 \u00A77to \u00A7e1000\u00A77.",
                         "\u00A77Cost will be displayed as \u00A7cToo Expensive\u00A77:",
                         "\u00A77- If Cost is above \u00A7e39",
                         "\u00A77- And \u00A7eReplace Too Expensive\u00A77 is disabled"

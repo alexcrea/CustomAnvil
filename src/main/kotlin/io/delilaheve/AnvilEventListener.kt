@@ -99,7 +99,6 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
         // Test for merge
         if (first.canMergeWith(second)) {
-
             val newEnchants = first.findEnchantments()
                 .combineWith(second.findEnchantments(), first.type, player)
             val resultItem = first.clone()
@@ -210,7 +209,6 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         if ((output == inventory.getItem(ANVIL_INPUT_LEFT))
             || !allowed
         ) {
-
             event.result = Event.Result.DENY
             return
         }
@@ -333,6 +331,13 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
             repairCost += calculatePenalty(leftItem, null, resultCopy)
             repairCost += resultAmount * ConfigOptions.unitRepairCost
+
+            if (
+                !ConfigOptions.doRemoveCostLimit &&
+                ConfigOptions.doCapCost) {
+
+                repairCost = min(repairCost, ConfigOptions.maxAnvilCost)
+            }
 
             if ((inventory.maximumRepairCost < repairCost)
                 || (player.level < repairCost)
