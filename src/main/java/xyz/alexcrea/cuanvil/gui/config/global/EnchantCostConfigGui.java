@@ -51,7 +51,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         }
 
         return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT_CONFIG, SECTION_NAME + '.' + key,
                 Arrays.asList(
                         "\u00A77How many level should " + prettyKey,
                         "\u00A77cost when applied by book or by another item."

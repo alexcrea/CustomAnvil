@@ -15,14 +15,15 @@ the plugin can be downloaded on the
 or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 ---
 **Custom Anvil** have the following features:
-- Vanilla like default configuration
-- Custom enchantment level limit
-- Custom anvil recipes
-- Custom enchant restrictions (allow unsafe enchantment only for a group of item or create new restriction)
-- Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds)
-- Custom XP cost for every aspect of the anvil
+- Vanilla like default configuration.
+- Custom enchantment level limit.
+- Custom anvil recipes.
+- Custom enchant restrictions (allow unsafe enchantment only for a group of item or create new restriction).
+- Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds).
+- Custom XP cost for every aspect of the anvil.
 - Permissions to bypass level limit or enchantment restriction.
-- Gui to configure the plugin in game
+- Display xp cost instead of "to expensive" when above lv 40. (need ProtocoLib)
+- Gui to configure the plugin in game.
 ---
 ### Permissions:
 ```yml
@@ -54,8 +55,8 @@ Default configuration can be found on following links:
 There is non known issue, if you find one please report the issue.
 
 ### Planned:
-- Semi manual config update on pluign or minecraft update
-- Check unknow registered enchantment & warn
-- Warn admin on unsuported minecraft version 
+- Semi manual config update on plugin or minecraft update
+- Check unknown registered enchantment & warn
+- Warn admin on unsupported minecraft version 
 
 

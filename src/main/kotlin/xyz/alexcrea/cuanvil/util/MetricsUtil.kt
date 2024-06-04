@@ -7,7 +7,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 object MetricsUtil {
 
-    private const val baseConfigHash = -1592940914
+    private const val baseConfigHash = 1000387384
     private const val enchantLimitsConfigHash = -275034280
     private const val enchantValuesConfigHash = -17048020
     private const val enchantConflictConfigHash = 546475833

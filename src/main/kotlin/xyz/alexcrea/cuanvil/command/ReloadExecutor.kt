@@ -36,7 +36,7 @@ class ReloadExecutor : CommandExecutor {
             if (!ConfigHolder.reloadAllFromDisk(hardfail)) return false
 
             // Then update all global gui containing value from config
-            BasicConfigGui.INSTANCE.updateGuiValues()
+            BasicConfigGui.getInstance()?.updateGuiValues()
             EnchantCostConfigGui.INSTANCE.updateGuiValues()
             EnchantLimitConfigGui.INSTANCE.updateGuiValues()
 

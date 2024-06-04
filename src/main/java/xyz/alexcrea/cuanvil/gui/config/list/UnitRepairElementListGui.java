@@ -116,8 +116,8 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
         return DoubleSettingGui.doubleFactory(
                 "\u00A70%\u00A78" + materialDisplayName +" Repair",
                 this,
-                this.parentMaterial.name().toLowerCase()+"."+materialName,
                 ConfigHolder.UNIT_REPAIR_HOLDER,
+                this.parentMaterial.name().toLowerCase()+"."+materialName,
                 Arrays.asList(
                         "\u00A77Click here to change how many \u00A7e% \u00A77of \u00A7a" + materialDisplayName,
                         "\u00A77Should get repaired by \u00A7e"+this.materialName

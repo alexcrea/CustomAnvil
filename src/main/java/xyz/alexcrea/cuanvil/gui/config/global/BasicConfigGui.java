@@ -9,6 +9,7 @@ import kotlin.ranges.IntRange;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -17,7 +18,9 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.packet.PacketManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -26,17 +29,22 @@ import java.util.Collections;
  */
 public class BasicConfigGui extends ValueUpdatableGui {
 
-    public final static BasicConfigGui INSTANCE = new BasicConfigGui();
+    private static BasicConfigGui INSTANCE;
 
-    static {
-        INSTANCE.init();
+    public static BasicConfigGui getInstance() {
+        return INSTANCE;
     }
 
+    private final PacketManager packetManager;
     /**
      * Constructor of this Global gui for basic settings.
      */
-    private BasicConfigGui() {
-        super(3, "\u00A78Basic Config", CustomAnvil.instance);
+    public BasicConfigGui(PacketManager packetManager) {
+        super(4, "\u00A78Basic Config", CustomAnvil.instance);
+        INSTANCE = this;
+
+        this.packetManager = packetManager;
+        init();
     }
 
     PatternPane pane;
@@ -47,67 +55,93 @@ public class BasicConfigGui extends ValueUpdatableGui {
     private void init() {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "012345670",
+                "0L0T0I0S0",
+                "0C0R0U0r0",
                 "B00000000"
         );
-        pane = new PatternPane(0, 0, 9, 3, pattern);
+        pane = new PatternPane(0, 0, 9, 4, pattern);
         addPane(pane);
 
-        GuiGlobalItems.addBackItem(pane, MainConfigGui.INSTANCE);
+        GuiGlobalItems.addBackItem(pane, MainConfigGui.getInstance());
         GuiGlobalItems.addBackgroundItem(pane);
 
         prepareValues();
         updateGuiValues();
     }
 
-    private BoolSettingsGui.BoolSettingFactory limitRepairFactory;
-    private IntSettingsGui.IntSettingFactory repairCostFactory;
-    private GuiItem notNeededLimitValueItem;
-    private BoolSettingsGui.BoolSettingFactory removeRepairLimit;
-    private IntSettingsGui.IntSettingFactory itemRepairCost;
-    private IntSettingsGui.IntSettingFactory unitRepairCost;
-    private IntSettingsGui.IntSettingFactory itemRenameCost;
-    private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost;
+    private BoolSettingsGui.BoolSettingFactory capAnvilCostFactory; // L character
+    private GuiItem noCapRepairItem;
+    private IntSettingsGui.IntSettingFactory maxAnvilCostFactory; // C character
+    private GuiItem noMaxCostItem;
+
+    private BoolSettingsGui.BoolSettingFactory removeAnvilCostLimit; // R character
+    private BoolSettingsGui.BoolSettingFactory replaceTooExpensive; // T character
+
+    private IntSettingsGui.IntSettingFactory itemRepairCost; // I character
+    private IntSettingsGui.IntSettingFactory unitRepairCost; // U character
+    private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
+    private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
     /**
      * Prepare basic gui displayed items factory and static items..
      */
     protected void prepareValues() {
-        // limit repair item
-        this.limitRepairFactory = BoolSettingsGui.boolFactory("\u00A78Limit Repair Cost ?", this,
-                ConfigOptions.LIMIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_LIMIT_REPAIR,
-                "\u00A77Whether all anvil actions cost should be capped.",
-                "\u00A77If true, all anvil repairs will max out at the value of \u00A7aLimit Repair Value\u00A77.");
-
-        // repair cost item
-        IntRange range = ConfigOptions.REPAIR_LIMIT_RANGE;
-        this.repairCostFactory = IntSettingsGui.intFactory("\u00A78Repair Cost Limit", this,
-                ConfigOptions.LIMIT_REPAIR_VALUE, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "\u00A77Value to limit repair costs to when \u00A7aLimit Repair Value\u00A77 is true.",
-                        "\u00A77Valid values include \u00A7e1 \u00A77to \u00A7e39\u00A77: " +
-                                "vanilla would display \u00A7e40+\u00A77 as \u00A7ctoo expensive\u00A77."
-                ),
-                range.getFirst(), range.getLast(),
-                ConfigOptions.DEFAULT_LIMIT_REPAIR_VALUE,
-                1, 5, 10);
-
-        // repair cost not needed
+        // cap anvil cost
+        this.capAnvilCostFactory = BoolSettingsGui.boolFactory("\u00A78Cap Anvil Cost ?", this,
+                ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.CAP_ANVIL_COST, ConfigOptions.DEFAULT_CAP_ANVIL_COST,
+                "\u00A77All anvil cost will be capped to \u00A7aMax Anvil Cost\u00A77 if enabled.",
+                "\u00A77In other words:",
+                "\u00A77For any anvil cost greater than \u00A7aMax Anvil Cost\u00A77, Cost will be set to \u00A7aMax Anvil Cost\u00A77.");
+        // cap anvil cost not needed
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7cLimit Repair Value");
-        meta.setLore(Collections.singletonList("\u00A77This config need \u00A7cLimit Repair Cost\u00A77 enabled."));
+        meta.setDisplayName("\u00A7cCap Anvil Cost ?");
+        meta.setLore(Collections.singletonList("\u00A77This config only work if \u00A7cLimit Repair Cost\u00A77 is disabled."));
         item.setItemMeta(meta);
-        this.notNeededLimitValueItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        this.noCapRepairItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+
+
+        // repair cost item
+        IntRange range = ConfigOptions.MAX_ANVIL_COST_RANGE;
+        this.maxAnvilCostFactory = IntSettingsGui.intFactory("\u00A78Max Anvil Cost", this,
+                ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
+                Arrays.asList(
+                        "\u00A77Max cost the Anvil can get to.",
+                        "\u00A77Valid values include \u00A7e0 \u00A77to \u00A7e1000\u00A77.",
+                        "\u00A77Cost will be displayed as \u00A7cToo Expensive\u00A77:",
+                        "\u00A77- If Cost is above \u00A7e39",
+                        "\u00A77- And \u00A7eReplace Too Expensive\u00A77 is disabled"
+                ),
+                range.getFirst(), range.getLast(),
+                ConfigOptions.DEFAULT_MAX_ANVIL_COST,
+                1, 5, 10);
+        // max anvil cost not needed
+        item = new ItemStack(Material.BARRIER);
+        meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("\u00A7cMax Anvil Cost");
+        meta.setLore(Collections.singletonList("\u00A77This config only work if \u00A7cLimit Repair Cost\u00A77 is disabled."));
+        item.setItemMeta(meta);
+        this.noMaxCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+
 
         // remove repair limit item
-        this.removeRepairLimit = BoolSettingsGui.boolFactory("\u00A78Remove Repair Limit ?", this,
-                ConfigOptions.REMOVE_REPAIR_LIMIT, ConfigHolder.DEFAULT_CONFIG, ConfigOptions.DEFAULT_REMOVE_LIMIT,
-                "\u00A77Whether the anvil's repair limit should be removed entirely.",
-                "\u00A77The anvil will still visually display \u00A7ctoo expensive\u00A77.",
-                "\u00A77However the action will be completable.");
+        this.removeAnvilCostLimit = BoolSettingsGui.boolFactory("\u00A78Remove Anvil Cost Limit ?", this,
+                ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.REMOVE_ANVIL_COST_LIMIT, ConfigOptions.DEFAULT_REMOVE_ANVIL_COST_LIMIT,
+                "\u00A77Whether the anvil's cost limit should be removed entirely.",
+                "\u00A77The anvil will still visually display \u00A7cToo Expensive\u00A77 if \u00A7eReplace Too Expensive\u00A77 is disabled.",
+                "\u00A77However, the action will be completable if xp requirement is meet.");
+
+        // replace too expensive item
+        this.replaceTooExpensive = BoolSettingsGui.boolFactory("\u00A78Replace Too Expensive ?", this,
+                ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.REPLACE_TOO_EXPENSIVE, ConfigOptions.DEFAULT_REPLACE_TOO_EXPENSIVE,
+                getReplaceToExpensiveLore());
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
@@ -158,40 +192,63 @@ public class BasicConfigGui extends ValueUpdatableGui {
 
     }
 
+    @NotNull
+    private String[] getReplaceToExpensiveLore() {
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add("\u00A77Whenever anvil cost is above \u00A7e39\u00A77 should display the true price and not \u00A7cToo Expensive\u00A77.");
+        lore.add("\u00A77However, when bypassing \u00A7cToo Expensive\u00A77, anvil price will be displayed as \u00A7aGreen\u00A77.");
+        lore.add("\u00A77Even if cost is displayed as \u00A7aGreen\u00A77:");
+        lore.add("\u00A77If the player do not have the required xp level, the action will not be completable.");
+
+        if(!this.packetManager.isProtocoLibInstalled()){
+            lore.add("");
+            lore.add("\u00A74/!\\\u00A7cCaution/!\\ \u00A7cYou need ProtocoLib installed for this to work.");
+        }
+
+        String[] loreAsArray = new String[lore.size()];
+        return lore.toArray(loreAsArray);
+    }
+
     @Override
     public void updateGuiValues() {
-        // limit repair item
-        GuiItem limitRepairItem = this.limitRepairFactory.getItem();
-        pane.bindItem('1', limitRepairItem);
-
-        // rename cost item
-        GuiItem limitRepairValueItem;
-        if (this.limitRepairFactory.getConfiguredValue()) {
-            limitRepairValueItem = this.repairCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
+        // limit and cap anvil cost item
+        GuiItem capAnvilCostItem;
+        GuiItem maxAnvilCostItem;
+        if (!this.removeAnvilCostLimit.getConfiguredValue()) {
+            capAnvilCostItem = this.capAnvilCostFactory.getItem("Cap Anvil Cost");
+            maxAnvilCostItem = this.maxAnvilCostFactory.getItem(Material.EXPERIENCE_BOTTLE, "Max Anvil Cost");
         } else {
-            limitRepairValueItem = this.notNeededLimitValueItem;
+            capAnvilCostItem = this.noCapRepairItem;
+            maxAnvilCostItem = this.noMaxCostItem;
         }
-        pane.bindItem('2', limitRepairValueItem);
+
+        pane.bindItem('L', capAnvilCostItem);
+        pane.bindItem('C', maxAnvilCostItem);
 
         // remove repair limit item
-        GuiItem removeRepairLimitItem = this.removeRepairLimit.getItem();
-        pane.bindItem('3', removeRepairLimitItem);
+        GuiItem removeRepairLimitItem = this.removeAnvilCostLimit.getItem("Remove Anvil Cost Limit");
+        pane.bindItem('R', removeRepairLimitItem);
+
+        // replace too expensive item
+        GuiItem replaceToExpensiveItem = this.replaceTooExpensive.getItem();
+        pane.bindItem('T', replaceToExpensiveItem);
+
 
         // item repair cost
         GuiItem itemRepairCostItem = this.itemRepairCost.getItem(Material.ANVIL);
-        pane.bindItem('4', itemRepairCostItem);
+        pane.bindItem('I', itemRepairCostItem);
 
         // unit repair cost
         GuiItem unitRepairCostItem = this.unitRepairCost.getItem(Material.DIAMOND);
-        pane.bindItem('5', unitRepairCostItem);
+        pane.bindItem('U', unitRepairCostItem);
 
         // item rename cost
         GuiItem itemRenameCost = this.itemRenameCost.getItem(Material.NAME_TAG);
-        pane.bindItem('6', itemRenameCost);
+        pane.bindItem('r', itemRenameCost);
 
         // sacrifice illegal enchant cost
         GuiItem illegalCostItem = this.sacrificeIllegalEnchantCost.getItem(Material.ENCHANTED_BOOK);
-        pane.bindItem('7', illegalCostItem);
+        pane.bindItem('S', illegalCostItem);
 
         update();
     }

@@ -4,11 +4,14 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.4.4"
+version = "1.4.5"
 
 repositories {
     mavenCentral()
     maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+
+    // ProtocoLib
+    maven (url = "https://repo.dmulloy2.net/repository/public/" )
 }
 
 dependencies {
@@ -20,6 +23,8 @@ dependencies {
     // Gui library
     compileOnly("com.github.stefvanschie.inventoryframework:IF:0.10.13")
 
+    // Protocolib
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 

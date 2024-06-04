@@ -19,6 +19,7 @@ import org.bukkit.event.EventPriority.HIGHEST
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.packet.PacketManager
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import kotlin.math.min
@@ -34,7 +36,7 @@ import kotlin.math.min
 /**
  * Listener for anvil events
  */
-class AnvilEventListener : Listener {
+class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     companion object {
         // Anvil's output slot
@@ -97,7 +99,6 @@ class AnvilEventListener : Listener {
 
         // Test for merge
         if (first.canMergeWith(second)) {
-
             val newEnchants = first.findEnchantments()
                 .combineWith(second.findEnchantments(), first.type, player)
             val resultItem = first.clone()
@@ -208,7 +209,6 @@ class AnvilEventListener : Listener {
         if ((output == inventory.getItem(ANVIL_INPUT_LEFT))
             || !allowed
         ) {
-
             event.result = Event.Result.DENY
             return
         }
@@ -331,6 +331,13 @@ class AnvilEventListener : Listener {
 
             repairCost += calculatePenalty(leftItem, null, resultCopy)
             repairCost += resultAmount * ConfigOptions.unitRepairCost
+
+            if (
+                !ConfigOptions.doRemoveCostLimit &&
+                ConfigOptions.doCapCost) {
+
+                repairCost = min(repairCost, ConfigOptions.maxAnvilCost)
+            }
 
             if ((inventory.maximumRepairCost < repairCost)
                 || (player.level < repairCost)
@@ -520,8 +527,11 @@ class AnvilEventListener : Listener {
         ignoreRules: Boolean = false
     ) {
         // Test repair cost limit
-        val finalAnvilCost = if (ConfigOptions.limitRepairCost && !ignoreRules) {
-            min(anvilCost, ConfigOptions.limitRepairValue)
+        val finalAnvilCost = if (
+            !ignoreRules &&
+            !ConfigOptions.doRemoveCostLimit &&
+            ConfigOptions.doCapCost) {
+            min(anvilCost, ConfigOptions.maxAnvilCost)
         } else {
             anvilCost
         }
@@ -533,23 +543,43 @@ class AnvilEventListener : Listener {
             .server
             .scheduler
             .runTask(CustomAnvil.instance, Runnable {
-                if (ConfigOptions.removeRepairLimit || ignoreRules) {
-                    inventory.maximumRepairCost = Int.MAX_VALUE
-                } else{
-                    inventory.maximumRepairCost = 40 // minecraft default
-                }
-                inventory.repairCost = finalAnvilCost
+                inventory.maximumRepairCost =
+                    if (ConfigOptions.doRemoveCostLimit || ignoreRules)
+                { Int.MAX_VALUE }
+                    else
+                { ConfigOptions.maxAnvilCost + 1 }
 
+                inventory.repairCost = finalAnvilCost
                 event.view.setProperty(REPAIR_COST, finalAnvilCost)
 
                 val player = event.view.player
                 if(player is Player){
+                    if(player.gameMode != GameMode.CREATIVE ){
+                        val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
+                                (finalAnvilCost >= 40) &&
+                                finalAnvilCost < inventory.maximumRepairCost
+
+                        packetManager.setInstantBuild(player, bypassToExpensive)
+                    }
+
                     player.updateInventory()
                 }
             })
     }
 
+    @EventHandler
+    fun onAnvilClose(event: InventoryCloseEvent){
+        val player = event.player
+        if(event.inventory !is AnvilInventory) return
+        if(player is Player && GameMode.CREATIVE != player.gameMode){
+            packetManager.setInstantBuild(player, false)
+        }
+
+    }
+
 }
+
+
 
 
 private class SlotContainer(val type: SlotType, val slot: Int)

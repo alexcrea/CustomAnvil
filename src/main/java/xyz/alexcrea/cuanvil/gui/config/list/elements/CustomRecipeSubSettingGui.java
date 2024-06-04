@@ -78,8 +78,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = BoolSettingsGui.boolFactory("\u00A78Exact count ?", this,
-                this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
+                ConfigHolder.DEFAULT_CONFIG,
+                this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
         this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
                 this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,

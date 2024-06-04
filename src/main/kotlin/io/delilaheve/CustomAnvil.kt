@@ -8,6 +8,9 @@ import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
+import xyz.alexcrea.cuanvil.packet.NoProtocoLib
+import xyz.alexcrea.cuanvil.packet.PacketManager
+import xyz.alexcrea.cuanvil.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
@@ -66,13 +69,19 @@ class CustomAnvil : JavaPlugin() {
                 instance.logger.info(message)
             }
         }
+
+
     }
+
+    lateinit var packetManager: PacketManager
 
     /**
      * Setup plugin for use
      */
     override fun onEnable() {
         instance = this
+
+        val pluginManager = Bukkit.getPluginManager();
 
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
@@ -82,9 +91,15 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
+        // Load ProtocolLib dependency if exist
+        packetManager = if(pluginManager.isPluginEnabled("ProtocolLib"))
+        { ProtocoLibWrapper(); }
+        else
+        { NoProtocoLib(); }
+
         // Load chat listener
         chatListener = ChatEventListener()
-        Bukkit.getPluginManager().registerEvents(chatListener, this)
+        pluginManager.registerEvents(chatListener, this)
 
         // Load config
         val success = ConfigHolder.loadConfig()
@@ -98,7 +113,7 @@ class CustomAnvil : JavaPlugin() {
         prepareCommand()
 
         server.pluginManager.registerEvents(
-            AnvilEventListener(),
+            AnvilEventListener(packetManager),
             this
         )
     }
