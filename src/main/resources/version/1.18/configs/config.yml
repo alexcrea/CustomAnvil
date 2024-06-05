@@ -1,0 +1,246 @@
+# All anvil cost will be capped to limit_repair_value if enabled.
+#
+# In other words:
+# For any anvil cost greater than limit_repair_value, Cost will be set to limit_repair_value.
+limit_repair_cost: false
+
+# Max cost value the Anvil can get to.
+#
+# Valid values include 0 to 1000.
+# Cost will be displayed as "Too Expensive":
+# - If Cost is above 39
+# - And replace_too_expensive is disabled (false)
+limit_repair_value: 39
+
+# Whether the anvil's cost limit should be removed entirely.
+#
+# The anvil will still visually display "Too Expensive" if "replace_too_expensive" is disabled
+# However, the action will be completable if xp requirement is meet.
+remove_repair_limit: false
+
+# Whenever anvil cost is above 39 should display the true price and not "Too Expensive".
+#
+# However, when bypassing "Too Expensive", anvil price will be displayed as Green.
+# If the action is not completable, the cost will still be displayed as "Too expensive".
+# That mean you also need to change other settings like remove_repair_limit or limit_repair_cost.
+#
+# Require ProtocoLib.
+replace_too_expensive: false
+
+# XP Level amount added to the anvil when the item is repaired by another item of the same type
+#
+# Valid values include 0 to 1000
+item_repair_cost: 2
+
+# XP Level amount added to the anvil when the item is renamed
+#
+# Valid values include 0 to 1000
+item_rename_cost: 1
+
+# XP Level amount added to the anvil when the item is repaired by an "unit"
+# For example: a Diamond on a Diamond Sword
+# What's considered unit for what can be edited on the unit repair configuration.
+#
+# Valid values include 0 to 1000
+unit_repair_cost: 1
+
+# XP Level amount added to the anvil when a sacrifice enchantment
+# conflict with one of the left item enchantment
+#
+# Valid values include 0 to 1000
+sacrifice_illegal_enchant_cost: 1
+
+# Default limit to apply to any enchants missing from override_limits
+#
+# Valid values include 1 to 1000
+default_limit: 5
+
+# Override limits for specific enchants
+#
+# Enchantments not listed here will use the value of default_limit
+#
+# Overrides provided default from aqua_affinity to depth_strider won't change effect with extra levels
+#
+# Valid range of 1 - 255 for each enchantment
+enchant_limits:
+  aqua_affinity: 1
+  binding_curse: 1
+  channeling: 1
+  flame: 1
+  infinity: 1
+  mending: 1
+  multishot: 1
+  silk_touch: 1
+  vanishing_curse: 1
+  depth_strider: 3 # anything more than 3 is treated as 3 by the game
+  protection: 4
+  fire_protection: 4
+  blast_protection: 4
+  projectile_protection: 4
+  feather_falling: 4
+  thorns: 3
+  respiration: 3
+  sharpness: 5
+  smite: 5
+  bane_of_arthropods: 5
+  knockback: 2
+  fire_aspect: 2
+  looting: 3
+  sweeping: 3
+  sweeping_edge: 3
+  efficiency: 5
+  unbreaking: 3
+  fortune: 3
+  power: 5
+  punch: 2
+  luck_of_the_sea: 3
+  lure: 3
+  frost_walker: 2
+  impaling: 5
+  riptide: 3
+  loyalty: 3
+  piercing: 4
+  quick_charge: 3
+  soul_speed: 3
+  swift_sneak: 3
+
+# Multipliers used to calculate the enchantment's value in repair/combining
+#
+# Values here are pulled from the fandom wiki:
+# https://minecraft.fandom.com/wiki/Anvil_mechanics#Costs_for_combining_enchantments
+#
+# If an enchantment is missing values here, or is less than 0, it will default to 0
+#
+# Calculated as: [Enchantment lvl] * [multiplier]
+#
+# With default values protection 4 would have a value of 4 when
+# coming from either a book (4 * 1) or an item (4 * 1)
+enchant_values:
+  aqua_affinity:
+    item: 4
+    book: 2
+  bane_of_arthropods:
+    item: 2
+    book: 1
+  binding_curse:
+    item: 8
+    book: 4
+  blast_protection:
+    item: 4
+    book: 2
+  channeling:
+    item: 8
+    book: 4
+  depth_strider:
+    item: 4
+    book: 2
+  efficiency:
+    item: 1
+    book: 1
+  flame:
+    item: 4
+    book: 2
+  feather_falling:
+    item: 2
+    book: 1
+  fire_aspect:
+    item: 4
+    book: 2
+  fire_protection:
+    item: 2
+    book: 1
+  fortune:
+    item: 4
+    book: 2
+  frost_walker:
+    item: 4
+    book: 2
+  impaling:
+    item: 4
+    book: 2
+  infinity:
+    item: 8
+    book: 4
+  knockback:
+    item: 2
+    book: 1
+  looting:
+    item: 4
+    book: 2
+  loyalty:
+    item: 1
+    book: 1
+  luck_of_the_sea:
+    item: 4
+    book: 2
+  lure:
+    item: 4
+    book: 2
+  mending:
+    item: 4
+    book: 2
+  multishot:
+    item: 4
+    book: 2
+  piercing:
+    item: 1
+    book: 1
+  power:
+    item: 1
+    book: 1
+  projectile_protection:
+    item: 2
+    book: 1
+  protection:
+    item: 1
+    book: 1
+  punch:
+    item: 4
+    book: 2
+  quick_charge:
+    item: 2
+    book: 1
+  respiration:
+    item: 4
+    book: 2
+  riptide:
+    item: 4
+    book: 2
+  silk_touch:
+    item: 8
+    book: 4
+  sharpness:
+    item: 1
+    book: 1
+  smite:
+    item: 2
+    book: 1
+  soul_speed:
+    item: 8
+    book: 4
+  swift_sneak:
+    item: 8
+    book: 4
+  sweeping:
+    item: 4
+    book: 2
+  sweeping_edge:
+    item: 4
+    book: 2
+  thorns:
+    item: 8
+    book: 4
+  unbreaking:
+    item: 2
+    book: 1
+  vanishing_curse:
+    item: 8
+    book: 4
+
+# Whether to show debug logging
+debug_log: false
+
+# Whether to show verbose debug logging
+debug_log_verbose: false
+
+configVersion: 1.4.5

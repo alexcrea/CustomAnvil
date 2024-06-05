@@ -1,0 +1,201 @@
+# Please note this config use spigot material names.
+# It should match minecraft name in most case, maybe every case, but I can't be sure
+# In case there an issue with material name, you can found them here:
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+
+# An empty Exclude group exclude nothing, so it contain everything
+everything:
+  type: exclude
+
+# An empty include group will include nothing
+nothing:
+  type: include
+
+# This group is an example of a group including only stone and polished granite
+example_include:
+  type: include
+  items:
+    - stone
+    - polished_granite
+
+# This group contain everything except polished granite and elements of example_include
+example_exclude:
+  type: exclude
+  items:
+    - polished_granite
+  groups:
+    - example_include
+
+# Default configuration should be vanilla enchantment conflict group
+# there may have error, if you find one you can fix it !
+# https://minecraft.fandom.com/wiki/Enchanting
+
+swords:
+  type: include
+  items:
+    - wooden_sword
+    - stone_sword
+    - iron_sword
+    - diamond_sword
+    - golden_sword
+    - netherite_sword
+
+axes:
+  type: include
+  items:
+    - wooden_axe
+    - stone_axe
+    - iron_axe
+    - diamond_axe
+    - golden_axe
+    - netherite_axe
+
+melee_weapons:
+  type: include
+  groups:
+    - swords
+    - axes
+
+helmets:
+  type: include
+  items:
+    - leather_helmet
+    - chainmail_helmet
+    - iron_helmet
+    - diamond_helmet
+    - golden_helmet
+    - netherite_helmet
+    - turtle_helmet
+
+chestplate:
+  type: include
+  items:
+    - leather_chestplate
+    - chainmail_chestplate
+    - iron_chestplate
+    - diamond_chestplate
+    - golden_chestplate
+    - netherite_chestplate
+
+leggings:
+  type: include
+  items:
+    - leather_leggings
+    - chainmail_leggings
+    - iron_leggings
+    - diamond_leggings
+    - golden_leggings
+    - netherite_leggings
+
+boots:
+  type: include
+  items:
+    - leather_boots
+    - chainmail_boots
+    - iron_boots
+    - diamond_boots
+    - golden_boots
+    - netherite_boots
+
+armors:
+  type: include
+  groups:
+    - helmets
+    - chestplate
+    - leggings
+    - boots
+
+wearable:
+  type: include
+  items:
+    - elytra
+    - carved_pumpkin
+    - skeleton_skull
+    - wither_skeleton_skull
+    - zombie_head
+    - player_head
+    - creeper_head
+    - dragon_head
+  groups:
+    - armors
+
+tools:
+  type: include
+  items:
+    - wooden_pickaxe
+    - stone_pickaxe
+    - iron_pickaxe
+    - diamond_pickaxe
+    - golden_pickaxe
+    - netherite_pickaxe
+    - wooden_shovel
+    - stone_shovel
+    - iron_shovel
+    - diamond_shovel
+    - golden_shovel
+    - netherite_shovel
+    - wooden_hoe
+    - stone_hoe
+    - iron_hoe
+    - diamond_hoe
+    - golden_hoe
+    - netherite_hoe
+  groups:
+    - axes
+
+enchanted_book:
+  type: include
+  items:
+    - enchanted_book
+
+trident:
+  type: include
+  items:
+    - trident
+
+bow:
+  type: include
+  items:
+    - bow
+
+crossbow:
+  type: include
+  items:
+    - crossbow
+
+fishing_rod:
+  type: include
+  items:
+    - fishing_rod
+
+shears:
+  type: include
+  items:
+    - shears
+
+can_unbreak:
+  type: include
+  items:
+    - elytra
+    - flint_and_steel
+    - shield
+    - carrot_on_a_stick
+    - warped_fungus_on_a_stick
+  groups:
+    - melee_weapons
+    - tools
+    - armors
+    - trident
+    - bow
+    - crossbow
+    - fishing_rod
+    - shears
+
+can_vanish:
+  type: include
+  items:
+    - compass
+  groups:
+    - wearable
+    - can_unbreak
+
