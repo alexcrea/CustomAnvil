@@ -339,7 +339,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 repairCost = min(repairCost, ConfigOptions.maxAnvilCost)
             }
 
-            if ((inventory.maximumRepairCost < repairCost)
+            if ((inventory.maximumRepairCost <= repairCost)
                 || (player.level < repairCost)
             ) return
         }
