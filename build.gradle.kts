@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.4.5"
+version = "1.4.6"
 
 repositories {
     mavenCentral()
