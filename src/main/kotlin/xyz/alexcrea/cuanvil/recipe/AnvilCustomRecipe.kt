@@ -9,8 +9,8 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 class AnvilCustomRecipe(
     val name: String,
     var exactCount: Boolean,
-    //var exactLeft: Boolean,
-    //var exactRight: Boolean,
+
+    // Meta and
 
     var xpCostPerCraft: Int,
 

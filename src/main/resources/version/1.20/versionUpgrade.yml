@@ -1,0 +1,12 @@
+addNewItems:
+  message: "Add 1.20 items"
+  addPiglinHead:
+    type: add_list
+    config_type: item_group
+    path: wearable.items
+    value: piglin_head
+  addBrush:
+    type: list_add
+    config_type: item_group
+    path: can_unbreak.items
+    value: brush
