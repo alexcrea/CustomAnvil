@@ -7,6 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
 import xyz.alexcrea.cuanvil.packet.NoProtocoLib
 import xyz.alexcrea.cuanvil.packet.PacketManager
@@ -104,6 +106,10 @@ class CustomAnvil : JavaPlugin() {
         // Load config
         val success = ConfigHolder.loadConfig()
         if (!success) return
+
+        // Load gui constants //TODO maybe something better later
+        MainConfigGui.getInstance()
+        GuiSharedConstant.loadConstants()
 
         // Load metrics
         val metric = Metrics(this, bstatsPluginId)

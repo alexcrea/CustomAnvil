@@ -84,5 +84,6 @@ public class GuiSharedConstant {
         CONFIRM_PERMANENT_ITEM.setItemMeta(meta);
     }
 
+    public static void loadConstants(){}
 
 }
