@@ -5,8 +5,7 @@ It is expected to work on 1.18 to 1.21 minecraft servers running spigot or paper
 (the plugin support of 1.16.5 to 1.17.1 is experimental an may encounter issues)
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
-It was renamed because it now affects every anvil aspect and not only unsafe enchants
-
+It was renamed because it now affects every anvil aspect and not only unsafe enchants\
 **Custom Anvil** is based on [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants) by  DelilahEve.
 
 ### Download Locations:
@@ -43,14 +42,10 @@ anvilconfigreload or carl: Reload every config of this plugin
 customanvilconfig: open a menu for administrator to edit plugin's config in game
 ```
 ---
-### Default Configuration:
+### Default Plugin's Configurations
+For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.18)\
+For 1.21 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
 
-Default configuration can be found on following links:
-- [config.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/config.yml)
-- [enchant_conflict.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/enchant_conflict.yml)
-- [item_groups.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/item_groups.yml)
-- [unit_repair_item.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/unit_repair_item.yml)
-- [custom_recipes.yml](https://github.com/alexcrea/CustomAnvil/blob/master/src/main/resources/custom_recipes.yml)
 ---
 ### Known issue:
 There is non known issue, if you find one please report the issue.

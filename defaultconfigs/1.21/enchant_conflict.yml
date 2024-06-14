@@ -1,0 +1,379 @@
+# material conflicts
+#
+# If you want to edit this file:
+# - A conflict will apply to every item except if in one of the notAffectedGroups group
+# - the conflict will count only if the user try to combine at least as
+#   many conflicting enchantment as "maxEnchantmentBeforeConflict"
+#
+#
+# ----------------------------------------------------
+# These restriction are about not allowing enchantment
+# on illegal items
+# ----------------------------------------------------
+
+restriction_aqua_affinity:
+  enchantments:
+  - aqua_affinity
+  notAffectedGroups:
+  - enchanted_book
+  - helmets
+
+restriction_bane_of_arthropods:
+  enchantments:
+  - bane_of_arthropods
+  notAffectedGroups:
+  - enchanted_book
+  - melee_weapons
+  - mace
+
+restriction_blast_protection:
+  enchantments:
+  - blast_protection
+  notAffectedGroups:
+  - enchanted_book
+  - armors
+
+restriction_channeling:
+  enchantments:
+  - channeling
+  notAffectedGroups:
+  - enchanted_book
+  - trident
+
+restriction_binding_curse:
+  enchantments:
+  - binding_curse
+  notAffectedGroups:
+  - enchanted_book
+  - wearable
+
+restriction_vanishing_curse:
+  enchantments:
+  - vanishing_curse
+  notAffectedGroups:
+  - enchanted_book
+  - can_vanish
+
+restriction_depth_strider:
+  enchantments:
+  - depth_strider
+  notAffectedGroups:
+  - enchanted_book
+  - boots
+
+restriction_efficiency:
+  enchantments:
+  - efficiency
+  notAffectedGroups:
+  - enchanted_book
+  - tools
+  - shears
+
+restriction_feather_falling:
+  enchantments:
+  - feather_falling
+  notAffectedGroups:
+  - enchanted_book
+  - boots
+
+restriction_fire_aspect:
+  enchantments:
+  - fire_aspect
+  notAffectedGroups:
+  - enchanted_book
+  - swords
+  - mace
+
+restriction_fire_protection:
+  enchantments:
+  - fire_protection
+  notAffectedGroups:
+  - enchanted_book
+  - armors
+
+restriction_flame:
+  enchantments:
+  - flame
+  notAffectedGroups:
+  - enchanted_book
+  - bow
+
+restriction_fortune:
+  enchantments:
+  - fortune
+  notAffectedGroups:
+  - enchanted_book
+  - tools
+
+restriction_frost_walker:
+  enchantments:
+  - frost_walker
+  notAffectedGroups:
+  - enchanted_book
+  - boots
+
+restriction_impaling:
+  enchantments:
+  - impaling
+  notAffectedGroups:
+  - enchanted_book
+  - trident
+
+restriction_infinity:
+  enchantments:
+  - infinity
+  notAffectedGroups:
+  - enchanted_book
+  - bow
+
+restriction_knockback:
+  enchantments:
+  - knockback
+  notAffectedGroups:
+  - enchanted_book
+  - swords
+
+restriction_looting:
+  enchantments:
+  - looting
+  notAffectedGroups:
+  - enchanted_book
+  - swords
+
+restriction_loyalty:
+  enchantments:
+  - loyalty
+  notAffectedGroups:
+  - enchanted_book
+  - trident
+
+restriction_lure:
+  enchantments:
+  - lure
+  notAffectedGroups:
+  - enchanted_book
+  - fishing_rod
+
+restriction_mending:
+  enchantments:
+  - mending
+  notAffectedGroups:
+  - enchanted_book
+  - can_unbreak
+
+restriction_multishot:
+  enchantments:
+  - multishot
+  notAffectedGroups:
+  - enchanted_book
+  - crossbow
+
+restriction_piercing:
+  enchantments:
+  - piercing
+  notAffectedGroups:
+  - enchanted_book
+  - crossbow
+
+restriction_power:
+  enchantments:
+  - power
+  notAffectedGroups:
+  - enchanted_book
+  - bow
+
+restriction_projectile_protection:
+  enchantments:
+  - projectile_protection
+  notAffectedGroups:
+  - enchanted_book
+  - armors
+
+restriction_protection:
+  enchantments:
+  - protection
+  notAffectedGroups:
+  - enchanted_book
+  - armors
+
+restriction_punch:
+  enchantments:
+  - punch
+  notAffectedGroups:
+  - enchanted_book
+  - bow
+
+restriction_quick_charge:
+  enchantments:
+  - quick_charge
+  notAffectedGroups:
+  - enchanted_book
+  - crossbow
+
+restriction_respiration:
+  enchantments:
+  - respiration
+  notAffectedGroups:
+  - enchanted_book
+  - helmets
+
+restriction_riptide:
+  enchantments:
+  - riptide
+  notAffectedGroups:
+  - enchanted_book
+  - trident
+
+restriction_sharpness:
+  enchantments:
+  - sharpness
+  notAffectedGroups:
+  - enchanted_book
+  - melee_weapons
+
+restriction_silk_touch:
+  enchantments:
+  - silk_touch
+  notAffectedGroups:
+  - enchanted_book
+  - tools
+
+restriction_smite:
+  enchantments:
+  - smite
+  notAffectedGroups:
+  - enchanted_book
+  - melee_weapons
+  - mace
+
+restriction_soul_speed:
+  enchantments:
+  - soul_speed
+  notAffectedGroups:
+  - enchanted_book
+  - boots
+
+restriction_sweeping_edge:
+  enchantments:
+  - sweeping
+  - sweeping_edge
+  notAffectedGroups:
+  - enchanted_book
+  - swords
+
+# Do not exist in 1.18,  that mean useInFuture will be set to true
+# useInFuture set to true also mean it will not warn if there is an issue
+restriction_swift_sneak:
+  useInFuture: true
+  enchantments:
+  - swift_sneak
+  notAffectedGroups:
+  - enchanted_book
+  - leggings
+
+restriction_thorns:
+  enchantments:
+  - thorns
+  notAffectedGroups:
+  - enchanted_book
+  - armors
+
+restriction_unbreaking:
+  enchantments:
+  - unbreaking
+  notAffectedGroups:
+  - enchanted_book
+  - can_unbreak
+
+# ----------------------------------------------------
+# Now we have conflicts about enchantment Incompatibility
+# We just filtered what item enchantments can be applied
+# notAffectedGroups is empty as we don't want anything to not respect theses rules
+# maxEnchantmentBeforeConflict is set to 1 to only have 1 on those enchantment available
+# ----------------------------------------------------
+
+sword_enchant_conflict:
+  enchantments:
+  - bane_of_arthropods
+  - smite
+  - sharpness
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+protection_enchant_conflict:
+  enchantments:
+  - blast_protection
+  - fire_protection
+  - projectile_protection
+  - protection
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+trident_conflict1:
+  enchantments:
+  - channeling
+  - riptide
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+trident_conflict2:
+  enchantments:
+  - loyalty
+  - riptide
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+boot_conflict:
+  enchantments:
+  - depth_strider
+  - frost_walker
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+tool_conflict:
+  enchantments:
+  - fortune
+  - silk_touch
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+bow_conflict:
+  enchantments:
+  - mending
+  - infinity
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+
+crossbow_conflict:
+  enchantments:
+  - multishot
+  - piercing
+  notAffectedGroups: []
+  maxEnchantmentBeforeConflict: 1
+restriction_density:
+  enchantments:
+  - density
+  notAffectedGroups:
+  - mace
+restriction_breach:
+  enchantments:
+  - breach
+  notAffectedGroups:
+  - mace
+restriction_wind_burst:
+  enchantments:
+  - wind_burst
+  notAffectedGroups:
+  - mace
+mace_enchant_conflict:
+  enchantments:
+  - density
+  - breach
+  - smite
+  - bane_of_arthropods
+  maxEnchantmentBeforeConflict: 1
+
+# ----------------------------------------------------
+# Bellow is for custom conflicts.
+# This is also where conflict create from the gui will be placed.
+# ----------------------------------------------------
