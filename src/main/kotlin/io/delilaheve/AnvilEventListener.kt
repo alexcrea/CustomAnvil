@@ -549,10 +549,12 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                     else
                 { ConfigOptions.maxAnvilCost + 1 }
 
+                val player = event.view.player
+
                 inventory.repairCost = finalAnvilCost
                 event.view.setProperty(REPAIR_COST, finalAnvilCost)
+                player.openInventory.setProperty(REPAIR_COST, finalAnvilCost)
 
-                val player = event.view.player
                 if(player is Player){
                     if(player.gameMode != GameMode.CREATIVE ){
                         val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
