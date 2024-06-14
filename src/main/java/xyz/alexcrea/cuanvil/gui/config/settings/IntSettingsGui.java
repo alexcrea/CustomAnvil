@@ -16,7 +16,6 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
-import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -264,7 +263,6 @@ public class IntSettingsGui extends AbstractSettingGui {
     public boolean onSave() {
         holder.config.getConfig().set(holder.configPath, now);
 
-        MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }

@@ -15,7 +15,6 @@ import xyz.alexcrea.cuanvil.packet.PacketManager
 import xyz.alexcrea.cuanvil.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
-import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
 
@@ -116,8 +115,7 @@ class CustomAnvil : JavaPlugin() {
         GuiSharedConstant.loadConstants()
 
         // Load metrics
-        val metric = Metrics(this, bstatsPluginId)
-        MetricsUtil.addCustomMetric(metric)
+        Metrics(this, bstatsPluginId)
 
         // Add commands to reload the plugin
         prepareCommand()
