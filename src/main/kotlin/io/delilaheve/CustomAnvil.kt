@@ -108,7 +108,7 @@ class CustomAnvil : JavaPlugin() {
         if (!success) return
 
         // Load gui constants //TODO maybe something better later
-        MainConfigGui.getInstance()
+        MainConfigGui.getInstance().init(this.packetManager)
         GuiSharedConstant.loadConstants()
 
         // Load metrics

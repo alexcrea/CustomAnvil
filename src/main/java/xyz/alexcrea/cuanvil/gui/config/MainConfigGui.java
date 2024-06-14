@@ -24,11 +24,9 @@ public class MainConfigGui extends ChestGui {
 
     private MainConfigGui() {
         super(3, "\u00A78Anvil Config", CustomAnvil.instance);
-
-        init(CustomAnvil.instance.packetManager);
     }
 
-    private void init(PacketManager packetManager) {
+    public void init(PacketManager packetManager) {
         Pattern pattern = new Pattern(
                 "000000000",
                 "012304567",
