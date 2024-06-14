@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.listener.ChatEventListener
 import xyz.alexcrea.cuanvil.packet.NoProtocoLib
 import xyz.alexcrea.cuanvil.packet.PacketManager
 import xyz.alexcrea.cuanvil.packet.ProtocoLibWrapper
+import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
@@ -106,6 +107,9 @@ class CustomAnvil : JavaPlugin() {
         // Load config
         val success = ConfigHolder.loadConfig()
         if (!success) return
+
+        // temporary: handle 1.21 update
+        Update_1_21.handleUpdate()
 
         // Load gui constants //TODO maybe something better later
         MainConfigGui.getInstance().init(this.packetManager)
