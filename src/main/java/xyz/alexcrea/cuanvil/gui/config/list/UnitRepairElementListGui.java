@@ -17,7 +17,6 @@ import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
-import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +84,6 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
                         // Add new material
                         ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.name().toLowerCase()+"."+materialName,0.25);
 
-                        MetricsUtil.INSTANCE.notifyChange(ConfigHolder.UNIT_REPAIR_HOLDER, "");
                         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
                             ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
                         }

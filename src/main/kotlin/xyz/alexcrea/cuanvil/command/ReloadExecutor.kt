@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.config.global.*
-import xyz.alexcrea.cuanvil.util.MetricsUtil
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -44,9 +43,6 @@ class ReloadExecutor : CommandExecutor {
             GroupConfigGui.INSTANCE.reloadValues()
             UnitRepairConfigGui.INSTANCE.reloadValues()
             CustomRecipeConfigGui.INSTANCE.reloadValues()
-
-            // & update metric
-            MetricsUtil.testIfConfigIsDefault()
 
             return true
         } catch (e: Exception) {

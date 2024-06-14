@@ -17,7 +17,6 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
-import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -321,7 +320,6 @@ public class DoubleSettingGui extends AbstractSettingGui {
             this.holder.config.getConfig().set(this.holder.configPath, now.doubleValue());
         }
 
-        MetricsUtil.INSTANCE.notifyChange(this.holder.config, this.holder.configPath);
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }

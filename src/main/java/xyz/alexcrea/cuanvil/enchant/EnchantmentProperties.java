@@ -7,7 +7,9 @@ public enum EnchantmentProperties {
     BANE_OF_ARTHROPODS(EnchantmentRarity.UNCOMMON),
     BINDING_CURSE(EnchantmentRarity.VERY_RARE),
     BLAST_PROTECTION(EnchantmentRarity.RARE),
+    BREACH(EnchantmentRarity.RARE),
     CHANNELING(EnchantmentRarity.VERY_RARE),
+    DENSITY(EnchantmentRarity.UNCOMMON),
     DEPTH_STRIDER(EnchantmentRarity.RARE),
     EFFICIENCY(EnchantmentRarity.COMMON),
     FLAME(EnchantmentRarity.RARE),
@@ -42,7 +44,9 @@ public enum EnchantmentProperties {
     SWEEPING_EDGE(EnchantmentRarity.RARE),
     THORNS(EnchantmentRarity.VERY_RARE),
     UNBREAKING(EnchantmentRarity.UNCOMMON),
-    VANISHING_CURSE(EnchantmentRarity.VERY_RARE);
+    VANISHING_CURSE(EnchantmentRarity.VERY_RARE),
+    WIND_BURST(EnchantmentRarity.RARE),
+    ;
 
     private final EnchantmentRarity rarity;
 

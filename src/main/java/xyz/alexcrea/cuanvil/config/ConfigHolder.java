@@ -7,7 +7,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
-import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +27,7 @@ public abstract class ConfigHolder {
         UNIT_REPAIR_HOLDER = new UnitRepairHolder();
         CUSTOM_RECIPE_HOLDER = new CustomAnvilCraftHolder();
 
-        boolean result = reloadAllFromDisk(true);
-        if (result) {
-            MetricsUtil.INSTANCE.testIfConfigIsDefault();
-        }
-        return result;
+        return reloadAllFromDisk(true);
     }
 
     public static boolean reloadAllFromDisk(boolean hardfail) {
