@@ -4,7 +4,16 @@ import com.google.common.primitives.Ints;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record Version(int major, int minor, int build) implements Comparable<Version>{
+public class Version implements Comparable<Version>{
+    int major;
+    int minor;
+    int build;
+
+    public Version(int major, int minor, int build) {
+        this.major = major;
+        this.minor = minor;
+        this.build = build;
+    }
 
     public static @Nullable Version versionOf(@Nullable String version){
         if(version == null) return null;
@@ -52,7 +61,8 @@ public record Version(int major, int minor, int build) implements Comparable<Ver
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Version other){
+        if(obj instanceof Version){
+            Version other = (Version) obj;
             return (other.major == this.major) && (other.minor == this.minor) && (other.build == this.build);
         }
         return false;

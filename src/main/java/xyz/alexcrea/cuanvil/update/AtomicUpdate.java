@@ -9,20 +9,31 @@ import xyz.alexcrea.cuanvil.config.ConfigHolderEnum;
 
 import java.util.List;
 
-public record AtomicUpdate (
-        @NotNull AtomicUpdateType type,
-        @NotNull ConfigHolderEnum configType,
-        @NotNull  String path,
-        @Nullable String expected, // Ignored on list
-        @Nullable String value // Ignored on unset. not null if not unset
-
-){
-
+public class AtomicUpdate{
     private static final String UPDATE_TYPE = "type";
     private static final String CONFIG_TYPE_PATH = "config_type";
     private static final String PATH_PATH = "path";
     private static final String EXPECTED_PATH = "expected";
     private static final String VALUE_PATH = "value";
+
+    private final @NotNull AtomicUpdateType type;
+    private final @NotNull ConfigHolderEnum configType;
+    private final @NotNull  String path;
+    private final @Nullable String expected; // Ignored on list
+    private final @Nullable String value; // Ignored on unset. not null if not unset
+
+    public AtomicUpdate(
+            @NotNull AtomicUpdateType type,
+            @NotNull ConfigHolderEnum configType,
+            @NotNull  String path,
+            @Nullable String expected, // Ignored on list
+            @Nullable String value) {
+        this.type = type;
+        this.configType = configType;
+        this.path = path;
+        this.expected = expected;
+        this.value = value;
+    }
 
     public static @Nullable AtomicUpdate fromConfig(@NotNull ConfigurationSection section){
         String typeString = section.getString(UPDATE_TYPE);
@@ -64,24 +75,22 @@ public record AtomicUpdate (
     }
 
     public boolean isExpected(boolean ignoreIfOperationIsDone){
+        String value;
+        List<String> values;
         switch (this.type){
-            case SET -> {
-                String value = this.configType.getConfigHolder().getConfig().getString(this.path);
+            case SET:
+                value = this.configType.getConfigHolder().getConfig().getString(this.path);
                 return (isStringEqual(value, this.expected)) || (ignoreIfOperationIsDone && isStringEqual(value, this.value));
-            }
-            case UNSET -> {
-                String value = this.configType.getConfigHolder().getConfig().getString(this.path);
+            case UNSET:
+                value = this.configType.getConfigHolder().getConfig().getString(this.path);
                 return (isStringEqual(value, this.expected)) || (ignoreIfOperationIsDone && (value == null));
-            }
-            case LIST_ADD -> {
-                List<String> values = this.configType.getConfigHolder().getConfig().getStringList(this.path);
+            case LIST_ADD:
+                values = this.configType.getConfigHolder().getConfig().getStringList(this.path);
                 return ignoreIfOperationIsDone || !values.contains(this.value);
-            }
 
-            case LIST_REMOVE -> {
-                List<String> values = this.configType.getConfigHolder().getConfig().getStringList(this.path);
+            case LIST_REMOVE:
+                values = this.configType.getConfigHolder().getConfig().getStringList(this.path);
                 return ignoreIfOperationIsDone || values.contains(this.value);
-            }
         }
 
         return false;
@@ -95,23 +104,24 @@ public record AtomicUpdate (
         ConfigHolder configHolder = this.configType.getConfigHolder();
         FileConfiguration config = configHolder.getConfig();
 
+        List<String> values;
         switch (this.type){
-            case SET -> {
+            case SET:
                 config.set(this.path, this.value);
-            }
-            case UNSET -> {
+                break;
+            case UNSET:
                 config.set(this.path, null);
-            }
-            case LIST_ADD -> {
-                List<String> values = config.getStringList(this.path);
+                break;
+            case LIST_ADD:
+                values = config.getStringList(this.path);
                 values.add(this.value);
                 config.set(this.path, this.value);
-            }
-            case LIST_REMOVE -> {
-                List<String> values = config.getStringList(this.path);
+                break;
+            case LIST_REMOVE:
+                values = config.getStringList(this.path);
                 values.remove(this.value);
                 config.set(this.path, this.value);
-            }
+            break;
         }
 
         return true;
