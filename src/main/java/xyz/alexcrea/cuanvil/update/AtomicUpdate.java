@@ -1,37 +1,41 @@
 package xyz.alexcrea.cuanvil.update;
 
+import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ConfigOptions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.config.ConfigHolderEnum;
+import xyz.alexcrea.cuanvil.update.requirement.UpdateRequirement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AtomicUpdate{
     private static final String UPDATE_TYPE = "type";
     private static final String CONFIG_TYPE_PATH = "config_type";
     private static final String PATH_PATH = "path";
-    private static final String EXPECTED_PATH = "expected";
+    private static final String REQUIREMENT_PATH = "requirement";
     private static final String VALUE_PATH = "value";
 
     private final @NotNull AtomicUpdateType type;
     private final @NotNull ConfigHolderEnum configType;
     private final @NotNull  String path;
-    private final @Nullable String expected; // Ignored on list
+    private final @NotNull List<UpdateRequirement> requirements;
     private final @Nullable String value; // Ignored on unset. not null if not unset
 
     public AtomicUpdate(
             @NotNull AtomicUpdateType type,
             @NotNull ConfigHolderEnum configType,
             @NotNull  String path,
-            @Nullable String expected, // Ignored on list
+            @NotNull List<UpdateRequirement> requirements,
             @Nullable String value) {
         this.type = type;
         this.configType = configType;
         this.path = path;
-        this.expected = expected;
+        this.requirements = requirements;
         this.value = value;
     }
 
@@ -39,7 +43,7 @@ public class AtomicUpdate{
         String typeString = section.getString(UPDATE_TYPE);
         String configTypeString = section.getString(CONFIG_TYPE_PATH);
         String path = section.getString(PATH_PATH);
-        String expected = section.getString(EXPECTED_PATH);
+        List<String> expected = section.getStringList(REQUIREMENT_PATH);
         String value = section.getString(VALUE_PATH);
 
         if((configTypeString == null) ||
@@ -62,8 +66,32 @@ public class AtomicUpdate{
             configType = ConfigHolderEnum.valueOf(configTypeString.toUpperCase());
         } catch (Exception e) { return null; }
 
+        List<UpdateRequirement> requirements = new ArrayList<>();
+        for (String expectedPart : expected) {
+            UpdateRequirement requirement = UpdateRequirement.fromString(expectedPart);
+            if(requirement == null){
+                if (!ConfigOptions.INSTANCE.getDebugLog()) {
+                    CustomAnvil.instance.getLogger().warning("This message should not be displayed on Production. " +
+                            "If it do display please check for update or create a new issue.");
+                    CustomAnvil.instance.getLogger().warning("Here are the information of what happened: Atomic Update failed to parse requirement");
+                }
+                CustomAnvil.instance.getLogger().warning("Unsuccessfully parsed requirement: " + expectedPart);
 
-        return new AtomicUpdate(type, configType, path, expected, value);
+            }else{
+                requirements.add(requirement);
+            }
+        }
+
+        return new AtomicUpdate(type, configType, path, requirements, value);
+    }
+
+    public boolean isRequirementValidated(){
+        for (UpdateRequirement requirement : requirements) {
+            if(!requirement.isRequirementFulfilled(this.configType.getConfigHolder())){
+                return false;
+            }
+        }
+        return true;
     }
 
     // Is string equal can take null, it also checks if the content is equal but ignore case
@@ -74,16 +102,20 @@ public class AtomicUpdate{
         return val1.equalsIgnoreCase(val2);
     }
 
-    public boolean isExpected(boolean ignoreIfOperationIsDone){
+    public boolean isExpected(@Deprecated boolean ignoreIfOperationIsDone){
+        if(!isRequirementValidated()){
+            return false;
+        }
+
         String value;
         List<String> values;
         switch (this.type){
             case SET:
                 value = this.configType.getConfigHolder().getConfig().getString(this.path);
-                return (isStringEqual(value, this.expected)) || (ignoreIfOperationIsDone && isStringEqual(value, this.value));
+                return ignoreIfOperationIsDone && isStringEqual(value, this.value);
             case UNSET:
                 value = this.configType.getConfigHolder().getConfig().getString(this.path);
-                return (isStringEqual(value, this.expected)) || (ignoreIfOperationIsDone && (value == null));
+                return ignoreIfOperationIsDone && (value == null);
             case LIST_ADD:
                 values = this.configType.getConfigHolder().getConfig().getStringList(this.path);
                 return ignoreIfOperationIsDone || !values.contains(this.value);
