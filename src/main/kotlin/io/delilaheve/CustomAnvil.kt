@@ -12,7 +12,6 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
-import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
 import java.io.FileReader
@@ -80,7 +79,7 @@ class CustomAnvil : JavaPlugin() {
     override fun onEnable() {
         instance = this
 
-        val pluginManager = Bukkit.getPluginManager();
+        val pluginManager = Bukkit.getPluginManager()
 
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
@@ -104,8 +103,6 @@ class CustomAnvil : JavaPlugin() {
         val success = ConfigHolder.loadConfig()
         if (!success) return
 
-        // temporary: handle 1.21 update
-        Update_1_21.handleUpdate()
 
         // Handle custom enchant config
         DependencyManager.handleConfigChanges(this)
