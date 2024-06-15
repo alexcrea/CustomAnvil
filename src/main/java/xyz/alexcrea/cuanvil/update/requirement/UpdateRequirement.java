@@ -3,16 +3,17 @@ package xyz.alexcrea.cuanvil.update.requirement;
 import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.update.UpdatePart;
 
 public interface UpdateRequirement {
 
     boolean isRequirementFulfilled(@NotNull ConfigHolder holder);
 
-    static UpdateRequirement fromString(String value){
-        // Format [path requirementType arguments]
+    static UpdateRequirement fromString(String value, UpdatePart parent){
+        // Format: path requirementType [arguments]
         String[] args = value.split(" ");
         if(args.length < 2) return null;
-        String path = args[0];
+        String path = parent.absoluteRestrictionPath(args[0]);
         String type = args[1];
 
         String[] newArgs = new String[args.length-2];

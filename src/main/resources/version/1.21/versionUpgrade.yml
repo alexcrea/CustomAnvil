@@ -1,0 +1,119 @@
+add_mace_group:
+  message: "Add mace group"
+  config_file: item_group
+  default_type: set
+  base_path: "mace"
+  set_mace_type:
+    path: type
+    value: include
+  add_mace:
+    type: list_add
+    path: items
+    value: mace
+
+add_density:
+  message: "Add density enchantment conflict"
+  config_file: conflict
+  default_type: list_add
+  base_path: "restriction_density"
+  set_enchant_list:
+    path: enchantments
+    value: density
+  set_mace_allowed:
+    path: notAffectedGroups
+    value: mace
+
+add_breach:
+  message: "Add breach enchantment conflict"
+  config_file: conflict
+  default_type: list_add
+  base_path: "restriction_breach"
+  set_enchant_list:
+    path: enchantments
+    value: breach
+  set_mace_allowed:
+    path: notAffectedGroups
+    value: mace
+
+add_wind_burst:
+  message: "Add wind burst enchantment conflict"
+  config_file: conflict
+  default_type: list_add
+  base_path: "restriction_wind_burst"
+  set_enchant_list:
+    path: enchantments
+    value: wind_burst
+  set_mace_allowed:
+    path: notAffectedGroups
+    value: mace
+
+add_other_enchants_for_mace:
+  message: "Add mace to other allowed enchants"
+  config_file: conflict
+  default_type: list_add
+  add_mace_to_fire_aspect:
+    restrictions: ["restriction_fire_aspect.notAffectedGroups is_list"]
+    path: restriction_fire_aspect.notAffectedGroups
+    value: mace
+  add_mace_to_smite:
+    restrictions: ["restriction_smite.notAffectedGroups is_list"]
+    path: restriction_smite.notAffectedGroups
+    value: mace
+  add_mace_to_bane_of_arthropods:
+    restrictions: ["restriction_bane_of_arthropods.notAffectedGroups is_list"]
+    path: restriction_bane_of_arthropods.notAffectedGroups
+    value: mace
+
+add_mace_conflict:
+  message: "Add mace enchantment conflict with breach, density, smite and bane of arthropods."
+  config_file: conflict
+  default_type: set
+  base_path: "mace_enchant_conflict"
+  add_enchants:
+    type: list_add_multiples
+    path: enchantments
+    value: "density,breach,smite,bane_of_arthropods"
+  set_max_enchant_before_conflict:
+    path: maxEnchantmentBeforeConflict
+    value: 1
+
+add_level_limits:
+  message: "Add level limit for density, breach and wind burst"
+  config_file: default
+  default_type: set
+  base_path: "enchant_limits"
+  set_density_level_limit:
+    path: density
+    value: 5
+  set_breach_level_limit:
+    path: breach
+    value: 4
+  set_wind_burst_level_limit:
+    path: wind_burst
+    value: 3
+
+add_enchant_values:
+  message: "Add enchant values for density, breach and wind burst."
+  config_file: default
+  default_type: set
+  base_path: "mace_enchant_conflict"
+
+  set_density_item_value:
+    path: density.item
+    value: 1
+  set_breach_item_value:
+    path: breach.item
+    value: 4
+  set_wind_burst_item_value:
+    path: wind_burst.item
+    value: 4
+
+  set_density_book_value:
+    path: density.book
+    value: 1
+  set_breach_book_value:
+    path: breach.book
+    value: 2
+  set_wind_burst_book_value:
+    path: wind_burst.book
+    value: 2

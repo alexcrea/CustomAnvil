@@ -1,15 +1,14 @@
 addNewItems:
   message: "Add 1.20 items"
+  config_file: item_group
   addPiglinHead:
-    type: add_list
-    config_type: item_group
+    type: list_add
     requirement:
       - "wearable.items is_list"
     path: wearable.items
     value: piglin_head
   addBrush:
     type: list_add
-    config_type: item_group
     requirement:
       - "can_unbreak.items is_list"
     path: can_unbreak.items
