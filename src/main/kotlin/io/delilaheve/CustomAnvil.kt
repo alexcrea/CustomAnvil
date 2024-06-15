@@ -14,7 +14,6 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
-import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
 import java.io.FileReader
@@ -131,9 +130,6 @@ class CustomAnvil : JavaPlugin() {
             logger.log(Level.SEVERE,"could not load non default config.")
             return
         }
-
-        // temporary: handle 1.21 update
-        Update_1_21.handleUpdate()
 
         // Register enchantment of compatible plugin and load configuration change.
         DependencyManager.handleCompatibilityConfig()
