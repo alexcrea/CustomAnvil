@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.update;
 
-import jdk.incubator.vector.VectorShape;
 import kotlin.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,10 +12,12 @@ import java.io.InputStream;
 import java.util.*;
 
 public class UpdateManager {
-    private final static Version MAX_KNOW_MINECRAFT_VERSION = new Version(1, 20, 6);
+    private final static Version MAX_KNOW_MINECRAFT_VERSION = new Version(1, 21, 0);
 
+    public final static String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
+    public final static String PLUGIN_VERSION_PATH = "configVersion";
     private final static String UPDATE_FOLDER = "version";
-    private final static String VERSION_LIST_RESSOUCE = UPDATE_FOLDER+"/versionList.txt";
+    private final static String VERSION_LIST_RESSOUCE = UPDATE_FOLDER+"/minecraftVersions.txt";
 
     private List<Version> minecraftVersionList;
     private Version minecraftVersion;
@@ -58,15 +59,15 @@ public class UpdateManager {
 
         // Should work //TODO test for paper and spigot
         String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
-        System.out.println(versionString + " ; " + Bukkit.getServer().getBukkitVersion()); //TESTING
+        System.out.println(versionString + " ; " + Bukkit.getServer().getBukkitVersion()); //TESTING (for paper & spigot)
         this.minecraftVersion = Version.versionOf(versionString);
         if(this.minecraftVersion == null) return;
 
         this.usedMinecraftVersion = firstValidVersion(this.minecraftVersion);
 
         FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
-        String lastUsedMinecraftVersionString = config.getString("lowestMinecraftVersion");
-        String configVersionString = config.getString("configVersion");
+        String lastUsedMinecraftVersionString = config.getString(MINECRAFT_VERSION_PATH);
+        String configVersionString = config.getString(PLUGIN_VERSION_PATH);
 
         this.lastUsedMinecraftVersion = Version.versionOf(lastUsedMinecraftVersionString);
         this.configVersion = Version.versionOf(configVersionString);
@@ -78,7 +79,7 @@ public class UpdateManager {
     }
 
     public Version firstValidVersion(Version toFind){
-        for (Version version : this.minecraftVersionList) { // Assume sorted
+        for (Version version : this.minecraftVersionList) { // Assume sorted by readMinecraftVersionList
             if(version.compareTo(toFind) >= 0) return version;
         }
         return null;
