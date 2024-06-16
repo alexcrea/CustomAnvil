@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
@@ -92,6 +93,9 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("An old version of this plugin was detected")
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
+
+        // Register enchantments
+        WrappedEnchantment.registerEnchantments();
 
         // Load ProtocolLib dependency if exist
         packetManager = if(pluginManager.isPluginEnabled("ProtocolLib"))
