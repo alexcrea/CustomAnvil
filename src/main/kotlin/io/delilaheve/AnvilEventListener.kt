@@ -460,7 +460,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
             val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
             val value = resultLevel * enchantmentMultiplier
-            CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value")
+            CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
             rightValue += value
 
         }

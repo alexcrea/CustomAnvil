@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.dependency
 import me.athlaeos.enchantssquared.enchantments.CustomEnchant
 import me.athlaeos.enchantssquared.managers.CustomEnchantManager
 import org.bukkit.NamespacedKey
+import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
@@ -10,6 +11,11 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.EnchantSquaredEnchantment
 import java.util.*
 
 class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin) {
+
+    fun disableAnvilListener(){
+        PrepareAnvilEvent.getHandlerList().unregister(this.enchantmentSquaredPlugin)
+
+    }
 
     fun registerEnchantments(){
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {

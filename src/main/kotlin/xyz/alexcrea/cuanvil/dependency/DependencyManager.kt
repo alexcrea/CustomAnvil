@@ -19,9 +19,10 @@ object DependencyManager {
         else  NoProtocoLib()
 
         // Enchantment Squared dependency
-        enchantmentSquaredCompatibility =
-            if(pluginManager.isPluginEnabled("EnchantsSquared")) EnchantmentSquaredDependency(pluginManager.getPlugin("EnchantsSquared")!!)
-        else null
+        if(pluginManager.isPluginEnabled("EnchantsSquared")){
+            enchantmentSquaredCompatibility = EnchantmentSquaredDependency(pluginManager.getPlugin("EnchantsSquared")!!)
+            enchantmentSquaredCompatibility!!.disableAnvilListener()
+        }
 
     }
 
