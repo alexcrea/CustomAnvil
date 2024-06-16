@@ -7,22 +7,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
+
+import java.util.Locale;
 
 public class VanillaEnchant extends WrappedEnchantment {
 
     private final @NotNull Enchantment enchantment;
+
     public VanillaEnchant(@NotNull Enchantment enchantment){
         super(enchantment.getKey(),
-                enchantment.getName(),
-                EnchantmentRarity.COMMON);//TODO determine rarity
+                getRarity(enchantment),
+                enchantment.getMaxLevel());
         this.enchantment = enchantment;
-    }
 
-    @Override
-    public int defaultMaxLevel() {
-        return this.enchantment.getMaxLevel();
     }
 
     @Override
@@ -75,6 +75,13 @@ public class VanillaEnchant extends WrappedEnchantment {
 
     public static boolean isEnchantedBook(@NotNull ItemStack item){
         return Material.ENCHANTED_BOOK.equals(item.getType());
+    }
+
+    public static EnchantmentRarity getRarity(Enchantment enchantment){
+        try {return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();}
+        catch (IllegalArgumentException ignored) {}
+
+        return EnchantmentRarity.COMMON;
     }
 
 }

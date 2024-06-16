@@ -110,8 +110,7 @@ class EnchantConflictManager {
             }
         }
 
-        val enchantKey = NamespacedKey.minecraft(enchantName)
-        return WrappedEnchantment.getByKey(enchantKey)
+        return WrappedEnchantment.getByName(enchantName)
     }
 
 

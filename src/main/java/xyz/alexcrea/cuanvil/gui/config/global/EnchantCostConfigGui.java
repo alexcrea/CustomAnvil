@@ -44,7 +44,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
         // try to find rarity. default to 0 if not found
-        EnchantmentRarity rarity = EnchantmentRarity.NO_RARITY;
+        EnchantmentRarity rarity = enchant.defaultRarity();
         try {
             rarity = EnchantmentProperties.valueOf(key.toUpperCase(Locale.ENGLISH)).getRarity();
         } catch (IllegalArgumentException ignored) {

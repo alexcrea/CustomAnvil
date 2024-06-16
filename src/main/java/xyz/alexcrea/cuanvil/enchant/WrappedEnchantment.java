@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.enchant;
 
+import io.delilaheve.CustomAnvil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +11,12 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchant;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
+/**
+ * Represent any enchantment.
+ * One issue with the plugin is: it does not handle well duplicate key name (ignoring namespace) as the plugin was coded with vanilla enchantment in head
+ */
 public abstract class WrappedEnchantment {
 
     @NotNull
@@ -19,19 +25,21 @@ public abstract class WrappedEnchantment {
     private final String name;
     @NotNull
     private final EnchantmentRarity defaultRarity;
+    private final int defaultMaxLevel;
 
     /**
      * Constructor of Wrapped Enchantment.
      * @param key The enchantment's key.
-     * @param name The enchantment's name.
      * @param defaultRarity Default rarity the enchantment should be.
+     * @param defaultMaxLevel Default max level the enchantment can be applied with.
      */
     public WrappedEnchantment(
             @NotNull NamespacedKey key,
-            @NotNull String name,
-            @Nullable EnchantmentRarity defaultRarity){
+            @Nullable EnchantmentRarity defaultRarity,
+            int defaultMaxLevel){
         this.key = key;
-        this.name = name;
+        this.name = key.getKey();
+        this.defaultMaxLevel = defaultMaxLevel;
 
         if(defaultRarity == null) this.defaultRarity = EnchantmentRarity.COMMON;
         else this.defaultRarity = defaultRarity;
@@ -59,7 +67,7 @@ public abstract class WrappedEnchantment {
      * @return The enchantment name.
      */
     @NotNull
-    public String getName() {
+    public final String getName(){
         return name;
     }
 
@@ -67,9 +75,17 @@ public abstract class WrappedEnchantment {
      * Get the default maximum level of this enchantment.
      * @return The default maximum level of this enchantment.
      */
-    public abstract int defaultMaxLevel();
+    public final int defaultMaxLevel(){return defaultMaxLevel;}
 
-    // TODO maybe methods that do not require itemmeta ?
+    /**
+     * Get current level of the enchantment.
+     * @param item Item to search the level for.
+     */
+    public int getLevel(@NotNull ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) return 0;
+        return getLevel(item, meta);
+    }
 
     /**
      * Get current level of the enchantment.
@@ -78,6 +94,17 @@ public abstract class WrappedEnchantment {
      * @return Current leve of this enchantment on item. or 0 if absent.
      */
     public abstract int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta);
+
+    /**
+     * Check if this enchantment is present on the provided level.
+     * @param item The item to set the enchantment level.
+     * @return If the enchantment have been found.
+     */
+    public boolean isEnchantmentPresent(@NotNull ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) return false;
+        return isEnchantmentPresent(item, meta);
+    }
 
     /**
      * Check if this enchantment is present on the provided level.
@@ -134,17 +161,14 @@ public abstract class WrappedEnchantment {
     }
 
     // Register enchantment functions
-    private static HashMap<NamespacedKey, WrappedEnchantment> BY_KEY;
-    //private static HashMap<NamespacedKey, WrappedEnchantment> BY_NAME; //TODO decide if I should implement it.
+    private static final HashMap<NamespacedKey, WrappedEnchantment> BY_KEY = new HashMap<>();
+    private static final HashMap<String, WrappedEnchantment> BY_NAME = new HashMap<>();
 
     /**
      * This should only be called on main of custom anvil.
      * If called more than one time, chance of thing being broken will be high.
      */
     public static void registerEnchantments(){
-        BY_KEY = new HashMap<>();
-        //BY_NAME = new HashMap<>();
-
         for (Enchantment enchantment : Enchantment.values()) {
             register(new VanillaEnchant(enchantment));
         }
@@ -159,8 +183,21 @@ public abstract class WrappedEnchantment {
      * @param enchantment The enchantment to be registered.
      */
     public static void register(@NotNull WrappedEnchantment enchantment){
+        if(BY_KEY.containsKey(enchantment.getKey())){
+            CustomAnvil.instance.getLogger().log(Level.WARNING,
+                    "Duplicate registered enchantment. This should NOT happen.",
+                    new IllegalStateException(enchantment.getKey()+" enchantment was already registered"));
+            return;
+        }
+        if(BY_NAME.containsKey(enchantment.getName())){
+            CustomAnvil.instance.getLogger().log(Level.WARNING,
+                    "Duplicate registered enchantment name. There will have issue. " +
+                    "\nI hope this do not happen to you on a production server. If it do, there is probably a plugin trying to register an enchantment with the same name than another one",
+                    new IllegalStateException(enchantment.getKey()+" enchantment name was already registered"));
+        }
+
         BY_KEY.put(enchantment.getKey(), enchantment);
-        //BY_NAME.put(enchantment.getName(), enchantment);
+        BY_NAME.put(enchantment.getName(), enchantment);
     }
 
     /**
@@ -174,7 +211,7 @@ public abstract class WrappedEnchantment {
      */
     public static void unregister(@NotNull WrappedEnchantment enchantment){
         BY_KEY.remove(enchantment.getKey());
-        //BY_NAME.remove(enchantment.getName());
+        BY_NAME.remove(enchantment.getName());
     }
 
     /**
@@ -184,6 +221,15 @@ public abstract class WrappedEnchantment {
      */
     public static @Nullable WrappedEnchantment getByKey(@NotNull NamespacedKey key){
         return BY_KEY.get(key);
+    }
+
+    /**
+     * Gets the enchantment by the provided name.
+     * @param name Name to fetch.
+     * @return Registered enchantment. null if absent.
+     */
+    public static @Nullable WrappedEnchantment getByName(@NotNull String name){
+        return BY_NAME.get(name);
     }
 
     /**
