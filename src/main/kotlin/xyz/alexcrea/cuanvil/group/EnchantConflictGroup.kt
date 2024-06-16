@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 
 class EnchantConflictGroup(
     private val name: String,
@@ -10,14 +10,15 @@ class EnchantConflictGroup(
     var minBeforeBlock: Int
 ) {
 
-    private val enchantments = HashSet<Enchantment>()
+    private val enchantments = HashSet<WrappedEnchantment>()
 
-    fun addEnchantment(enchant: Enchantment) {
+    fun addEnchantment(enchant: WrappedEnchantment) {
         enchantments.add(enchant)
     }
 
-    fun allowed(enchants: Set<Enchantment>, mat: Material): Boolean {
+    fun allowed(enchants: Set<WrappedEnchantment>, mat: Material): Boolean {
         if (enchantments.size < minBeforeBlock) {
+            CustomAnvil.verboseLog("Conflicting bc of to many enchantments")
             return true
         }
 
@@ -31,6 +32,7 @@ class EnchantConflictGroup(
             if (enchantment !in enchantments) continue
             CustomAnvil.verboseLog("Enchant ${enchantment.key} is in: ${enchantAmount + 1}/$minBeforeBlock ")
             if (++enchantAmount > minBeforeBlock) {
+                CustomAnvil.verboseLog("it is not allowed bc of to many enchantment in conflict")
                 return false
             }
 
@@ -42,11 +44,11 @@ class EnchantConflictGroup(
         return this.cantConflict
     }
 
-    fun getEnchants(): HashSet<Enchantment> {
+    fun getEnchants(): HashSet<WrappedEnchantment> {
         return enchantments
     }
 
-    fun setEnchants(enchants: Set<Enchantment>) {
+    fun setEnchants(enchants: Set<WrappedEnchantment>) {
         enchantments.clear()
         enchantments.addAll(enchants)
     }

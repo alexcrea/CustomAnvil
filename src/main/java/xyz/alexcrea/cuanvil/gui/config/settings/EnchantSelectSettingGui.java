@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -29,7 +30,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
     SelectEnchantmentContainer enchantContainer;
     int page;
 
-    Set<Enchantment> selectedEnchant;
+    Set<WrappedEnchantment> selectedEnchant;
 
     public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer, int page) {
         super(6, title, parent);
@@ -64,8 +65,8 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
         filledEnchant.align(OutlinePane.Alignment.BEGIN);
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
-        Set<Enchantment> illegalEnchant = this.enchantContainer.illegalEnchantments();
-        for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
+        Set<WrappedEnchantment> illegalEnchant = this.enchantContainer.illegalEnchantments();
+        for (WrappedEnchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
             if (illegalEnchant.contains(enchant)) {
                 return;
             }
@@ -76,7 +77,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
 
     }
 
-    private GuiItem getGuiItemFromEnchant(Enchantment enchantment) {
+    private GuiItem getGuiItemFromEnchant(WrappedEnchantment enchantment) {
         boolean isIn = this.selectedEnchant.contains(enchantment);
 
         Material usedMaterial;
@@ -122,7 +123,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
         item.setItemMeta(meta);
     }
 
-    private Consumer<InventoryClickEvent> getEnchantItemConsumer(Enchantment enchant, GuiItem guiItem) {
+    private Consumer<InventoryClickEvent> getEnchantItemConsumer(WrappedEnchantment enchant, GuiItem guiItem) {
         return event -> {
             event.setCancelled(true);
 
@@ -151,7 +152,7 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean hadChange() {
-        Set<Enchantment> baseGroup = this.enchantContainer.getSelectedEnchantments();
+        Set<WrappedEnchantment> baseGroup = this.enchantContainer.getSelectedEnchantments();
         return baseGroup.size() != this.selectedEnchant.size() ||
                 !baseGroup.containsAll(this.selectedEnchant);
     }

@@ -2,8 +2,8 @@ package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
-import org.bukkit.enchantments.Enchantment
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 
 /**
  * Config option accessors
@@ -239,7 +239,7 @@ object ConfigOptions {
     /**
      * Get the given [enchantment]'s limit
      */
-    fun enchantLimit(enchantment: Enchantment): Int {
+    fun enchantLimit(enchantment: WrappedEnchantment): Int {
         return enchantLimit(enchantment.enchantmentName)
     }
 
@@ -273,7 +273,7 @@ object ConfigOptions {
      * it's source [isFromBook]
      */
     fun enchantmentValue(
-        enchantment: Enchantment,
+        enchantment: WrappedEnchantment,
         isFromBook: Boolean
     ): Int {
         return enchantmentValue(enchantment.enchantmentName, isFromBook)
@@ -308,23 +308,5 @@ object ConfigOptions {
         }
         return DEFAULT_ENCHANT_VALUE
     }
-
-    /**
-     * Get an array of key of basic config options
-     */
-    fun getBasicConfigKeys(): Array<String> {
-        return arrayOf(
-            DEFAULT_LIMIT_PATH,
-            CAP_ANVIL_COST,
-            MAX_ANVIL_COST,
-            REPLACE_TOO_EXPENSIVE,
-            ITEM_REPAIR_COST,
-            UNIT_REPAIR_COST,
-            ITEM_RENAME_COST,
-            SACRIFICE_ILLEGAL_COST,
-            REMOVE_ANVIL_COST_LIMIT
-        )
-    }
-
 
 }

@@ -1,11 +1,9 @@
 package io.delilaheve.util
 
-import io.delilaheve.CustomAnvil
 import org.bukkit.Material.ENCHANTED_BOOK
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -23,44 +21,19 @@ object ItemUtil {
     /**
      * Find the enchantment map for this [ItemStack] and return it as a [MutableMap]
      */
-    fun ItemStack.findEnchantments() = if (isEnchantedBook()) {
-        (itemMeta as? EnchantmentStorageMeta)?.storedEnchants ?: emptyMap()
-    } else {
-        itemMeta?.enchants ?: emptyMap()
-    }
+    fun ItemStack.findEnchantments(): MutableMap<WrappedEnchantment, Int> = WrappedEnchantment.getEnchants(this)
 
     /**
      * Apply an [enchantments] map to this [ItemStack]
      */
-    fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<Enchantment, Int>) {
-        if (isEnchantedBook()) {
-            /* For some god-forsaken reason, item meta is not mutable
-             * so, we have to get the instance, modify it, then set it
-             * back to the item... #BecauseMinecraft */
-            val bookMeta = (itemMeta as? EnchantmentStorageMeta)
-            bookMeta?.replaceEnchants(enchantments)
-            itemMeta = bookMeta
-        } else {
-            itemMeta?.enchants?.forEach { (enchant, _) ->
-                removeEnchantment(enchant)
-            }
-            addUnsafeEnchantments(enchantments)
-        }
-    }
+    fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<WrappedEnchantment, Int>) {
+        WrappedEnchantment.clearEnchants(this)
 
-    /**
-     * Apply an [enchantments] map to this book
-     */
-    private fun EnchantmentStorageMeta.replaceEnchants(
-        enchantments: Map<Enchantment, Int>
-    ) {
-        storedEnchants.forEach { (enchant, _) ->
-            removeStoredEnchant(enchant)
+        //TODO maybe faster methode to add vanilla enchantment. maybe move this function to wrapped enchantment
+        enchantments.forEach { (enchantment, level) ->
+            enchantment.addEnchantmentUnsafe(this, level)
         }
-        enchantments.forEach { (enchant, level) ->
-            val added = addStoredEnchant(enchant, level, true)
-            CustomAnvil.log("${enchant.key} added to item? $added")
-        }
+
     }
 
     /**
