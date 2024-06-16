@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
+import xyz.alexcrea.cuanvil.dependency.EnchantmentSquaredDependency;
 import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchantment;
 
 import java.util.*;
@@ -35,7 +36,7 @@ public abstract class WrappedEnchantment {
      * @param defaultRarity Default rarity the enchantment should be.
      * @param defaultMaxLevel Default max level the enchantment can be applied with.
      */
-    public WrappedEnchantment(
+    protected WrappedEnchantment(
             @NotNull NamespacedKey key,
             @Nullable EnchantmentRarity defaultRarity,
             int defaultMaxLevel){
@@ -159,6 +160,12 @@ public abstract class WrappedEnchantment {
             );
         }
 
+        // Clean Enchant Squared enchants
+        EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
+        if(enchantmentSquared != null){
+            enchantmentSquared.clearEnchantments(item);
+        }
+
         // Clean unoptimised enchants
         for (WrappedEnchantment enchant : unoptimisedValues()) {
             if(enchant.isEnchantmentPresent(item)){
@@ -188,6 +195,12 @@ public abstract class WrappedEnchantment {
             item.getEnchantments().forEach(
                     (enchantment, level) -> enchantments.put(getByKey(enchantment.getKey()), level)
             );
+        }
+
+        // Enchants Squared get
+        EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
+        if(enchantmentSquared != null){
+            enchantmentSquared.getEnchantmentsSquared(item, enchantments);
         }
 
         // Unoptimised enchantment get
@@ -234,7 +247,7 @@ public abstract class WrappedEnchantment {
         }
 
         if(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility() != null){
-            DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility().registerEnchantements();
+            DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility().registerEnchantments();
         }
 
     }

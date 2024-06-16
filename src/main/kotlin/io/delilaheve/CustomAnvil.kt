@@ -12,7 +12,6 @@ import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
-import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
 import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File

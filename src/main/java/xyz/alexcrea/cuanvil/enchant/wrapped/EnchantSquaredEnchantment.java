@@ -2,11 +2,11 @@ package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import me.athlaeos.enchantssquared.enchantments.CustomEnchant;
 import me.athlaeos.enchantssquared.managers.CustomEnchantManager;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 
 import java.util.Map;
@@ -14,14 +14,20 @@ import java.util.Objects;
 
 public class EnchantSquaredEnchantment extends WrappedEnchantment {
 
-    private final @NotNull CustomEnchant enchant;
-    public EnchantSquaredEnchantment(@NotNull CustomEnchant enchant, @NotNull Plugin enchantSquared) {
-        super(Objects.requireNonNull(NamespacedKey.fromString(enchant.getType().toLowerCase(), enchantSquared)), null, enchant.getMaxLevel());
+    public final @NotNull CustomEnchant enchant;
+    public EnchantSquaredEnchantment(@NotNull CustomEnchant enchant) {
+        super(Objects.requireNonNull(
+                Objects.requireNonNull(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility()).getKeyFromEnchant(enchant)),
+                EnchantmentRarity.COMMON,
+                enchant.getMaxLevel());
         this.enchant = enchant;
 
     }
 
-    //TODO optimise for bulk operation
+    @Override
+    protected boolean isOptimised() {
+        return true;
+    }
 
     @Override
     public int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta) {

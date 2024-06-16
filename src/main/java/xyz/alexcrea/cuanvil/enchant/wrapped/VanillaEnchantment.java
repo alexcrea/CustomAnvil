@@ -78,10 +78,11 @@ public class VanillaEnchantment extends WrappedEnchantment {
     }
 
     public static EnchantmentRarity getRarity(Enchantment enchantment){
-        try {return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();}
-        catch (IllegalArgumentException ignored) {}
-
-        return EnchantmentRarity.COMMON;
+        try {
+            return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
+        } catch (IllegalArgumentException ignored) {
+            return EnchantmentRarity.COMMON;
+        }
     }
 
 }

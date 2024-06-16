@@ -8,15 +8,15 @@ import xyz.alexcrea.cuanvil.dependency.protocolib.ProtocoLibWrapper
 object DependencyManager {
 
     lateinit var packetManager: PacketManager
-    var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null;
+    var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
 
     fun loadDependency(){
-        val pluginManager = Bukkit.getPluginManager();
+        val pluginManager = Bukkit.getPluginManager()
 
         // ProtocolLib dependency
         packetManager =
-            if(pluginManager.isPluginEnabled("ProtocolLib")) ProtocoLibWrapper();
-        else  NoProtocoLib();
+            if(pluginManager.isPluginEnabled("ProtocolLib")) ProtocoLibWrapper()
+        else  NoProtocoLib()
 
         // Enchantment Squared dependency
         enchantmentSquaredCompatibility =
