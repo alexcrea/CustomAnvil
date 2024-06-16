@@ -1,16 +1,17 @@
 package xyz.alexcrea.cuanvil.enchant;
 
 import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ItemUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchant;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -78,6 +79,14 @@ public abstract class WrappedEnchantment {
     public final int defaultMaxLevel(){return defaultMaxLevel;}
 
     /**
+     * If the enchantment have specialised group operation.
+     * @return If the enchantment is optimised for group operation.
+     */
+    protected boolean isOptimised(){
+        return false;
+    }
+
+    /**
      * Get current level of the enchantment.
      * @param item Item to search the level for.
      */
@@ -133,17 +142,35 @@ public abstract class WrappedEnchantment {
      * Clear every enchantment from this item.
      * @param item Item to be cleared from enchantments.
      */
-    public static void clearEnchants(@NotNull ItemStack item){ //TODO faster method to clear vanilla enchantment
-        for (WrappedEnchantment enchant : getEnchants(item).keySet()) {
-            enchant.removeFrom(item);
+    public static void clearEnchants(@NotNull ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) return;
+
+        // Clean Vanilla enchants
+        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
+            EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
+            bookMeta.getStoredEnchants().forEach(
+                    (enchantment, leve) -> bookMeta.removeStoredEnchant(enchantment)
+            );
+        } else {
+            item.getEnchantments().forEach(
+                    (enchantment, leve) -> item.removeEnchantment(enchantment)
+            );
+        }
+
+        // Clean unoptimised enchants
+        for (WrappedEnchantment enchant : unoptimisedValues()) {
+            if(enchant.isEnchantmentPresent(item)){
+                enchant.removeFrom(item);
+            }
         }
 
     }
 
     /**
      * Get enchantments of an item.
-     * @param item item to get enchantment from.
-     * @return a map of the set enchantments and there's respective levels.
+     * @param item Item to get enchantment from.
+     * @return A map of the set enchantments and there's respective levels.
      */
     public static Map<WrappedEnchantment, Integer> getEnchants(@NotNull ItemStack item){ //TODO faster method to find vanilla enchantment
         Map<WrappedEnchantment, Integer> enchantments = new HashMap<>();
@@ -151,18 +178,50 @@ public abstract class WrappedEnchantment {
         ItemMeta meta = item.getItemMeta();
         if(meta == null) return enchantments;
 
-        for (WrappedEnchantment enchantment : WrappedEnchantment.values()) {
+        // Vanilla optimised get
+        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
+            ((EnchantmentStorageMeta)meta).getStoredEnchants().forEach(
+                    (enchantment, level) -> enchantments.put(getByKey(enchantment.getKey()), level)
+            );
+        } else {
+            item.getEnchantments().forEach(
+                    (enchantment, level) -> enchantments.put(getByKey(enchantment.getKey()), level)
+            );
+        }
+
+        // Unoptimised enchantment get
+        findEnchantsFromSelectedList(item, meta, enchantments, unoptimisedValues());
+
+        return enchantments;
+    }
+
+
+    /**
+     * Find enchantments of an item. only test the enchantment from the list.
+     * @param item Item to get enchantment from.
+     * @param meta Meta of the provided item.
+     * @param enchantments Map of enchantment to complete.
+     * @param enchantmentToTest Enchantment to test
+     */
+    private static void findEnchantsFromSelectedList(
+            @NotNull ItemStack item,
+            @NotNull ItemMeta meta,
+            @NotNull Map<WrappedEnchantment, Integer> enchantments,
+            @NotNull Collection<WrappedEnchantment> enchantmentToTest){
+
+        for (WrappedEnchantment enchantment : enchantmentToTest) {
             if(enchantment.isEnchantmentPresent(item, meta)){
                 enchantments.put(enchantment, enchantment.getLevel(item, meta));
             }
         }
 
-        return enchantments;
     }
+
 
     // Register enchantment functions
     private static final HashMap<NamespacedKey, WrappedEnchantment> BY_KEY = new HashMap<>();
     private static final HashMap<String, WrappedEnchantment> BY_NAME = new HashMap<>();
+    private static final List<WrappedEnchantment> UNOPTIMISED_ENCHANTMENT = new ArrayList<>();
 
     /**
      * This should only be called on main of custom anvil.
@@ -198,6 +257,10 @@ public abstract class WrappedEnchantment {
 
         BY_KEY.put(enchantment.getKey(), enchantment);
         BY_NAME.put(enchantment.getName(), enchantment);
+
+        if(!enchantment.isOptimised()){
+            UNOPTIMISED_ENCHANTMENT.add(enchantment);
+        }
     }
 
     /**
@@ -239,6 +302,15 @@ public abstract class WrappedEnchantment {
     @NotNull
     public static WrappedEnchantment[] values() {
         return BY_KEY.values().toArray(new WrappedEnchantment[0]);
+    }
+
+    /**
+     * Gets a list of all the unoptimised enchantments.
+     * @return List of enchantment.
+     */
+    @NotNull
+    private static List<WrappedEnchantment> unoptimisedValues() {
+        return UNOPTIMISED_ENCHANTMENT;
     }
 
 }

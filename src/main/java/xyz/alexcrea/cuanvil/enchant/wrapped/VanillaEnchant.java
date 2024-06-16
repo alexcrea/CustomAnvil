@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import io.delilaheve.util.ItemUtil;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -26,8 +25,13 @@ public class VanillaEnchant extends WrappedEnchantment {
     }
 
     @Override
+    protected boolean isOptimised() {
+        return true;
+    }
+
+    @Override
     public int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta) {
-        if (isEnchantedBook(item)) {
+        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
             return ((EnchantmentStorageMeta)meta).getStoredEnchantLevel(this.enchantment);
         } else {
             return meta.getEnchantLevel(this.enchantment);
@@ -47,7 +51,7 @@ public class VanillaEnchant extends WrappedEnchantment {
 
     @Override
     public void addEnchantmentUnsafe(@NotNull ItemStack item, int level) {
-        if (isEnchantedBook(item)) {
+        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
             EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
 
             assert bookMeta != null;
@@ -71,10 +75,6 @@ public class VanillaEnchant extends WrappedEnchantment {
             item.removeEnchantment(this.enchantment);
         }
 
-    }
-
-    public static boolean isEnchantedBook(@NotNull ItemStack item){
-        return Material.ENCHANTED_BOOK.equals(item.getType());
     }
 
     public static EnchantmentRarity getRarity(Enchantment enchantment){
