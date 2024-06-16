@@ -2,12 +2,12 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -39,7 +39,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
     }
 
     @Override
-    public EnchantCostSettingsGui.EnchantCostSettingFactory getFactoryFromEnchant(Enchantment enchant) {
+    public EnchantCostSettingsGui.EnchantCostSettingFactory getFactoryFromEnchant(WrappedEnchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ENGLISH);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 

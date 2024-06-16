@@ -4,7 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.enchantments.Enchantment;
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -55,7 +55,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
     protected void prepareValues() {
         bookItemFactoryList = new ArrayList<>();
 
-        for (Enchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
+        for (WrappedEnchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
             T factory = getFactoryFromEnchant(enchant);
 
             bookItemFactoryList.add(factory);
@@ -80,7 +80,7 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
     }
 
 
-    public abstract T getFactoryFromEnchant(Enchantment enchant);
+    public abstract T getFactoryFromEnchant(WrappedEnchantment enchant);
 
     public abstract GuiItem getItemFromFactory(T inventoryFactory);
 

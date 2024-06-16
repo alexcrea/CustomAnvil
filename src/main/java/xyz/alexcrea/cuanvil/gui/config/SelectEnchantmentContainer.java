@@ -1,15 +1,15 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
-import org.bukkit.enchantments.Enchantment;
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 
 import java.util.Set;
 
 public interface SelectEnchantmentContainer {
 
-    Set<Enchantment> getSelectedEnchantments();
+    Set<WrappedEnchantment> getSelectedEnchantments();
 
-    boolean setSelectedEnchantments(Set<Enchantment> enchantments);
+    boolean setSelectedEnchantments(Set<WrappedEnchantment> enchantments);
 
-    Set<Enchantment> illegalEnchantments();
+    Set<WrappedEnchantment> illegalEnchantments();
 
 }

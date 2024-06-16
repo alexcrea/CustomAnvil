@@ -5,12 +5,12 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
@@ -118,7 +118,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             EnchantConflictManager manager = ConfigHolder.CONFLICT_HOLDER.getConflictManager();
 
             // Remove from manager
-            for (Enchantment enchantment : this.enchantConflict.getEnchants()) {
+            for (WrappedEnchantment enchantment : this.enchantConflict.getEnchants()) {
                 manager.removeConflictFromMap(enchantment, this.enchantConflict);
             }
             manager.conflictList.remove(this.enchantConflict);
@@ -164,12 +164,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         // Prepare enchantment lore
         ArrayList<String> enchantLore = new ArrayList<>();
         enchantLore.add("\u00A77Allow you to select a list of \u00A75Enchantments \u00A77that this conflict should include");
-        Set<Enchantment> enchants = getSelectedEnchantments();
+        Set<WrappedEnchantment> enchants = getSelectedEnchantments();
         if (enchants.isEmpty()) {
             enchantLore.add("\u00A77There is no included enchantment for this conflict.");
         } else {
             enchantLore.add("\u00A77List of included enchantment for this conflict:");
-            Iterator<Enchantment> enchantIterator = enchants.iterator();
+            Iterator<WrappedEnchantment> enchantIterator = enchants.iterator();
 
             boolean greaterThanMax = enchants.size() > 5;
             int maxindex = (greaterThanMax ? 4 : enchants.size());
@@ -243,12 +243,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     // Select enchantment container methods
 
     @Override
-    public Set<Enchantment> getSelectedEnchantments() {
+    public Set<WrappedEnchantment> getSelectedEnchantments() {
         return this.enchantConflict.getEnchants();
     }
 
     @Override
-    public boolean setSelectedEnchantments(Set<Enchantment> enchantments) {
+    public boolean setSelectedEnchantments(Set<WrappedEnchantment> enchantments) {
         if (!this.shouldWork) {
             CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict + " enchants but sub config is destroyed");
             return false;
@@ -260,7 +260,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         // Save on file configuration
         String[] enchantKeys = new String[enchantments.size()];
         int index = 0;
-        for (Enchantment enchantment : enchantments) {
+        for (WrappedEnchantment enchantment : enchantments) {
             enchantKeys[index++] = enchantment.getKey().getKey();
         }
         ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict + ".enchantments", enchantKeys);
@@ -280,7 +280,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     }
 
     @Override
-    public Set<Enchantment> illegalEnchantments() {
+    public Set<WrappedEnchantment> illegalEnchantments() {
         return Collections.emptySet();
     }
 

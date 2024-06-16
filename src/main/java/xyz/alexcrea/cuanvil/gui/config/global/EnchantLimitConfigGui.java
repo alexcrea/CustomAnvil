@@ -2,8 +2,8 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
@@ -32,7 +32,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     }
 
     @Override
-    public IntSettingsGui.IntSettingFactory getFactoryFromEnchant(Enchantment enchant) {
+    public IntSettingsGui.IntSettingFactory getFactoryFromEnchant(WrappedEnchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
@@ -42,7 +42,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
                         "\u00A77Maximum applied level of " + prettyKey
                 ),
                 0, 255,
-                enchant.getMaxLevel(),
+                enchant.defaultMaxLevel(),
                 1, 5, 10, 50, 100);
     }
 

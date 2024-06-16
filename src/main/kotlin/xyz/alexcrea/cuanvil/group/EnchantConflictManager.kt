@@ -5,6 +5,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
+import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 
 class EnchantConflictManager {
 
@@ -27,12 +28,12 @@ class EnchantConflictManager {
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT =
-            Enchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
-            Enchantment.SWEEPING_EDGE
+            WrappedEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
+            WrappedEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
 
     }
 
-    private lateinit var conflictMap: HashMap<Enchantment, ArrayList<EnchantConflictGroup>>
+    private lateinit var conflictMap: HashMap<WrappedEnchantment, ArrayList<EnchantConflictGroup>>
     lateinit var conflictList: ArrayList<EnchantConflictGroup>
 
     // Read and prepare all conflict
@@ -58,14 +59,14 @@ class EnchantConflictManager {
         }
     }
 
-    fun addConflictToConflictMap(enchant: Enchantment, conflict: EnchantConflictGroup) {
+    fun addConflictToConflictMap(enchant: WrappedEnchantment, conflict: EnchantConflictGroup) {
         if (!conflictMap.containsKey(enchant)) {
             conflictMap[enchant] = ArrayList()
         }
         conflictMap[enchant]!!.add(conflict)
     }
 
-    fun removeConflictFromMap(enchant: Enchantment, conflict: EnchantConflictGroup): Boolean {
+    fun removeConflictFromMap(enchant: WrappedEnchantment, conflict: EnchantConflictGroup): Boolean {
         return conflictMap[enchant]!!.remove(conflict)
     }
 
@@ -100,7 +101,7 @@ class EnchantConflictManager {
         return conflict
     }
 
-    private fun getEnchantByName(enchantName: String): Enchantment? {
+    private fun getEnchantByName(enchantName: String): WrappedEnchantment? {
 
         // Temporary solution for 1.20.5
         when(enchantName){
@@ -110,7 +111,7 @@ class EnchantConflictManager {
         }
 
         val enchantKey = NamespacedKey.minecraft(enchantName)
-        return Enchantment.getByKey(enchantKey)
+        return WrappedEnchantment.getByKey(enchantKey)
     }
 
 
@@ -151,7 +152,7 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(base: Set<Enchantment>, mat: Material, newEnchant: Enchantment): ConflictType {
+    fun isConflicting(base: Set<WrappedEnchantment>, mat: Material, newEnchant: WrappedEnchantment): ConflictType {
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
         val conflictList = conflictMap[newEnchant] ?: return ConflictType.NO_CONFLICT
         CustomAnvil.verboseLog("Did not get skipped")
