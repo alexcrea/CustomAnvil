@@ -95,7 +95,7 @@ class CustomAnvil : JavaPlugin() {
         }
 
         // Register enchantments
-        WrappedEnchantment.registerEnchantments();
+        WrappedEnchantment.registerEnchantments()
 
         // Load ProtocolLib dependency if exist
         packetManager = if(pluginManager.isPluginEnabled("ProtocolLib"))
