@@ -26,6 +26,9 @@ dependencies {
     // Protocolib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
+    // EnchantsSquaredRewritten
+    compileOnly(files("libs/EnchantsSquared.jar"))
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

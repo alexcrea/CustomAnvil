@@ -46,3 +46,4 @@ permissions:
 softdepend:
   - UnsafeEnchantsPlus
   - ProtocolLib
+  - EnchantsSquared
