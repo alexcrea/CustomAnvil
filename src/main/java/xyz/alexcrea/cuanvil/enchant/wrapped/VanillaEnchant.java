@@ -46,11 +46,13 @@ public class VanillaEnchant extends WrappedEnchantment {
     }
 
     @Override
-    public void addEnchantmentUnsafe(@NotNull ItemStack item, @NotNull ItemMeta meta, int level) {
+    public void addEnchantmentUnsafe(@NotNull ItemStack item, int level) {
         if (isEnchantedBook(item)) {
-            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)meta);
+            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
 
+            assert bookMeta != null;
             bookMeta.addStoredEnchant(this.enchantment, level, true);
+            item.setItemMeta(bookMeta);
         } else {
             item.addUnsafeEnchantment(this.enchantment, level);
         }
@@ -58,13 +60,16 @@ public class VanillaEnchant extends WrappedEnchantment {
     }
 
     @Override
-    public void removeFrom(@NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public void removeFrom(@NotNull ItemStack item) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)meta);
+            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
 
+            assert bookMeta != null;
             bookMeta.removeStoredEnchant(this.enchantment);
+            item.setItemMeta(bookMeta);
+        }else{
+            item.removeEnchantment(this.enchantment);
         }
-        item.removeEnchantment(this.enchantment);
 
     }
 

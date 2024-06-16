@@ -29,13 +29,11 @@ object ItemUtil {
     fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<WrappedEnchantment, Int>) {
         WrappedEnchantment.clearEnchants(this)
 
-        val meta = this.itemMeta ?: return
-
+        //TODO maybe faster methode to add vanilla enchantment. maybe move this function to wrapped enchantment
         enchantments.forEach { (enchantment, level) ->
-            enchantment.addEnchantmentUnsafe(this, meta, level)
+            enchantment.addEnchantmentUnsafe(this, level)
         }
 
-        this.itemMeta = meta
     }
 
     /**

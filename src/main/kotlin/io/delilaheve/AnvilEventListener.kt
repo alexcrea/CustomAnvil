@@ -452,6 +452,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
                 if (ConflictType.BIG_CONFLICT == conflictType) {
                     illegalPenalty += ConfigOptions.sacrificeIllegalCost
+                    CustomAnvil.verboseLog("Big conflict. Adding illegal price penalty")
                 }
                 continue
             }

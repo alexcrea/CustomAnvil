@@ -90,17 +90,15 @@ public abstract class WrappedEnchantment {
     /**
      * Force add an enchantment at the provided level.
      * @param item The item to set the enchantment level.
-     * @param meta Meta of the provided item. It can be changed, but will not be set on the item.
      * @param level The level to set the enchantment to.
      */
-    public abstract void addEnchantmentUnsafe(@NotNull ItemStack item, @NotNull ItemMeta meta, int level);
+    public abstract void addEnchantmentUnsafe(@NotNull ItemStack item, int level);
 
     /**
      * Remove this enchantment from the provided ItemStack.
      * @param item The item to remove the enchantment.
-     * @param meta Meta of the provided item. It can be changed, but will not be set on the item.
      */
-    public abstract void removeFrom(@NotNull ItemStack item, @NotNull ItemMeta meta);
+    public abstract void removeFrom(@NotNull ItemStack item);
 
     // Static functions
 
@@ -109,13 +107,10 @@ public abstract class WrappedEnchantment {
      * @param item Item to be cleared from enchantments.
      */
     public static void clearEnchants(@NotNull ItemStack item){ //TODO faster method to clear vanilla enchantment
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null) return;
-
         for (WrappedEnchantment enchant : getEnchants(item).keySet()) {
-            enchant.removeFrom(item, meta);
+            enchant.removeFrom(item);
         }
-        item.setItemMeta(meta);
+
     }
 
     /**

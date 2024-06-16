@@ -18,6 +18,7 @@ class EnchantConflictGroup(
 
     fun allowed(enchants: Set<WrappedEnchantment>, mat: Material): Boolean {
         if (enchantments.size < minBeforeBlock) {
+            CustomAnvil.verboseLog("Conflicting bc of to many enchantments")
             return true
         }
 
@@ -31,6 +32,7 @@ class EnchantConflictGroup(
             if (enchantment !in enchantments) continue
             CustomAnvil.verboseLog("Enchant ${enchantment.key} is in: ${enchantAmount + 1}/$minBeforeBlock ")
             if (++enchantAmount > minBeforeBlock) {
+                CustomAnvil.verboseLog("it is not allowed bc of to many enchantment in conflict")
                 return false
             }
 
