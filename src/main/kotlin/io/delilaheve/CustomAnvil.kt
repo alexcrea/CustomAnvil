@@ -91,11 +91,11 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
-        // Register enchantments
-        WrappedEnchantment.registerEnchantments()
-
         // Load dependency
         DependencyManager.loadDependency()
+
+        // Register enchantments
+        WrappedEnchantment.registerEnchantments()
 
         // Load chat listener
         chatListener = ChatEventListener()

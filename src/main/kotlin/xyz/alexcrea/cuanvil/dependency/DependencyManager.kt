@@ -20,9 +20,8 @@ object DependencyManager {
 
         // Enchantment Squared dependency
         enchantmentSquaredCompatibility =
-            if(pluginManager.isPluginEnabled("EnchantsSquared")) EnchantmentSquaredDependency()
+            if(pluginManager.isPluginEnabled("EnchantsSquared")) EnchantmentSquaredDependency(pluginManager.getPlugin("EnchantsSquared")!!)
         else null
-
 
     }
 

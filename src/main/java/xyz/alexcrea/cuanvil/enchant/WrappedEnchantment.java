@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
-import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchant;
+import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchantment;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -230,7 +230,7 @@ public abstract class WrappedEnchantment {
      */
     public static void registerEnchantments(){
         for (Enchantment enchantment : Enchantment.values()) {
-            register(new VanillaEnchant(enchantment));
+            register(new VanillaEnchantment(enchantment));
         }
 
         if(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility() != null){
