@@ -21,7 +21,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    compileOnly("com.github.stefvanschie.inventoryframework:IF:0.10.13")
+    compileOnly("com.github.stefvanschie.inventoryframework:IF:0.10.14")
 
     // Protocolib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")

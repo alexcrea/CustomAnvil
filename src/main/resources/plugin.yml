@@ -8,7 +8,7 @@ load: POSTWORLD
 authors: [ DelilahEve, alexcrea ]
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
-  - com.github.stefvanschie.inventoryframework:IF:0.10.13
+  - com.github.stefvanschie.inventoryframework:IF:0.10.14
 
 commands:
   anvilconfigreload:

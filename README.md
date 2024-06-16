@@ -13,6 +13,7 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 the plugin can be downloaded on the
 [Spigot site](https://www.spigotmc.org/resources/custom-anvil.114884)
 or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
+
 ---
 **Custom Anvil** have the following features:
 - Vanilla like default configuration.
