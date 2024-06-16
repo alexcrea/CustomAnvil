@@ -18,7 +18,7 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
-import xyz.alexcrea.cuanvil.packet.PacketManager;
+import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;

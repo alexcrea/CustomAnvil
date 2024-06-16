@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
-import xyz.alexcrea.cuanvil.packet.PacketManager;
+import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager;
 
 import java.util.Collections;
 

@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchant;
 
 import java.util.*;
@@ -172,7 +173,7 @@ public abstract class WrappedEnchantment {
      * @param item Item to get enchantment from.
      * @return A map of the set enchantments and there's respective levels.
      */
-    public static Map<WrappedEnchantment, Integer> getEnchants(@NotNull ItemStack item){ //TODO faster method to find vanilla enchantment
+    public static Map<WrappedEnchantment, Integer> getEnchants(@NotNull ItemStack item){
         Map<WrappedEnchantment, Integer> enchantments = new HashMap<>();
 
         ItemMeta meta = item.getItemMeta();
@@ -230,6 +231,10 @@ public abstract class WrappedEnchantment {
     public static void registerEnchantments(){
         for (Enchantment enchantment : Enchantment.values()) {
             register(new VanillaEnchant(enchantment));
+        }
+
+        if(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility() != null){
+            DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility().registerEnchantements();
         }
 
     }
