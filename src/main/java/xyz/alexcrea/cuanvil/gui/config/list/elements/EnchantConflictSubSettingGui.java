@@ -79,15 +79,15 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
 
         // Displayed item will be updated later
-        this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), (event) -> {
+        this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), event -> {
             event.setCancelled(true);
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
-                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + " \u00A75Enchantments",
-                    this, this, 0);
+                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + "\u00A75",
+                    this, this);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
-        this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), (event) -> {
+        this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), event -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
                     "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + " \u00A73Groups",

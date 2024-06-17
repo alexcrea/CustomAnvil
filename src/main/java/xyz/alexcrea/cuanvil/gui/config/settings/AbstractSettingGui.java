@@ -45,7 +45,6 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
     }
 
     protected GuiItem saveItem;
-    protected GuiItem noChangeItem;
 
     /**
      * Initialise and prepare value for this gui.
@@ -61,15 +60,14 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
         GuiGlobalItems.addBackgroundItem(pane);
 
         saveItem = GuiGlobalItems.saveItem(this, parent);
-        noChangeItem = GuiGlobalItems.noChangeItem();
 
-        pane.bindItem('S', noChangeItem);
+        pane.bindItem('S',  GuiGlobalItems.noChangeItem());
 
     }
 
     @Override
     public void update() {
-        pane.bindItem('S', hadChange() ? saveItem : noChangeItem);
+        pane.bindItem('S', hadChange() ? saveItem :  GuiGlobalItems.noChangeItem());
         super.update();
     }
 
@@ -94,6 +92,7 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * @return The gui's pattern.
      */
     protected abstract Pattern getGuiPattern();
+
 
     /**
      * Most of the time a setting gui will be called from a global gui.

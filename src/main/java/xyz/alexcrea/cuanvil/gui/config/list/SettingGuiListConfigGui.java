@@ -38,16 +38,16 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
 
     @Override
     public void updateValueForGeneric(T generic, boolean shouldUpdate) {
-        S factory = this.factoryMap.get(generic);
-        if(factory == null){
+        if(!this.factoryMap.containsKey(generic)){
             // Create new item & factory
-            factory = createFactory(generic);
+            S factory = createFactory(generic);
             GuiItem newItem = itemFromFactory(generic, factory);
 
             addToPage(newItem);
             this.guiItemMap.put(generic, newItem);
             this.factoryMap.put(generic, factory);
         }else{
+            S factory = this.factoryMap.get(generic);
             // Update old item
             GuiItem oldItem = this.guiItemMap.get(generic);
 
@@ -73,6 +73,7 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
         oldITem.setProperties(newItem.getProperties());
         oldITem.setVisible(newItem.isVisible());
     }
+
     @Override
     protected GuiItem findGuiItemForRemoval(T generic) {
         return this.guiItemMap.get(generic);

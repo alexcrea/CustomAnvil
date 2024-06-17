@@ -1,9 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.settings;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.Orientable;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import com.github.stefvanschie.inventoryframework.pane.Pane;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
@@ -13,71 +11,67 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
+import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-public class EnchantSelectSettingGui extends AbstractSettingGui {
+public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnchantment, EnchantSelectSettingGui.DummyFactory> implements SettingGui {
 
-    SelectEnchantmentContainer enchantContainer;
-    int page;
+    private final SelectEnchantmentContainer enchantContainer;
 
-    Set<WrappedEnchantment> selectedEnchant;
+    private final Set<WrappedEnchantment> selectedEnchant;
+    private final GuiItem saveItem;
 
-    public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer, int page) {
-        super(6, title, parent);
+    public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer) {
+        super(title);
         this.enchantContainer = enchantContainer;
-        // Not used and not planned rn
-        this.page = page;
 
         this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());
 
-        // Add secondary background item
-        this.getPane().bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
+        this.saveItem = GuiGlobalItems.saveItem(this, parent);
+        this.backgroundPane.bindItem('S',  GuiGlobalItems.noChangeItem());
 
-        initGroups();
+        init();
     }
 
     @Override
-    protected Pattern getGuiPattern() {
+    protected Pattern getBackgroundPattern() {
         return new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "B1111111S"
+                "B11L1R11S"
         );
     }
 
-    protected void initGroups() {
-        // Add enchantment gui item
-        OutlinePane filledEnchant = new OutlinePane(0, 0, 9, 5);
-        filledEnchant.setPriority(Pane.Priority.HIGH);
-        filledEnchant.align(OutlinePane.Alignment.BEGIN);
-        filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
+    @Override
+    protected List<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
+        Set<WrappedEnchantment> illegalEnchantments = this.enchantContainer.illegalEnchantments();
 
-        Set<WrappedEnchantment> illegalEnchant = this.enchantContainer.illegalEnchantments();
-        for (WrappedEnchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
-            if (illegalEnchant.contains(enchant)) {
-                return;
-            }
-            filledEnchant.addItem(getGuiItemFromEnchant(enchant));
-        }
-
-        addPane(filledEnchant);
-
+        return Arrays.stream(WrappedEnchantment.values())
+                .filter(enchantment -> !illegalEnchantments.contains(enchantment))
+                .collect(Collectors.toList());
     }
 
-    private GuiItem getGuiItemFromEnchant(WrappedEnchantment enchantment) {
+    @Override
+    public void update() {
+        this.backgroundPane.bindItem('S', hadChange() ? saveItem : GuiGlobalItems.noChangeItem());
+        super.update();
+    }
+
+    @Override
+    protected GuiItem itemFromFactory(WrappedEnchantment enchantment, DummyFactory factory) {
         boolean isIn = this.selectedEnchant.contains(enchantment);
 
         Material usedMaterial;
@@ -94,7 +88,6 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
         guiItem.setAction(getEnchantItemConsumer(enchantment, guiItem));
         return guiItem;
     }
-
 
     private static final List<String> TRUE_LORE = Collections.singletonList("\u00A77Value: \u00A7aSelected");
     private static final List<String> FALSE_LORE = Collections.singletonList("\u00A77Value: \u00A7cNot Selected");
@@ -155,6 +148,34 @@ public class EnchantSelectSettingGui extends AbstractSettingGui {
         Set<WrappedEnchantment> baseGroup = this.enchantContainer.getSelectedEnchantments();
         return baseGroup.size() != this.selectedEnchant.size() ||
                 !baseGroup.containsAll(this.selectedEnchant);
+    }
+
+
+    // Unused methods and class
+    public static class DummyFactory extends AbstractSettingGui.SettingGuiFactory{
+        protected DummyFactory(@NotNull String configPath, @NotNull ConfigHolder config) {
+            super(configPath, config);
+        }
+        @Override
+        public Gui create() {
+            return null;
+        }
+    }
+    @Override
+    protected List<String> getCreateItemLore() {
+        return Collections.emptyList();
+    }
+    @Override
+    protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
+        return null;
+    }
+    @Override
+    protected String createItemName() {
+        return null;
+    }
+    @Override
+    protected DummyFactory createFactory(WrappedEnchantment generic) {
+        return null;
     }
 
 }
