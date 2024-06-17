@@ -1,15 +1,16 @@
 package xyz.alexcrea.cuanvil.gui.config.list.elements;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 
-public abstract class MappedToListSubSettingGui extends ValueUpdatableGui implements ElementMappedToListGui {
+public abstract class MappedToListSubSettingGui extends ChestGui implements ValueUpdatableGui, ElementMappedToListGui {
 
     private final GuiItem item;
-    public MappedToListSubSettingGui(
+    protected MappedToListSubSettingGui(
             GuiItem item,
             int rows,
             @NotNull String title) {
@@ -27,5 +28,9 @@ public abstract class MappedToListSubSettingGui extends ValueUpdatableGui implem
         return this;
     }
 
+    @Override
+    public Gui getConnectedGui() {
+        return this;
+    }
 
 }

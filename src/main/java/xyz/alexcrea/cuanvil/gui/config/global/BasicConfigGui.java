@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -27,7 +29,7 @@ import java.util.Collections;
 /**
  * Global config to edit basic basic settings.
  */
-public class BasicConfigGui extends ValueUpdatableGui {
+public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private static BasicConfigGui INSTANCE;
 
@@ -251,6 +253,11 @@ public class BasicConfigGui extends ValueUpdatableGui {
         pane.bindItem('S', illegalCostItem);
 
         update();
+    }
+
+    @Override
+    public Gui getConnectedGui() {
+        return this;
     }
 
 }

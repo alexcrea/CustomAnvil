@@ -17,7 +17,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
  */
 public abstract class AbstractSettingGui extends ChestGui {
 
-    protected final static String CLICK_LORE = "\u00A77Click Here to change the value";
+    protected static final String CLICK_LORE = "\u00A77Click Here to change the value";
 
     private PatternPane pane;
 
@@ -28,7 +28,7 @@ public abstract class AbstractSettingGui extends ChestGui {
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    public AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
+    protected AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
         super(rows, title, CustomAnvil.instance);
         initBase(parent);
     }
@@ -40,7 +40,7 @@ public abstract class AbstractSettingGui extends ChestGui {
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    public AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
+    protected AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
         this(rows, StringHolder.of(title), parent);
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractSettingGui extends ChestGui {
         pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
         addPane(pane);
 
-        GuiGlobalItems.addBackItem(pane, parent);
+        GuiGlobalItems.addBackItem(pane, parent.getConnectedGui());
         GuiGlobalItems.addBackgroundItem(pane);
 
         saveItem = GuiGlobalItems.saveItem(this, parent);

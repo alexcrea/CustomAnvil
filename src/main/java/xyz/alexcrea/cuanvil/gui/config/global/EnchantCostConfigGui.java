@@ -22,9 +22,9 @@ import java.util.Locale;
  */
 public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSettingsGui.EnchantCostSettingFactory> {
 
-    private final static String SECTION_NAME = "enchant_values";
+    private static final String SECTION_NAME = "enchant_values";
 
-    public final static EnchantCostConfigGui INSTANCE = new EnchantCostConfigGui();
+    public static final EnchantCostConfigGui INSTANCE = new EnchantCostConfigGui();
 
     static {
         INSTANCE.init();

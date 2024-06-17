@@ -138,7 +138,7 @@ public class GuiGlobalActions {
             // Update gui for those who have it open.
             goal.updateGuiValues();
             // Then show
-            goal.show(player);
+            goal.getConnectedGui().show(player);
         };
     }
 

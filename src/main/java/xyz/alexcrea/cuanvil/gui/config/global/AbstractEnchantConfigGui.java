@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import io.delilaheve.CustomAnvil;
@@ -17,7 +19,7 @@ import java.util.List;
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
-public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ValueUpdatableGui {
+public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ChestGui implements ValueUpdatableGui {
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.
@@ -78,7 +80,10 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
 
         update();
     }
-
+    @Override
+    public Gui getConnectedGui() {
+        return this;
+    }
 
     public abstract T getFactoryFromEnchant(WrappedEnchantment enchant);
 

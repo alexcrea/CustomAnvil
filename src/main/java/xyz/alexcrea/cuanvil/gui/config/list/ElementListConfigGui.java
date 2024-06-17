@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.Orientable;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
@@ -23,13 +25,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
+public abstract class ElementListConfigGui< T > extends ChestGui implements ValueUpdatableGui {
 
     private final String namePrefix;
 
     protected PatternPane backgroundPane;
 
-    public ElementListConfigGui(@NotNull String title) {
+    protected ElementListConfigGui(@NotNull String title) {
         super(6, title, CustomAnvil.instance);
         this.namePrefix = title;
 
@@ -302,6 +304,11 @@ public abstract class ElementListConfigGui< T > extends ValueUpdatableGui {
         // TODO maybe rework ValueUpdatableGui and it's dependency to allow a 1 item reload every time.
 
         reloadValues();
+    }
+
+    @Override
+    public Gui getConnectedGui() {
+        return this;
     }
 
 }
