@@ -7,13 +7,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.SettingGuiFactory> extends ElementListConfigGui< T >{
+public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui< T >{
 
     protected HashMap<T, GuiItem> guiItemMap;
     protected HashMap<T, S> factoryMap;

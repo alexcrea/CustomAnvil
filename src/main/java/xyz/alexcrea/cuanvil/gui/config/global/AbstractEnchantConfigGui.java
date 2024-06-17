@@ -6,7 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Collections;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
-public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<WrappedEnchantment, T> implements ValueUpdatableGui {
+public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<WrappedEnchantment, T> implements ValueUpdatableGui {
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.

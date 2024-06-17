@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,7 +133,7 @@ public class GuiGlobalItems {
      * @return A save setting item.
      */
     public static GuiItem saveItem(
-            @NotNull AbstractSettingGui setting,
+            @NotNull SettingGui setting,
             @NotNull ValueUpdatableGui goal) {
 
         ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
@@ -179,7 +180,7 @@ public class GuiGlobalItems {
      */
     public static GuiItem openSettingGuiItem(
             @NotNull ItemStack item,
-            @NotNull AbstractSettingGui.SettingGuiFactory factory
+            @NotNull SettingGui.SettingGuiFactory factory
     ) {
         return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
@@ -199,7 +200,7 @@ public class GuiGlobalItems {
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem createGuiItemFromProperties(
-            @NotNull AbstractSettingGui.SettingGuiFactory factory,
+            @NotNull SettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
             @NotNull StringBuilder itemName,
             @NotNull Object value,

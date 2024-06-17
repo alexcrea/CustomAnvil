@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.settings;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -233,7 +234,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         }
 
         @Override
-        public AbstractSettingGui create() {
+        public Gui create() {
             // Get current value or default
             boolean now = getConfiguredValue();
             // create new gui

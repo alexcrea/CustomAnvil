@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,12 +18,12 @@ import java.util.function.Consumer;
  */
 public class GuiGlobalActions {
 
-    public final static String NO_EDIT_PERM = "§cYou do not have permission to edit the config";
+    public static final String NO_EDIT_PERM = "§cYou do not have permission to edit the config";
 
     /**
      * A Consumer that should be used if the item goal is to do nothing on click.
      */
-    public final static Consumer<InventoryClickEvent> stayInPlace = (event) -> event.setCancelled(true);
+    public static final Consumer<InventoryClickEvent> stayInPlace = event -> event.setCancelled(true);
 
     /**
      * Create a consumer to create and open a new GUI.
@@ -80,7 +81,7 @@ public class GuiGlobalActions {
      * @param factory The setting gui factory.
      * @return A consumer to create and open a new setting GUI.
      */
-    public static @NotNull Consumer<InventoryClickEvent> openSettingGuiAction(AbstractSettingGui.SettingGuiFactory factory) {
+    public static @NotNull Consumer<InventoryClickEvent> openSettingGuiAction(SettingGui.SettingGuiFactory factory) {
         return event -> {
             event.setCancelled(true);
             Gui gui = factory.create();
@@ -119,7 +120,7 @@ public class GuiGlobalActions {
      * @return A consumer to open a global GUI.
      */
     public static @NotNull Consumer<InventoryClickEvent> saveSettingAction(
-            @NotNull AbstractSettingGui setting,
+            @NotNull SettingGui setting,
             @NotNull ValueUpdatableGui goal) {
         return event -> {
             event.setCancelled(true);
