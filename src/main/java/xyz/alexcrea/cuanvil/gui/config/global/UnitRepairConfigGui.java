@@ -18,7 +18,7 @@ import java.util.List;
 
 public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRepairElementListGui> {
 
-    public final static UnitRepairConfigGui INSTANCE = new UnitRepairConfigGui();
+    public static final UnitRepairConfigGui INSTANCE = new UnitRepairConfigGui();
 
     static {
         INSTANCE.init();
@@ -89,7 +89,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
 
         createItem.setItemMeta(createMeta);
 
-        return new GuiItem(createItem, (clickEvent) -> {
+        return new GuiItem(createItem, clickEvent -> {
             clickEvent.setCancelled(true);
 
             new SelectItemTypeGui(

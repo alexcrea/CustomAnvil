@@ -12,10 +12,7 @@ import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Global Config gui for enchantment cost settings.
@@ -39,7 +36,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
     }
 
     @Override
-    public EnchantCostSettingsGui.EnchantCostSettingFactory getFactoryFromEnchant(WrappedEnchantment enchant) {
+    public EnchantCostSettingsGui.EnchantCostSettingFactory createFactory(WrappedEnchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ENGLISH);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
@@ -62,7 +59,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
     }
 
     @Override
-    public GuiItem getItemFromFactory(EnchantCostSettingsGui.EnchantCostSettingFactory factory) {
+    public GuiItem itemFromFactory(WrappedEnchantment enchantment, EnchantCostSettingsGui.EnchantCostSettingFactory factory) {
         // Get item properties
         int itemCost = factory.getConfiguredValue();
         int bookCost = factory.getConfiguredBookValue();

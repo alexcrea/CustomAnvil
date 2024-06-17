@@ -15,9 +15,9 @@ import java.util.Locale;
  */
 public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
-    private final static String SECTION_NAME = "enchant_limits";
+    private static final String SECTION_NAME = "enchant_limits";
 
-    public final static EnchantLimitConfigGui INSTANCE = new EnchantLimitConfigGui();
+    public static final EnchantLimitConfigGui INSTANCE = new EnchantLimitConfigGui();
 
     static {
         INSTANCE.init();
@@ -32,7 +32,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     }
 
     @Override
-    public IntSettingsGui.IntSettingFactory getFactoryFromEnchant(WrappedEnchantment enchant) {
+    public IntSettingsGui.IntSettingFactory createFactory(WrappedEnchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
@@ -47,7 +47,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     }
 
     @Override
-    public GuiItem getItemFromFactory(IntSettingsGui.IntSettingFactory inventoryFactory) {
+    public GuiItem itemFromFactory(WrappedEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
         return inventoryFactory.getItem(
                 Material.ENCHANTED_BOOK,
                 inventoryFactory.getTitle());

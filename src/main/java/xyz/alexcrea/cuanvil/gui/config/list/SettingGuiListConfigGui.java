@@ -17,7 +17,7 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
 
     protected HashMap<T, GuiItem> guiItemMap;
     protected HashMap<T, S> factoryMap;
-    public SettingGuiListConfigGui(@NotNull String title) {
+    protected SettingGuiListConfigGui(@NotNull String title) {
         super(title);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
