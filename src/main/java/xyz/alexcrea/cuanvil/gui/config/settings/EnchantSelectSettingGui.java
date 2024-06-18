@@ -23,6 +23,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnchantment, EnchantSelectSettingGui.DummyFactory> implements SettingGui {
 
@@ -30,6 +31,8 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
 
     private final Set<WrappedEnchantment> selectedEnchant;
     private final GuiItem saveItem;
+
+    private boolean displayUnselected;
 
     public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer) {
         super(title);
@@ -39,6 +42,9 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
 
         this.saveItem = GuiGlobalItems.saveItem(this, parent);
         this.backgroundPane.bindItem('S',  GuiGlobalItems.noChangeItem());
+
+        this.displayUnselected = true;
+        this.backgroundPane.bindItem('b',  createDisplayUnusedItem());
 
         init();
     }
@@ -51,15 +57,22 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "B11L1R11S"
+                "B11LbR11S"
         );
     }
 
     @Override
-    protected List<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
+        Stream<WrappedEnchantment> toDisplayStream;
+        if(this.displayUnselected){
+            toDisplayStream = Arrays.stream(WrappedEnchantment.values());
+        }else{
+            toDisplayStream = this.selectedEnchant.stream();
+        }
         Set<WrappedEnchantment> illegalEnchantments = this.enchantContainer.illegalEnchantments();
 
-        return Arrays.stream(WrappedEnchantment.values())
+
+        return toDisplayStream
                 .filter(enchantment -> !illegalEnchantments.contains(enchantment))
                 .collect(Collectors.toList());
     }
@@ -87,6 +100,28 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
         GuiItem guiItem = new GuiItem(item, CustomAnvil.instance);
         guiItem.setAction(getEnchantItemConsumer(enchantment, guiItem));
         return guiItem;
+    }
+
+    private GuiItem createDisplayUnusedItem() {
+        ItemStack item = new ItemStack(this.displayUnselected ? Material.BOOK : Material.ENCHANTED_BOOK);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName((this.displayUnselected ? "\u00A7aEverything displayed" : "\u00A7eOnly selected displayed"));
+        meta.setLore(Collections.singletonList(
+                        "\u00A77Click here to see " +
+                        (this.displayUnselected ? "only selected" : "every") +
+                                " enchantments"));
+
+        item.setItemMeta(meta);
+
+        return new GuiItem(item, clickEvent -> {
+            clickEvent.setCancelled(true);
+            this.displayUnselected = !this.displayUnselected;
+
+            this.backgroundPane.bindItem('b',  createDisplayUnusedItem());
+            reloadValues();
+        }, CustomAnvil.instance);
     }
 
     private static final List<String> TRUE_LORE = Collections.singletonList("\u00A77Value: \u00A7aSelected");

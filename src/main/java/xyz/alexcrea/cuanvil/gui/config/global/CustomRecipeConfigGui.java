@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe, CustomRecipeSubSettingGui> {
@@ -90,7 +91,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
 
     @Override
-    protected List<AnvilCustomRecipe> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<AnvilCustomRecipe> getEveryDisplayableInstanceOfGeneric() {
         return ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().getRecipeList();
     }
 }

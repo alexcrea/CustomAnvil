@@ -20,10 +20,7 @@ import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class ElementListConfigGui< T > extends ChestGui implements ValueUpdatableGui {
 
@@ -296,7 +293,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected abstract void updateGeneric(T generic, ItemStack usedItem);
 
-    protected abstract List<T> getEveryDisplayableInstanceOfGeneric();
+    protected abstract Collection<T> getEveryDisplayableInstanceOfGeneric();
 
     @Override
     public void updateGuiValues() {

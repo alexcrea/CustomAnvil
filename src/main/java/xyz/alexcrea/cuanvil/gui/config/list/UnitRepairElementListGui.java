@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -136,7 +137,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     }
 
     @Override
-    protected List<String> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<String> getEveryDisplayableInstanceOfGeneric() {
         ArrayList<String> keys = new ArrayList<>();
         if(!this.shouldWork){
             return keys;

@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,7 +36,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     }
 
     @Override
-    protected List<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
         return GuiSharedConstant.SORTED_ENCHANTMENT_LIST;
     }
 

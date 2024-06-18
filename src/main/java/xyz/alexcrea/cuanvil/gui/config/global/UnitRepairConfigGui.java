@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRepairElementListGui> {
@@ -62,7 +63,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
     }
 
     @Override
-    protected List<Material> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
         ArrayList<Material> materials = new ArrayList<>();
 
         for (String matName : ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getKeys(false)) {
