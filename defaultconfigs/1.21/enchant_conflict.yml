@@ -1,3 +1,8 @@
+#
+# It is recommended that you use /configanvil to edit theses config.
+# You can still manually edit here if you like to. but if you do, don't forget to /anvilconfigreload after you changes !
+#
+
 # material conflicts
 #
 # If you want to edit this file:

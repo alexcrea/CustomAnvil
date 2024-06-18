@@ -12,11 +12,11 @@ import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 
 import java.util.Locale;
 
-public class VanillaEnchant extends WrappedEnchantment {
+public class VanillaEnchantment extends WrappedEnchantment {
 
     private final @NotNull Enchantment enchantment;
 
-    public VanillaEnchant(@NotNull Enchantment enchantment){
+    public VanillaEnchantment(@NotNull Enchantment enchantment){
         super(enchantment.getKey(),
                 getRarity(enchantment),
                 enchantment.getMaxLevel());
@@ -78,10 +78,11 @@ public class VanillaEnchant extends WrappedEnchantment {
     }
 
     public static EnchantmentRarity getRarity(Enchantment enchantment){
-        try {return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();}
-        catch (IllegalArgumentException ignored) {}
-
-        return EnchantmentRarity.COMMON;
+        try {
+            return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
+        } catch (IllegalArgumentException ignored) {
+            return EnchantmentRarity.COMMON;
+        }
     }
 
 }

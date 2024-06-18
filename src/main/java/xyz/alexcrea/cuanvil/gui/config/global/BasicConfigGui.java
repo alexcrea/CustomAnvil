@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -11,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
@@ -18,7 +21,6 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
-import xyz.alexcrea.cuanvil.packet.PacketManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +29,7 @@ import java.util.Collections;
 /**
  * Global config to edit basic basic settings.
  */
-public class BasicConfigGui extends ValueUpdatableGui {
+public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private static BasicConfigGui INSTANCE;
 
@@ -251,6 +253,11 @@ public class BasicConfigGui extends ValueUpdatableGui {
         pane.bindItem('S', illegalCostItem);
 
         update();
+    }
+
+    @Override
+    public Gui getConnectedGui() {
+        return this;
     }
 
 }

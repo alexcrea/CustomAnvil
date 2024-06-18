@@ -7,13 +7,11 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
-import xyz.alexcrea.cuanvil.packet.NoProtocoLib
-import xyz.alexcrea.cuanvil.packet.PacketManager
-import xyz.alexcrea.cuanvil.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
@@ -76,8 +74,6 @@ class CustomAnvil : JavaPlugin() {
 
     }
 
-    lateinit var packetManager: PacketManager
-
     /**
      * Setup plugin for use
      */
@@ -94,14 +90,11 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
+        // Load dependency
+        DependencyManager.loadDependency()
+
         // Register enchantments
         WrappedEnchantment.registerEnchantments()
-
-        // Load ProtocolLib dependency if exist
-        packetManager = if(pluginManager.isPluginEnabled("ProtocolLib"))
-        { ProtocoLibWrapper(); }
-        else
-        { NoProtocoLib(); }
 
         // Load chat listener
         chatListener = ChatEventListener()
@@ -114,8 +107,11 @@ class CustomAnvil : JavaPlugin() {
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
 
+        // Handle custom enchant config
+        DependencyManager.handleConfigChanges()
+
         // Load gui constants //TODO maybe something better later
-        MainConfigGui.getInstance().init(this.packetManager)
+        MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
 
         // Load metrics
@@ -125,7 +121,7 @@ class CustomAnvil : JavaPlugin() {
         prepareCommand()
 
         server.pluginManager.registerEvents(
-            AnvilEventListener(packetManager),
+            AnvilEventListener(DependencyManager.packetManager),
             this
         )
     }

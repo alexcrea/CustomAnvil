@@ -306,6 +306,15 @@ object ConfigOptions {
         if(enchantmentName == "sweeping_edge"){
             return enchantmentValue("sweeping", isFromBook)
         }
+
+        val enchantment = WrappedEnchantment.getByName(enchantmentName)
+        if(enchantment != null){
+            val rarity = enchantment.defaultRarity()
+
+            return if(isFromBook) rarity.bookValue
+            else rarity.itemValue
+        }
+
         return DEFAULT_ENCHANT_VALUE
     }
 

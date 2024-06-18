@@ -15,9 +15,9 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 /**
  * An instance gui used to edit a setting.
  */
-public abstract class AbstractSettingGui extends ChestGui {
+public abstract class AbstractSettingGui extends ChestGui implements SettingGui {
 
-    protected final static String CLICK_LORE = "\u00A77Click Here to change the value";
+    protected static final String CLICK_LORE = "\u00A77Click Here to change the value";
 
     private PatternPane pane;
 
@@ -28,7 +28,7 @@ public abstract class AbstractSettingGui extends ChestGui {
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    public AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
+    protected AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
         super(rows, title, CustomAnvil.instance);
         initBase(parent);
     }
@@ -40,12 +40,11 @@ public abstract class AbstractSettingGui extends ChestGui {
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    public AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
+    protected AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
         this(rows, StringHolder.of(title), parent);
     }
 
     protected GuiItem saveItem;
-    protected GuiItem noChangeItem;
 
     /**
      * Initialise and prepare value for this gui.
@@ -57,19 +56,18 @@ public abstract class AbstractSettingGui extends ChestGui {
         pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
         addPane(pane);
 
-        GuiGlobalItems.addBackItem(pane, parent);
+        GuiGlobalItems.addBackItem(pane, parent.getConnectedGui());
         GuiGlobalItems.addBackgroundItem(pane);
 
         saveItem = GuiGlobalItems.saveItem(this, parent);
-        noChangeItem = GuiGlobalItems.noChangeItem();
 
-        pane.bindItem('S', noChangeItem);
+        pane.bindItem('S',  GuiGlobalItems.noChangeItem());
 
     }
 
     @Override
     public void update() {
-        pane.bindItem('S', hadChange() ? saveItem : noChangeItem);
+        pane.bindItem('S', hadChange() ? saveItem :  GuiGlobalItems.noChangeItem());
         super.update();
     }
 
@@ -95,27 +93,13 @@ public abstract class AbstractSettingGui extends ChestGui {
      */
     protected abstract Pattern getGuiPattern();
 
-    /**
-     * Called when the associated setting need to be saved.
-     *
-     * @return true if the save was successful. false otherwise
-     */
-    public abstract boolean onSave();
-
-    /**
-     * If this function return true
-     * the gui assume the associated setting can be saved.
-     *
-     * @return true if there is a change to the setting. false otherwise
-     */
-    public abstract boolean hadChange();
 
     /**
      * Most of the time a setting gui will be called from a global gui.
      * <p>
      * It is better to keep a factory that hold setting data than find what parameters to use every time.
      */
-    public abstract static class SettingGuiFactory {
+    public abstract static class SettingGuiFactory implements SettingGui.SettingGuiFactory {
         @NotNull
         protected String configPath;
         @NotNull
@@ -148,11 +132,5 @@ public abstract class AbstractSettingGui extends ChestGui {
             return config;
         }
 
-        /**
-         * Create a gui using setting parameters and current setting value.
-         *
-         * @return A new instance of the implemented setting gui.
-         */
-        public abstract AbstractSettingGui create();
     }
 }

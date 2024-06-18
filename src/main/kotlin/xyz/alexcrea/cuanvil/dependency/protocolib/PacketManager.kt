@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.packet
+package xyz.alexcrea.cuanvil.dependency.protocolib
 
 import org.bukkit.entity.Player
 

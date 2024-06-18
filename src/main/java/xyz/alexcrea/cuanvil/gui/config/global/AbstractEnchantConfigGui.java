@@ -1,23 +1,25 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.Orientable;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import io.delilaheve.CustomAnvil;
+import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Abstract Global Config gui for enchantment setting configuration.
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
-public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.SettingGuiFactory> extends ValueUpdatableGui {
+public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<WrappedEnchantment, T> implements ValueUpdatableGui {
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.
@@ -25,63 +27,50 @@ public abstract class AbstractEnchantConfigGui<T extends AbstractSettingGui.Sett
      * @param title Title of the gui.
      */
     protected AbstractEnchantConfigGui(String title) {
-        super(6, title, CustomAnvil.instance);
-    }
-
-    private OutlinePane filledEnchant;
-
-    /**
-     * Initialise value updatable gui pattern
-     */
-    protected void init() {
-        // Back item panel
-        addPane(GuiSharedConstant.BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE);
-
-        // enchant item panel
-        this.filledEnchant = new OutlinePane(0, 0, 9, 5);
-        this.filledEnchant.align(OutlinePane.Alignment.BEGIN);
-        this.filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
-        addPane(this.filledEnchant);
-
-        prepareValues();
-        updateGuiValues();
-    }
-
-    private List<T> bookItemFactoryList;
-
-    /**
-     * Prepare enchantment config gui displayed items factory.
-     */
-    protected void prepareValues() {
-        bookItemFactoryList = new ArrayList<>();
-
-        for (WrappedEnchantment enchant : GuiSharedConstant.SORTED_ENCHANTMENT_LIST) {
-            T factory = getFactoryFromEnchant(enchant);
-
-            bookItemFactoryList.add(factory);
-        }
+        super(title);
     }
 
     @Override
-    public void updateGuiValues() {
+    public void updateGuiValues() { //TODO maybe optimise it.
+        reloadValues();
+    }
 
-        // probably not the most efficient but hey ! it do the work
-        // TODO optimise one day.. maybe
+    @Override
+    protected Collection<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
+        return GuiSharedConstant.SORTED_ENCHANTMENT_LIST;
+    }
 
-        this.filledEnchant.clear();
-
-        for (T inventoryFactory : this.bookItemFactoryList) {
-            GuiItem item = getItemFromFactory(inventoryFactory);
-
-            this.filledEnchant.addItem(item);
-        }
-
-        update();
+    @Override
+    protected Pattern getBackgroundPattern(){
+        return new Pattern(
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                "B11L1R111"
+        );
     }
 
 
-    public abstract T getFactoryFromEnchant(WrappedEnchantment enchant);
+    // Unused methods
+    @Override
+    protected GuiItem prepareCreateNewItem() {
+        return null;
+    }
 
-    public abstract GuiItem getItemFromFactory(T inventoryFactory);
+    @Override
+    protected List<String> getCreateItemLore() {
+        return Collections.emptyList();
+    }
+    @Override
+    protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
+        return null;
+    }
+
+    @Override
+    protected String createItemName() {
+        return null;
+    }
 
 }

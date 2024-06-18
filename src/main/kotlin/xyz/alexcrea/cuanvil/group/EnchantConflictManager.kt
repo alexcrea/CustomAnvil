@@ -93,7 +93,7 @@ class EnchantConflictManager {
             conflict.addEnchantment(enchant)
         }
         if (conflict.getEnchants().size == 0) {
-            if (!futureUse) {
+            if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                 CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not do anything")
             }
         }

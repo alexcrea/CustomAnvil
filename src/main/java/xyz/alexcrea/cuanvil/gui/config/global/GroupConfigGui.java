@@ -16,6 +16,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupConfigSubSettingGui> {
@@ -49,7 +50,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupCo
     }
 
     @Override
-    protected List<IncludeGroup> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<IncludeGroup> getEveryDisplayableInstanceOfGeneric() {
         ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
 
         for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {

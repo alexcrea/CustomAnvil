@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 public abstract class MappedElementListConfigGui< T, S > extends ElementListConfigGui< T > {
 
     protected final HashMap<T, S> elementGuiMap;
-    public MappedElementListConfigGui(@NotNull String title) {
+    protected MappedElementListConfigGui(@NotNull String title) {
         super(title);
         this.elementGuiMap = new HashMap<>();
 
@@ -38,7 +38,7 @@ public abstract class MappedElementListConfigGui< T, S > extends ElementListConf
 
         createItem.setItemMeta(createMeta);
 
-        return new GuiItem(createItem, (clickEvent) -> {
+        return new GuiItem(createItem, clickEvent -> {
             clickEvent.setCancelled(true);
             HumanEntity player = clickEvent.getWhoClicked();
 

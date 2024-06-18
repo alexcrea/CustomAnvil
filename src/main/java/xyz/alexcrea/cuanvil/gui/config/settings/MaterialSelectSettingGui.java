@@ -216,7 +216,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected List<Material> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
         return this.defaultMaterials;
     }
 

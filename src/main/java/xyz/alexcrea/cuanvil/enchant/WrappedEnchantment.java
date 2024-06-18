@@ -4,12 +4,15 @@ import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ItemUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchant;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
+import xyz.alexcrea.cuanvil.dependency.EnchantmentSquaredDependency;
+import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchantment;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -34,7 +37,7 @@ public abstract class WrappedEnchantment {
      * @param defaultRarity Default rarity the enchantment should be.
      * @param defaultMaxLevel Default max level the enchantment can be applied with.
      */
-    public WrappedEnchantment(
+    protected WrappedEnchantment(
             @NotNull NamespacedKey key,
             @Nullable EnchantmentRarity defaultRarity,
             int defaultMaxLevel){
@@ -50,6 +53,7 @@ public abstract class WrappedEnchantment {
      * Get the default rarity of this enchant.
      * @return The default rarity of this enchant.
      */
+    @NotNull
     public final EnchantmentRarity defaultRarity(){
         return defaultRarity;
     }
@@ -79,11 +83,20 @@ public abstract class WrappedEnchantment {
     public final int defaultMaxLevel(){return defaultMaxLevel;}
 
     /**
-     * If the enchantment have specialised group operation.
+     * Check if the enchantment have specialised group operation.
      * @return If the enchantment is optimised for group operation.
      */
     protected boolean isOptimised(){
         return false;
+    }
+
+    /**
+     * Check if the player is allowed to use this enchantment.
+     * @param player The player to test.
+     * @return If the player is allowed to use this enchantment.
+     */
+    public boolean isAllowed(@NotNull HumanEntity player){
+        return true;
     }
 
     /**
@@ -137,7 +150,6 @@ public abstract class WrappedEnchantment {
     public abstract void removeFrom(@NotNull ItemStack item);
 
     // Static functions
-
     /**
      * Clear every enchantment from this item.
      * @param item Item to be cleared from enchantments.
@@ -158,6 +170,12 @@ public abstract class WrappedEnchantment {
             );
         }
 
+        // Clean Enchant Squared enchants
+        EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
+        if(enchantmentSquared != null){
+            enchantmentSquared.clearEnchantments(item);
+        }
+
         // Clean unoptimised enchants
         for (WrappedEnchantment enchant : unoptimisedValues()) {
             if(enchant.isEnchantmentPresent(item)){
@@ -172,7 +190,7 @@ public abstract class WrappedEnchantment {
      * @param item Item to get enchantment from.
      * @return A map of the set enchantments and there's respective levels.
      */
-    public static Map<WrappedEnchantment, Integer> getEnchants(@NotNull ItemStack item){ //TODO faster method to find vanilla enchantment
+    public static Map<WrappedEnchantment, Integer> getEnchants(@NotNull ItemStack item){
         Map<WrappedEnchantment, Integer> enchantments = new HashMap<>();
 
         ItemMeta meta = item.getItemMeta();
@@ -187,6 +205,12 @@ public abstract class WrappedEnchantment {
             item.getEnchantments().forEach(
                     (enchantment, level) -> enchantments.put(getByKey(enchantment.getKey()), level)
             );
+        }
+
+        // Enchants Squared get
+        EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
+        if(enchantmentSquared != null){
+            enchantmentSquared.getEnchantmentsSquared(item, enchantments);
         }
 
         // Unoptimised enchantment get
@@ -229,7 +253,11 @@ public abstract class WrappedEnchantment {
      */
     public static void registerEnchantments(){
         for (Enchantment enchantment : Enchantment.values()) {
-            register(new VanillaEnchant(enchantment));
+            register(new VanillaEnchantment(enchantment));
+        }
+
+        if(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility() != null){
+            DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility().registerEnchantments();
         }
 
     }

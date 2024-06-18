@@ -7,17 +7,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.SettingGuiFactory> extends ElementListConfigGui< T >{
+public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui< T >{
 
     protected HashMap<T, GuiItem> guiItemMap;
     protected HashMap<T, S> factoryMap;
-    public SettingGuiListConfigGui(@NotNull String title) {
+    protected SettingGuiListConfigGui(@NotNull String title) {
         super(title);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
@@ -38,16 +38,16 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
 
     @Override
     public void updateValueForGeneric(T generic, boolean shouldUpdate) {
-        S factory = this.factoryMap.get(generic);
-        if(factory == null){
+        if(!this.factoryMap.containsKey(generic)){
             // Create new item & factory
-            factory = createFactory(generic);
+            S factory = createFactory(generic);
             GuiItem newItem = itemFromFactory(generic, factory);
 
             addToPage(newItem);
             this.guiItemMap.put(generic, newItem);
             this.factoryMap.put(generic, factory);
         }else{
+            S factory = this.factoryMap.get(generic);
             // Update old item
             GuiItem oldItem = this.guiItemMap.get(generic);
 
@@ -73,6 +73,7 @@ public abstract class SettingGuiListConfigGui< T, S extends AbstractSettingGui.S
         oldITem.setProperties(newItem.getProperties());
         oldITem.setVisible(newItem.isVisible());
     }
+
     @Override
     protected GuiItem findGuiItemForRemoval(T generic) {
         return this.guiItemMap.get(generic);

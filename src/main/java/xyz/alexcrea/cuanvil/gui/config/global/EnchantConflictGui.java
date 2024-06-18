@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup, EnchantConflictSubSettingGui> {
@@ -83,7 +84,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     }
 
     @Override
-    protected List<EnchantConflictGroup> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<EnchantConflictGroup> getEveryDisplayableInstanceOfGeneric() {
         return ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
     }
 
