@@ -132,7 +132,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
 
         if (meta == null) {
             CustomAnvil.instance.getLogger().warning("Could not create item for enchantment: " + name + ":\n" +
-                    "Item do not gave item meta: " + item + ". Using placeholder instead");
+                    "Item do not gave item meta: " + item + ". Using a placeholder item instead");
             item.setType(Material.PAPER);
             meta = item.getItemMeta();
             assert meta != null;

@@ -24,6 +24,7 @@ or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Custom XP cost for every aspect of the anvil.
 - Permissions to bypass level limit or enchantment restriction.
 - Display xp cost instead of "to expensive" when above lv 40. (need ProtocoLib)
+- Can handle some custom enchantment plugins (see bellow for more information)
 - Gui to configure the plugin in game.
 ---
 ### Permissions:
@@ -42,7 +43,24 @@ under 1.2.0 replace ca prefix by ue and use ue.unsafe. some permission/features 
 anvilconfigreload or carl: Reload every config of this plugin
 customanvilconfig: open a menu for administrator to edit plugin's config in game
 ```
+### Custom Enchantment Plugins
+Custom Anvil can be compatible with some custom enchant plugins. \
+Currently, there is not a lot of compatible plugin
+
+Here is a list of supported plugins with support status:
+- [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
+Officially supported but still experimental. Automatic configuration translation.
+
+If you like Custom Anvil to support a specific custom enchantment plugin. 
+You can ask, but please note implementing compatibility will be considered
+as low priority as I work for the plugin on my free time for free. \
+For custom enchantment plugin developers: 
+If you like to make your plugin compatible with Custom Anvil
+I recommend reaching out to me as there is currently no documentation.
+
 ---
+
+
 ### Default Plugin's Configurations
 For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.18)\
 For 1.21 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
