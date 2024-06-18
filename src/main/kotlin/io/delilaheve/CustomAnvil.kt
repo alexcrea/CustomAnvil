@@ -107,6 +107,9 @@ class CustomAnvil : JavaPlugin() {
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
 
+        // Handle custom enchant config
+        DependencyManager.handleConfigChanges()
+
         // Load gui constants //TODO maybe something better later
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()

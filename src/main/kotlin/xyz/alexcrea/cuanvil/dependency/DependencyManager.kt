@@ -26,4 +26,10 @@ object DependencyManager {
 
     }
 
+    fun handleConfigChanges() {
+
+        enchantmentSquaredCompatibility?.registerPluginConfiguration()
+
+    }
+
 }

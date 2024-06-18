@@ -310,11 +310,9 @@ object ConfigOptions {
         val enchantment = WrappedEnchantment.getByName(enchantmentName)
         if(enchantment != null){
             val rarity = enchantment.defaultRarity()
-            if(rarity != null){
-                return if(isFromBook) rarity.bookValue
-                else rarity.itemValue
 
-            }
+            return if(isFromBook) rarity.bookValue
+            else rarity.itemValue
         }
 
         return DEFAULT_ENCHANT_VALUE

@@ -53,6 +53,7 @@ public abstract class WrappedEnchantment {
      * Get the default rarity of this enchant.
      * @return The default rarity of this enchant.
      */
+    @NotNull
     public final EnchantmentRarity defaultRarity(){
         return defaultRarity;
     }
