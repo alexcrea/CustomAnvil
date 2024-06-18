@@ -2,6 +2,8 @@ package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import me.athlaeos.enchantssquared.enchantments.CustomEnchant;
 import me.athlaeos.enchantssquared.managers.CustomEnchantManager;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +29,18 @@ public class EnchantSquaredEnchantment extends WrappedEnchantment {
     @Override
     protected boolean isOptimised() {
         return true;
+    }
+
+    @Override
+    public boolean isAllowed(@NotNull HumanEntity human) {
+        if(human instanceof Player){
+            return this.enchant.hasPermission((Player) human);
+        }
+        // Not really ideal for maintainability but will probably never be executed. (At least I hope)
+        boolean required = CustomEnchantManager.getInstance().isRequirePermissions();
+        if (!required) return true;
+
+        return human.hasPermission("es.enchant.*") || !human.hasPermission(this.enchant.getRequiredPermission());
     }
 
     @Override

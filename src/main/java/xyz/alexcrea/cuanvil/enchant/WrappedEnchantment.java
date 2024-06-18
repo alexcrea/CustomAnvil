@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ItemUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -81,11 +82,20 @@ public abstract class WrappedEnchantment {
     public final int defaultMaxLevel(){return defaultMaxLevel;}
 
     /**
-     * If the enchantment have specialised group operation.
+     * Check if the enchantment have specialised group operation.
      * @return If the enchantment is optimised for group operation.
      */
     protected boolean isOptimised(){
         return false;
+    }
+
+    /**
+     * Check if the player is allowed to use this enchantment.
+     * @param player The player to test.
+     * @return If the player is allowed to use this enchantment.
+     */
+    public boolean isAllowed(@NotNull HumanEntity player){
+        return true;
     }
 
     /**
@@ -139,7 +149,6 @@ public abstract class WrappedEnchantment {
     public abstract void removeFrom(@NotNull ItemStack item);
 
     // Static functions
-
     /**
      * Clear every enchantment from this item.
      * @param item Item to be cleared from enchantments.

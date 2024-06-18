@@ -30,6 +30,8 @@ object EnchantmentUtil {
     ) = mutableMapOf<WrappedEnchantment, Int>().apply {
         putAll(this@combineWith)
         other.forEach { (enchantment, level) ->
+            if(!enchantment.isAllowed(player)) return@forEach
+
             // Get max level or 255 if player can bypass
             val maxLevel = if (player.hasPermission(CustomAnvil.bypassLevelPermission))
             { 255 } else
@@ -53,7 +55,7 @@ object EnchantmentUtil {
             }
             // Enchantment already in result list
             else {
-                val oldLevel = this[enchantment]!! // should be true, see the comment above
+                val oldLevel = this[enchantment]!! // <- should not be null. see the comment above
 
                 // ... and they are conflicting
                 val conflictType =
