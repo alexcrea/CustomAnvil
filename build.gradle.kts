@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.9.24"
     java
 }
 
@@ -12,6 +12,9 @@ repositories {
 
     // ProtocoLib
     maven (url = "https://repo.dmulloy2.net/repository/public/" )
+
+    // EcoEnchants
+    maven(url = "https://repo.auxilor.io/repository/maven-public/")
 }
 
 dependencies {
@@ -28,6 +31,10 @@ dependencies {
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
+
+    // EcoEnchants
+    compileOnly("com.willfp:EcoEnchants:12.5.1")
+    compileOnly("com.willfp:eco:6.70.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
