@@ -20,10 +20,11 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
         CustomAnvil.instance.logger.info("Enchantment Squared Detected !")
         CustomAnvil.instance.logger.info("Please be aware that Custom Anvil is bypassing Enchantment Squared ")
-        CustomAnvil.instance.logger.info("\"compatible_with\", " +
-                "\"disable_anvil\", " +
-                "\"incompatible_vanilla_enchantments\", " +
-                "\"incompatible_custom_enchantments\", " +
+        CustomAnvil.instance.logger.info(
+            "compatible_with, " +
+                "disable_anvil, " +
+                "incompatible_vanilla_enchantments, " +
+                "incompatible_custom_enchantments and max_level " +
                 "configuration values.")
     }
 
@@ -103,32 +104,32 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         val groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.config
         if(!groupConfig.isConfigurationSection("pickaxes")){
             groupConfig["pickaxes.type"] = "include"
-            groupConfig["pickaxes.items"] = arrayOf("wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "golden_pickaxe", "netherite_pickaxe")
+            groupConfig["pickaxes.items"] = listOf("wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "golden_pickaxe", "netherite_pickaxe")
         }
 
         if(!groupConfig.isConfigurationSection("shovels")){
             groupConfig["shovels.type"] = "include"
-            groupConfig["shovels.items"] = arrayOf("wooden_shovel", "stone_shovel", "iron_shovel", "diamond_shovel", "golden_shovel", "netherite_shovel")
+            groupConfig["shovels.items"] = listOf("wooden_shovel", "stone_shovel", "iron_shovel", "diamond_shovel", "golden_shovel", "netherite_shovel")
         }
 
         if(!groupConfig.isConfigurationSection("hoes")){
             groupConfig["hoes.type"] = "include"
-            groupConfig["hoes.items"] = arrayOf("wooden_hoe", "stone_ho", "iron_hoe", "diamond_hoe", "golden_hoe", "netherite_hoe")
+            groupConfig["hoes.items"] = listOf("wooden_hoe", "stone_ho", "iron_hoe", "diamond_hoe", "golden_hoe", "netherite_hoe")
         }
 
         if(!groupConfig.isConfigurationSection("shield")){
             groupConfig["shield.type"] = "include"
-            groupConfig["shield.items"] = arrayOf("shield")
+            groupConfig["shield.items"] = listOf("shield")
         }
 
         if(!groupConfig.isConfigurationSection("elytra")){
             groupConfig["elytra.type"] = "include"
-            groupConfig["elytra.items"] = arrayOf("elytra")
+            groupConfig["elytra.items"] = listOf("elytra")
         }
 
         if(!groupConfig.isConfigurationSection("trinkets")){
             groupConfig["trinkets.type"] = "include"
-            groupConfig["trinkets.items"] = arrayOf("rotten_flesh")
+            groupConfig["trinkets.items"] = listOf("rotten_flesh")
         }
 
     }
