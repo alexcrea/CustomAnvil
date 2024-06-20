@@ -55,7 +55,7 @@ object EnchantmentUtil {
             }
             // Enchantment already in result list
             else {
-                val oldLevel = this[enchantment]!! // <- should not be null. see the comment above
+                val oldLevel = this[enchantment]!! // <- should not be null. (enchantment already in result list)
 
                 // ... and they are conflicting
                 val conflictType =

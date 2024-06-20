@@ -33,41 +33,33 @@ class EnchantConflictManager {
 
     }
 
-    private lateinit var conflictMap: HashMap<WrappedEnchantment, ArrayList<EnchantConflictGroup>>
     lateinit var conflictList: ArrayList<EnchantConflictGroup>
 
     // Read and prepare all conflict
     fun prepareConflicts(config: ConfigurationSection, itemManager: ItemGroupManager) {
-        conflictMap = HashMap()
         conflictList = ArrayList()
 
+        // Clear conflict if exist
+        for (enchant in WrappedEnchantment.values()) {
+            enchant.clearConflict()
+        }
+        
         val keys = config.getKeys(false)
         for (key in keys) {
             val section = config.getConfigurationSection(key)!!
             val conflict = createConflict(section, itemManager, key)
 
-            addToMap(conflict)
+            addConflictToEnchantments(conflict)
             conflictList.add(conflict)
         }
 
     }
 
-    // Add the conflict to the map
-    private fun addToMap(conflict: EnchantConflictGroup) {
+    // Add the conflict to enchantments
+    private fun addConflictToEnchantments(conflict: EnchantConflictGroup) {
         conflict.getEnchants().forEach { enchant ->
-            addConflictToConflictMap(enchant, conflict)
+            enchant.addConflict(conflict)
         }
-    }
-
-    fun addConflictToConflictMap(enchant: WrappedEnchantment, conflict: EnchantConflictGroup) {
-        if (!conflictMap.containsKey(enchant)) {
-            conflictMap[enchant] = ArrayList()
-        }
-        conflictMap[enchant]!!.add(conflict)
-    }
-
-    fun removeConflictFromMap(enchant: WrappedEnchantment, conflict: EnchantConflictGroup): Boolean {
-        return conflictMap[enchant]!!.remove(conflict)
     }
 
     // create and read a conflict from a yaml section
@@ -85,7 +77,7 @@ class EnchantConflictManager {
         for (enchantName in enchantList) {
             val enchant = getEnchantByName(enchantName)
             if (enchant == null) {
-                if (!futureUse) {
+                if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                     CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
                 }
                 continue
@@ -153,8 +145,7 @@ class EnchantConflictManager {
 
     fun isConflicting(base: Set<WrappedEnchantment>, mat: Material, newEnchant: WrappedEnchantment): ConflictType {
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
-        val conflictList = conflictMap[newEnchant] ?: return ConflictType.NO_CONFLICT
-        CustomAnvil.verboseLog("Did not get skipped")
+        val conflictList = newEnchant.conflicts;
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
@@ -171,15 +162,39 @@ class EnchantConflictManager {
                 }
             }
         }
-        return result
+
+        // Test conflict with other conflict system.
+        val otherConflict = newEnchant.testConflict()
+
+        return result.getWorstConflict(otherConflict)
     }
 
 }
 
-enum class ConflictType {
-    NO_CONFLICT,
-    SMALL_CONFLICT,
-    BIG_CONFLICT
+/**
+ * Provide information about the current conflict.
+ */
+enum class ConflictType(private val importance: Int) {
+    /**
+     * Allowed to proceed the anvil process.
+     */
+    NO_CONFLICT(0),
 
+    /**
+     * Inform that the anvil process should not change the current applied enchantment.
+     */
+    SMALL_CONFLICT(1),
+
+    /**
+     * Inform that the anvil process should not change the current applied enchantment.
+     * Also add sacrificeIllegalCost for every enchantment marked as big conflict.
+     */
+    BIG_CONFLICT(2);
+
+    fun getWorstConflict(otherConflict: ConflictType): ConflictType {
+        return if(this.importance > otherConflict.importance) this
+        else otherConflict
+
+    }
 
 }

@@ -117,9 +117,9 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         Supplier<Boolean> deleteSupplier = () -> {
             EnchantConflictManager manager = ConfigHolder.CONFLICT_HOLDER.getConflictManager();
 
-            // Remove from manager
+            // Remove from enchantment
             for (WrappedEnchantment enchantment : this.enchantConflict.getEnchants()) {
-                manager.removeConflictFromMap(enchantment, this.enchantConflict);
+                enchantment.removeConflict(this.enchantConflict);
             }
             manager.conflictList.remove(this.enchantConflict);
 

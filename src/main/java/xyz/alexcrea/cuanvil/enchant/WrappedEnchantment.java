@@ -13,6 +13,9 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.dependency.EnchantmentSquaredDependency;
 import xyz.alexcrea.cuanvil.enchant.wrapped.VanillaEnchantment;
+import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.ConflictType;
+import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -31,6 +34,8 @@ public abstract class WrappedEnchantment {
     private final EnchantmentRarity defaultRarity;
     private final int defaultMaxLevel;
 
+    private final Set<EnchantConflictGroup> conflicts;
+
     /**
      * Constructor of Wrapped Enchantment.
      * @param key The enchantment's key.
@@ -47,6 +52,8 @@ public abstract class WrappedEnchantment {
 
         if(defaultRarity == null) this.defaultRarity = EnchantmentRarity.COMMON;
         else this.defaultRarity = defaultRarity;
+
+        this.conflicts = new HashSet<>();
     }
 
     /**
@@ -107,6 +114,25 @@ public abstract class WrappedEnchantment {
         ItemMeta meta = item.getItemMeta();
         if(meta == null) return 0;
         return getLevel(item, meta);
+    }
+
+    public void addConflict(@NotNull EnchantConflictGroup conflict){
+        this.conflicts.add(conflict);
+    }
+    public void removeConflict(@NotNull EnchantConflictGroup conflict){
+        this.conflicts.remove(conflict);
+    }
+
+    public void clearConflict(){
+        this.conflicts.clear();
+    }
+
+    public @NotNull Set<EnchantConflictGroup> getConflicts() {
+        return conflicts;
+    }
+
+    public @NotNull ConflictType testConflict() {
+        return ConflictType.NO_CONFLICT;
     }
 
     /**
