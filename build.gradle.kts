@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.24"
     java
+    id("com.github.johnrengelman.shadow").version("7.1.2")
 }
 
 group = "xyz.alexcrea"
@@ -24,7 +25,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    compileOnly("com.github.stefvanschie.inventoryframework:IF:0.10.14")
+    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
 
     // Protocolib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
@@ -61,4 +62,9 @@ val fatJar = tasks.register<Jar>("fatJar") {
 // Ensure fatJar and copyJar are run
 tasks.getByName("build") {
     dependsOn(fatJar)
+}
+
+// Shadow recesary dependency
+tasks.shadowJar {
+    relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
 }
