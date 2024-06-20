@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 
 class EnchantConflictGroup(
     private val name: String,
@@ -10,13 +10,13 @@ class EnchantConflictGroup(
     var minBeforeBlock: Int
 ) {
 
-    private val enchantments = HashSet<WrappedEnchantment>()
+    private val enchantments = HashSet<CAEnchantment>()
 
-    fun addEnchantment(enchant: WrappedEnchantment) {
+    fun addEnchantment(enchant: CAEnchantment) {
         enchantments.add(enchant)
     }
 
-    fun allowed(enchants: Set<WrappedEnchantment>, mat: Material): Boolean {
+    fun allowed(enchants: Set<CAEnchantment>, mat: Material): Boolean {
         if (enchantments.size < minBeforeBlock) {
             CustomAnvil.verboseLog("Conflicting bc of to many enchantments")
             return true
@@ -44,11 +44,11 @@ class EnchantConflictGroup(
         return this.cantConflict
     }
 
-    fun getEnchants(): HashSet<WrappedEnchantment> {
+    fun getEnchants(): HashSet<CAEnchantment> {
         return enchantments
     }
 
-    fun setEnchants(enchants: Set<WrappedEnchantment>) {
+    fun setEnchants(enchants: Set<CAEnchantment>) {
         enchantments.clear()
         enchantments.addAll(enchants)
     }

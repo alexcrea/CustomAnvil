@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
@@ -32,7 +32,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     }
 
     @Override
-    public IntSettingsGui.IntSettingFactory createFactory(WrappedEnchantment enchant) {
+    public IntSettingsGui.IntSettingFactory createFactory(CAEnchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
@@ -47,7 +47,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     }
 
     @Override
-    public GuiItem itemFromFactory(WrappedEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
+    public GuiItem itemFromFactory(CAEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
         return inventoryFactory.getItem(
                 Material.ENCHANTED_BOOK,
                 inventoryFactory.getTitle());

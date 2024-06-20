@@ -5,7 +5,8 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 
 class EnchantConflictManager {
 
@@ -28,8 +29,8 @@ class EnchantConflictManager {
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT =
-            WrappedEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
-            WrappedEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
+            CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
+            CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
 
     }
 
@@ -40,7 +41,7 @@ class EnchantConflictManager {
         conflictList = ArrayList()
 
         // Clear conflict if exist
-        for (enchant in WrappedEnchantment.values()) {
+        for (enchant in CAEnchantmentRegistry.getInstance().values()) {
             enchant.clearConflict()
         }
         
@@ -84,7 +85,7 @@ class EnchantConflictManager {
             }
             conflict.addEnchantment(enchant)
         }
-        if (conflict.getEnchants().size == 0) {
+        if (conflict.getEnchants().isEmpty()) {
             if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                 CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not do anything")
             }
@@ -93,7 +94,7 @@ class EnchantConflictManager {
         return conflict
     }
 
-    private fun getEnchantByName(enchantName: String): WrappedEnchantment? {
+    private fun getEnchantByName(enchantName: String): CAEnchantment? {
 
         // Temporary solution for 1.20.5
         when(enchantName){
@@ -102,7 +103,7 @@ class EnchantConflictManager {
             }
         }
 
-        return WrappedEnchantment.getByName(enchantName)
+        return CAEnchantment.getByName(enchantName)
     }
 
 
@@ -143,7 +144,7 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(base: Set<WrappedEnchantment>, mat: Material, newEnchant: WrappedEnchantment): ConflictType {
+    fun isConflicting(base: Set<CAEnchantment>, mat: Material, newEnchant: CAEnchantment): ConflictType {
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
         val conflictList = newEnchant.conflicts;
 

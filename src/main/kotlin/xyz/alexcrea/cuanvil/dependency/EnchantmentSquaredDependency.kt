@@ -8,10 +8,10 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
-import xyz.alexcrea.cuanvil.enchant.wrapped.EnchantSquaredEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import xyz.alexcrea.cuanvil.enchant.wrapped.CAEnchantSquaredEnchantment
 import java.util.*
-import kotlin.collections.ArrayList
 
 class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin) {
 
@@ -30,12 +30,16 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     fun registerEnchantments(){
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {
-            WrappedEnchantment.register(EnchantSquaredEnchantment(enchant))
+            CAEnchantmentRegistry.getInstance().register(
+                CAEnchantSquaredEnchantment(
+                    enchant
+                )
+            )
         }
 
     }
 
-    fun getEnchantmentsSquared(item: ItemStack, enchantments: MutableMap<WrappedEnchantment, Int>) {
+    fun getEnchantmentsSquared(item: ItemStack, enchantments: MutableMap<CAEnchantment, Int>) {
         val customEnchants = CustomEnchantManager.getInstance().getItemsEnchantsFromPDC(item)
 
         customEnchants.forEach{
@@ -51,8 +55,8 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     fun getKeyFromEnchant(enchant: CustomEnchant): NamespacedKey{
         return NamespacedKey.fromString(enchant.type.lowercase(Locale.getDefault()), this.enchantmentSquaredPlugin)!!
     }
-    private fun getWrappedEnchant(enchant: CustomEnchant): WrappedEnchantment{
-        return WrappedEnchantment.getByKey(getKeyFromEnchant(enchant))!!
+    private fun getWrappedEnchant(enchant: CustomEnchant): CAEnchantment {
+        return CAEnchantment.getByKey(getKeyFromEnchant(enchant))!!
     }
 
 
@@ -65,9 +69,9 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         CustomAnvil.instance.logger.info("Preparing configuration for Enchantment Squared...")
 
         // Prepare enchantments
-        val esEnchantments = ArrayList<EnchantSquaredEnchantment>()
+        val esEnchantments = ArrayList<CAEnchantSquaredEnchantment>()
         CustomEnchantManager.getInstance().allEnchants.forEach { (_, enchant) ->
-            esEnchantments.add(getWrappedEnchant(enchant) as EnchantSquaredEnchantment)
+            esEnchantments.add(getWrappedEnchant(enchant) as CAEnchantSquaredEnchantment)
         }
 
         // Write default level limit and xp cost
@@ -134,7 +138,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     }
 
-    private fun writeMaterialRestriction(esEnchantments: List<EnchantSquaredEnchantment>){
+    private fun writeMaterialRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>){
         val conflictConfig = ConfigHolder.CONFLICT_HOLDER.config
         for (enchantment in esEnchantments) {
             val restrictionName = "restriction_${enchantment.key.key}"
@@ -158,9 +162,9 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         }
     }
 
-    private fun writeEnchantmentConflicts(esEnchantments: List<EnchantSquaredEnchantment>){
-        val otherEnchants = ArrayList<WrappedEnchantment>()
-        otherEnchants.addAll(WrappedEnchantment.values())
+    private fun writeEnchantmentConflicts(esEnchantments: List<CAEnchantSquaredEnchantment>){
+        val otherEnchants = ArrayList<CAEnchantment>()
+        otherEnchants.addAll(CAEnchantmentRegistry.getInstance().values())
 
         for (enchantment in esEnchantments) {
             otherEnchants.remove(enchantment)
@@ -174,7 +178,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         }
     }
 
-    private fun writeConflict(enchantment1: WrappedEnchantment, enchantment2: WrappedEnchantment){
+    private fun writeConflict(enchantment1: CAEnchantment, enchantment2: CAEnchantment){
         val conflictConfig = ConfigHolder.CONFLICT_HOLDER.config
         val conflictPath = "${enchantment1.name}_with_${enchantment2.name}_conflict"
 

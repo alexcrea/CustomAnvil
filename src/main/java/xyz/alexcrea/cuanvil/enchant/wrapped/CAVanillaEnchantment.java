@@ -6,17 +6,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentBase;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 
 import java.util.Locale;
 
-public class VanillaEnchantment extends WrappedEnchantment {
+public class CAVanillaEnchantment extends CAEnchantmentBase {
 
     private final @NotNull Enchantment enchantment;
 
-    public VanillaEnchantment(@NotNull Enchantment enchantment){
+    public CAVanillaEnchantment(@NotNull Enchantment enchantment){
         super(enchantment.getKey(),
                 getRarity(enchantment),
                 enchantment.getMaxLevel());
@@ -25,7 +25,7 @@ public class VanillaEnchantment extends WrappedEnchantment {
     }
 
     @Override
-    protected boolean isOptimised() {
+    public boolean isOptimised() {
         return true;
     }
 

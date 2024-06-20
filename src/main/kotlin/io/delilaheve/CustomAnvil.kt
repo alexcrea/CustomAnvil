@@ -8,7 +8,7 @@ import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
@@ -94,7 +94,7 @@ class CustomAnvil : JavaPlugin() {
         DependencyManager.loadDependency()
 
         // Register enchantments
-        WrappedEnchantment.registerEnchantments()
+        CAEnchantmentRegistry.getInstance().registerStartupEnchantments()
 
         // Load chat listener
         chatListener = ChatEventListener()

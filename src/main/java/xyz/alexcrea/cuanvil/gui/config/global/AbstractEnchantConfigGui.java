@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
-public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<WrappedEnchantment, T> implements ValueUpdatableGui {
+public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T> implements ValueUpdatableGui {
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.
@@ -36,7 +36,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     }
 
     @Override
-    protected Collection<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<CAEnchantment> getEveryDisplayableInstanceOfGeneric() {
         return GuiSharedConstant.SORTED_ENCHANTMENT_LIST;
     }
 

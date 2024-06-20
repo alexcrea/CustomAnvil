@@ -4,7 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max
 import kotlin.math.min
@@ -17,17 +17,17 @@ object EnchantmentUtil {
     /**
      * Enchantment name without namespace
      */
-    val WrappedEnchantment.enchantmentName: String
+    val CAEnchantment.enchantmentName: String
         get() = key.key
 
     /**
      * Combine 2 sets of enchantments according to our configuration
      */
-    fun Map<WrappedEnchantment, Int>.combineWith(
-        other: Map<WrappedEnchantment, Int>,
+    fun Map<CAEnchantment, Int>.combineWith(
+        other: Map<CAEnchantment, Int>,
         mat: Material,
         player: HumanEntity
-    ) = mutableMapOf<WrappedEnchantment, Int>().apply {
+    ) = mutableMapOf<CAEnchantment, Int>().apply {
         putAll(this@combineWith)
         other.forEach { (enchantment, level) ->
             if(!enchantment.isAllowed(player)) return@forEach

@@ -3,7 +3,7 @@ package io.delilaheve.util
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -21,13 +21,13 @@ object ItemUtil {
     /**
      * Find the enchantment map for this [ItemStack] and return it as a [MutableMap]
      */
-    fun ItemStack.findEnchantments(): MutableMap<WrappedEnchantment, Int> = WrappedEnchantment.getEnchants(this)
+    fun ItemStack.findEnchantments(): MutableMap<CAEnchantment, Int> = CAEnchantment.getEnchants(this)
 
     /**
      * Apply an [enchantments] map to this [ItemStack]
      */
-    fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<WrappedEnchantment, Int>) {
-        WrappedEnchantment.clearEnchants(this)
+    fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<CAEnchantment, Int>) {
+        CAEnchantment.clearEnchants(this)
 
         //TODO maybe faster methode to add vanilla enchantment. maybe move this function to wrapped enchantment
         enchantments.forEach { (enchantment, level) ->
