@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.enchant;
 
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -9,8 +10,11 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.group.ConflictType;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public abstract class CAEnchantmentBase implements CAEnchantment {
 
@@ -22,7 +26,7 @@ public abstract class CAEnchantmentBase implements CAEnchantment {
     private final EnchantmentRarity defaultRarity;
     private final int defaultMaxLevel;
 
-    private final Set<EnchantConflictGroup> conflicts;
+    private final List<EnchantConflictGroup> conflicts;
 
     /**
      * Constructor of Wrapped Enchantment.
@@ -38,10 +42,9 @@ public abstract class CAEnchantmentBase implements CAEnchantment {
         this.name = key.getKey();
         this.defaultMaxLevel = defaultMaxLevel;
 
-        if(defaultRarity == null) this.defaultRarity = EnchantmentRarity.COMMON;
-        else this.defaultRarity = defaultRarity;
+        this.defaultRarity = Objects.requireNonNullElse(defaultRarity, EnchantmentRarity.COMMON);
 
-        this.conflicts = new HashSet<>();
+        this.conflicts = new ArrayList<>();
     }
 
     @NotNull
@@ -105,12 +108,14 @@ public abstract class CAEnchantmentBase implements CAEnchantment {
     }
 
     @Override
-    public @NotNull Set<EnchantConflictGroup> getConflicts() {
+    public @NotNull List<EnchantConflictGroup> getConflicts() {
         return conflicts;
     }
 
     @Override
-    public @NotNull ConflictType testConflict() {
+    public @NotNull ConflictType testConflict(@NotNull Map<CAEnchantment, Integer> baseEnchantments,
+                                              @NotNull Material itemMat,
+                                              @NotNull Supplier<ItemStack> itemSupply) {
         return ConflictType.NO_CONFLICT;
     }
 

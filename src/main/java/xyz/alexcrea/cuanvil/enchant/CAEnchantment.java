@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant;
 
 import io.delilaheve.util.ItemUtil;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +17,7 @@ import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Represent an enchantment compatible with Custom Anvil.
@@ -65,14 +66,40 @@ public interface CAEnchantment {
      */
     boolean isAllowed(@NotNull HumanEntity player);
 
+    /**
+     * Add a conflict to this enchantment conflict list.
+     * @param conflict The conflict to add.
+     */
     void addConflict(@NotNull EnchantConflictGroup conflict);
+
+    /**
+     * Remove a conflict from the conflict list of this enchantment.
+     * @param conflict The conflict to remove from this enchantment.
+     */
     void removeConflict(@NotNull EnchantConflictGroup conflict);
 
+    /**
+     * Clear Custom Anvil conflicts for this enchantment.
+     */
     void clearConflict();
 
-    @NotNull Set<EnchantConflictGroup> getConflicts();
+    /**
+     * Get a collection of Custom Anvil conflict containing this enchantment.
+     * @return A collection of Custom Anvil conflict containing this enchantment.
+     */
+    @NotNull Collection<EnchantConflictGroup> getConflicts();
 
-    @NotNull ConflictType testConflict();
+    /**
+     * Test if the provided item can be compatible with this
+     * @param baseEnchantments Validated enchantments for the item.
+     * @param itemMat Material of the tested item.
+     * @param itemSupply Provide a new instance of used item stack but with baseEnchantments as enchantments.
+     * @return Type of conflict this enchantment has with the provided item.
+     */
+    @NotNull
+    ConflictType testConflict(@NotNull Map<CAEnchantment, Integer> baseEnchantments,
+                              @NotNull Material itemMat,
+                              @NotNull Supplier<ItemStack> itemSupply);
 
     /**
      * Get current level of the enchantment.

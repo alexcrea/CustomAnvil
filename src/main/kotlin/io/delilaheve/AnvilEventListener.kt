@@ -99,7 +99,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         // Test for merge
         if (first.canMergeWith(second)) {
             val newEnchants = first.findEnchantments()
-                .combineWith(second.findEnchantments(), first.type, player)
+                .combineWith(second.findEnchantments(), first, player)
             val resultItem = first.clone()
             resultItem.setEnchantmentsUnsafe(newEnchants)
 
@@ -436,15 +436,15 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
         val rightIsFormBook = right.isEnchantedBook()
         val resultEnchs = result.findEnchantments()
-        val resultEnchsKeys = HashSet(resultEnchs.keys)
+        val resultEnchsKeys = HashMap(resultEnchs)
 
         for (enchantment in right.findEnchantments()) {
             // count enchant as illegal enchant if it conflicts with another enchant or not in result
             if ((enchantment.key !in resultEnchsKeys)) {
-                resultEnchsKeys.add(enchantment.key)
+                resultEnchsKeys[enchantment.key] = enchantment.value
                 val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(
                     resultEnchsKeys,
-                    result.type,
+                    result,
                     enchantment.key
                 )
                 resultEnchsKeys.remove(enchantment.key)

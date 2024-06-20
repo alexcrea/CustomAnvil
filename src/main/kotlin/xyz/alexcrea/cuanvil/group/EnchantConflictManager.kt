@@ -1,12 +1,13 @@
 package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import java.util.function.Supplier
 
 class EnchantConflictManager {
 
@@ -144,14 +145,15 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(base: Set<CAEnchantment>, mat: Material, newEnchant: CAEnchantment): ConflictType {
+    fun isConflicting(appliedEnchants: Map<CAEnchantment, Int>, item: ItemStack, newEnchant: CAEnchantment): ConflictType {
+        val mat = item.type
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
         val conflictList = newEnchant.conflicts;
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
             CustomAnvil.verboseLog("Is against $conflict")
-            val allowed = conflict.allowed(base, mat)
+            val allowed = conflict.allowed(appliedEnchants.keys, mat)
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {
@@ -165,9 +167,22 @@ class EnchantConflictManager {
         }
 
         // Test conflict with other conflict system.
-        val otherConflict = newEnchant.testConflict()
+        val otherConflict = newEnchant.testConflict(appliedEnchants, mat, reEnchantSupplier(item, appliedEnchants))
 
         return result.getWorstConflict(otherConflict)
+    }
+
+    private fun reEnchantSupplier(item: ItemStack, enchantments: Map<CAEnchantment, Int>): Supplier<ItemStack> {
+       return Supplier {
+           val newItem = item.clone()
+
+           CAEnchantment.clearEnchants(newItem)
+           enchantments.forEach{//TODO maybe bulk add if possible
+               enchantment -> enchantment.key.addEnchantmentUnsafe(item, enchantment.value)
+           }
+
+           return@Supplier newItem;
+       }
     }
 
 }

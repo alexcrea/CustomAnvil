@@ -1,8 +1,8 @@
 package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
+import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
@@ -25,10 +25,11 @@ object EnchantmentUtil {
      */
     fun Map<CAEnchantment, Int>.combineWith(
         other: Map<CAEnchantment, Int>,
-        mat: Material,
+        item: ItemStack,
         player: HumanEntity
     ) = mutableMapOf<CAEnchantment, Int>().apply {
         putAll(this@combineWith)
+
         other.forEach { (enchantment, level) ->
             if(!enchantment.isAllowed(player)) return@forEach
 
@@ -44,7 +45,7 @@ object EnchantmentUtil {
                 // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
                 this[enchantment] = cappedLevel
                 val conflictType =
-                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys, mat, enchantment)
+                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this, item, enchantment)
                 if (!player.hasPermission(CustomAnvil.bypassFusePermission) &&
                     (conflictType != ConflictType.NO_CONFLICT)
                 ) {
@@ -59,7 +60,7 @@ object EnchantmentUtil {
 
                 // ... and they are conflicting
                 val conflictType =
-                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys, mat, enchantment)
+                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this, item, enchantment)
                 if ((conflictType != ConflictType.NO_CONFLICT)
                     && !player.hasPermission(CustomAnvil.bypassFusePermission)
                 ) {
