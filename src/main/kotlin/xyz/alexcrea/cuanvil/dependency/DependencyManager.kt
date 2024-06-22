@@ -9,6 +9,7 @@ object DependencyManager {
 
     lateinit var packetManager: PacketManager
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
+    var ecoEnchantCompatibility: EcoEnchantDependency? = null
 
     fun loadDependency(){
         val pluginManager = Bukkit.getPluginManager()
@@ -24,11 +25,17 @@ object DependencyManager {
             enchantmentSquaredCompatibility!!.disableAnvilListener()
         }
 
+        // EcoEnchants dependency
+        if(pluginManager.isPluginEnabled("EcoEnchants")){
+            ecoEnchantCompatibility = EcoEnchantDependency(pluginManager.getPlugin("EcoEnchants")!!)
+            ecoEnchantCompatibility!!.disableAnvilListener()
+        }
+
     }
 
     fun handleConfigChanges() {
-
         enchantmentSquaredCompatibility?.registerPluginConfiguration()
+        ecoEnchantCompatibility?.registerEnchantments()
 
     }
 

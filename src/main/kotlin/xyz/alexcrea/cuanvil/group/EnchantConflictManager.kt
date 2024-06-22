@@ -148,7 +148,7 @@ class EnchantConflictManager {
     fun isConflicting(appliedEnchants: Map<CAEnchantment, Int>, item: ItemStack, newEnchant: CAEnchantment): ConflictType {
         val mat = item.type
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
-        val conflictList = newEnchant.conflicts;
+        val conflictList = newEnchant.conflicts
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
@@ -157,17 +157,17 @@ class EnchantConflictManager {
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {
-                    result = ConflictType.SMALL_CONFLICT
+                    result = ConflictType.ITEM_CONFLICT
                     CustomAnvil.verboseLog("Small conflict, continuing")
                 } else {
                     CustomAnvil.verboseLog("Big conflict, probably stoping")
-                    return ConflictType.BIG_CONFLICT
+                    return ConflictType.ENCHANTMENT_CONFLICT
                 }
             }
         }
 
         // Test conflict with other conflict system.
-        val otherConflict = newEnchant.testConflict(appliedEnchants, mat, reEnchantSupplier(item, appliedEnchants))
+        val otherConflict = newEnchant.testOtherConflicts(appliedEnchants, mat, reEnchantSupplier(item, appliedEnchants))
 
         return result.getWorstConflict(otherConflict)
     }
@@ -181,7 +181,7 @@ class EnchantConflictManager {
                enchantment -> enchantment.key.addEnchantmentUnsafe(item, enchantment.value)
            }
 
-           return@Supplier newItem;
+           return@Supplier newItem
        }
     }
 
@@ -199,13 +199,13 @@ enum class ConflictType(private val importance: Int) {
     /**
      * Inform that the anvil process should not change the current applied enchantment.
      */
-    SMALL_CONFLICT(1),
+    ITEM_CONFLICT(1),
 
     /**
      * Inform that the anvil process should not change the current applied enchantment.
      * Also add sacrificeIllegalCost for every enchantment marked as big conflict.
      */
-    BIG_CONFLICT(2);
+    ENCHANTMENT_CONFLICT(2);
 
     fun getWorstConflict(otherConflict: ConflictType): ConflictType {
         return if(this.importance > otherConflict.importance) this

@@ -90,16 +90,17 @@ public interface CAEnchantment {
     @NotNull Collection<EnchantConflictGroup> getConflicts();
 
     /**
-     * Test if the provided item can be compatible with this
+     * Test if the provided item can be compatible with this enchantment. only non-Custom Anvil conflict.
      * @param baseEnchantments Validated enchantments for the item.
      * @param itemMat Material of the tested item.
      * @param itemSupply Provide a new instance of used item stack but with baseEnchantments as enchantments.
      * @return Type of conflict this enchantment has with the provided item.
      */
     @NotNull
-    ConflictType testConflict(@NotNull Map<CAEnchantment, Integer> baseEnchantments,
-                              @NotNull Material itemMat,
-                              @NotNull Supplier<ItemStack> itemSupply);
+    ConflictType testOtherConflicts(
+            @NotNull Map<CAEnchantment, Integer> baseEnchantments,
+            @NotNull Material itemMat,
+            @NotNull Supplier<ItemStack> itemSupply);
 
     /**
      * Get current level of the enchantment.

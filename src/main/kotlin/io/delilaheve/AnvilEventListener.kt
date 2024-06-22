@@ -449,7 +449,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 )
                 resultEnchsKeys.remove(enchantment.key)
 
-                if (ConflictType.BIG_CONFLICT == conflictType) {
+                if (ConflictType.ENCHANTMENT_CONFLICT == conflictType) {
                     illegalPenalty += ConfigOptions.sacrificeIllegalCost
                     CustomAnvil.verboseLog("Big conflict. Adding illegal price penalty")
                 }

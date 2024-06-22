@@ -46,3 +46,5 @@ softdepend:
   - UnsafeEnchantsPlus
   - ProtocolLib
   - EnchantsSquared
+  - EcoEnchants
+  - eco

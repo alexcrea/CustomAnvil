@@ -85,7 +85,8 @@ public class CAEnchantmentRegistry {
      * (By late I mean after custom anvil startup.)
      * @param enchantment The enchantment to be unregistered.
      */
-    public void unregister(@NotNull CAEnchantment enchantment){
+    public void unregister(CAEnchantment enchantment){
+        if(enchantment == null) return;
         byKeyMap.remove(enchantment.getKey());
         byNameMap.remove(enchantment.getName());
 

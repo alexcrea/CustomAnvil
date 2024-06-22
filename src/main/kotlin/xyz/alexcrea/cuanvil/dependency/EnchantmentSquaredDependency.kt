@@ -15,17 +15,19 @@ import java.util.*
 
 class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin) {
 
-    fun disableAnvilListener(){
-        PrepareAnvilEvent.getHandlerList().unregister(this.enchantmentSquaredPlugin)
-
+    init {
         CustomAnvil.instance.logger.info("Enchantment Squared Detected !")
         CustomAnvil.instance.logger.info("Please be aware that Custom Anvil is bypassing Enchantment Squared ")
         CustomAnvil.instance.logger.info(
             "compatible_with, " +
-                "disable_anvil, " +
-                "incompatible_vanilla_enchantments, " +
-                "incompatible_custom_enchantments and max_level " +
-                "configuration values.")
+                    "disable_anvil, " +
+                    "incompatible_vanilla_enchantments, " +
+                    "incompatible_custom_enchantments and max_level " +
+                    "configuration values.")
+    }
+
+    fun disableAnvilListener(){
+        PrepareAnvilEvent.getHandlerList().unregister(this.enchantmentSquaredPlugin)
     }
 
     fun registerEnchantments(){
@@ -118,7 +120,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
         if(!groupConfig.isConfigurationSection("hoes")){
             groupConfig["hoes.type"] = "include"
-            groupConfig["hoes.items"] = listOf("wooden_hoe", "stone_ho", "iron_hoe", "diamond_hoe", "golden_hoe", "netherite_hoe")
+            groupConfig["hoes.items"] = listOf("wooden_hoe", "stone_hoe", "iron_hoe", "diamond_hoe", "golden_hoe", "netherite_hoe")
         }
 
         if(!groupConfig.isConfigurationSection("shield")){
@@ -220,5 +222,5 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
             else -> null
         }
     }
-    
+
 }
