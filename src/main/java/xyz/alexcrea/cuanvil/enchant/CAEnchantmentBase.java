@@ -112,12 +112,4 @@ public abstract class CAEnchantmentBase implements CAEnchantment {
         return conflicts;
     }
 
-    @Override
-    public @NotNull ConflictType testOtherConflicts(
-            @NotNull Map<CAEnchantment, Integer> baseEnchantments,
-            @NotNull Material itemMat,
-            @NotNull Supplier<ItemStack> itemSupply) {
-        return ConflictType.NO_CONFLICT;
-    }
-
 }

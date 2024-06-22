@@ -5,9 +5,11 @@ import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
-import java.util.function.Supplier
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EnchantConflictManager {
 
@@ -166,23 +168,38 @@ class EnchantConflictManager {
             }
         }
 
-        // Test conflict with other conflict system.
-        val otherConflict = newEnchant.testOtherConflicts(appliedEnchants, mat, reEnchantSupplier(item, appliedEnchants))
+        val immutableEnchants = Collections.unmodifiableMap(appliedEnchants)
+        for (appliedEnchant in appliedEnchants) {
+            if(appliedEnchant is AdditionalTestEnchantment){
+                val doConflict = appliedEnchant.isEnchantConflict(immutableEnchants, mat)
+                if(doConflict){
+                    return ConflictType.ENCHANTMENT_CONFLICT
+                }
+;
+            }
+        }
 
-        return result.getWorstConflict(otherConflict)
+        if((result != ConflictType.ITEM_CONFLICT) && (newEnchant is AdditionalTestEnchantment)){
+            val partialItem = createPartialResult(item, immutableEnchants)
+
+            if(newEnchant.isItemConflict(immutableEnchants, mat, partialItem)){
+                return ConflictType.ITEM_CONFLICT
+            }
+
+        }
+
+        return result;
     }
 
-    private fun reEnchantSupplier(item: ItemStack, enchantments: Map<CAEnchantment, Int>): Supplier<ItemStack> {
-       return Supplier {
-           val newItem = item.clone()
+    private fun createPartialResult(item: ItemStack, enchantments: Map<CAEnchantment, Int>): ItemStack {
+       val newItem = item.clone()
 
-           CAEnchantment.clearEnchants(newItem)
-           enchantments.forEach{//TODO maybe bulk add if possible
-               enchantment -> enchantment.key.addEnchantmentUnsafe(item, enchantment.value)
-           }
-
-           return@Supplier newItem
+       CAEnchantment.clearEnchants(newItem)
+       enchantments.forEach{//TODO maybe bulk add if possible
+           enchantment -> enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
        }
+
+       return newItem
     }
 
 }
