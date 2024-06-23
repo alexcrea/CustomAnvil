@@ -35,6 +35,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
         val compatibilityFile = File(folder, "ecoEnchant.yml")
 
         if(compatibilityFile.exists()){
+            folder.mkdirs()
             compatibilityFile.createNewFile()
         }
 
