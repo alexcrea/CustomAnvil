@@ -44,6 +44,9 @@ public class CAEnchantmentRegistry {
         if(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility() != null){
             DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility().registerEnchantments();
         }
+        if(DependencyManager.INSTANCE.getEcoEnchantCompatibility() != null){
+            DependencyManager.INSTANCE.getEcoEnchantCompatibility().registerEnchantments();
+        }
 
     }
 
