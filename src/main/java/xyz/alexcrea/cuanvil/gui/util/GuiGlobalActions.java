@@ -6,7 +6,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 
 import java.lang.reflect.Constructor;

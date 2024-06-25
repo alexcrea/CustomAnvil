@@ -12,7 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
@@ -22,14 +23,13 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnchantment, EnchantSelectSettingGui.DummyFactory> implements SettingGui {
+public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantment, EnchantSelectSettingGui.DummyFactory> implements SettingGui {
 
     private final SelectEnchantmentContainer enchantContainer;
 
-    private final Set<WrappedEnchantment> selectedEnchant;
+    private final Set<CAEnchantment> selectedEnchant;
     private final GuiItem saveItem;
 
     private boolean displayUnselected;
@@ -62,19 +62,19 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
     }
 
     @Override
-    protected Collection<WrappedEnchantment> getEveryDisplayableInstanceOfGeneric() {
-        Stream<WrappedEnchantment> toDisplayStream;
+    protected Collection<CAEnchantment> getEveryDisplayableInstanceOfGeneric() {
+        Stream<CAEnchantment> toDisplayStream;
         if(this.displayUnselected){
-            toDisplayStream = Arrays.stream(WrappedEnchantment.values());
+            toDisplayStream = CAEnchantmentRegistry.getInstance().values().stream();
         }else{
             toDisplayStream = this.selectedEnchant.stream();
         }
-        Set<WrappedEnchantment> illegalEnchantments = this.enchantContainer.illegalEnchantments();
+        Set<CAEnchantment> illegalEnchantments = this.enchantContainer.illegalEnchantments();
 
 
         return toDisplayStream
                 .filter(enchantment -> !illegalEnchantments.contains(enchantment))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
     }
 
     @Override
-    protected GuiItem itemFromFactory(WrappedEnchantment enchantment, DummyFactory factory) {
+    protected GuiItem itemFromFactory(CAEnchantment enchantment, DummyFactory factory) {
         boolean isIn = this.selectedEnchant.contains(enchantment);
 
         Material usedMaterial;
@@ -151,7 +151,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
         item.setItemMeta(meta);
     }
 
-    private Consumer<InventoryClickEvent> getEnchantItemConsumer(WrappedEnchantment enchant, GuiItem guiItem) {
+    private Consumer<InventoryClickEvent> getEnchantItemConsumer(CAEnchantment enchant, GuiItem guiItem) {
         return event -> {
             event.setCancelled(true);
 
@@ -180,7 +180,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
 
     @Override
     public boolean hadChange() {
-        Set<WrappedEnchantment> baseGroup = this.enchantContainer.getSelectedEnchantments();
+        Set<CAEnchantment> baseGroup = this.enchantContainer.getSelectedEnchantments();
         return baseGroup.size() != this.selectedEnchant.size() ||
                 !baseGroup.containsAll(this.selectedEnchant);
     }
@@ -209,7 +209,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<WrappedEnch
         return null;
     }
     @Override
-    protected DummyFactory createFactory(WrappedEnchantment generic) {
+    protected DummyFactory createFactory(CAEnchantment generic) {
         return null;
     }
 

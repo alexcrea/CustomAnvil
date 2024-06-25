@@ -8,16 +8,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentBase;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 
 import java.util.Map;
 import java.util.Objects;
 
-public class EnchantSquaredEnchantment extends WrappedEnchantment {
+public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
 
     public final @NotNull CustomEnchant enchant;
-    public EnchantSquaredEnchantment(@NotNull CustomEnchant enchant) {
+    public CAEnchantSquaredEnchantment(@NotNull CustomEnchant enchant) {
         super(Objects.requireNonNull(
                 Objects.requireNonNull(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility()).getKeyFromEnchant(enchant)),
                 EnchantmentRarity.COMMON,
@@ -27,7 +27,7 @@ public class EnchantSquaredEnchantment extends WrappedEnchantment {
     }
 
     @Override
-    protected boolean isOptimised() {
+    public boolean isOptimised() {
         return true;
     }
 

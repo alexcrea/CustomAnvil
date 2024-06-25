@@ -5,14 +5,17 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Global Config gui for enchantment cost settings.
@@ -36,7 +39,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
     }
 
     @Override
-    public EnchantCostSettingsGui.EnchantCostSettingFactory createFactory(WrappedEnchantment enchant) {
+    public EnchantCostSettingsGui.EnchantCostSettingFactory createFactory(CAEnchantment enchant) {
         String key = enchant.getKey().getKey().toLowerCase(Locale.ENGLISH);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
@@ -59,7 +62,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
     }
 
     @Override
-    public GuiItem itemFromFactory(WrappedEnchantment enchantment, EnchantCostSettingsGui.EnchantCostSettingFactory factory) {
+    public GuiItem itemFromFactory(CAEnchantment enchantment, EnchantCostSettingsGui.EnchantCostSettingFactory factory) {
         // Get item properties
         int itemCost = factory.getConfiguredValue();
         int bookCost = factory.getConfiguredBookValue();

@@ -49,7 +49,10 @@ Currently, there is not a lot of compatible plugin
 
 Here is a list of supported plugins with support status:
 - [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
-Officially supported but still experimental. Automatic configuration translation.
+Officially supported but still experimental. Automatic configuration.
+- [EcoEnchant](https://www.spigotmc.org/resources/50-sale-%E2%8C%9B-ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/):
+Officially supported but still experimental. Need a server restart to add newly added enchantment. 
+Automatic configuration on restart.
 
 If you like Custom Anvil to support a specific custom enchantment plugin. 
 You can ask, but please note implementing compatibility will be considered

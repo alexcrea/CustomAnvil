@@ -1,10 +1,11 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.9.24"
     java
+    id("com.github.johnrengelman.shadow").version("7.1.2")
 }
 
 group = "xyz.alexcrea"
-version = "1.5.0"
+version = "1.5.1"
 
 repositories {
     mavenCentral()
@@ -12,6 +13,9 @@ repositories {
 
     // ProtocoLib
     maven (url = "https://repo.dmulloy2.net/repository/public/" )
+
+    // EcoEnchants
+    maven(url = "https://repo.auxilor.io/repository/maven-public/")
 }
 
 dependencies {
@@ -21,13 +25,17 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    compileOnly("com.github.stefvanschie.inventoryframework:IF:0.10.14")
+    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
 
     // Protocolib
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
+
+    // EcoEnchants
+    compileOnly("com.willfp:EcoEnchants:12.5.1")
+    compileOnly("com.willfp:eco:6.70.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
@@ -54,4 +62,9 @@ val fatJar = tasks.register<Jar>("fatJar") {
 // Ensure fatJar and copyJar are run
 tasks.getByName("build") {
     dependsOn(fatJar)
+}
+
+// Shadow recesary dependency
+tasks.shadowJar {
+    relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
 }

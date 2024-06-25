@@ -1,14 +1,13 @@
 main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
-version: 1.5.0
+version: 1.5.1
 description: Allow to customise anvil mechanics
 api-version: 1.16
 load: POSTWORLD
 authors: [ DelilahEve, alexcrea ]
 libraries:
-  - org.jetbrains.kotlin:kotlin-stdlib:1.6.21
-  - com.github.stefvanschie.inventoryframework:IF:0.10.14
+  - org.jetbrains.kotlin:kotlin-stdlib:1.9.24
 
 commands:
   anvilconfigreload:
@@ -47,3 +46,5 @@ softdepend:
   - UnsafeEnchantsPlus
   - ProtocolLib
   - EnchantsSquared
+  - EcoEnchants
+  - eco

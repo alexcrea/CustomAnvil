@@ -3,7 +3,7 @@ package io.delilaheve.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 
 /**
  * Config option accessors
@@ -239,7 +239,7 @@ object ConfigOptions {
     /**
      * Get the given [enchantment]'s limit
      */
-    fun enchantLimit(enchantment: WrappedEnchantment): Int {
+    fun enchantLimit(enchantment: CAEnchantment): Int {
         return enchantLimit(enchantment.enchantmentName)
     }
 
@@ -273,7 +273,7 @@ object ConfigOptions {
      * it's source [isFromBook]
      */
     fun enchantmentValue(
-        enchantment: WrappedEnchantment,
+        enchantment: CAEnchantment,
         isFromBook: Boolean
     ): Int {
         return enchantmentValue(enchantment.enchantmentName, isFromBook)
@@ -307,7 +307,7 @@ object ConfigOptions {
             return enchantmentValue("sweeping", isFromBook)
         }
 
-        val enchantment = WrappedEnchantment.getByName(enchantmentName)
+        val enchantment = CAEnchantment.getByName(enchantmentName)
         if(enchantment != null){
             val rarity = enchantment.defaultRarity()
 

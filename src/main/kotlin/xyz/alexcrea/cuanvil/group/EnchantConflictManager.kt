@@ -1,11 +1,15 @@
 package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EnchantConflictManager {
 
@@ -28,46 +32,38 @@ class EnchantConflictManager {
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT =
-            WrappedEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
-            WrappedEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
+            CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
+            CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
 
     }
 
-    private lateinit var conflictMap: HashMap<WrappedEnchantment, ArrayList<EnchantConflictGroup>>
     lateinit var conflictList: ArrayList<EnchantConflictGroup>
 
     // Read and prepare all conflict
     fun prepareConflicts(config: ConfigurationSection, itemManager: ItemGroupManager) {
-        conflictMap = HashMap()
         conflictList = ArrayList()
 
+        // Clear conflict if exist
+        for (enchant in CAEnchantmentRegistry.getInstance().values()) {
+            enchant.clearConflict()
+        }
+        
         val keys = config.getKeys(false)
         for (key in keys) {
             val section = config.getConfigurationSection(key)!!
             val conflict = createConflict(section, itemManager, key)
 
-            addToMap(conflict)
+            addConflictToEnchantments(conflict)
             conflictList.add(conflict)
         }
 
     }
 
-    // Add the conflict to the map
-    private fun addToMap(conflict: EnchantConflictGroup) {
+    // Add the conflict to enchantments
+    private fun addConflictToEnchantments(conflict: EnchantConflictGroup) {
         conflict.getEnchants().forEach { enchant ->
-            addConflictToConflictMap(enchant, conflict)
+            enchant.addConflict(conflict)
         }
-    }
-
-    fun addConflictToConflictMap(enchant: WrappedEnchantment, conflict: EnchantConflictGroup) {
-        if (!conflictMap.containsKey(enchant)) {
-            conflictMap[enchant] = ArrayList()
-        }
-        conflictMap[enchant]!!.add(conflict)
-    }
-
-    fun removeConflictFromMap(enchant: WrappedEnchantment, conflict: EnchantConflictGroup): Boolean {
-        return conflictMap[enchant]!!.remove(conflict)
     }
 
     // create and read a conflict from a yaml section
@@ -85,14 +81,14 @@ class EnchantConflictManager {
         for (enchantName in enchantList) {
             val enchant = getEnchantByName(enchantName)
             if (enchant == null) {
-                if (!futureUse) {
+                if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                     CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
                 }
                 continue
             }
             conflict.addEnchantment(enchant)
         }
-        if (conflict.getEnchants().size == 0) {
+        if (conflict.getEnchants().isEmpty()) {
             if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                 CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not do anything")
             }
@@ -101,7 +97,7 @@ class EnchantConflictManager {
         return conflict
     }
 
-    private fun getEnchantByName(enchantName: String): WrappedEnchantment? {
+    private fun getEnchantByName(enchantName: String): CAEnchantment? {
 
         // Temporary solution for 1.20.5
         when(enchantName){
@@ -110,7 +106,7 @@ class EnchantConflictManager {
             }
         }
 
-        return WrappedEnchantment.getByName(enchantName)
+        return CAEnchantment.getByName(enchantName)
     }
 
 
@@ -151,35 +147,87 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(base: Set<WrappedEnchantment>, mat: Material, newEnchant: WrappedEnchantment): ConflictType {
+    fun isConflicting(appliedEnchants: Map<CAEnchantment, Int>, item: ItemStack, newEnchant: CAEnchantment): ConflictType {
+        val mat = item.type
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
-        val conflictList = conflictMap[newEnchant] ?: return ConflictType.NO_CONFLICT
-        CustomAnvil.verboseLog("Did not get skipped")
+        val conflictList = newEnchant.conflicts
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
             CustomAnvil.verboseLog("Is against $conflict")
-            val allowed = conflict.allowed(base, mat)
+            val allowed = conflict.allowed(appliedEnchants.keys, mat)
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {
-                    result = ConflictType.SMALL_CONFLICT
+                    result = ConflictType.ITEM_CONFLICT
                     CustomAnvil.verboseLog("Small conflict, continuing")
                 } else {
                     CustomAnvil.verboseLog("Big conflict, probably stoping")
-                    return ConflictType.BIG_CONFLICT
+                    return ConflictType.ENCHANTMENT_CONFLICT
                 }
             }
         }
-        return result
+
+        val immutableEnchants = Collections.unmodifiableMap(appliedEnchants)
+        for (appliedEnchant in appliedEnchants) {
+            if(appliedEnchant is AdditionalTestEnchantment){
+                val doConflict = appliedEnchant.isEnchantConflict(immutableEnchants, mat)
+                if(doConflict){
+                    return ConflictType.ENCHANTMENT_CONFLICT
+                }
+;
+            }
+        }
+
+        if((result != ConflictType.ITEM_CONFLICT) && (newEnchant is AdditionalTestEnchantment)){
+            val partialItem = createPartialResult(item, immutableEnchants)
+
+            if(newEnchant.isItemConflict(immutableEnchants, mat, partialItem)){
+                return ConflictType.ITEM_CONFLICT
+            }
+
+        }
+
+        return result;
+    }
+
+    private fun createPartialResult(item: ItemStack, enchantments: Map<CAEnchantment, Int>): ItemStack {
+       val newItem = item.clone()
+
+       CAEnchantment.clearEnchants(newItem)
+       enchantments.forEach{//TODO maybe bulk add if possible
+           enchantment -> enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
+       }
+
+       return newItem
     }
 
 }
 
-enum class ConflictType {
-    NO_CONFLICT,
-    SMALL_CONFLICT,
-    BIG_CONFLICT
+/**
+ * Provide information about the current conflict.
+ */
+enum class ConflictType(private val importance: Int) {
+    /**
+     * Allowed to proceed the anvil process.
+     */
+    NO_CONFLICT(0),
 
+    /**
+     * Inform that the anvil process should not change the current applied enchantment.
+     */
+    ITEM_CONFLICT(1),
+
+    /**
+     * Inform that the anvil process should not change the current applied enchantment.
+     * Also add sacrificeIllegalCost for every enchantment marked as big conflict.
+     */
+    ENCHANTMENT_CONFLICT(2);
+
+    fun getWorstConflict(otherConflict: ConflictType): ConflictType {
+        return if(this.importance > otherConflict.importance) this
+        else otherConflict
+
+    }
 
 }

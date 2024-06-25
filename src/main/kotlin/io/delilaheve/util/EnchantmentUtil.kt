@@ -1,10 +1,10 @@
 package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
+import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max
 import kotlin.math.min
@@ -17,18 +17,19 @@ object EnchantmentUtil {
     /**
      * Enchantment name without namespace
      */
-    val WrappedEnchantment.enchantmentName: String
+    val CAEnchantment.enchantmentName: String
         get() = key.key
 
     /**
      * Combine 2 sets of enchantments according to our configuration
      */
-    fun Map<WrappedEnchantment, Int>.combineWith(
-        other: Map<WrappedEnchantment, Int>,
-        mat: Material,
+    fun Map<CAEnchantment, Int>.combineWith(
+        other: Map<CAEnchantment, Int>,
+        item: ItemStack,
         player: HumanEntity
-    ) = mutableMapOf<WrappedEnchantment, Int>().apply {
+    ) = mutableMapOf<CAEnchantment, Int>().apply {
         putAll(this@combineWith)
+
         other.forEach { (enchantment, level) ->
             if(!enchantment.isAllowed(player)) return@forEach
 
@@ -44,7 +45,7 @@ object EnchantmentUtil {
                 // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
                 this[enchantment] = cappedLevel
                 val conflictType =
-                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys, mat, enchantment)
+                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this, item, enchantment)
                 if (!player.hasPermission(CustomAnvil.bypassFusePermission) &&
                     (conflictType != ConflictType.NO_CONFLICT)
                 ) {
@@ -55,11 +56,11 @@ object EnchantmentUtil {
             }
             // Enchantment already in result list
             else {
-                val oldLevel = this[enchantment]!! // <- should not be null. see the comment above
+                val oldLevel = this[enchantment]!! // <- should not be null. (enchantment already in result list)
 
                 // ... and they are conflicting
                 val conflictType =
-                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this.keys, mat, enchantment)
+                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this, item, enchantment)
                 if ((conflictType != ConflictType.NO_CONFLICT)
                     && !player.hasPermission(CustomAnvil.bypassFusePermission)
                 ) {

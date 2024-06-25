@@ -7,20 +7,18 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class GuiSharedConstant {
 
-    public static final List<WrappedEnchantment> SORTED_ENCHANTMENT_LIST;
+    public static final List<CAEnchantment> SORTED_ENCHANTMENT_LIST;
 
     static {
-        SORTED_ENCHANTMENT_LIST = Arrays.asList(WrappedEnchantment.values());
+        SORTED_ENCHANTMENT_LIST = new ArrayList<>(CAEnchantmentRegistry.getInstance().values());
         SORTED_ENCHANTMENT_LIST.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
     }
 

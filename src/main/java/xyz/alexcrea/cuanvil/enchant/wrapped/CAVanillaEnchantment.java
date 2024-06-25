@@ -6,26 +6,30 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentBase;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
-import xyz.alexcrea.cuanvil.enchant.WrappedEnchantment;
 
 import java.util.Locale;
 
-public class VanillaEnchantment extends WrappedEnchantment {
+public class CAVanillaEnchantment extends CAEnchantmentBase {
 
     private final @NotNull Enchantment enchantment;
 
-    public VanillaEnchantment(@NotNull Enchantment enchantment){
+    public CAVanillaEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity rarity){
         super(enchantment.getKey(),
-                getRarity(enchantment),
+                rarity,
                 enchantment.getMaxLevel());
         this.enchantment = enchantment;
+    }
 
+    public CAVanillaEnchantment(@NotNull Enchantment enchantment){
+        this(enchantment, getRarity(enchantment));
     }
 
     @Override
-    protected boolean isOptimised() {
+    public boolean isOptimised() {
         return true;
     }
 
@@ -77,6 +81,7 @@ public class VanillaEnchantment extends WrappedEnchantment {
 
     }
 
+    @NotNull
     public static EnchantmentRarity getRarity(Enchantment enchantment){
         try {
             return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
@@ -85,4 +90,8 @@ public class VanillaEnchantment extends WrappedEnchantment {
         }
     }
 
+    @NotNull
+    protected Enchantment getEnchant() {
+        return this.enchantment;
+    }
 }
