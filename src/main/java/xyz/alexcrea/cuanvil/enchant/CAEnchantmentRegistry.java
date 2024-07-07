@@ -56,13 +56,14 @@ public class CAEnchantmentRegistry {
      * No guarantee that the enchantment will be present on the config gui if registered late.
      * (By late I mean after custom anvil startup.)
      * @param enchantment The enchantment to be registered.
+     * @return If the operation was successful.
      */
-    public void register(@NotNull CAEnchantment enchantment){
+    public boolean register(@NotNull CAEnchantment enchantment){
         if(byKeyMap.containsKey(enchantment.getKey())){
             CustomAnvil.instance.getLogger().log(Level.WARNING,
                     "Duplicate registered enchantment. This should NOT happen.",
                     new IllegalStateException(enchantment.getKey()+" enchantment was already registered"));
-            return;
+            return false;
         }
         if(byNameMap.containsKey(enchantment.getName())){
             CustomAnvil.instance.getLogger().log(Level.WARNING,
@@ -77,6 +78,7 @@ public class CAEnchantmentRegistry {
         if(!enchantment.isOptimised()){
             unoptimisedValues.add(enchantment);
         }
+        return true;
     }
 
     /**
@@ -87,13 +89,16 @@ public class CAEnchantmentRegistry {
      * No guarantee that the enchantment will absent if the config guis if unregistered late.
      * (By late I mean after custom anvil startup.)
      * @param enchantment The enchantment to be unregistered.
+     * @return If the operation was successful.
      */
-    public void unregister(CAEnchantment enchantment){
-        if(enchantment == null) return;
+
+    public boolean unregister(CAEnchantment enchantment){
+        if(enchantment == null) return false;
         byKeyMap.remove(enchantment.getKey());
         byNameMap.remove(enchantment.getName());
 
         unoptimisedValues.remove(enchantment);
+        return true;
     }
 
     /**
