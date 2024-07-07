@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
 
 /**
@@ -27,7 +28,21 @@ public class EnchantmentApi {
     }
 
     /**
-     * Register an enchantment by minecraft registered enchantment.
+     * Register an enchantment by minecraft registered enchantment instance.
+     *
+     * @param enchantment   the enchantment to register
+     * @param defaultRarity the default rarity of the provided enchantment
+     * @return true if successful
+     */
+    public static boolean registerEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity defaultRarity){
+        if(defaultRarity == null)
+            return registerEnchantment(new CAVanillaEnchantment(enchantment));
+
+        return registerEnchantment(new CAVanillaEnchantment(enchantment, defaultRarity));
+    }
+
+    /**
+     * Register an enchantment by minecraft registered enchantment instance.
      *
      * @param enchantment the enchantment to register
      * @return true if successful

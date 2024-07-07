@@ -11,6 +11,9 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.group.*;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Custom Anvil api for conflict registry.
  */
@@ -51,11 +54,13 @@ public class ConflictAPI {
         for (String enchantmentName : builder.getEnchantmentNames()){
             if(appendEnchantment(conflict, EnchantmentApi.getByName(enchantmentName))){
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + builder.getName());
+                logConflictOrigin(builder);
             }
         }
         for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()){
             if(!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))){
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentKey + " for conflict " + builder.getName());
+                logConflictOrigin(builder);
             }
         }
     }
@@ -89,6 +94,7 @@ public class ConflictAPI {
 
             if(materialGroup == null){
                 CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + builder.getName());
+                logConflictOrigin(builder);
                 continue;
             }
 
@@ -124,14 +130,39 @@ public class ConflictAPI {
 
         String name = builder.getName();
         if(name.contains(".")) {
-            CustomAnvil.instance.getLogger().warning("Conflict \"" + name +"\" contain . in its name but should not. this conflict is ignored.");
+            CustomAnvil.instance.getLogger().warning("Conflict " + name +" contain . in its name but should not. this conflict is ignored.");
+            logConflictOrigin(builder);
             return false;
         }
+
+        String basePath = name+".";
+
+        Set<String> enchantments = extractEnchantments(builder);
+        Set<String> excludedGroups = builder.getExcludedGroupNames();
+        if(!enchantments.isEmpty()) config.set(basePath + "enchantments", enchantments);
+        if(!excludedGroups.isEmpty()) config.set(basePath + "notAffectedGroups", excludedGroups);
+        if(builder.getMaxBeforeConflict() > 0) config.set(basePath + "maxEnchantmentBeforeConflict", builder.getMaxBeforeConflict());
+
 
         prepareSaveTask();
         if(updatePlanned) prepareUpdateTask();
 
         return true;
+    }
+
+    /**
+     * Extract every enchantment names from a builder.
+     * @param builder the builder storing the enchantments
+     * @return builder's stored enchantment
+     */
+    @NotNull
+    private Set<String> extractEnchantments(@NotNull ConflictBuilder builder){
+        Set<String> result = new HashSet<>(builder.getEnchantmentNames());
+        for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
+            result.add(enchantmentKey.getKey());
+        }
+
+        return result;
     }
 
     /**
@@ -160,5 +191,8 @@ public class ConflictAPI {
 
     }
 
+    private void logConflictOrigin(@NotNull ConflictBuilder builder){
+        CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() +" came from " + builder.getSourceName() + ".");
+    }
 
 }

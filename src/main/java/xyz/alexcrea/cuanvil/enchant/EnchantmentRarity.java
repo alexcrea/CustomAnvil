@@ -1,31 +1,31 @@
 package xyz.alexcrea.cuanvil.enchant;
 
-// because spigot (1.18) do not support enchantment rarity, I need to do it myself...
-public enum EnchantmentRarity {
+// because spigot (1.18) do not look like to provide access to enchantment rarity I need to do it myself...
+public class EnchantmentRarity {
 
-    NO_RARITY(0, 0),
-    COMMON(1),
-    UNCOMMON(2),
-    RARE(4),
-    VERY_RARE(8);
+    public static final EnchantmentRarity NO_RARITY = new EnchantmentRarity(0, 0);
+    public static final EnchantmentRarity COMMON = new EnchantmentRarity(1);
+    public static final EnchantmentRarity UNCOMMON = new EnchantmentRarity(2);
+    public static final EnchantmentRarity RARE = new EnchantmentRarity(4);
+    public static final EnchantmentRarity VERY_RARE = new EnchantmentRarity(8);
 
     private final int itemValue;
     private final int bookValue;
 
-    EnchantmentRarity(int itemValue, int bookValue) {
+    public EnchantmentRarity(int itemValue, int bookValue) {
         this.itemValue = itemValue;
         this.bookValue = bookValue;
     }
 
-    EnchantmentRarity(int itemValue) {
+    public EnchantmentRarity(int itemValue) {
         this(itemValue, Math.max(1, itemValue / 2));
     }
 
-    public int getBookValue() {
+    public final int getBookValue() {
         return bookValue;
     }
 
-    public int getItemValue() {
+    public final int getItemValue() {
         return itemValue;
     }
 

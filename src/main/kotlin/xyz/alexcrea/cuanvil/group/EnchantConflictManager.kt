@@ -28,7 +28,7 @@ class EnchantConflictManager {
         private const val FUTURE_USE_PATH = "useInFuture"
 
         // Default name for a joining group
-        public const val DEFAULT_GROUP_NAME = "joinedGroup"
+        const val DEFAULT_GROUP_NAME = "joinedGroup"
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT =
@@ -175,7 +175,7 @@ class EnchantConflictManager {
                 if(doConflict){
                     return ConflictType.ENCHANTMENT_CONFLICT
                 }
-;
+
             }
         }
 
@@ -188,7 +188,7 @@ class EnchantConflictManager {
 
         }
 
-        return result;
+        return result
     }
 
     private fun createPartialResult(item: ItemStack, enchantments: Map<CAEnchantment, Int>): ItemStack {
