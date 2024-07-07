@@ -16,7 +16,7 @@ import java.util.Collections;
 
 public class MainConfigGui extends ChestGui {
 
-    private final static MainConfigGui INSTANCE = new MainConfigGui();
+    private static final MainConfigGui INSTANCE = new MainConfigGui();
 
     public static MainConfigGui getInstance() {
         return INSTANCE;

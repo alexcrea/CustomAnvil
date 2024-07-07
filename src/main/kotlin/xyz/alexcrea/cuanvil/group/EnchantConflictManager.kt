@@ -28,7 +28,7 @@ class EnchantConflictManager {
         private const val FUTURE_USE_PATH = "useInFuture"
 
         // Default name for a joining group
-        private const val DEFAULT_GROUP_NAME = "joinedGroup"
+        public const val DEFAULT_GROUP_NAME = "joinedGroup"
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT =
@@ -140,7 +140,7 @@ class EnchantConflictManager {
     ): AbstractMaterialGroup {
         val group = itemManager.get(groupName)
         if (group == null) {
-            CustomAnvil.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
+            CustomAnvil.instance.logger.warning("Material group $groupName do not exist but is ask by conflict $conflictName")
             return IncludeGroup("error_placeholder")
         }
 

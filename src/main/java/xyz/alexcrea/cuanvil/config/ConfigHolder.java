@@ -192,7 +192,7 @@ public abstract class ConfigHolder {
 
     // Class for itemGroupsManager config
     public static class ItemGroupConfigHolder extends ResourceConfigHolder {
-        private final static String FILE_NAME = "item_groups";
+        private static final String FILE_NAME = "item_groups";
 
         ItemGroupManager itemGroupsManager;
 
@@ -219,7 +219,7 @@ public abstract class ConfigHolder {
 
     // Class for enchant conflict config
     public static class ConflictConfigHolder extends ResourceConfigHolder {
-        private final static String FILE_NAME = "enchant_conflict";
+        private static final String FILE_NAME = "enchant_conflict";
 
         EnchantConflictManager conflictManager;
 
@@ -243,7 +243,7 @@ public abstract class ConfigHolder {
 
     // Class for unit repair config
     public static class UnitRepairHolder extends ResourceConfigHolder {
-        private final static String ITEM_GROUP_FILE_NAME = "unit_repair_item";
+        private static final String ITEM_GROUP_FILE_NAME = "unit_repair_item";
 
 
         private UnitRepairHolder() {
@@ -259,7 +259,7 @@ public abstract class ConfigHolder {
 
     // Class for custom anvil craft
     public static class CustomAnvilCraftHolder extends ResourceConfigHolder {
-        private final static String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
+        private static final String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
         CustomAnvilRecipeManager recipeManager;
 
         private CustomAnvilCraftHolder() {

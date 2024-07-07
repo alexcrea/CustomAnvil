@@ -18,7 +18,7 @@ import java.util.Collection;
 
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup, EnchantConflictSubSettingGui> {
 
-    public final static EnchantConflictGui INSTANCE = new EnchantConflictGui();
+    public static final EnchantConflictGui INSTANCE = new EnchantConflictGui();
 
     static {
         INSTANCE.init();
