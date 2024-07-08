@@ -1,20 +1,16 @@
 package xyz.alexcrea.cuanvil.enchant;
 
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.group.ConflictType;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public abstract class CAEnchantmentBase implements CAEnchantment {
 

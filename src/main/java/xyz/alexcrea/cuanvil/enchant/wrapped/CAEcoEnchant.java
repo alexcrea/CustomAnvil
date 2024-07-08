@@ -5,13 +5,11 @@ import com.willfp.ecoenchants.target.EnchantmentTarget;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
-import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
-import xyz.alexcrea.cuanvil.group.ConflictType;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class CAEcoEnchant extends CAVanillaEnchantment implements AdditionalTestEnchantment {
 

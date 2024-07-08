@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.enchant;
 
 import io.delilaheve.util.ItemUtil;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -11,13 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.dependency.EnchantmentSquaredDependency;
-import xyz.alexcrea.cuanvil.group.ConflictType;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Represent an enchantment compatible with Custom Anvil.

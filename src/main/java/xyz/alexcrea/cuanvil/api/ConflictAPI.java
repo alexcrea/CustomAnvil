@@ -25,6 +25,7 @@ public class ConflictAPI {
 
     /**
      * Write and add a conflict.
+     * Will not write the conflict if it already exists.
      *
      * @param builder the conflict builder to base on
      * @return true if successful
@@ -122,7 +123,7 @@ public class ConflictAPI {
      * You should use {@link #addConflict(ConflictBuilder)} or {@link #writeConflict(ConflictBuilder)} instead
      *
      * @param builder       the builder
-     * @param updatePlanned if we should plan an update
+     * @param updatePlanned if we should plan a global update for conflicts
      * @return true if successful
      */
     public boolean writeConflict(@NotNull ConflictBuilder builder, boolean updatePlanned){
@@ -135,7 +136,7 @@ public class ConflictAPI {
             return false;
         }
 
-        String basePath = name+".";
+        String basePath = name + ".";
 
         Set<String> enchantments = extractEnchantments(builder);
         Set<String> excludedGroups = builder.getExcludedGroupNames();

@@ -9,7 +9,6 @@ import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import java.util.*
-import kotlin.collections.ArrayList
 
 class EnchantConflictManager {
 

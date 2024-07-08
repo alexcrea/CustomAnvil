@@ -83,7 +83,7 @@ public class EnchantmentApi {
     }
 
     /**
-     * Get by key the enchantment.
+     * Get by key a enchantment.
      *
      * @param key the key used to fetch
      * @return the custom anvil enchantment
@@ -94,7 +94,7 @@ public class EnchantmentApi {
     }
 
     /**
-     * Get by name the enchantment.
+     * Get by name a enchantment.
      *
      * @param name the name used to fetch
      * @return the custom anvil enchantment
