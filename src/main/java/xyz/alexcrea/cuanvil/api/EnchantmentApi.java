@@ -8,6 +8,8 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantLimitConfigGui;
 
 import java.util.Collections;
 import java.util.Map;
@@ -27,7 +29,13 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean registerEnchantment(@NotNull CAEnchantment enchantment){
-        return CAEnchantmentRegistry.getInstance().register(enchantment);
+        if(!CAEnchantmentRegistry.getInstance().register(enchantment)) return false;
+
+        // Add enchantment to gui.
+        EnchantCostConfigGui.INSTANCE.updateValueForGeneric(enchantment, true);
+        EnchantLimitConfigGui.INSTANCE.updateValueForGeneric(enchantment, true);
+
+        return true;
     }
 
     /**
@@ -57,6 +65,20 @@ public class EnchantmentApi {
     }
 
     /**
+     * Unregister an enchantment.
+     *
+     * @param enchantment The enchantment to unregister
+     * @return True if successful.
+     */
+    public static boolean unregisterEnchantment(@Nullable CAEnchantment enchantment){
+        // Remove from gui
+        EnchantCostConfigGui.INSTANCE.removeGeneric(enchantment);
+        EnchantLimitConfigGui.INSTANCE.removeGeneric(enchantment);
+
+        return CAEnchantmentRegistry.getInstance().unregister(enchantment);
+    }
+
+    /**
      * Unregister an enchantment by its key.
      *
      * @param key The enchantment key to unregister
@@ -64,17 +86,7 @@ public class EnchantmentApi {
      */
     public static boolean unregisterEnchantment(@NotNull NamespacedKey key){
         CAEnchantment enchantment = CAEnchantmentRegistry.getInstance().getByKey(key);
-        return CAEnchantmentRegistry.getInstance().unregister(enchantment);
-    }
-
-    /**
-     * Unregister an enchantment.
-     *
-     * @param enchantment The enchantment to unregister
-     * @return True if successful.
-     */
-    public static boolean unregisterEnchantment(@NotNull CAEnchantment enchantment){
-        return CAEnchantmentRegistry.getInstance().unregister(enchantment);
+        return unregisterEnchantment(enchantment);
     }
 
     /**

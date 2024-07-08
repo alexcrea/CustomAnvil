@@ -89,7 +89,7 @@ public class CAEnchantmentRegistry {
      * @return If the operation was successful.
      */
 
-    public boolean unregister(CAEnchantment enchantment){
+    public boolean unregister(@Nullable CAEnchantment enchantment){
         if(enchantment == null) return false;
         byKeyMap.remove(enchantment.getKey());
         byNameMap.remove(enchantment.getName());
@@ -103,7 +103,8 @@ public class CAEnchantmentRegistry {
      * @param key Key to fetch.
      * @return Registered enchantment. null if absent.
      */
-    public @Nullable CAEnchantment getByKey(@NotNull NamespacedKey key){
+    @Nullable
+    public CAEnchantment getByKey(@NotNull NamespacedKey key){
         return byKeyMap.get(key);
     }
 
@@ -112,7 +113,8 @@ public class CAEnchantmentRegistry {
      * @param name Name to fetch.
      * @return Registered enchantment. null if absent.
      */
-    public @Nullable CAEnchantment getByName(@NotNull String name){
+    @Nullable
+    public CAEnchantment getByName(@NotNull String name){
         return byNameMap.get(name);
     }
 
