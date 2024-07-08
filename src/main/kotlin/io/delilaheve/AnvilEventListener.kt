@@ -87,8 +87,8 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 event.result = null
                 return
             }
-            // We don't manually set item here as vanilla do it (renaming)
-            //event.result = null
+
+            event.result = resultItem
 
             anvilCost += calculatePenalty(first, null, resultItem)
 
