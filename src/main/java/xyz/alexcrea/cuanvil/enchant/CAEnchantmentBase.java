@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Default implementation of an enchantment compatible with Custom Anvil.
+ * One issue with custom anvil is: it does not handle well duplicate key name (ignoring namespace)
+ * as the plugin was initially coded with vanilla enchantment in head
+ */
 public abstract class CAEnchantmentBase implements CAEnchantment {
 
     @NotNull

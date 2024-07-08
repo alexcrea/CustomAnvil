@@ -8,10 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 public class CAEnchantmentRegistry {
@@ -121,7 +118,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Gets an array of all the registered enchantments.
-     * @return Array of enchantment.
+     * @return Array of enchantments.
      */
     @NotNull
     public Collection<CAEnchantment> values() {
@@ -129,12 +126,21 @@ public class CAEnchantmentRegistry {
     }
 
     /**
+     * Gets a map of all the registered enchantments.
+     * @return Map of enchantments.
+     */
+    public Map<NamespacedKey, CAEnchantment> registeredEnchantments() {
+        return byKeyMap;
+    }
+
+    /**
      * Gets a list of all the unoptimised enchantments.
-     * @return List of enchantment.
+     * @return List of unoptimised enchantments.
      */
     @NotNull
     public List<CAEnchantment> unoptimisedValues() {
         return unoptimisedValues;
     }
+
 
 }

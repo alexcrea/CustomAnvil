@@ -9,6 +9,9 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * Custom Anvil api for enchantment registry.
  */
@@ -20,8 +23,8 @@ public class EnchantmentApi {
     /**
      * Register an enchantment.
      *
-     * @param enchantment the enchantment to register
-     * @return true if successful
+     * @param enchantment The enchantment to register
+     * @return True if successful.
      */
     public static boolean registerEnchantment(@NotNull CAEnchantment enchantment){
         return CAEnchantmentRegistry.getInstance().register(enchantment);
@@ -30,9 +33,9 @@ public class EnchantmentApi {
     /**
      * Register an enchantment by minecraft registered enchantment instance.
      *
-     * @param enchantment   the enchantment to register
-     * @param defaultRarity the default rarity of the provided enchantment
-     * @return true if successful
+     * @param enchantment   The enchantment to register
+     * @param defaultRarity The default rarity of the provided enchantment
+     * @return True if successful.
      */
     public static boolean registerEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity defaultRarity){
         if(defaultRarity == null)
@@ -43,9 +46,11 @@ public class EnchantmentApi {
 
     /**
      * Register an enchantment by minecraft registered enchantment instance.
+     * <p>
+     * Please note that this function assume the provided enchantment is registered into minecraft registry.
      *
-     * @param enchantment the enchantment to register
-     * @return true if successful
+     * @param enchantment The enchantment to register
+     * @return True if successful.
      */
     public static boolean registerEnchantment(@NotNull Enchantment enchantment){
         return registerEnchantment(new CAVanillaEnchantment(enchantment));
@@ -54,8 +59,8 @@ public class EnchantmentApi {
     /**
      * Unregister an enchantment by its key.
      *
-     * @param key the enchantment key to unregister
-     * @return true if successful
+     * @param key The enchantment key to unregister
+     * @return True if successful.
      */
     public static boolean unregisterEnchantment(@NotNull NamespacedKey key){
         CAEnchantment enchantment = CAEnchantmentRegistry.getInstance().getByKey(key);
@@ -65,8 +70,8 @@ public class EnchantmentApi {
     /**
      * Unregister an enchantment.
      *
-     * @param enchantment the enchantment to unregister
-     * @return true if successful
+     * @param enchantment The enchantment to unregister
+     * @return True if successful.
      */
     public static boolean unregisterEnchantment(@NotNull CAEnchantment enchantment){
         return CAEnchantmentRegistry.getInstance().unregister(enchantment);
@@ -75,18 +80,18 @@ public class EnchantmentApi {
     /**
      * Unregister an enchantment by his bukkit enchantment.
      *
-     * @param enchantment the enchantment to unregister
-     * @return true if successful
+     * @param enchantment The enchantment to unregister
+     * @return True if successful.
      */
     public static boolean unregisterEnchantment(@NotNull Enchantment enchantment){
         return unregisterEnchantment(enchantment.getKey());
     }
 
     /**
-     * Get by key a enchantment.
+     * Get by key an enchantment.
      *
-     * @param key the key used to fetch
-     * @return the custom anvil enchantment
+     * @param key The key used to fetch
+     * @return The custom anvil enchantment of this key. null if not found.
      */
     @Nullable
     public static CAEnchantment getByKey(@NotNull NamespacedKey key){
@@ -94,14 +99,23 @@ public class EnchantmentApi {
     }
 
     /**
-     * Get by name a enchantment.
+     * Get by name an enchantment.
      *
-     * @param name the name used to fetch
-     * @return the custom anvil enchantment
+     * @param name The name used to fetch
+     * @return The custom anvil enchantment of this name. null if not found.
      */
     @Nullable
     public static CAEnchantment getByName(@NotNull String name){
         return CAEnchantmentRegistry.getInstance().getByName(name);
+    }
+
+    /**
+     * Get every registered custom anvil enchantments.
+     * @return An immutable map of enchantment key as map key and custom anvil enchantment as value.
+     */
+    @NotNull
+    public Map<NamespacedKey, CAEnchantment> getRegisteredEnchantments(){
+        return Collections.unmodifiableMap(CAEnchantmentRegistry.getInstance().registeredEnchantments());
     }
 
 }

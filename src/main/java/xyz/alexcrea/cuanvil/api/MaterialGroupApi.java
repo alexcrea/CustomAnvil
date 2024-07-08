@@ -13,11 +13,13 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * The type Material group api.
+ * Custom Anvil api for material group registry.
  */
 @SuppressWarnings("unused")
 public class MaterialGroupApi {
@@ -30,7 +32,7 @@ public class MaterialGroupApi {
      * Will not write the group if it already exists.
      *
      * @param group the group to add
-     * @return true if successful
+     * @return true if successful.
      */
     public boolean addMaterialGroup(@NotNull AbstractMaterialGroup group){
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
@@ -51,7 +53,7 @@ public class MaterialGroupApi {
      * You may want to use {@link #addMaterialGroup(AbstractMaterialGroup)} instead as it is more performance in most case as this function will reload every conflict.
      *
      * @param group the group to write
-     * @return true if successful
+     * @return true if successful.
      */
     public boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group){
         return writeMaterialGroup(group, true);
@@ -64,7 +66,7 @@ public class MaterialGroupApi {
      *
      * @param group         the group to write
      * @param updatePlanned if we should plan a global update for material groups
-     * @return true if successful
+     * @return true if successful.
      */
     public boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group, boolean updatePlanned){
         String name = group.getName();
@@ -147,12 +149,20 @@ public class MaterialGroupApi {
      * Get by name a group.
      *
      * @param groupName the group name used to fetch
-     * @return the abstract group of this name
+     * @return the abstract group of this name. null if not found.
      */
     @Nullable
     public static AbstractMaterialGroup getGroup(@NotNull String groupName){
         return ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().get(groupName);
     }
 
+    /**
+     * Get every registered material groups.
+     * @return An immutable map of group name as its key and group as mapped value.
+     */
+    @NotNull
+    public Map<String, AbstractMaterialGroup> getRegisteredGroups(){
+        return Collections.unmodifiableMap(ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap());
+    }
 
 }

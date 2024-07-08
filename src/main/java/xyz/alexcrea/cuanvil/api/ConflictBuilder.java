@@ -29,10 +29,11 @@ public class ConflictBuilder {
     /**
      * Instantiates a new Conflict builder.
      *
-     * @param source the source
-     * @param name   the name
+     * @param name              The conflict name
+     * @param maxBeforeConflict Maximum number of conflicting enchantment before conflict is active
+     * @param source            The conflict source
      */
-    public ConflictBuilder(@NotNull String name, @Nullable Plugin source){
+    public ConflictBuilder(@NotNull String name, int maxBeforeConflict, @Nullable Plugin source){
         this.source = source;
         this.name = name;
 
@@ -41,12 +42,23 @@ public class ConflictBuilder {
 
         this.excludedGroupNames = new HashSet<>();
 
-        this.maxBeforeConflict = 0;
+        this.maxBeforeConflict = maxBeforeConflict;
     }
+
     /**
      * Instantiates a new Conflict builder.
      *
-     * @param name the conflict name
+     * @param name   The conflict name
+     * @param source The conflict source
+     */
+    public ConflictBuilder(@NotNull String name, @Nullable Plugin source){
+        this(name, 0, source);
+    }
+
+    /**
+     * Instantiates a new Conflict builder.
+     *
+     * @param name The conflict name
      */
     public ConflictBuilder(@NotNull String name){
         this(name, null);
@@ -55,7 +67,7 @@ public class ConflictBuilder {
     /**
      * Gets conflict source.
      *
-     * @return the conflict source
+     * @return The conflict source.
      */
     @Nullable
     public Plugin getSource() {
@@ -65,7 +77,7 @@ public class ConflictBuilder {
     /**
      * Gets conflict source name.
      *
-     * @return the conflict source
+     * @return The conflict source name.
      */
     @NotNull
     public String getSourceName() {
@@ -77,7 +89,7 @@ public class ConflictBuilder {
     /**
      * Gets conflict name.
      *
-     * @return the name
+     * @return The conflict name.
      */
     @NotNull
     public String getName() {
@@ -87,7 +99,7 @@ public class ConflictBuilder {
     /**
      * Gets stored conflicting enchantment names.
      *
-     * @return the enchantment names
+     * @return The stored enchantment names.
      */
     @NotNull
     public Set<String> getEnchantmentNames() {
@@ -97,7 +109,7 @@ public class ConflictBuilder {
     /**
      * Gets stored conflicting enchantment keys.
      *
-     * @return the enchantment keys
+     * @return The stored enchantment keys.
      */
     @NotNull
     public Set<NamespacedKey> getEnchantmentKeys() {
@@ -107,7 +119,7 @@ public class ConflictBuilder {
     /**
      * Gets stored excluded group names.
      *
-     * @return the group names
+     * @return The stored group names.
      */
     @NotNull
     public Set<String> getExcludedGroupNames() {
@@ -115,7 +127,7 @@ public class ConflictBuilder {
     }
 
     /**
-     * Gets max number of conflicting enchantment before conflict is active.
+     * Gets maximum number of conflicting enchantment before conflict is active.
      * <p>
      * This value represent how many enchantment contained on this conflict can be applied to before conflict is considered active.
      * That mean new enchantment will not be able to be added to the item and present enchantment will not have its level upgraded.
@@ -131,8 +143,8 @@ public class ConflictBuilder {
     /**
      * Sets conflict name.
      *
-     * @param name the name
-     * @return the name
+     * @param name The name
+     * @return This conflict builder instance.
      */
     public ConflictBuilder setName(String name) {
         this.name = name;
@@ -140,15 +152,15 @@ public class ConflictBuilder {
     }
 
     /**
-     * Sets max number of conflicting enchantment before conflict is active.
+     * Sets maximum number of conflicting enchantment before conflict is active.
      * <p>
      * This value represent how many enchantment contained on this conflict can be applied to before conflict is considered active.
      * That mean new enchantment will not be able to be added to the item and present enchantment will not have its level upgraded.
      * <p>
      * In vanilla. material restriction have this value set to 0 and enchantment conflict set to 1.
      *
-     * @param maxBeforeConflict the max before conflict
-     * @return the max before conflict
+     * @param maxBeforeConflict The max before conflict
+     * @return This conflict builder instance.
      */
     public ConflictBuilder setMaxBeforeConflict(int maxBeforeConflict) {
         this.maxBeforeConflict = maxBeforeConflict;
@@ -158,8 +170,8 @@ public class ConflictBuilder {
     /**
      * Add a conflicting enchantment by name.
      *
-     * @param enchantmentName the enchantment name
-     * @return this conflict builder instance
+     * @param enchantmentName The enchantment name
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder addEnchantment(@NotNull String enchantmentName){
@@ -170,8 +182,8 @@ public class ConflictBuilder {
     /**
      * Add a conflicting enchantment by key.
      *
-     * @param enchantmentKey the enchantment key
-     * @return this conflict builder instance
+     * @param enchantmentKey The enchantment key
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder addEnchantment(@NotNull NamespacedKey enchantmentKey){
@@ -182,8 +194,8 @@ public class ConflictBuilder {
     /**
      * Add a conflicting enchantment by instance.
      *
-     * @param enchantment the enchantment
-     * @return this conflict builder instance
+     * @param enchantment The enchantment
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder addEnchantment(@NotNull CAEnchantment enchantment){
@@ -194,8 +206,8 @@ public class ConflictBuilder {
     /**
      * Remove conflicting enchantment by name.
      *
-     * @param enchantmentName the enchantment name
-     * @return this conflict builder instance
+     * @param enchantmentName The enchantment name
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder removeEnchantment(@NotNull String enchantmentName){
@@ -206,8 +218,8 @@ public class ConflictBuilder {
     /**
      * Remove conflicting enchantment by key.
      *
-     * @param enchantmentKey the enchantment key
-     * @return this conflict builder instance
+     * @param enchantmentKey The enchantment key
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder removeEnchantment(@NotNull NamespacedKey enchantmentKey){
@@ -218,8 +230,8 @@ public class ConflictBuilder {
     /**
      * Remove enchantment by instance.
      *
-     * @param enchantment the enchantment
-     * @return this conflict builder instance
+     * @param enchantment The enchantment
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder removeEnchantment(@NotNull CAEnchantment enchantment){
@@ -237,8 +249,8 @@ public class ConflictBuilder {
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
-     * @param groupName the group name
-     * @return this conflict builder instance
+     * @param groupName The group name
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder addExcludedGroup(@NotNull String groupName){
@@ -257,8 +269,8 @@ public class ConflictBuilder {
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
-     * @param group the group
-     * @return this conflict builder instance
+     * @param group The group
+     * @return this conflict builder instance.
      */
     @NotNull
     public ConflictBuilder addExcludedGroup(@NotNull AbstractMaterialGroup group){
@@ -276,8 +288,8 @@ public class ConflictBuilder {
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
-     * @param groupName the group name
-     * @return this conflict builder instance
+     * @param groupName The group name
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder removeExcludedGroup(@NotNull String groupName){
@@ -296,8 +308,8 @@ public class ConflictBuilder {
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
-     * @param group the group
-     * @return this conflict builder instance
+     * @param group The group
+     * @return This conflict builder instance.
      */
     @NotNull
     public ConflictBuilder removeExcludedGroup(@NotNull AbstractMaterialGroup group){
@@ -307,7 +319,7 @@ public class ConflictBuilder {
     /**
      * Copy this conflict builder.
      *
-     * @return a copy of this conflict builder
+     * @return A copy of this conflict builder.
      */
     @NotNull
     public ConflictBuilder copy() {

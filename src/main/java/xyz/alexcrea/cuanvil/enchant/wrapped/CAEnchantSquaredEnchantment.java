@@ -33,8 +33,8 @@ public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
 
     @Override
     public boolean isAllowed(@NotNull HumanEntity human) {
-        if(human instanceof Player){
-            return this.enchant.hasPermission((Player) human);
+        if(human instanceof Player player){
+            return this.enchant.hasPermission(player);
         }
         // Not really ideal for maintainability but will probably never be executed. (At least I hope)
         boolean required = CustomEnchantManager.getInstance().isRequirePermissions();

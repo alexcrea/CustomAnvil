@@ -18,7 +18,8 @@ import java.util.Map;
 
 /**
  * Represent an enchantment compatible with Custom Anvil.
- * One issue with custom anvil is: it does not handle well duplicate key name (ignoring namespace) as the plugin was coded with vanilla enchantment in head
+ * One issue with custom anvil is: it does not handle well duplicate key name (ignoring namespace)
+ * as the plugin was initially coded with vanilla enchantment in head
  */
 public interface CAEnchantment {
 
@@ -89,6 +90,7 @@ public interface CAEnchantment {
     /**
      * Get current level of the enchantment.
      * @param item Item to search the level for.
+     * @return The enchantment level.
      */
     int getLevel(@NotNull ItemStack item);
 
@@ -223,6 +225,8 @@ public interface CAEnchantment {
 
     /**
      * Gets an array of all the registered enchantments.
+     *
+     * @param key The enchantment key
      * @return Array of enchantment.
      */
     static @Nullable CAEnchantment getByKey(@NotNull NamespacedKey key){
@@ -231,6 +235,7 @@ public interface CAEnchantment {
 
     /**
      * Gets a list of all the unoptimised enchantments.
+     * @param name The enchantment name
      * @return List of enchantment.
      */
     static @Nullable CAEnchantment getByName(@NotNull String name){
