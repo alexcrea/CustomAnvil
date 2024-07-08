@@ -22,6 +22,8 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class ConflictAPI {
 
+    private ConflictAPI() {}
+
     private static int saveChangeTask = -1;
     private static int reloadChangeTask = -1;
 
@@ -32,7 +34,7 @@ public class ConflictAPI {
      * @param builder The conflict builder to base on
      * @return True if successful.
      */
-    public boolean addConflict(@NotNull ConflictBuilder builder){
+    public static boolean addConflict(@NotNull ConflictBuilder builder){
         FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
         if(config.contains(builder.getName())) return false;
 
@@ -53,7 +55,7 @@ public class ConflictAPI {
      * @param builder  The builder source
      * @param conflict The conflict target
      */
-    protected void appendEnchantments(@NotNull ConflictBuilder builder, @NotNull EnchantConflictGroup conflict){
+    protected static void appendEnchantments(@NotNull ConflictBuilder builder, @NotNull EnchantConflictGroup conflict){
         for (String enchantmentName : builder.getEnchantmentNames()){
             if(appendEnchantment(conflict, EnchantmentApi.getByName(enchantmentName))){
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + builder.getName());
@@ -75,7 +77,7 @@ public class ConflictAPI {
      * @param enchantment The enchantment
      * @return True if successful.
      */
-    protected boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment){
+    protected static boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment){
         if(enchantment == null)
             return false;
         conflict.addEnchantment(enchantment);
@@ -88,7 +90,7 @@ public class ConflictAPI {
      * @param builder The builder source
      * @return The abstract material group from the builder.
      */
-    protected AbstractMaterialGroup extractGroup(@NotNull ConflictBuilder builder){
+    protected static AbstractMaterialGroup extractGroup(@NotNull ConflictBuilder builder){
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         IncludeGroup group = new IncludeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
 
@@ -115,7 +117,7 @@ public class ConflictAPI {
      * @param builder The builder
      * @return True if successful.
      */
-    public boolean writeConflict(@NotNull ConflictBuilder builder){
+    public static boolean writeConflict(@NotNull ConflictBuilder builder){
         return writeConflict(builder, true);
     }
 
@@ -128,7 +130,7 @@ public class ConflictAPI {
      * @param updatePlanned If we should plan a global update for conflicts
      * @return True if successful.
      */
-    public boolean writeConflict(@NotNull ConflictBuilder builder, boolean updatePlanned){
+    public static boolean writeConflict(@NotNull ConflictBuilder builder, boolean updatePlanned){
         FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
 
         String name = builder.getName();
@@ -159,7 +161,7 @@ public class ConflictAPI {
      * @return Builder's stored enchantment.
      */
     @NotNull
-    private Set<String> extractEnchantments(@NotNull ConflictBuilder builder){
+    private static Set<String> extractEnchantments(@NotNull ConflictBuilder builder){
         Set<String> result = new HashSet<>(builder.getEnchantmentNames());
         for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
             result.add(enchantmentKey.getKey());
@@ -194,7 +196,7 @@ public class ConflictAPI {
 
     }
 
-    private void logConflictOrigin(@NotNull ConflictBuilder builder){
+    private static void logConflictOrigin(@NotNull ConflictBuilder builder){
         CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() +" came from " + builder.getSourceName() + ".");
     }
 
@@ -203,10 +205,9 @@ public class ConflictAPI {
      * @return An immutable collection of conflict.
      */
     @NotNull
-    public List<EnchantConflictGroup> getRegisteredConflict(){
+    public static List<EnchantConflictGroup> getRegisteredConflict(){
         List<EnchantConflictGroup> mutableList = ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
         return Collections.unmodifiableList(mutableList);
     }
-
 
 }

@@ -114,7 +114,7 @@ public class EnchantmentApi {
      * @return An immutable map of enchantment key as map key and custom anvil enchantment as value.
      */
     @NotNull
-    public Map<NamespacedKey, CAEnchantment> getRegisteredEnchantments(){
+    public static Map<NamespacedKey, CAEnchantment> getRegisteredEnchantments(){
         return Collections.unmodifiableMap(CAEnchantmentRegistry.getInstance().registeredEnchantments());
     }
 

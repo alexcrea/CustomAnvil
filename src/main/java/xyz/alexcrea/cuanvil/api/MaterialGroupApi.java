@@ -24,6 +24,8 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class MaterialGroupApi {
 
+    private MaterialGroupApi(){}
+
     private static int saveChangeTask = -1;
     private static int reloadChangeTask = -1;
 
@@ -34,7 +36,7 @@ public class MaterialGroupApi {
      * @param group the group to add
      * @return true if successful.
      */
-    public boolean addMaterialGroup(@NotNull AbstractMaterialGroup group){
+    public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group){
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         if(itemGroupManager.get(group.getName()) != null) return false;
 
@@ -55,7 +57,7 @@ public class MaterialGroupApi {
      * @param group the group to write
      * @return true if successful.
      */
-    public boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group){
+    public static boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group){
         return writeMaterialGroup(group, true);
     }
 
@@ -68,7 +70,7 @@ public class MaterialGroupApi {
      * @param updatePlanned if we should plan a global update for material groups
      * @return true if successful.
      */
-    public boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group, boolean updatePlanned){
+    public static boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group, boolean updatePlanned){
         String name = group.getName();
         if(name.contains(".")) {
             CustomAnvil.instance.getLogger().warning("Group " + name +" contain . in its name but should not. this material group is ignored.");
@@ -89,7 +91,7 @@ public class MaterialGroupApi {
         return true;
     }
 
-    private void writeKnownGroup(@NotNull String groupType, @NotNull AbstractMaterialGroup group){
+    private static void writeKnownGroup(@NotNull String groupType, @NotNull AbstractMaterialGroup group){
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
@@ -106,7 +108,7 @@ public class MaterialGroupApi {
 
     }
 
-    private void writeUnknownGroup(@NotNull AbstractMaterialGroup group) {
+    private static void writeUnknownGroup(@NotNull AbstractMaterialGroup group) {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
@@ -161,7 +163,7 @@ public class MaterialGroupApi {
      * @return An immutable map of group name as its key and group as mapped value.
      */
     @NotNull
-    public Map<String, AbstractMaterialGroup> getRegisteredGroups(){
+    public static Map<String, AbstractMaterialGroup> getRegisteredGroups(){
         return Collections.unmodifiableMap(ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap());
     }
 
