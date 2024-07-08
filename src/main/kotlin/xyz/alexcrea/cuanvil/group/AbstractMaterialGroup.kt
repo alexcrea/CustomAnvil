@@ -25,13 +25,37 @@ abstract class AbstractMaterialGroup(private val name: String) {
 
     /**
      * Push a material to this group to follow this group policy
+     * @return this instance.
      */
-    abstract fun addToPolicy(mat: Material)
+    abstract fun addToPolicy(mat: Material): AbstractMaterialGroup
+
+    /**
+     * Push a list of material to this group to follow this group policy
+     * @return this instance.
+     */
+    fun addAll(vararg materials: Material): AbstractMaterialGroup {
+        for (material in materials) {
+            addToPolicy(material)
+        }
+        return this
+    }
 
     /**
      * Push a group to this group to follow this group policy
+     * @return this instance.
      */
-    abstract fun addToPolicy(other: AbstractMaterialGroup)
+    abstract fun addToPolicy(other: AbstractMaterialGroup): AbstractMaterialGroup
+
+    /**
+     * Push a list of group to this group to follow this group policy
+     * @return this instance.
+     */
+    fun addAll(vararg otherList: AbstractMaterialGroup): AbstractMaterialGroup {
+        for (group in otherList) {
+            addToPolicy(group)
+        }
+        return this
+    }
 
     /**
      * Get the group contained material as a set

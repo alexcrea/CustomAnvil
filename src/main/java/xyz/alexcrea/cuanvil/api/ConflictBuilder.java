@@ -343,4 +343,13 @@ public class ConflictBuilder {
         return clone;
     }
 
+    /**
+     * Register this conflict.
+     * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder)}
+     * @return True if successful.
+     */
+    public boolean registerIfAbsent(){
+        return ConflictAPI.addConflict(this);
+    }
+
 }

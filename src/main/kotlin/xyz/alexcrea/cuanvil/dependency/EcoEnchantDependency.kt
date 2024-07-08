@@ -5,10 +5,9 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
-import xyz.alexcrea.cuanvil.enchant.wrapped.CAEcoEnchant
 import java.io.File
 
 class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
@@ -22,12 +21,9 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
     }
 
     fun registerEnchantments() {
-        val registery = CAEnchantmentRegistry.getInstance()
         for (ecoEnchant in EcoEnchants.values()) {
-            val enchantments: CAEnchantment = CAEcoEnchant(ecoEnchant)
-
-            registery.unregister(registery.getByKey(ecoEnchant.enchantment.key)) // As eco enchants are considered real enchantment, we need to unregister it.
-            registery.register(enchantments)
+            EnchantmentApi.unregisterEnchantment(ecoEnchant.enchantment) // As eco enchants is loaded before ca, we need to unregister old "vanilla" enchant.
+            EnchantmentApi.registerEnchantment(ecoEnchant.enchantment)
         }
     }
 
@@ -57,12 +53,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
                 doSave = true
                 config[testPath] = true
 
-                defaultConfig["enchant_limits.${enchantment.key.key}"] = enchantment.defaultMaxLevel()
-
-                val rarity = enchantment.defaultRarity()
-                defaultConfig["enchant_values.${enchantment.key.key}.item"] = rarity.itemValue
-                defaultConfig["enchant_values.${enchantment.key.key}.book"] = rarity.bookValue
-
+                DependencyManager.writeDefaultConfig(defaultConfig, enchantment)
             }
         }
 
