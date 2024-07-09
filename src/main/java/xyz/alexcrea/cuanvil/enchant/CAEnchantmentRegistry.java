@@ -5,7 +5,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
 
 import java.util.*;
@@ -36,13 +35,6 @@ public class CAEnchantmentRegistry {
     public void registerStartupEnchantments(){
         for (Enchantment enchantment : Enchantment.values()) {
             register(new CAVanillaEnchantment(enchantment));
-        }
-
-        if(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility() != null){
-            DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility().registerEnchantments();
-        }
-        if(DependencyManager.INSTANCE.getEcoEnchantCompatibility() != null){
-            DependencyManager.INSTANCE.getEcoEnchantCompatibility().registerEnchantments();
         }
 
     }

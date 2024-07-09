@@ -80,8 +80,6 @@ class CustomAnvil : JavaPlugin() {
     override fun onEnable() {
         instance = this
 
-        val pluginManager = Bukkit.getPluginManager();
-
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
         if (potentialPlugin != null) {
@@ -93,12 +91,8 @@ class CustomAnvil : JavaPlugin() {
         // Load dependency
         DependencyManager.loadDependency()
 
-        // Register enchantments
+        // Register vanilla enchantments
         CAEnchantmentRegistry.getInstance().registerStartupEnchantments()
-
-        // Load chat listener
-        chatListener = ChatEventListener()
-        pluginManager.registerEvents(chatListener, this)
 
         // Load config
         val success = ConfigHolder.loadConfig()
@@ -107,23 +101,26 @@ class CustomAnvil : JavaPlugin() {
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
 
-        // Handle custom enchant config
-        DependencyManager.handleConfigChanges(this)
-
         // Load gui constants //TODO maybe something better later
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
 
-        // Load metrics
-        Metrics(this, bstatsPluginId)
+        // Register enchantment of compatible plugin and load configuration change.
+        DependencyManager.registerEnchantments()
+        DependencyManager.handleCompatibilityConfig(this)
 
         // Add commands to reload the plugin
         prepareCommand()
 
-        server.pluginManager.registerEvents(
-            AnvilEventListener(DependencyManager.packetManager),
-            this
-        )
+        // Load chat listener
+        chatListener = ChatEventListener()
+        server.pluginManager.registerEvents(chatListener, this)
+
+        // Register anvil events
+        server.pluginManager.registerEvents(AnvilEventListener(DependencyManager.packetManager), this)
+
+        // Load metrics
+        Metrics(this, bstatsPluginId)
     }
 
     fun reloadResource(

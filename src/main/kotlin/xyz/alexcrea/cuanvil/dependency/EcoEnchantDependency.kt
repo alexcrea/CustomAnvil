@@ -53,7 +53,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
                 doSave = true
                 config[testPath] = true
 
-                DependencyManager.writeDefaultConfig(defaultConfig, enchantment)
+                DependencyManager.writeDefaultConfig(defaultConfig, enchantment)  //TODO move to api register
             }
         }
 

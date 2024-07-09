@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.api.ConflictBuilder
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
@@ -36,11 +37,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     fun registerEnchantments(){
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {
-            CAEnchantmentRegistry.getInstance().register(
-                CAEnchantSquaredEnchantment(
-                    enchant
-                )
-            )
+            EnchantmentApi.registerEnchantment(CAEnchantSquaredEnchantment(enchant))
         }
 
     }
@@ -81,7 +78,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         }
 
         // Write default level limit and xp cost
-        for (enchantment in esEnchantments) {
+        for (enchantment in esEnchantments) { //TODO move to api register
             DependencyManager.writeDefaultConfig(defaultConfig, enchantment)
         }
 

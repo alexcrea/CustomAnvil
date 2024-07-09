@@ -37,7 +37,7 @@ object DependencyManager {
 
     }
 
-    fun handleConfigChanges(plugin: Plugin) {
+    fun handleCompatibilityConfig(plugin: Plugin) {
         val folder = File(plugin.dataFolder, "compatibility")
 
         enchantmentSquaredCompatibility?.registerPluginConfiguration()
@@ -51,6 +51,12 @@ object DependencyManager {
         val rarity = enchantment.defaultRarity()
         defaultConfig["enchant_values.${enchantment.key.key}.item"] = rarity.itemValue
         defaultConfig["enchant_values.${enchantment.key.key}.book"] = rarity.bookValue
+    }
+
+    fun registerEnchantments() {
+        enchantmentSquaredCompatibility?.registerEnchantments()
+        ecoEnchantCompatibility?.registerEnchantments()
+
     }
 
 }

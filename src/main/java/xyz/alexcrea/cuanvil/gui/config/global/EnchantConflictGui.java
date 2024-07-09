@@ -36,7 +36,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
                 new IncludeGroup("new_group"),
                 0);
 
-        ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList().add(conflict);
+        ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
 
         // save empty conflict in config
         String[] emptyStringArray = new String[0];
