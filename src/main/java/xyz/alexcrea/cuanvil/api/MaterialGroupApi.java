@@ -122,6 +122,30 @@ public class MaterialGroupApi {
     }
 
     /**
+     * Remove a material group.
+     * Caution ! It will not be removed from depending conflict or other material group at runtime.
+     * For that reason, it is not recommended to use this function.
+     *
+     * @param group The recipe to remove
+     * @return True if successful.
+     */
+    public static boolean removeGroup(@NotNull AbstractMaterialGroup group){
+        // Remove from registry
+        ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
+
+        // Write as null and save to file
+        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(group.getName(), null);
+        prepareSaveTask();
+
+        // Remove from gui
+        if(group instanceof IncludeGroup includeGroup){
+            GroupConfigGui.INSTANCE.removeGeneric(includeGroup);
+        }
+
+        return true;
+    }
+
+    /**
      * Prepare a task to reload every conflict.
      */
     private static void prepareSaveTask() {

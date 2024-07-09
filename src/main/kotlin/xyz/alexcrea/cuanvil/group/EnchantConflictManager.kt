@@ -52,16 +52,32 @@ class EnchantConflictManager {
             val section = config.getConfigurationSection(key)!!
             val conflict = createConflict(section, itemManager, key)
 
-            addConflictToEnchantments(conflict)
-            conflictList.add(conflict)
+            addConflict(conflict)
         }
 
+    }
+
+    fun addConflict(conflict: EnchantConflictGroup){
+        addConflictToEnchantments(conflict)
+        conflictList.add(conflict)
+    }
+
+    fun removeConflict(conflict: EnchantConflictGroup){
+        removeConflictFromEnchantments(conflict)
+        conflictList.remove(conflict)
     }
 
     // Add the conflict to enchantments
     private fun addConflictToEnchantments(conflict: EnchantConflictGroup) {
         conflict.getEnchants().forEach { enchant ->
             enchant.addConflict(conflict)
+        }
+    }
+
+    // Remove the conflict from enchantments
+    private fun removeConflictFromEnchantments(conflict: EnchantConflictGroup) {
+        conflict.getEnchants().forEach { enchant ->
+            enchant.removeConflict(conflict)
         }
     }
 

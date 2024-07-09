@@ -7,7 +7,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 
 class AnvilCustomRecipe(
-    private val name: String,
+    val name: String,
     var exactCount: Boolean,
     //var exactLeft: Boolean,
     //var exactRight: Boolean,

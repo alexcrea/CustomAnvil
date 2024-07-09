@@ -41,7 +41,7 @@ public class ConflictAPI {
         EnchantConflictGroup conflict = builder.build();
 
         // Register conflict
-        ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList().add(conflict);
+        ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
 
         // Add conflict to gui
         EnchantConflictGui.INSTANCE.updateValueForGeneric(conflict, true);
@@ -110,6 +110,25 @@ public class ConflictAPI {
         return result;
     }
 
+    /**
+     * Remove a conflict.
+     *
+     * @param conflict The conflict to remove
+     * @return True if successful.
+     */
+    public static boolean removeConflict(@NotNull EnchantConflictGroup conflict){
+        // Remove from registry
+        ConfigHolder.CONFLICT_HOLDER.getConflictManager().removeConflict(conflict);
+
+        // Write as null and save to file
+        ConfigHolder.CONFLICT_HOLDER.getConfig().set(conflict.getName(), null);
+        prepareSaveTask();
+
+        // Remove from gui
+        EnchantConflictGui.INSTANCE.removeGeneric(conflict);
+
+        return true;
+    }
 
     /**
      * Prepare a task to save conflict configuration.

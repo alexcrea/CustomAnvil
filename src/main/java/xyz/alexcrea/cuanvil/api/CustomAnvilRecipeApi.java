@@ -11,6 +11,9 @@ import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Custom Anvil api for custom anvil recipes.
+ */
 @SuppressWarnings("unused")
 public class CustomAnvilRecipeApi {
 
@@ -47,12 +50,35 @@ public class CustomAnvilRecipeApi {
             return false;
         }
 
+        // Add to registry
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanAddNew(recipe);
+
         // Save to file
         recipe.saveToFile(false, false);
         prepareSaveTask();
 
-        // Update gui
+        // Add from gui
         CustomRecipeConfigGui.INSTANCE.updateValueForGeneric(recipe, true);
+
+        return true;
+    }
+
+    /**
+     * Remove a custom anvil recipe.
+     *
+     * @param recipe The recipe to remove
+     * @return True if successful.
+     */
+    public static boolean removeRecipe(@NotNull AnvilCustomRecipe recipe){
+        // Remove from registry
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
+
+        // Write as null and save to file
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(recipe.getName(), null);
+        prepareSaveTask();
+
+        // Remove from gui
+        CustomRecipeConfigGui.INSTANCE.removeGeneric(recipe);
 
         return true;
     }
