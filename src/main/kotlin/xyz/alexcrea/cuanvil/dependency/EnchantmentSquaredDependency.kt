@@ -170,7 +170,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
         conflict.addEnchantment(enchantment1).addEnchantment(enchantment2)
 
-        conflict.setMaxBeforeConflict(1);
+        conflict.setMaxBeforeConflict(1)
         conflict.registerIfAbsent()
     }
 

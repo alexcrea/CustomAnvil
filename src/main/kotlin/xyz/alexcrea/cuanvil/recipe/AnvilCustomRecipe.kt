@@ -74,23 +74,28 @@ class AnvilCustomRecipe(
 
     }
 
-    fun saveToFile(){
+    fun saveToFile(writeFile: Boolean, doBackup: Boolean){
         val fileConfig = ConfigHolder.CUSTOM_RECIPE_HOLDER.config
 
-        fileConfig.set("$name.$EXACT_COUNT_CONFIG", exactCount)
+        fileConfig["$name.$EXACT_COUNT_CONFIG"] = exactCount
         //fileConfig.set("$name.$EXACT_LEFT_CONFIG", exactLeft)
         //fileConfig.set("$name.$EXACT_RIGHT_CONFIG", exactRight)
 
-        fileConfig.set("$name.$XP_COST_CONFIG", xpCostPerCraft)
+        fileConfig["$name.$XP_COST_CONFIG"] = xpCostPerCraft
 
-        fileConfig.set("$name.$LEFT_ITEM_CONFIG", leftItem)
-        fileConfig.set("$name.$RIGHT_ITEM_CONFIG", rightItem)
-        fileConfig.set("$name.$RESULT_ITEM_CONFIG", resultItem)
+        fileConfig["$name.$LEFT_ITEM_CONFIG"] = leftItem
+        fileConfig["$name.$RIGHT_ITEM_CONFIG"] = rightItem
+        fileConfig["$name.$RESULT_ITEM_CONFIG"] = resultItem
 
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE)
+        if (writeFile) {
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(doBackup)
         }
+    }
+
+    @Deprecated("Should use saveToFile(Boolean, Boolean) instead") //TODO determine when an where to save/do backup and remove use of variable like TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE
+    fun saveToFile(){
+        saveToFile(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE, GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE)
     }
 
     fun updateFromFile(){

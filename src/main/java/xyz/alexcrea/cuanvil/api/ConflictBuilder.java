@@ -1,11 +1,13 @@
 package xyz.alexcrea.cuanvil.api;
 
+import io.delilaheve.CustomAnvil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -342,14 +344,83 @@ public class ConflictBuilder {
 
         return clone;
     }
+    /**
+     * Build a new Enchant conflict group by this builder.
+     * @return An Enchant conflict group with this builder parameters.
+     */
+    public EnchantConflictGroup build(){
+        AbstractMaterialGroup materials = extractGroups();
+        EnchantConflictGroup conflict = new EnchantConflictGroup(getName(), materials, getMaxBeforeConflict());
+        appendEnchantments(conflict);
+
+        return conflict;
+    }
 
     /**
-     * Register this conflict.
+     * Register this conflict if not yet registered.
      * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder)}
      * @return True if successful.
      */
     public boolean registerIfAbsent(){
         return ConflictAPI.addConflict(this);
+    }
+
+    /**
+     * Append builders stored enchantments into conflict.
+     *
+     * @param conflict The conflict target
+     */
+    protected void appendEnchantments(@NotNull EnchantConflictGroup conflict){
+        for (String enchantmentName : getEnchantmentNames()){
+            if(appendEnchantment(conflict, EnchantmentApi.getByName(enchantmentName))){
+                CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + getName());
+                ConflictAPI.logConflictOrigin(this);
+            }
+        }
+        for (NamespacedKey enchantmentKey : getEnchantmentKeys()){
+            if(!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))){
+                CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentKey + " for conflict " + getName());
+                ConflictAPI.logConflictOrigin(this);
+            }
+        }
+    }
+
+    /**
+     * Append an enchantment.
+     *
+     * @param conflict    The conflict target
+     * @param enchantment The enchantment
+     * @return True if successful.
+     */
+    protected static boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment){
+        if(enchantment == null)
+            return false;
+        conflict.addEnchantment(enchantment);
+        return true;
+    }
+
+    /**
+     * Extract group abstract material group.
+     *
+     * @return The abstract material group from the builder.
+     */
+    protected AbstractMaterialGroup extractGroups(){
+        ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
+        IncludeGroup group = new IncludeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
+
+        for (String groupName : getExcludedGroupNames()) {
+            AbstractMaterialGroup materialGroup = itemGroupManager.get(groupName);
+
+            if(materialGroup == null){
+                CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + getName());
+                ConflictAPI.logConflictOrigin(this);
+                continue;
+            }
+
+            group.addToPolicy(materialGroup);
+        }
+
+        return group;
     }
 
 }

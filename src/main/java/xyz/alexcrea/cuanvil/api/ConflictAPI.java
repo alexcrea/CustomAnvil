@@ -5,10 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.group.*;
+import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 
 import java.util.Collections;
@@ -31,7 +29,7 @@ public class ConflictAPI {
      * Write and add a conflict.
      * Will not write the conflict if it already exists.
      *
-     * @param builder The conflict builder to base on
+     * @param builder The conflict builder to be based on
      * @return True if successful.
      */
     public static boolean addConflict(@NotNull ConflictBuilder builder){
@@ -40,73 +38,15 @@ public class ConflictAPI {
 
         if(!writeConflict(builder, false)) return false;
 
-        AbstractMaterialGroup materials = extractGroup(builder);
-        EnchantConflictGroup conflict = new EnchantConflictGroup(builder.getName(), materials, builder.getMaxBeforeConflict());
-        appendEnchantments(builder, conflict);
+        EnchantConflictGroup conflict = builder.build();
 
+        // Register conflict
+        ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList().add(conflict);
+
+        // Add conflict to gui
         EnchantConflictGui.INSTANCE.updateValueForGeneric(conflict, true);
 
         return true;
-    }
-
-    /**
-     * Append builders stored enchantments into conflict.
-     *
-     * @param builder  The builder source
-     * @param conflict The conflict target
-     */
-    protected static void appendEnchantments(@NotNull ConflictBuilder builder, @NotNull EnchantConflictGroup conflict){
-        for (String enchantmentName : builder.getEnchantmentNames()){
-            if(appendEnchantment(conflict, EnchantmentApi.getByName(enchantmentName))){
-                CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + builder.getName());
-                logConflictOrigin(builder);
-            }
-        }
-        for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()){
-            if(!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))){
-                CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentKey + " for conflict " + builder.getName());
-                logConflictOrigin(builder);
-            }
-        }
-    }
-
-    /**
-     * Append an enchantment.
-     *
-     * @param conflict    The conflict target
-     * @param enchantment The enchantment
-     * @return True if successful.
-     */
-    protected static boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment){
-        if(enchantment == null)
-            return false;
-        conflict.addEnchantment(enchantment);
-        return true;
-    }
-
-    /**
-     * Extract group abstract material group.
-     *
-     * @param builder The builder source
-     * @return The abstract material group from the builder.
-     */
-    protected static AbstractMaterialGroup extractGroup(@NotNull ConflictBuilder builder){
-        ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        IncludeGroup group = new IncludeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
-
-        for (String groupName : builder.getExcludedGroupNames()) {
-            AbstractMaterialGroup materialGroup = itemGroupManager.get(groupName);
-
-            if(materialGroup == null){
-                CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + builder.getName());
-                logConflictOrigin(builder);
-                continue;
-            }
-
-            group.addToPolicy(materialGroup);
-        }
-
-        return group;
     }
 
     /**
@@ -135,7 +75,7 @@ public class ConflictAPI {
 
         String name = builder.getName();
         if(name.contains(".")) {
-            CustomAnvil.instance.getLogger().warning("Conflict " + name +" contain . in its name but should not. this conflict is ignored.");
+            CustomAnvil.instance.getLogger().warning("Conflict " + name +" contain \".\" in its name but should not. this conflict is ignored.");
             logConflictOrigin(builder);
             return false;
         }
@@ -170,8 +110,9 @@ public class ConflictAPI {
         return result;
     }
 
+
     /**
-     * Prepare a task to reload every conflict.
+     * Prepare a task to save conflict configuration.
      */
     private static void prepareSaveTask() {
         if(saveChangeTask != -1) return;
@@ -183,7 +124,7 @@ public class ConflictAPI {
     }
 
     /**
-     * Prepare a task to save configuration.
+     * Prepare a task to reload every conflict.
      */
     private static void prepareUpdateTask() {
         if(reloadChangeTask != -1) return;
@@ -196,7 +137,7 @@ public class ConflictAPI {
 
     }
 
-    private static void logConflictOrigin(@NotNull ConflictBuilder builder){
+    static void logConflictOrigin(@NotNull ConflictBuilder builder){
         CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() +" came from " + builder.getSourceName() + ".");
     }
 
