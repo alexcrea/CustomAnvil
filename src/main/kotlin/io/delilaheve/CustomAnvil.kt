@@ -97,19 +97,23 @@ class CustomAnvil : JavaPlugin() {
         chatListener = ChatEventListener()
         server.pluginManager.registerEvents(chatListener, this)
 
+        // Load dependency
+        DependencyManager.loadDependency()
+
         // Register anvil events
         server.pluginManager.registerEvents(AnvilEventListener(DependencyManager.packetManager), this)
 
         // Load metrics
         Metrics(this, bstatsPluginId)
 
-        // Load other things
+        // Load other thing later.
+        // It is so other dependent plugins can implement there event listener before we fire them.
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, {loadEnchantmentSystem()}, 0L)
     }
 
     private fun loadEnchantmentSystem(){
-        // Load dependency
-        DependencyManager.loadDependency()
+        // Load default configuration
+        if (!ConfigHolder.loadDefaultConfig()) return
 
         // Register enchantments
         CAEnchantmentRegistry.getInstance().registerStartupEnchantments()
@@ -119,8 +123,7 @@ class CustomAnvil : JavaPlugin() {
         server.pluginManager.callEvent(enchantReadyEvent)
 
         // Load config
-        val success = ConfigHolder.loadConfig()
-        if (!success) return
+        if (!ConfigHolder.loadNonDefaultConfig()) return
 
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
@@ -133,7 +136,7 @@ class CustomAnvil : JavaPlugin() {
         GuiSharedConstant.loadConstants()
 
         // Register enchantment of compatible plugin and load configuration change.
-        DependencyManager.handleCompatibilityConfig(this)
+        DependencyManager.handleCompatibilityConfig()
     }
 
     fun reloadResource(

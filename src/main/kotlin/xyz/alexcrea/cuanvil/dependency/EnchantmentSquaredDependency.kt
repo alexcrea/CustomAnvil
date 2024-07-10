@@ -11,7 +11,6 @@ import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.api.ConflictBuilder
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi
-import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEnchantSquaredEnchantment
@@ -36,6 +35,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     }
 
     fun registerEnchantments(){
+        CustomAnvil.instance.logger.info("Preparing Enchantment Squared compatibility...")
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {
             EnchantmentApi.registerEnchantment(CAEnchantSquaredEnchantment(enchant))
         }
@@ -62,14 +62,8 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         return CAEnchantment.getByKey(getKeyFromEnchant(enchant))!!
     }
 
-
-    private val IS_READY_PATH = "enchantment_square_ready"
     fun registerPluginConfiguration(){
-        val defaultConfig = ConfigHolder.DEFAULT_CONFIG.config
-        val isReady = defaultConfig.getBoolean(IS_READY_PATH, false)
-        if(isReady) return
-
-        CustomAnvil.instance.logger.info("Preparing configuration for Enchantment Squared...")
+        CustomAnvil.instance.logger.info("Preparing Enchantment Squared config...")
 
         // Prepare enchantments
         val esEnchantments = ArrayList<CAEnchantSquaredEnchantment>()
@@ -77,21 +71,10 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
             esEnchantments.add(getWrappedEnchant(enchant) as CAEnchantSquaredEnchantment)
         }
 
-        // Write default level limit and xp cost
-        for (enchantment in esEnchantments) { //TODO move to api register
-            DependencyManager.writeDefaultConfig(defaultConfig, enchantment)
-        }
-
         // Write groups and conflicts
         writeMissingGroups()
         writeMaterialRestriction(esEnchantments)
         writeEnchantmentConflicts(esEnchantments)
-
-        // Set ready
-        defaultConfig[IS_READY_PATH] = true
-
-        // Save
-        ConfigHolder.DEFAULT_CONFIG.saveToDisk(true)
 
         CustomAnvil.instance.logger.info("Enchantment Squared should now work as expected !")
     }
@@ -112,15 +95,15 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         MaterialGroupApi.addMaterialGroup(hoes)
 
         val shield = IncludeGroup("shield")
-        hoes.addToPolicy(Material.SHIELD)
+        shield.addToPolicy(Material.SHIELD)
         MaterialGroupApi.addMaterialGroup(shield)
 
         val elytra = IncludeGroup("elytra")
-        hoes.addToPolicy(Material.ELYTRA)
+        elytra.addToPolicy(Material.ELYTRA)
         MaterialGroupApi.addMaterialGroup(elytra)
 
         val trinkets = IncludeGroup("trinkets")
-        hoes.addToPolicy(Material.ROTTEN_FLESH)
+        trinkets.addToPolicy(Material.ROTTEN_FLESH)
         MaterialGroupApi.addMaterialGroup(trinkets)
 
     }

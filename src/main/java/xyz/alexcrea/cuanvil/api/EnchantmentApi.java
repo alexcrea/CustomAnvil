@@ -1,9 +1,13 @@
 package xyz.alexcrea.cuanvil.api;
 
+import io.delilaheve.CustomAnvil;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
@@ -19,6 +23,8 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class EnchantmentApi {
+
+    private static int saveChangeTask = -1;
 
     private EnchantmentApi() {}
 
@@ -38,6 +44,9 @@ public class EnchantmentApi {
         if(EnchantLimitConfigGui.getInstance() != null){
             EnchantLimitConfigGui.getInstance().updateValueForGeneric(enchantment, true);
         }
+
+        // Write default if do not exist
+        writeDefaultConfig(enchantment, false);
 
         return true;
     }
@@ -137,5 +146,45 @@ public class EnchantmentApi {
     public static Map<NamespacedKey, CAEnchantment> getRegisteredEnchantments(){
         return Collections.unmodifiableMap(CAEnchantmentRegistry.getInstance().registeredEnchantments());
     }
+
+    /**
+     * Write the default level and rarity configuration of the enchantment.
+     * @param enchantment The enchantment to write default configuration
+     * @param override If it should override old configuration
+     * @return Return false if override is false and a configuration exist. true otherwise.
+     */
+    public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override){
+        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
+        if(!override && config.contains(enchantment.getName())) return false;
+
+        writeDefaultConfig(config, enchantment);
+
+        prepareSaveTask();
+        return true;
+    }
+
+
+    private static void writeDefaultConfig(FileConfiguration defaultConfig, CAEnchantment enchantment) {
+        defaultConfig.set("enchant_limits." + enchantment.getKey().getKey(), enchantment.defaultMaxLevel());
+
+        String basePath = "enchant_values." + enchantment.getKey().getKey();
+        EnchantmentRarity rarity = enchantment.defaultRarity();
+
+        defaultConfig.set(basePath + ".item", rarity.getItemValue());
+        defaultConfig.set(basePath + ".book", rarity.getBookValue());
+    }
+
+    /**
+     * Prepare a task to save custom recipe configuration.
+     */
+    private static void prepareSaveTask() {
+        if(saveChangeTask != -1) return;
+
+        saveChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+            ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
+            saveChangeTask = -1;
+        }, 0L);
+    }
+
 
 }

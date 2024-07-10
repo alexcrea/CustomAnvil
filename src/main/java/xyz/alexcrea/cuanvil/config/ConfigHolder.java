@@ -20,21 +20,38 @@ public abstract class ConfigHolder {
     public static UnitRepairHolder UNIT_REPAIR_HOLDER;
     public static CustomAnvilCraftHolder CUSTOM_RECIPE_HOLDER;
 
-    public static boolean loadConfig() {
+    /**
+     * Load default configuration.
+     * @return True if successful.
+     */
+    public static boolean loadDefaultConfig() {
         DEFAULT_CONFIG = new DefaultConfigHolder();
+
+        return DEFAULT_CONFIG.reloadFromDisk(true);
+    }
+
+    /**
+     * Load non default configuration.
+     * @return True if successful.
+     */
+    public static boolean loadNonDefaultConfig() {
         ITEM_GROUP_HOLDER = new ItemGroupConfigHolder();
         CONFLICT_HOLDER = new ConflictConfigHolder();
         UNIT_REPAIR_HOLDER = new UnitRepairHolder();
         CUSTOM_RECIPE_HOLDER = new CustomAnvilCraftHolder();
 
-        return reloadAllFromDisk(true);
+        return removeNonDefaultFromDisk(true);
     }
 
     public static boolean reloadAllFromDisk(boolean hardfail) {
-
         boolean sucess = DEFAULT_CONFIG.reloadFromDisk(hardfail);
         if (!sucess) return false;
-        sucess = ITEM_GROUP_HOLDER.reloadFromDisk(hardfail);
+
+        return removeNonDefaultFromDisk(hardfail);
+    }
+
+    private static boolean removeNonDefaultFromDisk(boolean hardfail){
+        boolean sucess = ITEM_GROUP_HOLDER.reloadFromDisk(hardfail);
         if (!sucess) return false;
         sucess = CONFLICT_HOLDER.reloadFromDisk(hardfail);
         if (!sucess) return false;

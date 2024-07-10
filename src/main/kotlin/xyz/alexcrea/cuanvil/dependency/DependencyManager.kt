@@ -1,13 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency
 
 import org.bukkit.Bukkit
-import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.dependency.protocolib.NoProtocoLib
 import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
 import xyz.alexcrea.cuanvil.dependency.protocolib.ProtocoLibWrapper
-import xyz.alexcrea.cuanvil.enchant.CAEnchantment
-import java.io.File
 
 object DependencyManager {
 
@@ -21,7 +17,7 @@ object DependencyManager {
         // ProtocolLib dependency
         packetManager =
             if(pluginManager.isPluginEnabled("ProtocolLib")) ProtocoLibWrapper()
-        else  NoProtocoLib()
+        else NoProtocoLib()
 
         // Enchantment Squared dependency
         if(pluginManager.isPluginEnabled("EnchantsSquared")){
@@ -37,20 +33,9 @@ object DependencyManager {
 
     }
 
-    fun handleCompatibilityConfig(plugin: Plugin) {
-        val folder = File(plugin.dataFolder, "compatibility")
-
+    fun handleCompatibilityConfig() {
         enchantmentSquaredCompatibility?.registerPluginConfiguration()
-        ecoEnchantCompatibility?.registerPluginConfiguration(folder)
 
-    }
-
-    fun writeDefaultConfig(defaultConfig: FileConfiguration, enchantment: CAEnchantment) {
-        defaultConfig["enchant_limits.${enchantment.key.key}"] = enchantment.defaultMaxLevel()
-
-        val rarity = enchantment.defaultRarity()
-        defaultConfig["enchant_values.${enchantment.key.key}.item"] = rarity.itemValue
-        defaultConfig["enchant_values.${enchantment.key.key}.book"] = rarity.bookValue
     }
 
     fun registerEnchantments() {
