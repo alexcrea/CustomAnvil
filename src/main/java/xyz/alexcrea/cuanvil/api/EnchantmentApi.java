@@ -32,8 +32,12 @@ public class EnchantmentApi {
         if(!CAEnchantmentRegistry.getInstance().register(enchantment)) return false;
 
         // Add enchantment to gui.
-        EnchantCostConfigGui.INSTANCE.updateValueForGeneric(enchantment, true);
-        EnchantLimitConfigGui.INSTANCE.updateValueForGeneric(enchantment, true);
+        if(EnchantCostConfigGui.getInstance() != null){
+            EnchantCostConfigGui.getInstance().updateValueForGeneric(enchantment, true);
+        }
+        if(EnchantLimitConfigGui.getInstance() != null){
+            EnchantLimitConfigGui.getInstance().updateValueForGeneric(enchantment, true);
+        }
 
         return true;
     }
@@ -72,8 +76,12 @@ public class EnchantmentApi {
      */
     public static boolean unregisterEnchantment(@Nullable CAEnchantment enchantment){
         // Remove from gui
-        EnchantCostConfigGui.INSTANCE.removeGeneric(enchantment);
-        EnchantLimitConfigGui.INSTANCE.removeGeneric(enchantment);
+        if(EnchantCostConfigGui.getInstance() != null){
+            EnchantCostConfigGui.getInstance().removeGeneric(enchantment);
+        }
+        if(EnchantLimitConfigGui.getInstance() != null){
+            EnchantLimitConfigGui.getInstance().removeGeneric(enchantment);
+        }
 
         return CAEnchantmentRegistry.getInstance().unregister(enchantment);
     }

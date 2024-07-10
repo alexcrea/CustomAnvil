@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
@@ -24,18 +25,21 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
 
     private static final String SECTION_NAME = "enchant_values";
 
-    public static final EnchantCostConfigGui INSTANCE = new EnchantCostConfigGui();
+    private static EnchantCostConfigGui INSTANCE = null;
 
-    static {
-        INSTANCE.init();
+    @Nullable
+    public static EnchantCostConfigGui getInstance() {
+        return INSTANCE;
     }
 
     /**
      * Constructor of this Global gui for enchantment cost settings.
      */
-    private EnchantCostConfigGui() {
+    public EnchantCostConfigGui() {
         super("\u00A78Enchantment Level Cost");
+        if(INSTANCE == null) INSTANCE = this;
 
+        init();
     }
 
     @Override

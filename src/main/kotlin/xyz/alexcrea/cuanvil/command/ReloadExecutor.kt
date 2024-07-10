@@ -36,8 +36,8 @@ class ReloadExecutor : CommandExecutor {
 
             // Then update all global gui containing value from config
             BasicConfigGui.getInstance()?.updateGuiValues()
-            EnchantCostConfigGui.INSTANCE.updateGuiValues()
-            EnchantLimitConfigGui.INSTANCE.updateGuiValues()
+            EnchantCostConfigGui.getInstance()?.updateGuiValues()
+            EnchantLimitConfigGui.getInstance()?.updateGuiValues()
 
             EnchantConflictGui.INSTANCE.reloadValues()
             GroupConfigGui.INSTANCE.reloadValues()

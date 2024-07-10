@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import org.bukkit.Material;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
@@ -17,18 +18,21 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
 
     private static final String SECTION_NAME = "enchant_limits";
 
-    public static final EnchantLimitConfigGui INSTANCE = new EnchantLimitConfigGui();
+    private static EnchantLimitConfigGui INSTANCE = null;
 
-    static {
-        INSTANCE.init();
+    @Nullable
+    public static EnchantLimitConfigGui getInstance() {
+        return INSTANCE;
     }
 
     /**
      * Constructor of this Global gui for enchantment level limit settings.
      */
-    private EnchantLimitConfigGui() {
+    public EnchantLimitConfigGui() {
         super("\u00A78Enchantment Level Limit");
+        if(INSTANCE == null) INSTANCE = this;
 
+        init();
     }
 
     @Override
