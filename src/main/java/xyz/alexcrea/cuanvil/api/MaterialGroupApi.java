@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,10 +14,7 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Custom Anvil api for material group registry.
@@ -39,11 +37,16 @@ public class MaterialGroupApi {
     public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group){
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         if(itemGroupManager.get(group.getName()) != null) return false;
+        itemGroupManager.getGroupMap().put(group.getName(), group);
 
         if(!writeMaterialGroup(group, false)) return false;
 
         if(group instanceof IncludeGroup includeGroup){
             GroupConfigGui.INSTANCE.updateValueForGeneric(includeGroup, true);
+        }
+
+        if(ConfigOptions.INSTANCE.getVerboseDebugLog()){
+            CustomAnvil.instance.getLogger().info("Registered group " + group.getName());
         }
 
         return true;
@@ -100,10 +103,10 @@ public class MaterialGroupApi {
 
         config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, groupType);
         if(!materialSet.isEmpty()){
-            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSet);
+            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materialSet));
         }
         if(!groupSet.isEmpty()){
-            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, groupSet);
+            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSEtToStringList(groupSet));
         }
 
     }
@@ -116,9 +119,17 @@ public class MaterialGroupApi {
 
         config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, "include");
         if(!materials.isEmpty()){
-            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materials);
+            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materials));
         }
 
+    }
+
+    public static List<String> materialSetToStringList(@NotNull Set<Material> materials){
+        return materials.stream().map(material -> material.getKey().getKey().toLowerCase()).toList();
+    }
+
+    public static List<String> materialGroupSEtToStringList(@NotNull Set<AbstractMaterialGroup> groups){
+        return groups.stream().map(AbstractMaterialGroup::getName).toList();
     }
 
     /**

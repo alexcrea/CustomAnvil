@@ -325,24 +325,24 @@ public class ConflictBuilder {
      */
     @NotNull
     public ConflictBuilder copy() {
-        ConflictBuilder clone = new ConflictBuilder(this.name, this.source);
+        ConflictBuilder copy = new ConflictBuilder(this.name, this.source);
 
         setMaxBeforeConflict(this.maxBeforeConflict);
 
         // Set Enchantments
         for (NamespacedKey key : this.enchantmentKeys) {
-            clone.addEnchantment(key);
+            copy.addEnchantment(key);
         }
-        for (String name : this.enchantmentNames) {
-            clone.addEnchantment(name);
+        for (String enchantName : this.enchantmentNames) {
+            copy.addEnchantment(enchantName);
         }
 
         // Set Groups
-        for (String name : this.excludedGroupNames) {
-            clone.addExcludedGroup(name);
+        for (String groupName : this.excludedGroupNames) {
+            copy.addExcludedGroup(groupName);
         }
 
-        return clone;
+        return copy;
     }
     /**
      * Build a new Enchant conflict group by this builder.

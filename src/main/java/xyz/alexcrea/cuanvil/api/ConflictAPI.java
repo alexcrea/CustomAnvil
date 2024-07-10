@@ -9,10 +9,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Custom Anvil api for conflict registry.
@@ -82,8 +79,8 @@ public class ConflictAPI {
 
         String basePath = name + ".";
 
-        Set<String> enchantments = extractEnchantments(builder);
-        Set<String> excludedGroups = builder.getExcludedGroupNames();
+        List<String> enchantments = extractEnchantments(builder);
+        List<String> excludedGroups = new ArrayList<>(builder.getExcludedGroupNames());
         if(!enchantments.isEmpty()) config.set(basePath + "enchantments", enchantments);
         if(!excludedGroups.isEmpty()) config.set(basePath + "notAffectedGroups", excludedGroups);
         if(builder.getMaxBeforeConflict() > 0) config.set(basePath + "maxEnchantmentBeforeConflict", builder.getMaxBeforeConflict());
@@ -101,8 +98,8 @@ public class ConflictAPI {
      * @return Builder's stored enchantment.
      */
     @NotNull
-    private static Set<String> extractEnchantments(@NotNull ConflictBuilder builder){
-        Set<String> result = new HashSet<>(builder.getEnchantmentNames());
+    private static List<String> extractEnchantments(@NotNull ConflictBuilder builder){
+        List<String> result = new ArrayList<>(builder.getEnchantmentNames());
         for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
             result.add(enchantmentKey.getKey());
         }

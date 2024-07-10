@@ -110,7 +110,8 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     private fun writeMaterialRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>){
         for (enchantment in esEnchantments) {
-            val conflict = ConflictBuilder("restriction_${enchantment.key.key}")
+            val conflict = ConflictBuilder("restriction_${enchantment.key.key}", CustomAnvil.instance)
+            conflict.addEnchantment(enchantment)
 
             // enchanted book is allowed in any case.
             conflict.addExcludedGroup("enchanted_book")
@@ -146,7 +147,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     }
 
     private fun writeConflict(enchantment1: CAEnchantment, enchantment2: CAEnchantment){
-        val conflict = ConflictBuilder("${enchantment1.name}_with_${enchantment2.name}_conflict")
+        val conflict = ConflictBuilder("${enchantment1.name}_with_${enchantment2.name}_conflict", CustomAnvil.instance)
 
         conflict.addEnchantment(enchantment1).addEnchantment(enchantment2)
 
