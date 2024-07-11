@@ -1,11 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency
 
 import org.bukkit.Bukkit
-import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.dependency.protocolib.NoProtocoLib
 import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
 import xyz.alexcrea.cuanvil.dependency.protocolib.ProtocoLibWrapper
-import java.io.File
 
 object DependencyManager {
 
@@ -19,7 +17,7 @@ object DependencyManager {
         // ProtocolLib dependency
         packetManager =
             if(pluginManager.isPluginEnabled("ProtocolLib")) ProtocoLibWrapper()
-        else  NoProtocoLib()
+        else NoProtocoLib()
 
         // Enchantment Squared dependency
         if(pluginManager.isPluginEnabled("EnchantsSquared")){
@@ -35,11 +33,14 @@ object DependencyManager {
 
     }
 
-    fun handleConfigChanges(plugin: Plugin) {
-        val folder = File(plugin.dataFolder, "compatibility")
-
+    fun handleCompatibilityConfig() {
         enchantmentSquaredCompatibility?.registerPluginConfiguration()
-        ecoEnchantCompatibility?.registerPluginConfiguration(folder)
+
+    }
+
+    fun registerEnchantments() {
+        enchantmentSquaredCompatibility?.registerEnchantments()
+        ecoEnchantCompatibility?.registerEnchantments()
 
     }
 

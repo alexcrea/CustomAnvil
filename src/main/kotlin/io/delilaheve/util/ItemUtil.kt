@@ -29,7 +29,6 @@ object ItemUtil {
     fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<CAEnchantment, Int>) {
         CAEnchantment.clearEnchants(this)
 
-        //TODO maybe faster methode to add vanilla enchantment. maybe move this function to wrapped enchantment
         enchantments.forEach { (enchantment, level) ->
             enchantment.addEnchantmentUnsafe(this, level)
         }

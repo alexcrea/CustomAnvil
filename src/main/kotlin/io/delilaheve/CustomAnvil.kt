@@ -4,6 +4,8 @@ import io.delilaheve.util.ConfigOptions
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
+import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
+import xyz.alexcrea.cuanvil.api.event.CAEnchantRegistryReadyEvent
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
@@ -80,8 +82,6 @@ class CustomAnvil : JavaPlugin() {
     override fun onEnable() {
         instance = this
 
-        val pluginManager = Bukkit.getPluginManager();
-
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
         if (potentialPlugin != null) {
@@ -90,40 +90,53 @@ class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
-        // Load dependency
-        DependencyManager.loadDependency()
-
-        // Register enchantments
-        CAEnchantmentRegistry.getInstance().registerStartupEnchantments()
+        // Add commands
+        prepareCommand()
 
         // Load chat listener
         chatListener = ChatEventListener()
-        pluginManager.registerEvents(chatListener, this)
+        server.pluginManager.registerEvents(chatListener, this)
+
+        // Load dependency
+        DependencyManager.loadDependency()
+
+        // Register anvil events
+        server.pluginManager.registerEvents(AnvilEventListener(DependencyManager.packetManager), this)
+
+        // Load metrics
+        Metrics(this, bstatsPluginId)
+
+        // Load other thing later.
+        // It is so other dependent plugins can implement there event listener before we fire them.
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, {loadEnchantmentSystem()}, 0L)
+    }
+
+    private fun loadEnchantmentSystem(){
+        // Load default configuration
+        if (!ConfigHolder.loadDefaultConfig()) return
+
+        // Register enchantments
+        CAEnchantmentRegistry.getInstance().registerBukkit()
+        DependencyManager.registerEnchantments()
+
+        val enchantReadyEvent = CAEnchantRegistryReadyEvent()
+        server.pluginManager.callEvent(enchantReadyEvent)
 
         // Load config
-        val success = ConfigHolder.loadConfig()
-        if (!success) return
+        if (!ConfigHolder.loadNonDefaultConfig()) return
 
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
 
-        // Handle custom enchant config
-        DependencyManager.handleConfigChanges(this)
+        val configReadyEvent = CAConfigReadyEvent()
+        server.pluginManager.callEvent(configReadyEvent)
 
         // Load gui constants //TODO maybe something better later
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
 
-        // Load metrics
-        Metrics(this, bstatsPluginId)
-
-        // Add commands to reload the plugin
-        prepareCommand()
-
-        server.pluginManager.registerEvents(
-            AnvilEventListener(DependencyManager.packetManager),
-            this
-        )
+        // Register enchantment of compatible plugin and load configuration change.
+        DependencyManager.handleCompatibilityConfig()
     }
 
     fun reloadResource(

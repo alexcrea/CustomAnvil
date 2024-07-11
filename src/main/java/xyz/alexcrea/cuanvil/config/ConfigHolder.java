@@ -20,21 +20,38 @@ public abstract class ConfigHolder {
     public static UnitRepairHolder UNIT_REPAIR_HOLDER;
     public static CustomAnvilCraftHolder CUSTOM_RECIPE_HOLDER;
 
-    public static boolean loadConfig() {
+    /**
+     * Load default configuration.
+     * @return True if successful.
+     */
+    public static boolean loadDefaultConfig() {
         DEFAULT_CONFIG = new DefaultConfigHolder();
+
+        return DEFAULT_CONFIG.reloadFromDisk(true);
+    }
+
+    /**
+     * Load non default configuration.
+     * @return True if successful.
+     */
+    public static boolean loadNonDefaultConfig() {
         ITEM_GROUP_HOLDER = new ItemGroupConfigHolder();
         CONFLICT_HOLDER = new ConflictConfigHolder();
         UNIT_REPAIR_HOLDER = new UnitRepairHolder();
         CUSTOM_RECIPE_HOLDER = new CustomAnvilCraftHolder();
 
-        return reloadAllFromDisk(true);
+        return removeNonDefaultFromDisk(true);
     }
 
     public static boolean reloadAllFromDisk(boolean hardfail) {
-
         boolean sucess = DEFAULT_CONFIG.reloadFromDisk(hardfail);
         if (!sucess) return false;
-        sucess = ITEM_GROUP_HOLDER.reloadFromDisk(hardfail);
+
+        return removeNonDefaultFromDisk(hardfail);
+    }
+
+    private static boolean removeNonDefaultFromDisk(boolean hardfail){
+        boolean sucess = ITEM_GROUP_HOLDER.reloadFromDisk(hardfail);
         if (!sucess) return false;
         sucess = CONFLICT_HOLDER.reloadFromDisk(hardfail);
         if (!sucess) return false;
@@ -192,7 +209,7 @@ public abstract class ConfigHolder {
 
     // Class for itemGroupsManager config
     public static class ItemGroupConfigHolder extends ResourceConfigHolder {
-        private final static String FILE_NAME = "item_groups";
+        private static final String FILE_NAME = "item_groups";
 
         ItemGroupManager itemGroupsManager;
 
@@ -219,7 +236,7 @@ public abstract class ConfigHolder {
 
     // Class for enchant conflict config
     public static class ConflictConfigHolder extends ResourceConfigHolder {
-        private final static String FILE_NAME = "enchant_conflict";
+        private static final String FILE_NAME = "enchant_conflict";
 
         EnchantConflictManager conflictManager;
 
@@ -243,7 +260,7 @@ public abstract class ConfigHolder {
 
     // Class for unit repair config
     public static class UnitRepairHolder extends ResourceConfigHolder {
-        private final static String ITEM_GROUP_FILE_NAME = "unit_repair_item";
+        private static final String ITEM_GROUP_FILE_NAME = "unit_repair_item";
 
 
         private UnitRepairHolder() {
@@ -259,7 +276,7 @@ public abstract class ConfigHolder {
 
     // Class for custom anvil craft
     public static class CustomAnvilCraftHolder extends ResourceConfigHolder {
-        private final static String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
+        private static final String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
         CustomAnvilRecipeManager recipeManager;
 
         private CustomAnvilCraftHolder() {

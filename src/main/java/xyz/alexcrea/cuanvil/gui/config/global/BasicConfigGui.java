@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
@@ -31,8 +32,9 @@ import java.util.Collections;
  */
 public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
-    private static BasicConfigGui INSTANCE;
+    private static BasicConfigGui INSTANCE = null;
 
+    @Nullable
     public static BasicConfigGui getInstance() {
         return INSTANCE;
     }
@@ -43,7 +45,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
      */
     public BasicConfigGui(PacketManager packetManager) {
         super(4, "\u00A78Basic Config", CustomAnvil.instance);
-        INSTANCE = this;
+        if(INSTANCE == null) INSTANCE = this;
 
         this.packetManager = packetManager;
         init();

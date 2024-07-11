@@ -9,7 +9,6 @@ import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import java.util.*
-import kotlin.collections.ArrayList
 
 class EnchantConflictManager {
 
@@ -28,7 +27,7 @@ class EnchantConflictManager {
         private const val FUTURE_USE_PATH = "useInFuture"
 
         // Default name for a joining group
-        private const val DEFAULT_GROUP_NAME = "joinedGroup"
+        const val DEFAULT_GROUP_NAME = "joinedGroup"
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT =
@@ -53,16 +52,32 @@ class EnchantConflictManager {
             val section = config.getConfigurationSection(key)!!
             val conflict = createConflict(section, itemManager, key)
 
-            addConflictToEnchantments(conflict)
-            conflictList.add(conflict)
+            addConflict(conflict)
         }
 
+    }
+
+    fun addConflict(conflict: EnchantConflictGroup){
+        addConflictToEnchantments(conflict)
+        conflictList.add(conflict)
+    }
+
+    fun removeConflict(conflict: EnchantConflictGroup){
+        removeConflictFromEnchantments(conflict)
+        conflictList.remove(conflict)
     }
 
     // Add the conflict to enchantments
     private fun addConflictToEnchantments(conflict: EnchantConflictGroup) {
         conflict.getEnchants().forEach { enchant ->
             enchant.addConflict(conflict)
+        }
+    }
+
+    // Remove the conflict from enchantments
+    private fun removeConflictFromEnchantments(conflict: EnchantConflictGroup) {
+        conflict.getEnchants().forEach { enchant ->
+            enchant.removeConflict(conflict)
         }
     }
 
@@ -140,7 +155,7 @@ class EnchantConflictManager {
     ): AbstractMaterialGroup {
         val group = itemManager.get(groupName)
         if (group == null) {
-            CustomAnvil.instance.logger.warning("Group $groupName do not exist but is ask by conflict $conflictName")
+            CustomAnvil.instance.logger.warning("Material group $groupName do not exist but is ask by conflict $conflictName")
             return IncludeGroup("error_placeholder")
         }
 
@@ -175,7 +190,7 @@ class EnchantConflictManager {
                 if(doConflict){
                     return ConflictType.ENCHANTMENT_CONFLICT
                 }
-;
+
             }
         }
 
@@ -188,14 +203,14 @@ class EnchantConflictManager {
 
         }
 
-        return result;
+        return result
     }
 
     private fun createPartialResult(item: ItemStack, enchantments: Map<CAEnchantment, Int>): ItemStack {
        val newItem = item.clone()
 
        CAEnchantment.clearEnchants(newItem)
-       enchantments.forEach{//TODO maybe bulk add if possible
+       enchantments.forEach{
            enchantment -> enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
        }
 

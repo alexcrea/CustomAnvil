@@ -13,6 +13,9 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
 import java.util.Locale;
 
+/**
+ * Custom Anvil enchantment implementation for vanilla registered enchantment.
+ */
 public class CAVanillaEnchantment extends CAEnchantmentBase {
 
     private final @NotNull Enchantment enchantment;
@@ -29,7 +32,12 @@ public class CAVanillaEnchantment extends CAEnchantmentBase {
     }
 
     @Override
-    public boolean isOptimised() {
+    public boolean isGetOptimised() {
+        return true;
+    }
+
+    @Override
+    public boolean isCleanOptimised() {
         return true;
     }
 

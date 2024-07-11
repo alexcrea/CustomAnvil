@@ -118,10 +118,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             EnchantConflictManager manager = ConfigHolder.CONFLICT_HOLDER.getConflictManager();
 
             // Remove from enchantment
-            for (CAEnchantment enchantment : this.enchantConflict.getEnchants()) {
-                enchantment.removeConflict(this.enchantConflict);
-            }
-            manager.conflictList.remove(this.enchantConflict);
+            manager.removeConflict(this.enchantConflict);
 
             // Remove from parent
             this.parent.removeGeneric(this.enchantConflict);

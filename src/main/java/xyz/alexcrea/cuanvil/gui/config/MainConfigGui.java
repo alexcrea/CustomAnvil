@@ -16,7 +16,7 @@ import java.util.Collections;
 
 public class MainConfigGui extends ChestGui {
 
-    private final static MainConfigGui INSTANCE = new MainConfigGui();
+    private static final MainConfigGui INSTANCE = new MainConfigGui();
 
     public static MainConfigGui getInstance() {
         return INSTANCE;
@@ -58,7 +58,7 @@ public class MainConfigGui extends ChestGui {
         enchantLimitMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment level limit menu"));
         enchantLimitItemstack.setItemMeta(enchantLimitMeta);
 
-        GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, EnchantLimitConfigGui.INSTANCE);
+        GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, new EnchantLimitConfigGui());
         pane.bindItem('2', enchantLimitItem);
 
         // enchant cost item
@@ -70,7 +70,7 @@ public class MainConfigGui extends ChestGui {
         enchantCostMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment costs menu"));
         enchantCostItemstack.setItemMeta(enchantCostMeta);
 
-        GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, EnchantCostConfigGui.INSTANCE);
+        GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, new EnchantCostConfigGui());
         pane.bindItem('3', enchantCostItem);
 
         // Enchantment Conflicts item

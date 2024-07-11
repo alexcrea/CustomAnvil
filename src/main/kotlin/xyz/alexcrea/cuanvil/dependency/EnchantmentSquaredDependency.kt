@@ -3,14 +3,19 @@ package xyz.alexcrea.cuanvil.dependency
 import io.delilaheve.CustomAnvil
 import me.athlaeos.enchantssquared.enchantments.CustomEnchant
 import me.athlaeos.enchantssquared.managers.CustomEnchantManager
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
-import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.api.ConflictBuilder
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.api.MaterialGroupApi
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import xyz.alexcrea.cuanvil.enchant.bulk.EnchantSquaredBulkOperation
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEnchantSquaredEnchantment
+import xyz.alexcrea.cuanvil.group.IncludeGroup
 import java.util.*
 
 class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin) {
@@ -31,13 +36,17 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     }
 
     fun registerEnchantments(){
+        CustomAnvil.instance.logger.info("Preparing Enchantment Squared compatibility...")
+
+        // Register enchantments
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {
-            CAEnchantmentRegistry.getInstance().register(
-                CAEnchantSquaredEnchantment(
-                    enchant
-                )
-            )
+            EnchantmentApi.registerEnchantment(CAEnchantSquaredEnchantment(enchant))
         }
+
+        // Register bulk operation
+        val bulkOpperations = EnchantSquaredBulkOperation()
+        EnchantmentApi.addBulkGet(bulkOpperations)
+        EnchantmentApi.addBulkClean(bulkOpperations)
 
     }
 
@@ -50,10 +59,6 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     }
 
-    fun clearEnchantments(item: ItemStack) {
-        CustomEnchantManager.getInstance().removeAllEnchants(item)
-    }
-
     fun getKeyFromEnchant(enchant: CustomEnchant): NamespacedKey{
         return NamespacedKey.fromString(enchant.type.lowercase(Locale.getDefault()), this.enchantmentSquaredPlugin)!!
     }
@@ -61,14 +66,8 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         return CAEnchantment.getByKey(getKeyFromEnchant(enchant))!!
     }
 
-
-    private val IS_READY_PATH = "enchantment_square_ready"
     fun registerPluginConfiguration(){
-        val defaultConfig = ConfigHolder.DEFAULT_CONFIG.config
-        val isReady = defaultConfig.getBoolean(IS_READY_PATH, false)
-        if(isReady) return
-
-        CustomAnvil.instance.logger.info("Preparing configuration for Enchantment Squared...")
+        CustomAnvil.instance.logger.info("Preparing Enchantment Squared config...")
 
         // Prepare enchantments
         val esEnchantments = ArrayList<CAEnchantSquaredEnchantment>()
@@ -76,30 +75,10 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
             esEnchantments.add(getWrappedEnchant(enchant) as CAEnchantSquaredEnchantment)
         }
 
-        // Write default level limit and xp cost
-        for (enchantment in esEnchantments) {
-            defaultConfig["enchant_limits.${enchantment.key.key}"] = enchantment.defaultMaxLevel()
-
-            val rarity = enchantment.defaultRarity()
-            defaultConfig["enchant_values.${enchantment.key.key}.item"] = rarity.itemValue
-            defaultConfig["enchant_values.${enchantment.key.key}.book"] = rarity.bookValue
-        }
-
         // Write groups and conflicts
         writeMissingGroups()
         writeMaterialRestriction(esEnchantments)
         writeEnchantmentConflicts(esEnchantments)
-
-        // Set ready
-        defaultConfig[IS_READY_PATH] = true
-
-        // Save
-        ConfigHolder.DEFAULT_CONFIG.saveToDisk(true)
-        ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true)
-        ConfigHolder.CONFLICT_HOLDER.saveToDisk(true)
-
-        // Reload
-        ConfigHolder.ITEM_GROUP_HOLDER.reload()
 
         CustomAnvil.instance.logger.info("Enchantment Squared should now work as expected !")
     }
@@ -107,60 +86,51 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     private fun writeMissingGroups(){
         // Write group that do not exist on custom anvil.
         // (Tools group regroup most of the tool items. I did not create a seperated group for theses)
-        val groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.config
-        if(!groupConfig.isConfigurationSection("pickaxes")){
-            groupConfig["pickaxes.type"] = "include"
-            groupConfig["pickaxes.items"] = listOf("wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "golden_pickaxe", "netherite_pickaxe")
-        }
+        val pickaxes = IncludeGroup("pickaxes")
+        pickaxes.addAll(Material.WOODEN_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE, Material.DIAMOND_PICKAXE, Material.GOLDEN_PICKAXE, Material.NETHERITE_PICKAXE)
+        MaterialGroupApi.addMaterialGroup(pickaxes)
 
-        if(!groupConfig.isConfigurationSection("shovels")){
-            groupConfig["shovels.type"] = "include"
-            groupConfig["shovels.items"] = listOf("wooden_shovel", "stone_shovel", "iron_shovel", "diamond_shovel", "golden_shovel", "netherite_shovel")
-        }
+        val shovels = IncludeGroup("shovels")
+        shovels.addAll(Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.NETHERITE_SHOVEL)
+        MaterialGroupApi.addMaterialGroup(shovels)
 
-        if(!groupConfig.isConfigurationSection("hoes")){
-            groupConfig["hoes.type"] = "include"
-            groupConfig["hoes.items"] = listOf("wooden_hoe", "stone_hoe", "iron_hoe", "diamond_hoe", "golden_hoe", "netherite_hoe")
-        }
+        val hoes = IncludeGroup("hoes")
+        hoes.addAll(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.NETHERITE_HOE)
+        MaterialGroupApi.addMaterialGroup(hoes)
 
-        if(!groupConfig.isConfigurationSection("shield")){
-            groupConfig["shield.type"] = "include"
-            groupConfig["shield.items"] = listOf("shield")
-        }
+        val shield = IncludeGroup("shield")
+        shield.addToPolicy(Material.SHIELD)
+        MaterialGroupApi.addMaterialGroup(shield)
 
-        if(!groupConfig.isConfigurationSection("elytra")){
-            groupConfig["elytra.type"] = "include"
-            groupConfig["elytra.items"] = listOf("elytra")
-        }
+        val elytra = IncludeGroup("elytra")
+        elytra.addToPolicy(Material.ELYTRA)
+        MaterialGroupApi.addMaterialGroup(elytra)
 
-        if(!groupConfig.isConfigurationSection("trinkets")){
-            groupConfig["trinkets.type"] = "include"
-            groupConfig["trinkets.items"] = listOf("rotten_flesh")
-        }
+        val trinkets = IncludeGroup("trinkets")
+        trinkets.addToPolicy(Material.ROTTEN_FLESH)
+        MaterialGroupApi.addMaterialGroup(trinkets)
 
     }
 
     private fun writeMaterialRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>){
-        val conflictConfig = ConfigHolder.CONFLICT_HOLDER.config
         for (enchantment in esEnchantments) {
-            val restrictionName = "restriction_${enchantment.key.key}"
-            if(!conflictConfig.isConfigurationSection(restrictionName)){
-                conflictConfig["$restrictionName.enchantments"] = listOf(enchantment.name)
+            val conflict = ConflictBuilder("restriction_${enchantment.key.key}", CustomAnvil.instance)
+            conflict.addEnchantment(enchantment)
 
-                // Get allowed groups
-                val listOfAllowed = ArrayList<String>()
-                listOfAllowed.add("enchanted_book") // enchanted book is allowed in any case.
+            // enchanted book is allowed in any case.
+            conflict.addExcludedGroup("enchanted_book")
 
-                for (esGroup in enchantment.enchant.compatibleItems) {
-                    val caGroup = esGroupToCAGroup(esGroup)
-                    if(caGroup == null){
-                        CustomAnvil.instance.logger.info("Could not find equivalent custom anvil group for $esGroup")
-                        continue
-                    }
-                    listOfAllowed.add(caGroup)
+            // Get allowed groups
+            for (esGroup in enchantment.enchant.compatibleItems) {
+                val caGroup = esGroupToCAGroup(esGroup)
+                if(caGroup == null){
+                    CustomAnvil.instance.logger.info("Could not find equivalent custom anvil group for $esGroup")
+                    continue
                 }
-                conflictConfig["$restrictionName.notAffectedGroups"] = listOfAllowed
+                conflict.addExcludedGroup(caGroup)
             }
+
+            conflict.registerIfAbsent()
         }
     }
 
@@ -181,18 +151,12 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     }
 
     private fun writeConflict(enchantment1: CAEnchantment, enchantment2: CAEnchantment){
-        val conflictConfig = ConfigHolder.CONFLICT_HOLDER.config
-        val conflictPath = "${enchantment1.name}_with_${enchantment2.name}_conflict"
+        val conflict = ConflictBuilder("${enchantment1.name}_with_${enchantment2.name}_conflict", CustomAnvil.instance)
 
-        if(!conflictConfig.isConfigurationSection(conflictPath)){
-            conflictConfig["$conflictPath.enchantments"] = listOf(enchantment1.name, enchantment2.name)
+        conflict.addEnchantment(enchantment1).addEnchantment(enchantment2)
 
-            val empty: List<String> = Collections.emptyList()
-            conflictConfig["$conflictPath.notAffectedGroups"] = empty
-
-            conflictConfig["$conflictPath.maxEnchantmentBeforeConflict"] = 1
-        }
-
+        conflict.setMaxBeforeConflict(1)
+        conflict.registerIfAbsent()
     }
 
     /**

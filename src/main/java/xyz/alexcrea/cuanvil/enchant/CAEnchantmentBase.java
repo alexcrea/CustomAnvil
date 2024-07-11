@@ -1,21 +1,22 @@
 package xyz.alexcrea.cuanvil.enchant;
 
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.group.ConflictType;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 
+/**
+ * Default implementation of an enchantment compatible with Custom Anvil.
+ * One issue with custom anvil is: it does not handle well duplicate key name (ignoring namespace)
+ * as the plugin was initially coded with vanilla enchantment in head
+ */
 public abstract class CAEnchantmentBase implements CAEnchantment {
 
     @NotNull
@@ -71,19 +72,18 @@ public abstract class CAEnchantmentBase implements CAEnchantment {
     }
 
     @Override
-    public boolean isOptimised(){
+    public boolean isGetOptimised(){
+        return false;
+    }
+
+    @Override
+    public boolean isCleanOptimised(){
         return false;
     }
 
     @Override
     public boolean isAllowed(@NotNull HumanEntity player){
         return true;
-    }
-
-    public int getLevel(@NotNull ItemStack item){
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null) return 0;
-        return getLevel(item, meta);
     }
 
     public boolean isEnchantmentPresent(@NotNull ItemStack item){

@@ -20,14 +20,18 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         return false
     }
 
-    override fun addToPolicy(mat: Material) {
+    override fun addToPolicy(mat: Material): ExcludeGroup {
         includedMaterial.remove(mat)
         groupItems.remove(mat)
+
+        return this
     }
 
-    override fun addToPolicy(other: AbstractMaterialGroup) {
+    override fun addToPolicy(other: AbstractMaterialGroup): ExcludeGroup {
         includedGroup.add(other)
         groupItems.removeAll(other.getMaterials())
+
+        return this
     }
 
     override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {

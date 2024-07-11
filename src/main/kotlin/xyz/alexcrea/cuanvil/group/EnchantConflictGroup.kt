@@ -5,7 +5,7 @@ import org.bukkit.Material
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 
 class EnchantConflictGroup(
-    private val name: String,
+    val name: String,
     private val cantConflict: AbstractMaterialGroup,
     var minBeforeBlock: Int
 ) {
