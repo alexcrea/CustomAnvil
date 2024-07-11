@@ -5,6 +5,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.enchant.wrapped.CAEcoEnchant
 
 class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
 
@@ -21,7 +22,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
 
         for (ecoEnchant in EcoEnchants.values()) {
             EnchantmentApi.unregisterEnchantment(ecoEnchant.enchantment) // As eco enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
-            EnchantmentApi.registerEnchantment(ecoEnchant.enchantment)
+            EnchantmentApi.registerEnchantment(CAEcoEnchant(ecoEnchant))
         }
 
         CustomAnvil.instance.logger.info("Eco Enchant should now work as expected !")
