@@ -20,12 +20,14 @@ public class CAEnchantmentRegistry {
     // Register enchantment functions
     private final HashMap<NamespacedKey, CAEnchantment> byKeyMap;
     private final HashMap<String, CAEnchantment> byNameMap;
-    private final List<CAEnchantment> unoptimisedValues;
+    private final List<CAEnchantment> unoptimisedGetValues;
+    private final List<CAEnchantment> unoptimisedCleanValues;
 
     private CAEnchantmentRegistry() {
         byKeyMap = new HashMap<>();
         byNameMap = new HashMap<>();
-        unoptimisedValues = new ArrayList<>();
+        unoptimisedGetValues = new ArrayList<>();
+        unoptimisedCleanValues = new ArrayList<>();
     }
 
     /**
@@ -64,9 +66,13 @@ public class CAEnchantmentRegistry {
         byKeyMap.put(enchantment.getKey(), enchantment);
         byNameMap.put(enchantment.getName(), enchantment);
 
-        if(!enchantment.isOptimised()){
-            unoptimisedValues.add(enchantment);
+        if(!enchantment.isGetOptimised()){
+            unoptimisedGetValues.add(enchantment);
         }
+        if(!enchantment.isCleanOptimised()){
+            unoptimisedCleanValues.add(enchantment);
+        }
+
         return true;
     }
 
@@ -86,7 +92,8 @@ public class CAEnchantmentRegistry {
         byKeyMap.remove(enchantment.getKey());
         byNameMap.remove(enchantment.getName());
 
-        unoptimisedValues.remove(enchantment);
+        unoptimisedGetValues.remove(enchantment);
+        unoptimisedCleanValues.remove(enchantment);
         return true;
     }
 
@@ -128,12 +135,21 @@ public class CAEnchantmentRegistry {
     }
 
     /**
-     * Gets a list of all the unoptimised enchantments.
+     * Gets a list of all the unoptimised get operation enchantments.
      * @return List of unoptimised enchantments.
      */
     @NotNull
-    public List<CAEnchantment> unoptimisedValues() {
-        return unoptimisedValues;
+    public List<CAEnchantment> unoptimisedGetValues() {
+        return unoptimisedGetValues;
+    }
+
+    /**
+     * Gets a list of all the unoptimised clean operation enchantments.
+     * @return List of unoptimised enchantments.
+     */
+    @NotNull
+    public List<CAEnchantment> unoptimisedCleanValues() {
+        return unoptimisedCleanValues;
     }
 
 

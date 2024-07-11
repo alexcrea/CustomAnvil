@@ -27,7 +27,12 @@ public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
     }
 
     @Override
-    public boolean isOptimised() {
+    public boolean isGetOptimised() {
+        return true;
+    }
+
+    @Override
+    public boolean isCleanOptimised() {
         return true;
     }
 

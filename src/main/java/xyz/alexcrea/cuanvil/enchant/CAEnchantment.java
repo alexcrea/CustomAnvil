@@ -21,6 +21,7 @@ import java.util.Map;
  * One issue with custom anvil is: it does not handle well duplicate key name (ignoring namespace)
  * as the plugin was initially coded with vanilla enchantment in head
  */
+@SuppressWarnings("unused")
 public interface CAEnchantment {
 
 
@@ -52,10 +53,16 @@ public interface CAEnchantment {
     int defaultMaxLevel();
 
     /**
-     * Check if the enchantment have specialised group operation.
-     * @return If the enchantment is optimised for group operation.
+     * Check if the enchantment have specialised get bulk operation.
+     * @return If the enchantment is optimised for get bulk operation.
      */
-    boolean isOptimised();
+    boolean isGetOptimised();
+
+    /**
+     * Check if the enchantment have specialised clean bulk operation.
+     * @return If the enchantment is optimised for clean bulk operation.
+     */
+    boolean isCleanOptimised();
 
     /**
      * Check if the player is allowed to use this enchantment.
@@ -89,15 +96,20 @@ public interface CAEnchantment {
 
     /**
      * Get current level of the enchantment.
-     * @param item Item to search the level for.
-     * @return The enchantment level.
+     * @param item Item to search the level for. Should not get changed.
+     * @return Current leve of this enchantment on item. or 0 if absent.
      */
-    int getLevel(@NotNull ItemStack item);
+    default int getLevel(@NotNull ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) return 0;
+
+        return getLevel(item, meta);
+    }
 
     /**
      * Get current level of the enchantment.
-     * @param item Item to search the level for.
-     * @param meta Meta of the provided item. It will not be changed and not be set on the item.
+     * @param item Item to search the level for. Should not get changed.
+     * @param meta Meta of the provided item. Should not get changed.
      * @return Current leve of this enchantment on item. or 0 if absent.
      */
     int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta);
@@ -158,7 +170,7 @@ public interface CAEnchantment {
         }
 
         // Clean unoptimised enchants
-        for (CAEnchantment enchant : CAEnchantmentRegistry.getInstance().unoptimisedValues()) {
+        for (CAEnchantment enchant : CAEnchantmentRegistry.getInstance().unoptimisedCleanValues()) {
             if(enchant.isEnchantmentPresent(item)){
                 enchant.removeFrom(item);
             }
@@ -196,7 +208,7 @@ public interface CAEnchantment {
         }
 
         // Unoptimised enchantment get
-        findEnchantsFromSelectedList(item, meta, enchantments, registry.unoptimisedValues());
+        findEnchantsFromSelectedList(item, meta, enchantments, registry.unoptimisedGetValues());
 
         return enchantments;
     }

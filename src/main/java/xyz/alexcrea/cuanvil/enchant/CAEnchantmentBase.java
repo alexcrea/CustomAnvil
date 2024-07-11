@@ -72,19 +72,18 @@ public abstract class CAEnchantmentBase implements CAEnchantment {
     }
 
     @Override
-    public boolean isOptimised(){
+    public boolean isGetOptimised(){
+        return false;
+    }
+
+    @Override
+    public boolean isCleanOptimised(){
         return false;
     }
 
     @Override
     public boolean isAllowed(@NotNull HumanEntity player){
         return true;
-    }
-
-    public int getLevel(@NotNull ItemStack item){
-        ItemMeta meta = item.getItemMeta();
-        if(meta == null) return 0;
-        return getLevel(item, meta);
     }
 
     public boolean isEnchantmentPresent(@NotNull ItemStack item){
