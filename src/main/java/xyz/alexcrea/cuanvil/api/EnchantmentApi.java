@@ -11,6 +11,8 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
+import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
+import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantLimitConfigGui;
@@ -186,5 +188,20 @@ public class EnchantmentApi {
         }, 0L);
     }
 
+    /**
+     * Add a bulk get operator.
+     * @param operation An optimised get enchantments operation
+     */
+    public static void addBulkGet(@NotNull BulkGetEnchantOperation operation){
+        CAEnchantmentRegistry.getInstance().getOptimisedGetOperators().add(operation);
+    }
+
+    /**
+     * Add a bulk clean operator.
+     * @param operation An optimised clean enchantments operation
+     */
+    public static void addBulkClean(@NotNull BulkCleanEnchantOperation operation){
+        CAEnchantmentRegistry.getInstance().getOptimisedCleanOperators().add(operation);
+    }
 
 }

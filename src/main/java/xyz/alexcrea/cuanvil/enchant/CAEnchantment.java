@@ -1,15 +1,13 @@
 package xyz.alexcrea.cuanvil.enchant;
 
-import io.delilaheve.util.ItemUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.dependency.DependencyManager;
-import xyz.alexcrea.cuanvil.dependency.EnchantmentSquaredDependency;
+import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
+import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
 import java.util.Collection;
@@ -148,26 +146,20 @@ public interface CAEnchantment {
      * @param item Item to be cleared from enchantments.
      */
     static void clearEnchants(@NotNull ItemStack item){
+        // Optimised enchantment clean using item stack
+        for (BulkCleanEnchantOperation cleanOperator : CAEnchantmentRegistry.getInstance().getOptimisedCleanOperators()) {
+            cleanOperator.bulkClear(item);
+        }
+
         ItemMeta meta = item.getItemMeta();
         if(meta == null) return;
 
-        // Clean Vanilla enchants
-        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
-            bookMeta.getStoredEnchants().forEach(
-                    (enchantment, leve) -> bookMeta.removeStoredEnchant(enchantment)
-            );
-        } else {
-            item.getEnchantments().forEach(
-                    (enchantment, leve) -> item.removeEnchantment(enchantment)
-            );
+        // Optimised enchantment clean using item meta
+        for (BulkCleanEnchantOperation cleanOperator : CAEnchantmentRegistry.getInstance().getOptimisedCleanOperators()) {
+            cleanOperator.bulkClear(item, meta);
         }
 
-        // Clean Enchant Squared enchants
-        EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
-        if(enchantmentSquared != null){
-            enchantmentSquared.clearEnchantments(item);
-        }
+        item.setItemMeta(meta);
 
         // Clean unoptimised enchants
         for (CAEnchantment enchant : CAEnchantmentRegistry.getInstance().unoptimisedCleanValues()) {
@@ -190,21 +182,9 @@ public interface CAEnchantment {
         ItemMeta meta = item.getItemMeta();
         if(meta == null) return enchantments;
 
-        // Vanilla optimised get
-        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            ((EnchantmentStorageMeta)meta).getStoredEnchants().forEach(
-                    (enchantment, level) -> enchantments.put(registry.getByKey(enchantment.getKey()), level)
-            );
-        } else {
-            item.getEnchantments().forEach(
-                    (enchantment, level) -> enchantments.put(registry.getByKey(enchantment.getKey()), level)
-            );
-        }
-
-        // Enchants Squared get
-        EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
-        if(enchantmentSquared != null){
-            enchantmentSquared.getEnchantmentsSquared(item, enchantments);
+        // Optimised enchantment get
+        for (BulkGetEnchantOperation getOperator : CAEnchantmentRegistry.getInstance().getOptimisedGetOperators()) {
+            getOperator.bulkGet(enchantments, item, meta);
         }
 
         // Unoptimised enchantment get

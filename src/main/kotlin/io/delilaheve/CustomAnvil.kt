@@ -116,7 +116,7 @@ class CustomAnvil : JavaPlugin() {
         if (!ConfigHolder.loadDefaultConfig()) return
 
         // Register enchantments
-        CAEnchantmentRegistry.getInstance().registerStartupEnchantments()
+        CAEnchantmentRegistry.getInstance().registerBukkit()
         DependencyManager.registerEnchantments()
 
         val enchantReadyEvent = CAEnchantRegistryReadyEvent()

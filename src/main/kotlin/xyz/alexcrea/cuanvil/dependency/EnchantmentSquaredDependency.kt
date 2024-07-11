@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import xyz.alexcrea.cuanvil.enchant.bulk.EnchantSquaredBulkOperation
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEnchantSquaredEnchantment
 import xyz.alexcrea.cuanvil.group.IncludeGroup
 import java.util.*
@@ -36,9 +37,16 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     fun registerEnchantments(){
         CustomAnvil.instance.logger.info("Preparing Enchantment Squared compatibility...")
+
+        // Register enchantments
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {
             EnchantmentApi.registerEnchantment(CAEnchantSquaredEnchantment(enchant))
         }
+
+        // Register bulk operation
+        val bulkOpperations = EnchantSquaredBulkOperation()
+        EnchantmentApi.addBulkGet(bulkOpperations)
+        EnchantmentApi.addBulkClean(bulkOpperations)
 
     }
 
@@ -49,10 +57,6 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
                 (enchantment, level ) -> enchantments[getWrappedEnchant(enchantment)] = level
         }
 
-    }
-
-    fun clearEnchantments(item: ItemStack) {
-        CustomEnchantManager.getInstance().removeAllEnchants(item)
     }
 
     fun getKeyFromEnchant(enchant: CustomEnchant): NamespacedKey{

@@ -5,6 +5,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.enchant.bulk.BukkitEnchantBulkOperation;
+import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
+import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
 
 import java.util.*;
@@ -20,24 +23,38 @@ public class CAEnchantmentRegistry {
     // Register enchantment functions
     private final HashMap<NamespacedKey, CAEnchantment> byKeyMap;
     private final HashMap<String, CAEnchantment> byNameMap;
+
     private final List<CAEnchantment> unoptimisedGetValues;
     private final List<CAEnchantment> unoptimisedCleanValues;
+
+    private final List<BulkGetEnchantOperation> optimisedGetOperators;
+    private final List<BulkCleanEnchantOperation> optimisedCleanOperators;
 
     private CAEnchantmentRegistry() {
         byKeyMap = new HashMap<>();
         byNameMap = new HashMap<>();
+
         unoptimisedGetValues = new ArrayList<>();
         unoptimisedCleanValues = new ArrayList<>();
+
+        optimisedGetOperators = new ArrayList<>();
+        optimisedCleanOperators = new ArrayList<>();
     }
 
     /**
      * This should only be called on main of custom anvil.
      * If called more than one time, chance of thing being broken will be high.
      */
-    public void registerStartupEnchantments(){
+    public void registerBukkit(){
+        // Register enchantment
         for (Enchantment enchantment : Enchantment.values()) {
             register(new CAVanillaEnchantment(enchantment));
         }
+
+        // Add bukkit enchantment bulk operation
+        BukkitEnchantBulkOperation bukkitOperation = new BukkitEnchantBulkOperation();
+        optimisedGetOperators.add(bukkitOperation);
+        optimisedCleanOperators.add(bukkitOperation);
 
     }
 
@@ -152,5 +169,20 @@ public class CAEnchantmentRegistry {
         return unoptimisedCleanValues;
     }
 
+    /**
+     * Get "clean optimised operation" for get enchantments.
+     * @return Get mutable "clean enchantments optimised operation" list.
+     */
+    public List<BulkCleanEnchantOperation> getOptimisedCleanOperators() {
+        return optimisedCleanOperators;
+    }
+
+    /**
+     * Get "get optimised operation" for get enchantments.
+     * @return Get mutable "get enchantments optimised operation" list.
+     */
+    public List<BulkGetEnchantOperation> getOptimisedGetOperators() {
+        return optimisedGetOperators;
+    }
 
 }
