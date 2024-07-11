@@ -11,7 +11,7 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
 import java.util.Map;
 
-public class CAEcoEnchant extends CAVanillaEnchantment implements AdditionalTestEnchantment {
+public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
     private final @NotNull EcoEnchant ecoEnchant;
 
@@ -28,7 +28,7 @@ public class CAEcoEnchant extends CAVanillaEnchantment implements AdditionalTest
             }
 
             for (CAEnchantment other : enchantments.keySet()) {
-                if(other instanceof CAVanillaEnchantment otherVanilla
+                if(other instanceof CABukkitEnchantment otherVanilla
                         && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())){
                     return true;
                 }

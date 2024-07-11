@@ -16,18 +16,18 @@ import java.util.Locale;
 /**
  * Custom Anvil enchantment implementation for vanilla registered enchantment.
  */
-public class CAVanillaEnchantment extends CAEnchantmentBase {
+public class CABukkitEnchantment extends CAEnchantmentBase {
 
     private final @NotNull Enchantment enchantment;
 
-    public CAVanillaEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity rarity){
+    public CABukkitEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity rarity){
         super(enchantment.getKey(),
                 rarity,
                 enchantment.getMaxLevel());
         this.enchantment = enchantment;
     }
 
-    public CAVanillaEnchantment(@NotNull Enchantment enchantment){
+    public CABukkitEnchantment(@NotNull Enchantment enchantment){
         this(enchantment, getRarity(enchantment));
     }
 

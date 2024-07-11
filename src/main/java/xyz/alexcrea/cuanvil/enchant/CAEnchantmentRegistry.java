@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.enchant.bulk.BukkitEnchantBulkOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
-import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
+import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -48,7 +48,7 @@ public class CAEnchantmentRegistry {
     public void registerBukkit(){
         // Register enchantment
         for (Enchantment enchantment : Enchantment.values()) {
-            register(new CAVanillaEnchantment(enchantment));
+            register(new CABukkitEnchantment(enchantment));
         }
 
         // Add bukkit enchantment bulk operation

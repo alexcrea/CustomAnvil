@@ -13,7 +13,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
-import xyz.alexcrea.cuanvil.enchant.wrapped.CAVanillaEnchantment;
+import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantLimitConfigGui;
 
@@ -62,9 +62,9 @@ public class EnchantmentApi {
      */
     public static boolean registerEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity defaultRarity){
         if(defaultRarity == null)
-            return registerEnchantment(new CAVanillaEnchantment(enchantment));
+            return registerEnchantment(new CABukkitEnchantment(enchantment));
 
-        return registerEnchantment(new CAVanillaEnchantment(enchantment, defaultRarity));
+        return registerEnchantment(new CABukkitEnchantment(enchantment, defaultRarity));
     }
 
     /**
@@ -76,7 +76,7 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean registerEnchantment(@NotNull Enchantment enchantment){
-        return registerEnchantment(new CAVanillaEnchantment(enchantment));
+        return registerEnchantment(new CABukkitEnchantment(enchantment));
     }
 
     /**
