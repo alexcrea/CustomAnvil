@@ -175,7 +175,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
             "SHEARS" -> "shears"
             "FLINTANDSTEEL" -> "flint_and_steel"
             "FISHINGROD" -> "fishing_rod"
-            "ELYTRA" -> "elytra"
+            "ELYTRA", "ELYTRAS" -> "elytra"
             "PICKAXES" -> "pickaxes" // not on this plugin by default
             "AXES" -> "axes"
             "SHOVELS" -> "shovels" // not on this plugin by default
