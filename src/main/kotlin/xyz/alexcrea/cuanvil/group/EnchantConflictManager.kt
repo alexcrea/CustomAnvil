@@ -210,7 +210,7 @@ class EnchantConflictManager {
        val newItem = item.clone()
 
        CAEnchantment.clearEnchants(newItem)
-       enchantments.forEach{//TODO maybe bulk add if possible
+       enchantments.forEach{
            enchantment -> enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
        }
 
