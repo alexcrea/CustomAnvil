@@ -41,7 +41,7 @@ under 1.2.0 replace ca prefix by ue and use ue.unsafe. some permission/features 
 ### Commands
 ```yml
 anvilconfigreload or carl: Reload every config of this plugin
-customanvilconfig: open a menu for administrator to edit plugin's config in game
+customanvilconfig or configanvil: open a menu for administrator to edit plugin's config in game
 ```
 ### Custom Enchantment Plugins
 Custom Anvil can be compatible with some custom enchant plugins. \
@@ -49,20 +49,20 @@ Currently, there is not a lot of compatible plugin
 
 Here is a list of supported plugins with support status:
 - [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
-Officially supported but still experimental. Automatic configuration.
+Officially supported by Custom Anvil but still experimental. Automatic configuration.
 - [EcoEnchant](https://www.spigotmc.org/resources/50-sale-%E2%8C%9B-ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/):
-Officially supported but still experimental. Need a server restart to add newly added enchantment. 
-Automatic configuration on restart.
+Officially supported by Custom Anvil but still experimental. Need a server restart to add newly added enchantment. 
+Use EcoEnchant restriction system by default.​
 
 If you like Custom Anvil to support a specific custom enchantment plugin. 
 You can ask, but please note implementing compatibility will be considered
-as low priority as I work for the plugin on my free time for free. \
-For custom enchantment plugin developers: 
-If you like to make your plugin compatible with Custom Anvil
-I recommend reaching out to me as there is currently no documentation.
+as low priority as I work for the plugin on my free time for free.
+
+### For custom enchantment plugin developers
+For information about the API, please refer to [the Wiki](https://github.com/alexcrea/CustomAnvil/wiki) \
+(Please note that the wiki is currently incomplete)​
 
 ---
-
 
 ### Default Plugin's Configurations
 For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.18)\
@@ -75,6 +75,7 @@ There is non known issue, if you find one please report the issue.
 ### Planned:
 - Semi manual config update on plugin or minecraft update
 - Check unknown registered enchantment & warn
-- Warn admin on unsupported minecraft version 
+- Warn admin on unsupported minecraft version
+- Better custom craft​
 
 
