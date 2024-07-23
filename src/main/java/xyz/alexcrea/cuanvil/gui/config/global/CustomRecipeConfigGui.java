@@ -36,6 +36,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
     private CustomRecipeConfigGui() {
         super("Custom Recipe Config");
 
+        init();
     }
 
     @Override
