@@ -4,13 +4,17 @@ import com.google.common.io.Files;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
+@SuppressWarnings("unused")
 public abstract class ConfigHolder {
 
     // Available configuration:
@@ -140,7 +144,7 @@ public abstract class ConfigHolder {
                 Files.copy(base, firstBackup);
                 sufficientSuccess = true;
             } catch (IOException e) {
-                e.printStackTrace();
+                CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not copy backup saving config " + base.getName(), e);
             }
         }
         // save last backup
@@ -200,15 +204,126 @@ public abstract class ConfigHolder {
             YamlConfiguration configuration = CustomAnvil.instance.reloadResource(
                     getConfigFileName() + getConfigFileExtension(), hardFail);
             if (configuration == null) return false;
+
             this.configuration = configuration;
             reload();
+
             return true;
         }
 
     }
 
+    public abstract static class DeletableResource extends ResourceConfigHolder{
+
+        private static final String DELETED_FOLDER_PATH = "deleted";
+
+        private final @NotNull File parent;
+        private final @NotNull File deletedConfigFile;
+
+        private @Nullable YamlConfiguration deletedListConfig;
+        private DeletableResource(String resourceName) {
+            super(resourceName);
+            this.parent = new File(CustomAnvil.instance.getDataFolder(), DELETED_FOLDER_PATH);
+            this.deletedConfigFile = new File(this.parent, "deleted_" + resourceName + getConfigFileExtension());
+        }
+
+        @Override
+        public boolean reloadFromDisk(boolean hardFail) {
+            if(!super.reloadFromDisk(hardFail)) return false;
+            loadDeletedListFile(hardFail);
+
+            return true;
+        }
+
+        private void loadDeletedListFile(boolean hardFail){
+            this.deletedListConfig = CustomAnvil.instance.reloadResource(this.deletedConfigFile, hardFail);
+
+        }
+
+        /**
+         * Test if the provided element was deleted.
+         * @param objectPath The object path to delete.
+         * @return True if successful.
+         */
+        public boolean isDeleted(String objectPath){
+            if(this.deletedListConfig == null) return false;
+
+            return this.deletedListConfig.getBoolean(objectPath, false);
+        }
+
+        /**
+         * Delete a certain object by its path. do not save the config.
+         * @param objectPath The object path to delete.
+         * @return True if successful.
+         */
+        public boolean delete(String objectPath){
+            return delete(objectPath, false, false);
+        }
+
+        /**
+         * Delete a certain object by its path.
+         * @param objectPath The object path to delete.
+         * @param doSave If we should save the config after deleting.
+         * @param doBackup If we should create a backup.
+         * @return True if successful.
+         */
+        public boolean delete(String objectPath, boolean doSave, boolean doBackup){
+            // Create deleted list if it does not yet exist
+            if(this.deletedListConfig == null){
+                this.parent.mkdirs();
+                try {
+                    this.deletedConfigFile.createNewFile();
+                } catch (IOException e) {
+                    CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not create " + this.deletedConfigFile.getPath(), e);
+                }
+                loadDeletedListFile(false);
+
+                // Something was wrong somehow
+                if(this.deletedListConfig == null) return false;
+            }
+
+            // Add to the deleted config
+            this.deletedListConfig.set(objectPath, true);
+            this.getConfig().set(objectPath, null);
+
+            // Save the deleted config (may not be the most efficient, but I will handle it later)
+            if(doSave){
+                return saveToDisk(doBackup);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean saveToDisk(boolean doBackup) {
+            boolean deletedSaveSuccess = saveDeletedList();
+
+            return super.saveToDisk(doBackup) && deletedSaveSuccess;
+        }
+
+        /**
+         * Save list of deleted elements.
+         * @return true if successful.
+         */
+        public boolean saveDeletedList() {
+            if(this.deletedListConfig == null) return true;
+
+            try {
+                this.deletedListConfig.save(this.deletedConfigFile);
+            } catch (IOException e) {
+                CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not save " + this.deletedConfigFile.getPath(), e);
+                return false;
+            }
+
+            return true;
+        }
+
+
+    }
+
+
     // Class for itemGroupsManager config
-    public static class ItemGroupConfigHolder extends ResourceConfigHolder {
+    public static class ItemGroupConfigHolder extends DeletableResource {
         private static final String FILE_NAME = "item_groups";
 
         ItemGroupManager itemGroupsManager;
@@ -235,7 +350,7 @@ public abstract class ConfigHolder {
     }
 
     // Class for enchant conflict config
-    public static class ConflictConfigHolder extends ResourceConfigHolder {
+    public static class ConflictConfigHolder extends DeletableResource {
         private static final String FILE_NAME = "enchant_conflict";
 
         EnchantConflictManager conflictManager;
@@ -259,9 +374,8 @@ public abstract class ConfigHolder {
     }
 
     // Class for unit repair config
-    public static class UnitRepairHolder extends ResourceConfigHolder {
+    public static class UnitRepairHolder extends DeletableResource {
         private static final String ITEM_GROUP_FILE_NAME = "unit_repair_item";
-
 
         private UnitRepairHolder() {
             super(ITEM_GROUP_FILE_NAME);
@@ -275,7 +389,7 @@ public abstract class ConfigHolder {
 
 
     // Class for custom anvil craft
-    public static class CustomAnvilCraftHolder extends ResourceConfigHolder {
+    public static class CustomAnvilCraftHolder extends DeletableResource {
         private static final String CUSTOM_RECIPE_FILE_NAME = "custom_recipes";
         CustomAnvilRecipeManager recipeManager;
 

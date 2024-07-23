@@ -120,7 +120,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             cleanAndBeUnusable();
 
             // Update config file storage
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(this.anvilRecipe.toString(), null);
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(this.anvilRecipe.toString());
 
             // Save
             boolean success = true;

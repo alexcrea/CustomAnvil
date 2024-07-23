@@ -127,7 +127,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             cleanAndBeUnusable();
 
             // Update config file storage
-            ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict.toString(), null);
+            ConfigHolder.CONFLICT_HOLDER.delete(this.enchantConflict.toString());
 
             // Save
             boolean success = true;

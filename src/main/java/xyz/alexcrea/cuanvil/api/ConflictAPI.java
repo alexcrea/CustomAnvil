@@ -9,7 +9,9 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Custom Anvil api for conflict registry.
@@ -30,18 +32,34 @@ public class ConflictAPI {
      * @return True if successful.
      */
     public static boolean addConflict(@NotNull ConflictBuilder builder){
+        return addConflict(builder, false);
+    }
+
+    /**
+     * Write and add a conflict.
+     * Will not write the conflict if it already exists.
+     *
+     * @param builder The conflict builder to be based on
+     * @param overrideDeleted If we should write even if the conflict was previously deleted.
+     * @return True if successful.
+     */
+    public static boolean addConflict(@NotNull ConflictBuilder builder, boolean overrideDeleted){
         FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+
+        // Test if conflict can be added
+        if(!overrideDeleted && ConfigHolder.CONFLICT_HOLDER.isDeleted(builder.getName())) return false;
         if(config.contains(builder.getName())) return false;
 
         if(!writeConflict(builder, false)) return false;
 
-        EnchantConflictGroup conflict = builder.build();
 
+        EnchantConflictGroup conflict = builder.build();
         // Register conflict
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
 
         // Add conflict to gui
-        EnchantConflictGui.INSTANCE.updateValueForGeneric(conflict, true);
+        EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+        if(conflictGui != null) conflictGui.updateValueForGeneric(conflict, true);
 
         return true;
     }
@@ -118,11 +136,13 @@ public class ConflictAPI {
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().removeConflict(conflict);
 
         // Write as null and save to file
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(conflict.getName(), null);
+        ConfigHolder.CONFLICT_HOLDER.delete(conflict.getName());
         prepareSaveTask();
 
         // Remove from gui
-        EnchantConflictGui.INSTANCE.removeGeneric(conflict);
+        EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+        if(conflictGui != null) conflictGui.removeGeneric(conflict);
+
 
         return true;
     }
@@ -147,14 +167,16 @@ public class ConflictAPI {
 
         reloadChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
             ConfigHolder.CONFLICT_HOLDER.reload();
-            EnchantConflictGui.INSTANCE.reloadValues();
+            EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+            if(conflictGui != null) conflictGui.reloadValues();
+
             reloadChangeTask = -1;
         }, 0L);
 
     }
 
     static void logConflictOrigin(@NotNull ConflictBuilder builder){
-        CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() +" came from " + builder.getSourceName() + ".");
+        CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() + " came from " + builder.getSourceName() + ".");
     }
 
     /**

@@ -82,7 +82,7 @@ public class MainConfigGui extends ChestGui {
         enchantConflictMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment conflict menu"));
         enchantConflictItemstack.setItemMeta(enchantConflictMeta);
 
-        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, EnchantConflictGui.INSTANCE);
+        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, EnchantConflictGui.getInstance());
         pane.bindItem('4', enchantConflictItem);
 
         // Group config items
@@ -94,7 +94,7 @@ public class MainConfigGui extends ChestGui {
         groupMeta.setLore(Collections.singletonList("\u00A77Click here to open material group menu"));
         groupItemstack.setItemMeta(groupMeta);
 
-        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.INSTANCE);
+        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.getInstance());
 
         pane.bindItem('5', groupConfigItem);
 
@@ -107,7 +107,7 @@ public class MainConfigGui extends ChestGui {
         unitRepairMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil unit repair menu"));
         unirRepairItemstack.setItemMeta(unitRepairMeta);
 
-        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.INSTANCE);
+        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.getInstance());
         pane.bindItem('6', unitRepairItem);
 
         // Custom recipe item
@@ -119,7 +119,7 @@ public class MainConfigGui extends ChestGui {
         customRecipeMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil custom recipe menu"));
         customRecipeItemstack.setItemMeta(customRecipeMeta);
 
-        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.INSTANCE);
+        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.getInstance());
         pane.bindItem('7', customRecipeItem);
 
         // quit item

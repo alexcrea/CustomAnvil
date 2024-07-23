@@ -27,22 +27,41 @@ public class MaterialGroupApi {
     private static int saveChangeTask = -1;
     private static int reloadChangeTask = -1;
 
+
     /**
      * Write and add a group.
      * Will not write the group if it already exists.
      *
-     * @param group the group to add
+     * @param group The group to add
      * @return true if successful.
      */
     public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group){
+        return addMaterialGroup(group, false);
+    }
+
+    /**
+     * Write and add a group.
+     * Will not write the group if it already exists.
+     *
+     * @param group The group to add
+     * @param overrideDeleted If we should write even if the group was previously deleted.
+     * @return true if successful.
+     */
+    public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group, boolean overrideDeleted){
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
+
+        // Test if it exists/existed
+        if(!overrideDeleted && ConfigHolder.ITEM_GROUP_HOLDER.isDeleted(group.getName())) return false;
         if(itemGroupManager.get(group.getName()) != null) return false;
+
+        // Add group
         itemGroupManager.getGroupMap().put(group.getName(), group);
 
         if(!writeMaterialGroup(group, false)) return false;
 
         if(group instanceof IncludeGroup includeGroup){
-            GroupConfigGui.INSTANCE.updateValueForGeneric(includeGroup, true);
+            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
+            if(configGui != null) configGui.updateValueForGeneric(includeGroup, true);
         }
 
         if(ConfigOptions.INSTANCE.getVerboseDebugLog()){
@@ -145,12 +164,13 @@ public class MaterialGroupApi {
         ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
 
         // Write as null and save to file
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(group.getName(), null);
+        ConfigHolder.ITEM_GROUP_HOLDER.delete(group.getName());
         prepareSaveTask();
 
         // Remove from gui
         if(group instanceof IncludeGroup includeGroup){
-            GroupConfigGui.INSTANCE.removeGeneric(includeGroup);
+            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
+            if(configGui != null) configGui.removeGeneric(includeGroup);
         }
 
         return true;
@@ -176,7 +196,10 @@ public class MaterialGroupApi {
 
         reloadChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
             ConfigHolder.ITEM_GROUP_HOLDER.reload();
-            GroupConfigGui.INSTANCE.reloadValues();
+
+            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
+            if(configGui != null) configGui.reloadValues();
+
             reloadChangeTask = -1;
         }, 0L);
 

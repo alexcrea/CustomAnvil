@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
@@ -17,10 +19,18 @@ import java.util.Collection;
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe, CustomRecipeSubSettingGui> {
 
 
-    public final static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
+    private static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
 
-    static {
-        INSTANCE.init();
+    @Nullable
+    public static CustomRecipeConfigGui getCurrentInstance(){
+        return INSTANCE;
+    }
+
+    @NotNull
+    public static CustomRecipeConfigGui getInstance(){
+        if(INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
+
+        return INSTANCE;
     }
 
     private CustomRecipeConfigGui() {

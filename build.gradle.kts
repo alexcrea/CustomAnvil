@@ -1,12 +1,11 @@
 import cn.lalaki.pub.BaseCentralPortalPlusExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.0.0"
     java
     id("org.jetbrains.dokka").version("1.9.20")
-    id("io.github.goooler.shadow").version("8.1.8") // using fork of com.github.johnrengelman.shadow to support java 1.21
+    id("io.github.goooler.shadow").version("8.1.8") // using fork of com.github.johnrengelman.shadow to support java 1.21. edit I do not need java 1.21 now so should be replaced ?
     // Maven publish
     `maven-publish`
     signing

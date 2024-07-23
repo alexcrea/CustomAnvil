@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
@@ -18,14 +20,24 @@ import java.util.Collection;
 
 public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRepairElementListGui> {
 
-    public static final UnitRepairConfigGui INSTANCE = new UnitRepairConfigGui();
+    private static UnitRepairConfigGui INSTANCE;
 
-    static {
-        INSTANCE.init();
+    @Nullable
+    public static UnitRepairConfigGui getCurrentInstance(){
+        return INSTANCE;
+    }
+
+    @NotNull
+    public static UnitRepairConfigGui getInstance(){
+        if(INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
+
+        return INSTANCE;
     }
 
     private UnitRepairConfigGui() {
         super("Unit Repair Config");
+
+        init();
     }
 
     @Override

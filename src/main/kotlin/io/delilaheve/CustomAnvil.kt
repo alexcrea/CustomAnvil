@@ -128,6 +128,10 @@ class CustomAnvil : JavaPlugin() {
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
 
+        // Register enchantment of compatible plugin and load configuration change.
+        DependencyManager.handleCompatibilityConfig()
+
+        // Call config event
         val configReadyEvent = CAConfigReadyEvent()
         server.pluginManager.callEvent(configReadyEvent)
 
@@ -135,8 +139,6 @@ class CustomAnvil : JavaPlugin() {
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
 
-        // Register enchantment of compatible plugin and load configuration change.
-        DependencyManager.handleCompatibilityConfig()
     }
 
     fun reloadResource(
@@ -148,20 +150,34 @@ class CustomAnvil : JavaPlugin() {
         if (!file.exists()) {
             saveResource(resourceName, false)
         }
+
+        return reloadResource(file, hardFailSafe)
+    }
+
+    // Unlike above function. this function will not clone default from jar.
+    fun reloadResource(
+        resourceFile: File,
+        hardFailSafe: Boolean = true
+    ): YamlConfiguration? {
+        // Test if file exist
+        if (!resourceFile.exists()) {
+            return null
+        }
+
         // Load resource
         val yamlConfig = YamlConfiguration()
         try {
-            val configReader = FileReader(file)
+            val configReader = FileReader(resourceFile)
             yamlConfig.load(configReader)
         } catch (test: Exception) {
             if (hardFailSafe) {
                 // This is important and may impact gameplay if it does not load.
                 // Failsafe is to stop the plugin
-                logger.severe("Resource $resourceName Could not be load or reload.")
+                logger.severe("Resource ${resourceFile.path} Could not be load or reload.")
                 logger.severe("Disabling plugin.")
                 Bukkit.getPluginManager().disablePlugin(this)
             } else {
-                logger.warning("Resource $resourceName Could not be load or reload.")
+                logger.warning("Resource ${resourceFile.path} Could not be load or reload.")
             }
             return null
         }
