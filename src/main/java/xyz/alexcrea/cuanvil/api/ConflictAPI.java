@@ -118,7 +118,7 @@ public class ConflictAPI {
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().removeConflict(conflict);
 
         // Write as null and save to file
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(conflict.getName(), null);
+        ConfigHolder.CONFLICT_HOLDER.delete(conflict.getName());
         prepareSaveTask();
 
         // Remove from gui

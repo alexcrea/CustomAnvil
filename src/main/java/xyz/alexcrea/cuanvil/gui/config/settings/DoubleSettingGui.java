@@ -316,7 +316,11 @@ public class DoubleSettingGui extends AbstractSettingGui {
     @Override
     public boolean onSave() {
         if(isNull()){
-            this.holder.config.getConfig().set(this.holder.configPath, null);
+            if(this.holder.config instanceof ConfigHolder.DeletableResource deletableResource){
+                deletableResource.delete(this.holder.configPath);
+            }else{
+                this.holder.config.getConfig().set(this.holder.configPath, null);
+            }
         }else{
             this.holder.config.getConfig().set(this.holder.configPath, now.doubleValue());
         }

@@ -252,6 +252,15 @@ public abstract class ConfigHolder {
         }
 
         /**
+         * Delete a certain object by its path. do not save the config.
+         * @param objectPath The object path to delete.
+         * @return True if successful.
+         */
+        public boolean delete(String objectPath){
+            return delete(objectPath, false, false);
+        }
+
+        /**
          * Delete a certain object by its path.
          * @param objectPath The object path to delete.
          * @param doSave If we should save the config after deleting.

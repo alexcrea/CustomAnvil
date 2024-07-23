@@ -145,7 +145,7 @@ public class MaterialGroupApi {
         ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
 
         // Write as null and save to file
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(group.getName(), null);
+        ConfigHolder.ITEM_GROUP_HOLDER.delete(group.getName());
         prepareSaveTask();
 
         // Remove from gui

@@ -74,7 +74,7 @@ public class CustomAnvilRecipeApi {
         ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
 
         // Write as null and save to file
-        ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(recipe.getName(), null);
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(recipe.getName());
         prepareSaveTask();
 
         // Remove from gui

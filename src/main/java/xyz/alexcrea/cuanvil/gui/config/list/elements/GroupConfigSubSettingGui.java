@@ -129,7 +129,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             cleanAndBeUnusable();
 
             // Update config file storage
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig().set(this.group.getName(), null);
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(this.group.getName());
 
             // Save
             boolean success = true;
