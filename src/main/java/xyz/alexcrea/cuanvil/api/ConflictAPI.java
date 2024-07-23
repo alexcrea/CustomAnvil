@@ -9,7 +9,9 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Custom Anvil api for conflict registry.
@@ -56,7 +58,8 @@ public class ConflictAPI {
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
 
         // Add conflict to gui
-        EnchantConflictGui.INSTANCE.updateValueForGeneric(conflict, true);
+        EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+        if(conflictGui != null) conflictGui.updateValueForGeneric(conflict, true);
 
         return true;
     }
@@ -137,7 +140,9 @@ public class ConflictAPI {
         prepareSaveTask();
 
         // Remove from gui
-        EnchantConflictGui.INSTANCE.removeGeneric(conflict);
+        EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+        if(conflictGui != null) conflictGui.removeGeneric(conflict);
+
 
         return true;
     }
@@ -162,14 +167,16 @@ public class ConflictAPI {
 
         reloadChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
             ConfigHolder.CONFLICT_HOLDER.reload();
-            EnchantConflictGui.INSTANCE.reloadValues();
+            EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+            if(conflictGui != null) conflictGui.reloadValues();
+
             reloadChangeTask = -1;
         }, 0L);
 
     }
 
     static void logConflictOrigin(@NotNull ConflictBuilder builder){
-        CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() +" came from " + builder.getSourceName() + ".");
+        CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() + " came from " + builder.getSourceName() + ".");
     }
 
     /**

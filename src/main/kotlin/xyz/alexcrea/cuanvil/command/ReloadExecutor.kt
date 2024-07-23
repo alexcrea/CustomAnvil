@@ -1,11 +1,15 @@
 package xyz.alexcrea.cuanvil.command
 
 import io.delilaheve.CustomAnvil
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
+import xyz.alexcrea.cuanvil.update.Update_1_21
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -39,10 +43,20 @@ class ReloadExecutor : CommandExecutor {
             EnchantCostConfigGui.getInstance()?.updateGuiValues()
             EnchantLimitConfigGui.getInstance()?.updateGuiValues()
 
-            EnchantConflictGui.INSTANCE.reloadValues()
-            GroupConfigGui.INSTANCE.reloadValues()
-            UnitRepairConfigGui.INSTANCE.reloadValues()
-            CustomRecipeConfigGui.INSTANCE.reloadValues()
+            EnchantConflictGui.getCurrentInstance()?.reloadValues()
+            GroupConfigGui.getCurrentInstance()?.reloadValues()
+            UnitRepairConfigGui.getCurrentInstance()?.reloadValues()
+            CustomRecipeConfigGui.getCurrentInstance()?.reloadValues()
+
+            // temporary: handle 1.21 update
+            Update_1_21.handleUpdate()
+
+            // Register enchantment of compatible plugin and load configuration change.
+            DependencyManager.handleCompatibilityConfig()
+
+            // Call event
+            val configReadyEvent = CAConfigReadyEvent()
+            Bukkit.getServer().pluginManager.callEvent(configReadyEvent)
 
             return true
         } catch (e: Exception) {

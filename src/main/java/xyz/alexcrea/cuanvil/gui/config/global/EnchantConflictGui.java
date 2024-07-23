@@ -5,6 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
@@ -18,14 +20,25 @@ import java.util.Collection;
 
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup, EnchantConflictSubSettingGui> {
 
-    public static final EnchantConflictGui INSTANCE = new EnchantConflictGui();
+    private static EnchantConflictGui INSTANCE;
 
-    static {
-        INSTANCE.init();
+    @Nullable
+    public static EnchantConflictGui getCurrentInstance(){
+        return INSTANCE;
     }
+
+    @NotNull
+    public static EnchantConflictGui getInstance(){
+        if(INSTANCE == null) INSTANCE = new EnchantConflictGui();
+
+        return INSTANCE;
+    }
+
 
     private EnchantConflictGui() {
         super( "Conflict Config");
+
+        init();
     }
 
     @Override

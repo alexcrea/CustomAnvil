@@ -5,6 +5,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.GroupType;
@@ -20,14 +22,24 @@ import java.util.Collection;
 
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupConfigSubSettingGui> {
 
-    public final static GroupConfigGui INSTANCE = new GroupConfigGui();
+    private static GroupConfigGui INSTANCE;
 
-    static {
-        INSTANCE.init();
+    @Nullable
+    public static GroupConfigGui getCurrentInstance(){
+        return INSTANCE;
+    }
+
+    @NotNull
+    public static GroupConfigGui getInstance(){
+        if(INSTANCE == null) INSTANCE = new GroupConfigGui();
+
+        return INSTANCE;
     }
 
     public GroupConfigGui() {
         super("Group Config");
+
+        init();
     }
 
     @Override

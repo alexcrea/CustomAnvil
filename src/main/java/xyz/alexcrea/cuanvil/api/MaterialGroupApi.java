@@ -60,7 +60,8 @@ public class MaterialGroupApi {
         if(!writeMaterialGroup(group, false)) return false;
 
         if(group instanceof IncludeGroup includeGroup){
-            GroupConfigGui.INSTANCE.updateValueForGeneric(includeGroup, true);
+            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
+            if(configGui != null) configGui.updateValueForGeneric(includeGroup, true);
         }
 
         if(ConfigOptions.INSTANCE.getVerboseDebugLog()){
@@ -168,7 +169,8 @@ public class MaterialGroupApi {
 
         // Remove from gui
         if(group instanceof IncludeGroup includeGroup){
-            GroupConfigGui.INSTANCE.removeGeneric(includeGroup);
+            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
+            if(configGui != null) configGui.removeGeneric(includeGroup);
         }
 
         return true;
@@ -194,7 +196,10 @@ public class MaterialGroupApi {
 
         reloadChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
             ConfigHolder.ITEM_GROUP_HOLDER.reload();
-            GroupConfigGui.INSTANCE.reloadValues();
+
+            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
+            if(configGui != null) configGui.reloadValues();
+
             reloadChangeTask = -1;
         }, 0L);
 

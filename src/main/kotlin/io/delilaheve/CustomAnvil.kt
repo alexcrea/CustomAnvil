@@ -128,6 +128,10 @@ class CustomAnvil : JavaPlugin() {
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
 
+        // Register enchantment of compatible plugin and load configuration change.
+        DependencyManager.handleCompatibilityConfig()
+
+        // Call config event
         val configReadyEvent = CAConfigReadyEvent()
         server.pluginManager.callEvent(configReadyEvent)
 
@@ -135,8 +139,6 @@ class CustomAnvil : JavaPlugin() {
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
 
-        // Register enchantment of compatible plugin and load configuration change.
-        DependencyManager.handleCompatibilityConfig()
     }
 
     fun reloadResource(
