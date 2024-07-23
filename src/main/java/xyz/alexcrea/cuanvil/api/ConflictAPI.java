@@ -30,13 +30,28 @@ public class ConflictAPI {
      * @return True if successful.
      */
     public static boolean addConflict(@NotNull ConflictBuilder builder){
+        return addConflict(builder, false);
+    }
+
+    /**
+     * Write and add a conflict.
+     * Will not write the conflict if it already exists.
+     *
+     * @param builder The conflict builder to be based on
+     * @param overrideDeleted If we should write even if the conflict was previously deleted.
+     * @return True if successful.
+     */
+    public static boolean addConflict(@NotNull ConflictBuilder builder, boolean overrideDeleted){
         FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+
+        // Test if conflict can be added
+        if(!overrideDeleted && ConfigHolder.CONFLICT_HOLDER.isDeleted(builder.getName())) return false;
         if(config.contains(builder.getName())) return false;
 
         if(!writeConflict(builder, false)) return false;
 
-        EnchantConflictGroup conflict = builder.build();
 
+        EnchantConflictGroup conflict = builder.build();
         // Register conflict
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
 

@@ -27,16 +27,34 @@ public class MaterialGroupApi {
     private static int saveChangeTask = -1;
     private static int reloadChangeTask = -1;
 
+
     /**
      * Write and add a group.
      * Will not write the group if it already exists.
      *
-     * @param group the group to add
+     * @param group The group to add
      * @return true if successful.
      */
     public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group){
+        return addMaterialGroup(group, false);
+    }
+
+    /**
+     * Write and add a group.
+     * Will not write the group if it already exists.
+     *
+     * @param group The group to add
+     * @param overrideDeleted If we should write even if the group was previously deleted.
+     * @return true if successful.
+     */
+    public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group, boolean overrideDeleted){
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
+
+        // Test if it exists/existed
+        if(!overrideDeleted && ConfigHolder.ITEM_GROUP_HOLDER.isDeleted(group.getName())) return false;
         if(itemGroupManager.get(group.getName()) != null) return false;
+
+        // Add group
         itemGroupManager.getGroupMap().put(group.getName(), group);
 
         if(!writeMaterialGroup(group, false)) return false;

@@ -245,7 +245,7 @@ public abstract class ConfigHolder {
          * @param objectPath The object path to delete.
          * @return True if successful.
          */
-        private boolean wasDeleted(String objectPath){
+        public boolean isDeleted(String objectPath){
             if(this.deletedListConfig == null) return false;
 
             return this.deletedListConfig.getBoolean(objectPath, false);

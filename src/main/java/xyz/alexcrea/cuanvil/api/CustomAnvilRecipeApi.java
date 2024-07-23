@@ -29,10 +29,24 @@ public class CustomAnvilRecipeApi {
      * @return True if successful.
      */
     public static boolean addRecipe(@NotNull AnvilRecipeBuilder builder){
+        return addRecipe(builder, false);
+    }
+
+    /**
+     * Write and add a custom anvil recipe.
+     * Will not write the recipe if it already exists.
+     *
+     * @param builder The recipe builder to be based on
+     * @param overrideDeleted If we should write even if the recipe was previously deleted.
+     * @return True if successful.
+     */
+    public static boolean addRecipe(@NotNull AnvilRecipeBuilder builder, boolean overrideDeleted){
         FileConfiguration config = ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig();
         String name = builder.getName();
 
+        if(!overrideDeleted && ConfigHolder.CUSTOM_RECIPE_HOLDER.isDeleted(builder.getName())) return false;
         if(config.contains(builder.getName())) return false;
+
         if(builder.getName().contains(".")) {
             CustomAnvil.instance.getLogger().warning("Custom anvil recipe " + name + " contain \".\" in its name but should not. this recipe is ignored.");
             return false;
