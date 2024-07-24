@@ -51,8 +51,8 @@ class ReloadExecutor : CommandExecutor {
             // temporary: handle 1.21 update
             Update_1_21.handleUpdate()
 
-            // Register enchantment of compatible plugin and load configuration change.
-            DependencyManager.handleCompatibilityConfig()
+            // Handle dependency reload
+            DependencyManager.handleConfigReload()
 
             // Call event
             val configReadyEvent = CAConfigReadyEvent()
