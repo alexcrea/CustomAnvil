@@ -65,9 +65,9 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     protected Collection<CAEnchantment> getEveryDisplayableInstanceOfGeneric() {
         Stream<CAEnchantment> toDisplayStream;
         if(this.displayUnselected){
-            toDisplayStream = CAEnchantmentRegistry.getInstance().values().stream();
+            toDisplayStream = CAEnchantmentRegistry.getInstance().getNameSortedEnchantments().stream();
         }else{
-            toDisplayStream = this.selectedEnchant.stream();
+            toDisplayStream = this.selectedEnchant.stream().sorted(Comparator.comparing(CAEnchantment::getName));
         }
         Set<CAEnchantment> illegalEnchantments = this.enchantContainer.illegalEnchantments();
 

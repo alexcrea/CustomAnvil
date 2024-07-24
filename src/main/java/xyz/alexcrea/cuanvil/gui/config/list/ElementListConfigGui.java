@@ -118,8 +118,8 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
         this.pages.clear();
         this.pages.add(this.firstPage);
 
-        for (T conflict : getEveryDisplayableInstanceOfGeneric()) {
-            updateValueForGeneric(conflict, false);
+        for (T generic : getEveryDisplayableInstanceOfGeneric()) {
+            updateValueForGeneric(generic, false);
         }
 
         update();

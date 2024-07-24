@@ -44,4 +44,13 @@ object DependencyManager {
 
     }
 
+    fun handleConfigReload(){
+        // Register enchantment of compatible plugin and load configuration change.
+        handleCompatibilityConfig()
+
+        // Then handle plugin reload
+        ecoEnchantCompatibility?.handleConfigReload()
+
+    }
+
 }
