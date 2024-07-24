@@ -122,6 +122,18 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
         }, CustomAnvil.instance);
     }
 
+    @NotNull
+    public UnitRepairElementListGui getInstanceOrCreate(Material mat){
+        UnitRepairElementListGui element = this.elementGuiMap.get(mat);
+        if(element == null){
+            updateValueForGeneric(mat, false);
+
+            element = this.elementGuiMap.get(mat);
+        }
+
+        return element;
+    }
+
     @Override // Not used in this implementation.
     protected String genericDisplayedName() {
         return "this function Should not be used.";

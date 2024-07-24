@@ -83,7 +83,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
                         String materialName = type.name().toLowerCase();
 
                         // Add new material
-                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.name().toLowerCase()+"."+materialName,0.25);
+                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.name().toLowerCase() + "." + materialName,0.25);
 
                         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
                             ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);

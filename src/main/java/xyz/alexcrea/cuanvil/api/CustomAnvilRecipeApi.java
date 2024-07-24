@@ -88,7 +88,7 @@ public class CustomAnvilRecipeApi {
         // Remove from registry
         ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
 
-        // Write as null and save to file
+        // Delete and save to file
         ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(recipe.getName());
         prepareSaveTask();
 

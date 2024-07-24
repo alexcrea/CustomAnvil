@@ -135,7 +135,7 @@ public class ConflictAPI {
         // Remove from registry
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().removeConflict(conflict);
 
-        // Write as null and save to file
+        // Delete and save to file
         ConfigHolder.CONFLICT_HOLDER.delete(conflict.getName());
         prepareSaveTask();
 

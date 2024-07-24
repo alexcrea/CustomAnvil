@@ -163,7 +163,7 @@ public class MaterialGroupApi {
         // Remove from registry
         ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
 
-        // Write as null and save to file
+        // Delete and save to file
         ConfigHolder.ITEM_GROUP_HOLDER.delete(group.getName());
         prepareSaveTask();
 
