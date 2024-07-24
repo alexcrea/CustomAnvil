@@ -22,10 +22,10 @@ object UnitRepairUtil {
         if (other == null) return null
         val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
         // Get configuration section if exist
-        val otherName = other.type.name.uppercase()
+        val otherName = other.type.name.lowercase()
         var section = config.getConfigurationSection(otherName)
         if (section == null) {
-            section = config.getConfigurationSection(otherName.lowercase())
+            section = config.getConfigurationSection(otherName.uppercase())
             if (section == null) return null
 
         }
@@ -44,11 +44,11 @@ object UnitRepairUtil {
      * If value is set to less than or equal to 0 then it will be set to default
      */
     private fun getRepairAmount(item: ItemStack, section: ConfigurationSection, default: Double): Double? {
-        val itemName = item.type.name.uppercase()
+        val itemName = item.type.name.lowercase()
         val repairValue = if (section.isDouble(itemName)) {
             section.getDouble(itemName)
-        } else if (section.isDouble(itemName.lowercase())) {
-            section.getDouble(itemName.lowercase())
+        } else if (section.isDouble(itemName.uppercase())) {
+            section.getDouble(itemName.uppercase())
         } else {
             return null
         }
