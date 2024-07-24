@@ -24,6 +24,8 @@ public class CAEnchantmentRegistry {
     private final HashMap<NamespacedKey, CAEnchantment> byKeyMap;
     private final HashMap<String, CAEnchantment> byNameMap;
 
+    private final SortedSet<CAEnchantment> nameSortedEnchantments;
+
     private final List<CAEnchantment> unoptimisedGetValues;
     private final List<CAEnchantment> unoptimisedCleanValues;
 
@@ -33,6 +35,8 @@ public class CAEnchantmentRegistry {
     private CAEnchantmentRegistry() {
         byKeyMap = new HashMap<>();
         byNameMap = new HashMap<>();
+
+        nameSortedEnchantments = new TreeSet<>(Comparator.comparing(CAEnchantment::getName));
 
         unoptimisedGetValues = new ArrayList<>();
         unoptimisedCleanValues = new ArrayList<>();
@@ -82,6 +86,7 @@ public class CAEnchantmentRegistry {
 
         byKeyMap.put(enchantment.getKey(), enchantment);
         byNameMap.put(enchantment.getName(), enchantment);
+        nameSortedEnchantments.add(enchantment);
 
         if(!enchantment.isGetOptimised()){
             unoptimisedGetValues.add(enchantment);
@@ -108,6 +113,8 @@ public class CAEnchantmentRegistry {
         if(enchantment == null) return false;
         byKeyMap.remove(enchantment.getKey());
         byNameMap.remove(enchantment.getName());
+
+        nameSortedEnchantments.remove(enchantment);
 
         unoptimisedGetValues.remove(enchantment);
         unoptimisedCleanValues.remove(enchantment);
@@ -185,4 +192,11 @@ public class CAEnchantmentRegistry {
         return optimisedGetOperators;
     }
 
+    /**
+     * Get custom anvil enchantment sorted by name.
+     * @return An immutable sorted set of every registered enchantment sorted by name.
+     */
+    public SortedSet<CAEnchantment> getNameSortedEnchantments() {
+        return Collections.unmodifiableSortedSet(nameSortedEnchantments);
+    }
 }

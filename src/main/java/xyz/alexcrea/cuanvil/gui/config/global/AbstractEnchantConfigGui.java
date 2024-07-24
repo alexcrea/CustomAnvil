@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
@@ -37,7 +38,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
 
     @Override
     protected Collection<CAEnchantment> getEveryDisplayableInstanceOfGeneric() {
-        return GuiSharedConstant.SORTED_ENCHANTMENT_LIST;
+        return CAEnchantmentRegistry.getInstance().getNameSortedEnchantments();
     }
 
     @Override

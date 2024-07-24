@@ -7,20 +7,13 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 
 import java.util.*;
 
 public class GuiSharedConstant {
 
-    public static final List<CAEnchantment> SORTED_ENCHANTMENT_LIST;
-
-    static {
-        SORTED_ENCHANTMENT_LIST = new ArrayList<>(CAEnchantmentRegistry.getInstance().values());
-        SORTED_ENCHANTMENT_LIST.sort(Comparator.comparing(ench -> ench.getKey().getKey()));
-    }
+    private GuiSharedConstant(){}
 
     public static final Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
     public static final GuiItem SECONDARY_BACKGROUND_ITEM = GuiGlobalItems.backgroundItem(GuiSharedConstant.SECONDARY_BACKGROUND_MATERIAL);
