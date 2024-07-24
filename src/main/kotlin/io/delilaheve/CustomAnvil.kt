@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
 import java.io.FileReader
+import java.util.logging.Level
 
 /**
  * Bukkit/Spigot/Paper plugin to alter anvil feature
@@ -113,7 +114,10 @@ class CustomAnvil : JavaPlugin() {
 
     private fun loadEnchantmentSystem(){
         // Load default configuration
-        if (!ConfigHolder.loadDefaultConfig()) return
+        if (!ConfigHolder.loadDefaultConfig()) {
+            logger.log(Level.SEVERE,"could not load default config.")
+            return
+        }
 
         // Register enchantments
         CAEnchantmentRegistry.getInstance().registerBukkit()
@@ -123,7 +127,10 @@ class CustomAnvil : JavaPlugin() {
         server.pluginManager.callEvent(enchantReadyEvent)
 
         // Load config
-        if (!ConfigHolder.loadNonDefaultConfig()) return
+        if (!ConfigHolder.loadNonDefaultConfig()) {
+            logger.log(Level.SEVERE,"could not load non default config.")
+            return
+        }
 
         // temporary: handle 1.21 update
         Update_1_21.handleUpdate()
