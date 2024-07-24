@@ -152,10 +152,10 @@ public class CAEnchantmentRegistry {
 
     /**
      * Gets a map of all the registered enchantments.
-     * @return Map of enchantments.
+     * @return Immutable map of enchantments.
      */
     public Map<NamespacedKey, CAEnchantment> registeredEnchantments() {
-        return byKeyMap;
+        return Collections.unmodifiableMap(byKeyMap);
     }
 
     /**
@@ -178,7 +178,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Get "clean optimised operation" for get enchantments.
-     * @return Get mutable "clean enchantments optimised operation" list.
+     * @return Mutable "clean enchantments optimised operation" list.
      */
     public List<BulkCleanEnchantOperation> getOptimisedCleanOperators() {
         return optimisedCleanOperators;
@@ -186,7 +186,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Get "get optimised operation" for get enchantments.
-     * @return Get mutable "get enchantments optimised operation" list.
+     * @return Mutable "get enchantments optimised operation" list.
      */
     public List<BulkGetEnchantOperation> getOptimisedGetOperators() {
         return optimisedGetOperators;
