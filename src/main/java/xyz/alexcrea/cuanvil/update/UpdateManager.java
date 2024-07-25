@@ -12,12 +12,12 @@ import java.io.InputStream;
 import java.util.*;
 
 public class UpdateManager {
-    private final static Version MAX_KNOW_MINECRAFT_VERSION = new Version(1, 21, 0);
+    private static final Version MAX_KNOW_MINECRAFT_VERSION = new Version(1, 21, 0);
 
-    public final static String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
-    public final static String PLUGIN_VERSION_PATH = "configVersion";
-    private final static String UPDATE_FOLDER = "version";
-    private final static String VERSION_LIST_RESSOUCE = UPDATE_FOLDER+"/minecraftVersions.txt";
+    public static final String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
+    public static final String PLUGIN_VERSION_PATH = "configVersion";
+    private static final String UPDATE_FOLDER = "version";
+    private static final String VERSION_LIST_RESSOUCE = UPDATE_FOLDER+"/minecraftVersions.txt";
 
     private List<Version> minecraftVersionList;
     private Version minecraftVersion;

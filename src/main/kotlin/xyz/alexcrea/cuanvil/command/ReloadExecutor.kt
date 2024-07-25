@@ -9,7 +9,6 @@ import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
-import xyz.alexcrea.cuanvil.update.Update_1_21
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -48,8 +47,7 @@ class ReloadExecutor : CommandExecutor {
             UnitRepairConfigGui.getCurrentInstance()?.reloadValues()
             CustomRecipeConfigGui.getCurrentInstance()?.reloadValues()
 
-            // temporary: handle 1.21 update
-            Update_1_21.handleUpdate()
+            // TODO use the update system config I guess
 
             // Handle dependency reload
             DependencyManager.handleConfigReload()

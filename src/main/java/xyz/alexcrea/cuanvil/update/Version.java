@@ -61,8 +61,7 @@ public class Version implements Comparable<Version>{
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Version){
-            Version other = (Version) obj;
+        if(obj instanceof Version other){
             return (other.major == this.major) && (other.minor == this.minor) && (other.build == this.build);
         }
         return false;

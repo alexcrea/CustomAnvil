@@ -131,6 +131,8 @@ class CustomAnvil : JavaPlugin() {
             return
         }
 
+        // TODO use the update system config I guess
+
         // Register enchantment of compatible plugin and load configuration change.
         DependencyManager.handleCompatibilityConfig()
 
