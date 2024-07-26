@@ -163,10 +163,10 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
             val displayName = ChatColor.stripColor(it.displayName)
-            val inventoryName = ChatColor.stripColor(inventory.renameText)
+            var inventoryName = ChatColor.stripColor(inventory.renameText)
             // Change color name
             if(inventoryName != null){
-                inventoryName.replace("&", "§")
+                inventoryName = inventoryName.replace("&", "§")
             }
 
             if (!displayName.contentEquals(inventoryName)) {
