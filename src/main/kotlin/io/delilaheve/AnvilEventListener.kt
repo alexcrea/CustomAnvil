@@ -256,7 +256,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
         var numberOfChanges = 0
         var startIndex = 0
-        CustomAnvil.log("${matcher.find(startIndex)} $builder")
+
         while(matcher.find(startIndex)){
             startIndex = matcher.start()
             if(startIndex >= builder.length - endOffset) break
@@ -503,7 +503,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     /**
      * Function to calculate work penalty of anvil work
-     * Also change result work penalty
+     * Also change result work penalty if right item is not null
      */
     private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
@@ -516,10 +516,13 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 (right.itemMeta as? Repairable)?.repairCost ?: 0
             }
 
-        // Try to set work penalty for the result item
-        result.itemMeta?.let {
-            (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
-            result.itemMeta = it
+        // Try to set work penalty for the result item only if right item not null
+        if(right != null){
+            result.itemMeta?.let {
+                (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
+                result.itemMeta = it
+
+            }
         }
 
         CustomAnvil.log(
