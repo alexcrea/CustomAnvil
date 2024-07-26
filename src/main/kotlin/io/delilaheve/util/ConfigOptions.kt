@@ -239,7 +239,7 @@ object ConfigOptions {
     /**
      * How many xp should use of color should cost
      */
-    private val useOfColorCost: Int
+    val useOfColorCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
                 .config

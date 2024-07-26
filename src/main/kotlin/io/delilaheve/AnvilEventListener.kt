@@ -169,21 +169,29 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             val displayName = ChatColor.stripColor(it.displayName)
             var inventoryName = ChatColor.stripColor(inventory.renameText)
 
+            var sumCost = 0
+
             var useColor = false
             if(ConfigOptions.renameColorPossible){
                 val resultString = StringBuilder(inventoryName)
 
                 useColor = handleRenamingColor(resultString, player)
 
-                if(useColor) inventoryName = resultString.toString()
+                if(useColor) {
+                    inventoryName = resultString.toString()
+
+                    sumCost+= ConfigOptions.useOfColorCost
+                }
             }
 
-            if ((!useColor && !displayName.contentEquals(inventoryName)) || (useColor && !(it.displayName).contentEquals(inventoryName))) {
+            if ((!useColor && (!displayName.contentEquals(inventoryName))) || (useColor && !(it.displayName).contentEquals(inventoryName))) {
                 it.setDisplayName(inventoryName)
                 resultItem.itemMeta = it
 
-                return ConfigOptions.itemRenameCost
+                sumCost+= ConfigOptions.itemRenameCost
             }
+
+            return sumCost
         }
         return 0
     }
@@ -415,8 +423,14 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             leftItem.itemMeta?.let { leftMeta ->
                 val leftName = leftMeta.displayName
                 output.itemMeta?.let {
+                    // Rename cost
                     if (!leftName.contentEquals(it.displayName)) {
                         repairCost += ConfigOptions.itemRenameCost
+
+                        // Color cost
+                        if(it.displayName.contains('§')){
+                            repairCost += ConfigOptions.useOfColorCost
+                        }
                     }
                 }
             }
