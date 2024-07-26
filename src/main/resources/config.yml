@@ -58,6 +58,7 @@ sacrifice_illegal_enchant_cost: 1
 # Allow using color code and hexadecimal color.
 #
 # Color code are prefixed by "&" and hexadecimal color by "#".
+# Color code will not be applied if it colors nothing. "&&" can be used to write "&".
 allow_color_code: false
 allow_hexadecimal_color: false
 

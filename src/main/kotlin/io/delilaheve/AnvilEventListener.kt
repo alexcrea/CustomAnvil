@@ -12,6 +12,7 @@ import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -79,7 +80,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         // Test rename lonely item
         if (second == null) {
             val resultItem = first.clone()
-            var anvilCost = handleRename(resultItem, inventory)
+            var anvilCost = handleRename(resultItem, inventory, player)
 
             // Test/stop if nothing changed.
             if (first == resultItem) {
@@ -121,7 +122,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             // As calculatePenalty edit result, we need to calculate penalty after checking equality
             anvilCost += calculatePenalty(first, second, resultItem)
             // Calculate rename cost
-            anvilCost += handleRename(resultItem, inventory)
+            anvilCost += handleRename(resultItem, inventory, player)
 
             // Finally, we set result
             event.result = resultItem
@@ -134,7 +135,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         val unitRepairAmount = first.getRepair(second)
         if (unitRepairAmount != null) {
             val resultItem = first.clone()
-            var anvilCost = handleRename(resultItem, inventory)
+            var anvilCost = handleRename(resultItem, inventory, player)
 
             val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
             if (repairAmount > 0) {
@@ -159,17 +160,22 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     }
 
-    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int {
+    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
             val displayName = ChatColor.stripColor(it.displayName)
             var inventoryName = ChatColor.stripColor(inventory.renameText)
-            // Change color name
-            if(inventoryName != null){
-                inventoryName = inventoryName.replace("&", "§")
+
+            var useColor = false
+            if(ConfigOptions.renameColorPossible){
+                val resultString = StringBuilder(inventoryName)
+
+                useColor = handleRenamingColor(resultString, player)
+
+                if(useColor) inventoryName = resultString.toString()
             }
 
-            if (!displayName.contentEquals(inventoryName)) {
+            if ((!useColor && !displayName.contentEquals(inventoryName)) || (useColor && !(it.displayName).contentEquals(inventoryName))) {
                 it.setDisplayName(inventoryName)
                 resultItem.itemMeta = it
 
@@ -177,6 +183,46 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             }
         }
         return 0
+    }
+
+    private fun handleRenamingColor(textToColor: StringBuilder, player: HumanEntity): Boolean {
+        val usePermission = ConfigOptions.permissionNeededForColor
+        val canUseColorCode = ConfigOptions.allowColorCode && (!usePermission || player.hasPermission("ca.color.code"))
+        val canUseHexColor = ConfigOptions.allowHexadecimalColor && (!usePermission || player.hasPermission("ca.color.hex"))
+
+        if((!canUseColorCode) && (!canUseHexColor)) return false
+
+        var useColor = false
+        // Handle color code
+        if(canUseColorCode){
+            useColor = replaceAll(textToColor, "&", "§", 2)
+            replaceAll(textToColor, "§§", "&", 2)
+        }
+
+        //TODO handle hexadecimal color
+
+        return useColor
+    }
+
+    /**
+     * Replace every instance of "from" to "to".
+     * @param builder The builder to replace the string from.
+     * @param from The source that should be replaced.
+     * @param to The string that should replace.
+     * @param endOffset Amount of character that should be ignored at the end.
+     */
+    private fun replaceAll(builder: java.lang.StringBuilder, from: String, to: String, endOffset: Int): Boolean {
+        var index = builder.indexOf(from)
+        if(index == -1 || index >= builder.length - endOffset) return false
+
+        while (index != -1 && index < builder.length - endOffset) {
+            CustomAnvil.log("$index ; ${builder.length - endOffset} ")
+            builder.replace(index, index + from.length, to)
+            index += to.length
+            index = builder.indexOf(from, index)
+        }
+
+        return true
     }
 
     /**
