@@ -10,87 +10,74 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
  */
 object ConfigOptions {
 
-    // Path for limiting anvil cost
+    // ----------------------
+    // Path for config values
+    // ----------------------
+
     const val CAP_ANVIL_COST = "limit_repair_cost"
-
-    // Path for max anvil cost value
     const val MAX_ANVIL_COST = "limit_repair_value"
-
-    // Path for removing anvil cost limits
     const val REMOVE_ANVIL_COST_LIMIT = "remove_repair_limit"
 
-    // Path for removing too expensive when unused
     const val REPLACE_TOO_EXPENSIVE = "replace_too_expensive"
 
-    // Path for level cost on item repair
     const val ITEM_REPAIR_COST = "item_repair_cost"
-
-    // Path for level cost on unit repair
     const val UNIT_REPAIR_COST = "unit_repair_cost"
 
-    // Path for level cost on item renaming
     const val ITEM_RENAME_COST = "item_rename_cost"
 
-    // Path for level cost on illegal enchantment on sacrifice
     const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
 
-    // Path for default enchantment limits
+    // Color related config
+    const val ALLOW_COLOR_CODE = "allow_color_code"
+    const val ALLOW_HEXADECIMAL_COLOR = "allow_hexadecimal_color"
+    const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
+    const val USE_OF_COLOR_COST = "use_of_color_cost"
+
     private const val DEFAULT_LIMIT_PATH = "default_limit"
 
-
-    // Root path for enchantment limits
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
-
-
-    // Root path for enchantment values
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
 
-
-    // Debug logging toggle path
+    // Debug flag
     private const val DEBUG_LOGGING = "debug_log"
-
-    // Debug verbose logging toggle path
     private const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
 
+    // ----------------------
+    // Default config values
+    // ----------------------
 
-    // Default value for limiting repair cost
     const val DEFAULT_CAP_ANVIL_COST = false
-
-    // Default value for repair cost limit
     const val DEFAULT_MAX_ANVIL_COST = 39
-
-    // Default for removing repair cost limits
     const val DEFAULT_REMOVE_ANVIL_COST_LIMIT = false
 
-    // Default for removing repair cost limits
     const val DEFAULT_REPLACE_TOO_EXPENSIVE = false
 
-    // Default value for level cost on item repair
     const val DEFAULT_ITEM_REPAIR_COST = 2
-
-    // Default value for level cost per unit repair
     const val DEFAULT_UNIT_REPAIR_COST = 1
 
-    // Default value for level cost on item renaming
     const val DEFAULT_ITEM_RENAME_COST = 1
 
-    // Default value for level cost on illegal enchantment on sacrifice
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
 
+    // Color related config
+    const val DEFAULT_ALLOW_COLOR_CODE = false
+    const val DEFAULT_ALLOW_HEXADECIMAL_COLOR = false
+    const val DEFAULT_PERMISSION_NEEDED_FOR_COLOR = true
+    const val DEFAULT_USE_OF_COLOR_COST = 0
 
-    // Default value for enchantment limits
     private const val DEFAULT_ENCHANT_LIMIT = 5
 
-    // Default value for debug logging
+    // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
-
-    // Default value for debug logging
     private const val DEFAULT_VERBOSE_DEBUG_LOG = false
 
+    // -------------
+    // Config Ranges
+    // -------------
 
     // Valid range for repair cost limit
     @JvmField
@@ -108,6 +95,10 @@ object ConfigOptions {
     @JvmField
     val SACRIFICE_ILLEGAL_COST_RANGE = 0..1000
 
+    // Valid range for color use cost
+    @JvmField
+    val USE_OF_COLOR_COST_RANGE = 0..1000
+
     // Valid range for an enchantment limit
     @JvmField
     val ENCHANT_LIMIT_RANGE = 1..255
@@ -115,6 +106,10 @@ object ConfigOptions {
 
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
+
+    // -------------
+    // Get methods
+    // -------------
 
     /**
      * Whether to cap anvil costs
@@ -204,6 +199,53 @@ object ConfigOptions {
                 .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
                 ?: DEFAULT_SACRIFICE_ILLEGAL_COST
+        }
+
+    /**
+     * Allow usage of color code
+     */
+    val allowColorCode: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(ALLOW_COLOR_CODE, DEFAULT_ALLOW_COLOR_CODE)
+        }
+
+    /**
+     * Allow usage of hexadecimal color
+     */
+    val allowHexadecimalColor: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR)
+        }
+
+    /**
+     * If one of the color component is enabled
+     */
+    val renameColorPossible: Boolean get() { return allowColorCode || allowHexadecimalColor }
+
+    /**
+     * If players need a permission to use color
+     */
+    val permissionNeededForColor: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR)
+        }
+
+    /**
+     * How many xp should use of color should cost
+     */
+    private val useOfColorCost: Int
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getInt(USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST)
+                .takeIf { it in USE_OF_COLOR_COST_RANGE }
+                ?: DEFAULT_USE_OF_COLOR_COST
         }
 
     /**

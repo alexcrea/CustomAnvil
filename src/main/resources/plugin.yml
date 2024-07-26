@@ -39,6 +39,14 @@ permissions:
   ca.config.edit:
     default: op
     description: Allow administrator to edit the plugin's config in game
+  # color permissions
+  ca.color.code:
+    default: op
+    description: Allow player to use color code if permission is required (toggleable)
+  ca.color.hex:
+    default: op
+    description: Allow player to use hexadecimal color if permission is required (toggleable)
+
 
 # soft depend on old name, so I can disable it if it is on the same server
 # as it is the old name for this plugin
