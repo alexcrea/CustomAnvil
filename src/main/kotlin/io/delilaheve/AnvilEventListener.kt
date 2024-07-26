@@ -195,8 +195,10 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         var useColor = false
         // Handle color code
         if(canUseColorCode){
-            useColor = replaceAll(textToColor, "&", "§", 2)
-            replaceAll(textToColor, "§§", "&", 2)
+            var nbReplacement = replaceAll(textToColor, "&", "§", 2)
+            nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
+
+            if(nbReplacement > 0) useColor = true
         }
 
         //TODO handle hexadecimal color
@@ -210,19 +212,20 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
      * @param from The source that should be replaced.
      * @param to The string that should replace.
      * @param endOffset Amount of character that should be ignored at the end.
+     * @return The number of replacement was that was done.
      */
-    private fun replaceAll(builder: java.lang.StringBuilder, from: String, to: String, endOffset: Int): Boolean {
+    private fun replaceAll(builder: java.lang.StringBuilder, from: String, to: String, endOffset: Int): Int {
         var index = builder.indexOf(from)
-        if(index == -1 || index >= builder.length - endOffset) return false
+        var numberOfChanges = 0
 
         while (index != -1 && index < builder.length - endOffset) {
-            CustomAnvil.log("$index ; ${builder.length - endOffset} ")
             builder.replace(index, index + from.length, to)
             index += to.length
             index = builder.indexOf(from, index)
+            numberOfChanges+=1
         }
 
-        return true
+        return numberOfChanges
     }
 
     /**
