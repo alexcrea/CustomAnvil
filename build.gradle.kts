@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.5.4-beta-1"
+version = "1.5.4-beta.1"
 
 java {
     disableAutoTargetJvm()

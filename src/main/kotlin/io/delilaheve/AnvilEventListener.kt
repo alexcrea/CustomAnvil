@@ -170,7 +170,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             }
 
             if (!displayName.contentEquals(inventoryName)) {
-                it.setDisplayName(inventory.renameText)
+                it.setDisplayName(inventoryName)
                 resultItem.itemMeta = it
 
                 return ConfigOptions.itemRenameCost
