@@ -31,7 +31,10 @@ import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlin.math.min
+
 
 /**
  * Listener for anvil events
@@ -201,7 +204,11 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             if(nbReplacement > 0) useColor = true
         }
 
-        //TODO handle hexadecimal color
+        if(canUseHexColor){
+            val nbReplacement = replaceHexToColor(textToColor, 7)
+
+            if(nbReplacement > 0) useColor = true
+        }
 
         return useColor
     }
@@ -222,6 +229,37 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             builder.replace(index, index + from.length, to)
             index += to.length
             index = builder.indexOf(from, index)
+
+            numberOfChanges+=1
+        }
+
+        return numberOfChanges
+    }
+
+    val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
+    /**
+     * Replace every hex color formatted like #000000 to the minecraft format
+     * @param builder The builder to replace the hex color from.
+     * @param endOffset Amount of character that should be ignored at the end.
+     * @return The number of replacement was that was done.
+     */
+    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int): Int {
+        val matcher: Matcher = HEX_PATTERN.matcher(builder)
+
+        var numberOfChanges = 0
+        var startIndex = 0
+        CustomAnvil.log("${matcher.find(startIndex)} $builder")
+        while(matcher.find(startIndex)){
+            startIndex = matcher.start()
+            if(startIndex >= builder.length - endOffset) break
+
+            builder.replace(startIndex, startIndex + 1, "§x")
+            startIndex+=2
+            for (i in 0..5) {
+                builder.insert(startIndex, '§')
+                startIndex+=2
+            }
+
             numberOfChanges+=1
         }
 
