@@ -55,7 +55,24 @@ unit_repair_cost: 1
 # Valid values include 0 to 1000
 sacrifice_illegal_enchant_cost: 1
 
-# Default limit to apply to any enchants missing from override_limits
+# Allow using color code and hexadecimal color.
+#
+# Color code are prefixed by "&" and hexadecimal color by "#".
+# Color code will not be applied if it colors nothing. "&&" can be used to write "&".
+allow_color_code: false
+allow_hexadecimal_color: false
+
+# Toggle if color should only be applicable if the player a certain permission.
+#
+# permission are "ca.color.code" for use of color code and "ca.color.hex" for use of hexadecimal color.
+permission_needed_for_color: true
+
+# Xp cost if the player use color in the items name on rename.
+#
+# Valid values include 0 to 1000.
+use_of_color_cost: 0
+
+# Default limit to apply to any enchants missing from enchant_limits
 #
 # Valid values include 1 to 1000
 default_limit: 5

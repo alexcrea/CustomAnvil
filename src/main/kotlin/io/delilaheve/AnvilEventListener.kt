@@ -12,6 +12,7 @@ import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -30,7 +31,10 @@ import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlin.math.min
+
 
 /**
  * Listener for anvil events
@@ -79,7 +83,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         // Test rename lonely item
         if (second == null) {
             val resultItem = first.clone()
-            var anvilCost = handleRename(resultItem, inventory)
+            var anvilCost = handleRename(resultItem, inventory, player)
 
             // Test/stop if nothing changed.
             if (first == resultItem) {
@@ -121,7 +125,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             // As calculatePenalty edit result, we need to calculate penalty after checking equality
             anvilCost += calculatePenalty(first, second, resultItem)
             // Calculate rename cost
-            anvilCost += handleRename(resultItem, inventory)
+            anvilCost += handleRename(resultItem, inventory, player)
 
             // Finally, we set result
             event.result = resultItem
@@ -134,7 +138,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         val unitRepairAmount = first.getRepair(second)
         if (unitRepairAmount != null) {
             val resultItem = first.clone()
-            var anvilCost = handleRename(resultItem, inventory)
+            var anvilCost = handleRename(resultItem, inventory, player)
 
             val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
             if (repairAmount > 0) {
@@ -159,18 +163,115 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     }
 
-    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory): Int {
+    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
             val displayName = ChatColor.stripColor(it.displayName)
-            val inventoryName = ChatColor.stripColor(inventory.renameText)
-            if (!displayName.contentEquals(inventoryName)) {
-                it.setDisplayName(inventory.renameText)
-                resultItem.itemMeta = it
-                return ConfigOptions.itemRenameCost
+            var inventoryName = ChatColor.stripColor(inventory.renameText)
+
+            var sumCost = 0
+
+            var useColor = false
+            if(ConfigOptions.renameColorPossible){
+                val resultString = StringBuilder(inventoryName)
+
+                useColor = handleRenamingColor(resultString, player)
+
+                if(useColor) {
+                    inventoryName = resultString.toString()
+
+                    sumCost+= ConfigOptions.useOfColorCost
+                }
             }
+
+            if ((!useColor && (!displayName.contentEquals(inventoryName))) || (useColor && !(it.displayName).contentEquals(inventoryName))) {
+                it.setDisplayName(inventoryName)
+                resultItem.itemMeta = it
+
+                sumCost+= ConfigOptions.itemRenameCost
+            }
+
+            return sumCost
         }
         return 0
+    }
+
+    private fun handleRenamingColor(textToColor: StringBuilder, player: HumanEntity): Boolean {
+        val usePermission = ConfigOptions.permissionNeededForColor
+        val canUseColorCode = ConfigOptions.allowColorCode && (!usePermission || player.hasPermission("ca.color.code"))
+        val canUseHexColor = ConfigOptions.allowHexadecimalColor && (!usePermission || player.hasPermission("ca.color.hex"))
+
+        if((!canUseColorCode) && (!canUseHexColor)) return false
+
+        var useColor = false
+        // Handle color code
+        if(canUseColorCode){
+            var nbReplacement = replaceAll(textToColor, "&", "§", 2)
+            nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
+
+            if(nbReplacement > 0) useColor = true
+        }
+
+        if(canUseHexColor){
+            val nbReplacement = replaceHexToColor(textToColor, 7)
+
+            if(nbReplacement > 0) useColor = true
+        }
+
+        return useColor
+    }
+
+    /**
+     * Replace every instance of "from" to "to".
+     * @param builder The builder to replace the string from.
+     * @param from The source that should be replaced.
+     * @param to The string that should replace.
+     * @param endOffset Amount of character that should be ignored at the end.
+     * @return The number of replacement was that was done.
+     */
+    private fun replaceAll(builder: java.lang.StringBuilder, from: String, to: String, endOffset: Int): Int {
+        var index = builder.indexOf(from)
+        var numberOfChanges = 0
+
+        while (index != -1 && index < builder.length - endOffset) {
+            builder.replace(index, index + from.length, to)
+            index += to.length
+            index = builder.indexOf(from, index)
+
+            numberOfChanges+=1
+        }
+
+        return numberOfChanges
+    }
+
+    val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
+    /**
+     * Replace every hex color formatted like #000000 to the minecraft format
+     * @param builder The builder to replace the hex color from.
+     * @param endOffset Amount of character that should be ignored at the end.
+     * @return The number of replacement was that was done.
+     */
+    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int): Int {
+        val matcher: Matcher = HEX_PATTERN.matcher(builder)
+
+        var numberOfChanges = 0
+        var startIndex = 0
+
+        while(matcher.find(startIndex)){
+            startIndex = matcher.start()
+            if(startIndex >= builder.length - endOffset) break
+
+            builder.replace(startIndex, startIndex + 1, "§x")
+            startIndex+=2
+            for (i in 0..5) {
+                builder.insert(startIndex, '§')
+                startIndex+=2
+            }
+
+            numberOfChanges+=1
+        }
+
+        return numberOfChanges
     }
 
     /**
@@ -322,8 +423,14 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             leftItem.itemMeta?.let { leftMeta ->
                 val leftName = leftMeta.displayName
                 output.itemMeta?.let {
+                    // Rename cost
                     if (!leftName.contentEquals(it.displayName)) {
                         repairCost += ConfigOptions.itemRenameCost
+
+                        // Color cost
+                        if(it.displayName.contains('§')){
+                            repairCost += ConfigOptions.useOfColorCost
+                        }
                     }
                 }
             }
@@ -396,7 +503,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     /**
      * Function to calculate work penalty of anvil work
-     * Also change result work penalty
+     * Also change result work penalty if right item is not null
      */
     private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
@@ -409,10 +516,13 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 (right.itemMeta as? Repairable)?.repairCost ?: 0
             }
 
-        // Try to set work penalty for the result item
-        result.itemMeta?.let {
-            (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
-            result.itemMeta = it
+        // Try to set work penalty for the result item only if right item not null
+        if(right != null){
+            result.itemMeta?.let {
+                (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
+                result.itemMeta = it
+
+            }
         }
 
         CustomAnvil.log(
