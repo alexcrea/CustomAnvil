@@ -59,8 +59,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private void init() {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "0L0T0I0S0",
-                "0C0R0U0r0",
+                "LT0I0S0cp",
+                "CR0U0r0hP",
                 "B00000000"
         );
         pane = new PatternPane(0, 0, 9, 4, pattern);
@@ -73,9 +73,9 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         updateGuiValues();
     }
 
-    private BoolSettingsGui.BoolSettingFactory capAnvilCostFactory; // L character
+    private BoolSettingsGui.BoolSettingFactory capAnvilCost; // L character
     private GuiItem noCapRepairItem;
-    private IntSettingsGui.IntSettingFactory maxAnvilCostFactory; // C character
+    private IntSettingsGui.IntSettingFactory maxAnvilCost; // C character
     private GuiItem noMaxCostItem;
 
     private BoolSettingsGui.BoolSettingFactory removeAnvilCostLimit; // R character
@@ -86,12 +86,18 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
+    private BoolSettingsGui.BoolSettingFactory allowColorCode; // c character
+    private BoolSettingsGui.BoolSettingFactory allowHexColor; // h character
+
+    private BoolSettingsGui.BoolSettingFactory permissionNeededForColor; // p character
+    private IntSettingsGui.IntSettingFactory useOfColorCost; // P character
+
     /**
      * Prepare basic gui displayed items factory and static items..
      */
     protected void prepareValues() {
         // cap anvil cost
-        this.capAnvilCostFactory = BoolSettingsGui.boolFactory("\u00A78Cap Anvil Cost ?", this,
+        this.capAnvilCost = BoolSettingsGui.boolFactory("\u00A78Cap Anvil Cost ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.CAP_ANVIL_COST, ConfigOptions.DEFAULT_CAP_ANVIL_COST,
                 "\u00A77All anvil cost will be capped to \u00A7aMax Anvil Cost\u00A77 if enabled.",
@@ -110,7 +116,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // repair cost item
         IntRange range = ConfigOptions.MAX_ANVIL_COST_RANGE;
-        this.maxAnvilCostFactory = IntSettingsGui.intFactory("\u00A78Max Anvil Cost", this,
+        this.maxAnvilCost = IntSettingsGui.intFactory("\u00A78Max Anvil Cost", this,
                 ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "\u00A77Max cost the Anvil can get to.",
@@ -146,6 +152,10 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.REPLACE_TOO_EXPENSIVE, ConfigOptions.DEFAULT_REPLACE_TOO_EXPENSIVE,
                 getReplaceToExpensiveLore());
+
+        // ------------
+        // Cost config
+        // ------------
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
@@ -194,6 +204,42 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
 
+        // -------------
+        // Color config
+        // -------------
+
+        this.allowColorCode = BoolSettingsGui.boolFactory("\u00A78Allow Use Of Color Code ?", this,
+                ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE,
+                "\u00A77Whether players can use color code.",
+                "\u00A77Color code a formatted like \u00A7a&a\u00A77 and is used in the rename field of the anvil.",
+                "\u00A77Player may need permission to use color code if \u00A7ePlayer need permission to use color\u00A77 is enabled.");
+
+        this.allowHexColor = BoolSettingsGui.boolFactory("\u00A78Allow Use Of Hexadecimal Color ?", this,
+                ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR,
+                "\u00A77Whether players can use hexadecimal color.",
+                "\u00A77Color code a formatted like \u00A7e#012345\u00A77 and is used in the rename field of the anvil.",
+                "\u00A77Player may need permission to use color code if \u00A7ePermission Needed For Color\u00A77 is enabled.");
+
+        this.permissionNeededForColor = BoolSettingsGui.boolFactory("\u00A78Need Permission To Use Color ?", this,
+                ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR,
+                "\u00A77Whether players should have permission to be able to use colors.",
+                "\u00A77Give player \u00A7eca.color.code\u00A77 Permission to allow use of color code.",
+                "\u00A77Give player \u00A7eca.color.hex\u00A77  Permission to allow use of hexadecimal color.");
+
+        range = ConfigOptions.USE_OF_COLOR_COST_RANGE;
+        this.useOfColorCost = IntSettingsGui.intFactory("\u00A78Cost Of Using Color", this,
+                ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
+                Arrays.asList(
+                        "\u00A77XP level cost when using color code or hexadecimal color using the anvil.",
+                        "\u00A77conflict With one of the left item enchantment"
+                ),
+                range.getFirst(), range.getLast(),
+                ConfigOptions.DEFAULT_USE_OF_COLOR_COST,
+                1, 5, 10, 50, 100);
+
     }
 
     @NotNull
@@ -219,8 +265,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         GuiItem capAnvilCostItem;
         GuiItem maxAnvilCostItem;
         if (!this.removeAnvilCostLimit.getConfiguredValue()) {
-            capAnvilCostItem = this.capAnvilCostFactory.getItem("Cap Anvil Cost");
-            maxAnvilCostItem = this.maxAnvilCostFactory.getItem(Material.EXPERIENCE_BOTTLE, "Max Anvil Cost");
+            capAnvilCostItem = this.capAnvilCost.getItem("Cap Anvil Cost");
+            maxAnvilCostItem = this.maxAnvilCost.getItem(Material.EXPERIENCE_BOTTLE, "Max Anvil Cost");
         } else {
             capAnvilCostItem = this.noCapRepairItem;
             maxAnvilCostItem = this.noMaxCostItem;
@@ -247,12 +293,28 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('U', unitRepairCostItem);
 
         // item rename cost
-        GuiItem itemRenameCost = this.itemRenameCost.getItem(Material.NAME_TAG);
-        pane.bindItem('r', itemRenameCost);
+        GuiItem itemRenameCostItem = this.itemRenameCost.getItem(Material.NAME_TAG);
+        pane.bindItem('r', itemRenameCostItem);
 
         // sacrifice illegal enchant cost
         GuiItem illegalCostItem = this.sacrificeIllegalEnchantCost.getItem(Material.ENCHANTED_BOOK);
         pane.bindItem('S', illegalCostItem);
+
+        // allow color code
+        GuiItem allowColorCodeItem = this.allowColorCode.getItem();
+        pane.bindItem('c', allowColorCodeItem);
+
+        // allow hex color
+        GuiItem allowHexColorItem = this.allowHexColor.getItem();
+        pane.bindItem('h', allowHexColorItem);
+
+        // use permission for color
+        GuiItem permissionNeededItem = this.permissionNeededForColor.getItem();
+        pane.bindItem('p', permissionNeededItem);
+
+        // using color cost
+        GuiItem useColorCostItem = this.useOfColorCost.getItem(Material.EXPERIENCE_BOTTLE, "Use color");
+        pane.bindItem('P', useColorCostItem);
 
         update();
     }
