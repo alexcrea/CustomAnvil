@@ -145,7 +145,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 anvilCost += repairAmount * ConfigOptions.unitRepairCost
             }
             // We do not care about right item penalty for unit repair
-            anvilCost += calculatePenalty(first, null, resultItem)
+            anvilCost += calculatePenalty(first, null, resultItem, true)
 
             // Test/stop if nothing changed.
             if (first == resultItem) {
@@ -506,6 +506,14 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
      * Also change result work penalty if right item is not null
      */
     private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
+        return calculatePenalty(left, right, result, false)
+    }
+
+    /**
+     * Function to calculate work penalty of anvil work
+     * Also change result work penalty if right item is not null
+     */
+    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, unitRepair: Boolean): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penalty
         val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
@@ -516,8 +524,8 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 (right.itemMeta as? Repairable)?.repairCost ?: 0
             }
 
-        // Try to set work penalty for the result item only if right item not null
-        if(right != null){
+        // Increase penalty on fusing or unit repair
+        if(right != null || unitRepair){
             result.itemMeta?.let {
                 (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
                 result.itemMeta = it

@@ -1,7 +1,7 @@
 main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
-version: 1.5.4
+version: 1.5.4-fix
 description: Allow to customise anvil mechanics
 api-version: 1.16
 load: POSTWORLD
