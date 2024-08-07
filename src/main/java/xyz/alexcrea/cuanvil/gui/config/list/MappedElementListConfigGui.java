@@ -29,11 +29,11 @@ public abstract class MappedElementListConfigGui< T, S > extends ElementListConf
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("\u00A7aCreate new "+genericDisplayedName());
+        createMeta.setDisplayName("§aCreate new "+genericDisplayedName());
         createMeta.setLore(Arrays.asList(
-                "\u00A77Create a new "+genericDisplayedName()+".",
-                "\u00A77You will be asked to name the "+genericDisplayedName()+" in chat.",
-                "\u00A77Then, you should edit the "+genericDisplayedName()+" config as you need"
+                "§7Create a new "+genericDisplayedName()+".",
+                "§7You will be asked to name the "+genericDisplayedName()+" in chat.",
+                "§7Then, you should edit the "+genericDisplayedName()+" config as you need"
         ));
 
         createItem.setItemMeta(createMeta);
@@ -50,8 +50,8 @@ public abstract class MappedElementListConfigGui< T, S > extends ElementListConf
             }
             player.closeInventory();
 
-            player.sendMessage("\u00A7eWrite the "+genericDisplayedName()+" name you want to create in the chat.\n" +
-                    "\u00A7eOr write \u00A7ccancel \u00A7eto go back to "+genericDisplayedName()+" config menu");
+            player.sendMessage("§eWrite the "+genericDisplayedName()+" name you want to create in the chat.\n" +
+                    "§eOr write §ccancel §eto go back to "+genericDisplayedName()+" config menu");
 
             CustomAnvil.Companion.getChatListener().setListenedCallback(player, prepareCreateItemConsumer(player));
 

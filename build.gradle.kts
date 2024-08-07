@@ -74,6 +74,8 @@ allprojects {
     tasks.withType<JavaCompile>().configureEach {
         sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported.
         targetCompatibility = "16"
+
+        options.encoding = "UTF-8"
     }
 
     kotlin {

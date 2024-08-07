@@ -45,7 +45,7 @@ public class ConfirmActionGui extends AbstractAskGui {
             }
 
             if (!success) {
-                event.getWhoClicked().sendMessage("\u00A7cAction could not be completed. ");
+                event.getWhoClicked().sendMessage("§cAction could not be completed. ");
             }
             backOnConfirm.show(player);
 
@@ -55,7 +55,7 @@ public class ConfirmActionGui extends AbstractAskGui {
         ItemStack infoItem = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItem.getItemMeta();
 
-        infoMeta.setDisplayName("\u00A7eAre you sure ?");
+        infoMeta.setDisplayName("§eAre you sure ?");
         if(actionDescription != null){
             infoMeta.setLore(Arrays.asList(actionDescription.split("\n")));
         }

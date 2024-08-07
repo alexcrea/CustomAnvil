@@ -3,3 +3,7 @@
 /build/
 /out/
 .lastDeploymentsId
+
+#nms submodule build directory ignored
+/nms/*/build
+

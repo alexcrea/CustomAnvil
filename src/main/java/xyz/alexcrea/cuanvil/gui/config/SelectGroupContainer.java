@@ -19,12 +19,12 @@ public interface SelectGroupContainer {
     static List<String> getGroupLore(SelectGroupContainer container, String containerType, String groupAction){
         // Prepare group lore
         ArrayList<String> groupLore = new ArrayList<>();
-        groupLore.add("\u00A77Allow you to select a list of \u00A73Groups \u00A77that this " + containerType + " should " + groupAction);
+        groupLore.add("§7Allow you to select a list of §3Groups §7that this " + containerType + " should " + groupAction);
         Set<AbstractMaterialGroup> grouos = container.getSelectedGroups();
         if (grouos.isEmpty()) {
-            groupLore.add("\u00A77There is no "+groupAction+"d group for this "+containerType+".");
+            groupLore.add("§7There is no "+groupAction+"d group for this "+containerType+".");
         } else {
-            groupLore.add("\u00A77List of "+groupAction+"d groups for this "+containerType+":");
+            groupLore.add("§7List of "+groupAction+"d groups for this "+containerType+":");
             Iterator<AbstractMaterialGroup> groupIterator = grouos.iterator();
 
             boolean greaterThanMax = grouos.size() > 5;
@@ -32,11 +32,11 @@ public interface SelectGroupContainer {
             for (int i = 0; i < maxindex; i++) {
                 // format string like "- Melee Weapons"
                 String formattedName = CasedStringUtil.snakeToUpperSpacedCase(groupIterator.next().getName());
-                groupLore.add("\u00A77- \u00A73" + formattedName);
+                groupLore.add("§7- §3" + formattedName);
 
             }
             if (greaterThanMax) {
-                groupLore.add("\u00A77And " + (grouos.size() - 4) + " more...");
+                groupLore.add("§7And " + (grouos.size() - 4) + " more...");
             }
         }
         return groupLore;

@@ -65,8 +65,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta deleteMeta = deleteItem.getItemMeta();
 
-        deleteMeta.setDisplayName("\u00A74DELETE GROUP");
-        deleteMeta.setLore(Collections.singletonList("\u00A7cCaution with this button !"));
+        deleteMeta.setDisplayName("§4DELETE GROUP");
+        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, openGuiAndCheckAction(), CustomAnvil.instance));
@@ -140,8 +140,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.toString()) + "\u00A7c?",
-                "\u00A77Confirm that you want to delete this group.",
+        return new ConfirmActionGui("§cDelete §e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.toString()) + "§c?",
+                "§7Confirm that you want to delete this group.",
                 this, this.parent, deleteSupplier
         );
     }
@@ -151,8 +151,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         if(usedLoc.isEmpty()){
             return false;
         }
-        StringBuilder stb = new StringBuilder("\u00A7cCan't delete group " +this.group.getName()+
-                "\n\u00A7eUsed by:");
+        StringBuilder stb = new StringBuilder("§cCan't delete group " +this.group.getName()+
+                "\n§eUsed by:");
         int maxIndex = usedLoc.size();
         int nbMore = 0;
         if(maxIndex > 10){
@@ -160,10 +160,10 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             maxIndex = 9;
         }
         for (int i = 0; i < maxIndex; i++) {
-            stb.append("\n\u00A7r-\u00A7e ").append(usedLoc.get(i));
+            stb.append("\n§r-§e ").append(usedLoc.get(i));
         }
         if(nbMore > 0){
-            stb.append("\u00A7cAnd ").append(nbMore).append(" More...");
+            stb.append("§cAnd ").append(nbMore).append(" More...");
         }
 
         player.sendMessage(stb.toString());
@@ -214,7 +214,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemStack matSelectItem = this.materialSelection.getItem();
         ItemMeta matSelectMeta = matSelectItem.getItemMeta();
 
-        matSelectMeta.setDisplayName("\u00A7aSelect included \u00A7eMaterials \u00A7aSettings");
+        matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");
         matSelectMeta.setLore(matLore);
         matSelectMeta.addItemFlags(ItemFlag.values());
 
@@ -226,7 +226,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemStack groupSelectItem = this.groupSelection.getItem();
         ItemMeta groupSelectMeta = groupSelectItem.getItemMeta();
 
-        groupSelectMeta.setDisplayName("\u00A7aSelect included \u00A73Groups \u00A7aSettings");
+        groupSelectMeta.setDisplayName("§aSelect included §3Groups §aSettings");
         groupSelectMeta.setLore(groupLore);
 
         groupSelectItem.setItemMeta(groupSelectMeta);

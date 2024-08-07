@@ -133,7 +133,7 @@ public class GuiGlobalActions {
 
             // Save setting
             if (!setting.onSave()) {
-                player.sendMessage("\u00A7cSomething went wrong while saving the change of value.");
+                player.sendMessage("§cSomething went wrong while saving the change of value.");
             }
             // Update gui for those who have it open.
             goal.updateGuiValues();

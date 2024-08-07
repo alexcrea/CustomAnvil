@@ -74,11 +74,11 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " \u00A7fConflict");
+        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " §fConflict");
         meta.setLore(Arrays.asList(
-                "\u00A77Enchantment count:       \u00A7e" + conflict.getEnchants().size(),
-                "\u00A77Group count:               \u00A7e" + conflict.getCantConflictGroup().getGroups().size(),
-                "\u00A77Min enchantments count: \u00A7e" + conflict.getMinBeforeBlock()
+                "§7Enchantment count:       §e" + conflict.getEnchants().size(),
+                "§7Group count:               §e" + conflict.getCantConflictGroup().getGroups().size(),
+                "§7Min enchantments count: §e" + conflict.getMinBeforeBlock()
         ));
 
         item.setItemMeta(meta);

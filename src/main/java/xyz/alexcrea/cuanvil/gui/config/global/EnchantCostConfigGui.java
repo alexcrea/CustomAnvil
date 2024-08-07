@@ -36,7 +36,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     public EnchantCostConfigGui() {
-        super("\u00A78Enchantment Level Cost");
+        super("§8Enchantment Level Cost");
         if(INSTANCE == null) INSTANCE = this;
 
         init();
@@ -57,8 +57,8 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
                 ConfigHolder.DEFAULT_CONFIG, SECTION_NAME + '.' + key,
                 Arrays.asList(
-                        "\u00A77How many level should " + prettyKey,
-                        "\u00A77cost when applied by book or by another item."
+                        "§7How many level should " + prettyKey,
+                        "§7cost when applied by book or by another item."
                 ),
                 0, 255,
                 rarity.getItemValue(), rarity.getBookValue(),
@@ -70,7 +70,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Get item properties
         int itemCost = factory.getConfiguredValue();
         int bookCost = factory.getConfiguredBookValue();
-        String itemName = "\u00A7a" + factory.getTitle();
+        String itemName = "§a" + factory.getTitle();
         // Create item
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = item.getItemMeta();
@@ -78,8 +78,8 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
 
         // Prepare lore
         List<String> lore = new ArrayList<>();
-        lore.add("\u00A77Item  Cost: \u00A7e" + itemCost);
-        lore.add("\u00A77Book Cost: \u00A7e" + bookCost);
+        lore.add("§7Item  Cost: §e" + itemCost);
+        lore.add("§7Book Cost: §e" + bookCost);
 
         List<String> displayLore = factory.getDisplayLore();
         if(!displayLore.isEmpty()){

@@ -80,7 +80,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
     private ItemStack setDisplayMeta(ItemStack item, String actionDescription){
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName("\u00A7ePlace an item here");
+        meta.setDisplayName("§ePlace an item here");
         meta.setLore(Arrays.asList(actionDescription.split("\n")));
 
         item.setItemMeta(meta);

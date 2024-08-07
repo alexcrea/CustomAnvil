@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
@@ -54,15 +55,15 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         ItemMeta meta = displaydItem.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " \u00A7fCustom recipe");
+        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");
         meta.addItemFlags(ItemFlag.values());
 
         boolean shouldWork = recipe.validate();
 
         meta.setLore(Arrays.asList(
-                "\u00A77Should work:    \u00A7"+(shouldWork ? "aYes" : "cNo"),
-                "\u00A77Exact count:    \u00A7"+(recipe.getExactCount() ? "aYes" : "cNo"),
-                "\u00A77Recipe Xp Cost: \u00A7e"+recipe.getXpCostPerCraft()
+                "§7Should work:    §"+(shouldWork ? "aYes" : "cNo"),
+                "§7Exact count:    §"+(recipe.getExactCount() ? "aYes" : "cNo"),
+                "§7Recipe Xp Cost: §e"+recipe.getXpCostPerCraft()
 
         ));
 
@@ -94,7 +95,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanAddNew(recipe);
 
         // Save recipe to file
-        recipe.saveToFile();
+        recipe.saveToFile(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE, GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
 
         return recipe;
     }

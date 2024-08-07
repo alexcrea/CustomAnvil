@@ -77,8 +77,8 @@ public class ItemSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is \u00A7e" + holder.defaultVal));
+        meta.setDisplayName("§eReset to default value");
+        meta.setLore(Collections.singletonList("§7Default value is §e" + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -88,7 +88,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         }, CustomAnvil.instance);
     }
 
-    protected final static List<String> CLICK_LORE = Collections.singletonList("\u00A77Click Here with an item to change the value");
+    protected final static List<String> CLICK_LORE = Collections.singletonList("§7Click Here with an item to change the value");
 
     /**
      * Update item using the setting value to match the new value
@@ -105,7 +105,7 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemMeta valueMeta = displayedItem.getItemMeta();
             assert valueMeta != null;
 
-            valueMeta.setDisplayName("\u00A74NO ITEM SET");
+            valueMeta.setDisplayName("§4NO ITEM SET");
             valueMeta.setLore(CLICK_LORE);
 
             displayedItem.setItemMeta(valueMeta);
@@ -266,7 +266,7 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7a" + name);
+            meta.setDisplayName("§a" + name);
             meta.setLore(getDisplayLore());
             meta.addItemFlags(ItemFlag.values());
 
