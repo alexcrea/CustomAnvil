@@ -27,7 +27,7 @@ import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair

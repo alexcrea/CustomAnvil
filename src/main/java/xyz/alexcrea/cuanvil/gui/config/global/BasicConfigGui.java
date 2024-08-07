@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager;
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
@@ -280,9 +280,10 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         lore.add("\u00A77Even if cost is displayed as \u00A7aGreen\u00A77:");
         lore.add("\u00A77If the player do not have the required xp level, the action will not be completable.");
 
-        if(!this.packetManager.isProtocoLibInstalled()){
+        if(!this.packetManager.getCanSetInstantBuild()){
             lore.add("");
-            lore.add("\u00A74/!\\\u00A7cCaution/!\\ \u00A7cYou need ProtocoLib installed for this to work.");
+            lore.add("\u00A74/!\\\u00A7cCaution\u00A74/!\\ \u00A7cYou need ProtocoLib installed and working or a newer version of this plugin for this to work.");
+            lore.add("\u00A7cCurrently ProtocoLib is not detected.");
         }
 
         String[] loreAsArray = new String[lore.size()];

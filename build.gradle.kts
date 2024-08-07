@@ -15,33 +15,15 @@ plugins {
 group = "xyz.alexcrea"
 version = "1.5.4-fix"
 
-java {
-    disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(20))
-}
-
 repositories {
-    mavenCentral()
-    maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-
-    // ProtocoLib
-    maven (url = "https://repo.dmulloy2.net/repository/public/" )
-
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
+
 }
 
 dependencies {
-
-    compileOnly(kotlin("stdlib"))
-
-    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
-
     // Gui library
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
-
-    // Protocolib
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
@@ -50,29 +32,58 @@ dependencies {
     compileOnly("com.willfp:EcoEnchants:12.5.1")
     compileOnly("com.willfp:eco:6.70.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    // Include nms
+    implementation(project(":nms:nms-common"))
 
 }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
+allprojects {
+    apply(plugin = "java")
+    apply(plugin = "kotlin")
 
-// Set target version
-tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported.
-    targetCompatibility = "16"
-}
+    repositories {
+        mavenCentral()
 
-kotlin {
-    compilerOptions {
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        jvmTarget.set(JvmTarget.JVM_16)
+        // Spigot repository
+        maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
-}
 
+    dependencies {
+        compileOnly(kotlin("stdlib"))
+
+        // We assume nms part will not require version specific api.
+        // If any issue occur because of this assumption. please fell free to edit.
+        compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+
+        // Currently not used. but it would be useful to test.
+        testImplementation(platform("org.junit:junit-bom:5.9.1"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
+    }
+
+    // Configure used version of kotlin and java
+    java {
+        disableAutoTargetJvm()
+        toolchain.languageVersion.set(JavaLanguageVersion.of(20))
+    }
+
+    tasks.getByName<Test>("test") {
+        useJUnitPlatform()
+    }
+
+    // Set target version
+    tasks.withType<JavaCompile>().configureEach {
+        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported.
+        targetCompatibility = "16"
+    }
+
+    kotlin {
+        compilerOptions {
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            jvmTarget.set(JvmTarget.JVM_16)
+        }
+    }
+
+}
 
 // Fat-jar builder
 val fatJar = tasks.register<Jar>("fatJar") {
