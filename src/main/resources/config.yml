@@ -265,4 +265,10 @@ debug_log: false
 # Whether to show verbose debug logging
 debug_log_verbose: false
 
+# In case something when wrong with CustomAnvil packet manager.
+# If you see "missing class exception" or similar you may test this.
+# If enabled and Protocolib absent or disabled "Replace to expensive" will not work.
+# ProtocoLib may also be used if the server is in an "unsupported" version even if this option is disabled.
+force_protocolib: false
+
 configVersion: 1.4.5

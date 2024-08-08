@@ -10,6 +10,7 @@ plugins {
     `maven-publish`
     signing
     id("cn.lalaki.central").version("1.2.5")
+    id("io.papermc.paperweight.userdev") version "1.7.1" apply false
 }
 
 group = "xyz.alexcrea"
@@ -22,6 +23,9 @@ repositories {
 }
 
 dependencies {
+    // Spigot api
+    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+
     // Gui library
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
 
@@ -34,6 +38,7 @@ dependencies {
 
     // Include nms
     implementation(project(":nms:nms-common"))
+    implementation(project(":nms:v1_18R1", configuration = "reobf"))
 
 }
 
@@ -46,18 +51,21 @@ allprojects {
 
         // Spigot repository
         maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+
+        // Paper repository
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
     dependencies {
         compileOnly(kotlin("stdlib"))
 
-        // We assume nms part will not require version specific api.
-        // If any issue occur because of this assumption. please fell free to edit.
-        compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
-
         // Currently not used. but it would be useful to test.
         testImplementation(platform("org.junit:junit-bom:5.9.1"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+    }
+
+    tasks.getByName<Test>("test") {
+        useJUnitPlatform()
     }
 
     // Configure used version of kotlin and java
@@ -66,13 +74,9 @@ allprojects {
         toolchain.languageVersion.set(JavaLanguageVersion.of(20))
     }
 
-    tasks.getByName<Test>("test") {
-        useJUnitPlatform()
-    }
-
     // Set target version
     tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported.
+        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
         targetCompatibility = "16"
 
         options.encoding = "UTF-8"

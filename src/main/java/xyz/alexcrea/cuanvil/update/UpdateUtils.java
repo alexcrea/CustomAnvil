@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.update;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -7,9 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UpdateUtils {
-    public final static String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
+    public static final String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
 
-    static int[] readVersionFromString(String versionString){
+    public static int[] currentMinecraftVersion(){
+        String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
+        return UpdateUtils.readVersionFromString(versionString);
+    }
+
+    public static int[] readVersionFromString(String versionString){
         String[] partialVersion = versionString.split("\\.");
         int[] versionParts = new int[]{0, 0, 0};
 

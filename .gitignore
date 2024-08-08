@@ -5,5 +5,6 @@
 .lastDeploymentsId
 
 #nms submodule build directory ignored
+/nms/build
 /nms/*/build
 

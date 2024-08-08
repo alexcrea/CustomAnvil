@@ -14,7 +14,7 @@ object DependencyManager {
     fun loadDependency(){
         val pluginManager = Bukkit.getPluginManager()
 
-        // ProtocolLib dependency
+        // Packet Manager
         val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
         packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
 
