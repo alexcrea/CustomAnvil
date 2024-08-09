@@ -6,5 +6,6 @@
 
 #nms submodule build directory ignored
 /nms/build
+/nms/.gradle
 /nms/*/build
-
+/nms/*/.gradle

@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":nms:nms-common"))
 
     // Used for nms
-    paperweight.paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.2-R0.1-SNAPSHOT")
 }
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
 
 }
 
-// As minecraft 1.18 work with java 1.17 or above. we set language version to 1.17
+// I do not know minecraft 1.19 recommended java version. assumed 17 is good enough
 
 // Configure used version of kotlin and java
 java {

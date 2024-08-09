@@ -1,7 +1,7 @@
 package xyz.alexcrea.cuanvil.dependency.packet
 
 import org.bukkit.Bukkit
-import xyz.alexcrea.cuanvil.dependency.packet.versions.V1_18R1_Manager
+import xyz.alexcrea.cuanvil.dependency.packet.versions.*
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 
 object PacketManagerSelector {
@@ -36,28 +36,28 @@ object PacketManagerSelector {
                 }
 
                 18 -> when (versionParts[2]) {
-                    0, 1 -> V1_18R1_Manager()
-                    2 -> null // TODO V1_18R2
+                    0, 1 -> V1_18R1_PacketManager()
+                    2 -> V1_18R2_PacketManager()
                     else -> null
                 }
 
                 19 -> when (versionParts[2]) {
-                    0, 1, 2 -> null // TODO V1_19R1
-                    3 -> null // TODO V1_19R2
-                    4 -> null // TODO V1_19R3
+                    0, 1, 2 -> V1_19R1_PacketManager()
+                    3 -> V1_19R2_PacketManager()
+                    4 -> V1_19R3_PacketManager()
                     else -> null
                 }
 
                 20 -> when (versionParts[2]) {
-                    0, 1 -> null // TODO V1_20R1
-                    2 -> null // TODO V1_20R2
-                    3, 4 -> null // TODO V1_20R3
-                    5, 6 -> null // TODO V1_20R4
+                    0, 1 -> V1_20R1_PacketManager()
+                    2 -> V1_20R2_PacketManager()
+                    3, 4 -> V1_20R3_PacketManager()
+                    5, 6 -> V1_20R4_PacketManager()
                     else -> null
                 }
 
                 21 -> when (versionParts[2]) {
-                    0 -> null // TODO V1_21R1
+                    0, 1 -> V1_21R1_PacketManager()
                     else -> null
                 }
 

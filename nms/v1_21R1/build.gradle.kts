@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":nms:nms-common"))
 
     // Used for nms
-    paperweight.paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT") // 1.21.1 userdev did not release yet but still use R1
 }
 
 repositories {
@@ -19,18 +19,18 @@ repositories {
 
 }
 
-// As minecraft 1.18 work with java 1.17 or above. we set language version to 1.17
+// minecraft 1.21 java version is 21.
 
 // Configure used version of kotlin and java
 java {
     disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 // Set target version
 tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "17"
-    targetCompatibility = "17"
+    sourceCompatibility = "21"
+    targetCompatibility = "21"
 
     options.encoding = "UTF-8"
 }
@@ -38,6 +38,6 @@ tasks.withType<JavaCompile>().configureEach {
 kotlin {
     compilerOptions {
         apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        jvmTarget.set(JvmTarget.JVM_17)
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
