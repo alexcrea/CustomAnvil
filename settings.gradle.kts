@@ -3,6 +3,8 @@ rootProject.name = "CustomAnvil"
 // NMS subproject
 include("nms:nms-common")
 findProject(":nms:nms-common")?.name = "nms-common"
+include("nms:v1_17R1")
+findProject(":nms:v1_17R1")?.name = "v1_17R1"
 include("nms:v1_18R1")
 findProject(":nms:v1_18R1")?.name = "v1_18R1"
 include("nms:v1_18R2")
