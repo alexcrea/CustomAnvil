@@ -23,7 +23,7 @@ or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds).
 - Custom XP cost for every aspect of the anvil.
 - Permissions to bypass level limit or enchantment restriction.
-- Display xp cost instead of "to expensive" when above lv 40. (need ProtocoLib)
+- Display xp cost instead of "to expensive" when above lv 40. (see bellow for more information)
 - Can handle some custom enchantment plugins (see bellow for more information)
 - Gui to configure the plugin in game.
 - Support of color code and hexadecimal color
@@ -62,6 +62,16 @@ If you like Custom Anvil to support a specific custom enchantment plugin.
 You can ask, but please note implementing compatibility will be considered
 as low priority as I work for the plugin on my free time for free.
 
+### Overriding Too Expensive
+
+One of the configurations allow displaying price about 40 and removing Too Expensive. \
+By how the minecraft client work: price above 40 can only be displayed green even if the play does not own enough experience level. 
+
+For 1.16.5 and future version (above 1.21.1) you will need ProtocoLib enabled on your server for this feature. \
+You can also wait for an update of the plugin.
+
+please note that 1.16.5 to 1.17.1 are not officially supported. Run at your own risk.
+
 ### For custom enchantment plugin developers
 For information about the API, please refer to [the Wiki](https://github.com/alexcrea/CustomAnvil/wiki) \
 (Please note that the wiki is currently incomplete)​
@@ -70,7 +80,7 @@ For information about the API, please refer to [the Wiki](https://github.com/ale
 
 ### Default Plugin's Configurations
 For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.18)\
-For 1.21 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
+For 1.21 to 1.21.1 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
 
 ---
 ### Known issue:
