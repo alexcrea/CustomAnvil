@@ -361,7 +361,10 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
                 rightItem.amount -= amount * recipe.rightItem!!.amount
                 inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
             }
-            player.level -= amount
+
+            if(player.gameMode != GameMode.CREATIVE){
+                player.level -= xpCost
+            }
 
             // Then we try to find the new values for the anvil
             val newAmount = getCustomRecipeAmount(recipe, leftItem, rightItem)
