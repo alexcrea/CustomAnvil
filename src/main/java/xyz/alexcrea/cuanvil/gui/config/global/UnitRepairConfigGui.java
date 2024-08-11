@@ -62,10 +62,10 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7eRepaired by " +materialName);
+        meta.setDisplayName("§eRepaired by " +materialName);
         meta.setLore(Arrays.asList(
-                "\u00A77There is currently \u00A7e" +reparableItemCount+ " \u00A77reparable item with "+materialName,
-                "\u00A77Click here to open the menu to edit reparable item by " + materialName
+                "§7There is currently §e" +reparableItemCount+ " §7reparable item with "+materialName,
+                "§7Click here to open the menu to edit reparable item by " + materialName
         ));
 
         item.setItemMeta(meta);
@@ -93,10 +93,10 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("\u00A7aSelect a new unit material");
+        createMeta.setDisplayName("§aSelect a new unit material");
         createMeta.setLore(Arrays.asList(
-                "\u00A77Select a new unit material to be used.",
-                "\u00A77You will be asked the material to use."
+                "§7Select a new unit material to be used.",
+                "§7You will be asked the material to use."
         ));
 
         createItem.setItemMeta(createMeta);
@@ -106,8 +106,8 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
 
             new SelectItemTypeGui(
                     "Select unit repair item.",
-                    "\u00A77Click here with an item to set the item\n" +
-                            "\u00A77You like to be an unit repair item",
+                    "§7Click here with an item to set the item\n" +
+                            "§7You like to be an unit repair item",
                     this,
                     (itemStack, player) -> {
                         Material type = itemStack.getType();

@@ -66,9 +66,9 @@ public class BoolSettingsGui extends AbstractSettingGui {
         // Prepare default Value text
         String defaultValueLore;
         if(holder.defaultVal){
-            defaultValueLore = "\u00A7aYes \u00A77Is the default value";
+            defaultValueLore = "§aYes §7Is the default value";
         }else{
-            defaultValueLore = "\u00A7cNo \u00A77Is the default value";
+            defaultValueLore = "§cNo §7Is the default value";
         }
 
         // Create reset to default item
@@ -76,7 +76,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7eReset to default value");
+        meta.setDisplayName("§eReset to default value");
         meta.setLore(Collections.singletonList(defaultValueLore));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
@@ -97,10 +97,10 @@ public class BoolSettingsGui extends AbstractSettingGui {
         String displayedName;
         Material displayedMat;
         if (now) {
-            displayedName = "\u00A7aYes";
+            displayedName = "§aYes";
             displayedMat = Material.GREEN_TERRACOTTA;
         } else {
-            displayedName = "\u00A7cNo";
+            displayedName = "§cNo";
             displayedMat = Material.RED_TERRACOTTA;
         }
 
@@ -254,14 +254,14 @@ public class BoolSettingsGui extends AbstractSettingGui {
             boolean value = getConfiguredValue();
 
             Material itemMat;
-            StringBuilder itemName = new StringBuilder("\u00A7e");
+            StringBuilder itemName = new StringBuilder("§e");
             String finalValue;
             if (value) {
                 itemMat = Material.GREEN_TERRACOTTA;
-                finalValue = "\u00A7aYes";
+                finalValue = "§aYes";
             } else {
                 itemMat = Material.RED_TERRACOTTA;
-                finalValue = "\u00A7cNo";
+                finalValue = "§cNo";
             }
             itemName.append(name);
 

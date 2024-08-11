@@ -30,7 +30,7 @@ public class GuiGlobalItems {
         ItemMeta meta = BACK_ITEM.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7cBack");
+        meta.setDisplayName("§cBack");
         BACK_ITEM.setItemMeta(meta);
     }
 
@@ -82,7 +82,7 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7c");
+        meta.setDisplayName("§c");
         item.setItemMeta(meta);
         return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
@@ -139,7 +139,7 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7aSave");
+        meta.setDisplayName("§aSave");
         item.setItemMeta(meta);
         return new GuiItem(item,
                 GuiGlobalActions.saveSettingAction(setting, goal),
@@ -154,7 +154,7 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A77No change. can't save.");
+        meta.setDisplayName("§7No change. can't save.");
         item.setItemMeta(meta);
         NO_CHANGE_ITEM = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
@@ -185,7 +185,7 @@ public class GuiGlobalItems {
     }
 
     // Prefix of the one line lore that will be added to setting's item.
-    public static final String SETTING_ITEM_LORE_PREFIX = "\u00A77value: ";
+    public static final String SETTING_ITEM_LORE_PREFIX = "§7value: ";
 
     /**
      * Create an arbitrary GuiItem from a unique setting and item's property.
@@ -247,8 +247,8 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7eTemporary close this menu");
-        meta.setLore(Collections.singletonList("\u00A77Allow you to chose other item then return here."));
+        meta.setDisplayName("§eTemporary close this menu");
+        meta.setLore(Collections.singletonList("§7Allow you to chose other item then return here."));
         item.setItemMeta(meta);
 
         return new GuiItem(item, event -> {
@@ -263,7 +263,7 @@ public class GuiGlobalItems {
 
             });
 
-            player.sendMessage("\u00A7eWrite something in chat to return to the item config menu.");
+            player.sendMessage("§eWrite something in chat to return to the item config menu.");
             player.closeInventory();
         }, CustomAnvil.instance);
     }

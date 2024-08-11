@@ -71,8 +71,8 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("\u00A7eReset to default value");
-        meta.setLore(Collections.singletonList("\u00A77Default value is \u00A7e" + holder.defaultVal));
+        meta.setDisplayName("§eReset to default value");
+        meta.setLore(Collections.singletonList("§7Default value is §e" + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -97,7 +97,7 @@ public class IntSettingsGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + now + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7c-" + (now - planned) + "\u00A7r)");
+            meta.setDisplayName("§e" + now + " §f-> §e" + planned + " §r(§c-" + (now - planned) + "§r)");
             meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
@@ -116,7 +116,7 @@ public class IntSettingsGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + now + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7a+" + (planned - now) + "\u00A7r)");
+            meta.setDisplayName("§e" + now + " §f-> §e" + planned + " §r(§a+" + (planned - now) + "§r)");
             meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
@@ -131,7 +131,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("\u00A7fValue: \u00A7e" + now);
+        resultMeta.setDisplayName("§fValue: §e" + now);
         resultMeta.setLore(holder.displayLore);
 
         resultPaper.setItemMeta(resultMeta);
@@ -218,21 +218,21 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         // Get material properties
         Material stepMat;
-        StringBuilder stepName = new StringBuilder("\u00A7");
+        StringBuilder stepName = new StringBuilder("§");
         List<String> stepLore;
         Consumer<InventoryClickEvent> clickEvent;
         if (stepValue == step) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
-            stepLore = Collections.singletonList("\u00A77Value is changing by " + stepValue);
+            stepLore = Collections.singletonList("§7Value is changing by " + stepValue);
             clickEvent = GuiGlobalActions.stayInPlace;
         } else {
             stepMat = Material.RED_STAINED_GLASS_PANE;
             stepName.append('c');
-            stepLore = Collections.singletonList("\u00A77Click here to change the value by " + stepValue);
+            stepLore = Collections.singletonList("§7Click here to change the value by " + stepValue);
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of: \u00A7e").append(stepValue);
+        stepName.append("Step of: §e").append(stepValue);
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
@@ -393,10 +393,10 @@ public class IntSettingsGui extends AbstractSettingGui {
         ) {
             // Get item properties
             int value = getConfiguredValue();
-            StringBuilder itemName = new StringBuilder("\u00A7a").append(name);
+            StringBuilder itemName = new StringBuilder("§a").append(name);
 
             return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
-                    "\u00A7e" + value,
+                    "§e" + value,
                     this.displayLore, true);
         }
 

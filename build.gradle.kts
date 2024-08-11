@@ -10,38 +10,24 @@ plugins {
     `maven-publish`
     signing
     id("cn.lalaki.central").version("1.2.5")
+    id("io.papermc.paperweight.userdev") version "1.7.1" apply false
 }
 
 group = "xyz.alexcrea"
 version = "1.5.4-fix"
 
-java {
-    disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(20))
-}
-
 repositories {
-    mavenCentral()
-    maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-
-    // ProtocoLib
-    maven (url = "https://repo.dmulloy2.net/repository/public/" )
-
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
+
 }
 
 dependencies {
-
-    compileOnly(kotlin("stdlib"))
-
+    // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
     implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
-
-    // Protocolib
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
@@ -50,29 +36,69 @@ dependencies {
     compileOnly("com.willfp:EcoEnchants:12.5.1")
     compileOnly("com.willfp:eco:6.70.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-
+    // Include nms
+    implementation(project(":nms:nms-common"))
+    implementation(project(":nms:v1_17R1", configuration = "reobf"))
+    implementation(project(":nms:v1_18R1", configuration = "reobf"))
+    implementation(project(":nms:v1_18R2", configuration = "reobf"))
+    implementation(project(":nms:v1_19R1", configuration = "reobf"))
+    implementation(project(":nms:v1_19R2", configuration = "reobf"))
+    implementation(project(":nms:v1_19R3", configuration = "reobf"))
+    implementation(project(":nms:v1_20R1", configuration = "reobf"))
+    implementation(project(":nms:v1_20R2", configuration = "reobf"))
+    implementation(project(":nms:v1_20R3", configuration = "reobf"))
+    implementation(project(":nms:v1_20R4", configuration = "reobf"))
+    implementation(project(":nms:v1_21R1", configuration = "reobf"))
 }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
+allprojects {
+    apply(plugin = "java")
+    apply(plugin = "kotlin")
 
-// Set target version
-tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported.
-    targetCompatibility = "16"
-}
+    repositories {
+        mavenCentral()
 
-kotlin {
-    compilerOptions {
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        jvmTarget.set(JvmTarget.JVM_16)
+        // Spigot repository
+        maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+
+        // Paper repository
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
-}
 
+    dependencies {
+        compileOnly(kotlin("stdlib"))
+
+        // Currently not used. but it would be useful to test.
+        testImplementation(platform("org.junit:junit-bom:5.9.1"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
+    }
+
+    tasks.getByName<Test>("test") {
+        useJUnitPlatform()
+    }
+
+    // Configure used version of kotlin and java
+    java {
+        disableAutoTargetJvm()
+        toolchain.languageVersion.set(JavaLanguageVersion.of(20))
+    }
+
+    // Set target version
+    tasks.withType<JavaCompile>().configureEach {
+        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
+        targetCompatibility = "16"
+
+        options.encoding = "UTF-8"
+    }
+
+    kotlin {
+        compilerOptions {
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            jvmTarget.set(JvmTarget.JVM_16)
+        }
+    }
+
+}
 
 // Fat-jar builder
 val fatJar = tasks.register<Jar>("fatJar") {

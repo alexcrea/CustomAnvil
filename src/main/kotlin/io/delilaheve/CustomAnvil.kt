@@ -98,6 +98,12 @@ class CustomAnvil : JavaPlugin() {
         chatListener = ChatEventListener()
         server.pluginManager.registerEvents(chatListener, this)
 
+        // Load default configuration
+        if (!ConfigHolder.loadDefaultConfig()) {
+            logger.log(Level.SEVERE,"could not load default config.")
+            return
+        }
+
         // Load dependency
         DependencyManager.loadDependency()
 
@@ -113,12 +119,6 @@ class CustomAnvil : JavaPlugin() {
     }
 
     private fun loadEnchantmentSystem(){
-        // Load default configuration
-        if (!ConfigHolder.loadDefaultConfig()) {
-            logger.log(Level.SEVERE,"could not load default config.")
-            return
-        }
-
         // Register enchantments
         CAEnchantmentRegistry.getInstance().registerBukkit()
         DependencyManager.registerEnchantments()

@@ -199,7 +199,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
                 ItemStack leftItem = this.goLeftItem.getItem();
                 ItemMeta leftMeta = leftItem.getItemMeta();
 
-                leftMeta.setDisplayName("\u00A7eReturn to page " + (page));
+                leftMeta.setDisplayName("§eReturn to page " + (page));
 
                 leftItem.setItemMeta(leftMeta);
                 this.goLeftItem.setItem(leftItem);
@@ -216,7 +216,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
                 ItemStack rightItem = this.goRightItem.getItem();
                 ItemMeta rightMeta = rightItem.getItemMeta();
 
-                rightMeta.setDisplayName("\u00A7eGo to page " + (page + 2));
+                rightMeta.setDisplayName("§eGo to page " + (page + 2));
 
                 rightItem.setItemMeta(rightMeta);
                 this.goRightItem.setItem(rightItem);

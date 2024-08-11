@@ -83,10 +83,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta bookMeta = bookItemstack.getItemMeta();
         assert bookMeta != null;
 
-        bookMeta.setDisplayName("\u00A7aCost of an Enchantment by Book");
+        bookMeta.setDisplayName("§aCost of an Enchantment by Book");
         bookMeta.setLore(Arrays.asList(
-                "\u00A77Cost per result item level of an sacrifice enchantment",
-                "\u00A77Only apply if sacrificed item \u00A7cis \u00A77a book"));
+                "§7Cost per result item level of an sacrifice enchantment",
+                "§7Only apply if sacrificed item §cis §7a book"));
         bookItemstack.setItemMeta(bookMeta);
 
         // sword display
@@ -95,10 +95,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         assert swordMeta != null;
 
         swordMeta.addItemFlags(ItemFlag.values());
-        swordMeta.setDisplayName("\u00A7aCost of an Enchantment by Item");
+        swordMeta.setDisplayName("§aCost of an Enchantment by Item");
         swordMeta.setLore(Arrays.asList(
-                "\u00A77Cost per result item level of an sacrifice enchantment",
-                "\u00A77Only apply if sacrificed item \u00A7cis not \u00A77a book"));
+                "§7Cost per result item level of an sacrifice enchantment",
+                "§7Only apply if sacrificed item §cis not §7a book"));
         swordItemstack.setItemMeta(swordMeta);
 
         pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
@@ -115,10 +115,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // assume holder is an instance of EnchantCostSettingFactory
         EnchantCostSettingFactory holder = (EnchantCostSettingFactory) this.holder;
 
-        meta.setDisplayName("\u00A7eReset to default value");
+        meta.setDisplayName("§eReset to default value");
         meta.setLore(Arrays.asList(
-                "\u00A77Default item  value is: \u00A7e" + holder.defaultVal,
-                "\u00A77Default book value is: \u00A7e" + holder.defaultBookVal));
+                "§7Default item  value is: §e" + holder.defaultVal,
+                "§7Default book value is: §e" + holder.defaultBookVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -147,7 +147,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + nowBook + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7c-" + (nowBook - planned) + "\u00A7r)");
+            meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§c-" + (nowBook - planned) + "§r)");
             meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
@@ -165,7 +165,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("\u00A7e" + nowBook + " \u00A7f-> \u00A7e" + planned + " \u00A7r(\u00A7a+" + (planned - nowBook) + "\u00A7r)");
+            meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§a+" + (planned - nowBook) + "§r)");
             meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
@@ -180,7 +180,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta nowMeta = nowPaper.getItemMeta();
         assert nowMeta != null;
 
-        nowMeta.setDisplayName("\u00A7fValue: \u00A7e" + nowBook);
+        nowMeta.setDisplayName("§fValue: §e" + nowBook);
         if(!holder.displayLore.isEmpty()){
             nowMeta.setLore(holder.displayLore);
         }

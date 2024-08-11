@@ -107,9 +107,9 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName((this.displayUnselected ? "\u00A7aEverything displayed" : "\u00A7eOnly selected displayed"));
+        meta.setDisplayName((this.displayUnselected ? "§aEverything displayed" : "§eOnly selected displayed"));
         meta.setLore(Collections.singletonList(
-                        "\u00A77Click here to see " +
+                        "§7Click here to see " +
                         (this.displayUnselected ? "only selected" : "every") +
                                 " enchantments"));
 
@@ -124,8 +124,8 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         }, CustomAnvil.instance);
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("\u00A77Value: \u00A7aSelected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("\u00A77Value: \u00A7cNot Selected");
+    private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
+    private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
 
     public void setEnchantItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
@@ -138,7 +138,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
             assert meta != null;
         }
 
-        meta.setDisplayName("\u00A7" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
+        meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
         if (isIn) {
             meta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
             meta.setLore(TRUE_LORE);

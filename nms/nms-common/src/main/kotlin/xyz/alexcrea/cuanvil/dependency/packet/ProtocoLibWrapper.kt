@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.dependency.protocolib
+package xyz.alexcrea.cuanvil.dependency.packet
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
@@ -11,7 +11,7 @@ class ProtocoLibWrapper: PacketManager {
 
     private val protocolManager: ProtocolManager = ProtocolLibrary.getProtocolManager();
 
-    override val isProtocoLibInstalled: Boolean
+    override val canSetInstantBuild: Boolean
         get() = true
 
     override fun setInstantBuild(player: Player, instantBuild: Boolean) {

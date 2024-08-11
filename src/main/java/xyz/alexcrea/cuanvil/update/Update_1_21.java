@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
@@ -23,8 +22,7 @@ public class Update_1_21 {
             }
         }
 
-        String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
-        int[] versionParts = UpdateUtils.readVersionFromString(versionString);
+        int[] versionParts = UpdateUtils.currentMinecraftVersion();
 
         // Test 1.21
         if((versionParts[0] >= 1) && (versionParts[1] >= 21)){

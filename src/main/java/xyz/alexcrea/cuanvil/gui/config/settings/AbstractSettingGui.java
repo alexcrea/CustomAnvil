@@ -17,7 +17,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
  */
 public abstract class AbstractSettingGui extends ChestGui implements SettingGui {
 
-    protected static final String CLICK_LORE = "\u00A77Click Here to change the value";
+    protected static final String CLICK_LORE = "§7Click Here to change the value";
 
     private PatternPane pane;
 

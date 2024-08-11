@@ -29,7 +29,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantLimitConfigGui() {
-        super("\u00A78Enchantment Level Limit");
+        super("§8Enchantment Level Limit");
         if(INSTANCE == null) INSTANCE = this;
 
         init();
@@ -43,7 +43,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         return IntSettingsGui.intFactory(prettyKey + " Level Limit", this,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Collections.singletonList(
-                        "\u00A77Maximum applied level of " + prettyKey
+                        "§7Maximum applied level of " + prettyKey
                 ),
                 0, 255,
                 enchant.defaultMaxLevel(),

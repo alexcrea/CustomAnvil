@@ -49,12 +49,12 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupCo
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " \u00A7fGroup");
+        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " §fGroup");
         meta.setLore(Arrays.asList(
-                "\u00A77Number of selected groups : " + group.getGroups().size(),
-                "\u00A77Number of included material : " + group.getNonGroupInheritedMaterials().size(),
+                "§7Number of selected groups : " + group.getGroups().size(),
+                "§7Number of included material : " + group.getNonGroupInheritedMaterials().size(),
                 "",
-                "\u00A77Total number of included material "+group.getMaterials().size()));
+                "§7Total number of included material "+group.getMaterials().size()));
 
         item.setItemMeta(meta);
         return item;

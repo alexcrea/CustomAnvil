@@ -74,7 +74,7 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
             // Not the most efficient on large number of conflict, but it should not run often.
             for (T generic : getEveryDisplayableInstanceOfGeneric()) {
                 if (generic.toString().equalsIgnoreCase(message)) {
-                    player.sendMessage("\u00A7cPlease enter a "+genericDisplayedName()+" name that do not already exist...");
+                    player.sendMessage("§cPlease enter a "+genericDisplayedName()+" name that do not already exist...");
                     // wait next message.
                     CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
                     return;

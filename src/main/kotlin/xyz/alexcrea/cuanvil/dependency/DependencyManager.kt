@@ -1,9 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency
 
 import org.bukkit.Bukkit
-import xyz.alexcrea.cuanvil.dependency.protocolib.NoProtocoLib
-import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager
-import xyz.alexcrea.cuanvil.dependency.protocolib.ProtocoLibWrapper
+import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
 
 object DependencyManager {
 
@@ -14,10 +14,9 @@ object DependencyManager {
     fun loadDependency(){
         val pluginManager = Bukkit.getPluginManager()
 
-        // ProtocolLib dependency
-        packetManager =
-            if(pluginManager.isPluginEnabled("ProtocolLib")) ProtocoLibWrapper()
-        else NoProtocoLib()
+        // Packet Manager
+        val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
+        packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
 
         // Enchantment Squared dependency
         if(pluginManager.isPluginEnabled("EnchantsSquared")){

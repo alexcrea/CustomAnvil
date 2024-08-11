@@ -85,10 +85,10 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         ItemMeta selectMeta = selectItem.getItemMeta();
         assert selectMeta != null;
 
-        selectMeta.setDisplayName("\u00A7aAdd Item");
+        selectMeta.setDisplayName("§aAdd Item");
         selectMeta.setLore(Arrays.asList(
-                "\u00A77Click here with an item to add",
-                "\u00A77it's Material to the list."));
+                "§7Click here with an item to add",
+                "§7it's Material to the list."));
 
         selectItem.setItemMeta(selectMeta);
 
@@ -105,9 +105,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         ItemMeta instantRemoveOnMeta = instantRemoveOnItem.getItemMeta();
         assert instantRemoveOnMeta != null;
 
-        instantRemoveOnMeta.setDisplayName("\u00A7eInstant remove is \u00A7aEnabled \u00A7e!");
+        instantRemoveOnMeta.setDisplayName("§eInstant remove is §aEnabled §e!");
         instantRemoveOnMeta.setLore(
-                Collections.singletonList("\u00A77Click here to disable the instant remove"));
+                Collections.singletonList("§7Click here to disable the instant remove"));
 
         instantRemoveOnItem.setItemMeta(instantRemoveOnMeta);
 
@@ -116,9 +116,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         ItemMeta instantRemoveOffMeta = instantRemoveOffItem.getItemMeta();
         assert instantRemoveOffMeta != null;
 
-        instantRemoveOffMeta.setDisplayName("\u00A7eInstant remove is \u00A7cDisabled \u00A7e!");
+        instantRemoveOffMeta.setDisplayName("§eInstant remove is §cDisabled §e!");
         instantRemoveOffMeta.setLore(
-                Collections.singletonList("\u00A77Click here to enable the instant remove"));
+                Collections.singletonList("§7Click here to enable the instant remove"));
 
         instantRemoveOffItem.setItemMeta(instantRemoveOffMeta);
 
@@ -143,7 +143,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         ItemMeta saveMeta = saveItemStack.getItemMeta();
         assert saveMeta != null;
 
-        saveMeta.setDisplayName("\u00A7aSave");
+        saveMeta.setDisplayName("§aSave");
 
         saveItemStack.setItemMeta(saveMeta);
 
@@ -165,7 +165,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
             result.addAll(this.elementGuiMap.keySet());
 
             if(!this.selector.setSelectedMaterials(result)){
-                player.sendMessage("\u00A7cSomething went wrong while saving the change of value.");
+                player.sendMessage("§cSomething went wrong while saving the change of value.");
             }
 
             // Return to parent
@@ -206,8 +206,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null) return item;
-        meta.setDisplayName("\u00A7a" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()));
-        meta.setLore(Collections.singletonList("\u00A77Click here to remove this material from the list"));
+        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()));
+        meta.setLore(Collections.singletonList("§7Click here to remove this material from the list"));
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);
@@ -236,7 +236,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
                         "Remove " + materialName,
-                        "\u00A77Confirm Remove " + materialName.toLowerCase() + " from this list.",
+                        "§7Confirm Remove " + materialName.toLowerCase() + " from this list.",
                         this, this,
                         () -> {
                             removeMaterial(material);

@@ -43,7 +43,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             @NotNull GuiItem parentItemForThisGui) {
         super(parentItemForThisGui,
                 3,
-                "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + " \u00A78Config");
+                "§e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + " §8Config");
         this.parent = parent;
         this.enchantConflict = enchantConflict;
 
@@ -72,8 +72,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        deleteMeta.setDisplayName("\u00A74DELETE CONFLICT");
-        deleteMeta.setLore(Collections.singletonList("\u00A7cCaution with this button !"));
+        deleteMeta.setDisplayName("§4DELETE CONFLICT");
+        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -82,7 +82,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), event -> {
             event.setCancelled(true);
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
-                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + "\u00A75",
+                    "§e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + "§5",
                     this, this);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
@@ -90,17 +90,17 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), event -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
-                    "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + " \u00A73Groups",
+                    "§e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + " §3Groups",
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
         this.minBeforeActiveSettingFactory = IntSettingsGui.intFactory(
-                "\u00A78Minimum enchantment count",
+                "§8Minimum enchantment count",
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
                 Arrays.asList(
-                        "\u00A77Minimum enchantment count set to X mean only X enchantment can be put",
-                        "\u00A77on an item before the conflict is active."
+                        "§7Minimum enchantment count set to X mean only X enchantment can be put",
+                        "§7on an item before the conflict is active."
                 ),
                 0, 255, 0, 1
         );
@@ -138,8 +138,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + "\u00A7c?",
-                "\u00A77Confirm that you want to delete this conflict.",
+        return new ConfirmActionGui("§cDelete §e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + "§c?",
+                "§7Confirm that you want to delete this conflict.",
                 this, this.parent, deleteSupplier
         );
     }
@@ -160,12 +160,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
         // Prepare enchantment lore
         ArrayList<String> enchantLore = new ArrayList<>();
-        enchantLore.add("\u00A77Allow you to select a list of \u00A75Enchantments \u00A77that this conflict should include");
+        enchantLore.add("§7Allow you to select a list of §5Enchantments §7that this conflict should include");
         Set<CAEnchantment> enchants = getSelectedEnchantments();
         if (enchants.isEmpty()) {
-            enchantLore.add("\u00A77There is no included enchantment for this conflict.");
+            enchantLore.add("§7There is no included enchantment for this conflict.");
         } else {
-            enchantLore.add("\u00A77List of included enchantment for this conflict:");
+            enchantLore.add("§7List of included enchantment for this conflict:");
             Iterator<CAEnchantment> enchantIterator = enchants.iterator();
 
             boolean greaterThanMax = enchants.size() > 5;
@@ -173,10 +173,10 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             for (int i = 0; i < maxindex; i++) {
                 // format string like "- Fire Protection"
                 String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
-                enchantLore.add("\u00A77- \u00A75" + formattedName);
+                enchantLore.add("§7- §5" + formattedName);
             }
             if (greaterThanMax) {
-                enchantLore.add("\u00A77And " + (enchants.size() - 4) + " more...");
+                enchantLore.add("§7And " + (enchants.size() - 4) + " more...");
             }
 
         }
@@ -189,7 +189,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta enchantMeta = enchantItem.getItemMeta();
         assert enchantMeta != null;
 
-        enchantMeta.setDisplayName("\u00A7aSelect included \u00A75Enchantments \u00A7aSettings");
+        enchantMeta.setDisplayName("§aSelect included §5Enchantments §aSettings");
         enchantMeta.setLore(enchantLore);
 
         enchantItem.setItemMeta(enchantMeta);
@@ -201,7 +201,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta groupMeta = groupItem.getItemMeta();
         assert groupMeta != null;
 
-        groupMeta.setDisplayName("\u00A7aSelect Excluded \u00A73Groups \u00A7aSettings");
+        groupMeta.setDisplayName("§aSelect Excluded §3Groups §aSettings");
         groupMeta.setLore(groupLore);
 
         groupItem.setItemMeta(groupMeta);

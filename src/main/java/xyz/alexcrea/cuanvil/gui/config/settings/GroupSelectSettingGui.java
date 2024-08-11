@@ -91,8 +91,8 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         return guiItem;
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("\u00A77Value: \u00A7aSelected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("\u00A77Value: \u00A7cNot Selected");
+    private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
+    private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
 
     public void setGroupItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
@@ -105,7 +105,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             assert meta != null;
         }
 
-        meta.setDisplayName("\u00A7" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
+        meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
         if (isIn) {
             meta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
             meta.setLore(TRUE_LORE);

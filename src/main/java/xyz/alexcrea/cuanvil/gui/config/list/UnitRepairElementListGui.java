@@ -35,7 +35,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     public UnitRepairElementListGui(@NotNull Material parentMaterial,
                                     @NotNull UnitRepairConfigGui parentGui,
                                     @NotNull GuiItem parentItem) {
-        super("\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.name().toLowerCase()) + " \u00A7rUnit repair");
+        super("§e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.name().toLowerCase()) + " §rUnit repair");
         this.parentItem = parentItem;
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
@@ -48,8 +48,8 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     @Override
     protected List<String> getCreateItemLore() {
         return Arrays.asList(
-                "\u00A77Select a new item to be repairable.",
-                "\u00A77You will be asked the material to use."
+                "§7Select a new item to be repairable.",
+                "§7You will be asked the material to use."
         );
     }
 
@@ -64,19 +64,19 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
 
             new SelectItemTypeGui(
                     "Select item to be repaired.",
-                    "\u00A77Click here with an item to set the item\n" +
-                            "\u00A77You like to be repaired by " + this.materialName,
+                    "§7Click here with an item to set the item\n" +
+                            "§7You like to be repaired by " + this.materialName,
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
                         Material type = itemStack.getType();
 
                         if(!(meta instanceof Damageable) || (type.getMaxDurability() <= 0)) {
-                            player.sendMessage("\u00A7cThis item can't be damaged, so it can't be repaired.");
+                            player.sendMessage("§cThis item can't be damaged, so it can't be repaired.");
                             return;
                         }
                         if(type == this.parentMaterial){
-                            player.sendMessage("\u00A7cItem can't repair something of the same type.");
+                            player.sendMessage("§cItem can't repair something of the same type.");
                             return;
                         }
 
@@ -105,7 +105,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
 
     @Override
     protected String createItemName() {
-        return "\u00A7aAdd a new item reparable by " + this.materialName;
+        return "§aAdd a new item reparable by " + this.materialName;
     }
 
     @Override
@@ -113,13 +113,13 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
         String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(materialName);
 
         return DoubleSettingGui.doubleFactory(
-                "\u00A70%\u00A78" + materialDisplayName +" Repair",
+                "§0%§8" + materialDisplayName +" Repair",
                 this,
                 ConfigHolder.UNIT_REPAIR_HOLDER,
                 this.parentMaterial.name().toLowerCase()+"."+materialName,
                 Arrays.asList(
-                        "\u00A77Click here to change how many \u00A7e% \u00A77of \u00A7a" + materialDisplayName,
-                        "\u00A77Should get repaired by \u00A7e"+this.materialName
+                        "§7Click here to change how many §e% §7of §a" + materialDisplayName,
+                        "§7Should get repaired by §e"+this.materialName
                 ),
                 2,
                 true, true,
@@ -133,7 +133,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     @Override
     protected GuiItem itemFromFactory(String materialName, DoubleSettingGui.DoubleSettingFactory factory) {
         return factory.getItem(materialFromName(materialName),
-                "\u00A77%\u00A7a" + CasedStringUtil.snakeToUpperSpacedCase(materialName)+ " \u00A7erepaired by \u00A7a" + this.materialName);
+                "§7%§a" + CasedStringUtil.snakeToUpperSpacedCase(materialName)+ " §erepaired by §a" + this.materialName);
     }
 
     @Override

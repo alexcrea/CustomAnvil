@@ -37,7 +37,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             @NotNull CustomRecipeConfigGui parent,
             @NotNull AnvilCustomRecipe anvilRecipe,
             @NotNull GuiItem parentItemForThisGui) {
-        super(parentItemForThisGui, 3, "\u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " \u00A78Config");
+        super(parentItemForThisGui, 3, "§e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " §8Config");
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
 
@@ -68,8 +68,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        deleteMeta.setDisplayName("\u00A74DELETE RECIPE");
-        deleteMeta.setLore(Collections.singletonList("\u00A7cCaution with this button !"));
+        deleteMeta.setDisplayName("§4DELETE RECIPE");
+        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -77,33 +77,33 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         // Displayed item will be updated later
 
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
-        this.exactCountFactory = BoolSettingsGui.boolFactory("\u00A78Exact count ?", this,
+        this.exactCountFactory = BoolSettingsGui.boolFactory("§8Exact count ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
-        this.xpCostFactory = IntSettingsGui.intFactory("\u00A78Recipe Xp Cost", this,
+        this.xpCostFactory = IntSettingsGui.intFactory("§8Recipe Xp Cost", this,
                 this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG, 1, 5, 10);
 
 
-        this.leftItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Left \u00A78Item", this,
+        this.leftItemFactory = ItemSettingGui.itemFactory("§eRecipe Left §8Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
-                "\u00A77Set the left item of the custom craft",
-                "\u00A77\u25A0 + \u25A1 = \u25A1");
+                "§7Set the left item of the custom craft",
+                "§7\u25A0 + \u25A1 = \u25A1");
 
-        this.rightItemFactory = ItemSettingGui.itemFactory("\u00A7eRecipe Right \u00A78Item", this,
+        this.rightItemFactory = ItemSettingGui.itemFactory("§eRecipe Right §8Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
-                "\u00A77Set the right item of the custom craft",
-                "\u00A77\u25A1 + \u25A0 = \u25A1");
+                "§7Set the right item of the custom craft",
+                "§7\u25A1 + \u25A0 = \u25A1");
 
-        this.resultItemFactory = ItemSettingGui.itemFactory("\u00A7aRecipe Result \u00A78Item", this,
+        this.resultItemFactory = ItemSettingGui.itemFactory("§aRecipe Result §8Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
-                "\u00A77Set the result item of the custom craft",
-                "\u00A77\u25A1 + \u25A1 = \u25A0");
+                "§7Set the result item of the custom craft",
+                "§7\u25A1 + \u25A1 = \u25A0");
     }
 
     private ConfirmActionGui createDeleteGui() {
@@ -131,8 +131,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             return success;
         };
 
-        return new ConfirmActionGui("\u00A7cDelete \u00A7e" + CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString()) + "\u00A7c?",
-                "\u00A77Confirm that you want to delete this conflict.",
+        return new ConfirmActionGui("§cDelete §e" + CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString()) + "§c?",
+                "§7Confirm that you want to delete this conflict.",
                 this, this.parent, deleteSupplier
         );
     }

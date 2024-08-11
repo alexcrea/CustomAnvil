@@ -8,7 +8,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.dependency.protocolib.PacketManager;
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 
@@ -23,7 +23,7 @@ public class MainConfigGui extends ChestGui {
     }
 
     private MainConfigGui() {
-        super(3, "\u00A78Anvil Config", CustomAnvil.instance);
+        super(3, "§8Anvil Config", CustomAnvil.instance);
     }
 
     public void init(PacketManager packetManager) {
@@ -42,8 +42,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta basicConfigMeta = basicConfigItemstack.getItemMeta();
         assert basicConfigMeta != null;
 
-        basicConfigMeta.setDisplayName("\u00A7aBasic Config Menu");
-        basicConfigMeta.setLore(Collections.singletonList("\u00A77Click here to open basic config menu"));
+        basicConfigMeta.setDisplayName("§aBasic Config Menu");
+        basicConfigMeta.setLore(Collections.singletonList("§7Click here to open basic config menu"));
         basicConfigItemstack.setItemMeta(basicConfigMeta);
 
         GuiItem basicConfigItem = GuiGlobalItems.goToGuiItem(basicConfigItemstack, new BasicConfigGui(packetManager));
@@ -54,8 +54,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta enchantLimitMeta = enchantLimitItemstack.getItemMeta();
         assert enchantLimitMeta != null;
 
-        enchantLimitMeta.setDisplayName("\u00A7aEnchantment Level Limit");
-        enchantLimitMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment level limit menu"));
+        enchantLimitMeta.setDisplayName("§aEnchantment Level Limit");
+        enchantLimitMeta.setLore(Collections.singletonList("§7Click here to open enchantment level limit menu"));
         enchantLimitItemstack.setItemMeta(enchantLimitMeta);
 
         GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, new EnchantLimitConfigGui());
@@ -66,8 +66,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta enchantCostMeta = enchantCostItemstack.getItemMeta();
         assert enchantCostMeta != null;
 
-        enchantCostMeta.setDisplayName("\u00A7aEnchantment Cost");
-        enchantCostMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment costs menu"));
+        enchantCostMeta.setDisplayName("§aEnchantment Cost");
+        enchantCostMeta.setLore(Collections.singletonList("§7Click here to open enchantment costs menu"));
         enchantCostItemstack.setItemMeta(enchantCostMeta);
 
         GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, new EnchantCostConfigGui());
@@ -78,8 +78,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta enchantConflictMeta = enchantConflictItemstack.getItemMeta();
         assert enchantConflictMeta != null;
 
-        enchantConflictMeta.setDisplayName("\u00A7aEnchantment Conflict");
-        enchantConflictMeta.setLore(Collections.singletonList("\u00A77Click here to open enchantment conflict menu"));
+        enchantConflictMeta.setDisplayName("§aEnchantment Conflict");
+        enchantConflictMeta.setLore(Collections.singletonList("§7Click here to open enchantment conflict menu"));
         enchantConflictItemstack.setItemMeta(enchantConflictMeta);
 
         GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, EnchantConflictGui.getInstance());
@@ -90,8 +90,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta groupMeta = groupItemstack.getItemMeta();
         assert groupMeta != null;
 
-        groupMeta.setDisplayName("\u00A7aGroups");
-        groupMeta.setLore(Collections.singletonList("\u00A77Click here to open material group menu"));
+        groupMeta.setDisplayName("§aGroups");
+        groupMeta.setLore(Collections.singletonList("§7Click here to open material group menu"));
         groupItemstack.setItemMeta(groupMeta);
 
         GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.getInstance());
@@ -103,8 +103,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
         assert unitRepairMeta != null;
 
-        unitRepairMeta.setDisplayName("\u00A7aUnit Repair");
-        unitRepairMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil unit repair menu"));
+        unitRepairMeta.setDisplayName("§aUnit Repair");
+        unitRepairMeta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
         unirRepairItemstack.setItemMeta(unitRepairMeta);
 
         GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.getInstance());
@@ -115,8 +115,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta customRecipeMeta = customRecipeItemstack.getItemMeta();
         assert customRecipeMeta != null;
 
-        customRecipeMeta.setDisplayName("\u00A7aCustom recipes");
-        customRecipeMeta.setLore(Collections.singletonList("\u00A77Click here to open anvil custom recipe menu"));
+        customRecipeMeta.setDisplayName("§aCustom recipes");
+        customRecipeMeta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
         customRecipeItemstack.setItemMeta(customRecipeMeta);
 
         GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.getInstance());
@@ -127,7 +127,7 @@ public class MainConfigGui extends ChestGui {
         ItemMeta quitMeta = quitItemstack.getItemMeta();
         assert quitMeta != null;
 
-        quitMeta.setDisplayName("\u00A7cQuit");
+        quitMeta.setDisplayName("§cQuit");
         quitItemstack.setItemMeta(quitMeta);
 
         GuiItem quitItem = new GuiItem(quitItemstack, event -> {
