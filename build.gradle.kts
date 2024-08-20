@@ -36,6 +36,9 @@ dependencies {
     compileOnly("com.willfp:EcoEnchants:12.5.1")
     compileOnly("com.willfp:eco:6.70.1")
 
+    // Disenchantment
+    compileOnly("cz.kominekjan:Disenchantment:v5.3.1")
+
     // Include nms
     implementation(project(":nms:nms-common"))
     implementation(project(":nms:v1_17R1", configuration = "reobf"))
