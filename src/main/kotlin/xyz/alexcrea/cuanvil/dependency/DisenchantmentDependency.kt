@@ -80,12 +80,14 @@ class DisenchantmentDependency {
 
         if(event.result != null) {
             CustomAnvil.log("Detected pre anvil item extract bypass.")
+            XpSetterUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
             return true
         }
 
         splitEvent.onDisenchantmentEvent(event)
         if(event.result != null) {
             CustomAnvil.log("Detected pre anvil split enchant bypass.")
+            XpSetterUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
             return true
         }
 
