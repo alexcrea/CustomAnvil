@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.5.5"
+version = "1.6.0"
 
 repositories {
     // EcoEnchants
@@ -35,6 +35,9 @@ dependencies {
     // EcoEnchants
     compileOnly("com.willfp:EcoEnchants:12.5.1")
     compileOnly("com.willfp:eco:6.70.1")
+
+    // Disenchantment
+    compileOnly("cz.kominekjan:Disenchantment:v5.3.1")
 
     // Include nms
     implementation(project(":nms:nms-common"))

@@ -2,7 +2,6 @@ package io.delilaheve
 
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.combineWith
-import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
@@ -25,11 +24,13 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
-import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.calculatePenalty
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.getRightValues
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.setAnvilInvXp
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -43,9 +44,9 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
     companion object {
         // Anvil's output slot
-        private const val ANVIL_INPUT_LEFT = 0
-        private const val ANVIL_INPUT_RIGHT = 1
-        private const val ANVIL_OUTPUT_SLOT = 2
+        const val ANVIL_INPUT_LEFT = 0
+        const val ANVIL_INPUT_RIGHT = 1
+        const val ANVIL_OUTPUT_SLOT = 2
 
         // static slot container
         private val NO_SLOT = SlotContainer(SlotType.NO_SLOT, 0)
@@ -57,6 +58,9 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
      */
     @EventHandler(priority = HIGHEST)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
+        // Test if the event should bypass custom anvil.
+        if(DependencyManager.tryEventPreAnvilBypass(event)) return
+
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
@@ -75,7 +79,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             resultItem.amount *= amount
 
             event.result = resultItem
-            handleAnvilXp(inventory, event, recipe.xpCostPerCraft * amount, true)
+            setAnvilInvXp(inventory, event.view, recipe.xpCostPerCraft * amount, true)
 
             return
         }
@@ -96,7 +100,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
 
             anvilCost += calculatePenalty(first, null, resultItem)
 
-            handleAnvilXp(inventory, event, anvilCost)
+            setAnvilInvXp(inventory, event.view, anvilCost)
             return
         }
 
@@ -130,7 +134,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             // Finally, we set result
             event.result = resultItem
 
-            handleAnvilXp(inventory, event, anvilCost)
+            setAnvilInvXp(inventory, event.view, anvilCost)
             return
         }
 
@@ -155,7 +159,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             }
             event.result = resultItem
 
-            handleAnvilXp(inventory, event, anvilCost)
+            setAnvilInvXp(inventory, event.view, anvilCost)
         } else {
             CustomAnvil.log("no anvil fuse type found")
             event.result = null
@@ -282,9 +286,13 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         val player = event.whoClicked as? Player ?: return
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
         val inventory = event.inventory as? AnvilInventory ?: return
+
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
             return
         }
+        // Test if the event should bypass custom anvil.
+        if(DependencyManager.tryClickAnvilResultBypass(event, inventory)) return
+
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
@@ -504,96 +512,6 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         }
     }
 
-    /**
-     * Function to calculate work penalty of anvil work
-     * Also change result work penalty if right item is not null
-     */
-    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
-        return calculatePenalty(left, right, result, false)
-    }
-
-    /**
-     * Function to calculate work penalty of anvil work
-     * Also change result work penalty if right item is not null
-     */
-    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, unitRepair: Boolean): Int {
-        // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
-        // Calculate work penalty
-        val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
-        val rightPenalty =
-            if (right == null) {
-                0
-            } else {
-                (right.itemMeta as? Repairable)?.repairCost ?: 0
-            }
-
-        // Increase penalty on fusing or unit repair
-        if(right != null || unitRepair){
-            result.itemMeta?.let {
-                (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
-                result.itemMeta = it
-
-            }
-        }
-
-        CustomAnvil.log(
-            "Calculated penalty: " +
-                    "leftPenalty: $leftPenalty, " +
-                    "rightPenalty: $rightPenalty, " +
-                    "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}"
-        )
-
-        return leftPenalty + rightPenalty
-    }
-
-    /**
-     * Function to calculate right enchantment values
-     * it include enchantment placed on final item and conflicting enchantment
-     */
-    private fun getRightValues(right: ItemStack, result: ItemStack): Int {
-        // Calculate right value and illegal enchant penalty
-        var illegalPenalty = 0
-        var rightValue = 0
-
-        val rightIsFormBook = right.isEnchantedBook()
-        val resultEnchs = result.findEnchantments()
-        val resultEnchsKeys = HashMap(resultEnchs)
-
-        for (enchantment in right.findEnchantments()) {
-            // count enchant as illegal enchant if it conflicts with another enchant or not in result
-            if ((enchantment.key !in resultEnchsKeys)) {
-                resultEnchsKeys[enchantment.key] = enchantment.value
-                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(
-                    resultEnchsKeys,
-                    result,
-                    enchantment.key
-                )
-                resultEnchsKeys.remove(enchantment.key)
-
-                if (ConflictType.ENCHANTMENT_CONFLICT == conflictType) {
-                    illegalPenalty += ConfigOptions.sacrificeIllegalCost
-                    CustomAnvil.verboseLog("Big conflict. Adding illegal price penalty")
-                }
-                continue
-            }
-            // We know "enchantment.key in resultEnchs" true
-            val resultLevel = resultEnchs[enchantment.key]!!
-
-            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
-            val value = resultLevel * enchantmentMultiplier
-            CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
-            rightValue += value
-
-        }
-        CustomAnvil.log(
-            "Calculated right values: " +
-                    "rightValue: $rightValue, " +
-                    "illegalPenalty: $illegalPenalty"
-        )
-
-        return rightValue + illegalPenalty
-    }
-
     private fun getCustomRecipe (
         leftItem: ItemStack,
         rightItem: ItemStack?) : AnvilCustomRecipe? {
@@ -637,58 +555,6 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
         }
     }
 
-
-    /**
-     * Display xp needed for the work on the anvil inventory
-     */
-    private fun handleAnvilXp(
-        inventory: AnvilInventory,
-        event: PrepareAnvilEvent,
-        anvilCost: Int,
-        ignoreRules: Boolean = false
-    ) {
-        // Test repair cost limit
-        val finalAnvilCost = if (
-            !ignoreRules &&
-            !ConfigOptions.doRemoveCostLimit &&
-            ConfigOptions.doCapCost) {
-            min(anvilCost, ConfigOptions.maxAnvilCost)
-        } else {
-            anvilCost
-        }
-
-        /* Because Minecraft likes to have the final say in the repair cost displayed
-            * we need to wait for the event to end before overriding it, this ensures that
-            * we have the final say in the process. */
-        CustomAnvil.instance
-            .server
-            .scheduler
-            .runTask(CustomAnvil.instance, Runnable {
-                inventory.maximumRepairCost =
-                    if (ConfigOptions.doRemoveCostLimit || ignoreRules)
-                { Int.MAX_VALUE }
-                    else
-                { ConfigOptions.maxAnvilCost + 1 }
-
-                val player = event.view.player
-
-                inventory.repairCost = finalAnvilCost
-                event.view.setProperty(REPAIR_COST, finalAnvilCost)
-                player.openInventory.setProperty(REPAIR_COST, finalAnvilCost)
-
-                if(player is Player){
-                    if(player.gameMode != GameMode.CREATIVE ){
-                        val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
-                                (finalAnvilCost >= 40) &&
-                                finalAnvilCost < inventory.maximumRepairCost
-
-                        packetManager.setInstantBuild(player, bypassToExpensive)
-                    }
-
-                    player.updateInventory()
-                }
-            })
-    }
 
     @EventHandler
     fun onAnvilClose(event: InventoryCloseEvent){

@@ -47,18 +47,22 @@ under 1.2.0 replace ca prefix by ue and use ue.unsafe. some permission/features 
 anvilconfigreload or carl: Reload every config of this plugin
 customanvilconfig or configanvil: open a menu for administrator to edit plugin's config in game
 ```
-### Custom Enchantment Plugins
-Custom Anvil can be compatible with some custom enchant plugins. \
-Currently, there is not a lot of compatible plugin
+### Supported Plugins
+Custom Anvil can be compatible with some custom enchant and anvil mechanics plugins.
 
-Here is a list of supported plugins with support status:
+Here is a list of supported custom enchantment plugins with support status:
 - [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
 Officially supported by Custom Anvil but still experimental. Automatic configuration.
-- [EcoEnchant](https://www.spigotmc.org/resources/50-sale-%E2%8C%9B-ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/):
-Officially supported by Custom Anvil but still experimental. Need to use /anvilconfigreload or a server restart to add newly added enchantment. 
-Use EcoEnchant restriction system by default.​
 
-If you like Custom Anvil to support a specific custom enchantment plugin. 
+- [EcoEnchant](https://www.spigotmc.org/resources/ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/):
+Officially supported by Custom Anvil but still experimental. Need to use /anvilconfigreload or a server restart to add newly added enchantment. 
+Use EcoEnchant restriction system by default.
+
+Here is a list of supported anvil mechanic plugins with support status:
+- [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/)
+Officially supported by Custom Anvil but still experimental. mostly use Custom Anvil xp settings. 
+
+If you like Custom Anvil to support a specific plugin (custom enchant or anvil mechanic). 
 You can ask, but please note implementing compatibility will be considered
 as low priority as I work for the plugin on my free time for free.
 

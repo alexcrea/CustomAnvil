@@ -1,6 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency
 
 import org.bukkit.Bukkit
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.PrepareAnvilEvent
+import org.bukkit.inventory.AnvilInventory
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
@@ -10,6 +13,7 @@ object DependencyManager {
     lateinit var packetManager: PacketManager
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    var disenchantmentCompatibility: DisenchantmentDependency? = null
 
     fun loadDependency(){
         val pluginManager = Bukkit.getPluginManager()
@@ -28,6 +32,12 @@ object DependencyManager {
         if(pluginManager.isPluginEnabled("EcoEnchants")){
             ecoEnchantCompatibility = EcoEnchantDependency(pluginManager.getPlugin("EcoEnchants")!!)
             ecoEnchantCompatibility!!.disableAnvilListener()
+        }
+
+        // Disenchantment dependency
+        if(pluginManager.isPluginEnabled("Disenchantment")){
+            disenchantmentCompatibility = DisenchantmentDependency()
+            disenchantmentCompatibility!!.redirectListeners()
         }
 
     }
@@ -50,6 +60,22 @@ object DependencyManager {
         // Then handle plugin reload
         ecoEnchantCompatibility?.handleConfigReload()
 
+    }
+
+    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent): Boolean {
+        var bypass = false
+
+        if(disenchantmentCompatibility?.testPrepareAnvil(event) == true) bypass = true
+
+        return bypass
+    }
+
+    fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
+        var bypass = false
+
+        if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
+
+        return bypass
     }
 
 }

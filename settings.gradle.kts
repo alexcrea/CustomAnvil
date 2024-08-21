@@ -1,4 +1,13 @@
+import java.net.URI
+
 rootProject.name = "CustomAnvil"
+
+// for Disenchantment dependency
+sourceControl {
+    gitRepository(URI.create("https://github.com/H7KZ/Disenchantment.git")) {
+        producesModule("cz.kominekjan:Disenchantment")
+    }
+}
 
 // NMS subproject
 include("nms:nms-common")
