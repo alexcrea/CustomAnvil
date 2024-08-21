@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
-import xyz.alexcrea.cuanvil.util.XpSetterUtil
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 
 class DisenchantmentDependency {
 
@@ -80,14 +80,14 @@ class DisenchantmentDependency {
 
         if(event.result != null) {
             CustomAnvil.log("Detected pre anvil item extract bypass.")
-            XpSetterUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
             return true
         }
 
         splitEvent.onDisenchantmentEvent(event)
         if(event.result != null) {
             CustomAnvil.log("Detected pre anvil split enchant bypass.")
-            XpSetterUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
             return true
         }
 

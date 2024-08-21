@@ -2,7 +2,6 @@ package io.delilaheve
 
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.combineWith
-import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
@@ -25,14 +24,14 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Repairable
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
-import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.calculatePenalty
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.getRightValues
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.setAnvilInvXp
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
-import xyz.alexcrea.cuanvil.util.XpSetterUtil.setAnvilInvXp
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.math.min
@@ -511,96 +510,6 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
             }
             return CURSOR_SLOT
         }
-    }
-
-    /**
-     * Function to calculate work penalty of anvil work
-     * Also change result work penalty if right item is not null
-     */
-    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
-        return calculatePenalty(left, right, result, false)
-    }
-
-    /**
-     * Function to calculate work penalty of anvil work
-     * Also change result work penalty if right item is not null
-     */
-    private fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, unitRepair: Boolean): Int {
-        // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
-        // Calculate work penalty
-        val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
-        val rightPenalty =
-            if (right == null) {
-                0
-            } else {
-                (right.itemMeta as? Repairable)?.repairCost ?: 0
-            }
-
-        // Increase penalty on fusing or unit repair
-        if(right != null || unitRepair){
-            result.itemMeta?.let {
-                (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
-                result.itemMeta = it
-
-            }
-        }
-
-        CustomAnvil.log(
-            "Calculated penalty: " +
-                    "leftPenalty: $leftPenalty, " +
-                    "rightPenalty: $rightPenalty, " +
-                    "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}"
-        )
-
-        return leftPenalty + rightPenalty
-    }
-
-    /**
-     * Function to calculate right enchantment values
-     * it include enchantment placed on final item and conflicting enchantment
-     */
-    private fun getRightValues(right: ItemStack, result: ItemStack): Int {
-        // Calculate right value and illegal enchant penalty
-        var illegalPenalty = 0
-        var rightValue = 0
-
-        val rightIsFormBook = right.isEnchantedBook()
-        val resultEnchs = result.findEnchantments()
-        val resultEnchsKeys = HashMap(resultEnchs)
-
-        for (enchantment in right.findEnchantments()) {
-            // count enchant as illegal enchant if it conflicts with another enchant or not in result
-            if ((enchantment.key !in resultEnchsKeys)) {
-                resultEnchsKeys[enchantment.key] = enchantment.value
-                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(
-                    resultEnchsKeys,
-                    result,
-                    enchantment.key
-                )
-                resultEnchsKeys.remove(enchantment.key)
-
-                if (ConflictType.ENCHANTMENT_CONFLICT == conflictType) {
-                    illegalPenalty += ConfigOptions.sacrificeIllegalCost
-                    CustomAnvil.verboseLog("Big conflict. Adding illegal price penalty")
-                }
-                continue
-            }
-            // We know "enchantment.key in resultEnchs" true
-            val resultLevel = resultEnchs[enchantment.key]!!
-
-            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
-            val value = resultLevel * enchantmentMultiplier
-            CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
-            rightValue += value
-
-        }
-        CustomAnvil.log(
-            "Calculated right values: " +
-                    "rightValue: $rightValue, " +
-                    "illegalPenalty: $illegalPenalty"
-        )
-
-        return rightValue + illegalPenalty
     }
 
     private fun getCustomRecipe (
