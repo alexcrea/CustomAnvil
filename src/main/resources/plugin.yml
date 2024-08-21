@@ -53,6 +53,7 @@ permissions:
 softdepend:
   - UnsafeEnchantsPlus
   - ProtocolLib
+  - Disenchantment
   - EnchantsSquared
   - EcoEnchants
   - eco
