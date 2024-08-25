@@ -37,7 +37,7 @@ dependencies {
     compileOnly("com.willfp:eco:6.70.1")
 
     // Disenchantment
-    compileOnly("cz.kominekjan:Disenchantment:v5.3.1")
+    compileOnly("cz.kominekjan:Disenchantment:v5.4.0")
 
     // Include nms
     implementation(project(":nms:nms-common"))
