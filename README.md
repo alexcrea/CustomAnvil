@@ -1,8 +1,8 @@
 # Custom Anvil
 
-**Custom Anvil** is a plugin that allows server administrators to customise every aspect of the anvil's mechanics. 
+**Custom Anvil** is a plugin that allows server administrators to customize every aspect of the anvil's mechanics. 
 It is expected to work on 1.18 to 1.21 minecraft servers running spigot or paper.
-(the plugin support of 1.16.5 to 1.17.1 is experimental an may encounter issues)
+(the plugin support of 1.16.5 to 1.17.1 is experimental and may encounter issues)
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
 It was renamed because it now affects every anvil aspect and not only unsafe enchants\
@@ -23,8 +23,8 @@ or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds).
 - Custom XP cost for every aspect of the anvil.
 - Permissions to bypass level limit or enchantment restriction.
-- Display xp cost instead of "to expensive" when above lv 40. (see bellow for more information)
-- Can handle some custom enchantment plugins (see bellow for more information)
+- Display XP cost instead of "too expensive" when above level 40. (see below for more information)
+- Can handle some custom enchantment plugins (see below for more information)
 - Gui to configure the plugin in game.
 - Support of color code and hexadecimal color
 ---
@@ -39,8 +39,6 @@ ca.config.edit: Allow administrator to edit the plugin's config in game
 ca.color.code: Allow player to use color code if permission is required (toggleable)
 ca.color.hex: Allow player to use hexadecimal color if permission is required (toggleable)
 ```
-/!\ version under 1.3.1 use other permission. from 1.2.0 to 1.3.1-A1 use ua.unsafe instead of ca.affected
-under 1.2.0 replace ca prefix by ue and use ue.unsafe. some permission/features may not exist before the last version.
 
 ### Commands
 ```yml
@@ -48,7 +46,7 @@ anvilconfigreload or carl: Reload every config of this plugin
 customanvilconfig or configanvil: open a menu for administrator to edit plugin's config in game
 ```
 ### Supported Plugins
-Custom Anvil can be compatible with some custom enchant and anvil mechanics plugins.
+Custom Anvil can be compatible with some custom enchantments and anvil mechanics plugins.
 
 Here is a list of supported custom enchantment plugins with support status:
 - [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
@@ -60,7 +58,7 @@ Use EcoEnchant restriction system by default.
 
 Here is a list of supported anvil mechanic plugins with support status:
 - [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/)
-Officially supported by Custom Anvil but still experimental. mostly use Custom Anvil xp settings. 
+Officially supported by Custom Anvil but still experimental. Mostly use Custom Anvil XP settings. 
 
 If you like Custom Anvil to support a specific plugin (custom enchant or anvil mechanic). 
 You can ask, but please note implementing compatibility will be considered
@@ -69,12 +67,11 @@ as low priority as I work for the plugin on my free time for free.
 ### Overriding Too Expensive
 
 One of the configurations allow displaying price about 40 and removing Too Expensive. \
-By how the minecraft client work: price above 40 can only be displayed green even if the play does not own enough experience level. 
+By how the minecraft client work: price above 40 can only be displayed green, even if the player does not own enough experience level. 
+Minecraft version 1.17 to 1.21.1 do not need any dependency. Other version need ProtocoLib enabled on your server for this feature. \
+You can also wait for an update of the plugin to support a newer version.
 
-For 1.16.5 and future version (above 1.21.1) you will need ProtocoLib enabled on your server for this feature. \
-You can also wait for an update of the plugin.
-
-please note that 1.16.5 to 1.17.1 are not officially supported. Run at your own risk.
+Please note that 1.16.5 to 1.17.1 are not officially supported. Run at your own risk.
 
 ### For custom enchantment plugin developers
 For information about the API, please refer to [the Wiki](https://github.com/alexcrea/CustomAnvil/wiki) \
@@ -87,13 +84,10 @@ For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/Cus
 For 1.21 to 1.21.1 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
 
 ---
-### Known issue:
-There is non known issue, if you find one please report the issue.
+Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) for metric. You can [disable it](https://bstats.org/getting-started) if you like.
 
 ### Planned:
 - Semi manual config update on plugin or minecraft update
-- Check unknown registered enchantment & warn
+- Get restriction and multiplier on unknown 
 - Warn admin on unsupported minecraft version
-- Better custom craft​
-
-
+- More features for custom anvil craft​
