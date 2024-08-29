@@ -1,12 +1,14 @@
 package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 
 import java.util.HashMap;
@@ -17,10 +19,14 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
 
     protected HashMap<T, GuiItem> guiItemMap;
     protected HashMap<T, S> factoryMap;
-    protected SettingGuiListConfigGui(@NotNull String title) {
-        super(title);
+    protected SettingGuiListConfigGui(@NotNull String title, Gui parent) {
+        super(title, parent);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
+    }
+
+    protected SettingGuiListConfigGui(@NotNull String title) {
+        this(title, MainConfigGui.getInstance());
     }
 
     @Override

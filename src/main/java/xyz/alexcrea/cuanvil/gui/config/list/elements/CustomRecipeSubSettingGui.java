@@ -78,29 +78,33 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = BoolSettingsGui.boolFactory("§8Exact count ?", this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
         this.xpCostFactory = IntSettingsGui.intFactory("§8Recipe Xp Cost", this,
-                this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG, 1, 5, 10);
 
 
         this.leftItemFactory = ItemSettingGui.itemFactory("§eRecipe Left §8Item", this,
-                this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 "§7Set the left item of the custom craft",
                 "§7\u25A0 + \u25A1 = \u25A1");
 
         this.rightItemFactory = ItemSettingGui.itemFactory("§eRecipe Right §8Item", this,
-                this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
                 "§7Set the right item of the custom craft",
                 "§7\u25A1 + \u25A0 = \u25A1");
 
         this.resultItemFactory = ItemSettingGui.itemFactory("§aRecipe Result §8Item", this,
-                this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG, ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
                 "§7Set the result item of the custom craft",
                 "§7\u25A1 + \u25A1 = \u25A0");

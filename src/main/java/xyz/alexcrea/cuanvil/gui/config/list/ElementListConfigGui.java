@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
@@ -31,14 +30,14 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected PatternPane backgroundPane;
 
-    protected ElementListConfigGui(@NotNull String title) {
+    protected ElementListConfigGui(@NotNull String title, Gui parent) {
         super(6, title, CustomAnvil.instance);
         this.namePrefix = title;
 
         // Back item panel
         Pattern pattern = getBackgroundPattern();
         this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
-        GuiGlobalItems.addBackItem(this.backgroundPane, MainConfigGui.getInstance());
+        GuiGlobalItems.addBackItem(this.backgroundPane, parent);
 
     }
 
