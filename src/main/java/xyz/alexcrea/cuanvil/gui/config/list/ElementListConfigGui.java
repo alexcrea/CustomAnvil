@@ -30,6 +30,11 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected PatternPane backgroundPane;
 
+    public static final int LIST_FILLER_START_X = 1;
+    public static final int LIST_FILLER_START_Y = 1;
+    public static final int LIST_FILLER_LENGTH = 7;
+    public static final int LIST_FILLER_HEIGHT = 4;
+
     protected ElementListConfigGui(@NotNull String title, Gui parent) {
         super(6, title, CustomAnvil.instance);
         this.namePrefix = title;
@@ -43,11 +48,11 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected Pattern getBackgroundPattern(){
         return new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
                 "B11L1R11C"
         );
     }
@@ -78,7 +83,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected void prepareStaticValues(){
         // Left item creation for consumer & bind
-        this.goLeftItem = new GuiItem(new ItemStack(Material.RED_TERRACOTTA), event -> {
+        this.goLeftItem = new GuiItem(new ItemStack(Material.RED_STAINED_GLASS_PANE), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
             int page = this.pageMap.getOrDefault(playerUUID, 0);
@@ -93,7 +98,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
         }, CustomAnvil.instance);
 
         // Right item creation for consumer & bind
-        this.goRightItem = new GuiItem(new ItemStack(Material.GREEN_TERRACOTTA), event -> {
+        this.goRightItem = new GuiItem(new ItemStack(Material.LIME_STAINED_GLASS_PANE), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
             int page = pageMap.getOrDefault(playerUUID, 0);
@@ -127,7 +132,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
     protected abstract GuiItem prepareCreateNewItem();
 
     protected OutlinePane createEmptyPage() {
-        OutlinePane page = new OutlinePane(0, 0, 9, 5);
+        OutlinePane page = new OutlinePane(LIST_FILLER_START_X, LIST_FILLER_START_Y, LIST_FILLER_LENGTH, LIST_FILLER_HEIGHT);
         page.align(OutlinePane.Alignment.BEGIN);
         page.setOrientation(Orientable.Orientation.HORIZONTAL);
 
@@ -145,7 +150,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
     protected void addToPage(GuiItem guiItem) {
         // Get first available page or create one
         OutlinePane page = this.pages.get(this.pages.size() - 1);
-        if (page.getItems().size() >= 5 * 9) {
+        if (page.getItems().size() >= LIST_FILLER_LENGTH * LIST_FILLER_HEIGHT) {
             page = createEmptyPage();
             this.pages.add(page);
         }

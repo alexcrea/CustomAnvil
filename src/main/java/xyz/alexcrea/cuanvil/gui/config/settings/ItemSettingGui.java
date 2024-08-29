@@ -62,7 +62,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     public void prepareStaticItems(){
         prepareReturnToDefault();
 
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_TERRACOTTA, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
         getPane().bindItem('s', temporaryLeave);
     }
 

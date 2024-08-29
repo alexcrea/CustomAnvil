@@ -71,7 +71,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
         this.pane.bindItem('V', selectGuiItem.get());
 
         // Temporary leave item
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_TERRACOTTA, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
 
         this.pane.bindItem('s', temporaryLeave);
 

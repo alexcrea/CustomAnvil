@@ -17,6 +17,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
+import xyz.alexcrea.cuanvil.gui.config.list.ElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
@@ -50,18 +51,22 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     @Override
     protected Pattern getGuiPattern() {
         return new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
                 "B1111111S"
         );
     }
 
     protected void initGroups() {
         // Add enchantment gui item
-        OutlinePane filledEnchant = new OutlinePane(0, 0, 9, 5);
+        OutlinePane filledEnchant = new OutlinePane(
+                ElementListConfigGui.LIST_FILLER_START_X,
+                ElementListConfigGui.LIST_FILLER_START_Y,
+                ElementListConfigGui.LIST_FILLER_LENGTH,
+                ElementListConfigGui.LIST_FILLER_HEIGHT);
         filledEnchant.setPriority(Pane.Priority.HIGH);
         filledEnchant.align(OutlinePane.Alignment.BEGIN);
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
