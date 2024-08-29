@@ -12,7 +12,8 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 
 the plugin can be downloaded on the
 [Spigot site](https://www.spigotmc.org/resources/custom-anvil.114884)
-or [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
+or [on modrinth](https://modrinth.com/plugin/customanvil)
+or here [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 
 ---
 **Custom Anvil** have the following features:
@@ -88,6 +89,9 @@ Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Pl
 
 ### Planned:
 - Semi manual config update on plugin or minecraft update
-- Get restriction and multiplier on unknown 
+- Get restriction and multiplier on unknown enchantments
 - Warn admin on unsupported minecraft version
 - More features for custom anvil craft​
+
+### Known issue:
+Most unknown registered enchantments (by unsupported custom enchantment plugin & datapacks) will not have restriction by default. Planned but no eta.
