@@ -3,6 +3,7 @@ package io.delilaheve.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 
 /**
@@ -32,6 +33,8 @@ object ConfigOptions {
     const val ALLOW_HEXADECIMAL_COLOR = "allow_hexadecimal_color"
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
+
+    const val WORK_PENALTY_TYPE = "work_penalty_type"
 
     private const val DEFAULT_LIMIT_PATH = "default_limit"
 
@@ -246,6 +249,17 @@ object ConfigOptions {
                 .getInt(USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST)
                 .takeIf { it in USE_OF_COLOR_COST_RANGE }
                 ?: DEFAULT_USE_OF_COLOR_COST
+        }
+
+    /**
+     * How many xp should use of color should cost
+     */
+    val workPenaltyType: WorkPenaltyType
+        get() {
+            return WorkPenaltyType.fromString(
+                ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getString(WORK_PENALTY_TYPE));
         }
 
     /**
