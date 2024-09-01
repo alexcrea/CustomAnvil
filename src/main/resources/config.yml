@@ -72,7 +72,8 @@ permission_needed_for_color: true
 # Valid values include 0 to 1000.
 use_of_color_cost: 0
 
-# Every time an item is used on the anvil. item work penalty is added to the price and increase
+# Work penalty increase the price for every anvil use.
+# This config allow you to choose the comportment of work penalty.
 # Vanilla work penalty formula can be represented as 2 * previous_penalty + 1. with start value equal to 0
 # See https://minecraft.wiki/w/Anvil_mechanics#Anvil_uses for more detail
 #

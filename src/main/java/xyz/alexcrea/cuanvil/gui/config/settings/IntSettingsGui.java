@@ -276,37 +276,10 @@ public class IntSettingsGui extends AbstractSettingGui {
     }
 
     /**
-     * Create an int setting factory from setting's parameters.
-     *
-     * @param title       The title of the gui.
-     * @param parent      Parent gui to go back when completed.
-     * @param configPath  Configuration path of this setting.
-     * @param config      Configuration holder of this setting.
-     * @param displayLore Gui display item lore.
-     * @param min         Minimum value of this setting.
-     * @param max         Maximum value of this setting.
-     * @param defaultVal  Default value if not found on the config.
-     * @param steps       List of step the value can increment/decrement.
-     *                    List's size should be between 1 (included) and 5 (included).
-     *                    it is visually preferable to have an odd number of step.
-     *                    If step only contain 1 value, no step item should be displayed.
-     * @return A factory for an int setting gui.
-     */
-    public static IntSettingFactory intFactory(@NotNull String title, ValueUpdatableGui parent,
-                                               String configPath, ConfigHolder config,
-                                               @Nullable List<String> displayLore,
-                                               int min, int max, int defaultVal, int... steps) {
-        return new IntSettingFactory(
-                title, parent,
-                configPath, config,
-                displayLore,
-                min, max, defaultVal, steps);
-    }
-
-    /**
      * A factory for an int setting gui that hold setting's information.
      */
     public static class IntSettingFactory extends SettingGuiFactory {
+
         @NotNull
         String title;
         @NotNull
@@ -335,7 +308,7 @@ public class IntSettingsGui extends AbstractSettingGui {
          *                    it is visually preferable to have an odd number of step.
          *                    If step only contain 1 value, no step item should be displayed.
          */
-        protected IntSettingFactory(
+        public IntSettingFactory(
                 @NotNull String title, @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
                 @Nullable List<String> displayLore,

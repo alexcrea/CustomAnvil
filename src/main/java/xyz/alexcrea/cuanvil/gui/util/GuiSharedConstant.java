@@ -27,7 +27,7 @@ public class GuiSharedConstant {
     public static final boolean TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE = true;
     public static final boolean TEMPORARY_DO_BACKUP_EVERY_SAVE = true;
 
-    public static final PatternPane BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE; //TODO CHECK USAGE AND FIX
+    public static final PatternPane BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE;
 
     static {
         Pattern pattern = new Pattern(

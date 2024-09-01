@@ -162,28 +162,6 @@ public class BoolSettingsGui extends AbstractSettingGui {
     }
 
     /**
-     * Create a bool setting factory from setting's parameters.
-     *
-     * @param title        The title of the gui.
-     * @param parent       Parent gui to go back when completed.
-     * @param config       Configuration holder of this setting.
-     * @param configPath   Configuration path of this setting.
-     * @param defaultVal   Default value if not found on the config.
-     * @param displayLore  Gui display item lore.
-     * @return A factory for a boolean setting gui.
-     */
-    public static BoolSettingFactory boolFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
-                                                 @NotNull ConfigHolder config,
-                                                 @NotNull String configPath, boolean defaultVal,
-                                                 String... displayLore) {
-        return new BoolSettingFactory(
-                title, parent,
-                config,
-                configPath, defaultVal,
-                displayLore);
-    }
-
-    /**
      * A factory for a boolean setting gui that hold setting's information.
      */
     public static class BoolSettingFactory extends SettingGuiFactory {
@@ -206,7 +184,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
          * @param defaultVal   Default value if not found on the config.
          * @param displayLore  Gui display item lore.
          */
-        protected BoolSettingFactory(
+        public BoolSettingFactory(
                 @NotNull String title, @NotNull ValueUpdatableGui parent,
                 @NotNull ConfigHolder config, @NotNull String configPath,
                 boolean defaultVal, String... displayLore) {

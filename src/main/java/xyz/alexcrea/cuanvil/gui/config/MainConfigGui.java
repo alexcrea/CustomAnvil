@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Collections;
 
@@ -28,7 +29,7 @@ public class MainConfigGui extends ChestGui {
 
     public void init(PacketManager packetManager) {
         Pattern pattern = new Pattern(
-                "000000000",
+                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "012304567",
                 "Q00000000"
         );
