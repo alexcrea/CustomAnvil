@@ -97,46 +97,46 @@ default_limit: 5
 #
 # Valid range of 1 - 255 for each enchantment
 enchant_limits:
-  aqua_affinity: 1
-  binding_curse: 1
-  channeling: 1
-  flame: 1
-  infinity: 1
-  mending: 1
-  multishot: 1
-  silk_touch: 1
-  vanishing_curse: 1
-  depth_strider: 3 # anything more than 3 is treated as 3 by the game
-  protection: 4
-  fire_protection: 4
-  blast_protection: 4
-  projectile_protection: 4
-  feather_falling: 4
-  thorns: 3
-  respiration: 3
-  sharpness: 5
-  smite: 5
-  bane_of_arthropods: 5
-  knockback: 2
-  fire_aspect: 2
-  looting: 3
-  sweeping: 3
-  sweeping_edge: 3
-  efficiency: 5
-  unbreaking: 3
-  fortune: 3
-  power: 5
-  punch: 2
-  luck_of_the_sea: 3
-  lure: 3
-  frost_walker: 2
-  impaling: 5
-  riptide: 3
-  loyalty: 3
-  piercing: 4
-  quick_charge: 3
-  soul_speed: 3
-  swift_sneak: 3
+  minecraft:aqua_affinity: 1
+  minecraft:binding_curse: 1
+  minecraft:channeling: 1
+  minecraft:flame: 1
+  minecraft:infinity: 1
+  minecraft:mending: 1
+  minecraft:multishot: 1
+  minecraft:silk_touch: 1
+  minecraft:vanishing_curse: 1
+  minecraft:depth_strider: 3 # anything more than 3 is treated as 3 by the game
+  minecraft:protection: 4
+  minecraft:fire_protection: 4
+  minecraft:blast_protection: 4
+  minecraft:projectile_protection: 4
+  minecraft:feather_falling: 4
+  minecraft:thorns: 3
+  minecraft:respiration: 3
+  minecraft:sharpness: 5
+  minecraft:smite: 5
+  minecraft:bane_of_arthropods: 5
+  minecraft:knockback: 2
+  minecraft:fire_aspect: 2
+  minecraft:looting: 3
+  minecraft:sweeping: 3
+  minecraft:sweeping_edge: 3
+  minecraft:efficiency: 5
+  minecraft:unbreaking: 3
+  minecraft:fortune: 3
+  minecraft:power: 5
+  minecraft:punch: 2
+  minecraft:luck_of_the_sea: 3
+  minecraft:lure: 3
+  minecraft:frost_walker: 2
+  minecraft:impaling: 5
+  minecraft:riptide: 3
+  minecraft:loyalty: 3
+  minecraft:piercing: 4
+  minecraft:quick_charge: 3
+  minecraft:soul_speed: 3
+  minecraft:swift_sneak: 3
 
 # Multipliers used to calculate the enchantment's value in repair/combining
 #
@@ -150,124 +150,124 @@ enchant_limits:
 # With default values protection 4 would have a value of 4 when
 # coming from either a book (4 * 1) or an item (4 * 1)
 enchant_values:
-  aqua_affinity:
+  minecraft:aqua_affinity:
     item: 4
     book: 2
-  bane_of_arthropods:
+  minecraft:bane_of_arthropods:
     item: 2
     book: 1
-  binding_curse:
+  minecraft:binding_curse:
     item: 8
     book: 4
-  blast_protection:
+  minecraft:blast_protection:
     item: 4
     book: 2
-  channeling:
+  minecraft:channeling:
     item: 8
     book: 4
-  depth_strider:
+  minecraft:depth_strider:
     item: 4
     book: 2
-  efficiency:
+  minecraft:efficiency:
     item: 1
     book: 1
-  flame:
+  minecraft:flame:
     item: 4
     book: 2
-  feather_falling:
+  minecraft:feather_falling:
     item: 2
     book: 1
-  fire_aspect:
+  minecraft:fire_aspect:
     item: 4
     book: 2
-  fire_protection:
+  minecraft:fire_protection:
     item: 2
     book: 1
-  fortune:
+  minecraft:fortune:
     item: 4
     book: 2
-  frost_walker:
+  minecraft:frost_walker:
     item: 4
     book: 2
-  impaling:
+  minecraft:impaling:
     item: 4
     book: 2
-  infinity:
+  minecraft:infinity:
     item: 8
     book: 4
-  knockback:
+  minecraft:knockback:
     item: 2
     book: 1
-  looting:
+  minecraft:looting:
     item: 4
     book: 2
-  loyalty:
+  minecraft:loyalty:
     item: 1
     book: 1
-  luck_of_the_sea:
+  minecraft:luck_of_the_sea:
     item: 4
     book: 2
-  lure:
+  minecraft:lure:
     item: 4
     book: 2
-  mending:
+  minecraft:mending:
     item: 4
     book: 2
-  multishot:
+  minecraft:multishot:
     item: 4
     book: 2
-  piercing:
+  minecraft:piercing:
     item: 1
     book: 1
-  power:
+  minecraft:power:
     item: 1
     book: 1
-  projectile_protection:
+  minecraft:projectile_protection:
     item: 2
     book: 1
-  protection:
+  minecraft:protection:
     item: 1
     book: 1
-  punch:
+  minecraft:punch:
     item: 4
     book: 2
-  quick_charge:
+  minecraft:quick_charge:
     item: 2
     book: 1
-  respiration:
+  minecraft:respiration:
     item: 4
     book: 2
-  riptide:
+  minecraft:riptide:
     item: 4
     book: 2
-  silk_touch:
+  minecraft:silk_touch:
     item: 8
     book: 4
-  sharpness:
+  minecraft:sharpness:
     item: 1
     book: 1
-  smite:
+  minecraft:smite:
     item: 2
     book: 1
-  soul_speed:
+  minecraft:soul_speed:
     item: 8
     book: 4
-  swift_sneak:
+  minecraft:swift_sneak:
     item: 8
     book: 4
-  sweeping:
+  minecraft:sweeping:
     item: 4
     book: 2
-  sweeping_edge:
+  minecraft:sweeping_edge:
     item: 4
     book: 2
-  thorns:
+  minecraft:thorns:
     item: 8
     book: 4
-  unbreaking:
+  minecraft:unbreaking:
     item: 2
     book: 1
-  vanishing_curse:
+  minecraft:vanishing_curse:
     item: 8
     book: 4
 

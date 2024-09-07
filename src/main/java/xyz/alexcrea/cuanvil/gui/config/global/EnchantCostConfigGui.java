@@ -44,24 +44,16 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
 
     @Override
     public EnchantCostSettingsGui.EnchantCostSettingFactory createFactory(CAEnchantment enchant) {
-        String key = enchant.getKey().getKey().toLowerCase(Locale.ENGLISH);
-        String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
+        String key = enchant.getKey().toString().toLowerCase(Locale.ENGLISH);
+        String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
-        // try to find rarity. default to 0 if not found
-        EnchantmentRarity rarity = enchant.defaultRarity();
-        try {
-            rarity = EnchantmentProperties.valueOf(key.toUpperCase(Locale.ENGLISH)).getRarity();
-        } catch (IllegalArgumentException ignored) {
-        }
-
-        return EnchantCostSettingsGui.enchantCostFactory(prettyKey + " Level Cost", this,
-                ConfigHolder.DEFAULT_CONFIG, SECTION_NAME + '.' + key,
+        return new EnchantCostSettingsGui.EnchantCostSettingFactory(prettyKey + " Cost", this,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7How many level should " + prettyKey,
                         "§7cost when applied by book or by another item."
                 ),
-                0, 255,
-                rarity.getItemValue(), rarity.getBookValue(),
+                enchant, 0, 255,
                 1, 10, 50);
     }
 
