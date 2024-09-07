@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.plugin.Plugin
 import java.util.function.Consumer
 
-class PaperScheduler : TaskScheduler {
+class FoliaScheduler : TaskScheduler {
     override fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any? {
         if(time < 1){
             return Bukkit.getGlobalRegionScheduler().run(
@@ -39,11 +39,11 @@ class PaperScheduler : TaskScheduler {
     }
 
     companion object {
-        fun isPaper(): Boolean {
+        fun isFolia(): Boolean {
             try {
-                Bukkit::class.java.getDeclaredMethod("getGlobalRegionScheduler")
+                Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
                 return true
-            } catch (e: NoSuchMethodException) {
+            } catch (e: ClassNotFoundException) {
                 return false
             }
         }
