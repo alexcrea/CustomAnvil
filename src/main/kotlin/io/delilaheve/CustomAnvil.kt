@@ -115,7 +115,7 @@ class CustomAnvil : JavaPlugin() {
 
         // Load other thing later.
         // It is so other dependent plugins can implement there event listener before we fire them.
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this, {loadEnchantmentSystem()}, 0L)
+        DependencyManager.scheduler.scheduleGlobally(this, {loadEnchantmentSystem()})
     }
 
     private fun loadEnchantmentSystem(){

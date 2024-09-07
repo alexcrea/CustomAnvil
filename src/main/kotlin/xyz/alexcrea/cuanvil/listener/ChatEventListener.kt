@@ -1,12 +1,12 @@
 package xyz.alexcrea.cuanvil.listener
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
@@ -39,9 +39,11 @@ class ChatEventListener : Listener {
         event.isCancelled = true
 
         // sync callback with default server thread
-        Bukkit.getScheduler().runTask(CustomAnvil.instance, Runnable {
+        DependencyManager.scheduler.scheduleOnEntity(
+            CustomAnvil.instance, player,
+            Runnable {
             eventCallback.accept(event.message)
-        })
+        }, 0L)
     }
 
 }

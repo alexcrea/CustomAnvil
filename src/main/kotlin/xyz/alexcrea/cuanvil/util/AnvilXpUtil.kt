@@ -38,20 +38,19 @@ object AnvilXpUtil {
             anvilCost
         }
 
+        val player = view.player
+
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that
             * we have the final say in the process. */
-        CustomAnvil.instance
-            .server
-            .scheduler
-            .runTask(CustomAnvil.instance, Runnable {
+        DependencyManager.scheduler.scheduleOnEntity(
+            CustomAnvil.instance, player,
+            Runnable {
                 inventory.maximumRepairCost =
                     if (ConfigOptions.doRemoveCostLimit || ignoreRules)
                     { Int.MAX_VALUE }
                     else
                     { ConfigOptions.maxAnvilCost + 1 }
-
-                val player = view.player
 
                 inventory.repairCost = finalAnvilCost
                 view.setProperty(REPAIR_COST, finalAnvilCost)

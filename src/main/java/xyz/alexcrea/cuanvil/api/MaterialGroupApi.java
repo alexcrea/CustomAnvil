@@ -2,12 +2,12 @@ package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.ExcludeGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
@@ -24,8 +24,8 @@ public class MaterialGroupApi {
 
     private MaterialGroupApi(){}
 
-    private static int saveChangeTask = -1;
-    private static int reloadChangeTask = -1;
+    private static Object saveChangeTask = null;
+    private static Object reloadChangeTask = null;
 
 
     /**
@@ -180,28 +180,28 @@ public class MaterialGroupApi {
      * Prepare a task to reload every conflict.
      */
     private static void prepareSaveTask() {
-        if(saveChangeTask != -1) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true);
-            saveChangeTask = -1;
-        }, 0L);
+            saveChangeTask = null;
+        });
     }
 
     /**
      * Prepare a task to save configuration.
      */
     private static void prepareUpdateTask() {
-        if(reloadChangeTask != -1) return;
+        if(reloadChangeTask != null) return;
 
-        reloadChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+        reloadChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.ITEM_GROUP_HOLDER.reload();
 
             GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
             if(configGui != null) configGui.reloadValues();
 
-            reloadChangeTask = -1;
-        }, 0L);
+            reloadChangeTask = null;
+        });
 
     }
 
