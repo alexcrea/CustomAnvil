@@ -94,7 +94,7 @@ class EnchantConflictManager {
         // Read and add enchantment to conflict
         val enchantList = section.getStringList(ENCH_LIST_PATH)
         for (enchantName in enchantList) {
-            val enchant = getEnchantByName(enchantName)
+            val enchant = getEnchantByIdentifier(enchantName)
             if (enchant == null) {
                 if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                     CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
@@ -112,7 +112,13 @@ class EnchantConflictManager {
         return conflict
     }
 
-    private fun getEnchantByName(enchantName: String): CAEnchantment? {
+    private fun getEnchantByIdentifier(enchantName: String): CAEnchantment? {
+        val key = NamespacedKey.fromString(enchantName)
+        if(key != null){
+            val enchantment = CAEnchantment.getByKey(key)
+            if(enchantment != null) return enchantment
+
+        }
 
         // Temporary solution for 1.20.5
         when(enchantName){

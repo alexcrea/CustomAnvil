@@ -104,7 +104,7 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean unregisterEnchantment(@NotNull NamespacedKey key){
-        CAEnchantment enchantment = CAEnchantmentRegistry.getInstance().getByKey(key);
+        CAEnchantment enchantment = CAEnchantment.getByKey(key);
         return unregisterEnchantment(enchantment);
     }
 
@@ -126,7 +126,7 @@ public class EnchantmentApi {
      */
     @Nullable
     public static CAEnchantment getByKey(@NotNull NamespacedKey key){
-        return CAEnchantmentRegistry.getInstance().getByKey(key);
+        return CAEnchantment.getByKey(key);
     }
 
     /**
@@ -137,7 +137,7 @@ public class EnchantmentApi {
      */
     @Nullable
     public static CAEnchantment getByName(@NotNull String name){
-        return CAEnchantmentRegistry.getInstance().getByName(name);
+        return CAEnchantment.getByName(name);
     }
 
     /**

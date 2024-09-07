@@ -258,7 +258,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         String[] enchantKeys = new String[enchantments.size()];
         int index = 0;
         for (CAEnchantment enchantment : enchantments) {
-            enchantKeys[index++] = enchantment.getKey().getKey();
+            enchantKeys[index++] = enchantment.getKey().toString();
         }
         ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict + ".enchantments", enchantKeys);
 

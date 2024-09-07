@@ -62,6 +62,8 @@ public class CAEnchantmentRegistry {
 
     }
 
+    private static boolean hasWarnedRegistering = false;
+
     /**
      * Can be used to register new enchantment.
      * <p>
@@ -73,15 +75,18 @@ public class CAEnchantmentRegistry {
     public boolean register(@NotNull CAEnchantment enchantment){
         if(byKeyMap.containsKey(enchantment.getKey())){
             CustomAnvil.instance.getLogger().log(Level.WARNING,
-                    "Duplicate registered enchantment. This should NOT happen.",
+                    "Duplicate registered enchantment. This should NOT happen any time.\n" +
+                    "If you are a custom anvil developer. You maybe custom anvil detected your enchantment as a bukkit enchantment. " +
+                            "maybe remove enchantment with the same key before registering yours",
                     new IllegalStateException(enchantment.getKey()+" enchantment was already registered"));
             return false;
         }
-        if(byNameMap.containsKey(enchantment.getName())){
+
+        if((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())){
+            hasWarnedRegistering = true;
+
             CustomAnvil.instance.getLogger().log(Level.WARNING,
-                    "Duplicate registered enchantment name. There will have issue. " +
-                            "\nI hope this do not happen to you on a production server. If it do, there is probably a plugin trying to register an enchantment with the same name than another one",
-                    new IllegalStateException(enchantment.getKey()+" enchantment name was already registered"));
+                    "Duplicate registered enchantment name. Please check that configuration is using namespace.");
         }
 
         byKeyMap.put(enchantment.getKey(), enchantment);

@@ -16,159 +16,159 @@
 # on illegal items
 # ----------------------------------------------------
 
-restriction_aqua_affinity:
-  enchantments: [ aqua_affinity ]
+restriction_minecraft_aqua_affinity:
+  enchantments: [ minecraft:aqua_affinity ]
   notAffectedGroups: [ enchanted_book, helmets ]
 
-restriction_bane_of_arthropods:
-  enchantments: [ bane_of_arthropods ]
+restriction_minecraft_bane_of_arthropods:
+  enchantments: [ minecraft:bane_of_arthropods ]
   notAffectedGroups: [ enchanted_book, melee_weapons ]
 
-restriction_blast_protection:
-  enchantments: [ blast_protection ]
+restriction_minecraft_blast_protection:
+  enchantments: [ minecraft:blast_protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_channeling:
-  enchantments: [ channeling ]
+restriction_minecraft_channeling:
+  enchantments: [ minecraft:channeling ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_binding_curse:
-  enchantments: [ binding_curse ]
+restriction_minecraft_binding_curse:
+  enchantments: [ minecraft:binding_curse ]
   notAffectedGroups: [ enchanted_book, wearable ]
 
-restriction_vanishing_curse:
-  enchantments: [ vanishing_curse ]
+restriction_minecraft_vanishing_curse:
+  enchantments: [ minecraft:vanishing_curse ]
   notAffectedGroups: [ enchanted_book, can_vanish ]
 
-restriction_depth_strider:
-  enchantments: [ depth_strider ]
+restriction_minecraft_depth_strider:
+  enchantments: [ minecraft:depth_strider ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_efficiency:
-  enchantments: [ efficiency ]
+restriction_minecraft_efficiency:
+  enchantments: [ minecraft:efficiency ]
   notAffectedGroups: [ enchanted_book, tools,  shears ]
 
-restriction_feather_falling:
-  enchantments: [ feather_falling ]
+restriction_minecraft_feather_falling:
+  enchantments: [ minecraft:feather_falling ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_fire_aspect:
-  enchantments: [ fire_aspect ]
+restriction_minecraft_fire_aspect:
+  enchantments: [ minecraft:fire_aspect ]
   notAffectedGroups: [ enchanted_book, swords ]
 
-restriction_fire_protection:
-  enchantments: [ fire_protection ]
+restriction_minecraft_fire_protection:
+  enchantments: [ minecraft:fire_protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_flame:
-  enchantments: [ flame ]
+restriction_minecraft_flame:
+  enchantments: [ minecraft:flame ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_fortune:
-  enchantments: [ fortune ]
+restriction_minecraft_fortune:
+  enchantments: [ minecraft:fortune ]
   notAffectedGroups: [ enchanted_book, tools ]
 
-restriction_frost_walker:
-  enchantments: [ frost_walker ]
+restriction_minecraft_frost_walker:
+  enchantments: [ minecraft:frost_walker ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_impaling:
-  enchantments: [ impaling ]
+restriction_minecraft_impaling:
+  enchantments: [ minecraft:impaling ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_infinity:
-  enchantments: [ infinity ]
+restriction_minecraft_infinity:
+  enchantments: [ minecraft:infinity ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_knockback:
-  enchantments: [ knockback ]
+restriction_minecraft_knockback:
+  enchantments: [ minecraft:knockback ]
   notAffectedGroups: [ enchanted_book, swords ]
 
-restriction_looting:
-  enchantments: [ looting ]
+restriction_minecraft_looting:
+  enchantments: [ minecraft:looting ]
   notAffectedGroups: [ enchanted_book, swords ]
 
-restriction_loyalty:
-  enchantments: [ loyalty ]
+restriction_minecraft_loyalty:
+  enchantments: [ minecraft:loyalty ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_lure:
-  enchantments: [ lure ]
+restriction_minecraft_lure:
+  enchantments: [ minecraft:lure ]
   notAffectedGroups: [ enchanted_book, fishing_rod ]
 
-restriction_mending:
-  enchantments: [ mending ]
+restriction_minecraft_mending:
+  enchantments: [ minecraft:mending ]
   notAffectedGroups: [ enchanted_book, can_unbreak ]
 
-restriction_multishot:
-  enchantments: [ multishot ]
+restriction_minecraft_multishot:
+  enchantments: [ minecraft:multishot ]
   notAffectedGroups: [ enchanted_book, crossbow ]
 
-restriction_piercing:
-  enchantments: [ piercing ]
+restriction_minecraft_piercing:
+  enchantments: [ minecraft:piercing ]
   notAffectedGroups: [ enchanted_book, crossbow ]
 
-restriction_power:
-  enchantments: [ power ]
+restriction_minecraft_power:
+  enchantments: [ minecraft:power ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_projectile_protection:
-  enchantments: [ projectile_protection ]
+restriction_minecraft_projectile_protection:
+  enchantments: [ minecraft:projectile_protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_protection:
-  enchantments: [ protection ]
+restriction_minecraft_protection:
+  enchantments: [ minecraft:protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_punch:
-  enchantments: [ punch ]
+restriction_minecraft_punch:
+  enchantments: [ minecraft:punch ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_quick_charge:
-  enchantments: [ quick_charge ]
+restriction_minecraft_quick_charge:
+  enchantments: [ minecraft:quick_charge ]
   notAffectedGroups: [ enchanted_book, crossbow ]
 
-restriction_respiration:
-  enchantments: [ respiration ]
+restriction_minecraft_respiration:
+  enchantments: [ minecraft:respiration ]
   notAffectedGroups: [ enchanted_book, helmets ]
 
-restriction_riptide:
-  enchantments: [ riptide ]
+restriction_minecraft_riptide:
+  enchantments: [ minecraft:riptide ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_sharpness:
-  enchantments: [ sharpness ]
+restriction_minecraft_sharpness:
+  enchantments: [ minecraft:sharpness ]
   notAffectedGroups: [ enchanted_book, melee_weapons ]
 
-restriction_silk_touch:
-  enchantments: [ silk_touch ]
+restriction_minecraft_silk_touch:
+  enchantments: [ minecraft:silk_touch ]
   notAffectedGroups: [ enchanted_book, tools ]
 
-restriction_smite:
-  enchantments: [ smite ]
+restriction_minecraft_smite:
+  enchantments: [ minecraft:smite ]
   notAffectedGroups: [ enchanted_book, melee_weapons ]
 
-restriction_soul_speed:
-  enchantments: [ soul_speed ]
+restriction_minecraft_soul_speed:
+  enchantments: [ minecraft:soul_speed ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_sweeping_edge:
-  enchantments: [ sweeping, sweeping_edge ]
+restriction_minecraft_sweeping_edge:
+  enchantments: [ minecraft:sweeping, minecraft:sweeping_edge ]
   notAffectedGroups: [ enchanted_book, swords ]
 
 # Do not exist in 1.18,  that mean useInFuture will be set to true
 # useInFuture set to true also mean it will not warn if there is an issue
-restriction_swift_sneak:
+restriction_minecraft_swift_sneak:
   useInFuture: true
-  enchantments: [ swift_sneak ]
+  enchantments: [ minecraft:swift_sneak ]
   notAffectedGroups: [ enchanted_book, leggings ]
 
-restriction_thorns:
-  enchantments: [ thorns ]
+restriction_minecraft_thorns:
+  enchantments: [ minecraft:thorns ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_unbreaking:
-  enchantments: [ unbreaking ]
+restriction_minecraft_unbreaking:
+  enchantments: [ minecraft:unbreaking ]
   notAffectedGroups: [ enchanted_book, can_unbreak ]
 
 # ----------------------------------------------------
@@ -180,60 +180,60 @@ restriction_unbreaking:
 
 sword_enchant_conflict:
   enchantments:
-    - bane_of_arthropods
-    - smite
-    - sharpness
+    - minecraft:bane_of_arthropods
+    - minecraft:smite
+    - minecraft:sharpness
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 protection_enchant_conflict:
   enchantments:
-    - blast_protection
-    - fire_protection
-    - projectile_protection
-    - protection
+    - minecraft:blast_protection
+    - minecraft:fire_protection
+    - minecraft:projectile_protection
+    - minecraft:protection
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 trident_conflict1:
   enchantments:
-    - channeling
-    - riptide
+    - minecraft:channeling
+    - minecraft:riptide
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 trident_conflict2:
   enchantments:
-    - loyalty
-    - riptide
+    - minecraft:loyalty
+    - minecraft:riptide
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 boot_conflict:
   enchantments:
-    - depth_strider
-    - frost_walker
+    - minecraft:depth_strider
+    - minecraft:frost_walker
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 tool_conflict:
   enchantments:
-    - fortune
-    - silk_touch
+    - minecraft:fortune
+    - minecraft:silk_touch
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 bow_conflict:
   enchantments:
-    - mending
-    - infinity
+    - minecraft:mending
+    - minecraft:infinity
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
 crossbow_conflict:
   enchantments:
-    - multishot
-    - piercing
+    - minecraft:multishot
+    - minecraft:piercing
   notAffectedGroups: [ ]
   maxEnchantmentBeforeConflict: 1
 
