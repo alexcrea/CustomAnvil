@@ -10,6 +10,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.group.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -372,7 +373,7 @@ public class ConflictBuilder {
      */
     protected void appendEnchantments(@NotNull EnchantConflictGroup conflict){
         for (String enchantmentName : getEnchantmentNames()){
-            if(appendEnchantment(conflict, EnchantmentApi.getByName(enchantmentName))){
+            if(appendEnchantments(conflict, EnchantmentApi.getListByName(enchantmentName)) == 0){
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
             }
@@ -397,6 +398,24 @@ public class ConflictBuilder {
             return false;
         conflict.addEnchantment(enchantment);
         return true;
+    }
+
+    /**
+     * Append a list of enchantments.
+     *
+     * @param conflict    The conflict target
+     * @param enchantments List of enchantment to add
+     * @return Number of enchantment added
+     */
+    protected static int appendEnchantments(@NotNull EnchantConflictGroup conflict, @NotNull List<CAEnchantment> enchantments){
+        int numberValid = 0;
+        for (CAEnchantment enchantment : enchantments) {
+            if(appendEnchantment(conflict, enchantment)){
+                numberValid++;
+            }
+        }
+
+        return numberValid;
     }
 
     /**

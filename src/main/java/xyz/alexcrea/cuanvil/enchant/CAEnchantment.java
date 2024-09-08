@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -226,12 +227,24 @@ public interface CAEnchantment {
     }
 
     /**
-     * Gets a list of all the unoptimised enchantments.
-     * @param name The enchantment name
-     * @return List of enchantment.
+     * Gets the enchantment by the provided name.
+     * @param name Name to fetch.
+     * @return Registered enchantment. null if absent.
+     *
+     * @deprecated use {@link #getListByName(String)}
      */
+    @Deprecated(since = "1.6.1")
     static @Nullable CAEnchantment getByName(@NotNull String name){
         return CAEnchantmentRegistry.getInstance().getByName(name);
+    }
+
+    /**
+     * Gets list of enchantment using the provided name.
+     * @param name Name to fetch.
+     * @return List of registered enchantment.
+     */
+    static List<CAEnchantment> getListByName(@NotNull String name){
+        return CAEnchantmentRegistry.getInstance().getListByName(name);
     }
 
 }

@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantLimitConfigGui;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -134,10 +135,22 @@ public class EnchantmentApi {
      *
      * @param name The name used to fetch
      * @return The custom anvil enchantment of this name. null if not found.
+     * @deprecated use {@link #getListByName(String)}
      */
+    @Deprecated(since = "1.6.1")
     @Nullable
     public static CAEnchantment getByName(@NotNull String name){
         return CAEnchantment.getByName(name);
+    }
+
+    /**
+     * Get list of enchantment using the provided name.
+     *
+     * @param name The name used to fetch
+     * @return List of custom anvil enchantments of this name. May be empty if not found.
+     */
+    public static List<CAEnchantment> getListByName(@NotNull String name){
+        return CAEnchantment.getListByName(name);
     }
 
     /**
@@ -167,9 +180,9 @@ public class EnchantmentApi {
 
 
     private static void writeDefaultConfig(FileConfiguration defaultConfig, CAEnchantment enchantment) {
-        defaultConfig.set("enchant_limits." + enchantment.getKey().getKey(), enchantment.defaultMaxLevel());
+        defaultConfig.set("enchant_limits." + enchantment.getKey(), enchantment.defaultMaxLevel());
 
-        String basePath = "enchant_values." + enchantment.getKey().getKey();
+        String basePath = "enchant_values." + enchantment.getKey();
         EnchantmentRarity rarity = enchantment.defaultRarity();
 
         defaultConfig.set(basePath + ".item", rarity.getItemValue());
