@@ -44,11 +44,11 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     @Override
     protected Pattern getBackgroundPattern(){
         return new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
                 "B11L1R111"
         );
     }

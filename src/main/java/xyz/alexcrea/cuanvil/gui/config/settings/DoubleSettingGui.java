@@ -353,42 +353,6 @@ public class DoubleSettingGui extends AbstractSettingGui {
     }
 
     /**
-     * Create a double setting factory from setting's parameters.
-     *
-     * @param title        The title of the gui.
-     * @param parent       Parent gui to go back when completed.
-     * @param config       Configuration holder of this setting.
-     * @param configPath   Configuration path of this setting.
-     * @param displayLore  Gui display item lore.
-     * @param scale        The scale of the decimal.
-     * @param asPercentage If we should display the value as a %.
-     * @param nullOnZero   Set the value as null (deleting it) when equal to 0
-     * @param min          Minimum value of this setting.
-     * @param max          Maximum value of this setting.
-     * @param defaultVal   Default value if not found on the config.
-     * @param steps        List of step the value can increment/decrement.
-     *                     List's size should be between 1 (included) and 5 (included).
-     *                     it is visually preferable to have an odd number of step.
-     *                     If step only contain 1 value, no step item should be displayed.
-     * @return A factory for a double setting gui.
-     */
-    @NotNull
-    public static DoubleSettingFactory doubleFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
-                                                     @NotNull ConfigHolder config,
-                                                     @NotNull String configPath,
-                                                     @Nullable List<String> displayLore,
-                                                     int scale, boolean asPercentage, boolean nullOnZero,
-                                                     double min, double max, double defaultVal, double... steps) {
-        return new DoubleSettingFactory(
-                title, parent,
-                config,
-                configPath,
-                displayLore,
-                scale, asPercentage, nullOnZero,
-                min, max, defaultVal, steps);
-    }
-
-    /**
      * A factory for a double setting gui that hold setting's information.
      */
     public static class DoubleSettingFactory extends SettingGuiFactory {
@@ -427,7 +391,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
          *                     it is visually preferable to have an odd number of step.
          *                     If step only contain 1 value, no step item should be displayed.
          */
-        protected DoubleSettingFactory(
+        public DoubleSettingFactory(
                 @NotNull String title, @NotNull ValueUpdatableGui parent,
                 @NotNull ConfigHolder config,
                 @NotNull String configPath,

@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.dependency
 
+import io.delilaheve.CustomAnvil
 import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
@@ -7,9 +8,14 @@ import org.bukkit.inventory.AnvilInventory
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
+import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
+import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
+import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
 
 object DependencyManager {
 
+    var isFolia: Boolean = false
+    lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManager
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
@@ -17,6 +23,14 @@ object DependencyManager {
 
     fun loadDependency(){
         val pluginManager = Bukkit.getPluginManager()
+
+        // Bukkit or Paper scheduler ?
+        isFolia = testIsFolia()
+        scheduler = if(isFolia) {
+            CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
+
+            FoliaScheduler()
+        } else BukkitScheduler()
 
         // Packet Manager
         val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
@@ -76,6 +90,16 @@ object DependencyManager {
         if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
 
         return bypass
+    }
+
+
+    private fun testIsFolia(): Boolean {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
+            return true
+        } catch (e: ClassNotFoundException) {
+            return false
+        }
     }
 
 }

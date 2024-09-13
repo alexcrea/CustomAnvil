@@ -38,20 +38,19 @@ object AnvilXpUtil {
             anvilCost
         }
 
+        val player = view.player
+
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that
             * we have the final say in the process. */
-        CustomAnvil.instance
-            .server
-            .scheduler
-            .runTask(CustomAnvil.instance, Runnable {
+        DependencyManager.scheduler.scheduleOnEntity(
+            CustomAnvil.instance, player,
+            Runnable {
                 inventory.maximumRepairCost =
                     if (ConfigOptions.doRemoveCostLimit || ignoreRules)
                     { Int.MAX_VALUE }
                     else
                     { ConfigOptions.maxAnvilCost + 1 }
-
-                val player = view.player
 
                 inventory.repairCost = finalAnvilCost
                 view.setProperty(REPAIR_COST, finalAnvilCost)
@@ -85,16 +84,17 @@ object AnvilXpUtil {
     fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, unitRepair: Boolean): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penalty
+        val penaltyType = ConfigOptions.workPenaltyType;
         val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
+
+
         val rightPenalty =
-            if (right == null) {
-                0
-            } else {
-                (right.itemMeta as? Repairable)?.repairCost ?: 0
-            }
+            if (right == null) 0
+            else (right.itemMeta as? Repairable)?.repairCost ?: 0
+
 
         // Increase penalty on fusing or unit repair
-        if(right != null || unitRepair){
+        if(penaltyType.isPenaltyIncreasing && (right != null || unitRepair)){
             result.itemMeta?.let {
                 (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
                 result.itemMeta = it
@@ -108,6 +108,8 @@ object AnvilXpUtil {
                     "rightPenalty: $rightPenalty, " +
                     "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}"
         )
+
+        if(!penaltyType.isPenaltyAdditive) return 0
 
         return leftPenalty + rightPenalty
     }

@@ -57,11 +57,11 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     @Override
     protected Pattern getBackgroundPattern(){
         return new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
                 "BT1LAR1IS"
         );
     }
@@ -77,7 +77,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         super.prepareStaticValues();
 
         // Temporary leave item
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_TERRACOTTA, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
         this.backgroundPane.bindItem('T', temporaryLeave);
 
         // Select new mat item

@@ -40,7 +40,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
 
-        return IntSettingsGui.intFactory(prettyKey + " Level Limit", this,
+        return new IntSettingsGui.IntSettingFactory(prettyKey + " Level Limit", this,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Collections.singletonList(
                         "§7Maximum applied level of " + prettyKey

@@ -14,10 +14,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.EnumSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -26,6 +28,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Global config to edit basic basic settings.
@@ -59,7 +62,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private void init() {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "LT0I0S0cp",
+                "LT0IWS0cp",
                 "CR0U0r0hP",
                 "B00000000"
         );
@@ -86,6 +89,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
+    private EnumSettingGui.EnumSettingFactory<WorkPenaltyType> workPenaltyType; // W character
+
     private BoolSettingsGui.BoolSettingFactory allowColorCode; // c character
     private BoolSettingsGui.BoolSettingFactory allowHexColor; // h character
 
@@ -99,7 +104,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
      */
     protected void prepareValues() {
         // cap anvil cost
-        this.capAnvilCost = BoolSettingsGui.boolFactory("§8Cap Anvil Cost ?", this,
+        this.capAnvilCost = new BoolSettingsGui.BoolSettingFactory("§8Cap Anvil Cost ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.CAP_ANVIL_COST, ConfigOptions.DEFAULT_CAP_ANVIL_COST,
                 "§7All anvil cost will be capped to §aMax Anvil Cost§7 if enabled.",
@@ -118,7 +123,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // repair cost item
         IntRange range = ConfigOptions.MAX_ANVIL_COST_RANGE;
-        this.maxAnvilCost = IntSettingsGui.intFactory("§8Max Anvil Cost", this,
+        this.maxAnvilCost = new IntSettingsGui.IntSettingFactory("§8Max Anvil Cost", this,
                 ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7Max cost the Anvil can get to.",
@@ -142,7 +147,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
 
         // remove repair limit item
-        this.removeAnvilCostLimit = BoolSettingsGui.boolFactory("§8Remove Anvil Cost Limit ?", this,
+        this.removeAnvilCostLimit = new BoolSettingsGui.BoolSettingFactory("§8Remove Anvil Cost Limit ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.REMOVE_ANVIL_COST_LIMIT, ConfigOptions.DEFAULT_REMOVE_ANVIL_COST_LIMIT,
                 "§7Whether the anvil's cost limit should be removed entirely.",
@@ -150,7 +155,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 "§7However, the action will be completable if xp requirement is meet.");
 
         // replace too expensive item
-        this.replaceTooExpensive = BoolSettingsGui.boolFactory("§8Replace Too Expensive ?", this,
+        this.replaceTooExpensive = new BoolSettingsGui.BoolSettingFactory("§8Replace Too Expensive ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.REPLACE_TOO_EXPENSIVE, ConfigOptions.DEFAULT_REPLACE_TOO_EXPENSIVE,
                 getReplaceToExpensiveLore());
@@ -161,7 +166,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
-        this.itemRepairCost = IntSettingsGui.intFactory("§8Item Repair Cost", this,
+        this.itemRepairCost = new IntSettingsGui.IntSettingFactory("§8Item Repair Cost", this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7XP Level amount added to the anvil when the item",
@@ -172,7 +177,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 1, 5, 10, 50, 100);
 
         // unit repair cost
-        this.unitRepairCost = IntSettingsGui.intFactory("§8Unit Repair Cost", this,
+        this.unitRepairCost = new IntSettingsGui.IntSettingFactory("§8Unit Repair Cost", this,
                 ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7XP Level amount added to the anvil when the item is repaired by an §eunit§7.",
@@ -185,7 +190,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // item rename cost
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
-        this.itemRenameCost = IntSettingsGui.intFactory("§8Rename Cost", this,
+        this.itemRenameCost = new IntSettingsGui.IntSettingFactory("§8Rename Cost", this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7XP Level amount added to the anvil when the item is renamed."
@@ -196,7 +201,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // sacrifice illegal enchant cost
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
-        this.sacrificeIllegalEnchantCost = IntSettingsGui.intFactory("§8Sacrifice Illegal Enchant Cost", this,
+        this.sacrificeIllegalEnchantCost = new IntSettingsGui.IntSettingFactory("§8Sacrifice Illegal Enchant Cost", this,
                 ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7XP Level amount added to the anvil when a sacrifice enchantment",
@@ -207,11 +212,51 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 1, 5, 10, 50, 100);
 
         // -------------
+        // Work Penalty
+        // -------------
+
+        this.workPenaltyType = new EnumSettingGui.EnumSettingFactory<>("§8Work Penalty Type", this,
+                ConfigOptions.WORK_PENALTY_TYPE, ConfigHolder.DEFAULT_CONFIG
+        ) {
+            @NotNull
+            @Override
+            public WorkPenaltyType getConfiguredValue() {
+                return ConfigOptions.INSTANCE.getWorkPenaltyType();
+            }
+
+            @NotNull
+            @Override
+            public WorkPenaltyType getDefault() {
+                return WorkPenaltyType.DEFAULT;
+            }
+
+            @NotNull
+            @Override
+            public List<String> getDisplayLore(WorkPenaltyType value) {
+                return List.of(
+                        "§7Work penalty increase the price for every anvil use.",
+                        "§7This config allow you to choose the comportment of work penalty.",
+                        "",
+                        value.configDisplayForAdd(),
+                        value.configDisplayForIncrease()
+
+                );
+            }
+
+            @NotNull
+            @Override
+            public WorkPenaltyType next(@NotNull WorkPenaltyType now) {
+                return WorkPenaltyType.next(now);
+            }
+
+        };
+
+        // -------------
         // Color config
         // -------------
 
         // Allow us of color code
-        this.allowColorCode = BoolSettingsGui.boolFactory("§8Allow Use Of Color Code ?", this,
+        this.allowColorCode = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Color Code ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE,
                 "§7Whether players can use color code.",
@@ -219,7 +264,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 "§7Player may need permission to use color code if §ePlayer need permission to use color§7 is enabled.");
 
         // Allow us of hexadecimal color
-        this.allowHexColor = BoolSettingsGui.boolFactory("§8Allow Use Of Hexadecimal Color ?", this,
+        this.allowHexColor = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Hexadecimal Color ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR,
                 "§7Whether players can use hexadecimal color.",
@@ -227,7 +272,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 "§7Player may need permission to use color code if §ePermission Needed For Color§7 is enabled.");
 
         // Permission needed for color
-        this.permissionNeededForColor = BoolSettingsGui.boolFactory("§8Need Permission To Use Color ?", this,
+        this.permissionNeededForColor = new BoolSettingsGui.BoolSettingFactory("§8Need Permission To Use Color ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR,
                 "§7Whether players should have permission to be able to use colors.",
@@ -248,7 +293,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // Cost of using color
         range = ConfigOptions.USE_OF_COLOR_COST_RANGE;
-        this.useOfColorCost = IntSettingsGui.intFactory("§8Cost Of Using Color", this,
+        this.useOfColorCost = new IntSettingsGui.IntSettingFactory("§8Cost Of Using Color", this,
                 ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7XP level cost when using color code or hexadecimal color using the anvil.",
@@ -330,6 +375,10 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // sacrifice illegal enchant cost
         GuiItem illegalCostItem = this.sacrificeIllegalEnchantCost.getItem(Material.ENCHANTED_BOOK);
         pane.bindItem('S', illegalCostItem);
+
+        // work penalty type
+        GuiItem workPenaltyType = this.workPenaltyType.getItem(Material.DAMAGED_ANVIL, "§aWork Penalty Type");
+        pane.bindItem('W', workPenaltyType);
 
         // allow color code
         GuiItem allowColorCodeItem = this.allowColorCode.getItem();

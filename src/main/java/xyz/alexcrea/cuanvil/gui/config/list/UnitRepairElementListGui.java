@@ -112,7 +112,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     protected DoubleSettingGui.DoubleSettingFactory createFactory(String materialName) {
         String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(materialName);
 
-        return DoubleSettingGui.doubleFactory(
+        return new DoubleSettingGui.DoubleSettingFactory(
                 "§0%§8" + materialDisplayName +" Repair",
                 this,
                 ConfigHolder.UNIT_REPAIR_HOLDER,

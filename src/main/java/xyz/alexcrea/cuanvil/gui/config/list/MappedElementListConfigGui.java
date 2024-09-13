@@ -7,6 +7,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public abstract class MappedElementListConfigGui< T, S > extends ElementListConf
 
     protected final HashMap<T, S> elementGuiMap;
     protected MappedElementListConfigGui(@NotNull String title) {
-        super(title);
+        super(title, MainConfigGui.getInstance());
         this.elementGuiMap = new HashMap<>();
 
     }

@@ -1,9 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency
 
-import cz.kominekjan.disenchantment.events.ItemClickEvent
-import cz.kominekjan.disenchantment.events.ItemEvent
-import cz.kominekjan.disenchantment.events.SplitBookClickEvent
-import cz.kominekjan.disenchantment.events.SplitBookEvent
+import cz.kominekjan.disenchantment.events.DisenchantClickEvent
+import cz.kominekjan.disenchantment.events.DisenchantEvent
+import cz.kominekjan.disenchantment.events.ShatterClickEvent
+import cz.kominekjan.disenchantment.events.ShatterEvent
 import io.delilaheve.AnvilEventListener
 import io.delilaheve.CustomAnvil
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -19,11 +19,11 @@ class DisenchantmentDependency {
         CustomAnvil.instance.logger.info("Disenchantment Detected !")
     }
 
-    private lateinit var splitEvent: SplitBookEvent
-    private lateinit var itemEvent: ItemEvent
+    private lateinit var splitEvent: ShatterEvent
+    private lateinit var itemEvent: DisenchantEvent
 
-    private lateinit var splitBookClickEvent: SplitBookClickEvent
-    private lateinit var itemClickEvent: ItemClickEvent
+    private lateinit var splitBookClickEvent: ShatterClickEvent
+    private lateinit var itemClickEvent: DisenchantClickEvent
 
     fun redirectListeners() {
 
@@ -32,12 +32,12 @@ class DisenchantmentDependency {
         for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
             val listener = registeredListener.listener
 
-            if(listener is SplitBookEvent){
+            if(listener is ShatterEvent){
                 this.splitEvent = listener
                 toUnregister.add(registeredListener)
             }
 
-            if(listener is ItemEvent){
+            if(listener is DisenchantEvent){
                 itemEvent = listener
                 toUnregister.add(registeredListener)
             }
@@ -53,12 +53,12 @@ class DisenchantmentDependency {
         for (registeredListener in InventoryClickEvent.getHandlerList().registeredListeners) {
             val listener = registeredListener.listener
 
-            if(listener is SplitBookClickEvent){
+            if(listener is ShatterClickEvent){
                 splitBookClickEvent = listener
                 toUnregister.add(registeredListener)
             }
 
-            if(listener is ItemClickEvent){
+            if(listener is DisenchantClickEvent){
                 itemClickEvent = listener
                 toUnregister.add(registeredListener)
             }

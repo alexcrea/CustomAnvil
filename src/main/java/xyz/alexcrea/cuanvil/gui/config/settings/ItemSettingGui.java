@@ -62,7 +62,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     public void prepareStaticItems(){
         prepareReturnToDefault();
 
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_TERRACOTTA, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
         getPane().bindItem('s', temporaryLeave);
     }
 
@@ -164,27 +164,6 @@ public class ItemSettingGui extends AbstractSettingGui {
     }
 
     /**
-     * Create aa item setting factory from setting's parameters.
-     *
-     * @param title       The title of the gui.
-     * @param parent      Parent gui to go back when completed.
-     * @param configPath  Configuration path of this setting.
-     * @param config      Configuration holder of this setting.
-     * @param defaultVal  Default value if not found on the config.
-     * @param displayLore Gui display item lore.
-     * @return A factory for an item setting gui.
-     */
-    public static ItemSettingGui.ItemSettingFactory itemFactory(@NotNull String title, @NotNull ValueUpdatableGui parent,
-                                                                @NotNull String configPath, @NotNull ConfigHolder config,
-                                                                @Nullable ItemStack defaultVal,
-                                                                String... displayLore) {
-        return new ItemSettingGui.ItemSettingFactory(
-                title, parent,
-                configPath, config,
-                defaultVal, displayLore);
-    }
-
-    /**
      * A factory for an item setting gui that hold setting's information.
      */
     public static class ItemSettingFactory extends SettingGuiFactory {
@@ -207,7 +186,7 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param defaultVal  Default value if not found on the config.
          * @param displayLore Gui display item lore.
          */
-        protected ItemSettingFactory(
+        public ItemSettingFactory(
                 @NotNull String title, @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
                 @Nullable ItemStack defaultVal,

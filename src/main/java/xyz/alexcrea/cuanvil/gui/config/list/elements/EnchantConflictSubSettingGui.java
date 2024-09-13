@@ -95,7 +95,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
-        this.minBeforeActiveSettingFactory = IntSettingsGui.intFactory(
+        this.minBeforeActiveSettingFactory = new IntSettingsGui.IntSettingFactory(
                 "§8Minimum enchantment count",
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
                 Arrays.asList(

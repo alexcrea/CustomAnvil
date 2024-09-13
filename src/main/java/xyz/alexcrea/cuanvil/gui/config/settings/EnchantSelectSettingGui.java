@@ -15,6 +15,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -35,7 +36,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     private boolean displayUnselected;
 
     public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer) {
-        super(title);
+        super(title, parent instanceof Gui parentGui ? parentGui : MainConfigGui.getInstance()) ;
         this.enchantContainer = enchantContainer;
 
         this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());
@@ -52,11 +53,11 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     @Override
     protected Pattern getBackgroundPattern() {
         return new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
                 "B11LbR11S"
         );
     }

@@ -28,6 +28,7 @@ or here [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Can handle some custom enchantment plugins (see below for more information)
 - Gui to configure the plugin in game.
 - Support of color code and hexadecimal color
+- (Experimental) folia support (gui do not work)
 ---
 ### Permissions:
 ```yml
@@ -59,7 +60,7 @@ Use EcoEnchant restriction system by default.
 
 Here is a list of supported anvil mechanic plugins with support status:
 - [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/)
-Officially supported by Custom Anvil but still experimental. Mostly use Custom Anvil XP settings. 
+Officially supported by Custom Anvil but still experimental. Mostly use Custom Anvil basic XP settings. (version >= 5.4.0)
 
 If you like Custom Anvil to support a specific plugin (custom enchant or anvil mechanic). 
 You can ask, but please note implementing compatibility will be considered
@@ -88,10 +89,10 @@ For 1.21 to 1.21.1 use the [1.21 configurations](https://github.com/alexcrea/Cus
 Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) for metric. You can [disable it](https://bstats.org/getting-started) if you like.
 
 ### Planned:
-- Semi manual config update on plugin or minecraft update
-- Get restriction and multiplier on unknown enchantments
+- Better folia support (make gui work. fix some dirty handled parts)
+- Get restriction on unknown enchantments
 - Warn admin on unsupported minecraft version
-- More features for custom anvil craft​
+- More features for custom anvil craft
 
 ### Known issue:
 Most unknown registered enchantments (by unsupported custom enchantment plugin & datapacks) will not have restriction by default. Planned but no eta.

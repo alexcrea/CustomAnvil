@@ -12,12 +12,12 @@ public class EnchantmentRarity {
     private final int itemValue;
     private final int bookValue;
 
-    public EnchantmentRarity(int itemValue, int bookValue) {
+    private EnchantmentRarity(int itemValue, int bookValue) {
         this.itemValue = itemValue;
         this.bookValue = bookValue;
     }
 
-    public EnchantmentRarity(int itemValue) {
+    private EnchantmentRarity(int itemValue) {
         this(itemValue, Math.max(1, itemValue / 2));
     }
 
@@ -27,6 +27,26 @@ public class EnchantmentRarity {
 
     public final int getItemValue() {
         return itemValue;
+    }
+
+
+    public static EnchantmentRarity getRarity(int itemValue, int bookValue){
+        int expectedBook = Math.max(1, itemValue / 2);
+        if((expectedBook == bookValue) && (itemValue != 0)) return getRarity(itemValue);
+
+        if(itemValue == 0 && bookValue == 0) return NO_RARITY;
+        return new EnchantmentRarity(itemValue, bookValue);
+    }
+
+    public static EnchantmentRarity getRarity(int itemValue){
+        return switch (itemValue) {
+            case 0 -> NO_RARITY;
+            case 1 -> COMMON;
+            case 2 -> UNCOMMON;
+            case 4 -> RARE;
+            case 8 -> VERY_RARE;
+            default -> new EnchantmentRarity(itemValue);
+        };
     }
 
 }

@@ -19,7 +19,9 @@ public class GuiSharedConstant {
     public static final Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
     public static final GuiItem SECONDARY_BACKGROUND_ITEM = GuiGlobalItems.backgroundItem(GuiSharedConstant.SECONDARY_BACKGROUND_MATERIAL);
 
+    public static final String UPPER_FILLER_FULL_PLANE = "111111111";
     public static final String EMPTY_GUI_FULL_LINE = "000000000";
+    public static final String EMPTY_FILLER_FULL_LINE = "100000001";
 
     // Temporary values, until I get something better.
     public static final boolean TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE = true;
@@ -29,11 +31,11 @@ public class GuiSharedConstant {
 
     static {
         Pattern pattern = new Pattern(
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                GuiSharedConstant.EMPTY_GUI_FULL_LINE,
+                GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
+                GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
                 "B11111111"
         );
         BACK_TO_MAIN_MENU_BIG_LIST_DISPLAY_BACKGROUND_PANE = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
