@@ -2,12 +2,12 @@ package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
 import kotlin.Triple;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
 
@@ -23,7 +23,7 @@ public class UnitRepairApi {
 
     private UnitRepairApi(){}
 
-    private static int saveChangeTask = -1;
+    private static Object saveChangeTask = null;
 
     /**
      * Write and add a custom anvil unit repair recipe.
@@ -161,12 +161,12 @@ public class UnitRepairApi {
      * Prepare a task to save custom unit repair recipe configuration.
      */
     private static void prepareSaveTask() {
-        if(saveChangeTask != -1) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
-            saveChangeTask = -1;
-        }, 0L);
+            saveChangeTask = null;
+        });
     }
 
     /**

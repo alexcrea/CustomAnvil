@@ -1,13 +1,13 @@
 package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
@@ -26,7 +26,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class EnchantmentApi {
 
-    private static int saveChangeTask = -1;
+    private static Object saveChangeTask = null;
 
     private EnchantmentApi() {}
 
@@ -180,12 +180,12 @@ public class EnchantmentApi {
      * Prepare a task to save custom recipe configuration.
      */
     private static void prepareSaveTask() {
-        if(saveChangeTask != -1) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
-            saveChangeTask = -1;
-        }, 0L);
+            saveChangeTask = null;
+        });
     }
 
     /**

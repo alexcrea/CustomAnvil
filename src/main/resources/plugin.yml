@@ -2,6 +2,7 @@ main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
 version: 1.6.0
+folia-supported: true
 description: Allow to customise anvil mechanics
 api-version: 1.16
 load: POSTWORLD

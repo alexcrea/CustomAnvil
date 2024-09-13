@@ -1,11 +1,11 @@
 package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
 
@@ -21,8 +21,8 @@ public class ConflictAPI {
 
     private ConflictAPI() {}
 
-    private static int saveChangeTask = -1;
-    private static int reloadChangeTask = -1;
+    private static Object saveChangeTask = null;
+    private static Object reloadChangeTask = null;
 
     /**
      * Write and add a conflict.
@@ -151,27 +151,27 @@ public class ConflictAPI {
      * Prepare a task to save conflict configuration.
      */
     private static void prepareSaveTask() {
-        if(saveChangeTask != -1) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
-            saveChangeTask = -1;
-        }, 0L);
+            saveChangeTask = null;
+        });
     }
 
     /**
      * Prepare a task to reload every conflict.
      */
     private static void prepareUpdateTask() {
-        if(reloadChangeTask != -1) return;
+        if(reloadChangeTask != null) return;
 
-        reloadChangeTask = Bukkit.getScheduler().scheduleSyncDelayedTask(CustomAnvil.instance, ()->{
+        reloadChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.CONFLICT_HOLDER.reload();
             EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
             if(conflictGui != null) conflictGui.reloadValues();
 
-            reloadChangeTask = -1;
-        }, 0L);
+            reloadChangeTask = null;
+        });
 
     }
 
