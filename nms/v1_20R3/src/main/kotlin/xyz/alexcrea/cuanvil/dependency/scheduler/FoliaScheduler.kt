@@ -10,13 +10,12 @@ class FoliaScheduler : TaskScheduler {
     override fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any? {
         if(time < 1){
             return Bukkit.getGlobalRegionScheduler().run(
-                plugin,
-                Consumer { scheduledTask: ScheduledTask? -> task.run() }
-            )
+                plugin
+            ) { scheduledTask: ScheduledTask? -> task.run() }
         }
         return Bukkit.getGlobalRegionScheduler().runDelayed(
             plugin,
-            Consumer { scheduledTask: ScheduledTask? -> task.run() },
+            { scheduledTask: ScheduledTask? -> task.run() },
             time
         )
     }
@@ -26,27 +25,16 @@ class FoliaScheduler : TaskScheduler {
         if(time < 1){
             return entity.scheduler.run(
                 plugin,
-                Consumer { scheduledTask: ScheduledTask? -> task.run() },
-                Runnable {}
+                { scheduledTask: ScheduledTask? -> task.run() },
+                {}
             )
         }
         return entity.scheduler.runDelayed(
             plugin,
-            Consumer { scheduledTask: ScheduledTask? -> task.run() },
-            Runnable {},
+            { scheduledTask: ScheduledTask? -> task.run() },
+            {},
             time
         )
-    }
-
-    companion object {
-        fun isFolia(): Boolean {
-            try {
-                Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
-                return true
-            } catch (e: ClassNotFoundException) {
-                return false
-            }
-        }
     }
     
 }

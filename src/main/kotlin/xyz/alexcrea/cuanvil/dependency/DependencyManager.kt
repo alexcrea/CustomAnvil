@@ -25,7 +25,7 @@ object DependencyManager {
         val pluginManager = Bukkit.getPluginManager()
 
         // Bukkit or Paper scheduler ?
-        isFolia = FoliaScheduler.isFolia()
+        isFolia = testIsFolia()
         scheduler = if(isFolia) {
             CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
 
@@ -90,6 +90,16 @@ object DependencyManager {
         if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
 
         return bypass
+    }
+
+
+    private fun testIsFolia(): Boolean {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
+            return true
+        } catch (e: ClassNotFoundException) {
+            return false
+        }
     }
 
 }
