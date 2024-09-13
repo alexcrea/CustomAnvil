@@ -36,7 +36,7 @@ object ConfigOptions {
 
     const val WORK_PENALTY_TYPE = "work_penalty_type"
 
-    private const val DEFAULT_LIMIT_PATH = "default_limit"
+    const val DEFAULT_LIMIT_PATH = "default_limit"
 
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     const val ENCHANT_VALUES_ROOT = "enchant_values"
@@ -72,7 +72,7 @@ object ConfigOptions {
     const val DEFAULT_PERMISSION_NEEDED_FOR_COLOR = true
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
-    private const val DEFAULT_ENCHANT_LIMIT = 5
+    const val DEFAULT_ENCHANT_LIMIT = 5
 
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false

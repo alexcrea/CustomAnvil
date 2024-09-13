@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
+import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
@@ -145,6 +146,9 @@ class CustomAnvil : JavaPlugin() {
         // Load gui constants //TODO maybe something better later
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
+
+        // Finally, re add default we may be missing
+        PluginSetDefault.reAddMissingDefault()
 
     }
 
