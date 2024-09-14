@@ -10,10 +10,11 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 
 ### Download Locations:
 
-the plugin can be downloaded on the
-[Spigot site](https://www.spigotmc.org/resources/custom-anvil.114884)
-or [on modrinth](https://modrinth.com/plugin/customanvil)
-or here [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
+the plugin can be downloaded on
+[Spigot](https://www.spigotmc.org/resources/custom-anvil.114884),
+ [on modrinth](https://modrinth.com/plugin/customanvil),
+ [on hangar](https://hangar.papermc.io/alexcrea/Custom_Anvil)
+ or here [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 
 ---
 **Custom Anvil** have the following features:
@@ -28,7 +29,7 @@ or here [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 - Can handle some custom enchantment plugins (see below for more information)
 - Gui to configure the plugin in game.
 - Support of color code and hexadecimal color
-- (Experimental) folia support (gui do not work)
+- (Experimental) Folia support (gui do not work)
 ---
 ### Permissions:
 ```yml
@@ -89,7 +90,7 @@ For 1.21 to 1.21.1 use the [1.21 configurations](https://github.com/alexcrea/Cus
 Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) for metric. You can [disable it](https://bstats.org/getting-started) if you like.
 
 ### Planned:
-- Better folia support (make gui work. fix some dirty handled parts)
+- Better Folia support (make gui work. fix some dirty handled parts)
 - Get restriction on unknown enchantments
 - Warn admin on unsupported minecraft version
 - More features for custom anvil craft
