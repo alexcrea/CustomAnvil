@@ -12,8 +12,8 @@ It was renamed because it now affects every anvil aspect and not only unsafe enc
 
 the plugin can be downloaded on
 [Spigot](https://www.spigotmc.org/resources/custom-anvil.114884),
- [on modrinth](https://modrinth.com/plugin/customanvil),
- [on hangar](https://hangar.papermc.io/alexcrea/Custom_Anvil)
+ [modrinth](https://modrinth.com/plugin/customanvil),
+ [Hangar](https://hangar.papermc.io/alexcrea/CustomAnvil)
  or here [on GitHub](https://github.com/alexcrea/CustomAnvil/releases/latest)
 
 ---
