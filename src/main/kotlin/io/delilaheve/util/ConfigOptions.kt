@@ -405,7 +405,7 @@ object ConfigOptions {
             return maxBeforeMergeDisabled("sweeping")
         }
 
-        return DEFAULT_MAX_BEFORE_MERGE_DISABLED
+        return value
     }
 
 }
