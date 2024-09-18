@@ -360,16 +360,19 @@ restriction_density:
   - density
   notAffectedGroups:
   - mace
+  - enchanted_book
 restriction_breach:
   enchantments:
   - breach
   notAffectedGroups:
   - mace
+  - enchanted_book
 restriction_wind_burst:
   enchantments:
   - wind_burst
   notAffectedGroups:
   - mace
+  - enchanted_book
 mace_enchant_conflict:
   enchantments:
   - density
