@@ -10,22 +10,21 @@ import static xyz.alexcrea.cuanvil.update.UpdateUtils.addToStringList;
 // It will be replaced by a better system later.
 public class Update_1_21 {
 
+    private static final Version V1_21 = new Version(1, 21);
+
     public static void handleUpdate(){
         // Assume if version path is not null then it's 1.21
         String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
         if(oldVersion != null){
-            int[] versionParts = UpdateUtils.readVersionFromString(oldVersion);
+            Version version = Version.fromString(oldVersion);
 
             // Test 1.21
-            if((versionParts[0] >= 1) && (versionParts[1] >= 21)){
-                return;
-            }
+            if(V1_21.greaterEqual(version)) return;
         }
-
-        int[] versionParts = UpdateUtils.currentMinecraftVersion();
+        Version current = UpdateUtils.currentMinecraftVersion();
 
         // Test 1.21
-        if((versionParts[0] >= 1) && (versionParts[1] >= 21)){
+        if(current.greaterEqual(V1_21)){
             doUpdate();
         }
 
@@ -37,6 +36,7 @@ public class Update_1_21 {
         FileConfiguration baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
         FileConfiguration groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
         FileConfiguration conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        FileConfiguration unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
 
         // Add mace to groups
         groupConfig.set("mace.type", "include");
@@ -46,13 +46,13 @@ public class Update_1_21 {
 
         // Add new enchant conflicts
         addToStringList(conflictConfig, "restriction_density.enchantments", "density");
-        addToStringList(conflictConfig, "restriction_density.notAffectedGroups", "mace");
+        addToStringList(conflictConfig, "restriction_density.notAffectedGroups", "mace", "enchanted_book");
 
         addToStringList(conflictConfig, "restriction_breach.enchantments", "breach");
-        addToStringList(conflictConfig, "restriction_breach.notAffectedGroups", "mace");
+        addToStringList(conflictConfig, "restriction_breach.notAffectedGroups", "mace", "enchanted_book");
 
         addToStringList(conflictConfig, "restriction_wind_burst.enchantments", "wind_burst");
-        addToStringList(conflictConfig, "restriction_wind_burst.notAffectedGroups", "mace");
+        addToStringList(conflictConfig, "restriction_wind_burst.notAffectedGroups", "mace", "enchanted_book");
 
         // Add mace to conflicts
         addToStringList(conflictConfig, "restriction_fire_aspect.notAffectedGroups", "mace");
@@ -77,6 +77,9 @@ public class Update_1_21 {
         baseConfig.set("enchant_values.wind_burst.item", 4);
         baseConfig.set("enchant_values.wind_burst.book", 2);
 
+        // Add unit repair for mace
+        unitConfig.set("breeze_rod.mace", 0.25);
+
         // Set version string as 1.21
         baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, "1.21");
 
@@ -84,6 +87,7 @@ public class Update_1_21 {
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
         ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true);
         ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
+        ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
 
         // imply reload of CONFLICT_HOLDER
         // We also do not need to reload base config as there is no object related to it.

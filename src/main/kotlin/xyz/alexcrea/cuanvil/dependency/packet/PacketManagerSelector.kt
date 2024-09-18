@@ -21,7 +21,7 @@ object PacketManagerSelector {
                 NoPacketManager()
     private val versionSpecificManager: PacketManagerBase?
         get() {
-            val versionParts = UpdateUtils.currentMinecraftVersion()
+            val versionParts = UpdateUtils.currentMinecraftVersionArray()
             if (versionParts[0] != 1) return null
 
             return when (versionParts[1]) {

@@ -283,4 +283,4 @@ debug_log_verbose: false
 # ProtocoLib may also be used if the server is in an "unsupported" version even if this option is disabled.
 force_protocolib: false
 
-configVersion: 1.4.5
+configVersion: 1.6.2

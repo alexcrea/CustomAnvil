@@ -10,7 +10,13 @@ import java.util.List;
 public class UpdateUtils {
     public static final String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
 
-    public static int[] currentMinecraftVersion(){
+    public static Version currentMinecraftVersion(){
+        String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
+        return Version.fromString(versionString);
+    }
+
+    @Deprecated
+    public static int[] currentMinecraftVersionArray(){
         String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
         return UpdateUtils.readVersionFromString(versionString);
     }
@@ -25,7 +31,7 @@ public class UpdateUtils {
         return versionParts;
     }
 
-    static void addToStringList(FileConfiguration config, String path, String... toAdd){
+    public static void addToStringList(FileConfiguration config, String path, String... toAdd){
         List<String> groups = new ArrayList<>(config.getStringList(path));
         groups.addAll(Arrays.asList(toAdd));
         config.set(path, groups);
