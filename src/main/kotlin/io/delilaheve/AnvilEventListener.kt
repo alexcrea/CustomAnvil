@@ -56,7 +56,7 @@ class AnvilEventListener(private val packetManager: PacketManager) : Listener {
     /**
      * Event handler logic for when an anvil contains items to be combined
      */
-    @EventHandler(priority = HIGHEST)
+    @EventHandler(priority = HIGHEST, ignoreCancelled = true)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         // Test if the event should bypass custom anvil.
         if(DependencyManager.tryEventPreAnvilBypass(event)) return
