@@ -381,9 +381,13 @@ object ConfigOptions {
     private fun getDefaultValue(enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
                                 isFromBook: Boolean) : Int {
 
-        val enchantmentName = enchantment.enchantmentName
-        if(enchantmentName == "sweeping_edge"){
-            val limit = enchantmentValue("sweeping", isFromBook)
+        val enchantmentName = enchantment.key.toString()
+        if(enchantmentName == "minecraft:sweeping_edge"){
+            var limit = enchantmentValue("minecraft:sweeping", isFromBook)
+            if(limit != null) return limit
+            
+            // legacy name
+            limit = enchantmentValue("sweeping", isFromBook)
             if(limit != null) return limit
         }
 
@@ -399,28 +403,39 @@ object ConfigOptions {
      * a negative value would mean never disabled
      */
     fun maxBeforeMergeDisabled(enchantment: CAEnchantment): Int {
-        return maxBeforeMergeDisabled(enchantment.enchantmentName)
+        val key = enchantment.key.toString()
+        var value = maxBeforeMergeDisabled(key)
+        if(value != null) return value
+
+        // Legacy name
+        val legacy = enchantment.enchantmentName
+        value = maxBeforeMergeDisabled(legacy)
+        if(value != null) return value
+
+        if(key == "minecraft:sweeping_edge"){
+            value = maxBeforeMergeDisabled("minecraft:sweeping")
+            if(value != null) return value
+
+            // legacy name of legacy enchantment name
+            value = maxBeforeMergeDisabled("sweeping")
+            if(value != null) return value
+        }
+
+        return DEFAULT_MAX_BEFORE_MERGE_DISABLED
     }
 
     /**
      * Get the given [enchantmentName]'s level before merge is disabled
      * a negative value would mean never disabled
      */
-    private fun maxBeforeMergeDisabled(enchantmentName: String) : Int {
+    private fun maxBeforeMergeDisabled(enchantmentName: String) : Int? {
         // find if set
         val path = "${DISABLE_MERGE_OVER_ROOT}.$enchantmentName"
 
-        val value = CustomAnvil.instance
+        return CustomAnvil.instance
             .config
-            .getInt(path, DEFAULT_MAX_BEFORE_MERGE_DISABLED)
+            .getInt(path, ENCHANT_LIMIT_RANGE.min() - 1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
-            ?: DEFAULT_MAX_BEFORE_MERGE_DISABLED;
-
-        if((value == DEFAULT_MAX_BEFORE_MERGE_DISABLED) && (enchantmentName == "sweeping_edge")){
-            return maxBeforeMergeDisabled("sweeping")
-        }
-
-        return value
     }
 
 }

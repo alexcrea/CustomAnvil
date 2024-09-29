@@ -278,9 +278,9 @@ enchant_values:
 # -1 mean enchantment merge for this enchantment is not disabled. default to -1 if absent.
 disable-merge-over:
   # Sharpness is set to -1. it equivalent to it not being set to anything (and work as vanilla)
-  sharpness: -1
+  minecraft:sharpness: -1
   # If uncommented. 2 unbreaking II book would not give an unbreaking III book. but unbreaking III book can still be applied
-  #unbreaking: 2
+  #minecraft:unbreaking: 2
 
 # Whether to show debug logging
 debug_log: false
