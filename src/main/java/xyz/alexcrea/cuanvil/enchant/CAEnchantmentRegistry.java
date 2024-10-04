@@ -146,7 +146,7 @@ public class CAEnchantmentRegistry {
      *
      * @deprecated use {@link #getListByName(String)}
      */
-    @Deprecated(since = "1.6.1")
+    @Deprecated(since = "1.6.3")
     @Nullable
     public CAEnchantment getByName(@NotNull String name){
         List<CAEnchantment> enchantments = getListByName(name);

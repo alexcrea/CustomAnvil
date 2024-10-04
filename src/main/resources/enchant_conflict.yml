@@ -16,87 +16,87 @@
 # on illegal items
 # ----------------------------------------------------
 
-restriction_minecraft_aqua_affinity:
+restriction_aqua_affinity:
   enchantments: [ minecraft:aqua_affinity ]
   notAffectedGroups: [ enchanted_book, helmets ]
 
-restriction_minecraft_bane_of_arthropods:
+restriction_bane_of_arthropods:
   enchantments: [ minecraft:bane_of_arthropods ]
   notAffectedGroups: [ enchanted_book, melee_weapons ]
 
-restriction_minecraft_blast_protection:
+restriction_blast_protection:
   enchantments: [ minecraft:blast_protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_minecraft_channeling:
+restriction_channeling:
   enchantments: [ minecraft:channeling ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_minecraft_binding_curse:
+restriction_binding_curse:
   enchantments: [ minecraft:binding_curse ]
   notAffectedGroups: [ enchanted_book, wearable ]
 
-restriction_minecraft_vanishing_curse:
+restriction_vanishing_curse:
   enchantments: [ minecraft:vanishing_curse ]
   notAffectedGroups: [ enchanted_book, can_vanish ]
 
-restriction_minecraft_depth_strider:
+restriction_depth_strider:
   enchantments: [ minecraft:depth_strider ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_minecraft_efficiency:
+restriction_efficiency:
   enchantments: [ minecraft:efficiency ]
   notAffectedGroups: [ enchanted_book, tools,  shears ]
 
-restriction_minecraft_feather_falling:
+restriction_feather_falling:
   enchantments: [ minecraft:feather_falling ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_minecraft_fire_aspect:
+restriction_fire_aspect:
   enchantments: [ minecraft:fire_aspect ]
   notAffectedGroups: [ enchanted_book, swords ]
 
-restriction_minecraft_fire_protection:
+restriction_fire_protection:
   enchantments: [ minecraft:fire_protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_minecraft_flame:
+restriction_flame:
   enchantments: [ minecraft:flame ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_minecraft_fortune:
+restriction_fortune:
   enchantments: [ minecraft:fortune ]
   notAffectedGroups: [ enchanted_book, tools ]
 
-restriction_minecraft_frost_walker:
+restriction_frost_walker:
   enchantments: [ minecraft:frost_walker ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_minecraft_impaling:
+restriction_impaling:
   enchantments: [ minecraft:impaling ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_minecraft_infinity:
+restriction_infinity:
   enchantments: [ minecraft:infinity ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_minecraft_knockback:
+restriction_knockback:
   enchantments: [ minecraft:knockback ]
   notAffectedGroups: [ enchanted_book, swords ]
 
-restriction_minecraft_looting:
+restriction_looting:
   enchantments: [ minecraft:looting ]
   notAffectedGroups: [ enchanted_book, swords ]
 
-restriction_minecraft_loyalty:
+restriction_loyalty:
   enchantments: [ minecraft:loyalty ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_minecraft_lure:
+restriction_lure:
   enchantments: [ minecraft:lure ]
   notAffectedGroups: [ enchanted_book, fishing_rod ]
 
-restriction_minecraft_mending:
+restriction_mending:
   enchantments: [ minecraft:mending ]
   notAffectedGroups: [ enchanted_book, can_unbreak ]
 
@@ -104,70 +104,70 @@ restriction_minecraft_multishot:
   enchantments: [ minecraft:multishot ]
   notAffectedGroups: [ enchanted_book, crossbow ]
 
-restriction_minecraft_piercing:
+restriction_piercing:
   enchantments: [ minecraft:piercing ]
   notAffectedGroups: [ enchanted_book, crossbow ]
 
-restriction_minecraft_power:
+restriction_power:
   enchantments: [ minecraft:power ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_minecraft_projectile_protection:
+restriction_projectile_protection:
   enchantments: [ minecraft:projectile_protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_minecraft_protection:
+restriction_protection:
   enchantments: [ minecraft:protection ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_minecraft_punch:
+restriction_punch:
   enchantments: [ minecraft:punch ]
   notAffectedGroups: [ enchanted_book, bow ]
 
-restriction_minecraft_quick_charge:
+restriction_quick_charge:
   enchantments: [ minecraft:quick_charge ]
   notAffectedGroups: [ enchanted_book, crossbow ]
 
-restriction_minecraft_respiration:
+restriction_respiration:
   enchantments: [ minecraft:respiration ]
   notAffectedGroups: [ enchanted_book, helmets ]
 
-restriction_minecraft_riptide:
+restriction_riptide:
   enchantments: [ minecraft:riptide ]
   notAffectedGroups: [ enchanted_book, trident ]
 
-restriction_minecraft_sharpness:
+restriction_sharpness:
   enchantments: [ minecraft:sharpness ]
   notAffectedGroups: [ enchanted_book, melee_weapons ]
 
-restriction_minecraft_silk_touch:
+restriction__silk_touch:
   enchantments: [ minecraft:silk_touch ]
   notAffectedGroups: [ enchanted_book, tools ]
 
-restriction_minecraft_smite:
+restriction_smite:
   enchantments: [ minecraft:smite ]
   notAffectedGroups: [ enchanted_book, melee_weapons ]
 
-restriction_minecraft_soul_speed:
+restriction_soul_speed:
   enchantments: [ minecraft:soul_speed ]
   notAffectedGroups: [ enchanted_book, boots ]
 
-restriction_minecraft_sweeping_edge:
+restriction_sweeping_edge:
   enchantments: [ minecraft:sweeping, minecraft:sweeping_edge ]
   notAffectedGroups: [ enchanted_book, swords ]
 
 # Do not exist in 1.18,  that mean useInFuture will be set to true
 # useInFuture set to true also mean it will not warn if there is an issue
-restriction_minecraft_swift_sneak:
+restriction_swift_sneak:
   useInFuture: true
   enchantments: [ minecraft:swift_sneak ]
   notAffectedGroups: [ enchanted_book, leggings ]
 
-restriction_minecraft_thorns:
+restriction_thorns:
   enchantments: [ minecraft:thorns ]
   notAffectedGroups: [ enchanted_book, armors ]
 
-restriction_minecraft_unbreaking:
+restriction__unbreaking:
   enchantments: [ minecraft:unbreaking ]
   notAffectedGroups: [ enchanted_book, can_unbreak ]
 

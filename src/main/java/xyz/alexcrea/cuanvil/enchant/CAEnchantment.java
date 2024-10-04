@@ -233,7 +233,7 @@ public interface CAEnchantment {
      *
      * @deprecated use {@link #getListByName(String)}
      */
-    @Deprecated(since = "1.6.1")
+    @Deprecated(since = "1.6.3")
     static @Nullable CAEnchantment getByName(@NotNull String name){
         return CAEnchantmentRegistry.getInstance().getByName(name);
     }

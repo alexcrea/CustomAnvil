@@ -137,7 +137,7 @@ public class EnchantmentApi {
      * @return The custom anvil enchantment of this name. null if not found.
      * @deprecated use {@link #getListByName(String)}
      */
-    @Deprecated(since = "1.6.1")
+    @Deprecated(since = "1.6.3")
     @Nullable
     public static CAEnchantment getByName(@NotNull String name){
         return CAEnchantment.getByName(name);
