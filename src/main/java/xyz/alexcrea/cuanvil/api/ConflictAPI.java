@@ -119,7 +119,7 @@ public class ConflictAPI {
     private static List<String> extractEnchantments(@NotNull ConflictBuilder builder){
         List<String> result = new ArrayList<>(builder.getEnchantmentNames());
         for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
-            result.add(enchantmentKey.getKey());
+            result.add(enchantmentKey.toString());
         }
 
         return result;

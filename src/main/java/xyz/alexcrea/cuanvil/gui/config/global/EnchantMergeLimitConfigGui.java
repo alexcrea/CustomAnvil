@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -34,8 +35,8 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
 
     @Override
     public IntSettingsGui.IntSettingFactory createFactory(CAEnchantment enchant) {
-        String key = enchant.getKey().getKey().toLowerCase(Locale.ROOT);
-        String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key);
+        String key = enchant.getKey().toString().toLowerCase(Locale.ROOT);
+        String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
         return new IntSettingsGui.IntSettingFactory(prettyKey + " Merge Limit", this,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
@@ -48,7 +49,13 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
                         "§e-1 §7(default) will set the merge limit to enchantment's maximum level"
                 ),
                 -1, 255, -1,
-                1, 5, 10, 50, 100);
+                1, 5, 10, 50, 100){
+
+            @Override
+            public int getConfiguredValue() {
+                return ConfigOptions.INSTANCE.maxBeforeMergeDisabled(enchant);
+            }
+        };
     }
 
     @Override
