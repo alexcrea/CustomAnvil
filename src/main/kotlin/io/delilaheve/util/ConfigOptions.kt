@@ -41,6 +41,8 @@ object ConfigOptions {
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
+    const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
+
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
@@ -109,6 +111,9 @@ object ConfigOptions {
 
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
+
+    // Default max before merge disabled (negative mean enabled)
+    const val DEFAULT_MAX_BEFORE_MERGE_DISABLED = -1;
 
     // -------------
     // Get methods
@@ -372,6 +377,35 @@ object ConfigOptions {
         }
 
         return DEFAULT_ENCHANT_VALUE
+    }
+
+    /**
+     * Get the given [enchantmentName]'s level before merge is disabled
+     * a negative value would mean never disabled
+     */
+    fun maxBeforeMergeDisabled(enchantment: CAEnchantment): Int {
+        return maxBeforeMergeDisabled(enchantment.enchantmentName)
+    }
+
+    /**
+     * Get the given [enchantmentName]'s level before merge is disabled
+     * a negative value would mean never disabled
+     */
+    private fun maxBeforeMergeDisabled(enchantmentName: String) : Int {
+        // find if set
+        val path = "${DISABLE_MERGE_OVER_ROOT}.$enchantmentName"
+
+        val value = CustomAnvil.instance
+            .config
+            .getInt(path, DEFAULT_MAX_BEFORE_MERGE_DISABLED)
+            .takeIf { it in ENCHANT_LIMIT_RANGE }
+            ?: DEFAULT_MAX_BEFORE_MERGE_DISABLED;
+
+        if((value == DEFAULT_MAX_BEFORE_MERGE_DISABLED) && (enchantmentName == "sweeping_edge")){
+            return maxBeforeMergeDisabled("sweeping")
+        }
+
+        return value
     }
 
 }

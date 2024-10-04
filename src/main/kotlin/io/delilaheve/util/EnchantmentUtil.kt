@@ -76,7 +76,11 @@ object EnchantmentUtil {
                 }
                 // ... and they're the same level
                 else {
-                    // try to increase the enchantment level by 1
+                    // We test if it is allowed to merge at this level
+                    val maxBeforeDisabled = ConfigOptions.maxBeforeMergeDisabled(enchantment)
+                    if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) return@forEach
+
+                    // Now we increase the enchantment level by 1
                     var newLevel = oldLevel + 1
                     newLevel = max(min(newLevel, maxLevel), oldLevel)
                     this[enchantment] = newLevel
