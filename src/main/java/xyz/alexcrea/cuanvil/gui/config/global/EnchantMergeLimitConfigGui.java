@@ -42,10 +42,10 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
                 Arrays.asList(
                         "§7Maximum merge level for for " + prettyKey,
                         "",
-                        "For example, if set to 2, lvl1 + lvl1 of will give a lvl2",
-                        "But lvl2 + lvl2 will not give lv 3.",
-                        "Will still not merge above max enchantment level even if above",
-                        "-1 will set the maximum to enchantment's maximum level"
+                        "§7For example, if set to §e2§7, §alvl1 §7+ §alvl1 §7of will give a §alvl2",
+                        "§7But §alvl2 §7+ §alvl2 §7will not give a §clv3§7.",
+                        "§7Will still not merge above max enchantment level",
+                        "§e-1 §7(default) will set the merge limit to enchantment's maximum level"
                 ),
                 -1, 255, -1,
                 1, 5, 10, 50, 100);
