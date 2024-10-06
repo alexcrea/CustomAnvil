@@ -16,14 +16,6 @@ class EditConfigExecutor : CommandExecutor {
             sender.sendMessage(GuiGlobalActions.NO_EDIT_PERM)
             return false
         }
-        if(DependencyManager.isFolia){
-            sender.sendMessage("§cIt look like you are using Folia. Sadly Custom Anvil do not support Config gui for Folia.")
-            sender.sendMessage("§eIt is may come in a future version.")
-            sender.sendMessage("")
-            sender.sendMessage("§eCurrently you need to edit manually the config or copy from another server (spigot or better)")
-            sender.sendMessage("§eThen /anvilconfigreload after config file is edited")
-            return false
-        }
 
         if (sender !is HumanEntity) return false
         MainConfigGui.getInstance().show(sender)

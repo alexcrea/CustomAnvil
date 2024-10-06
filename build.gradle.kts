@@ -27,7 +27,8 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
+    //implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14") // we can't use the maven artefact currently as it do not support folia
+    implementation(files("libs/IF-0.10.17-folia.jar"))
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
