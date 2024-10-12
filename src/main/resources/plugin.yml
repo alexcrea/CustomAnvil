@@ -49,8 +49,8 @@ permissions:
     description: Allow player to use hexadecimal color if permission is required (toggleable)
 
 
-# soft depend on old name, so I can disable it if it is on the same server
-# as it is the old name for this plugin
+# soft depend on old name (UnsafeEnchantsPlus), so I can disable it if it is on the same server (old name for this plugin)
+# Also depend to other plugin for compatibility
 softdepend:
   - UnsafeEnchantsPlus
   - ProtocolLib
@@ -58,3 +58,4 @@ softdepend:
   - EnchantsSquared
   - EcoEnchants
   - eco
+  - ExcellentEnchants

@@ -23,6 +23,8 @@ object DependencyManager {
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
+
     var disenchantmentCompatibility: DisenchantmentDependency? = null
 
     fun loadDependency(){
@@ -53,6 +55,11 @@ object DependencyManager {
             ecoEnchantCompatibility!!.disableAnvilListener()
         }
 
+        // Excellent Enchants dependency
+        if(pluginManager.isPluginEnabled("ExcellentEnchants")){
+            excellentEnchantsCompatibility = ExcellentEnchantsDependency(pluginManager.getPlugin("ExcellentEnchants")!!)
+        }
+
         // Disenchantment dependency
         if(pluginManager.isPluginEnabled("Disenchantment")){
             disenchantmentCompatibility = DisenchantmentDependency()
@@ -69,6 +76,7 @@ object DependencyManager {
     fun registerEnchantments() {
         enchantmentSquaredCompatibility?.registerEnchantments()
         ecoEnchantCompatibility?.registerEnchantments()
+        excellentEnchantsCompatibility?.registerEnchantments()
 
     }
 
