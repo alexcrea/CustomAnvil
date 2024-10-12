@@ -125,8 +125,7 @@ object ConfigOptions {
     val doCapCost: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(CAP_ANVIL_COST, DEFAULT_CAP_ANVIL_COST)
+                .get().getBoolean(CAP_ANVIL_COST, DEFAULT_CAP_ANVIL_COST)
         }
 
     /**
@@ -135,8 +134,7 @@ object ConfigOptions {
     val maxAnvilCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(MAX_ANVIL_COST, DEFAULT_MAX_ANVIL_COST)
+                .get().getInt(MAX_ANVIL_COST, DEFAULT_MAX_ANVIL_COST)
                 .takeIf { it in MAX_ANVIL_COST_RANGE }
                 ?: DEFAULT_MAX_ANVIL_COST
         }
@@ -147,8 +145,7 @@ object ConfigOptions {
     val doRemoveCostLimit: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(REMOVE_ANVIL_COST_LIMIT, DEFAULT_REMOVE_ANVIL_COST_LIMIT)
+                .get().getBoolean(REMOVE_ANVIL_COST_LIMIT, DEFAULT_REMOVE_ANVIL_COST_LIMIT)
         }
 
     /**
@@ -157,8 +154,7 @@ object ConfigOptions {
     val doReplaceTooExpensive: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(REPLACE_TOO_EXPENSIVE, DEFAULT_REPLACE_TOO_EXPENSIVE)
+                .get().getBoolean(REPLACE_TOO_EXPENSIVE, DEFAULT_REPLACE_TOO_EXPENSIVE)
         }
 
     /**
@@ -167,8 +163,7 @@ object ConfigOptions {
     val itemRepairCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
+                .get().getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
                 ?: DEFAULT_ITEM_REPAIR_COST
         }
@@ -179,8 +174,7 @@ object ConfigOptions {
     val unitRepairCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST)
+                .get().getInt(UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
                 ?: DEFAULT_UNIT_REPAIR_COST
         }
@@ -191,8 +185,7 @@ object ConfigOptions {
     val itemRenameCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST)
+                .get().getInt(ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST)
                 .takeIf { it in ITEM_RENAME_COST_RANGE }
                 ?: DEFAULT_ITEM_RENAME_COST
         }
@@ -203,8 +196,7 @@ object ConfigOptions {
     val sacrificeIllegalCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
+                .get().getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
                 ?: DEFAULT_SACRIFICE_ILLEGAL_COST
         }
@@ -215,8 +207,7 @@ object ConfigOptions {
     val allowColorCode: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(ALLOW_COLOR_CODE, DEFAULT_ALLOW_COLOR_CODE)
+                .get().getBoolean(ALLOW_COLOR_CODE, DEFAULT_ALLOW_COLOR_CODE)
         }
 
     /**
@@ -225,8 +216,7 @@ object ConfigOptions {
     val allowHexadecimalColor: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR)
+                .get().getBoolean(ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR)
         }
 
     /**
@@ -240,8 +230,7 @@ object ConfigOptions {
     val permissionNeededForColor: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR)
+                .get().getBoolean(PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR)
         }
 
     /**
@@ -250,8 +239,7 @@ object ConfigOptions {
     val useOfColorCost: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST)
+                .get().getInt(USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST)
                 .takeIf { it in USE_OF_COLOR_COST_RANGE }
                 ?: DEFAULT_USE_OF_COLOR_COST
         }
@@ -263,8 +251,7 @@ object ConfigOptions {
         get() {
             return WorkPenaltyType.fromString(
                 ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getString(WORK_PENALTY_TYPE));
+                .get().getString(WORK_PENALTY_TYPE));
         }
 
     /**
@@ -273,8 +260,7 @@ object ConfigOptions {
     private val defaultEnchantLimit: Int
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
+                .get().getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
         }
 
     /**
@@ -283,8 +269,7 @@ object ConfigOptions {
     val debugLog: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
+                .get().getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
         }
 
     /**
@@ -293,8 +278,7 @@ object ConfigOptions {
     val verboseDebugLog: Boolean
         get() {
             return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
+                .get().getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
         }
 
     /**

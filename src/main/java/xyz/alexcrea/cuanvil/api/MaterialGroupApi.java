@@ -114,7 +114,7 @@ public class MaterialGroupApi {
     }
 
     private static void writeKnownGroup(@NotNull String groupType, @NotNull AbstractMaterialGroup group){
-        FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.acquiredWrite();
 
         String basePath = group.getName() + ".";
         Set<Material> materialSet = group.getNonGroupInheritedMaterials();
@@ -128,10 +128,11 @@ public class MaterialGroupApi {
             config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSEtToStringList(groupSet));
         }
 
+        ConfigHolder.ITEM_GROUP_HOLDER.releaseWrite();
     }
 
     private static void writeUnknownGroup(@NotNull AbstractMaterialGroup group) {
-        FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.acquiredWrite();
 
         String basePath = group.getName() + ".";
         EnumSet<Material> materials = group.getMaterials();
@@ -141,6 +142,7 @@ public class MaterialGroupApi {
             config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materials));
         }
 
+        ConfigHolder.ITEM_GROUP_HOLDER.releaseWrite();
     }
 
     public static List<String> materialSetToStringList(@NotNull Set<Material> materials){

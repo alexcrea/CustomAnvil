@@ -118,7 +118,8 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, this.now.configName());
+        holder.config.acquiredWrite().set(holder.configPath, this.now.configName());
+        holder.config.releaseWrite();
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);

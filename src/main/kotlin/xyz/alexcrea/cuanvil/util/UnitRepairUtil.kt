@@ -20,7 +20,7 @@ object UnitRepairUtil {
         other: ItemStack?
     ): Double? {
         if (other == null) return null
-        val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
+        val config = ConfigHolder.UNIT_REPAIR_HOLDER.get()
         // Get configuration section if exist
         val otherName = other.type.name.lowercase()
         var section = config.getConfigurationSection(otherName)

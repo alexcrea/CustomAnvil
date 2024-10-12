@@ -148,7 +148,8 @@ public class BoolSettingsGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, now);
+        holder.config.acquiredWrite().set(holder.configPath, now);
+        holder.config.releaseWrite();
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
@@ -208,7 +209,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
          * @return The configured value for the associated setting.
          */
         public boolean getConfiguredValue() {
-            return this.config.getConfig().getBoolean(this.configPath, this.defaultVal);
+            return this.config.get().getBoolean(this.configPath, this.defaultVal);
         }
 
         @Override

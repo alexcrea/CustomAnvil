@@ -10,7 +10,7 @@ import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 public class PluginSetDefault {
 
     public static void reAddMissingDefault(){
-        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
+        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.acquiredWrite();
 
         int nbSet = 0;
 
@@ -28,6 +28,8 @@ public class PluginSetDefault {
         nbSet+= trySetDefault(config, ConfigOptions.USE_OF_COLOR_COST, ConfigOptions.DEFAULT_USE_OF_COLOR_COST);
         nbSet+= trySetDefault(config, ConfigOptions.WORK_PENALTY_TYPE, WorkPenaltyType.DEFAULT.configName());
         nbSet+= trySetDefault(config, ConfigOptions.DEFAULT_LIMIT_PATH, ConfigOptions.DEFAULT_ENCHANT_LIMIT);
+
+        ConfigHolder.DEFAULT_CONFIG.releaseWrite();
 
         if(nbSet > 0){
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");

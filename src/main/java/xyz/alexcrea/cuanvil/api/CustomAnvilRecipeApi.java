@@ -41,19 +41,27 @@ public class CustomAnvilRecipeApi {
      * @return True if successful.
      */
     public static boolean addRecipe(@NotNull AnvilRecipeBuilder builder, boolean overrideDeleted){
-        FileConfiguration config = ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.CUSTOM_RECIPE_HOLDER.acquiredWrite();
         String name = builder.getName();
 
-        if(!overrideDeleted && ConfigHolder.CUSTOM_RECIPE_HOLDER.isDeleted(builder.getName())) return false;
-        if(config.contains(builder.getName())) return false;
+        if(!overrideDeleted && ConfigHolder.CUSTOM_RECIPE_HOLDER.isDeleted(builder.getName())) {
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.releaseWrite();
+            return false;
+        }
+        if(config.contains(builder.getName())) {
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.releaseWrite();
+            return false;
+        }
 
         if(builder.getName().contains(".")) {
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.releaseWrite();
             CustomAnvil.instance.getLogger().warning("Custom anvil recipe " + name + " contain \".\" in its name but should not. this recipe is ignored.");
             return false;
         }
 
         AnvilCustomRecipe recipe = builder.build();
         if(recipe == null){
+            ConfigHolder.CUSTOM_RECIPE_HOLDER.releaseWrite();
             CustomAnvil.instance.getLogger().warning("Custom anvil recipe " + name + " could not be parsed.");
             if(builder.getLeftItem() == null){
                 CustomAnvil.instance.getLogger().warning("It look like left item of the recipe is null.");
@@ -66,6 +74,7 @@ public class CustomAnvilRecipeApi {
 
         // Add to registry
         ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanAddNew(recipe);
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.releaseWrite();
 
         // Save to file
         recipe.saveToFile(false, false);

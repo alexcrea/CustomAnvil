@@ -169,12 +169,13 @@ public class EnchantmentApi {
      * @return Return false if override is false and a configuration exist. true otherwise.
      */
     public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override){
-        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
+        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.acquiredWrite();
         if(!override && config.contains(enchantment.getName())) return false;
 
         writeDefaultConfig(config, enchantment);
 
         prepareSaveTask();
+        ConfigHolder.DEFAULT_CONFIG.releaseWrite();
         return true;
     }
 

@@ -49,7 +49,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
 
     @Override
     protected ItemStack createItemForGeneric(Material material) {
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(material.name().toLowerCase());
+        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.get().getConfigurationSection(material.name().toLowerCase());
         String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
 
         if(material.isAir()){
@@ -77,7 +77,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
     protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
         ArrayList<Material> materials = new ArrayList<>();
 
-        for (String matName : ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getKeys(false)) {
+        for (String matName : ConfigHolder.UNIT_REPAIR_HOLDER.get().getKeys(false)) {
             Material mat = Material.getMaterial(matName.toUpperCase());
             if(mat != null){
                 materials.add(mat);

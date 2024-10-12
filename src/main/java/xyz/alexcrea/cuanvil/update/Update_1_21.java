@@ -14,7 +14,7 @@ public class Update_1_21 {
 
     public static void handleUpdate(){
         // Assume if version path is not null then it's 1.21
-        String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
+        String oldVersion = ConfigHolder.DEFAULT_CONFIG.get().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
         if(oldVersion != null){
             Version version = Version.fromString(oldVersion);
 
@@ -33,10 +33,10 @@ public class Update_1_21 {
     private static void doUpdate() {
         CustomAnvil.instance.getLogger().info("Updating config to support 1.21 ...");
 
-        FileConfiguration baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
-        FileConfiguration groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
-        FileConfiguration conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
-        FileConfiguration unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration baseConfig = ConfigHolder.DEFAULT_CONFIG.acquiredWrite();
+        FileConfiguration groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.acquiredWrite();
+        FileConfiguration conflictConfig = ConfigHolder.CONFLICT_HOLDER.acquiredWrite();
+        FileConfiguration unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.acquiredWrite();
 
         // Add mace to groups
         groupConfig.set("mace.type", "include");
@@ -84,10 +84,17 @@ public class Update_1_21 {
         // Set version string as 1.21
         baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, "1.21");
 
-        // Save
+        // Release write and save
+        ConfigHolder.DEFAULT_CONFIG.releaseWrite();
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
+
+        ConfigHolder.ITEM_GROUP_HOLDER.releaseWrite();
         ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true);
+
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
         ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
+
+        ConfigHolder.UNIT_REPAIR_HOLDER.releaseWrite();
         ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
 
         // imply reload of CONFLICT_HOLDER

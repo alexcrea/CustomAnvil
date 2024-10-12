@@ -62,7 +62,7 @@ public class UnitRepairApi {
      * @return true if successful.
      */
     public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value, boolean overrideDeleted){
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.get();
         String path = unit.name().toLowerCase() + "." + repairable.name().toLowerCase();
 
         if(!overrideDeleted && ConfigHolder.UNIT_REPAIR_HOLDER.isDeleted(path)) return false;
@@ -82,7 +82,7 @@ public class UnitRepairApi {
      * @return true if successful.
      */
     public static boolean setUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value){
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.acquiredWrite();
 
         String repairableName = repairable.name().toLowerCase();
         String path = unit.name().toLowerCase() + "." + repairableName;
@@ -100,6 +100,7 @@ public class UnitRepairApi {
             repairConfigGui.updateValueForGeneric(unit, true);
         }
 
+        ConfigHolder.UNIT_REPAIR_HOLDER.releaseWrite();
         return true;
     }
 
@@ -115,7 +116,7 @@ public class UnitRepairApi {
         String unitName = unit.name();
         String repairableName = repairable.name();
 
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.acquiredWrite();
         config.set(unitName.toLowerCase() + repairableName.toUpperCase(), null);
         config.set(unitName.toUpperCase() + repairableName.toLowerCase(), null);
         config.set(unitName.toUpperCase() + repairableName.toUpperCase(), null);
@@ -138,6 +139,7 @@ public class UnitRepairApi {
 
         } else lastValue = true;
 
+        ConfigHolder.UNIT_REPAIR_HOLDER.releaseWrite();
 
         // We only need to "delete" as the lower case to be counted as deleted
         ConfigHolder.UNIT_REPAIR_HOLDER.delete(unitName.toLowerCase() + repairableName.toLowerCase());
@@ -184,7 +186,7 @@ public class UnitRepairApi {
     public static List<Triple<Material, Material, Double>> getUnitRepairs(){
         List<Triple<Material, Material, Double>> mutableList = new ArrayList<>();
 
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.get();
         for (String unitKey : config.getKeys(false)) {
             // Test if config section exist
             if(!config.isConfigurationSection(unitKey)) continue;

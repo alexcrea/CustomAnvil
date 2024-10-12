@@ -62,7 +62,7 @@ class AnvilCustomRecipe(
         }
 
         fun getFromConfig(name: String): AnvilCustomRecipe? {
-            return getFromConfig(name, ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getConfigurationSection(name))
+            return getFromConfig(name, ConfigHolder.CUSTOM_RECIPE_HOLDER.unsafeGet().getConfigurationSection(name))
         }
     }
 
@@ -75,7 +75,7 @@ class AnvilCustomRecipe(
     }
 
     fun saveToFile(writeFile: Boolean, doBackup: Boolean){
-        val fileConfig = ConfigHolder.CUSTOM_RECIPE_HOLDER.config
+        val fileConfig = ConfigHolder.CUSTOM_RECIPE_HOLDER.acquiredWrite()
 
         fileConfig["$name.$EXACT_COUNT_CONFIG"] = exactCount
         //fileConfig.set("$name.$EXACT_LEFT_CONFIG", exactLeft)
@@ -86,7 +86,7 @@ class AnvilCustomRecipe(
         fileConfig["$name.$LEFT_ITEM_CONFIG"] = leftItem
         fileConfig["$name.$RIGHT_ITEM_CONFIG"] = rightItem
         fileConfig["$name.$RESULT_ITEM_CONFIG"] = resultItem
-
+        ConfigHolder.CUSTOM_RECIPE_HOLDER.releaseWrite()
 
         if (writeFile) {
             ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(doBackup)
@@ -99,28 +99,28 @@ class AnvilCustomRecipe(
     }
 
     fun updateFromFile(){
-        this.exactCount = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getBoolean(
+        this.exactCount = ConfigHolder.CUSTOM_RECIPE_HOLDER.get().getBoolean(
             "$name.$EXACT_COUNT_CONFIG",
             DEFAULT_EXACT_COUNT_CONFIG
         )
 
-        this.xpCostPerCraft = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getInt(
+        this.xpCostPerCraft = ConfigHolder.CUSTOM_RECIPE_HOLDER.get().getInt(
             "$name.$XP_COST_CONFIG",
             DEFAULT_XP_COST_CONFIG
         )
 
         // Update items
-        val leftItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        val leftItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.get().getItemStack(
             "$name.$LEFT_ITEM_CONFIG",
             DEFAULT_LEFT_ITEM_CONFIG
         )
 
-        this.rightItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        this.rightItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.get().getItemStack(
             "$name.$RIGHT_ITEM_CONFIG",
             DEFAULT_RIGHT_ITEM_CONFIG
         )
 
-        this.resultItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        this.resultItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.get().getItemStack(
             "$name.$RESULT_ITEM_CONFIG",
             DEFAULT_RESULT_ITEM_CONFIG
         )

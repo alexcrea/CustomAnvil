@@ -13,7 +13,7 @@ public class PluginUpdates {
     private static final String CONFIG_VERSION_PATH = "configVersion";
 
     public static void handlePluginUpdate(){
-        String versionString = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(CONFIG_VERSION_PATH);
+        String versionString = ConfigHolder.DEFAULT_CONFIG.get().getString(CONFIG_VERSION_PATH);
         Version current = versionString == null ? new Version(0) : Version.fromString(versionString);
 
         Set<ConfigHolder> toSave = new HashSet<>();
@@ -28,7 +28,9 @@ public class PluginUpdates {
 
     private static void finishConfiguration(@Nonnull String newVersion, @Nonnull Set<ConfigHolder> toSave) {
         CustomAnvil.instance.getLogger().info("Configuration file updated to " + newVersion);
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(CONFIG_VERSION_PATH, newVersion);
+
+        ConfigHolder.DEFAULT_CONFIG.acquiredWrite().set(CONFIG_VERSION_PATH, newVersion);
+        ConfigHolder.DEFAULT_CONFIG.releaseWrite();
 
         toSave.add(ConfigHolder.DEFAULT_CONFIG);
         for (ConfigHolder configHolder : toSave) {

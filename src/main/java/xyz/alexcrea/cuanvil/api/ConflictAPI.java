@@ -44,7 +44,7 @@ public class ConflictAPI {
      * @return True if successful.
      */
     public static boolean addConflict(@NotNull ConflictBuilder builder, boolean overrideDeleted){
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.get();
 
         // Test if conflict can be added
         if(!overrideDeleted && ConfigHolder.CONFLICT_HOLDER.isDeleted(builder.getName())) return false;
@@ -86,10 +86,11 @@ public class ConflictAPI {
      * @return True if successful.
      */
     public static boolean writeConflict(@NotNull ConflictBuilder builder, boolean updatePlanned){
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.acquiredWrite();
 
         String name = builder.getName();
         if(name.contains(".")) {
+            ConfigHolder.CONFLICT_HOLDER.releaseWrite();
             CustomAnvil.instance.getLogger().warning("Conflict " + name +" contain \".\" in its name but should not. this conflict is ignored.");
             logConflictOrigin(builder);
             return false;
@@ -107,6 +108,7 @@ public class ConflictAPI {
         prepareSaveTask();
         if(updatePlanned) prepareUpdateTask();
 
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
         return true;
     }
 

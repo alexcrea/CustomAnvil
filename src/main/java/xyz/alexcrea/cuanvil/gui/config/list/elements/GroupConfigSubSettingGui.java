@@ -286,7 +286,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             groupNames[index++] = otherGroup.getName();
         }
 
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(group.getName()+"."+ItemGroupManager.GROUP_LIST_PATH, groupNames);
+        ConfigHolder.ITEM_GROUP_HOLDER.acquiredWrite().set(group.getName()+"."+ItemGroupManager.GROUP_LIST_PATH, groupNames);
+        ConfigHolder.ITEM_GROUP_HOLDER.releaseWrite();
 
         // Try to update referencing group. kind of expensive operation in some case.
         updateDirectReferencingGroups(group);
@@ -330,7 +331,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             groupNames[index++] = otherGroup.name().toLowerCase();
         }
 
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName()+"."+ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
+        ConfigHolder.ITEM_GROUP_HOLDER.acquiredWrite().set(this.group.getName()+"."+ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
+        ConfigHolder.ITEM_GROUP_HOLDER.releaseWrite();
 
         // update referencing groups
         updateDirectReferencingGroups(this.group);

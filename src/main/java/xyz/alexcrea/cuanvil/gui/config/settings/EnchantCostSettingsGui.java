@@ -7,6 +7,7 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -225,8 +226,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath + ITEM_PATH, now);
-        holder.config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
+        FileConfiguration config = holder.config.acquiredWrite();
+        config.set(holder.configPath + ITEM_PATH, now);
+        config.set(holder.configPath + BOOK_PATH, nowBook);
+        holder.config.releaseWrite();
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);

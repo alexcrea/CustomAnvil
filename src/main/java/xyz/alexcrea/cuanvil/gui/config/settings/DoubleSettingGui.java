@@ -319,10 +319,12 @@ public class DoubleSettingGui extends AbstractSettingGui {
             if(this.holder.config instanceof ConfigHolder.DeletableResource deletableResource){
                 deletableResource.delete(this.holder.configPath);
             }else{
-                this.holder.config.getConfig().set(this.holder.configPath, null);
+                this.holder.config.acquiredWrite().set(this.holder.configPath, null);
+                holder.config.releaseWrite();
             }
         }else{
-            this.holder.config.getConfig().set(this.holder.configPath, now.doubleValue());
+            this.holder.config.acquiredWrite().set(this.holder.configPath, now.doubleValue());
+            holder.config.releaseWrite();
         }
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
@@ -432,7 +434,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
          * @return The configured value for the associated setting.
          */
         public BigDecimal getConfiguredValue() {
-            ConfigurationSection section = this.config.getConfig();
+            ConfigurationSection section = this.config.get();
             if(section.isDouble(this.configPath)){
                 return BigDecimal.valueOf(section.getDouble(this.configPath)).setScale(2, RoundingMode.HALF_UP);
             }

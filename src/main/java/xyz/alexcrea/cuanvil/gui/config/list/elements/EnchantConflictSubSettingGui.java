@@ -147,7 +147,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     @Override
     public void updateGuiValues() {
         // update value from config to conflict
-        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.toString()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
+        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.get()
+                .getInt(this.enchantConflict.toString()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
         this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
 
         // Parent should call updateLocal with this call
@@ -260,7 +261,9 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         for (CAEnchantment enchantment : enchantments) {
             enchantKeys[index++] = enchantment.getKey().toString();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict + ".enchantments", enchantKeys);
+
+        ConfigHolder.CONFLICT_HOLDER.acquiredWrite().set(enchantConflict + ".enchantments", enchantKeys);
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
 
         try {
             updateGuiValues();
@@ -304,7 +307,9 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         for (AbstractMaterialGroup group : groups) {
             groupsNames[index++] = group.getName();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict + ".notAffectedGroups", groupsNames);
+
+        ConfigHolder.CONFLICT_HOLDER.acquiredWrite().set(this.enchantConflict + ".notAffectedGroups", groupsNames);
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
 
         try {
             updateGuiValues();

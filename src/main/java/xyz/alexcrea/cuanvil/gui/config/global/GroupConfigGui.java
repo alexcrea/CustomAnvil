@@ -87,8 +87,9 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupCo
         ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         if(manager.getGroupMap().containsKey(name)) return null;
 
-        ConfigurationSection config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
+        ConfigurationSection config = ConfigHolder.ITEM_GROUP_HOLDER.acquiredWrite();
         config.set(name+"."+ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
 
         return (IncludeGroup) manager.createGroup(config, name);
     }

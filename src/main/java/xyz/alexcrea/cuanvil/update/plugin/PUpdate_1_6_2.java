@@ -14,7 +14,7 @@ public class PUpdate_1_6_2 {
     private static final String[] toUpdate = new String[] {"restriction_density", "restriction_breach", "restriction_wind_burst"};
 
     public static void handleUpdate(@Nonnull Set<ConfigHolder> toSave) {
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.acquiredWrite();
 
         boolean conflictUpdated = false;
         for (String restriction : toUpdate) {
@@ -34,6 +34,7 @@ public class PUpdate_1_6_2 {
                 conflictUpdated = true;
             }
         }
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
 
         if(conflictUpdated){
             toSave.add(ConfigHolder.CONFLICT_HOLDER);
@@ -43,13 +44,14 @@ public class PUpdate_1_6_2 {
         }
 
         // Then we add the unit repair
-        config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        config = ConfigHolder.UNIT_REPAIR_HOLDER.acquiredWrite();
         String unitRepairPath = "breeze_rod.mace";
         if(!config.isConfigurationSection(unitRepairPath)){
             config.set(unitRepairPath, 0.25);
 
             toSave.add(ConfigHolder.UNIT_REPAIR_HOLDER);
         }
+        ConfigHolder.UNIT_REPAIR_HOLDER.releaseWrite();
 
     }
 

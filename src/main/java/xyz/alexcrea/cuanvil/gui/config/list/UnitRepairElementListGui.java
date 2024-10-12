@@ -83,7 +83,9 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
                         String materialName = type.name().toLowerCase();
 
                         // Add new material
-                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.name().toLowerCase() + "." + materialName,0.25);
+                        ConfigHolder.UNIT_REPAIR_HOLDER.acquiredWrite()
+                                .set(parentMaterial.name().toLowerCase() + "." + materialName,0.25);
+                        ConfigHolder.UNIT_REPAIR_HOLDER.releaseWrite();
 
                         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
                             ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
@@ -143,7 +145,8 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
             return keys;
         }
 
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(parentMaterial.name().toLowerCase());
+        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.get()
+                .getConfigurationSection(parentMaterial.name().toLowerCase());
         if(materialSection == null){
             return keys;
         }

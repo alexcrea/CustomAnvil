@@ -54,10 +54,11 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         // save empty conflict in config
         String[] emptyStringArray = new String[0];
 
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.acquiredWrite();
         config.set(name + ".enchantments", emptyStringArray);
         config.set(name + ".notAffectedGroups", emptyStringArray);
         config.set(name + ".maxEnchantmentBeforeConflict", 0);
+        ConfigHolder.CONFLICT_HOLDER.releaseWrite();
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);

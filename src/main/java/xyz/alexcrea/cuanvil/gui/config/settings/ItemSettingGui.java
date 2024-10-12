@@ -146,7 +146,8 @@ public class ItemSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, this.now);
+        holder.config.acquiredWrite().set(holder.configPath, this.now);
+        holder.config.releaseWrite();
 
         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
@@ -211,7 +212,7 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @return The configured value for the associated setting.
          */
         public ItemStack getConfiguredValue() {
-            return this.config.getConfig().getItemStack(this.configPath, this.defaultVal);
+            return this.config.get().getItemStack(this.configPath, this.defaultVal);
         }
 
         @NotNull
