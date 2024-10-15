@@ -59,6 +59,9 @@ Officially supported by Custom Anvil but still experimental. Automatic configura
 Officially supported by Custom Anvil but still experimental. Need to use /anvilconfigreload or a server restart to add newly added enchantment. 
 Use EcoEnchant restriction system by default.
 
+- [ExcellentEnchants](https://www.spigotmc.org/resources/excellentenchants-%E2%AD%90-75-vanilla-like-enchantments.61693/):
+Officially supported but still experimental. use ExcellentEnchants item type.
+
 Here is a list of supported anvil mechanic plugins with support status:
 - [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/)
 Officially supported by Custom Anvil but still experimental. Mostly use Custom Anvil basic XP settings. (version >= 5.4.0)
