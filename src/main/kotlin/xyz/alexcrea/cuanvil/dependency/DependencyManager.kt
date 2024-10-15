@@ -23,6 +23,8 @@ object DependencyManager {
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
+
     var disenchantmentCompatibility: DisenchantmentDependency? = null
 
     fun loadDependency(){
@@ -53,6 +55,12 @@ object DependencyManager {
             ecoEnchantCompatibility!!.disableAnvilListener()
         }
 
+        // Excellent Enchants dependency
+        if(pluginManager.isPluginEnabled("ExcellentEnchants")){
+            excellentEnchantsCompatibility = ExcellentEnchantsDependency()
+            excellentEnchantsCompatibility!!.redirectListeners()
+        }
+
         // Disenchantment dependency
         if(pluginManager.isPluginEnabled("Disenchantment")){
             disenchantmentCompatibility = DisenchantmentDependency()
@@ -69,6 +77,7 @@ object DependencyManager {
     fun registerEnchantments() {
         enchantmentSquaredCompatibility?.registerEnchantments()
         ecoEnchantCompatibility?.registerEnchantments()
+        excellentEnchantsCompatibility?.registerEnchantments()
 
     }
 
@@ -84,8 +93,11 @@ object DependencyManager {
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent): Boolean {
         var bypass = false
 
+        // Test if disenchantment used special prepare anvil
         if(disenchantmentCompatibility?.testPrepareAnvil(event) == true) bypass = true
 
+        // Test excellent enchantments used special prepare anvil
+        if(!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
 
         // Test if the inventory is a gui(version specific)
         if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
@@ -96,7 +108,11 @@ object DependencyManager {
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         var bypass = false
 
+        // Test if disenchantment used special event click
         if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
+
+        // Test if disenchantment used special event click
+        if(!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
 
         // Test if the inventory is a gui(version specific)
         if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true

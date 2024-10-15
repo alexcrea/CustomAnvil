@@ -36,6 +36,10 @@ dependencies {
     compileOnly("com.willfp:EcoEnchants:12.5.1")
     compileOnly("com.willfp:eco:6.70.1")
 
+    // ExcellentEnchants
+    compileOnly(files("libs/nightcore-2.6.4.jar"))
+    compileOnly(files("libs/ExcellentEnchants-4.2.2.jar"))
+
     // Disenchantment
     compileOnly("cz.kominekjan:Disenchantment:v5.4.0")
 
