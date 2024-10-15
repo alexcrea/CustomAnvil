@@ -13,7 +13,10 @@ import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
+import xyz.alexcrea.cuanvil.listener.AnvilCloseListener
+import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
+import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.Update_1_21
 import xyz.alexcrea.cuanvil.update.plugin.PluginUpdates
@@ -110,7 +113,9 @@ class CustomAnvil : JavaPlugin() {
         DependencyManager.loadDependency()
 
         // Register anvil events
-        server.pluginManager.registerEvents(AnvilEventListener(DependencyManager.packetManager), this)
+        server.pluginManager.registerEvents(PrepareAnvilListener(), this)
+        server.pluginManager.registerEvents(AnvilResultListener(), this)
+        server.pluginManager.registerEvents(AnvilCloseListener(DependencyManager.packetManager), this)
 
         // Load metrics
         Metrics(this, bstatsPluginId)
