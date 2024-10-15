@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -238,72 +240,44 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     }
 
     /**
-     * Create an int setting factory from setting's parameters.
-     *
-     * @param title          The title of the gui.
-     * @param parent         Parent gui to go back when completed.
-     * @param config         Configuration holder of this setting.
-     * @param configPath     Configuration path of this setting.
-     * @param displayLore    Gui display item lore.
-     * @param min            Minimum value of this setting.
-     * @param max            Maximum value of this setting.
-     * @param defaultItemVal Default item value if not found on the config.
-     * @param defaultBookVal Default book value if not found on the config.
-     * @param steps          List of step the value can increment/decrement.
-     *                       List's size should be between 1 (included) and 3 (included).
-     *                       it is visually preferable to have an odd number of step.
-     *                       If step only contain 1 value, no step item should be displayed.
-     * @return A factory for an enchant cost setting gui.
-     */
-    public static EnchantCostSettingFactory enchantCostFactory(
-            @NotNull String title, @NotNull ValueUpdatableGui parent,
-            @NotNull ConfigHolder config, @NotNull String configPath,
-            @Nullable List<String> displayLore,
-            int min, int max, int defaultItemVal, int defaultBookVal,
-            int... steps) {
-        return new EnchantCostSettingFactory(
-                title, parent,
-                configPath, config,
-                displayLore,
-                min, max, defaultItemVal, defaultBookVal, steps);
-    }
-
-    /**
      * A factory for an enchantment cost setting gui that hold setting's information.
      */
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
         int defaultBookVal;
+        @NotNull CAEnchantment enchantment;
 
         /**
          * Constructor for an enchantment cost setting gui factory.
          *
-         * @param title          The title of the gui.
-         * @param parent         Parent gui to go back when completed.
-         * @param configPath     Configuration path of this setting.
-         * @param config         Configuration holder of this setting.
-         * @param displayLore    Gui display item lore.
-         * @param min            Minimum value of this setting.
-         * @param max            Maximum value of this setting.
-         * @param defaultItemVal Default item value if not found on the config.
-         * @param defaultBookVal Default book value if not found on the config.
-         * @param steps          List of step the value can increment/decrement.
-         *                       List's size should be between 1 (included) and 3 (included).
-         *                       it is visually preferable to have an odd number of step.
-         *                       If step only contain 1 value, no step item should be displayed.
+         * @param title       The title of the gui.
+         * @param parent      Parent gui to go back when completed.
+         * @param configPath  Configuration path of this setting.
+         * @param config      Configuration holder of this setting.
+         * @param displayLore Gui display item lore.
+         * @param min         Minimum value of this setting.
+         * @param max         Maximum value of this setting.
+         * @param enchantment Enchantment to change the cost to
+         * @param steps       List of step the value can increment/decrement.
+         *                    List's size should be between 1 (included) and 3 (included).
+         *                    it is visually preferable to have an odd number of step.
+         *                    If step only contain 1 value, no step item should be displayed.
          */
-        protected EnchantCostSettingFactory(
+        public EnchantCostSettingFactory(
                 @NotNull String title, ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
                 @Nullable List<String> displayLore,
-                int min, int max, int defaultItemVal, int defaultBookVal,
-                int... steps) {
+                @NotNull CAEnchantment enchantment,
+                int min, int max, int... steps) {
 
             super(title, parent,
                     configPath, config,
                     displayLore,
-                    min, max, defaultItemVal, steps);
-            this.defaultBookVal = defaultBookVal;
+                    min, max, enchantment.defaultRarity().getItemValue(),
+                    steps);
+
+            this.defaultBookVal = enchantment.defaultRarity().getBookValue();
+            this.enchantment = enchantment;
         }
 
         /**
@@ -311,14 +285,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          */
         @Override
         public int getConfiguredValue() {
-            return this.config.getConfig().getInt(this.configPath + ITEM_PATH, this.defaultVal);
+            return ConfigOptions.INSTANCE.enchantmentValue(enchantment, false);
         }
 
         /**
          * @return The configured value for the enchant setting book value.
          */
         public int getConfiguredBookValue() {
-            return this.config.getConfig().getInt(this.configPath + BOOK_PATH, this.defaultBookVal);
+            return ConfigOptions.INSTANCE.enchantmentValue(enchantment, true);
         }
 
         @Override

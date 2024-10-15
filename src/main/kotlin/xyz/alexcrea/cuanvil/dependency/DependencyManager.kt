@@ -6,6 +6,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
+import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
 import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
@@ -17,8 +19,12 @@ object DependencyManager {
     var isFolia: Boolean = false
     lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManager
+    var externGuiTester: ExternGuiTester? = null
+
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
+
     var disenchantmentCompatibility: DisenchantmentDependency? = null
 
     fun loadDependency(){
@@ -35,6 +41,7 @@ object DependencyManager {
         // Packet Manager
         val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
         packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
+        externGuiTester = GuiTesterSelector.selectGuiTester
 
         // Enchantment Squared dependency
         if(pluginManager.isPluginEnabled("EnchantsSquared")){
@@ -46,6 +53,12 @@ object DependencyManager {
         if(pluginManager.isPluginEnabled("EcoEnchants")){
             ecoEnchantCompatibility = EcoEnchantDependency(pluginManager.getPlugin("EcoEnchants")!!)
             ecoEnchantCompatibility!!.disableAnvilListener()
+        }
+
+        // Excellent Enchants dependency
+        if(pluginManager.isPluginEnabled("ExcellentEnchants")){
+            excellentEnchantsCompatibility = ExcellentEnchantsDependency()
+            excellentEnchantsCompatibility!!.redirectListeners()
         }
 
         // Disenchantment dependency
@@ -64,6 +77,7 @@ object DependencyManager {
     fun registerEnchantments() {
         enchantmentSquaredCompatibility?.registerEnchantments()
         ecoEnchantCompatibility?.registerEnchantments()
+        excellentEnchantsCompatibility?.registerEnchantments()
 
     }
 
@@ -79,7 +93,14 @@ object DependencyManager {
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent): Boolean {
         var bypass = false
 
+        // Test if disenchantment used special prepare anvil
         if(disenchantmentCompatibility?.testPrepareAnvil(event) == true) bypass = true
+
+        // Test excellent enchantments used special prepare anvil
+        if(!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
+
+        // Test if the inventory is a gui(version specific)
+        if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
         return bypass
     }
@@ -87,7 +108,14 @@ object DependencyManager {
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         var bypass = false
 
+        // Test if disenchantment used special event click
         if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
+
+        // Test if disenchantment used special event click
+        if(!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
+
+        // Test if the inventory is a gui(version specific)
+        if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
         return bypass
     }

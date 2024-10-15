@@ -41,6 +41,8 @@ object ConfigOptions {
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
+    const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
+
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
@@ -109,6 +111,9 @@ object ConfigOptions {
 
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
+
+    // Default max before merge disabled (negative mean enabled)
+    const val DEFAULT_MAX_BEFORE_MERGE_DISABLED = -1;
 
     // -------------
     // Get methods
@@ -296,21 +301,28 @@ object ConfigOptions {
      * Get the given [enchantment]'s limit
      */
     fun enchantLimit(enchantment: CAEnchantment): Int {
-        return enchantLimit(enchantment.enchantmentName)
+        // Test namespace
+        var limit = enchantLimit(enchantment.key.toString())
+        if(limit != null) return limit;
+
+        // Test legacy (name only)
+        limit = enchantLimit(enchantment.enchantmentName)
+        if(limit != null) return limit;
+
+        // get default (and test old legacy if present)
+        return getDefaultLevel(enchantment.enchantmentName)
     }
 
     /**
      * Get the given [enchantmentName]'s limit
      */
-    private fun enchantLimit(enchantmentName: String): Int {
-        val default = getDefaultLevel(enchantmentName)
+    private fun enchantLimit(enchantmentName: String): Int? {
 
         val path = "${ENCHANT_LIMIT_ROOT}.$enchantmentName"
         return CustomAnvil.instance
             .config
-            .getInt(path, default)
+            .getInt(path, ENCHANT_LIMIT_RANGE.first-1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
-            ?: default
     }
 
     /**
@@ -319,7 +331,9 @@ object ConfigOptions {
     private fun getDefaultLevel(enchantmentName: String, // compatibility with 1.20.5. TODO better update system
         ) : Int {
         if(enchantmentName == "sweeping_edge"){
-            return enchantLimit("sweeping")
+            val limit =  enchantLimit("sweeping")
+            if(limit != null) return limit
+
         }
         return defaultEnchantLimit
     }
@@ -332,7 +346,17 @@ object ConfigOptions {
         enchantment: CAEnchantment,
         isFromBook: Boolean
     ): Int {
-        return enchantmentValue(enchantment.enchantmentName, isFromBook)
+        // Test namespace
+        var limit = enchantmentValue(enchantment.key.toString(), isFromBook)
+        if(limit != null) return limit;
+
+        // Test legacy (name only)
+        limit = enchantmentValue(enchantment.enchantmentName, isFromBook)
+        if(limit != null) return limit;
+
+        // get default (and test old legacy if present)
+        return getDefaultValue(enchantment, isFromBook)
+
     }
 
     /**
@@ -342,36 +366,76 @@ object ConfigOptions {
     private fun enchantmentValue(
         enchantmentName: String,
         isFromBook: Boolean
-    ): Int {
-        val default = getDefaultValue(enchantmentName, isFromBook)
-
+    ): Int? {
         val typeKey = if (isFromBook) KEY_BOOK else KEY_ITEM
         val path = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$typeKey"
         return CustomAnvil.instance
             .config
-            .getInt(path, default)
+            .getInt(path, DEFAULT_ENCHANT_VALUE - 1)
             .takeIf { it >= DEFAULT_ENCHANT_VALUE }
-            ?: DEFAULT_ENCHANT_VALUE
     }
 
     /**
      * Get default value if enchantment do not exist on config
      */
-    private fun getDefaultValue(enchantmentName: String, // compatibility with 1.20.5. TODO better update system
+    private fun getDefaultValue(enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
                                 isFromBook: Boolean) : Int {
-        if(enchantmentName == "sweeping_edge"){
-            return enchantmentValue("sweeping", isFromBook)
+
+        val enchantmentName = enchantment.key.toString()
+        if(enchantmentName == "minecraft:sweeping_edge"){
+            var limit = enchantmentValue("minecraft:sweeping", isFromBook)
+            if(limit != null) return limit
+            
+            // legacy name
+            limit = enchantmentValue("sweeping", isFromBook)
+            if(limit != null) return limit
         }
 
-        val enchantment = CAEnchantment.getByName(enchantmentName)
-        if(enchantment != null){
-            val rarity = enchantment.defaultRarity()
+        val rarity = enchantment.defaultRarity()
+        return if(isFromBook)
+            rarity.bookValue
+        else
+            rarity.itemValue
+    }
 
-            return if(isFromBook) rarity.bookValue
-            else rarity.itemValue
+    /**
+     * Get the given [enchantmentName]'s level before merge is disabled
+     * a negative value would mean never disabled
+     */
+    fun maxBeforeMergeDisabled(enchantment: CAEnchantment): Int {
+        val key = enchantment.key.toString()
+        var value = maxBeforeMergeDisabled(key)
+        if(value != null) return value
+
+        // Legacy name
+        val legacy = enchantment.enchantmentName
+        value = maxBeforeMergeDisabled(legacy)
+        if(value != null) return value
+
+        if(key == "minecraft:sweeping_edge"){
+            value = maxBeforeMergeDisabled("minecraft:sweeping")
+            if(value != null) return value
+
+            // legacy name of legacy enchantment name
+            value = maxBeforeMergeDisabled("sweeping")
+            if(value != null) return value
         }
 
-        return DEFAULT_ENCHANT_VALUE
+        return DEFAULT_MAX_BEFORE_MERGE_DISABLED
+    }
+
+    /**
+     * Get the given [enchantmentName]'s level before merge is disabled
+     * a negative value would mean never disabled
+     */
+    private fun maxBeforeMergeDisabled(enchantmentName: String) : Int? {
+        // find if set
+        val path = "${DISABLE_MERGE_OVER_ROOT}.$enchantmentName"
+
+        return CustomAnvil.instance
+            .config
+            .getInt(path, ENCHANT_LIMIT_RANGE.min() - 1)
+            .takeIf { it in ENCHANT_LIMIT_RANGE }
     }
 
 }

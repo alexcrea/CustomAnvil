@@ -30,7 +30,7 @@ public class MainConfigGui extends ChestGui {
     public void init(PacketManager packetManager) {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "012304567",
+                "012345678",
                 "Q00000000"
         );
         PatternPane pane = new PatternPane(0, 0, 9, 3, pattern);
@@ -62,6 +62,18 @@ public class MainConfigGui extends ChestGui {
         GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, new EnchantLimitConfigGui());
         pane.bindItem('2', enchantLimitItem);
 
+        // enchant level limit item
+        ItemStack enchantMergeLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemMeta enchantMergeLimitMeta = enchantMergeLimitItemstack.getItemMeta();
+        assert enchantMergeLimitMeta != null;
+
+        enchantMergeLimitMeta.setDisplayName("§aEnchantment Merge Limit");
+        enchantMergeLimitMeta.setLore(Collections.singletonList("§7Click here to open enchantment merge limit menu"));
+        enchantMergeLimitItemstack.setItemMeta(enchantMergeLimitMeta);
+
+        GuiItem enchantMergeLimitItem = GuiGlobalItems.goToGuiItem(enchantMergeLimitItemstack, new EnchantMergeLimitConfigGui());
+        pane.bindItem('3', enchantMergeLimitItem);
+
         // enchant cost item
         ItemStack enchantCostItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
         ItemMeta enchantCostMeta = enchantCostItemstack.getItemMeta();
@@ -72,7 +84,7 @@ public class MainConfigGui extends ChestGui {
         enchantCostItemstack.setItemMeta(enchantCostMeta);
 
         GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, new EnchantCostConfigGui());
-        pane.bindItem('3', enchantCostItem);
+        pane.bindItem('4', enchantCostItem);
 
         // Enchantment Conflicts item
         ItemStack enchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
@@ -84,7 +96,7 @@ public class MainConfigGui extends ChestGui {
         enchantConflictItemstack.setItemMeta(enchantConflictMeta);
 
         GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, EnchantConflictGui.getInstance());
-        pane.bindItem('4', enchantConflictItem);
+        pane.bindItem('5', enchantConflictItem);
 
         // Group config items
         ItemStack groupItemstack = new ItemStack(Material.CHEST);
@@ -97,7 +109,7 @@ public class MainConfigGui extends ChestGui {
 
         GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.getInstance());
 
-        pane.bindItem('5', groupConfigItem);
+        pane.bindItem('6', groupConfigItem);
 
         // Unit repair item
         ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);
@@ -109,7 +121,7 @@ public class MainConfigGui extends ChestGui {
         unirRepairItemstack.setItemMeta(unitRepairMeta);
 
         GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.getInstance());
-        pane.bindItem('6', unitRepairItem);
+        pane.bindItem('7', unitRepairItem);
 
         // Custom recipe item
         ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);
@@ -121,7 +133,7 @@ public class MainConfigGui extends ChestGui {
         customRecipeItemstack.setItemMeta(customRecipeMeta);
 
         GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.getInstance());
-        pane.bindItem('7', customRecipeItem);
+        pane.bindItem('8', customRecipeItem);
 
         // quit item
         ItemStack quitItemstack = new ItemStack(Material.BARRIER);

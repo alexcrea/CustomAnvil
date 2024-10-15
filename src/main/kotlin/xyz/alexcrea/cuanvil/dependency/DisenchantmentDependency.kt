@@ -4,13 +4,13 @@ import cz.kominekjan.disenchantment.events.DisenchantClickEvent
 import cz.kominekjan.disenchantment.events.DisenchantEvent
 import cz.kominekjan.disenchantment.events.ShatterClickEvent
 import cz.kominekjan.disenchantment.events.ShatterEvent
-import io.delilaheve.AnvilEventListener
 import io.delilaheve.CustomAnvil
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
+import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 
 class DisenchantmentDependency {
@@ -26,7 +26,6 @@ class DisenchantmentDependency {
     private lateinit var itemClickEvent: DisenchantClickEvent
 
     fun redirectListeners() {
-
         val toUnregister = ArrayList<RegisteredListener>()
         // get required PrepareAnvilEvent listener
         for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
@@ -96,7 +95,7 @@ class DisenchantmentDependency {
     }
 
     fun testAnvilResult(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
-        val previousResultSlot = inventory.getItem(AnvilEventListener.ANVIL_OUTPUT_SLOT)?.clone()
+        val previousResultSlot = inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)?.clone()
 
         // Test event if change the result
         itemClickEvent.onDisenchantmentClickEvent(event)
@@ -115,7 +114,7 @@ class DisenchantmentDependency {
     }
 
     private fun testAnvilInventoryChange(inventory: AnvilInventory, previous: ItemStack?): Boolean {
-        val currentResult = inventory.getItem(AnvilEventListener.ANVIL_OUTPUT_SLOT)
+        val currentResult = inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)
 
         return currentResult == previous
     }

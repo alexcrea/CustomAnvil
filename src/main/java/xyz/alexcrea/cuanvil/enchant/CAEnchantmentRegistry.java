@@ -22,7 +22,7 @@ public class CAEnchantmentRegistry {
 
     // Register enchantment functions
     private final HashMap<NamespacedKey, CAEnchantment> byKeyMap;
-    private final HashMap<String, CAEnchantment> byNameMap;
+    private final HashMap<String, List<CAEnchantment>> byNameMap;
 
     private final SortedSet<CAEnchantment> nameSortedEnchantments;
 
@@ -62,6 +62,8 @@ public class CAEnchantmentRegistry {
 
     }
 
+    private static boolean hasWarnedRegistering = false;
+
     /**
      * Can be used to register new enchantment.
      * <p>
@@ -73,19 +75,25 @@ public class CAEnchantmentRegistry {
     public boolean register(@NotNull CAEnchantment enchantment){
         if(byKeyMap.containsKey(enchantment.getKey())){
             CustomAnvil.instance.getLogger().log(Level.WARNING,
-                    "Duplicate registered enchantment. This should NOT happen.",
+                    "Duplicate registered enchantment. This should NOT happen any time.\n" +
+                    "If you are a custom anvil developer. You maybe custom anvil detected your enchantment as a bukkit enchantment. " +
+                            "maybe remove enchantment with the same key before registering yours",
                     new IllegalStateException(enchantment.getKey()+" enchantment was already registered"));
             return false;
         }
-        if(byNameMap.containsKey(enchantment.getName())){
+
+        if((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())){
+            hasWarnedRegistering = true;
+
             CustomAnvil.instance.getLogger().log(Level.WARNING,
-                    "Duplicate registered enchantment name. There will have issue. " +
-                            "\nI hope this do not happen to you on a production server. If it do, there is probably a plugin trying to register an enchantment with the same name than another one",
-                    new IllegalStateException(enchantment.getKey()+" enchantment name was already registered"));
+                    "Duplicate registered enchantment name. Please check that configuration is using namespace.");
         }
 
         byKeyMap.put(enchantment.getKey(), enchantment);
-        byNameMap.put(enchantment.getName(), enchantment);
+
+        byNameMap.putIfAbsent(enchantment.getName(), new ArrayList<>());
+        byNameMap.get(enchantment.getName()).add(enchantment);
+
         nameSortedEnchantments.add(enchantment);
 
         if(!enchantment.isGetOptimised()){
@@ -112,7 +120,7 @@ public class CAEnchantmentRegistry {
     public boolean unregister(@Nullable CAEnchantment enchantment){
         if(enchantment == null) return false;
         byKeyMap.remove(enchantment.getKey());
-        byNameMap.remove(enchantment.getName());
+        byNameMap.get(enchantment.getName()).remove(enchantment);
 
         nameSortedEnchantments.remove(enchantment);
 
@@ -135,10 +143,26 @@ public class CAEnchantmentRegistry {
      * Gets the enchantment by the provided name.
      * @param name Name to fetch.
      * @return Registered enchantment. null if absent.
+     *
+     * @deprecated use {@link #getListByName(String)}
      */
+    @Deprecated(since = "1.6.3")
     @Nullable
     public CAEnchantment getByName(@NotNull String name){
-        return byNameMap.get(name);
+        List<CAEnchantment> enchantments = getListByName(name);
+        if(enchantments.isEmpty()) return null;
+
+        return enchantments.get(0);
+    }
+
+    /**
+     * Gets list of enchantment using the provided name.
+     * @param name Name to fetch.
+     * @return List of registered enchantment.
+     */
+    @NotNull
+    public List<CAEnchantment> getListByName(@NotNull String name){
+        return byNameMap.getOrDefault(name, Collections.emptyList());
     }
 
     /**

@@ -30,9 +30,9 @@ class EnchantConflictManager {
         const val DEFAULT_GROUP_NAME = "joinedGroup"
 
         // 1.20.5 compatibility TODO better update system
-        private val SWEEPING_EDGE_ENCHANT =
+        private val SWEEPING_EDGE_ENCHANT = Collections.singletonList<CAEnchantment>(
             CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
-            CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
+            CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key))
 
     }
 
@@ -94,14 +94,14 @@ class EnchantConflictManager {
         // Read and add enchantment to conflict
         val enchantList = section.getStringList(ENCH_LIST_PATH)
         for (enchantName in enchantList) {
-            val enchant = getEnchantByName(enchantName)
-            if (enchant == null) {
+            val enchants = getEnchantByIdentifier(enchantName)
+            if (enchants.isEmpty()) {
                 if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
                     CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
                 }
                 continue
             }
-            conflict.addEnchantment(enchant)
+            conflict.addEnchantments(enchants)
         }
         if (conflict.getEnchants().isEmpty()) {
             if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
@@ -112,16 +112,23 @@ class EnchantConflictManager {
         return conflict
     }
 
-    private fun getEnchantByName(enchantName: String): CAEnchantment? {
+    private fun getEnchantByIdentifier(enchantName: String): List<CAEnchantment> {
+        val key = NamespacedKey.fromString(enchantName)
+        if(key != null){
+            val enchantment = CAEnchantment.getByKey(key)
+            if(enchantment != null) return Collections.singletonList(enchantment)
+
+        }
 
         // Temporary solution for 1.20.5
         when(enchantName){
-            "sweeping", "sweeping_edge" -> {
+            "minecraft:sweeping", "sweeping",
+            "minecraft:sweeping_edge", "sweeping_edge" -> {
                 return SWEEPING_EDGE_ENCHANT
             }
         }
 
-        return CAEnchantment.getByName(enchantName)
+        return CAEnchantment.getListByName(enchantName)
     }
 
 

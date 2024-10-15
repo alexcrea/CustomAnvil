@@ -15,6 +15,9 @@ class EnchantConflictGroup(
     fun addEnchantment(enchant: CAEnchantment) {
         enchantments.add(enchant)
     }
+    fun addEnchantments(enchants: List<CAEnchantment>) {
+        enchantments.addAll(enchants)
+    }
 
     fun allowed(enchants: Set<CAEnchantment>, mat: Material): Boolean {
         if (enchantments.size < minBeforeBlock) {

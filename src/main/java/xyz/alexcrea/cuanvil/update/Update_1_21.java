@@ -45,13 +45,13 @@ public class Update_1_21 {
         addToStringList(groupConfig, "can_unbreak.groups", "mace");
 
         // Add new enchant conflicts
-        addToStringList(conflictConfig, "restriction_density.enchantments", "density");
+        addToStringList(conflictConfig, "restriction_density.enchantments", "minecraft:density");
         addToStringList(conflictConfig, "restriction_density.notAffectedGroups", "mace", "enchanted_book");
 
-        addToStringList(conflictConfig, "restriction_breach.enchantments", "breach");
+        addToStringList(conflictConfig, "restriction_breach.enchantments", "minecraft:breach");
         addToStringList(conflictConfig, "restriction_breach.notAffectedGroups", "mace", "enchanted_book");
 
-        addToStringList(conflictConfig, "restriction_wind_burst.enchantments", "wind_burst");
+        addToStringList(conflictConfig, "restriction_wind_burst.enchantments", "minecraft:wind_burst");
         addToStringList(conflictConfig, "restriction_wind_burst.notAffectedGroups", "mace", "enchanted_book");
 
         // Add mace to conflicts
@@ -59,13 +59,14 @@ public class Update_1_21 {
         addToStringList(conflictConfig, "restriction_smite.notAffectedGroups", "mace");
         addToStringList(conflictConfig, "restriction_bane_of_arthropods.notAffectedGroups", "mace");
 
-        addToStringList(conflictConfig, "mace_enchant_conflict.enchantments", "density", "breach", "smite", "bane_of_arthropods");
+        addToStringList(conflictConfig, "mace_enchant_conflict.enchantments",
+                "minecraft:density", "minecraft:breach", "minecraft:smite", "minecraft:bane_of_arthropods");
         conflictConfig.set("mace_enchant_conflict.maxEnchantmentBeforeConflict", 1);
 
         // Add level limit
-        baseConfig.set("enchant_limits.density", 5);
-        baseConfig.set("enchant_limits.breach", 4);
-        baseConfig.set("enchant_limits.wind_burst", 3);
+        baseConfig.set("enchant_limits.minecraft:density", 5);
+        baseConfig.set("enchant_limits.minecraft:breach", 4);
+        baseConfig.set("enchant_limits.minecraft:wind_burst", 3);
 
         // Add enchant values
         baseConfig.set("enchant_values.density.item", 1);
