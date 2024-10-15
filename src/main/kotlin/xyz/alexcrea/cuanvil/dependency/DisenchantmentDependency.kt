@@ -26,7 +26,6 @@ class DisenchantmentDependency {
     private lateinit var itemClickEvent: DisenchantClickEvent
 
     fun redirectListeners() {
-
         val toUnregister = ArrayList<RegisteredListener>()
         // get required PrepareAnvilEvent listener
         for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {

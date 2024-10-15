@@ -57,7 +57,8 @@ object DependencyManager {
 
         // Excellent Enchants dependency
         if(pluginManager.isPluginEnabled("ExcellentEnchants")){
-            excellentEnchantsCompatibility = ExcellentEnchantsDependency(pluginManager.getPlugin("ExcellentEnchants")!!)
+            excellentEnchantsCompatibility = ExcellentEnchantsDependency()
+            excellentEnchantsCompatibility!!.redirectListeners()
         }
 
         // Disenchantment dependency
@@ -92,8 +93,11 @@ object DependencyManager {
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent): Boolean {
         var bypass = false
 
+        // Test if disenchantment used special prepare anvil
         if(disenchantmentCompatibility?.testPrepareAnvil(event) == true) bypass = true
 
+        // Test excellent enchantments used special prepare anvil
+        if(!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
 
         // Test if the inventory is a gui(version specific)
         if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
@@ -104,7 +108,11 @@ object DependencyManager {
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         var bypass = false
 
+        // Test if disenchantment used special event click
         if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
+
+        // Test if disenchantment used special event click
+        if(!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
 
         // Test if the inventory is a gui(version specific)
         if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
