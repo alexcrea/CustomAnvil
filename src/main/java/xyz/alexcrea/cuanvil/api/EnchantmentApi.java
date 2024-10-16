@@ -170,27 +170,37 @@ public class EnchantmentApi {
      */
     public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override){
         FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
-        if(!override && containEnchantment(config, enchantment)) return false;
 
-        writeDefaultConfig(config, enchantment);
-
-        prepareSaveTask();
+        if(tryWriteDefaultConfig(config, enchantment, override)){
+            prepareSaveTask();
+        }
         return true;
     }
 
-    private static boolean containEnchantment(FileConfiguration config, CAEnchantment enchantment) {
-        return config.contains(enchantment.getName()) || config.contains(enchantment.getKey().toString());
-    }
+    private static boolean tryWriteDefaultConfig(FileConfiguration defaultConfig, CAEnchantment enchantment, boolean override) {
+        boolean hasChange = false;
 
-
-    private static void writeDefaultConfig(FileConfiguration defaultConfig, CAEnchantment enchantment) {
-        defaultConfig.set("enchant_limits." + enchantment.getKey(), enchantment.defaultMaxLevel());
+        String levelPath = "enchant_limits." + enchantment.getKey();
+        if(override || !defaultConfig.isSet(levelPath)){
+            defaultConfig.set(levelPath, enchantment.defaultMaxLevel());
+            hasChange = true;
+        }
 
         String basePath = "enchant_values." + enchantment.getKey();
         EnchantmentRarity rarity = enchantment.defaultRarity();
 
-        defaultConfig.set(basePath + ".item", rarity.getItemValue());
-        defaultConfig.set(basePath + ".book", rarity.getBookValue());
+        String itemPath = basePath + ".item";
+        String bookPath = basePath + ".book";
+        if(override || !defaultConfig.isSet(itemPath)){
+            defaultConfig.set(itemPath, rarity.getItemValue());
+            hasChange = true;
+        }
+        if(override || !defaultConfig.isSet(bookPath)){
+            defaultConfig.set(bookPath, rarity.getBookValue());
+            hasChange = true;
+        }
+
+        return hasChange;
     }
 
     /**
