@@ -170,12 +170,16 @@ public class EnchantmentApi {
      */
     public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override){
         FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
-        if(!override && config.contains(enchantment.getName())) return false;
+        if(!override && containEnchantment(config, enchantment)) return false;
 
         writeDefaultConfig(config, enchantment);
 
         prepareSaveTask();
         return true;
+    }
+
+    private static boolean containEnchantment(FileConfiguration config, CAEnchantment enchantment) {
+        return config.contains(enchantment.getName()) || config.contains(enchantment.getKey().toString());
     }
 
 
