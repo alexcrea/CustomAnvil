@@ -3,15 +3,15 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "2.0.21"
     java
     id("org.jetbrains.dokka").version("1.9.20")
-    id("io.github.goooler.shadow").version("8.1.8") // using fork of com.github.johnrengelman.shadow to support java 1.21. edit I do not need java 1.21 now so should be replaced ?
+    id("com.gradleup.shadow").version("8.3.3")
     // Maven publish
     `maven-publish`
     signing
     id("cn.lalaki.central").version("1.2.5")
-    id("io.papermc.paperweight.userdev") version "1.7.1" apply false
+    id("io.papermc.paperweight.userdev") version "1.7.3" apply false
 }
 
 group = "xyz.alexcrea"
@@ -28,7 +28,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.14")
+    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
@@ -140,7 +140,7 @@ tasks {
         filesMatching("plugin.yml") {
             expand(
                 "version" to project.version,
-                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:1.9.24\" "
+                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.0.21\" "
             )
         }
 
