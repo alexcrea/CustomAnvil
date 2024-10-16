@@ -1,4 +1,5 @@
 import cn.lalaki.pub.BaseCentralPortalPlusExtension
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -14,7 +15,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.6.3"
+version = "1.6.3-test"
 
 repositories {
     // EcoEnchants
@@ -56,6 +57,9 @@ dependencies {
     implementation(project(":nms:v1_20R3", configuration = "reobf"))
     implementation(project(":nms:v1_20R4", configuration = "reobf"))
     implementation(project(":nms:v1_21R1", configuration = "reobf"))
+
+    // include kotlin for the offline jar
+    implementation(kotlin("stdlib"))
 }
 
 allprojects {
@@ -112,21 +116,66 @@ val fatJar = tasks.register<Jar>("fatJar") {
     manifest {
         attributes.apply { put("Main-Class", "io.delilaheve.CustomAnvil") }
     }
-    archiveFileName.set("${rootProject.name}-${archiveVersion}.jar")
+    archiveFileName.set("${rootProject.name}-${project.version}.jar")
     exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     duplicatesStrategy = DuplicatesStrategy.WARN
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     with(tasks.jar.get() as CopySpec)
 }
 
-// Ensure fatJar and copyJar are run
-tasks.getByName("build") {
-    dependsOn(fatJar)
-}
+tasks {
+    // Online jar (use of libraries)
+    shadowJar {
+        // No suffix for this jar
+        archiveClassifier.set("")
 
-// Shadow necessary dependency
-tasks.shadowJar {
-    relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
+        // Exclude kotlin std and its annotation
+        exclude("**/kotlin-stdlib*.jar")
+        exclude("**/annotations*.jar")
+
+        // Shadow necessary dependency
+        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
+
+        // Replace version and example fields in plugin.yml
+        filesMatching("plugin.yml") {
+            expand(
+                "version" to project.version,
+                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:1.9.24\" "
+            )
+        }
+
+        // Process resource for plugin.yml
+        dependsOn(processResources)
+    }
+
+    // Offline jar (include kotlin std in the final jar fine)
+    val offlineJar by creating(ShadowJar::class) {
+        archiveClassifier.set("offline")
+
+        // Shadow necessary dependency
+        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
+
+        filesMatching("plugin.yml") {
+            expand(
+                "version" to "${project.version}-offline",
+                "libraries" to ""
+            )
+        }
+
+        // Include all project other dependencies
+        from(project.configurations.runtimeClasspath)
+
+        // Add custom anvil compiled
+        from(sourceSets.main.get().output)
+
+        dependsOn(processResources)
+    }
+
+    // Make the online and offline jar on build
+    named("build") {
+        dependsOn(shadowJar, offlineJar)
+    }
+
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
@@ -152,7 +201,12 @@ signing {
 // PUBLISHING TO SONATYPE CONFIGURATION
 // ------------------------------------
 
-val localMavenRepo = uri("E:\\WorkSpace\\Java\\Maven\\repo") // The path is recommended to be set to an empty directory
+// The path is recommended to be set to an empty directory
+val localMavenRepo = uri(
+    project.findProperty("localMavenRepo") as String?
+        ?: rootProject.layout.buildDirectory.dir("local-maven-repo").get().asFile.toURI() // Convert to URI
+)
+
 centralPortalPlus {
     url = localMavenRepo
     username = System.getenv("SONATYPE_USERNAME")

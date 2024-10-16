@@ -1,14 +1,13 @@
 main: io.delilaheve.CustomAnvil
 name: CustomAnvil
 prefix: "Custom Anvil"
-version: 1.6.3
+version: ${version}
 folia-supported: true
 description: Allow to customise anvil mechanics
 api-version: 1.16
 load: POSTWORLD
 authors: [ DelilahEve, alexcrea ]
-libraries:
-  - org.jetbrains.kotlin:kotlin-stdlib:1.9.24
+libraries: [${libraries}]
 
 commands:
   anvilconfigreload:
