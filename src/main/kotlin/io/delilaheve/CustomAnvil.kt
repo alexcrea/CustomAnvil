@@ -28,7 +28,7 @@ import java.util.logging.Level
 /**
  * Bukkit/Spigot/Paper plugin to alter anvil feature
  */
-class CustomAnvil : JavaPlugin() {
+open class CustomAnvil : JavaPlugin() {
 
     companion object {
         // bstats plugin id

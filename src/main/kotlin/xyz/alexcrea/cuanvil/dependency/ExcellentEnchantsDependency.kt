@@ -82,16 +82,17 @@ class ExcellentEnchantsDependency {
             if(event.result == null) return true
         }
 
-        var first: ItemStack? = event.inventory.getItem(0)
-        var second: ItemStack? = event.inventory.getItem(1)
-        var result = event.result
+        val first: ItemStack = treatInput(event.inventory.getItem(0))
+        val second: ItemStack = treatInput(event.inventory.getItem(1))
 
-        if (first == null) first = ItemStack(Material.AIR)
-        if (second == null) second = ItemStack(Material.AIR)
-        if (result == null) result = ItemStack(Material.AIR)
+        return handleRechargeMethod.invoke(this.anvilListener, event, first, second) as Boolean
+    }
 
-        if(handleRechargeMethod.invoke(this.anvilListener, event, first, second) as Boolean) return true
-        return handleCombineMethod.invoke(this.anvilListener, event, first, second, result) as Boolean
+    fun treatAnvilResult(event: PrepareAnvilEvent, result: ItemStack) {
+        val first: ItemStack = treatInput(event.inventory.getItem(0))
+        val second: ItemStack = treatInput(event.inventory.getItem(1))
+
+        handleCombineMethod.invoke(this.anvilListener, event, first, second, result)
     }
 
     fun testAnvilResult(event: InventoryClickEvent): Any {
@@ -100,8 +101,12 @@ class ExcellentEnchantsDependency {
             return event.inventory.getItem(2) == null
         }
 
-
         return false;
+    }
+
+    fun treatInput(item: ItemStack?): ItemStack {
+        if(item == null) return ItemStack(Material.AIR)
+        return item
     }
 
 }

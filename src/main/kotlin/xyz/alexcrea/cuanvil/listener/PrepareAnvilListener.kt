@@ -86,6 +86,7 @@ class PrepareAnvilListener : Listener {
         resultItem.amount *= amount
 
         event.result = resultItem
+        DependencyManager.treatAnvilResult(event, resultItem)
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, recipe.xpCostPerCraft * amount, true)
 
         return true
@@ -104,6 +105,7 @@ class PrepareAnvilListener : Listener {
         }
 
         event.result = resultItem
+        DependencyManager.treatAnvilResult(event, resultItem)
 
         anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem)
 
@@ -173,6 +175,7 @@ class PrepareAnvilListener : Listener {
 
         // Finally, we set result
         event.result = resultItem
+        DependencyManager.treatAnvilResult(event, resultItem)
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, anvilCost)
     }
@@ -198,6 +201,7 @@ class PrepareAnvilListener : Listener {
             return true
         }
         event.result = resultItem
+        DependencyManager.treatAnvilResult(event, resultItem)
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, anvilCost)
         return true

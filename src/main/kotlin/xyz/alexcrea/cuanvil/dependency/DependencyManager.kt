@@ -5,6 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
 import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
@@ -103,6 +104,10 @@ object DependencyManager {
         if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
         return bypass
+    }
+
+    fun treatAnvilResult(event: PrepareAnvilEvent, result: ItemStack) {
+        excellentEnchantsCompatibility?.treatAnvilResult(event, result)
     }
 
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
