@@ -1,0 +1,61 @@
+main: io.delilaheve.CustomAnvil
+name: CustomAnvil
+prefix: "Custom Anvil"
+version: ${version}
+folia-supported: true
+description: Allow to customise anvil mechanics
+api-version: 1.16
+load: POSTWORLD
+authors: [ DelilahEve, alexcrea ]
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:2.0.21
+
+commands:
+  anvilconfigreload:
+    description: Reload every config of this plugin
+    permission: ca.command.reload
+    aliases:
+      #- acreload # anvil config reload
+      #- careload # custom anvil reload
+      - carl # custom anvil reload
+  customanvilconfig:
+    description: open a menu for administrator to edit plugin's config in game
+    permission: ca.config.edit
+    aliases:
+      - configanvil
+
+permissions:
+  ca.affected:
+    default: true
+    description: Player with this permission will be affected by the plugin
+  ca.bypass.fuse:
+    default: false
+    description: Allow player to combine every enchantments to every item (no custom limit)
+  ca.bypass.level:
+    default: false
+    description: Allow player to bypass every level limit (no custom limit)
+  ca.command.reload:
+    default: op
+    description: Allow administrator to reload the plugin's configs
+  ca.config.edit:
+    default: op
+    description: Allow administrator to edit the plugin's config in game
+  # color permissions
+  ca.color.code:
+    default: op
+    description: Allow player to use color code if permission is required (toggleable)
+  ca.color.hex:
+    default: op
+    description: Allow player to use hexadecimal color if permission is required (toggleable)
+
+
+# soft depend on old name (UnsafeEnchantsPlus), so I can disable it if it is on the same server (old name for this plugin)
+# Also depend to other plugin for compatibility
+softdepend:
+  - UnsafeEnchantsPlus
+  - ProtocolLib
+  - Disenchantment
+  - EnchantsSquared
+  - EcoEnchants
+  - eco
+  - ExcellentEnchants
