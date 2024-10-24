@@ -6,6 +6,7 @@ import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
 import org.bukkit.GameMode
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
@@ -25,6 +26,7 @@ object AnvilXpUtil {
     fun setAnvilInvXp(
         inventory: AnvilInventory,
         view: InventoryView,
+        player: HumanEntity,
         anvilCost: Int,
         ignoreRules: Boolean = false
     ) {
@@ -37,8 +39,6 @@ object AnvilXpUtil {
         } else {
             anvilCost
         }
-
-        val player = view.player
 
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that

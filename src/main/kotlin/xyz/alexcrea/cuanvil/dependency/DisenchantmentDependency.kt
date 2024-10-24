@@ -5,6 +5,7 @@ import cz.kominekjan.disenchantment.events.DisenchantEvent
 import cz.kominekjan.disenchantment.events.ShatterClickEvent
 import cz.kominekjan.disenchantment.events.ShatterEvent
 import io.delilaheve.CustomAnvil
+import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -70,7 +71,7 @@ class DisenchantmentDependency {
 
     }
 
-    fun testPrepareAnvil(event: PrepareAnvilEvent): Boolean {
+    fun testPrepareAnvil(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         val previousResult = event.result
         event.result = null
 
@@ -79,14 +80,14 @@ class DisenchantmentDependency {
 
         if(event.result != null) {
             CustomAnvil.log("Detected pre anvil item extract bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
             return true
         }
 
         splitEvent.onDisenchantmentEvent(event)
         if(event.result != null) {
             CustomAnvil.log("Detected pre anvil split enchant bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
             return true
         }
 

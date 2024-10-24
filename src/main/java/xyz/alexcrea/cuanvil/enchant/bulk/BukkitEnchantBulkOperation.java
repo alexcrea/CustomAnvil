@@ -29,7 +29,8 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
     @Override
     public void bulkClear(@NotNull ItemStack item) {
         if (item.getType() != Material.ENCHANTED_BOOK) {
-            item.getEnchantments().forEach((enchantment, leve) ->
+
+            item.getEnchantments().forEach((enchantment, level) ->
                     item.removeEnchantment(enchantment)
             );
         }
@@ -43,5 +44,6 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
                     bookMeta.removeStoredEnchant(enchantment)
             );
         }
+
     }
 }
