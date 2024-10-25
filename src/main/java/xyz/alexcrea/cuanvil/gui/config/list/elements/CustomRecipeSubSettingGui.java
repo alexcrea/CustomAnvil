@@ -35,9 +35,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
     public CustomRecipeSubSettingGui(
             @NotNull CustomRecipeConfigGui parent,
-            @NotNull AnvilCustomRecipe anvilRecipe,
-            @NotNull GuiItem parentItemForThisGui) {
-        super(parentItemForThisGui, 3, "§e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " §8Config");
+            @NotNull AnvilCustomRecipe anvilRecipe) {
+        super(3, "§e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " §8Config");
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
 

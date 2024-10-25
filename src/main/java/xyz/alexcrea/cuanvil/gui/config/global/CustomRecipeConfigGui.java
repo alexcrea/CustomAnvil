@@ -17,7 +17,8 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe, CustomRecipeSubSettingGui> {
+public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
+        MappedGuiListConfigGui.LazyElement<CustomRecipeSubSettingGui>> {
 
 
     private static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
@@ -44,15 +45,15 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
     protected ItemStack createItemForGeneric(AnvilCustomRecipe recipe) {
         // Get base item to display
         ItemStack craftResultItem = recipe.getResultItem();
-        ItemStack displaydItem;
+        ItemStack displayedItem;
         if(craftResultItem == null){
-            displaydItem = new ItemStack(Material.BARRIER);
+            displayedItem = new ItemStack(Material.BARRIER);
         }else{
-            displaydItem = craftResultItem.clone();
+            displayedItem = craftResultItem.clone();
         }
 
         // edit displayed item
-        ItemMeta meta = displaydItem.getItemMeta();
+        ItemMeta meta = displayedItem.getItemMeta();
         assert meta != null;
 
         meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");
@@ -67,13 +68,13 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
         ));
 
-        displaydItem.setItemMeta(meta);
-        return displaydItem;
+        displayedItem.setItemMeta(meta);
+        return displayedItem;
     }
 
     @Override
-    protected CustomRecipeSubSettingGui newInstanceOfGui(AnvilCustomRecipe generic, GuiItem item) {
-        return new CustomRecipeSubSettingGui(this, generic, item);
+    protected LazyElement<CustomRecipeSubSettingGui> newInstanceOfGui(AnvilCustomRecipe generic, GuiItem item) {
+        return new LazyElement<>(item, () -> new CustomRecipeSubSettingGui(this, generic));
     }
 
     @Override

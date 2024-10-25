@@ -18,7 +18,8 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup, EnchantConflictSubSettingGui> {
+public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup,
+        MappedGuiListConfigGui.LazyElement<EnchantConflictSubSettingGui>> {
 
     private static EnchantConflictGui INSTANCE;
 
@@ -86,8 +87,8 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     }
 
     @Override
-    protected EnchantConflictSubSettingGui newInstanceOfGui(EnchantConflictGroup conflict, GuiItem item) {
-        return new EnchantConflictSubSettingGui(this, conflict, item);
+    protected LazyElement<EnchantConflictSubSettingGui> newInstanceOfGui(EnchantConflictGroup conflict, GuiItem item) {
+        return new LazyElement<>(item, () -> new EnchantConflictSubSettingGui(this, conflict));
     }
 
     @Override

@@ -3,15 +3,19 @@ package xyz.alexcrea.cuanvil.gui.config.list;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.util.LazyValue;
 
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGui> extends MappedElementListConfigGui< T, S > {
+public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGui.LazyElement<?>>
+        extends MappedElementListConfigGui< T, S > {
 
     protected MappedGuiListConfigGui(@NotNull String title) {
         super(title);
@@ -20,7 +24,10 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
 
     @Override
     public void reloadValues() {
-        this.elementGuiMap.forEach((conflict, gui) -> gui.cleanAndBeUnusable());
+        this.elementGuiMap.forEach((conflict, element) -> {
+            ElementMappedToListGui gui = element.getStored();
+            if(gui != null) gui.cleanAndBeUnusable();
+        });
         this.elementGuiMap.clear();
 
         super.reloadValues();
@@ -30,23 +37,24 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
     protected S newElementRequested(T generic, GuiItem newItem) {
         S element = newInstanceOfGui(generic, newItem);
 
-        newItem.setAction(GuiGlobalActions.openGuiAction(element.getMappedGui()));
+        newItem.setAction(element.openAction());
         return element;
     }
 
     @Override
     protected GuiItem findItemFromElement(T generic, S element) {
-        return element.getParentItemForThisGui();
+        return element.getParentItem();
     }
 
     @Override
     protected void updateElement(T generic, S element) {
-        element.updateLocal();
+        ElementMappedToListGui gui = element.getStored();
+        if(gui != null) gui.updateLocal();
     }
 
     @Override
     protected GuiItem findGuiItemForRemoval(T generic, S element) {
-        return element.getParentItemForThisGui();
+        return element.getParentItem();
     }
 
     @Override
@@ -90,7 +98,7 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
             updateValueForGeneric(generic, true);
 
             // show the new conflict config to the player
-            this.elementGuiMap.get(generic).getMappedGui().show(player);
+            this.elementGuiMap.get(generic).get().getMappedGui().show(player);
 
             update();
         };
@@ -104,5 +112,29 @@ public abstract class MappedGuiListConfigGui< T, S extends ElementMappedToListGu
     protected abstract String genericDisplayedName();
 
     protected abstract T createAndSaveNewEmptyGeneric(String name);
+
+    public static class LazyElement<T extends ElementMappedToListGui> extends LazyValue<T> {
+
+        private final GuiItem parentItem;
+        private final LazyValue<Consumer<InventoryClickEvent>> lazyOpenConsumer;
+        public LazyElement(GuiItem parentItem, Supplier<T> valueSupplier) {
+            super(valueSupplier);
+            this.parentItem = parentItem;
+
+            this.lazyOpenConsumer = new LazyValue<>(() ->
+                    GuiGlobalActions.openGuiAction(this.get().getMappedGui()))
+            ;
+        }
+
+        public GuiItem getParentItem() {
+            return parentItem;
+        }
+
+        @NotNull
+        public Consumer<InventoryClickEvent> openAction(){
+            return event -> lazyOpenConsumer.get().accept(event);
+        }
+
+    }
 
 }
