@@ -30,13 +30,15 @@ object EnchantmentUtil {
     ) = mutableMapOf<CAEnchantment, Int>().apply {
         putAll(this@combineWith)
 
+        val bypassFuse = player.hasPermission(CustomAnvil.bypassFusePermission)
+        val bypassLevel = player.hasPermission(CustomAnvil.bypassLevelPermission)
+
         other.forEach { (enchantment, level) ->
             if(!enchantment.isAllowed(player)) return@forEach
 
             // Get max level or 255 if player can bypass
-            val maxLevel = if (player.hasPermission(CustomAnvil.bypassLevelPermission))
-            { 255 } else
-            { ConfigOptions.enchantLimit(enchantment) }
+            val maxLevel = if (bypassLevel) { 255 }
+            else { ConfigOptions.enchantLimit(enchantment) }
 
             val cappedLevel = min(level, maxLevel)
 
@@ -44,11 +46,15 @@ object EnchantmentUtil {
             if (!containsKey(enchantment)) {
                 // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
                 this[enchantment] = cappedLevel
-                val conflictType =
-                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this, item, enchantment)
-                if (!player.hasPermission(CustomAnvil.bypassFusePermission) &&
-                    (conflictType != ConflictType.NO_CONFLICT)
-                ) {
+                if(bypassFuse){
+                    CustomAnvil.verboseLog("Bypassed conflict check for ${enchantment.key}")
+                    return@forEach
+                }
+
+                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager
+                    .isConflicting(this, item, enchantment)
+
+                if (conflictType != ConflictType.NO_CONFLICT) {
                     CustomAnvil.verboseLog("Enchantment not yet in result list, but there is conflict (${enchantment.key}, conflict: $conflictType)")
                     this.remove(enchantment)
                 }
@@ -58,14 +64,17 @@ object EnchantmentUtil {
             else {
                 val oldLevel = this[enchantment]!! // <- should not be null. (enchantment already in result list)
 
-                // ... and they are conflicting
-                val conflictType =
-                    ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(this, item, enchantment)
-                if ((conflictType != ConflictType.NO_CONFLICT)
-                    && !player.hasPermission(CustomAnvil.bypassFusePermission)
-                ) {
-                    CustomAnvil.verboseLog("Enchantment already in result list, and they are conflicting (${enchantment.key}, conflict: $conflictType)")
-                    return@forEach
+                if(bypassFuse){
+                    CustomAnvil.verboseLog("Bypassed conflict check for ${enchantment.key}")
+                } else {
+                    val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager
+                        .isConflicting(this, item, enchantment)
+
+                    // ... and they are conflicting
+                    if(conflictType != ConflictType.NO_CONFLICT){
+                        CustomAnvil.verboseLog(
+                            "Enchantment already in result list, and they are conflicting (${enchantment.key}, conflict: $conflictType)")
+                    }
                 }
 
                 // ... and they're not the same level
