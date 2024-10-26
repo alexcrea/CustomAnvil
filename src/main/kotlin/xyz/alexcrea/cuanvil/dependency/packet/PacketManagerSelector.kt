@@ -55,6 +55,7 @@ object PacketManagerSelector {
 
                 21 -> when (versionParts[2]) {
                     0, 1 -> V1_21R1_PacketManager()
+                    2, 3 -> V1_21R2_PacketManager()
                     else -> null
                 }
 
