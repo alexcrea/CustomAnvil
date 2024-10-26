@@ -15,12 +15,13 @@ import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.LazyValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupConfigSubSettingGui> {
+public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
 
     private static GroupConfigGui INSTANCE;
 
@@ -73,8 +74,8 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, GroupCo
     }
 
     @Override
-    protected GroupConfigSubSettingGui newInstanceOfGui(IncludeGroup group, GuiItem item) {
-        return new GroupConfigSubSettingGui(this, group, item);
+    protected LazyElement<GroupConfigSubSettingGui> newInstanceOfGui(IncludeGroup group, GuiItem item) {
+        return new LazyElement<>(item, () -> new GroupConfigSubSettingGui(this, group));
     }
 
     @Override

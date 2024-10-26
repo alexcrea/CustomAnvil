@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRepairElementListGui> {
+public class UnitRepairConfigGui extends
+        MappedGuiListConfigGui<Material, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
 
     private static UnitRepairConfigGui INSTANCE;
 
@@ -41,10 +42,12 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
     }
 
     @Override
-    protected UnitRepairElementListGui newInstanceOfGui(Material material, GuiItem item) {
-        UnitRepairElementListGui element = new UnitRepairElementListGui(material, this, item);
-        element.init();
-        return element;
+    protected LazyElement<UnitRepairElementListGui> newInstanceOfGui(Material material, GuiItem item) {
+        return new LazyElement<>(item, () -> {
+            UnitRepairElementListGui element = new UnitRepairElementListGui(material, this);
+            element.init();
+            return element;
+        });
     }
 
     @Override
@@ -115,7 +118,7 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
                         updateValueForGeneric(type, true);
 
                         // Display material edit setting
-                        this.elementGuiMap.get(type).getMappedGui().show(player);
+                        this.elementGuiMap.get(type).get().getMappedGui().show(player);
                     },
                     true
             ).show(clickEvent.getWhoClicked());
@@ -123,8 +126,8 @@ public class UnitRepairConfigGui extends MappedGuiListConfigGui<Material, UnitRe
     }
 
     @NotNull
-    public UnitRepairElementListGui getInstanceOrCreate(Material mat){
-        UnitRepairElementListGui element = this.elementGuiMap.get(mat);
+    public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(Material mat){
+        LazyElement<UnitRepairElementListGui> element = this.elementGuiMap.get(mat);
         if(element == null){
             updateValueForGeneric(mat, false);
 

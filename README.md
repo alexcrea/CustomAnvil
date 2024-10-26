@@ -1,7 +1,7 @@
 # Custom Anvil
 
 **Custom Anvil** is a plugin that allows server administrators to customize every aspect of the anvil's mechanics. 
-It is expected to work on 1.18 to 1.21 minecraft servers running spigot or paper.
+It is expected to work on 1.18 to 1.21.3 minecraft servers running spigot or paper.
 (the plugin support of 1.16.5 to 1.17.1 is experimental and may encounter issues)
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
@@ -95,7 +95,6 @@ Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Pl
 ### Planned:
 - Better Folia support (make gui work. fix some dirty handled parts)
 - Get restriction on unknown enchantments
-- Warn admin on unsupported minecraft version
 - More features for custom anvil craft
 
 ### Known issue:

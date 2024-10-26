@@ -37,9 +37,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     public GroupConfigSubSettingGui(
             @NotNull GroupConfigGui parent,
-            @NotNull IncludeGroup group,
-            @NotNull GuiItem item) {
-        super(item, 3,
+            @NotNull IncludeGroup group) {
+        super(3,
                 CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " Config");
         this.parent = parent;
         this.group = group;

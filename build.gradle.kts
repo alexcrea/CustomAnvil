@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.6.6"
+version = "1.6.7"
 
 repositories {
     // EcoEnchants
@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":nms:v1_20R3", configuration = "reobf"))
     implementation(project(":nms:v1_20R4", configuration = "reobf"))
     implementation(project(":nms:v1_21R1", configuration = "reobf"))
+    implementation(project(":nms:v1_21R2", configuration = "reobf"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))

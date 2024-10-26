@@ -26,17 +26,14 @@ import java.util.function.Consumer;
 
 public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, DoubleSettingGui.DoubleSettingFactory> implements ElementMappedToListGui {
 
-    private final GuiItem parentItem;
     private final Material parentMaterial;
     private final UnitRepairConfigGui parentGui;
     private final String materialName;
 
     private boolean shouldWork = true;
     public UnitRepairElementListGui(@NotNull Material parentMaterial,
-                                    @NotNull UnitRepairConfigGui parentGui,
-                                    @NotNull GuiItem parentItem) {
+                                    @NotNull UnitRepairConfigGui parentGui) {
         super("§e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.name().toLowerCase()) + " §rUnit repair");
-        this.parentItem = parentItem;
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
         this.materialName = CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.name().toLowerCase());
@@ -164,11 +161,6 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     }
 
     // ElementMappedToListGui methods
-
-    @Override
-    public GuiItem getParentItemForThisGui() {
-        return this.parentItem;
-    }
 
     @Override // Not used in this implementation
     public void updateLocal() {}

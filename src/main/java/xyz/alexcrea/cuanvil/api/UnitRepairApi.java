@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
 
 import java.util.ArrayList;
@@ -94,9 +95,9 @@ public class UnitRepairApi {
         // Add to gui
         UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
         if(repairConfigGui != null) {
-            UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit);
+            UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
-            elementGui.updateValueForGeneric(repairableName, true);
+            if(elementGui != null) elementGui.updateValueForGeneric(repairableName, true);
             repairConfigGui.updateValueForGeneric(unit, true);
         }
 
@@ -124,14 +125,15 @@ public class UnitRepairApi {
         boolean lastValue = false;
         if(config.isConfigurationSection(unitName.toLowerCase())) {
             ConfigurationSection section = config.getConfigurationSection(unitName.toLowerCase());
-            if(section.getKeys(false).isEmpty()) {
+
+            if(section != null && section.getKeys(false).isEmpty()) {
                 lastValue = true;
                 config.set(unitName.toLowerCase(), null);
             }
 
         } else if (config.isConfigurationSection(unitName.toUpperCase())) {
             ConfigurationSection section = config.getConfigurationSection(unitName.toUpperCase());
-            if(section.getKeys(false).isEmpty()) {
+            if(section != null && section.getKeys(false).isEmpty()) {
                 lastValue = true;
                 config.set(unitName.toUpperCase(), null);
             }
@@ -146,9 +148,9 @@ public class UnitRepairApi {
         // Remove from gui
         UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
         if(repairConfigGui != null) {
-            UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit);
+            UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
-            elementGui.removeGeneric(repairableName);
+            if(elementGui != null) elementGui.removeGeneric(repairableName);
             if(lastValue){
                 repairConfigGui.removeGeneric(unit);
             }

@@ -8,7 +8,7 @@ class v1_21R1_ExternGuiTester: ExternGuiTester {
     override val wesjdAnvilGuiName = "Wrapper1_21_R1"
 
     override fun getContainerClass(view: InventoryView): Class<Any>? {
-        if(view !is CraftInventoryView<*>) return null
+        if(view !is CraftInventoryView<*, *>) return null
         val container = view.handle
 
         return container.javaClass

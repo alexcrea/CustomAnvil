@@ -34,3 +34,5 @@ include("nms:v1_20R4")
 findProject(":nms:v1_20R4")?.name = "v1_20R4"
 include("nms:v1_21R1")
 findProject(":nms:v1_21R1")?.name = "v1_21R1"
+include("nms:v1_21R2")
+findProject(":nms:v1_21R2")?.name = "v1_21R2"

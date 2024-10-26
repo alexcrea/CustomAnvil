@@ -69,14 +69,14 @@ public class Update_1_21 {
         baseConfig.set("enchant_limits.minecraft:wind_burst", 3);
 
         // Add enchant values
-        baseConfig.set("enchant_values.density.item", 1);
-        baseConfig.set("enchant_values.density.book", 1);
+        baseConfig.set("enchant_values.minecraft:density.item", 2);
+        baseConfig.set("enchant_values.minecraft:density.book", 1);
 
-        baseConfig.set("enchant_values.breach.item", 4);
-        baseConfig.set("enchant_values.breach.book", 2);
+        baseConfig.set("enchant_values.minecraft:breach.item", 4);
+        baseConfig.set("enchant_values.minecraft:breach.book", 2);
 
-        baseConfig.set("enchant_values.wind_burst.item", 4);
-        baseConfig.set("enchant_values.wind_burst.book", 2);
+        baseConfig.set("enchant_values.minecraft:wind_burst.item", 4);
+        baseConfig.set("enchant_values.minecraft:wind_burst.book", 2);
 
         // Add unit repair for mace
         unitConfig.set("breeze_rod.mace", 0.25);

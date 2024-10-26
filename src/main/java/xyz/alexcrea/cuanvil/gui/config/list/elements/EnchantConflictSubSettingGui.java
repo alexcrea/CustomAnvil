@@ -39,10 +39,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
     public EnchantConflictSubSettingGui(
             @NotNull EnchantConflictGui parent,
-            @NotNull EnchantConflictGroup enchantConflict,
-            @NotNull GuiItem parentItemForThisGui) {
-        super(parentItemForThisGui,
-                3,
+            @NotNull EnchantConflictGroup enchantConflict) {
+        super(3,
                 "§e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + " §8Config");
         this.parent = parent;
         this.enchantConflict = enchantConflict;
