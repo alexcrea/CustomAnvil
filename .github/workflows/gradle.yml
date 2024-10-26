@@ -28,6 +28,7 @@ jobs:
         java-version: |
             16
             17
+            20
             21
         distribution: 'temurin'
         cache: 'gradle'
@@ -68,6 +69,7 @@ jobs:
         java-version: |
             16
             17
+            20
             21
 
     # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
