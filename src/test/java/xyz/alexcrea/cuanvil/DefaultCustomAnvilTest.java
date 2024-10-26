@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +30,6 @@ public class DefaultCustomAnvilTest {
 
     @AfterEach
     public void tearDown() {
-        // Set config to null
-        ConfigHolder.DEFAULT_CONFIG = null;
-        ConfigHolder.ITEM_GROUP_HOLDER = null;
-        ConfigHolder.CONFLICT_HOLDER = null;
-        ConfigHolder.UNIT_REPAIR_HOLDER = null;
-        ConfigHolder.CUSTOM_RECIPE_HOLDER = null;
-        
         // Stop the mock server
         MockBukkit.unmock();
 

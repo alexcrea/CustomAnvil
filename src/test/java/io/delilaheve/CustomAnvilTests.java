@@ -10,6 +10,9 @@ public class CustomAnvilTests extends DefaultCustomAnvilTest {
     public void simpleInitTest() {
         Assertions.assertNotNull(server);
         Assertions.assertNotNull(plugin);
+
+        // Test shutdown
+        plugin.onDisable();
     }
 
 }

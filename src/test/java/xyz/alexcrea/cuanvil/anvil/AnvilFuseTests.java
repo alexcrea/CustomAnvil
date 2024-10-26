@@ -13,7 +13,7 @@ import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
-public class AnvilFuseTest extends DefaultCustomAnvilTest {
+public class AnvilFuseTests extends DefaultCustomAnvilTest {
 
     private AnvilInventory anvil;
     private PlayerMock player;
