@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import xyz.alexcrea.cuanvil.DefaultCustomAnvilTest;
+import xyz.alexcrea.cuanvil.tests.DefaultCustomAnvilTest;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;

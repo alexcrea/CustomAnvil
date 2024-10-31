@@ -85,6 +85,7 @@ public class AnvilFuseTestUtil {
                 "Openned inventory is not anvil");
 
         // Test with only the left item
+        anvil.setItem(1, null); // We clear the right slot in case something was there
         testPlacingItem(anvil, player,
                 0, data.expectedPriceAfterLeftPlaced(),
                 data.leftItem(), data.expectedAfterLeftPlaced());
@@ -116,12 +117,12 @@ public class AnvilFuseTestUtil {
         AnvilFuseTestUtil.imitateAnvilUpdate(player, anvil);
 
         ItemStack result = anvil.getItem(2);
-        assertEqual(result, expectedResult);
+        assertEqual(expectedResult, result);
         assertPriceEqual(expectedPrice, anvil.getRepairCost());
     }
 
     public static void assertEqual(@Nullable ItemStack item1, @Nullable ItemStack item2) {
-        if(isAir(item1)) Assertions.assertTrue(isAir(item2));
+        if(isAir(item1)) Assertions.assertTrue(isAir(item2),"Item "+item2+" was not AIR but was expected to be air");
         else Assertions.assertEquals(item1, item2);
 
     }

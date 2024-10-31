@@ -1,19 +1,17 @@
-package xyz.alexcrea.cuanvil;
+package xyz.alexcrea.cuanvil.tests;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import io.delilaheve.CustomAnvil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultCustomAnvilTest {
+public abstract class DefaultCustomAnvilTest {
 
     protected ServerMock server;
     protected CustomAnvil plugin;

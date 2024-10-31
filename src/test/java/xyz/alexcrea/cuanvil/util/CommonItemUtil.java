@@ -15,7 +15,13 @@ public class CommonItemUtil {
         );
     }
 
-
+    public static ItemStack bane_of_arthropods(int level){
+        return AnvilFuseTestUtil.prepareItem(
+                Material.DIAMOND_SWORD,
+                List.of("bane_of_arthropods"),
+                level
+        );
+    }
 
 
 }

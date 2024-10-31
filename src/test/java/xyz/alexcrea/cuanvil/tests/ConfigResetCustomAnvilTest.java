@@ -1,11 +1,11 @@
-package xyz.alexcrea.cuanvil;
+package xyz.alexcrea.cuanvil.tests;
 
 import org.junit.jupiter.api.AfterEach;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
 import java.io.File;
 
-public class ConfigResetCustomAnvilTest extends DefaultCustomAnvilTest {
+public abstract class ConfigResetCustomAnvilTest extends DefaultCustomAnvilTest {
 
     @Override
     @AfterEach

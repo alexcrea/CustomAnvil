@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import xyz.alexcrea.cuanvil.DefaultCustomAnvilTest;
+import xyz.alexcrea.cuanvil.tests.DefaultCustomAnvilTest;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
