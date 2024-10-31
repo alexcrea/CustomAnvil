@@ -359,10 +359,19 @@ public class ConflictBuilder {
 
     /**
      * Register this conflict if not yet registered.
-     * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder)}
+     * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder, boolean) ConflictAPI.addConflict(this, true)}}
      * @return True if successful.
      */
     public boolean registerIfAbsent(){
+        return ConflictAPI.addConflict(this, true);
+    }
+
+    /**
+     * Register this conflict if not yet registered or deleted.
+     * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder) ConflictAPI.addConflict(this)}
+     * @return True if successful.
+     */
+    public boolean registerIfNew(){
         return ConflictAPI.addConflict(this);
     }
 
