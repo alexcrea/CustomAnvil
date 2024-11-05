@@ -6,6 +6,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
@@ -23,6 +25,13 @@ public class AnvilFuseTestUtil {
     public static ItemStack prepareItem(@NotNull Material material,
                                         @NotNull List<CAEnchantment> enchantments,
                                         @NotNull List<Integer> level){
+        return prepareItem(material, 0, enchantments, level);
+    }
+
+    public static ItemStack prepareItem(@NotNull Material material,
+                                        int repairCost,
+                                        @NotNull List<CAEnchantment> enchantments,
+                                        @NotNull List<Integer> level){
         Assertions.assertEquals(enchantments.size(), level.size());
 
         HashMap<CAEnchantment, Integer> enchantmentMap = new HashMap<>();
@@ -33,11 +42,21 @@ public class AnvilFuseTestUtil {
         ItemStack item = new EnchantedItemStackMock(material);
         ItemUtil.INSTANCE.setEnchantmentsUnsafe(item, enchantmentMap);
 
+        ItemMeta meta = item.getItemMeta();
+        ((Repairable) meta).setRepairCost(repairCost);
+        item.setItemMeta(meta);
+
         return item;
     }
 
 
     public static ItemStack prepareItem(@NotNull Material material,
+                                        @NotNull List<String> enchantmentNames,
+                                        Integer... levels){
+        return prepareItem(material, 0, enchantmentNames, levels);
+    }
+    public static ItemStack prepareItem(@NotNull Material material,
+                                        int repairCost,
                                         @NotNull List<String> enchantmentNames,
                                         Integer... levels){
         List<CAEnchantment> enchantments = new ArrayList<>();
@@ -50,7 +69,7 @@ public class AnvilFuseTestUtil {
             enchantments.addAll(enchantmentList);
         }
 
-        return prepareItem(material, enchantments, List.of(levels));
+        return prepareItem(material, repairCost, enchantments, List.of(levels));
     }
 
 
