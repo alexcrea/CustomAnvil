@@ -74,6 +74,7 @@ object EnchantmentUtil {
                     if(conflictType != ConflictType.NO_CONFLICT){
                         CustomAnvil.verboseLog(
                             "Enchantment already in result list, and they are conflicting (${enchantment.key}, conflict: $conflictType)")
+                        return@forEach
                     }
                 }
 
