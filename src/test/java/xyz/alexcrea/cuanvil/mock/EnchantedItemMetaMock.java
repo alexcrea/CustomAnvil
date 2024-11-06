@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.mock;
 
 import be.seeseemelk.mockbukkit.inventory.meta.ItemMetaMock;
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -35,9 +36,10 @@ public class EnchantedItemMetaMock extends ItemMetaMock implements EnchantmentSt
         return super.getEnchantLevel(ench);
     }
 
+    // badly imitate paper (and I hope spigot) behavior and avoid concurrent modification exception
     @Override
     public @NotNull Map<Enchantment, Integer> getStoredEnchants() {
-        return super.getEnchants();
+        return ImmutableMap.copyOf(super.getEnchants());
     }
 
     @Override
