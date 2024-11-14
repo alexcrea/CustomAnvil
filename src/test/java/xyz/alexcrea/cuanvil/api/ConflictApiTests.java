@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.api;
 
-import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryType;
@@ -10,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;

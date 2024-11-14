@@ -12,11 +12,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
-import xyz.alexcrea.cuanvil.tests.DefaultCustomAnvilTest;
+import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
 
 import java.util.stream.Stream;
 
-public class DefaultConfigTests extends DefaultCustomAnvilTest {
+public class DefaultConfigTests extends SharedCustomAnvilTest {
 
     @ParameterizedTest
     @MethodSource("provideStringsForIsConfiguredValueValid")

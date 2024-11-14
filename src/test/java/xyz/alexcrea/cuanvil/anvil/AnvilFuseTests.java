@@ -1,37 +1,48 @@
 package xyz.alexcrea.cuanvil.anvil;
 
-import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.tests.DefaultCustomAnvilTest;
+import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
-public class AnvilFuseTests extends DefaultCustomAnvilTest {
+public class AnvilFuseTests extends SharedCustomAnvilTest {
 
-    private AnvilInventory anvil;
-    private PlayerMock player;
+    private static AnvilInventory anvil;
+    private static PlayerMock player;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
+    @BeforeAll
+    public static void setUp() {
         // Mock used player & open anvil
         player = server.addPlayer();
 
         Inventory anvil = server.createInventory(player, InventoryType.ANVIL);
 
-        this.anvil = (AnvilInventory) anvil;
+        AnvilFuseTests.anvil = (AnvilInventory) anvil;
         player.openInventory(anvil);
 
         ConfigHolder.DEFAULT_CONFIG.getConfig().set("debug_log", true);
         ConfigHolder.DEFAULT_CONFIG.getConfig().set("debug_log_verbose", true);
+    }
+
+    @BeforeEach
+    public void prepareAnvil(){
+        anvil.clear();
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        player = null;
+        anvil = null;
     }
 
     @Test

@@ -1,10 +1,10 @@
 package xyz.alexcrea.cuanvil.mock;
 
-import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 
 public class EnchantedItemStackMock extends ItemStackMock {
 

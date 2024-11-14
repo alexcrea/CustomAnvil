@@ -1,11 +1,11 @@
 package xyz.alexcrea.cuanvil.mock;
 
-import org.mockbukkit.mockbukkit.inventory.PlayerInventoryViewMock;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mockbukkit.mockbukkit.inventory.PlayerInventoryViewMock;
 
 @SuppressWarnings({"removal"})
 public class AnvilViewMock extends PlayerInventoryViewMock implements AnvilView {

@@ -1,7 +1,5 @@
 package io.delilaheve.util;
 
-import org.mockbukkit.mockbukkit.entity.PlayerMock;
-import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
@@ -12,6 +10,8 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
