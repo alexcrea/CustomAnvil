@@ -1,6 +1,6 @@
 package xyz.alexcrea.cuanvil.mock;
 
-import be.seeseemelk.mockbukkit.inventory.PlayerInventoryViewMock;
+import org.mockbukkit.mockbukkit.inventory.PlayerInventoryViewMock;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.view.AnvilView;

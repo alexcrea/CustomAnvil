@@ -90,8 +90,7 @@ public class AnvilFuseTestUtil {
             new PrepareAnvilListener().anvilCombineCheck(event);
             anvil.setResult(event.getResult());
         } catch (Exception e){
-            e.printStackTrace();
-            Assertions.fail();
+            Assertions.fail(e);
         }
     }
 
@@ -141,8 +140,15 @@ public class AnvilFuseTestUtil {
     }
 
     public static void assertEqual(@Nullable ItemStack item1, @Nullable ItemStack item2) {
-        if(isAir(item1)) Assertions.assertTrue(isAir(item2),"Item "+item2+" was not AIR but was expected to be air");
-        else Assertions.assertEquals(item1, item2);
+        boolean secondIsAir = isAir(item2);
+        if(isAir(item1)) Assertions.assertTrue(secondIsAir,"Item "+item2+" was not AIR but was expected to be air");
+        else {
+            Assertions.assertFalse(secondIsAir,"Item "+item2+" was expected not to be air");
+
+            item1.setDurability(item1.getDurability());
+            item2.setDurability(item2.getDurability());
+            Assertions.assertEquals(item1, item2);
+        }
 
     }
 
