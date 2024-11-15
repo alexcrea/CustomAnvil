@@ -78,6 +78,7 @@ public class CustomAnvilRecipeApi {
         return true;
     }
 
+    // TODO remove by name and/or by builder (as name is keept) (and maybe create a get by name)
     /**
      * Remove a custom anvil recipe.
      *
@@ -86,7 +87,8 @@ public class CustomAnvilRecipeApi {
      */
     public static boolean removeRecipe(@NotNull AnvilCustomRecipe recipe){
         // Remove from registry
-        ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
+        boolean result = ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
+        if(!result) return false;
 
         // Delete and save to file
         ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(recipe.getName());

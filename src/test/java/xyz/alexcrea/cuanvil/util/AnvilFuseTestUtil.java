@@ -132,6 +132,7 @@ public class AnvilFuseTestUtil {
             @Nullable ItemStack toPlace,
             @Nullable ItemStack expectedResult){
         anvil.setItem(slot, toPlace);
+        anvil.setItem(2, null);
         AnvilFuseTestUtil.imitateAnvilUpdate(player, anvil);
 
         ItemStack result = anvil.getItem(2);

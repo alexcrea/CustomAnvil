@@ -11,13 +11,11 @@ import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.AnvilColorUtil
