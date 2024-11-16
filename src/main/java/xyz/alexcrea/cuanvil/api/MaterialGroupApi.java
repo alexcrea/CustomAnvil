@@ -125,7 +125,7 @@ public class MaterialGroupApi {
             config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materialSet));
         }
         if(!groupSet.isEmpty()){
-            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSEtToStringList(groupSet));
+            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSetToStringList(groupSet));
         }
 
     }
@@ -147,7 +147,7 @@ public class MaterialGroupApi {
         return materials.stream().map(material -> material.getKey().getKey().toLowerCase()).toList();
     }
 
-    public static List<String> materialGroupSEtToStringList(@NotNull Set<AbstractMaterialGroup> groups){
+    public static List<String> materialGroupSetToStringList(@NotNull Set<AbstractMaterialGroup> groups){
         return groups.stream().map(AbstractMaterialGroup::getName).toList();
     }
 
@@ -157,11 +157,12 @@ public class MaterialGroupApi {
      * For that reason, it is not recommended to use this function.
      *
      * @param group The recipe to remove
-     * @return True if successful.
+     * @return True if the group was present.
      */
     public static boolean removeGroup(@NotNull AbstractMaterialGroup group){
         // Remove from registry
-        ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
+        AbstractMaterialGroup removed = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
+        if(removed == null) return false;
 
         // Delete and save to file
         ConfigHolder.ITEM_GROUP_HOLDER.delete(group.getName());
