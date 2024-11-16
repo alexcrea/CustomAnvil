@@ -6,6 +6,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,9 @@ import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConflictApiTests extends ConfigResetCustomAnvilTest {
 
@@ -42,7 +47,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
     }
 
     @Test
-    public void testConflict(){
+    public void testConflict() {
         ItemStack sharpness1 = CommonItemUtil.sharpness(1);
         ItemStack arthropods1 = CommonItemUtil.bane_of_arthropods(1);
         ItemStack illegalResult = AnvilFuseTestUtil.prepareItem(
@@ -70,13 +75,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
 
         // Try to find & remove conflict
-        EnchantConflictGroup conflict = null;
-        for (EnchantConflictGroup enchantConflictGroup : ConflictAPI.getRegisteredConflict()) {
-            if("sword_enchant_conflict".equalsIgnoreCase(enchantConflictGroup.getName())){
-                conflict = enchantConflictGroup;
-                break;
-            }
-        }
+        EnchantConflictGroup conflict = findGroup("sword_enchant_conflict");
         Assertions.assertNotNull(conflict, "Could not find conflict.");
 
         // Test what happen when we remove the conflict (illegal item should be allowed)
@@ -95,6 +94,49 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         // Now the conflict should be registered and conflict should exist
         Assertions.assertTrue(builder.registerIfAbsent());
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+    }
+
+    @Test
+    void writeGroup_Reload() {
+        String conflictName = "conflict";
+        ConflictBuilder builder = new ConflictBuilder(conflictName);
+
+        // Group not being set should not exist
+        assertFalse(doGroupExist(conflictName));
+
+        // Add group and reload
+        assertTrue(ConflictAPI.writeConflict(builder));
+        assertFalse(doGroupExist(conflictName));
+
+        // Tick so write get reloaded
+        server.getScheduler().performOneTick();
+
+        assertTrue(doGroupExist(conflictName));
+    }
+
+    @Test
+    void writeGroup_InvalidDot() {
+        String conflictName = "conflict.conflict";
+        ConflictBuilder builder = new ConflictBuilder(conflictName);
+
+        // Try write group
+        assertFalse(ConflictAPI.writeConflict(builder));
+    }
+
+    // Maybe move to ConflictApi class ?
+   private static boolean doGroupExist(@NotNull String groupName) {
+        return findGroup(groupName) != null;
+    }
+
+    // Maybe move to ConflictApi class ?
+    @Nullable
+    private static EnchantConflictGroup findGroup(@NotNull String groupName){
+        for (EnchantConflictGroup enchantConflictGroup : ConflictAPI.getRegisteredConflict()) {
+            if (groupName.equalsIgnoreCase(enchantConflictGroup.getName())) {
+                return enchantConflictGroup;
+            }
+        }
+        return null;
     }
 
 }

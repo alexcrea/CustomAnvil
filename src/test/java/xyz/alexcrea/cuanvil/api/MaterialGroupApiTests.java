@@ -43,7 +43,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     }
 
     @Test
-    void testAfterReload(){
+    void writeGroup_Reload() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
 
@@ -61,6 +61,16 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
 
         assertTrue(doGroupExist(groupName));
         assertTrue(doGroupCanBeFound(groupName));
+    }
+
+
+    @Test
+    void writeGroup_InvalidDot() {
+        String groupName = "group.group";
+        IncludeGroup group = new IncludeGroup(groupName);
+
+        // Try write group
+        assertFalse(MaterialGroupApi.writeMaterialGroup(group));
     }
 
     boolean doGroupExist(String groupName) {
