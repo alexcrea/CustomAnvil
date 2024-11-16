@@ -5,7 +5,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UnitRepairApiTest extends ConfigResetCustomAnvilTest {
+public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
 
     private AnvilInventory anvil;
     private PlayerMock player;
