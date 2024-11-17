@@ -148,7 +148,6 @@ public class ConflictAPI {
         EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
         if (conflictGui != null) conflictGui.removeGeneric(conflict);
 
-
         return true;
     }
 
@@ -177,7 +176,6 @@ public class ConflictAPI {
 
             reloadChangeTask = null;
         });
-
     }
 
     static void logConflictOrigin(@NotNull ConflictBuilder builder) {

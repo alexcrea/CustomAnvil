@@ -36,7 +36,7 @@ public class ConflictBuilder {
      * @param maxBeforeConflict Maximum number of conflicting enchantment before conflict is active
      * @param source            The conflict source
      */
-    public ConflictBuilder(@NotNull String name, int maxBeforeConflict, @Nullable Plugin source){
+    public ConflictBuilder(@NotNull String name, int maxBeforeConflict, @Nullable Plugin source) {
         this.source = source;
         this.name = name;
 
@@ -54,7 +54,7 @@ public class ConflictBuilder {
      * @param name   The conflict name
      * @param source The conflict source
      */
-    public ConflictBuilder(@NotNull String name, @Nullable Plugin source){
+    public ConflictBuilder(@NotNull String name, @Nullable Plugin source) {
         this(name, 0, source);
     }
 
@@ -63,7 +63,7 @@ public class ConflictBuilder {
      *
      * @param name The conflict name
      */
-    public ConflictBuilder(@NotNull String name){
+    public ConflictBuilder(@NotNull String name) {
         this(name, null);
     }
 
@@ -84,7 +84,7 @@ public class ConflictBuilder {
      */
     @NotNull
     public String getSourceName() {
-        if(source == null) return "an unknown source";
+        if (source == null) return "an unknown source";
 
         return source.getName();
     }
@@ -177,7 +177,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder addEnchantment(@NotNull String enchantmentName){
+    public ConflictBuilder addEnchantment(@NotNull String enchantmentName) {
         enchantmentNames.add(enchantmentName);
         return this;
     }
@@ -189,7 +189,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder addEnchantment(@NotNull NamespacedKey enchantmentKey){
+    public ConflictBuilder addEnchantment(@NotNull NamespacedKey enchantmentKey) {
         enchantmentKeys.add(enchantmentKey);
         return this;
     }
@@ -201,7 +201,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder addEnchantment(@NotNull CAEnchantment enchantment){
+    public ConflictBuilder addEnchantment(@NotNull CAEnchantment enchantment) {
         addEnchantment(enchantment.getKey());
         return this;
     }
@@ -213,7 +213,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder removeEnchantment(@NotNull String enchantmentName){
+    public ConflictBuilder removeEnchantment(@NotNull String enchantmentName) {
         enchantmentNames.remove(enchantmentName);
         return this;
     }
@@ -225,7 +225,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder removeEnchantment(@NotNull NamespacedKey enchantmentKey){
+    public ConflictBuilder removeEnchantment(@NotNull NamespacedKey enchantmentKey) {
         enchantmentKeys.remove(enchantmentKey);
         return removeEnchantment(enchantmentKey.getKey());
     }
@@ -237,7 +237,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder removeEnchantment(@NotNull CAEnchantment enchantment){
+    public ConflictBuilder removeEnchantment(@NotNull CAEnchantment enchantment) {
         return removeEnchantment(enchantment.getKey());
     }
 
@@ -256,7 +256,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder addExcludedGroup(@NotNull String groupName){
+    public ConflictBuilder addExcludedGroup(@NotNull String groupName) {
         excludedGroupNames.add(groupName);
         return this;
     }
@@ -276,7 +276,7 @@ public class ConflictBuilder {
      * @return this conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder addExcludedGroup(@NotNull AbstractMaterialGroup group){
+    public ConflictBuilder addExcludedGroup(@NotNull AbstractMaterialGroup group) {
         return addExcludedGroup(group.getName());
     }
 
@@ -295,7 +295,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder removeExcludedGroup(@NotNull String groupName){
+    public ConflictBuilder removeExcludedGroup(@NotNull String groupName) {
         excludedGroupNames.remove(groupName);
         return this;
     }
@@ -315,7 +315,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder removeExcludedGroup(@NotNull AbstractMaterialGroup group){
+    public ConflictBuilder removeExcludedGroup(@NotNull AbstractMaterialGroup group) {
         return removeExcludedGroup(group.getName());
     }
 
@@ -328,7 +328,7 @@ public class ConflictBuilder {
     public ConflictBuilder copy() {
         ConflictBuilder copy = new ConflictBuilder(this.name, this.source);
 
-        setMaxBeforeConflict(this.maxBeforeConflict);
+        copy.setMaxBeforeConflict(this.maxBeforeConflict);
 
         // Set Enchantments
         for (NamespacedKey key : this.enchantmentKeys) {
@@ -345,11 +345,13 @@ public class ConflictBuilder {
 
         return copy;
     }
+
     /**
      * Build a new Enchant conflict group by this builder.
+     *
      * @return An Enchant conflict group with this builder parameters.
      */
-    public EnchantConflictGroup build(){
+    public EnchantConflictGroup build() {
         AbstractMaterialGroup materials = extractGroups();
         EnchantConflictGroup conflict = new EnchantConflictGroup(getName(), materials, getMaxBeforeConflict());
         appendEnchantments(conflict);
@@ -360,18 +362,20 @@ public class ConflictBuilder {
     /**
      * Register this conflict if not yet registered.
      * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder, boolean) ConflictAPI.addConflict(this, true)}}
+     *
      * @return True if successful.
      */
-    public boolean registerIfAbsent(){
+    public boolean registerIfAbsent() {
         return ConflictAPI.addConflict(this, true);
     }
 
     /**
      * Register this conflict if not yet registered or deleted.
      * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder) ConflictAPI.addConflict(this)}
+     *
      * @return True if successful.
      */
-    public boolean registerIfNew(){
+    public boolean registerIfNew() {
         return ConflictAPI.addConflict(this);
     }
 
@@ -380,15 +384,15 @@ public class ConflictBuilder {
      *
      * @param conflict The conflict target
      */
-    protected void appendEnchantments(@NotNull EnchantConflictGroup conflict){
-        for (String enchantmentName : getEnchantmentNames()){
-            if(appendEnchantments(conflict, EnchantmentApi.getListByName(enchantmentName)) == 0){
+    protected void appendEnchantments(@NotNull EnchantConflictGroup conflict) {
+        for (String enchantmentName : getEnchantmentNames()) {
+            if (appendEnchantments(conflict, EnchantmentApi.getListByName(enchantmentName)) == 0) {
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
             }
         }
-        for (NamespacedKey enchantmentKey : getEnchantmentKeys()){
-            if(!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))){
+        for (NamespacedKey enchantmentKey : getEnchantmentKeys()) {
+            if (!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))) {
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentKey + " for conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
             }
@@ -402,8 +406,8 @@ public class ConflictBuilder {
      * @param enchantment The enchantment
      * @return True if successful.
      */
-    protected static boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment){
-        if(enchantment == null)
+    protected static boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment) {
+        if (enchantment == null)
             return false;
         conflict.addEnchantment(enchantment);
         return true;
@@ -412,14 +416,14 @@ public class ConflictBuilder {
     /**
      * Append a list of enchantments.
      *
-     * @param conflict    The conflict target
+     * @param conflict     The conflict target
      * @param enchantments List of enchantment to add
      * @return Number of enchantment added
      */
-    protected static int appendEnchantments(@NotNull EnchantConflictGroup conflict, @NotNull List<CAEnchantment> enchantments){
+    protected static int appendEnchantments(@NotNull EnchantConflictGroup conflict, @NotNull List<CAEnchantment> enchantments) {
         int numberValid = 0;
         for (CAEnchantment enchantment : enchantments) {
-            if(appendEnchantment(conflict, enchantment)){
+            if (appendEnchantment(conflict, enchantment)) {
                 numberValid++;
             }
         }
@@ -432,14 +436,14 @@ public class ConflictBuilder {
      *
      * @return The abstract material group from the builder.
      */
-    protected AbstractMaterialGroup extractGroups(){
+    protected AbstractMaterialGroup extractGroups() {
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         IncludeGroup group = new IncludeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
 
         for (String groupName : getExcludedGroupNames()) {
             AbstractMaterialGroup materialGroup = itemGroupManager.get(groupName);
 
-            if(materialGroup == null){
+            if (materialGroup == null) {
                 CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
                 continue;
