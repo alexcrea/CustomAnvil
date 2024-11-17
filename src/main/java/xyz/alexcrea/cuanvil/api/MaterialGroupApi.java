@@ -27,10 +27,10 @@ public class MaterialGroupApi {
     private static Object saveChangeTask = null;
     private static Object reloadChangeTask = null;
 
-
     /**
      * Write and add a group.
      * Will not write the group if it already exists.
+     * Will not be successful if the group is empty.
      *
      * @param group The group to add
      * @return true if successful.
@@ -42,6 +42,7 @@ public class MaterialGroupApi {
     /**
      * Write and add a group.
      * Will not write the group if it already exists.
+     * Will not be successful if the group is empty.
      *
      * @param group The group to add
      * @param overrideDeleted If we should write even if the group was previously deleted.
@@ -77,7 +78,7 @@ public class MaterialGroupApi {
      * You may want to use {@link #addMaterialGroup(AbstractMaterialGroup)} instead as it is more performance in most case as this function will reload every conflict.
      *
      * @param group the group to write
-     * @return true if successful.
+     * @return true if was written successfully.
      */
     public static boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group){
         return writeMaterialGroup(group, true);
@@ -90,7 +91,7 @@ public class MaterialGroupApi {
      *
      * @param group         the group to write
      * @param updatePlanned if we should plan a global update for material groups
-     * @return true if successful.
+     * @return true if was written successfully.
      */
     public static boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group, boolean updatePlanned){
         String name = group.getName();
@@ -99,13 +100,15 @@ public class MaterialGroupApi {
             return false;
         }
 
+        boolean changed;
         if(group instanceof IncludeGroup includeGroup){
-            writeKnownGroup("include", includeGroup);
+            changed = writeKnownGroup("include", includeGroup);
         }else if(group instanceof ExcludeGroup excludeGroup){
-            writeKnownGroup("exclude", excludeGroup);
+            changed = writeKnownGroup("exclude", excludeGroup);
         }else{
-            writeUnknownGroup(group);
+            changed = writeUnknownGroup(group);
         }
+        if(!changed) return false;
 
         prepareSaveTask();
         if(updatePlanned) prepareUpdateTask();
@@ -113,34 +116,37 @@ public class MaterialGroupApi {
         return true;
     }
 
-    private static void writeKnownGroup(@NotNull String groupType, @NotNull AbstractMaterialGroup group){
+    private static boolean writeKnownGroup(@NotNull String groupType, @NotNull AbstractMaterialGroup group){
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
         Set<Material> materialSet = group.getNonGroupInheritedMaterials();
         Set<AbstractMaterialGroup> groupSet = group.getGroups();
 
-        config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, groupType);
         if(!materialSet.isEmpty()){
             config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materialSet));
         }
         if(!groupSet.isEmpty()){
             config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSetToStringList(groupSet));
         }
+        if(!config.isConfigurationSection(group.getName())) return false;
 
+        config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, groupType);
+        return true;
     }
 
-    private static void writeUnknownGroup(@NotNull AbstractMaterialGroup group) {
+    private static boolean writeUnknownGroup(@NotNull AbstractMaterialGroup group) {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
         EnumSet<Material> materials = group.getMaterials();
 
-        config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, "include");
-        if(!materials.isEmpty()){
-            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materials));
-        }
+        if(materials.isEmpty()) return false;
 
+        config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, "include");
+        config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materials));
+
+        return true;
     }
 
     public static List<String> materialSetToStringList(@NotNull Set<Material> materials){

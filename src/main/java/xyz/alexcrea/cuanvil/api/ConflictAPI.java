@@ -27,6 +27,7 @@ public class ConflictAPI {
     /**
      * Write and add a conflict.
      * Will not write the conflict if it already exists.
+     * Will not be successful if the conflict is empty.
      *
      * @param builder The conflict builder to be based on
      * @return True if successful.
@@ -38,6 +39,7 @@ public class ConflictAPI {
     /**
      * Write and add a conflict.
      * Will not write the conflict if it already exists.
+     * Will not be successful if the conflict is empty.
      *
      * @param builder The conflict builder to be based on
      * @param overrideDeleted If we should write even if the conflict was previously deleted.
@@ -51,7 +53,6 @@ public class ConflictAPI {
         if(config.contains(builder.getName())) return false;
 
         if(!writeConflict(builder, false)) return false;
-
 
         EnchantConflictGroup conflict = builder.build();
         // Register conflict
@@ -69,8 +70,8 @@ public class ConflictAPI {
      * <p>
      * You may want to use {@link #addConflict(ConflictBuilder)} instead as it is more performance in most case as this function will reload every conflict.
      *
-     * @param builder The builder
-     * @return True if successful.
+     * @param builder the builder
+     * @return true if was written successfully.
      */
     public static boolean writeConflict(@NotNull ConflictBuilder builder){
         return writeConflict(builder, true);
@@ -83,7 +84,7 @@ public class ConflictAPI {
      *
      * @param builder       The builder
      * @param updatePlanned If we should plan a global update for conflicts
-     * @return True if successful.
+     * @return true if was written successfully.
      */
     public static boolean writeConflict(@NotNull ConflictBuilder builder, boolean updatePlanned){
         FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
@@ -103,6 +104,7 @@ public class ConflictAPI {
         if(!excludedGroups.isEmpty()) config.set(basePath + "notAffectedGroups", excludedGroups);
         if(builder.getMaxBeforeConflict() > 0) config.set(basePath + "maxEnchantmentBeforeConflict", builder.getMaxBeforeConflict());
 
+        if(!config.isConfigurationSection(name)) return false;
 
         prepareSaveTask();
         if(updatePlanned) prepareUpdateTask();
