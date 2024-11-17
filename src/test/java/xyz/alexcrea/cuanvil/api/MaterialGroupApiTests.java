@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.api;
 
+import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
@@ -14,6 +15,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     void groupAddAndRemove() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
+        group.addToPolicy(Material.DIAMOND_PICKAXE); // We do not want it to be empty
 
         // Group not being set should not exist
         assertFalse(doGroupExist(groupName));
@@ -46,6 +48,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     void writeGroup_Reload() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
+        group.addToPolicy(Material.DIAMOND_PICKAXE); // We do not want it to be empty
 
         // Group not being set should not exist
         assertFalse(doGroupExist(groupName));
@@ -63,6 +66,22 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
         assertTrue(doGroupCanBeFound(groupName));
     }
 
+    @Test
+    void writeGroup_Empty() {
+        String groupName = "group";
+        IncludeGroup group = new IncludeGroup(groupName);
+
+        // Add group and reload
+        assertFalse(MaterialGroupApi.writeMaterialGroup(group));
+        assertFalse(doGroupExist(groupName));
+        assertFalse(doGroupCanBeFound(groupName));
+
+        // Tick so write get reloaded
+        server.getScheduler().performOneTick();
+
+        assertFalse(doGroupExist(groupName));
+        assertFalse(doGroupCanBeFound(groupName));
+    }
 
     @Test
     void writeGroup_InvalidDot() {

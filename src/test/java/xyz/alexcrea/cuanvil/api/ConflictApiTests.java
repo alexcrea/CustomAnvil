@@ -100,6 +100,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
     void writeGroup_Reload() {
         String conflictName = "conflict";
         ConflictBuilder builder = new ConflictBuilder(conflictName);
+        builder.addEnchantment("bane_of_arthropods");
 
         // Group not being set should not exist
         assertFalse(doGroupExist(conflictName));
@@ -115,6 +116,24 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
     }
 
     @Test
+    void writeGroup_Empty() {
+        String conflictName = "conflict";
+        ConflictBuilder builder = new ConflictBuilder(conflictName);
+
+        // Group not being set should not exist
+        assertFalse(doGroupExist(conflictName));
+
+        // Add group and reload
+        assertFalse(ConflictAPI.writeConflict(builder));
+        assertFalse(doGroupExist(conflictName));
+
+        // Tick so write get reloaded
+        server.getScheduler().performOneTick();
+
+        assertFalse(doGroupExist(conflictName));
+    }
+
+    @Test
     void writeGroup_InvalidDot() {
         String conflictName = "conflict.conflict";
         ConflictBuilder builder = new ConflictBuilder(conflictName);
@@ -124,13 +143,13 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
     }
 
     // Maybe move to ConflictApi class ?
-   private static boolean doGroupExist(@NotNull String groupName) {
+    private static boolean doGroupExist(@NotNull String groupName) {
         return findGroup(groupName) != null;
     }
 
     // Maybe move to ConflictApi class ?
     @Nullable
-    private static EnchantConflictGroup findGroup(@NotNull String groupName){
+    private static EnchantConflictGroup findGroup(@NotNull String groupName) {
         for (EnchantConflictGroup enchantConflictGroup : ConflictAPI.getRegisteredConflict()) {
             if (groupName.equalsIgnoreCase(enchantConflictGroup.getName())) {
                 return enchantConflictGroup;
