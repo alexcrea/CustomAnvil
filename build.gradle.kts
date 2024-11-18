@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.6.8"
+version = "1.6.9"
 
 repositories {
     // EcoEnchants
@@ -28,7 +28,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    val stefvanschie_IF = "com.github.stefvanschie.inventoryframework:IF:0.10.17"
+    val stefvanschie_IF = "com.github.stefvanschie.inventoryframework:IF:0.10.18"
     implementation(stefvanschie_IF)
     testRuntimeOnly(stefvanschie_IF)
 
