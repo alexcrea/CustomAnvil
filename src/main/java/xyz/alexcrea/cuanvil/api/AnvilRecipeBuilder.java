@@ -182,7 +182,7 @@ public class AnvilRecipeBuilder {
      */
     @Nullable // null if missing argument
     public AnvilCustomRecipe build() {
-        if(leftItem == null || rightItem == null) return null;
+        if(leftItem == null || resultItem == null) return null;
 
         return new AnvilCustomRecipe(
                 this.name,

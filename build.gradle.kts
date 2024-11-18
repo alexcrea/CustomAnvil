@@ -28,7 +28,9 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.17")
+    val stefvanschie_IF = "com.github.stefvanschie.inventoryframework:IF:0.10.17"
+    implementation(stefvanschie_IF)
+    testRuntimeOnly(stefvanschie_IF)
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
@@ -61,6 +63,10 @@ dependencies {
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
+
+    // Test dependency
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.3.1")
+    testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
 allprojects {
@@ -80,8 +86,8 @@ allprojects {
     dependencies {
         compileOnly(kotlin("stdlib"))
 
-        // Currently not used. but it would be useful to test.
-        testImplementation(platform("org.junit:junit-bom:5.9.1"))
+        // Test dependency
+        testImplementation(platform("org.junit:junit-bom:5.11.3"))
         testImplementation("org.junit.jupiter:junit-jupiter")
     }
 
@@ -92,7 +98,7 @@ allprojects {
     // Configure used version of kotlin and java
     java {
         disableAutoTargetJvm()
-        toolchain.languageVersion.set(JavaLanguageVersion.of(20))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     // Set target version

@@ -41,19 +41,20 @@ class PrepareAnvilListener : Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
+        // Should find player
+        val player: HumanEntity = event.viewers.first()
+
         // Test if the event should bypass custom anvil.
-        if(DependencyManager.tryEventPreAnvilBypass(event)) return
+        if(DependencyManager.tryEventPreAnvilBypass(event, player)) return
 
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
 
-        // Should find player
-        val player = event.view.player
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         // Test custom recipe
-        if(testCustomRecipe(event, inventory, first, second)) return
+        if(testCustomRecipe(event, inventory, player, first, second)) return
 
         // Test rename lonely item
         if(second == null) {
@@ -75,7 +76,9 @@ class PrepareAnvilListener : Listener {
 
     }
 
-    private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory, first: ItemStack, second: ItemStack?): Boolean {
+    private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory,
+                                 player: HumanEntity,
+                                 first: ItemStack, second: ItemStack?): Boolean {
         val recipe = CustomRecipeUtil.getCustomRecipe(first, second)
         CustomAnvil.verboseLog("custom recipe not null? ${recipe != null}")
         if(recipe == null) return false
@@ -87,7 +90,7 @@ class PrepareAnvilListener : Listener {
 
         event.result = resultItem
         DependencyManager.treatAnvilResult(event, resultItem)
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, recipe.xpCostPerCraft * amount, true)
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, recipe.xpCostPerCraft * amount, true)
 
         return true
     }
@@ -109,7 +112,7 @@ class PrepareAnvilListener : Listener {
 
         anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem)
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, anvilCost)
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
@@ -177,7 +180,7 @@ class PrepareAnvilListener : Listener {
         event.result = resultItem
         DependencyManager.treatAnvilResult(event, resultItem)
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, anvilCost)
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
     }
 
     private fun testUnitRepair(event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
@@ -203,7 +206,7 @@ class PrepareAnvilListener : Listener {
         event.result = resultItem
         DependencyManager.treatAnvilResult(event, resultItem)
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, anvilCost)
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
         return true
     }
 

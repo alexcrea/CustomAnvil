@@ -9,17 +9,17 @@ class CustomAnvilRecipeManager {
 
     lateinit var recipeList: ArrayList<AnvilCustomRecipe>
 
-    lateinit var recipeByMat: LinkedHashMap<Material, ArrayList<AnvilCustomRecipe>>
+    lateinit var recipeByMat: HashMap<Material, ArrayList<AnvilCustomRecipe>>
 
     fun prepareRecipes(config: FileConfiguration) {
         recipeList = ArrayList()
-        recipeByMat = LinkedHashMap()
+        recipeByMat = HashMap()
 
         // read all configs
         val keys = config.getKeys(false)
         for (key in keys) {
             val recipe = AnvilCustomRecipe.getFromConfig(key)
-            if(recipe == null){
+            if (recipe == null) {
                 CustomAnvil.log("Can't load recipe $key")
                 continue
             }
@@ -30,34 +30,34 @@ class CustomAnvilRecipeManager {
     }
 
 
-    fun cleanAddNew(recipe: AnvilCustomRecipe){
+    fun cleanAddNew(recipe: AnvilCustomRecipe) {
         recipeList.add(recipe)
         val leftItem = recipe.leftItem
-        if(leftItem != null){
+        if (leftItem != null) {
             addToMatMap(recipe, leftItem)
         }
 
     }
 
-    fun cleanSetLeftItem(recipe: AnvilCustomRecipe, leftItem: ItemStack?){
+    fun cleanSetLeftItem(recipe: AnvilCustomRecipe, leftItem: ItemStack?) {
         // Remove left item mat if exist
         val oldLeftItem = recipe.leftItem
-        if(oldLeftItem != null){
+        if (oldLeftItem != null) {
             val oldMat = oldLeftItem.type
 
             val test = recipeByMat[oldMat]
             test!!.remove(recipe)
         }
-        if(leftItem != null){
+        if (leftItem != null) {
             addToMatMap(recipe, leftItem)
         }
 
         recipe.leftItem = leftItem
     }
 
-    private fun addToMatMap(recipe: AnvilCustomRecipe, leftItem: ItemStack){
+    private fun addToMatMap(recipe: AnvilCustomRecipe, leftItem: ItemStack) {
         var recipeList = recipeByMat[leftItem.type]
-        if(recipeList == null){
+        if (recipeList == null) {
             recipeList = ArrayList()
             recipeByMat[leftItem.type] = recipeList
         }
@@ -65,11 +65,14 @@ class CustomAnvilRecipeManager {
 
     }
 
-    fun cleanRemove(recipe: AnvilCustomRecipe) {
+    fun cleanRemove(recipe: AnvilCustomRecipe): Boolean {
 
-        recipeList.remove(recipe)
-        cleanSetLeftItem(recipe, null)
+        val exist = recipeList.remove(recipe)
+        if (exist) {
+            cleanSetLeftItem(recipe, null)
+        }
 
+        return exist;
     }
 
 }

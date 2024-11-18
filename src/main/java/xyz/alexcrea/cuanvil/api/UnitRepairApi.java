@@ -117,9 +117,10 @@ public class UnitRepairApi {
         String repairableName = repairable.name();
 
         FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
-        config.set(unitName.toLowerCase() + repairableName.toUpperCase(), null);
-        config.set(unitName.toUpperCase() + repairableName.toLowerCase(), null);
-        config.set(unitName.toUpperCase() + repairableName.toUpperCase(), null);
+        config.set(unitName.toLowerCase() + "." + repairableName.toUpperCase(), null);
+        config.set(unitName.toUpperCase() + "." + repairableName.toLowerCase(), null);
+        config.set(unitName.toUpperCase() + "." + repairableName.toUpperCase(), null);
+        config.set(unitName.toLowerCase() + "." + repairableName.toLowerCase(), null);
 
         // Test if it was the last value of this section
         boolean lastValue = false;
@@ -142,7 +143,7 @@ public class UnitRepairApi {
 
 
         // We only need to "delete" as the lower case to be counted as deleted
-        ConfigHolder.UNIT_REPAIR_HOLDER.delete(unitName.toLowerCase() + repairableName.toLowerCase());
+        ConfigHolder.UNIT_REPAIR_HOLDER.delete(unitName.toLowerCase() + "." + repairableName.toLowerCase());
         prepareSaveTask();
 
         // Remove from gui

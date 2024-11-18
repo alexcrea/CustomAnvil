@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.dependency
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Bukkit
+import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -91,11 +92,11 @@ object DependencyManager {
 
     }
 
-    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent): Boolean {
+    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         var bypass = false
 
         // Test if disenchantment used special prepare anvil
-        if(disenchantmentCompatibility?.testPrepareAnvil(event) == true) bypass = true
+        if(disenchantmentCompatibility?.testPrepareAnvil(event, player) == true) bypass = true
 
         // Test excellent enchantments used special prepare anvil
         if(!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
