@@ -28,9 +28,9 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Gui library
-    val stefvanschie_IF = "com.github.stefvanschie.inventoryframework:IF:0.10.18"
-    implementation(stefvanschie_IF)
-    testRuntimeOnly(stefvanschie_IF)
+    val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18"
+    implementation(inventoryFramework)
+    testRuntimeOnly(inventoryFramework)
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
