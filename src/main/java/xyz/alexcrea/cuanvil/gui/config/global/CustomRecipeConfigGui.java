@@ -20,17 +20,16 @@ import java.util.Collection;
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
         MappedGuiListConfigGui.LazyElement<CustomRecipeSubSettingGui>> {
 
-
     private static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
 
     @Nullable
-    public static CustomRecipeConfigGui getCurrentInstance(){
+    public static CustomRecipeConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
     @NotNull
-    public static CustomRecipeConfigGui getInstance(){
-        if(INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
+    public static CustomRecipeConfigGui getInstance() {
+        if (INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
 
         return INSTANCE;
     }
@@ -46,9 +45,9 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         // Get base item to display
         ItemStack craftResultItem = recipe.getResultItem();
         ItemStack displayedItem;
-        if(craftResultItem == null){
+        if (craftResultItem == null) {
             displayedItem = new ItemStack(Material.BARRIER);
-        }else{
+        } else {
             displayedItem = craftResultItem.clone();
         }
 
@@ -62,9 +61,9 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         boolean shouldWork = recipe.validate();
 
         meta.setLore(Arrays.asList(
-                "§7Should work:    §"+(shouldWork ? "aYes" : "cNo"),
-                "§7Exact count:    §"+(recipe.getExactCount() ? "aYes" : "cNo"),
-                "§7Recipe Xp Cost: §e"+recipe.getXpCostPerCraft()
+                "§7Should work:    §" + (shouldWork ? "aYes" : "cNo"),
+                "§7Exact count:    §" + (recipe.getExactCount() ? "aYes" : "cNo"),
+                "§7Recipe Xp Cost: §e" + recipe.getXpCostPerCraft()
 
         ));
 

@@ -107,6 +107,9 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
                 "§7Set the result item of the custom craft",
                 "§7\u25A1 + \u25A1 = \u25A0");
+
+        // Now we update the items
+        updateLocal();
     }
 
     private ConfirmActionGui createDeleteGui() {
