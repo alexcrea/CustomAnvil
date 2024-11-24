@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener;
 import xyz.alexcrea.cuanvil.mock.AnvilViewMock;
-import xyz.alexcrea.cuanvil.mock.EnchantedItemStackMock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public class AnvilFuseTestUtil {
             enchantmentMap.put(enchantments.get(i), level.get(i));
         }
 
-        ItemStack item = new EnchantedItemStackMock(material);
+        ItemStack item = new ItemStack(material);
         ItemUtil.INSTANCE.setEnchantmentsUnsafe(item, enchantmentMap);
 
         ItemMeta meta = item.getItemMeta();
