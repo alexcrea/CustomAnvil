@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.6.10"
+version = "1.6.11"
 
 repositories {
     // EcoEnchants
@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":nms:v1_20R4", configuration = "reobf"))
     implementation(project(":nms:v1_21R1", configuration = "reobf"))
     implementation(project(":nms:v1_21R2", configuration = "reobf"))
+    implementation(project(":nms:v1_21R3"))//, configuration = "reobf")) // TODO add again when paperweigh 1.21.4 update
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
