@@ -48,6 +48,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         resultPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability()/2));
         ItemMeta meta = resultPickaxe.getItemMeta();
         ((Repairable) meta).setRepairCost(1);
+        resultPickaxe.setItemMeta(meta);
 
         ItemStack diamond2 = new ItemStackMock(Material.DIAMOND, 2);
 
@@ -93,6 +94,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         resultPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability()/2));
         ItemMeta meta = resultPickaxe.getItemMeta();
         ((Repairable) meta).setRepairCost(1);
+        resultPickaxe.setItemMeta(meta);
 
         ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
 

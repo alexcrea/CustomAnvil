@@ -4,6 +4,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Repairable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,11 +51,15 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
     public void mergeFuseTest(){
         // Literally just test a sharpness 4 + sharpness 4
         ItemStack sharpness4 = CommonItemUtil.sharpness(4);
-        ItemStack sharpness5 = CommonItemUtil.sharpness(5);
+
+        ItemStack sharpness5Result = CommonItemUtil.sharpness(5);
+        Repairable meta = (Repairable) sharpness5Result.getItemMeta();
+        meta.setRepairCost(1);
+        sharpness5Result.setItemMeta(meta);
 
         AnvilFuseTestData data = new AnvilFuseTestData(
                 sharpness4, sharpness4,
-                sharpness5
+                sharpness5Result
                 // TODO add expected price
         );
 
@@ -66,9 +72,14 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
         ItemStack sharpness4 = CommonItemUtil.sharpness(4);
         ItemStack sharpness5 = CommonItemUtil.sharpness(5);
 
+        ItemStack sharpness5Result = CommonItemUtil.sharpness(5);
+        Repairable meta = (Repairable) sharpness5Result.getItemMeta();
+        meta.setRepairCost(1);
+        sharpness5Result.setItemMeta(meta);
+
         AnvilFuseTestData data = new AnvilFuseTestData(
                 sharpness4, sharpness5,
-                sharpness5
+                sharpness5Result
                 // TODO add expected price
         );
 

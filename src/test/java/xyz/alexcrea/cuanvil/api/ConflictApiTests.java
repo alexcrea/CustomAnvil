@@ -51,7 +51,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         ItemStack sharpness1 = CommonItemUtil.sharpness(1);
         ItemStack arthropods1 = CommonItemUtil.bane_of_arthropods(1);
         ItemStack illegalResult = AnvilFuseTestUtil.prepareItem(
-                Material.DIAMOND_SWORD,
+                Material.DIAMOND_SWORD, 1,
                 List.of("bane_of_arthropods", "sharpness"),
                 1, 1
         );

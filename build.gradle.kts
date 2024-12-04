@@ -66,7 +66,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Test dependency
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.5.0")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.9.3") //lower bound: 4.9.2  upper bound: 4.9.3
     testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
