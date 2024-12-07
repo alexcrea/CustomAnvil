@@ -11,6 +11,7 @@ plugins {
     `maven-publish`
     signing
     id("cn.lalaki.central").version("1.2.5")
+    // Paper
     id("io.papermc.paperweight.userdev") version "1.7.3" apply false
 }
 

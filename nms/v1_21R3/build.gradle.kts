@@ -3,24 +3,20 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 group = rootProject.group
 version = rootProject.version
 
-//TODO uncomment when paperDevBundle 1.21.4 release
-/*plugins {
+plugins {
     id("io.papermc.paperweight.userdev")
-}*/
+}
 
 dependencies {
     implementation(project(":nms:nms-common"))
 
     // Used for nms
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT") //TODO remove when paperDevBundle 1.21.4 release
-    compileOnly("org.spigotmc:spigot:1.21.4-R0.1-SNAPSHOT") //TODO remove when paperDevBundle 1.21.4 release
-    //paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT") //TODO uncomment when paperDevBundle 1.21.4 release
+    paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT")
 }
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 
-    mavenLocal() //TODO remove when paperDevBundle 1.21.4 release
 }
 
 // minecraft 1.21 java version is 21.

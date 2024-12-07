@@ -7,7 +7,6 @@ import org.bukkit.entity.Player
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase
 
-// Todo: replace it by the mojang mapped version when paper dev bundle release
 class V1_21R2_PacketManager : PacketManagerBase(), PacketManager {
     override val canSetInstantBuild: Boolean
         get() = true
