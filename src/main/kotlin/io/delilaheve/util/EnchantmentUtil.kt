@@ -89,7 +89,11 @@ object EnchantmentUtil {
                     // We test if it is allowed to merge at this level
                     if(!bypassLevel){
                         val maxBeforeDisabled = ConfigOptions.maxBeforeMergeDisabled(enchantment)
-                        if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) return@forEach
+                        if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) {
+                            CustomAnvil.verboseLog(
+                                "Reached max merge before disable for ${enchantment.key}: $oldLevel/$maxBeforeDisabled)")
+                            return@forEach
+                        }
                     }
 
                     // Now we increase the enchantment level by 1
