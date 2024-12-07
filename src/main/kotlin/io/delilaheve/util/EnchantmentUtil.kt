@@ -39,6 +39,7 @@ object EnchantmentUtil {
             // Get max level or 255 if player can bypass
             val maxLevel = if (bypassLevel) { 255 }
             else { ConfigOptions.enchantLimit(enchantment) }
+            CustomAnvil.verboseLog("Max level of ${enchantment.key} is $maxLevel (bypassLevel is $bypassLevel)")
 
             val cappedLevel = min(level, maxLevel)
 
