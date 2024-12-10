@@ -52,6 +52,11 @@ class AnvilResultListener: Listener {
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
 
+        if(!GameMode.CREATIVE.equals(player.gameMode) && inventory.repairCost >= inventory.maximumRepairCost) {
+            event.result = Event.Result.DENY
+            return
+        }
+
         // Test custom recipe
         val recipe = CustomRecipeUtil.getCustomRecipe(leftItem, rightItem)
         if(recipe != null){
@@ -107,6 +112,7 @@ class AnvilResultListener: Listener {
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
         val xpCost = amount * recipe.xpCostPerCraft
 
+        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $xpCost, level: ${player.level}, result: ${player.level < xpCost}")
         if ((player.gameMode != GameMode.CREATIVE) && (player.level < xpCost)) return
 
         // We give the item manually

@@ -39,6 +39,7 @@ object EnchantmentUtil {
             // Get max level or 255 if player can bypass
             val maxLevel = if (bypassLevel) { 255 }
             else { ConfigOptions.enchantLimit(enchantment) }
+            CustomAnvil.verboseLog("Max level of ${enchantment.key} is $maxLevel (bypassLevel is $bypassLevel)")
 
             val cappedLevel = min(level, maxLevel)
 
@@ -89,7 +90,11 @@ object EnchantmentUtil {
                     // We test if it is allowed to merge at this level
                     if(!bypassLevel){
                         val maxBeforeDisabled = ConfigOptions.maxBeforeMergeDisabled(enchantment)
-                        if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) return@forEach
+                        if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) {
+                            CustomAnvil.verboseLog(
+                                "Reached max merge before disable for ${enchantment.key}: $oldLevel/$maxBeforeDisabled)")
+                            return@forEach
+                        }
                     }
 
                     // Now we increase the enchantment level by 1
