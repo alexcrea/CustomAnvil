@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.6.12-debug.2"
+version = "1.6.12"
 
 repositories {
     // EcoEnchants
