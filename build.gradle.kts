@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.6.12"
+version = "1.6.13"
 
 repositories {
     // EcoEnchants
@@ -43,6 +43,7 @@ dependencies {
     // ExcellentEnchants
     compileOnly(files("libs/nightcore-2.6.4.jar"))
     compileOnly(files("libs/ExcellentEnchants-4.2.2.jar"))
+    compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar"))
 
     // Disenchantment
     compileOnly("cz.kominekjan:Disenchantment:v5.4.0")
