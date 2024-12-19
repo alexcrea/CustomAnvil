@@ -14,14 +14,14 @@ import java.util.Map;
 public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, BulkCleanEnchantOperation {
 
     @Override
-    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentList, @NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull ItemStack item, @NotNull ItemMeta meta) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
             ((EnchantmentStorageMeta)meta).getStoredEnchants().forEach((enchantment, level) ->
-                    enchantmentList.put(EnchantmentApi.getByKey(enchantment.getKey()), level)
+                    enchantmentMap.put(EnchantmentApi.getByKey(enchantment.getKey()), level)
             );
         } else {
             item.getEnchantments().forEach((enchantment, level) ->
-                    enchantmentList.put(EnchantmentApi.getByKey(enchantment.getKey()), level)
+                    enchantmentMap.put(EnchantmentApi.getByKey(enchantment.getKey()), level)
             );
         }
     }

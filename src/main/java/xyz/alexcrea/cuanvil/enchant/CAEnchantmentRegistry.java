@@ -16,6 +16,7 @@ import java.util.logging.Level;
 public class CAEnchantmentRegistry {
 
     private static final CAEnchantmentRegistry instance = new CAEnchantmentRegistry();
+
     public static CAEnchantmentRegistry getInstance() {
         return instance;
     }
@@ -49,7 +50,7 @@ public class CAEnchantmentRegistry {
      * This should only be called on main of custom anvil.
      * If called more than one time, chance of thing being broken will be high.
      */
-    public void registerBukkit(){
+    public void registerBukkit() {
         // Register enchantment
         for (Enchantment enchantment : Enchantment.values()) {
             register(new CABukkitEnchantment(enchantment));
@@ -59,7 +60,6 @@ public class CAEnchantmentRegistry {
         BukkitEnchantBulkOperation bukkitOperation = new BukkitEnchantBulkOperation();
         optimisedGetOperators.add(bukkitOperation);
         optimisedCleanOperators.add(bukkitOperation);
-
     }
 
     private static boolean hasWarnedRegistering = false;
@@ -69,20 +69,26 @@ public class CAEnchantmentRegistry {
      * <p>
      * No guarantee that the enchantment will be present on the config gui if registered late.
      * (By late I mean after custom anvil startup.)
+     *
      * @param enchantment The enchantment to be registered.
      * @return If the operation was successful.
      */
-    public boolean register(@NotNull CAEnchantment enchantment){
-        if(byKeyMap.containsKey(enchantment.getKey())){
+    public boolean register(@NotNull CAEnchantment enchantment) {
+        if (byKeyMap.containsKey(enchantment.getKey())) {
+            if (!enchantment.equals(byKeyMap.get(enchantment.getKey()))) {
+                // We are trying to register the exact same enchantment. so we just skip it.
+                return false;
+            }
+
             CustomAnvil.instance.getLogger().log(Level.WARNING,
-                    "Duplicate registered enchantment. This should NOT happen any time.\n" +
-                    "If you are a custom anvil developer. You maybe custom anvil detected your enchantment as a bukkit enchantment. " +
-                            "maybe remove enchantment with the same key before registering yours",
-                    new IllegalStateException(enchantment.getKey()+" enchantment was already registered"));
+                    "Duplicate distinct registered enchantment. This should NOT happen any time.\n" +
+                            "If you are a custom anvil developer: Maybe custom anvil detected your enchantment as a bukkit enchantment. " +
+                            "you should maybe remove enchantment with the same key before registering yours",
+                    new IllegalStateException("enchantment " + enchantment.getKey() + " was already registered"));
             return false;
         }
 
-        if((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())){
+        if ((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())) {
             hasWarnedRegistering = true;
 
             CustomAnvil.instance.getLogger().log(Level.WARNING,
@@ -96,10 +102,10 @@ public class CAEnchantmentRegistry {
 
         nameSortedEnchantments.add(enchantment);
 
-        if(!enchantment.isGetOptimised()){
+        if (!enchantment.isGetOptimised()) {
             unoptimisedGetValues.add(enchantment);
         }
-        if(!enchantment.isCleanOptimised()){
+        if (!enchantment.isCleanOptimised()) {
             unoptimisedCleanValues.add(enchantment);
         }
 
@@ -113,12 +119,13 @@ public class CAEnchantmentRegistry {
      * <p>
      * No guarantee that the enchantment will absent if the config guis if unregistered late.
      * (By late I mean after custom anvil startup.)
+     *
      * @param enchantment The enchantment to be unregistered.
      * @return If the operation was successful.
      */
 
-    public boolean unregister(@Nullable CAEnchantment enchantment){
-        if(enchantment == null) return false;
+    public boolean unregister(@Nullable CAEnchantment enchantment) {
+        if (enchantment == null) return false;
         byKeyMap.remove(enchantment.getKey());
         byNameMap.get(enchantment.getName()).remove(enchantment);
 
@@ -131,42 +138,45 @@ public class CAEnchantmentRegistry {
 
     /**
      * Gets the enchantment by the provided key.
+     *
      * @param key Key to fetch.
      * @return Registered enchantment. null if absent.
      */
     @Nullable
-    public CAEnchantment getByKey(@NotNull NamespacedKey key){
+    public CAEnchantment getByKey(@NotNull NamespacedKey key) {
         return byKeyMap.get(key);
     }
 
     /**
      * Gets the enchantment by the provided name.
+     *
      * @param name Name to fetch.
      * @return Registered enchantment. null if absent.
-     *
      * @deprecated use {@link #getListByName(String)}
      */
     @Deprecated(since = "1.6.3")
     @Nullable
-    public CAEnchantment getByName(@NotNull String name){
+    public CAEnchantment getByName(@NotNull String name) {
         List<CAEnchantment> enchantments = getListByName(name);
-        if(enchantments.isEmpty()) return null;
+        if (enchantments.isEmpty()) return null;
 
         return enchantments.get(0);
     }
 
     /**
      * Gets list of enchantment using the provided name.
+     *
      * @param name Name to fetch.
      * @return List of registered enchantment.
      */
     @NotNull
-    public List<CAEnchantment> getListByName(@NotNull String name){
+    public List<CAEnchantment> getListByName(@NotNull String name) {
         return byNameMap.getOrDefault(name, Collections.emptyList());
     }
 
     /**
      * Gets an array of all the registered enchantments.
+     *
      * @return Array of enchantments.
      */
     @NotNull
@@ -176,6 +186,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Gets a map of all the registered enchantments.
+     *
      * @return Immutable map of enchantments.
      */
     public Map<NamespacedKey, CAEnchantment> registeredEnchantments() {
@@ -184,6 +195,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Gets a list of all the unoptimised get operation enchantments.
+     *
      * @return List of unoptimised enchantments.
      */
     @NotNull
@@ -193,6 +205,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Gets a list of all the unoptimised clean operation enchantments.
+     *
      * @return List of unoptimised enchantments.
      */
     @NotNull
@@ -202,6 +215,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Get "clean optimised operation" for get enchantments.
+     *
      * @return Mutable "clean enchantments optimised operation" list.
      */
     public List<BulkCleanEnchantOperation> getOptimisedCleanOperators() {
@@ -210,6 +224,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Get "get optimised operation" for get enchantments.
+     *
      * @return Mutable "get enchantments optimised operation" list.
      */
     public List<BulkGetEnchantOperation> getOptimisedGetOperators() {
@@ -218,6 +233,7 @@ public class CAEnchantmentRegistry {
 
     /**
      * Get custom anvil enchantment sorted by name.
+     *
      * @return An immutable sorted set of every registered enchantment sorted by name.
      */
     public SortedSet<CAEnchantment> getNameSortedEnchantments() {

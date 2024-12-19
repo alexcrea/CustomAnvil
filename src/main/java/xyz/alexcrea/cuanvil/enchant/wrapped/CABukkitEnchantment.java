@@ -157,4 +157,13 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof CABukkitEnchantment other)){
+            return false;
+        }
+
+        return this.enchantment.equals(other.getEnchant());
+    }
+
 }

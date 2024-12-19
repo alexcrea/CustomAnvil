@@ -14,10 +14,10 @@ import java.util.Map;
 public class EnchantSquaredBulkOperation implements BulkGetEnchantOperation, BulkCleanEnchantOperation {
 
     @Override
-    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentList, @NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull ItemStack item, @NotNull ItemMeta meta) {
         EnchantmentSquaredDependency enchantmentSquared = DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility();
         if(enchantmentSquared != null){
-            enchantmentSquared.getEnchantmentsSquared(item, enchantmentList);
+            enchantmentSquared.getEnchantmentsSquared(item, enchantmentMap);
         }
     }
 
