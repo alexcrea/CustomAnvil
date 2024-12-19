@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.bulk.BukkitEnchantBulkOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
@@ -77,6 +78,10 @@ public class CAEnchantmentRegistry {
         if (byKeyMap.containsKey(enchantment.getKey())) {
             if (!enchantment.equals(byKeyMap.get(enchantment.getKey()))) {
                 // We are trying to register the exact same enchantment. so we just skip it.
+                return false;
+            }
+
+            if(ConfigHolder.DEFAULT_CONFIG.getConfig().getBoolean("caution_secret_do_not_log_duplicated_registered_key", false)){
                 return false;
             }
 
