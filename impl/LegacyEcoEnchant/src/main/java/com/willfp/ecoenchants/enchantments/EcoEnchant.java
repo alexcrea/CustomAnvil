@@ -11,10 +11,6 @@ import java.util.Set;
  */
 public class EcoEnchant {
 
-    public boolean getConflictsWithEverything() {
-        return false;
-    }
-
     public boolean conflictsWith(@NotNull Enchantment enchant) {
         return false;
     }

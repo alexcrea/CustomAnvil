@@ -23,16 +23,12 @@ public class CALegacyEcoEnchant extends CABukkitEnchantment implements Additiona
 
     @Override
     public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
-        if (!enchantments.isEmpty()) {
-            if (this.ecoEnchant.getConflictsWithEverything()) {
-                return true;
-            }
+        if (enchantments.isEmpty()) return false;
 
-            for (CAEnchantment other : enchantments.keySet()) {
-                if (other instanceof CABukkitEnchantment otherVanilla
-                        && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())) {
-                    return true;
-                }
+        for (CAEnchantment other : enchantments.keySet()) {
+            if (other instanceof CABukkitEnchantment otherVanilla
+                    && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())) {
+                return true;
             }
         }
 

@@ -22,19 +22,19 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
 
     @Override
     public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
-        if(!enchantments.isEmpty()) {
-            if (this.ecoEnchant.getConflictsWithEverything()) {
+        if(enchantments.isEmpty()) return false;
+
+        if (this.ecoEnchant.getConflictsWithEverything()) {
+            return true;
+        }
+
+        for (CAEnchantment other : enchantments.keySet()) {
+            if(other instanceof CABukkitEnchantment otherVanilla
+                    && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())){
                 return true;
             }
-
-            for (CAEnchantment other : enchantments.keySet()) {
-                if(other instanceof CABukkitEnchantment otherVanilla
-                        && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())){
-                    return true;
-                }
-            }
-
         }
+
         return false;
     }
 
