@@ -44,10 +44,13 @@ dependencies {
     // ExcellentEnchants
     compileOnly(files("libs/nightcore-2.6.4.jar"))
     compileOnly(files("libs/ExcellentEnchants-4.2.2.jar"))
-    compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar"))
+    compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar")) // For legacy excellent enchants
 
     // Disenchantment
     compileOnly("cz.kominekjan:Disenchantment:v5.4.0")
+
+    // HavenBags
+    compileOnly(files("libs/HavenBags-1.30.1.1729.jar"))
 
     // Include nms
     implementation(project(":nms:nms-common"))
