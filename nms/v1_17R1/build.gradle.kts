@@ -24,7 +24,7 @@ repositories {
 // Configure used version of kotlin and java
 java {
     disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(16))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 // Set target version
