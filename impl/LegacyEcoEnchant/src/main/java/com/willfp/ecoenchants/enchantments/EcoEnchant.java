@@ -1,6 +1,7 @@
 package com.willfp.ecoenchants.enchantments;
 
 import com.willfp.ecoenchants.enchantments.meta.EnchantmentTarget;
+import com.willfp.ecoenchants.enchantments.meta.EnchantmentType;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,4 +20,7 @@ public class EcoEnchant {
         return null;
     }
 
+    public EnchantmentType getType() {
+        return null;
+    }
 }

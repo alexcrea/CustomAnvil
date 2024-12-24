@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import com.willfp.ecoenchants.enchantments.EcoEnchant;
 import com.willfp.ecoenchants.enchantments.meta.EnchantmentTarget;
+import com.willfp.ecoenchants.enchantments.meta.EnchantmentType;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -25,9 +26,19 @@ public class CALegacyEcoEnchant extends CABukkitEnchantment implements Additiona
     public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
         if (enchantments.isEmpty()) return false;
 
+        EnchantmentType type = this.ecoEnchant.getType();
+        boolean isSingular = type.isSingular();
+
         for (CAEnchantment other : enchantments.keySet()) {
             if (other instanceof CABukkitEnchantment otherVanilla
                     && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())) {
+                return true;
+            }
+
+            if (isSingular &&
+                    other != this &&
+                    (other instanceof CALegacyEcoEnchant otherEco) &&
+                    type.equals(otherEco.ecoEnchant.getType())) {
                 return true;
             }
         }
