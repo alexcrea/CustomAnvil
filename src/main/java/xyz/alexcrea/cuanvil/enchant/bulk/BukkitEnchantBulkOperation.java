@@ -1,7 +1,9 @@
 package xyz.alexcrea.cuanvil.enchant.bulk;
 
+import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,16 +16,27 @@ import java.util.Map;
 public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, BulkCleanEnchantOperation {
 
     @Override
-    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentList, @NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull ItemStack item, @NotNull ItemMeta meta) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            ((EnchantmentStorageMeta)meta).getStoredEnchants().forEach((enchantment, level) ->
-                    enchantmentList.put(EnchantmentApi.getByKey(enchantment.getKey()), level)
+            ((EnchantmentStorageMeta) meta).getStoredEnchants().forEach((enchantment, level) ->
+                    addEnchantment(enchantmentMap, enchantment, level)
             );
         } else {
             item.getEnchantments().forEach((enchantment, level) ->
-                    enchantmentList.put(EnchantmentApi.getByKey(enchantment.getKey()), level)
+                    addEnchantment(enchantmentMap, enchantment, level)
             );
         }
+    }
+
+    public void addEnchantment(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull Enchantment enchantment, int level) {
+        CAEnchantment enchant = EnchantmentApi.getByKey(enchantment.getKey());
+        if (enchant == null) {
+            CustomAnvil.instance.getLogger().warning("Enchantment of key " + enchantment.getKey() +
+                    " somehow not found in CustomAnvil ?");
+            return;
+        }
+
+        enchantmentMap.put(enchant, level);
     }
 
     @Override

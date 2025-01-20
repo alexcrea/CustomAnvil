@@ -16,13 +16,18 @@ import java.util.Objects;
 public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
 
     public final @NotNull CustomEnchant enchant;
+
     public CAEnchantSquaredEnchantment(@NotNull CustomEnchant enchant) {
         super(Objects.requireNonNull(
-                Objects.requireNonNull(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility()).getKeyFromEnchant(enchant)),
+                        Objects.requireNonNull(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility()).getKeyFromEnchant(enchant)),
                 EnchantmentRarity.COMMON,
                 enchant.getMaxLevel());
         this.enchant = enchant;
 
+    }
+
+    public @NotNull CustomEnchant getEnchant() {
+        return enchant;
     }
 
     @Override
@@ -59,6 +64,16 @@ public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
     @Override
     public void removeFrom(@NotNull ItemStack item) {
         CustomEnchantManager.getInstance().removeEnchant(item, this.enchant.getType());
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CAEnchantSquaredEnchantment other)) {
+            return false;
+        }
+
+        return this.enchant.equals(other.getEnchant());
     }
 
 }

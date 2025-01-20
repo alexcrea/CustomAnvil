@@ -28,13 +28,14 @@ object DependencyManager {
     var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
 
     var disenchantmentCompatibility: DisenchantmentDependency? = null
+    var havenBagsCompatibility: HavenBagsDependency? = null
 
-    fun loadDependency(){
+    fun loadDependency() {
         val pluginManager = Bukkit.getPluginManager()
 
         // Bukkit or Paper scheduler ?
         isFolia = testIsFolia()
-        scheduler = if(isFolia) {
+        scheduler = if (isFolia) {
             CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
 
             FoliaScheduler()
@@ -46,27 +47,33 @@ object DependencyManager {
         externGuiTester = GuiTesterSelector.selectGuiTester
 
         // Enchantment Squared dependency
-        if(pluginManager.isPluginEnabled("EnchantsSquared")){
+        if (pluginManager.isPluginEnabled("EnchantsSquared")) {
             enchantmentSquaredCompatibility = EnchantmentSquaredDependency(pluginManager.getPlugin("EnchantsSquared")!!)
             enchantmentSquaredCompatibility!!.disableAnvilListener()
         }
 
         // EcoEnchants dependency
-        if(pluginManager.isPluginEnabled("EcoEnchants")){
+        if (pluginManager.isPluginEnabled("EcoEnchants")) {
             ecoEnchantCompatibility = EcoEnchantDependency(pluginManager.getPlugin("EcoEnchants")!!)
             ecoEnchantCompatibility!!.disableAnvilListener()
         }
 
         // Excellent Enchants dependency
-        if(pluginManager.isPluginEnabled("ExcellentEnchants")){
+        if (pluginManager.isPluginEnabled("ExcellentEnchants")) {
             excellentEnchantsCompatibility = ExcellentEnchantsDependency()
             excellentEnchantsCompatibility!!.redirectListeners()
         }
 
         // Disenchantment dependency
-        if(pluginManager.isPluginEnabled("Disenchantment")){
+        if (pluginManager.isPluginEnabled("Disenchantment")) {
             disenchantmentCompatibility = DisenchantmentDependency()
             disenchantmentCompatibility!!.redirectListeners()
+        }
+
+        // HavenBags dependency
+        if (pluginManager.isPluginEnabled("HavenBags")) {
+            havenBagsCompatibility = HavenBagsDependency()
+            havenBagsCompatibility!!.redirectListeners()
         }
 
     }
@@ -83,7 +90,7 @@ object DependencyManager {
 
     }
 
-    fun handleConfigReload(){
+    fun handleConfigReload() {
         // Register enchantment of compatible plugin and load configuration change.
         handleCompatibilityConfig()
 
@@ -95,14 +102,18 @@ object DependencyManager {
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         var bypass = false
 
-        // Test if disenchantment used special prepare anvil
-        if(disenchantmentCompatibility?.testPrepareAnvil(event, player) == true) bypass = true
+        // Test if disenchantment used prepare anvil
+        if (disenchantmentCompatibility?.testPrepareAnvil(event, player) == true) bypass = true
 
-        // Test excellent enchantments used special prepare anvil
-        if(!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
+        // Test heaven bags used prepare anvil
+        if (!bypass && (havenBagsCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
+
+        // Test excellent enchantments used prepare anvil
+        if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
 
         // Test if the inventory is a gui(version specific)
-        if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+
 
         return bypass
     }
@@ -114,14 +125,17 @@ object DependencyManager {
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         var bypass = false
 
-        // Test if disenchantment used special event click
-        if(disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
+        // Test if disenchantment used event click
+        if (disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
 
-        // Test if disenchantment used special event click
-        if(!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
+        // Test if haven bag used event click
+        if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true
+
+        // Test if disenchantment used event click
+        if (!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
 
         // Test if the inventory is a gui(version specific)
-        if(!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
         return bypass
     }

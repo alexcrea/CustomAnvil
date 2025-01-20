@@ -191,7 +191,7 @@ class EnchantConflictManager {
         }
 
         val immutableEnchants = Collections.unmodifiableMap(appliedEnchants)
-        for (appliedEnchant in appliedEnchants) {
+        for (appliedEnchant in appliedEnchants.keys) {
             if(appliedEnchant is AdditionalTestEnchantment){
                 val doConflict = appliedEnchant.isEnchantConflict(immutableEnchants, mat)
                 if(doConflict){

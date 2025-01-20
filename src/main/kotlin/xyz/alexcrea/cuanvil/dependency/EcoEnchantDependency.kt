@@ -10,17 +10,40 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.CAEcoEnchant
 
 class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
 
+    private val isLegacy: Boolean
+    private val legacyDependency: LegacyEcoEnchantDependency?
+
     init {
         CustomAnvil.instance.logger.info("Eco Enchant Detected !")
+
+        var isLegacy = true
+        try {
+            Class.forName("com.willfp.ecoenchants.enchant.EcoEnchants")
+            isLegacy = false
+        } catch (_: ClassNotFoundException) {
+        }
+
+        this.isLegacy = isLegacy;
+        if (isLegacy) {
+            this.legacyDependency = LegacyEcoEnchantDependency()
+        } else {
+            this.legacyDependency = null
+        }
+
     }
 
-    fun disableAnvilListener(){
+    fun disableAnvilListener() {
         PrepareAnvilEvent.getHandlerList().unregister(this.ecoEnchantPlugin)
     }
 
     private var ecoEnchantOldEnchantments: MutableSet<EcoEnchant>? = null
     fun registerEnchantments() {
         CustomAnvil.instance.logger.info("Preparing Eco Enchant compatibility...")
+
+        if (isLegacy) {
+            legacyDependency!!.registerEnchantments();
+            return
+        }
 
         val enchantments = EcoEnchants.values()
         for (ecoEnchant in enchantments) {
@@ -34,14 +57,19 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
     }
 
     fun handleConfigReload() {
+        if (isLegacy) {
+            legacyDependency!!.handleConfigReload()
+            return
+        }
+
         // Should not happen in known case.
-        if(this.ecoEnchantOldEnchantments == null) return
+        if (this.ecoEnchantOldEnchantments == null) return
 
         val newEnchantments = EcoEnchants.values()
 
         // Add new enchantments
         for (ecoEnchant in newEnchantments)
-            if(!this.ecoEnchantOldEnchantments!!.contains(ecoEnchant))
+            if (!this.ecoEnchantOldEnchantments!!.contains(ecoEnchant))
                 EnchantmentApi.registerEnchantment(CAEcoEnchant(ecoEnchant))
 
         // Remove old enchantments that not now currently used
