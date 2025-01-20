@@ -5,12 +5,10 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
 import valorless.havenbags.BagSkin
 import valorless.havenbags.BagUpgrade
 import valorless.havenbags.HavenBags
-import valorless.havenbags.prevention.EquipPrevention
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 
@@ -77,16 +75,10 @@ class HavenBagsDependency {
             CustomAnvil.log("Detected anvil click haven bag bypass.")
             bagUpgrade.onInventoryClick(event)
             bagSkin.onInventoryClick(event)
-            return true;
+            return true
         }
 
         return false
-    }
-
-    private fun testAnvilInventoryChange(inventory: AnvilInventory, previous: ItemStack?): Boolean {
-        val currentResult = inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)
-
-        return currentResult == previous
     }
 
 }

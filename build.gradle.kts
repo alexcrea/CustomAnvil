@@ -3,16 +3,16 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.0"
     java
     id("org.jetbrains.dokka").version("1.9.20")
-    id("com.gradleup.shadow").version("8.3.3")
+    id("com.gradleup.shadow").version("8.3.5")
     // Maven publish
     `maven-publish`
     signing
     id("cn.lalaki.central").version("1.2.5")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.8" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.14" apply false
 }
 
 group = "xyz.alexcrea"
@@ -37,17 +37,17 @@ dependencies {
     compileOnly(files("libs/EnchantsSquared.jar"))
 
     // EcoEnchants
-    compileOnly("com.willfp:EcoEnchants:12.5.1")
-    compileOnly("com.willfp:eco:6.70.1")
+    compileOnly("com.willfp:EcoEnchants:12.11.1")
+    compileOnly("com.willfp:eco:6.74.5")
     compileOnly(project(":impl:LegacyEcoEnchant"))
 
     // ExcellentEnchants
-    compileOnly(files("libs/nightcore-2.6.4.jar"))
-    compileOnly(files("libs/ExcellentEnchants-4.2.2.jar"))
+    compileOnly(files("libs/nightcore-2.7.3.jar"))
+    compileOnly(files("libs/ExcellentEnchants-4.3.1.jar"))
     compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar")) // For legacy excellent enchants
 
     // Disenchantment
-    compileOnly("cz.kominekjan:Disenchantment:v5.4.0")
+    compileOnly(files("libs/Disenchantment-6.1.0.jar"))
 
     // HavenBags
     compileOnly(files("libs/HavenBags-1.30.1.1729.jar"))
@@ -72,7 +72,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Test dependency
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.9.3") //lower bound: 4.9.2  upper bound: 4.9.3
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.21.0")
     testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
@@ -154,7 +154,7 @@ tasks {
         filesMatching("plugin.yml") {
             expand(
                 "version" to project.version,
-                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.0.21\" "
+                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" "
             )
         }
 
@@ -163,27 +163,34 @@ tasks {
     }
 
     // Offline jar (include kotlin std in the final jar fine)
-    val offlineJar by creating(ShadowJar::class) {
-        archiveClassifier.set("offline")
-
-        // Shadow necessary dependency
-        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
-
-        filesMatching("plugin.yml") {
-            expand(
-                "version" to "${project.version}-offline",
-                "libraries" to ""
-            )
-        }
+    val offlineJar by // Shadow necessary dependency
+    registering(
 
         // Include all project other dependencies
-        from(project.configurations.runtimeClasspath)
+        ShadowJar
 
         // Add custom anvil compiled
-        from(sourceSets.main.get().output)
+        ::class, fun ShadowJar.() {
+            archiveClassifier.set("offline")
 
-        dependsOn(processResources)
-    }
+            // Shadow necessary dependency
+            relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
+
+            filesMatching("plugin.yml") {
+                expand(
+                    "version" to "${project.version}-offline",
+                    "libraries" to ""
+                )
+            }
+
+            // Include all project other dependencies
+            from(project.configurations.runtimeClasspath)
+
+            // Add custom anvil compiled
+            from(sourceSets.main.get().output)
+
+            dependsOn(processResources)
+        })
 
     // Make the online and offline jar on build
     named("build") {
@@ -197,12 +204,12 @@ val sourcesJar by tasks.registering(Jar::class) {
     from(kotlin.sourceSets.main.get().kotlin)
 }
 
-val javadocJar by tasks.creating(Jar::class) {
+val javadocJar by tasks.registering(Jar::class, fun Jar.() {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Javadoc JAR"
     archiveClassifier.set("javadoc")
     from(tasks.named("dokkaHtml"))
-}
+})
 
 signing {
     useGpgCmd()

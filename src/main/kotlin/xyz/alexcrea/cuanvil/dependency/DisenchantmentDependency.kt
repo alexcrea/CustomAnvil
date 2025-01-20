@@ -1,9 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency
 
-import cz.kominekjan.disenchantment.events.DisenchantClickEvent
-import cz.kominekjan.disenchantment.events.DisenchantEvent
-import cz.kominekjan.disenchantment.events.ShatterClickEvent
-import cz.kominekjan.disenchantment.events.ShatterEvent
+import com.jankominek.disenchantment.events.DisenchantClickEvent
+import com.jankominek.disenchantment.events.DisenchantEvent
+import com.jankominek.disenchantment.events.ShatterClickEvent
+import com.jankominek.disenchantment.events.ShatterEvent
 import io.delilaheve.CustomAnvil
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent

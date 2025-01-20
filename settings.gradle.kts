@@ -1,13 +1,4 @@
-import java.net.URI
-
 rootProject.name = "CustomAnvil"
-
-// for Disenchantment dependency
-sourceControl {
-    gitRepository(URI.create("https://github.com/H7KZ/Disenchantment.git")) {
-        producesModule("cz.kominekjan:Disenchantment")
-    }
-}
 
 // NMS subproject
 include("nms:nms-common")
@@ -38,5 +29,6 @@ include("nms:v1_21R2")
 findProject(":nms:v1_21R2")?.name = "v1_21R2"
 include("nms:v1_21R3")
 findProject(":nms:v1_21R3")?.name = "v1_21R3"
+
 include(":impl:LegacyEcoEnchant")
 findProject(":impl:LegacyEcoEnchant")?.name = "LegacyEcoEnchant"

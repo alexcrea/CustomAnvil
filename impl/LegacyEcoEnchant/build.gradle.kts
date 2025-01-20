@@ -2,7 +2,7 @@ group = rootProject.group
 version = rootProject.version
 
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.0"
 }
 
 // Imitate needed class and method to support legacy version of EcoEnchant
