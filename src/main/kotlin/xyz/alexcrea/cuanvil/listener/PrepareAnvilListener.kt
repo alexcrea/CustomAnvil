@@ -116,26 +116,27 @@ class PrepareAnvilListener : Listener {
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
+        // Can be null
+        var inventoryName = ChatColor.stripColor(inventory.renameText)
+
+        var sumCost = 0
+        var useColor = false
+        if(ConfigOptions.renameColorPossible && inventoryName != null){
+            val resultString = StringBuilder(inventoryName)
+
+            useColor = AnvilColorUtil.handleRenamingColor(resultString, player)
+
+            if(useColor) {
+                inventoryName = resultString.toString()
+
+                sumCost+= ConfigOptions.useOfColorCost
+            }
+        }
+
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
+
             val displayName = ChatColor.stripColor(it.displayName)
-            var inventoryName = ChatColor.stripColor(inventory.renameText)
-
-            var sumCost = 0
-
-            var useColor = false
-            if(ConfigOptions.renameColorPossible){
-                val resultString = StringBuilder(inventoryName)
-
-                useColor = AnvilColorUtil.handleRenamingColor(resultString, player)
-
-                if(useColor) {
-                    inventoryName = resultString.toString()
-
-                    sumCost+= ConfigOptions.useOfColorCost
-                }
-            }
-
             if ((!useColor && (!displayName.contentEquals(inventoryName))) || (useColor && !(it.displayName).contentEquals(inventoryName))) {
                 it.setDisplayName(inventoryName)
                 resultItem.itemMeta = it
