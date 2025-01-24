@@ -22,6 +22,7 @@ import xyz.alexcrea.cuanvil.util.AnvilColorUtil
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.logging.Level
 
 /**
  * Listener for anvil events
@@ -45,7 +46,20 @@ class PrepareAnvilListener : Listener {
         val player: HumanEntity = event.viewers.first()
 
         // Test if the event should bypass custom anvil.
-        if(DependencyManager.tryEventPreAnvilBypass(event, player)) return
+        var shouldBypass: Boolean
+        try {
+            shouldBypass = DependencyManager.tryEventPreAnvilBypass(event, player)
+        } catch (e: Exception){
+            shouldBypass = true
+            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+
+            // Just in case to avoid illegal items
+            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            // Finally, warn the player, maybe a lot of time but better warn than do nothing
+            player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+        }
+        if(shouldBypass) return
 
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return

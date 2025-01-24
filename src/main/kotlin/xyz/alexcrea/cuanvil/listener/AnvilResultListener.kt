@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.unitRepair
+import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -23,6 +24,7 @@ import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.logging.Level
 import kotlin.math.min
 
 class AnvilResultListener: Listener {
@@ -45,8 +47,22 @@ class AnvilResultListener: Listener {
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
             return
         }
+
         // Test if the event should bypass custom anvil.
-        if(DependencyManager.tryClickAnvilResultBypass(event, inventory)) return
+        var shouldBypass: Boolean
+        try {
+            shouldBypass = DependencyManager.tryClickAnvilResultBypass(event, inventory)
+        } catch (e: Exception){
+            shouldBypass = true
+            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+
+            // Just in case to avoid illegal items
+            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            // Finally, warn the player, maybe a lot of time but better warn than do nothing
+            player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+        }
+        if(shouldBypass) return
 
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
