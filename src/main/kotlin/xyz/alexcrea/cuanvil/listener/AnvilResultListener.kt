@@ -45,6 +45,7 @@ class AnvilResultListener: Listener {
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
             return
         }
+
         // Test if the event should bypass custom anvil.
         if(DependencyManager.tryClickAnvilResultBypass(event, inventory)) return
 
@@ -52,7 +53,7 @@ class AnvilResultListener: Listener {
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
 
-        if(!GameMode.CREATIVE.equals(player.gameMode) && inventory.repairCost >= inventory.maximumRepairCost) {
+        if(GameMode.CREATIVE != player.gameMode && inventory.repairCost >= inventory.maximumRepairCost) {
             event.result = Event.Result.DENY
             return
         }
@@ -96,7 +97,6 @@ class AnvilResultListener: Listener {
         }
     }
 
-
     private fun onCustomCraft(event: InventoryClickEvent,
                               recipe: AnvilCustomRecipe,
                               player: Player,
@@ -122,7 +122,7 @@ class AnvilResultListener: Listener {
 
         // Handle not creative middle click...
         if (event.click != ClickType.MIDDLE &&
-            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, xpCost)) return;
+            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, xpCost)) return
 
         // Finally, we add the item to the player
         if (slotDestination.type == SlotType.CURSOR) {
@@ -222,7 +222,7 @@ class AnvilResultListener: Listener {
                               resultCopy: ItemStack, resultAmount: Int): Int {
         if (player.gameMode == GameMode.CREATIVE) return 0
 
-        var repairCost = 0;
+        var repairCost = 0
         // Get repairCost
         leftItem.itemMeta?.let { leftMeta ->
             val leftName = leftMeta.displayName

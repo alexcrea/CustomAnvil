@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.dependency
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
@@ -15,6 +16,8 @@ import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
 import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
+import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
+import java.util.logging.Level
 
 object DependencyManager {
 
@@ -96,10 +99,25 @@ object DependencyManager {
 
         // Then handle plugin reload
         ecoEnchantCompatibility?.handleConfigReload()
-
     }
 
+    // Return true if should bypass (either by a dependency or error)
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+        try {
+            return unsafeTryEventPreAnvilBypass(event, player)
+        } catch (e: Exception){
+            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+
+            // Just in case to avoid illegal items
+            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            // Finally, warn the player, maybe a lot of time but better warn than do nothing
+            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            return true
+        }
+    }
+
+    private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         var bypass = false
 
         // Test if disenchantment used prepare anvil
@@ -118,11 +136,44 @@ object DependencyManager {
         return bypass
     }
 
-    fun treatAnvilResult(event: PrepareAnvilEvent, result: ItemStack) {
+    // Return true only if error occurred (and so should bypass rest)
+    fun tryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack): Boolean {
+        try {
+            unsafeTryTreatAnvilResult(event, result)
+            return false
+        } catch (e: Exception){
+            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+
+            // Just in case to avoid illegal items
+            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            // Finally, warn the player, maybe a lot of time but better warn than do nothing
+            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            return true
+        }
+    }
+
+    private fun unsafeTryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack) {
         excellentEnchantsCompatibility?.treatAnvilResult(event, result)
     }
 
+    // Return true if should bypass (either by a dependency or error)
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
+        try {
+           return unsafeTryClickAnvilResultBypass(event, inventory)
+        } catch (e: Exception){
+            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+
+            // Just in case to avoid illegal items
+            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            // Finally, warn the player, maybe a lot of time but better warn than do nothing
+            event.whoClicked.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            return true
+        }
+    }
+
+    private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         var bypass = false
 
         // Test if disenchantment used event click

@@ -22,6 +22,7 @@ import xyz.alexcrea.cuanvil.util.AnvilColorUtil
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.logging.Level
 
 /**
  * Listener for anvil events
@@ -45,7 +46,7 @@ class PrepareAnvilListener : Listener {
         val player: HumanEntity = event.viewers.first()
 
         // Test if the event should bypass custom anvil.
-        if(DependencyManager.tryEventPreAnvilBypass(event, player)) return
+        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
 
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
@@ -76,6 +77,7 @@ class PrepareAnvilListener : Listener {
 
     }
 
+    // return true if a custom recipe exist with these ingredient
     private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory,
                                  player: HumanEntity,
                                  first: ItemStack, second: ItemStack?): Boolean {
@@ -89,7 +91,7 @@ class PrepareAnvilListener : Listener {
         resultItem.amount *= amount
 
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, recipe.xpCostPerCraft * amount, true)
 
         return true
@@ -108,7 +110,7 @@ class PrepareAnvilListener : Listener {
         }
 
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
         anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem)
 
@@ -116,27 +118,30 @@ class PrepareAnvilListener : Listener {
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
+        // Can be null
+        var inventoryName = ChatColor.stripColor(inventory.renameText)
+
+        var sumCost = 0
+        var useColor = false
+        if(ConfigOptions.renameColorPossible && inventoryName != null){
+            val resultString = StringBuilder(inventoryName)
+
+            useColor = AnvilColorUtil.handleRenamingColor(resultString, player)
+
+            if(useColor) {
+                inventoryName = resultString.toString()
+
+                sumCost+= ConfigOptions.useOfColorCost
+            }
+        }
+
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
-            val displayName = ChatColor.stripColor(it.displayName)
-            var inventoryName = ChatColor.stripColor(inventory.renameText)
+            val displayName =
+                if (useColor) it.displayName
+                else ChatColor.stripColor(it.displayName)
 
-            var sumCost = 0
-
-            var useColor = false
-            if(ConfigOptions.renameColorPossible){
-                val resultString = StringBuilder(inventoryName)
-
-                useColor = AnvilColorUtil.handleRenamingColor(resultString, player)
-
-                if(useColor) {
-                    inventoryName = resultString.toString()
-
-                    sumCost+= ConfigOptions.useOfColorCost
-                }
-            }
-
-            if ((!useColor && (!displayName.contentEquals(inventoryName))) || (useColor && !(it.displayName).contentEquals(inventoryName))) {
+            if (!displayName.contentEquals(inventoryName)) {
                 it.setDisplayName(inventoryName)
                 resultItem.itemMeta = it
 
@@ -178,11 +183,12 @@ class PrepareAnvilListener : Listener {
 
         // Finally, we set result
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
     }
 
+    // return true if there is a valid unit repair with these ingredients
     private fun testUnitRepair(event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
                                first: ItemStack, second: ItemStack): Boolean {
         val unitRepairAmount = first.getRepair(second) ?: return false
@@ -204,7 +210,7 @@ class PrepareAnvilListener : Listener {
             return true
         }
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
         return true

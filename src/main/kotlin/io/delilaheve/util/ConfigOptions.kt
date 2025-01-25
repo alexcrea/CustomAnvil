@@ -48,8 +48,8 @@ object ConfigOptions {
     private const val KEY_ITEM = "item"
 
     // Debug flag
-    private const val DEBUG_LOGGING = "debug_log"
-    private const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
+    const val DEBUG_LOGGING = "debug_log"
+    const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
 
     // ----------------------
     // Default config values
