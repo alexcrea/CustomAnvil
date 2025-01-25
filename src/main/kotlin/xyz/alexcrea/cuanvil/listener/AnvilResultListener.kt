@@ -4,7 +4,6 @@ import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.unitRepair
-import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -24,7 +23,6 @@ import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
-import java.util.logging.Level
 import kotlin.math.min
 
 class AnvilResultListener: Listener {
@@ -49,26 +47,13 @@ class AnvilResultListener: Listener {
         }
 
         // Test if the event should bypass custom anvil.
-        var shouldBypass: Boolean
-        try {
-            shouldBypass = DependencyManager.tryClickAnvilResultBypass(event, inventory)
-        } catch (e: Exception){
-            shouldBypass = true
-            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
-
-            // Just in case to avoid illegal items
-            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
-        }
-        if(shouldBypass) return
+        if(DependencyManager.tryClickAnvilResultBypass(event, inventory)) return
 
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
 
-        if(!GameMode.CREATIVE.equals(player.gameMode) && inventory.repairCost >= inventory.maximumRepairCost) {
+        if(GameMode.CREATIVE != player.gameMode && inventory.repairCost >= inventory.maximumRepairCost) {
             event.result = Event.Result.DENY
             return
         }
@@ -112,7 +97,6 @@ class AnvilResultListener: Listener {
         }
     }
 
-
     private fun onCustomCraft(event: InventoryClickEvent,
                               recipe: AnvilCustomRecipe,
                               player: Player,
@@ -138,7 +122,7 @@ class AnvilResultListener: Listener {
 
         // Handle not creative middle click...
         if (event.click != ClickType.MIDDLE &&
-            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, xpCost)) return;
+            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, xpCost)) return
 
         // Finally, we add the item to the player
         if (slotDestination.type == SlotType.CURSOR) {
@@ -238,7 +222,7 @@ class AnvilResultListener: Listener {
                               resultCopy: ItemStack, resultAmount: Int): Int {
         if (player.gameMode == GameMode.CREATIVE) return 0
 
-        var repairCost = 0;
+        var repairCost = 0
         // Get repairCost
         leftItem.itemMeta?.let { leftMeta ->
             val leftName = leftMeta.displayName

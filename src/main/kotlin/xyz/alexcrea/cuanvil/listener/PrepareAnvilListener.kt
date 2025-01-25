@@ -46,20 +46,7 @@ class PrepareAnvilListener : Listener {
         val player: HumanEntity = event.viewers.first()
 
         // Test if the event should bypass custom anvil.
-        var shouldBypass: Boolean
-        try {
-            shouldBypass = DependencyManager.tryEventPreAnvilBypass(event, player)
-        } catch (e: Exception){
-            shouldBypass = true
-            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
-
-            // Just in case to avoid illegal items
-            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
-        }
-        if(shouldBypass) return
+        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
 
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
@@ -90,6 +77,7 @@ class PrepareAnvilListener : Listener {
 
     }
 
+    // return true if a custom recipe exist with these ingredient
     private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory,
                                  player: HumanEntity,
                                  first: ItemStack, second: ItemStack?): Boolean {
@@ -103,7 +91,7 @@ class PrepareAnvilListener : Listener {
         resultItem.amount *= amount
 
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, recipe.xpCostPerCraft * amount, true)
 
         return true
@@ -122,7 +110,7 @@ class PrepareAnvilListener : Listener {
         }
 
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
         anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem)
 
@@ -195,11 +183,12 @@ class PrepareAnvilListener : Listener {
 
         // Finally, we set result
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
     }
 
+    // return true if there is a valid unit repair with these ingredients
     private fun testUnitRepair(event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
                                first: ItemStack, second: ItemStack): Boolean {
         val unitRepairAmount = first.getRepair(second) ?: return false
@@ -221,7 +210,7 @@ class PrepareAnvilListener : Listener {
             return true
         }
         event.result = resultItem
-        DependencyManager.treatAnvilResult(event, resultItem)
+        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
         return true
