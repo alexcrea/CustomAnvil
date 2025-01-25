@@ -36,4 +36,19 @@ public record AnvilFuseTestData(
         this(leftItem, rightItem, expectedResult, null
         );
     }
+
+    public AnvilFuseTestData(
+            @Nullable ItemStack leftItem,
+            @Nullable ItemStack rightItem,
+            @Nullable ItemStack expectedResult,
+
+            @Nullable ItemStack expectedAfterLeftPlaced,
+            @Nullable ItemStack expectedAfterRightPlaced
+    ){
+        this(leftItem, rightItem,
+                expectedResult, expectedAfterLeftPlaced, expectedAfterRightPlaced,
+                null, null, null
+        );
+    }
+
 }

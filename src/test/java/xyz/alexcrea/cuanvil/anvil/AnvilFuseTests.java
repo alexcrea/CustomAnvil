@@ -1,11 +1,15 @@
 package xyz.alexcrea.cuanvil.anvil;
 
+import io.delilaheve.util.ConfigOptions;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.eclipse.aether.util.ConfigUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,8 +36,9 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
         AnvilFuseTests.anvil = (AnvilInventory) anvil;
         player.openInventory(anvil);
 
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set("debug_log", true);
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set("debug_log_verbose", true);
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.DEBUG_LOGGING, true);
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.VERBOSE_DEBUG_LOGGING, true);
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.ALLOW_COLOR_CODE, true); // For rename test
     }
 
     @BeforeEach
@@ -95,6 +100,25 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
         AnvilFuseTestData data = new AnvilFuseTestData(
                 sharpness5, sharpness4,
                 null
+        );
+
+        AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
+    }
+
+    // Note: currently anvil can only have null name. maybe handle differently later
+    @Test
+    public void nullNameResetTest(){
+        ItemStack base = new ItemStack(Material.NETHERITE_SWORD);
+        ItemStack expected = base.clone();
+
+        ItemMeta meta = expected.getItemMeta();
+        meta.displayName(Component.text("test"));
+        base.setItemMeta(meta);
+
+        AnvilFuseTestData data = new AnvilFuseTestData(
+                base, null,
+                expected, expected, null
+                // TODO add expected price
         );
 
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
