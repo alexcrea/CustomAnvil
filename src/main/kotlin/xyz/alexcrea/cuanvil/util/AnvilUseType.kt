@@ -1,9 +1,10 @@
 package xyz.alexcrea.cuanvil.util
 
-enum class AnvilUseType {
+enum class AnvilUseType(val typeName: String) {
 
-    RENAME_ONLY,
-    MERGE,
-    UNIT_REPAIR
+    RENAME_ONLY("rename_only"),
+    MERGE("merge"),
+    UNIT_REPAIR("unit_repair"),
+    ;
 
 }
