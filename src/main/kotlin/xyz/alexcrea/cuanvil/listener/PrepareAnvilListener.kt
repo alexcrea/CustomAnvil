@@ -19,6 +19,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.AnvilColorUtil
+import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
@@ -112,7 +113,7 @@ class PrepareAnvilListener : Listener {
         event.result = resultItem
         if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
-        anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem)
+        anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
     }
@@ -177,7 +178,7 @@ class PrepareAnvilListener : Listener {
             return
         }
         // As calculatePenalty edit result, we need to calculate penalty after checking equality
-        anvilCost += AnvilXpUtil.calculatePenalty(first, second, resultItem)
+        anvilCost += AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
         // Calculate rename cost
         anvilCost += handleRename(resultItem, inventory, player)
 
@@ -201,7 +202,7 @@ class PrepareAnvilListener : Listener {
             anvilCost += repairAmount * ConfigOptions.unitRepairCost
         }
         // We do not care about right item penalty for unit repair
-        anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, true)
+        anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.UNIT_REPAIR)
 
         // Test/stop if nothing changed.
         if (first == resultItem) {

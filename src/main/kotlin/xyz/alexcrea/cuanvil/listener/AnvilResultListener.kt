@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
+import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
@@ -239,7 +240,7 @@ class AnvilResultListener: Listener {
             }
         }
 
-        repairCost += AnvilXpUtil.calculatePenalty(leftItem, null, resultCopy)
+        repairCost += AnvilXpUtil.calculatePenalty(leftItem, null, resultCopy, AnvilUseType.UNIT_REPAIR)
         repairCost += resultAmount * ConfigOptions.unitRepairCost
 
         if (

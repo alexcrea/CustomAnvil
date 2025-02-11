@@ -69,24 +69,16 @@ object AnvilXpUtil {
                 }
             })
     }
-    /**
-     * Function to calculate work penalty of anvil work
-     * Also change result work penalty if right item is not null
-     */
-    fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack): Int {
-        return calculatePenalty(left, right, result, false)
-    }
 
     /**
      * Function to calculate work penalty of anvil work
      * Also change result work penalty if right item is not null
      */
-    fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, unitRepair: Boolean): Int {
+    fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, useType: AnvilUseType): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penalty
-        val penaltyType = ConfigOptions.workPenaltyType;
+        val penaltyType = ConfigOptions.workPenaltyType
         val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
-
 
         val rightPenalty =
             if (right == null) 0
@@ -94,7 +86,7 @@ object AnvilXpUtil {
 
 
         // Increase penalty on fusing or unit repair
-        if(penaltyType.isPenaltyIncreasing && (right != null || unitRepair)){
+        if(penaltyType.isPenaltyIncreasing && (right != null || AnvilUseType.UNIT_REPAIR == useType)){
             result.itemMeta?.let {
                 (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
                 result.itemMeta = it
