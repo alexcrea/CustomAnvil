@@ -57,7 +57,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
             String increasing = (workPenalty.isPenaltyIncreasing(type) ? "§a" : "§c") + "Increasing";
             String additive = (workPenalty.isPenaltyAdditive(type) ? "§a" : "§c") + "Additive";
 
-            displayLore.add("§e" + type.getTypeName() + ": " + increasing + " §7| " + additive);
+            displayLore.add("§e" + type.getTypeName() + ": " + additive + " §7| " + increasing);
         }
 
         ItemStack item = new ItemStack(itemMat);
@@ -86,8 +86,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
     protected Pattern getGuiPattern() {
         return new Pattern(
                 "00zy0xw00",
-                "00ab0cd00",
                 "001203400",
+                "00ab0c000",
                 "B0000000S"
         );
     }
@@ -108,7 +108,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ItemStack displayItem = new ItemStack(type.getDisplayMat());
 
         ArrayList<String> displayLore = new ArrayList<>();
-        displayLore.add("§e" + type.getTypeName() + ": " + increasingStr + " §7| " + additiveStr);
+        displayLore.add("§e" + type.getTypeName() + ": " + additiveStr + " §7| " + increasingStr);
 
         ItemMeta meta = displayItem.getItemMeta();
         meta.setDisplayName("§e" + type.getDisplayName());
