@@ -4,7 +4,10 @@ import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
+import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.util.AnvilUseType
+import java.util.EnumMap
 
 /**
  * Config option accessors
@@ -34,7 +37,11 @@ object ConfigOptions {
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
-    const val WORK_PENALTY_TYPE = "work_penalty_type"
+    const val WORK_PENALTY_ROOT = "work_penalty"
+    const val WORK_PENALTY_INCREASE = "shared_increase"
+    const val WORK_PENALTY_ADDITIVE = "shared_additive"
+    const val EXCLUSIVE_WORK_PENALTY_INCREASE = "exclusive_increase"
+    const val EXCLUSIVE_WORK_PENALTY_ADDITIVE = "exclusive_additive"
 
     const val DEFAULT_LIMIT_PATH = "default_limit"
 
@@ -113,7 +120,7 @@ object ConfigOptions {
     private const val DEFAULT_ENCHANT_VALUE = 0
 
     // Default max before merge disabled (negative mean enabled)
-    const val DEFAULT_MAX_BEFORE_MERGE_DISABLED = -1;
+    const val DEFAULT_MAX_BEFORE_MERGE_DISABLED = -1
 
     // -------------
     // Get methods
@@ -257,15 +264,37 @@ object ConfigOptions {
         }
 
     /**
-     * How many xp should use of color should cost
+     * How work penalties should work
      */
     val workPenaltyType: WorkPenaltyType
         get() {
-            return WorkPenaltyType.fromString(
-                ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getString(WORK_PENALTY_TYPE));
+            val penaltyMap = EnumMap<AnvilUseType, WorkPenaltyPart>(AnvilUseType::class.java)
+
+            for (type in AnvilUseType.entries) {
+                penaltyMap[type] = workPenaltyPart(type)
+            }
+
+            return WorkPenaltyType(penaltyMap)
         }
+
+    /**
+     * How work penalty should work
+     */
+    fun workPenaltyPart(type: AnvilUseType): WorkPenaltyPart {
+        val config = ConfigHolder.DEFAULT_CONFIG.config
+        val path = WORK_PENALTY_ROOT + "." + type.typeName
+
+        // Find values
+        val defaultPenalty = type.defaultPenalty
+        val section = config.getConfigurationSection(path) ?: return defaultPenalty
+
+        val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
+        val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)
+        val exclusivePenaltyIncrease = section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
+        val exclusivePenaltyAdditive = section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
+
+        return WorkPenaltyPart(penaltyIncrease, penaltyAdditive, exclusivePenaltyIncrease, exclusivePenaltyAdditive)
+    }
 
     /**
      * Default enchantment limit
@@ -303,11 +332,11 @@ object ConfigOptions {
     fun enchantLimit(enchantment: CAEnchantment): Int {
         // Test namespace
         var limit = enchantLimit(enchantment.key.toString())
-        if(limit != null) return limit;
+        if(limit != null) return limit
 
         // Test legacy (name only)
         limit = enchantLimit(enchantment.enchantmentName)
-        if(limit != null) return limit;
+        if(limit != null) return limit
 
         // get default (and test old legacy if present)
         return getDefaultLevel(enchantment.enchantmentName)
@@ -348,11 +377,11 @@ object ConfigOptions {
     ): Int {
         // Test namespace
         var limit = enchantmentValue(enchantment.key.toString(), isFromBook)
-        if(limit != null) return limit;
+        if(limit != null) return limit
 
         // Test legacy (name only)
         limit = enchantmentValue(enchantment.enchantmentName, isFromBook)
-        if(limit != null) return limit;
+        if(limit != null) return limit
 
         // get default (and test old legacy if present)
         return getDefaultValue(enchantment, isFromBook)

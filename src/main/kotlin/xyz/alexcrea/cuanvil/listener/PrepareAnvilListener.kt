@@ -23,8 +23,6 @@ import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
-import java.util.logging.Level
-
 /**
  * Listener for anvil events
  */
@@ -93,7 +91,12 @@ class PrepareAnvilListener : Listener {
 
         event.result = resultItem
         if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, recipe.xpCostPerCraft * amount, true)
+
+        // Maybe add an option on custom craft to ignore/not ignore penalty ??
+        var xpCost = recipe.xpCostPerCraft * amount
+        xpCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.CUSTOM_CRAFT)
+
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, xpCost, true)
 
         return true
     }

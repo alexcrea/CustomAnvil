@@ -5,7 +5,6 @@ import io.delilaheve.util.ConfigOptions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 
 public class PluginSetDefault {
 
@@ -26,7 +25,6 @@ public class PluginSetDefault {
         nbSet+= trySetDefault(config, ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR);
         nbSet+= trySetDefault(config, ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR);
         nbSet+= trySetDefault(config, ConfigOptions.USE_OF_COLOR_COST, ConfigOptions.DEFAULT_USE_OF_COLOR_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.WORK_PENALTY_TYPE, WorkPenaltyType.DEFAULT.configName());
         nbSet+= trySetDefault(config, ConfigOptions.DEFAULT_LIMIT_PATH, ConfigOptions.DEFAULT_ENCHANT_LIMIT);
 
         if(nbSet > 0){

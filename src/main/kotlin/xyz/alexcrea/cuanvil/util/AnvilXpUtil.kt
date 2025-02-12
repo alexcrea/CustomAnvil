@@ -6,6 +6,7 @@ import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
 import org.bukkit.GameMode
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.AnvilInventory
@@ -13,12 +14,15 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
+import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.min
 
 object AnvilXpUtil {
+
+    const val EXCLUSIVE_PENALTY_PREFIX = "repair_cost"
 
     /**
      * Display xp needed for the work on the anvil inventory
@@ -34,7 +38,8 @@ object AnvilXpUtil {
         val finalAnvilCost = if (
             !ignoreRules &&
             !ConfigOptions.doRemoveCostLimit &&
-            ConfigOptions.doCapCost) {
+            ConfigOptions.doCapCost
+        ) {
             min(anvilCost, ConfigOptions.maxAnvilCost)
         } else {
             anvilCost
@@ -47,17 +52,18 @@ object AnvilXpUtil {
             CustomAnvil.instance, player,
             Runnable {
                 inventory.maximumRepairCost =
-                    if (ConfigOptions.doRemoveCostLimit || ignoreRules)
-                    { Int.MAX_VALUE }
-                    else
-                    { ConfigOptions.maxAnvilCost + 1 }
+                    if (ConfigOptions.doRemoveCostLimit || ignoreRules) {
+                        Int.MAX_VALUE
+                    } else {
+                        ConfigOptions.maxAnvilCost + 1
+                    }
 
                 inventory.repairCost = finalAnvilCost
                 view.setProperty(REPAIR_COST, finalAnvilCost)
                 player.openInventory.setProperty(REPAIR_COST, finalAnvilCost)
 
-                if(player is Player){
-                    if(player.gameMode != GameMode.CREATIVE ){
+                if (player is Player) {
+                    if (player.gameMode != GameMode.CREATIVE) {
                         val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
                                 (finalAnvilCost >= 40) &&
                                 finalAnvilCost < inventory.maximumRepairCost
@@ -77,21 +83,25 @@ object AnvilXpUtil {
     fun calculatePenalty(left: ItemStack, right: ItemStack?, result: ItemStack, useType: AnvilUseType): Int {
         // Extracted From https://minecraft.fandom.com/wiki/Anvil_mechanics#Enchantment_equation
         // Calculate work penalty
-        val penaltyType = ConfigOptions.workPenaltyType
+        val penaltyType = ConfigOptions.workPenaltyPart(useType)
         val leftPenalty = (left.itemMeta as? Repairable)?.repairCost ?: 0
+        val leftExclusivePenalty = findExclusivePenalty(left, useType)
 
         val rightPenalty =
             if (right == null) 0
             else (right.itemMeta as? Repairable)?.repairCost ?: 0
-
+        val rightExclusivePenalty = findExclusivePenalty(right, useType)
 
         // Increase penalty on fusing or unit repair
-        if(penaltyType.isPenaltyIncreasing && (right != null || AnvilUseType.UNIT_REPAIR == useType)){
+        if (penaltyType.penaltyIncrease) {
             result.itemMeta?.let {
                 (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
                 result.itemMeta = it
-
             }
+        }
+        if (penaltyType.exclusivePenaltyIncrease) {
+            val resultPenalty = leftExclusivePenalty * 2 + 1
+            setExclusivePenalty(result, resultPenalty, useType)
         }
 
         CustomAnvil.log(
@@ -101,9 +111,40 @@ object AnvilXpUtil {
                     "result penalty: ${(result.itemMeta as? Repairable)?.repairCost ?: "none"}"
         )
 
-        if(!penaltyType.isPenaltyAdditive) return 0
+        var resultSum = 0
+        if (penaltyType.penaltyAdditive) {
+            resultSum += leftPenalty + rightPenalty
+        }
+        if (penaltyType.exclusivePenaltyAdditive) {
+            resultSum += leftExclusivePenalty + rightExclusivePenalty
+        }
 
-        return leftPenalty + rightPenalty
+        return resultSum
+    }
+
+    private fun setExclusivePenalty(
+        result: ItemStack,
+        resultPenalty: Int,
+        useType: AnvilUseType
+    ) {
+        val tagPath = EXCLUSIVE_PENALTY_PREFIX + "_" + useType.typeName
+        val key = NamespacedKey(CustomAnvil.instance, tagPath)
+
+        val meta = result.itemMeta!!
+        meta.persistentDataContainer.set(key, PersistentDataType.INTEGER, resultPenalty)
+        result.itemMeta = meta
+    }
+
+    private fun findExclusivePenalty(
+        left: ItemStack?,
+        useType: AnvilUseType
+    ): Int {
+        if (left == null) return 0
+        val tagPath = EXCLUSIVE_PENALTY_PREFIX + "_" + useType.typeName
+        val key = NamespacedKey(CustomAnvil.instance, tagPath)
+
+        val meta = left.itemMeta!!
+        return meta.persistentDataContainer.get(key, PersistentDataType.INTEGER) ?: return 0
     }
 
     /**

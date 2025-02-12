@@ -1,114 +1,66 @@
 package xyz.alexcrea.cuanvil.config;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import com.google.common.collect.ImmutableMap;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.gui.config.settings.AbstractSettingGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.EnumSettingGui;
+import xyz.alexcrea.cuanvil.util.AnvilUseType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
 
-public enum WorkPenaltyType implements EnumSettingGui.ConfigurableEnum {
-    DEFAULT("default",  true, true, "§aDefault", Material.LIME_TERRACOTTA),
-    ADDITIVE("add_only", false, true, "§eAdd Only", Material.YELLOW_TERRACOTTA),
-    INCREASE("increase_only", true, false, "§eIncrease Only", Material.YELLOW_TERRACOTTA),
-    DISABLED("disabled", false, false, "§cDisabled", Material.RED_TERRACOTTA),
-    ;
+public class WorkPenaltyType {
 
-    private final String name;
-    private final boolean penaltyIncrease;
-    private final boolean penaltyAdditive;
+    public record WorkPenaltyPart(
+            boolean penaltyIncrease,
+            boolean penaltyAdditive,
+            boolean exclusivePenaltyIncrease,
+            boolean exclusivePenaltyAdditive
+            ) {
 
-    private final String configName;
-    private final Material configMaterial;
+        @Override
+        public boolean equals(Object obj) {
+            if(!(obj instanceof WorkPenaltyPart other)) return false;
 
-    WorkPenaltyType(String name, boolean penaltyIncrease, boolean penaltyAdditive, String configName, Material configMaterial) {
-        this.name = name;
-        this.penaltyIncrease = penaltyIncrease;
-        this.penaltyAdditive = penaltyAdditive;
-        this.configName = configName;
-        this.configMaterial = configMaterial;
-    }
-
-    public boolean isPenaltyIncreasing() {
-        return penaltyIncrease;
-    }
-
-    public boolean isPenaltyAdditive() {
-        return penaltyAdditive;
-    }
-
-    private boolean doRepresentThisType(String toTest){
-        return name.equalsIgnoreCase(toTest);
-    }
-
-    @NotNull
-    public static WorkPenaltyType fromString(@Nullable String toTest){
-        if(toTest == null) return DEFAULT;
-
-        // Test if it matches any of values
-        for (WorkPenaltyType value : values()) {
-            if(value.doRepresentThisType(toTest)){
-                return value;
-            }
+            return other.penaltyIncrease == this.penaltyIncrease &&
+                    other.penaltyAdditive == this.penaltyAdditive &&
+                    other.exclusivePenaltyIncrease == this.exclusivePenaltyIncrease &&
+                    other.exclusivePenaltyAdditive == this.exclusivePenaltyAdditive;
         }
 
-        // Use default if not found
-        return DEFAULT;
+        public WorkPenaltyPart(boolean penaltyIncrease, boolean penaltyAdditive) {
+            this(penaltyIncrease, penaltyAdditive, false, false);
+        }
     }
 
-    @NotNull
-    public static WorkPenaltyType next(@NotNull WorkPenaltyType now){
-        return switch (now){
-            case DEFAULT -> ADDITIVE;
-            case ADDITIVE -> INCREASE;
-            case INCREASE -> DISABLED;
-            case DISABLED -> DEFAULT;
+    private final EnumMap<AnvilUseType, WorkPenaltyPart> partMap;
 
-        };
-
+    public WorkPenaltyType(@Nullable EnumMap<AnvilUseType, WorkPenaltyPart> partMap) {
+        this.partMap = new EnumMap<>(partMap != null ? partMap : new EnumMap<>(AnvilUseType.class));
     }
 
-    @Override
-    public ItemStack configurationGuiItem() {
-        ItemStack displayedItem = new ItemStack(this.configMaterial);
-        ItemMeta valueMeta = displayedItem.getItemMeta();
-        assert valueMeta != null;
-
-        valueMeta.setDisplayName(this.configName);
-
-        List<String> lore = new ArrayList<>();
-
-        lore.add(configDisplayForAdd());
-        lore.add(configDisplayForIncrease());
-        lore.add("");
-
-        lore.add(AbstractSettingGui.CLICK_LORE);
-        valueMeta.setLore(lore);
-
-        displayedItem.setItemMeta(valueMeta);
-
-        return displayedItem;
+    public ImmutableMap<AnvilUseType, WorkPenaltyPart> getPartMap() {
+        return ImmutableMap.copyOf(partMap);
     }
 
-    public String configDisplayForAdd(){
-        return ("§7Add penalty:        " + (penaltyAdditive ? "§aYes" : "§cNo"));
+    public WorkPenaltyPart getPenaltyInfo(AnvilUseType type) {
+        return partMap.getOrDefault(type, type.getDefaultPenalty());
     }
 
-    public String configDisplayForIncrease(){
-        return ("§7Increase penalty: " + (penaltyIncrease ? "§aYes" : "§cNo"));
+    public boolean isPenaltyIncreasing(AnvilUseType type) {
+        return partMap.getOrDefault(type, type.getDefaultPenalty()).penaltyIncrease;
+    }
+
+    public boolean isPenaltyAdditive(AnvilUseType type) {
+        return partMap.getOrDefault(type, type.getDefaultPenalty()).penaltyAdditive;
     }
 
     @Override
-    public String configName() {
-        return this.name;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorkPenaltyType that)) return false;
+
+        for (AnvilUseType type : AnvilUseType.getEntries()) {
+            if(!getPenaltyInfo(type).equals(that.getPenaltyInfo(type))) return false;
+        }
+        return true;
     }
 
-    @Override
-    public String configurationGuiName() {
-        return this.configName;
-    }
 }

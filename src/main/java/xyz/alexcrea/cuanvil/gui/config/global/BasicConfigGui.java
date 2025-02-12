@@ -14,13 +14,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.EnumSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.WorkPenaltyTypeSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -28,7 +27,6 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Global config to edit basic basic settings.
@@ -88,8 +86,6 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory unitRepairCost; // U character
     private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
-
-    private EnumSettingGui.EnumSettingFactory<WorkPenaltyType> workPenaltyType; // W character
 
     private BoolSettingsGui.BoolSettingFactory allowColorCode; // c character
     private BoolSettingsGui.BoolSettingFactory allowHexColor; // h character
@@ -210,46 +206,6 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
-
-        // -------------
-        // Work Penalty
-        // -------------
-
-        this.workPenaltyType = new EnumSettingGui.EnumSettingFactory<>("§8Work Penalty Type", this,
-                ConfigOptions.WORK_PENALTY_TYPE, ConfigHolder.DEFAULT_CONFIG
-        ) {
-            @NotNull
-            @Override
-            public WorkPenaltyType getConfiguredValue() {
-                return ConfigOptions.INSTANCE.getWorkPenaltyType();
-            }
-
-            @NotNull
-            @Override
-            public WorkPenaltyType getDefault() {
-                return WorkPenaltyType.DEFAULT;
-            }
-
-            @NotNull
-            @Override
-            public List<String> getDisplayLore(WorkPenaltyType value) {
-                return List.of(
-                        "§7Work penalty increase the price for every anvil use.",
-                        "§7This config allow you to choose the comportment of work penalty.",
-                        "",
-                        value.configDisplayForAdd(),
-                        value.configDisplayForIncrease()
-
-                );
-            }
-
-            @NotNull
-            @Override
-            public WorkPenaltyType next(@NotNull WorkPenaltyType now) {
-                return WorkPenaltyType.next(now);
-            }
-
-        };
 
         // -------------
         // Color config
@@ -377,7 +333,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('S', illegalCostItem);
 
         // work penalty type
-        GuiItem workPenaltyType = this.workPenaltyType.getItem(Material.DAMAGED_ANVIL, "§aWork Penalty Type");
+        GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(this, Material.DAMAGED_ANVIL, "§aWork Penalty Type");
         pane.bindItem('W', workPenaltyType);
 
         // allow color code

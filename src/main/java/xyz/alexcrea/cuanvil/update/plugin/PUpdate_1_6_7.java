@@ -20,8 +20,6 @@ public class PUpdate_1_6_7 {
 
             toSave.add(ConfigHolder.DEFAULT_CONFIG);
         }
-
-
     }
 
 }
