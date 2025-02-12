@@ -10,13 +10,23 @@ public class WorkPenaltyType {
 
     public record WorkPenaltyPart(
             boolean penaltyIncrease,
-            boolean penaltyAdditive) {
+            boolean penaltyAdditive,
+            boolean exclusivePenaltyIncrease,
+            boolean exclusivePenaltyAdditive
+            ) {
 
         @Override
         public boolean equals(Object obj) {
             if(!(obj instanceof WorkPenaltyPart other)) return false;
 
-            return other.penaltyIncrease == this.penaltyIncrease && other.penaltyAdditive == this.penaltyAdditive;
+            return other.penaltyIncrease == this.penaltyIncrease &&
+                    other.penaltyAdditive == this.penaltyAdditive &&
+                    other.exclusivePenaltyIncrease == this.exclusivePenaltyIncrease &&
+                    other.exclusivePenaltyAdditive == this.exclusivePenaltyAdditive;
+        }
+
+        public WorkPenaltyPart(boolean penaltyIncrease, boolean penaltyAdditive) {
+            this(penaltyIncrease, penaltyAdditive, false, false);
         }
     }
 

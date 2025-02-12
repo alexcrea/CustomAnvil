@@ -50,7 +50,9 @@ public class PUpdate_1_8_0 {
             WorkPenaltyType.WorkPenaltyPart part = partEnum.get(type);
             part = new WorkPenaltyType.WorkPenaltyPart(
                     keepIncrease & part.penaltyIncrease(),
-                    keepAdditive & part.penaltyAdditive());
+                    keepAdditive & part.penaltyAdditive(),
+                    part.exclusivePenaltyIncrease(),
+                    part.exclusivePenaltyAdditive());
             partEnum.replace(type, part);
         }
 

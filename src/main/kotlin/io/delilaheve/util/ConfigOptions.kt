@@ -38,8 +38,10 @@ object ConfigOptions {
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
     const val WORK_PENALTY_ROOT = "work_penalty"
-    const val WORK_PENALTY_INCREASE = "increase"
-    const val WORK_PENALTY_ADDITIVE = "additive"
+    const val WORK_PENALTY_INCREASE = "shared_increase"
+    const val WORK_PENALTY_ADDITIVE = "shared_additive"
+    const val EXCLUSIVE_WORK_PENALTY_INCREASE = "exclusive_increase"
+    const val EXCLUSIVE_WORK_PENALTY_ADDITIVE = "exclusive_additive"
 
     const val DEFAULT_LIMIT_PATH = "default_limit"
 
@@ -283,12 +285,15 @@ object ConfigOptions {
         val path = WORK_PENALTY_ROOT + "." + type.typeName
 
         // Find values
-        val section = config.getConfigurationSection(path) ?: return type.defaultPenalty
+        val defaultPenalty = type.defaultPenalty
+        val section = config.getConfigurationSection(path) ?: return defaultPenalty
 
-        val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, true)
-        val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, true)
+        val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
+        val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)
+        val exclusivePenaltyIncrease = section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
+        val exclusivePenaltyAdditive = section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
 
-        return WorkPenaltyPart(penaltyIncrease, penaltyAdditive)
+        return WorkPenaltyPart(penaltyIncrease, penaltyAdditive, exclusivePenaltyIncrease, exclusivePenaltyAdditive)
     }
 
     /**
