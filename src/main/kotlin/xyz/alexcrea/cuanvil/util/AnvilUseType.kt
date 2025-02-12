@@ -1,10 +1,29 @@
 package xyz.alexcrea.cuanvil.util
 
-enum class AnvilUseType(val typeName: String) {
+import org.bukkit.Material
+import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 
-    RENAME_ONLY("rename_only"),
-    MERGE("merge"),
-    UNIT_REPAIR("unit_repair"),
+enum class AnvilUseType(val typeName: String,
+                        val defaultPenalty: WorkPenaltyPart,
+                        val displayName: String, val displayMat: Material
+    ) {
+
+    RENAME_ONLY("rename_only",
+        WorkPenaltyPart(false, true),
+        "Rename Only", Material.NAME_TAG
+        ),
+    MERGE("merge",
+        WorkPenaltyPart(true, true),
+        "Merge", Material.ANVIL
+    ),
+    UNIT_REPAIR("unit_repair",
+        WorkPenaltyPart(true, true),
+        "Unit Repair", Material.DIAMOND
+    ),
+    CUSTOM_CRAFT("custom_craft",
+        WorkPenaltyPart(false, false),
+        "Custom Craft", Material.CRAFTING_TABLE
+    ),
     ;
 
 }

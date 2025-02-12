@@ -19,6 +19,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.WorkPenaltyTypeSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -85,8 +86,6 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory unitRepairCost; // U character
     private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
-
-    //TODO private EnumSettingGui.EnumSettingFactory<WorkPenaltyType> workPenaltyType; // W character
 
     private BoolSettingsGui.BoolSettingFactory allowColorCode; // c character
     private BoolSettingsGui.BoolSettingFactory allowHexColor; // h character
@@ -207,46 +206,6 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100);
-
-        // -------------
-        // Work Penalty
-        // -------------
-
-        /*TODO this.workPenaltyType = new EnumSettingGui.EnumSettingFactory<>("§8Work Penalty Type", this,
-                ConfigOptions.WORK_PENALTY_TYPE, ConfigHolder.DEFAULT_CONFIG
-        ) {
-            @NotNull
-            @Override
-            public WorkPenaltyType getConfiguredValue() {
-                return ConfigOptions.INSTANCE.getWorkPenaltyType();
-            }
-
-            @NotNull
-            @Override
-            public WorkPenaltyType getDefault() {
-                return WorkPenaltyType.DEFAULT;
-            }
-
-            @NotNull
-            @Override
-            public List<String> getDisplayLore(WorkPenaltyType value) {
-                return List.of(
-                        "§7Work penalty increase the price for every anvil use.",
-                        "§7This config allow you to choose the comportment of work penalty.",
-                        "",
-                        "IN PROGRESS",
-                        "IN PROGRESS"
-
-                );
-            }
-
-            @NotNull
-            @Override
-            public WorkPenaltyType next(@NotNull WorkPenaltyType now) {
-                return WorkPenaltyType.next(now);
-            }
-
-        };*/
 
         // -------------
         // Color config
@@ -374,8 +333,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('S', illegalCostItem);
 
         // work penalty type
-        //TODO GuiItem workPenaltyType = this.workPenaltyType.getItem(Material.DAMAGED_ANVIL, "§aWork Penalty Type");
-        //TODO pane.bindItem('W', workPenaltyType);
+        GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(this, Material.DAMAGED_ANVIL, "§aWork Penalty Type");
+        pane.bindItem('W', workPenaltyType);
 
         // allow color code
         GuiItem allowColorCodeItem = this.allowColorCode.getItem();

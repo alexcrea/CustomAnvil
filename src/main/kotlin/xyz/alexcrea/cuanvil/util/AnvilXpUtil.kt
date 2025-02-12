@@ -84,9 +84,8 @@ object AnvilXpUtil {
             if (right == null) 0
             else (right.itemMeta as? Repairable)?.repairCost ?: 0
 
-
         // Increase penalty on fusing or unit repair
-        if(penaltyType.penaltyIncrease && (right != null || AnvilUseType.UNIT_REPAIR == useType)){
+        if(penaltyType.penaltyIncrease){
             result.itemMeta?.let {
                 (it as? Repairable)?.repairCost = leftPenalty * 2 + 1
                 result.itemMeta = it

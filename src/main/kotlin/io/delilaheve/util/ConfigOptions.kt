@@ -38,7 +38,9 @@ object ConfigOptions {
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
     //const val WORK_PENALTY_TYPE = "work_penalty_type" TODO move old value to config migration
-    const val WORK_PENALTY = "work_penalty"
+    const val WORK_PENALTY_ROOT = "work_penalty"
+    const val WORK_PENALTY_INCREASE = "increase"
+    const val WORK_PENALTY_ADDITIVE = "additive"
 
     const val DEFAULT_LIMIT_PATH = "default_limit"
 
@@ -278,14 +280,14 @@ object ConfigOptions {
      * How work penalty should work
      */
     fun workPenaltyPart(type: AnvilUseType): WorkPenaltyPart {
-        val config = ConfigHolder.CONFLICT_HOLDER.config
-        val path = WORK_PENALTY + "." + type.typeName
+        val config = ConfigHolder.DEFAULT_CONFIG.config
+        val path = WORK_PENALTY_ROOT + "." + type.typeName
 
         // Find values
-        val section = config.getConfigurationSection(path) ?: return WorkPenaltyPart.ONLY_TRUE_PART
+        val section = config.getConfigurationSection(path) ?: return type.defaultPenalty
 
-        val penaltyIncrease = section.getBoolean("penalty_increase", true)
-        val penaltyAdditive = section.getBoolean("penalty_additive", true)
+        val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, true)
+        val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, true)
 
         return WorkPenaltyPart(penaltyIncrease, penaltyAdditive)
     }
