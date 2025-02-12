@@ -156,11 +156,15 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
+        return saveWorkPenalty(items);
+    }
+
+    public static boolean saveWorkPenalty(Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> partEnum) {
         String path = ConfigOptions.WORK_PENALTY_ROOT;
         ConfigHolder configHolder = ConfigHolder.DEFAULT_CONFIG;
         FileConfiguration config = configHolder.getConfig();
 
-        items.forEach((key, value) -> {
+        partEnum.forEach((key, value) -> {
             String partPath = path + "." + key.getTypeName();
 
             if (key.getDefaultPenalty().equals(value)) {
@@ -172,8 +176,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
             config.set(partPath + '.' + ConfigOptions.WORK_PENALTY_ADDITIVE, value.penaltyAdditive());
         });
 
-        configHolder.saveToDisk(true);
-        return true;
+        return configHolder.saveToDisk(true);
     }
 
     @Override

@@ -37,7 +37,6 @@ object ConfigOptions {
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
-    //const val WORK_PENALTY_TYPE = "work_penalty_type" TODO move old value to config migration
     const val WORK_PENALTY_ROOT = "work_penalty"
     const val WORK_PENALTY_INCREASE = "increase"
     const val WORK_PENALTY_ADDITIVE = "additive"

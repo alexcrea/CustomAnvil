@@ -72,18 +72,6 @@ permission_needed_for_color: true
 # Valid values include 0 to 1000.
 use_of_color_cost: 0
 
-# Work penalty increase the price for every anvil use.
-# This config allow you to choose the comportment of work penalty.
-# Vanilla work penalty formula can be represented as 2 * previous_penalty + 1. with start value equal to 0
-# See https://minecraft.wiki/w/Anvil_mechanics#Anvil_uses for more detail
-#
-# Valid work penalty type is:
-# - default: work penalty added and increased
-# - increase_only: work penalty increased but not added
-# - add_only: work penalty added but not increased
-# - disabled: work penalty disabled
-work_penalty_type: default
-
 # Default limit to apply to any enchants missing from enchant_limits
 #
 # Valid values include 1 to 1000
@@ -294,4 +282,4 @@ debug_log_verbose: false
 # ProtocoLib may also be used if the server is in an "unsupported" version even if this option is disabled.
 force_protocolib: false
 
-configVersion: 1.6.2
+configVersion: 1.8.0
