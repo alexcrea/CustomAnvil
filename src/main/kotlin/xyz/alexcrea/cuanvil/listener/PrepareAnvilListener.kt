@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.listener
 
+import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.combineWith
@@ -42,7 +43,7 @@ class PrepareAnvilListener : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         // Should find player
-        val player: HumanEntity = event.viewers.first()
+        val player: HumanEntity = InventoryViewUtil.getInstance().getPlayer(event.view)
 
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
