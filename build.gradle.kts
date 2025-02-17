@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.8.1"
+version = "1.8.2"
 
 repositories {
     // EcoEnchants
@@ -50,7 +50,7 @@ dependencies {
     compileOnly(files("libs/Disenchantment-6.1.0.jar"))
 
     // HavenBags
-    compileOnly(files("libs/HavenBags-1.30.1.1729.jar"))
+    compileOnly(files("libs/HavenBags-1.31.0.1760.jar"))
 
     // Include nms
     implementation(project(":nms:nms-common"))

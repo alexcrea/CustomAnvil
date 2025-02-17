@@ -6,9 +6,9 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.plugin.RegisteredListener
-import valorless.havenbags.BagSkin
-import valorless.havenbags.BagUpgrade
 import valorless.havenbags.HavenBags
+import valorless.havenbags.features.BagSkin
+import valorless.havenbags.features.BagUpgrade
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 

@@ -67,7 +67,7 @@ Here is a list of supported anvil mechanic plugins with support status:
 Officially supported by Custom Anvil but still experimental. Mostly use Custom Anvil basic XP settings. (version >= 6.1.0)
 
 - [HavenBags](https://www.spigotmc.org/resources/havenbags-shulker-like-player-bound-bags-1-17-1-21-4.110420/)
-Officially supported by Custom Anvil. Not really enchantment related but CustomAnvil should not impact bag upgrade and skin via anvil.
+Officially supported by Custom Anvil. Not really enchantment related but CustomAnvil should not impact bag upgrade and skin via anvil. (version >= 1.31.0)
 
 If you like Custom Anvil to support a specific plugin (custom enchant or anvil mechanic). 
 You can ask, but please note implementing compatibility will be considered
