@@ -52,7 +52,7 @@ class ExcellentEnchantsDependency {
         CustomAnvil.instance.logger.info("Excellent Enchants should now work as expected !")
     }
 
-    private lateinit var fragilityCurse: CurseOfFragilityEnchant
+    private var fragilityCurse: CurseOfFragilityEnchant? = null
 
     private var modernAnvilListener: AnvilListener? = null
     private var legacyAnvilListener: EnchantAnvilListener? = null
@@ -119,7 +119,7 @@ class ExcellentEnchantsDependency {
 
     fun testPrepareAnvil(event: PrepareAnvilEvent): Boolean {
         if (event.result != null) {
-            this.fragilityCurse.onItemAnvil(event)
+            this.fragilityCurse?.onItemAnvil(event)
             if (event.result == null) return true
         }
 
