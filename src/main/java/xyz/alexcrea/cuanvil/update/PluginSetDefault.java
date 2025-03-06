@@ -30,9 +30,13 @@ public class PluginSetDefault {
 
         nbSet+= trySetDefault(config, APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL);
         nbSet+= trySetDefault(config, APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER);
+
         nbSet+= trySetDefault(config, REMOVE_LORE_BOOK_AND_QUIL, DEFAULT_REMOVE_LORE_BOOK_AND_QUIL);
         nbSet+= trySetDefault(config, REMOVE_LORE_LINE_PAPER, DEFAULT_REMOVE_LORE_LINE_PAPER);
         nbSet+= trySetDefault(config, LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER);
+
+        nbSet+= trySetDefault(config, EDIT_LORE_WITH_BOOK_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION);
+        nbSet+= trySetDefault(config, EDIT_LORE_WITH_PAPER_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION);
 
         if(nbSet > 0){
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");
