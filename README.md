@@ -38,9 +38,16 @@ ca.bypass.fuse: Allow player to combine every enchantments to every item (no cus
 ca.bypass.level: Allow player to bypass every level limit (no custom limit)
 ca.command.reload: Allow administrator to reload the plugin's configs
 ca.config.edit: Allow administrator to edit the plugin's config in game
-# Related to use of color (usage of permission for color is toggleable in basic config gui or config.yml)
-ca.color.code: Allow player to use color code if permission is required (toggleable)
-ca.color.hex: Allow player to use hexadecimal color if permission is required (toggleable)
+# Bellow permissions also require some config change to allow usage of features
+# usage of these permission is toggleable in basic config gui or config.yml
+
+# Permissions related to use of color
+ca.color.code: Allow player to use color code if enabled (toggleable)
+ca.color.hex: Allow player to use hexadecimal color if enabled (toggleable)
+
+# Permissions related to edition of the lore
+ca.lore_edit.book: Allow player to edit lore via book and quil if enabled (toggleable)
+ca.lore_edit.paper: Allow player to edit lore via paper if enabled (toggleable)
 ```
 
 ### Commands
