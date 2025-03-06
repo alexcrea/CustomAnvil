@@ -42,13 +42,19 @@ permissions:
   # color permissions
   ca.color.code:
     default: op
-    description: Allow player to use color code if permission is required (toggleable)
+    description: Allow player to use color code if enabled (toggleable)
   ca.color.hex:
     default: op
-    description: Allow player to use hexadecimal color if permission is required (toggleable)
+    description: Allow player to use hexadecimal color if enabled (toggleable)
+  # lore edit permissions
+  ca.lore_edit.book:
+    default: op
+    description: Allow player to edit lore via book and quil if enabled (toggleable)
+  ca.lore_edit.paper:
+    default: op
+    description: Allow player to edit lore via paper if enabled (toggleable)
 
-
-# soft depend on old name (UnsafeEnchantsPlus), so I can disable it if it is on the same server (old name for this plugin)
+# soft depend on old name of this plugin (UnsafeEnchantsPlus), so I can disable it if it is on the same server
 # Also depend to other plugin for compatibility
 softdepend:
   - UnsafeEnchantsPlus

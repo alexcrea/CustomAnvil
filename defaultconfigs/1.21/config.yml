@@ -273,15 +273,17 @@ disable-merge-over:
 # Settings for lore modification
 lore_edit:
   book_and_quil:
-    # permission is ca.lore.book_and_quil
     use_permission: true
+    # permission is ca.lore_edit.book
     append: false
     remove: false
   paper:
+    use_permission: true
+    # permission is ca.lore_edit.paper
     append_line: false
     remove_line: false
     # what order should the lines should get added/removed (start/end, if invalid or not present will be end)
-    order: end
+    order: "end"
 
 # Whether to show debug logging
 debug_log: false
