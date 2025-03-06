@@ -37,6 +37,7 @@ object ConfigOptions {
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
+    // Work penalty config
     const val WORK_PENALTY_ROOT = "work_penalty"
     const val WORK_PENALTY_INCREASE = "shared_increase"
     const val WORK_PENALTY_ADDITIVE = "shared_additive"
@@ -49,6 +50,13 @@ object ConfigOptions {
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
+
+    // Lore edit configs
+    const val APPEND_LORE_BOOK_AND_QUIL = "lore_edit.book_and_quil.append"
+    const val REMOVE_LORE_BOOK_AND_QUIL = "lore_edit.book_and_quil.remove"
+    const val APPEND_LORE_LINE_PAPER = "lore_edit.paper.append_line"
+    const val REMOVE_LORE_LINE_PAPER = "lore_edit.paper.remove_line"
+    const val LORE_LINE_WITH_PAPER_ORDER = "lore_edit.paper.order"
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
@@ -82,6 +90,13 @@ object ConfigOptions {
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
     const val DEFAULT_ENCHANT_LIMIT = 5
+
+    // lore edit config
+    const val DEFAULT_APPEND_LORE_BOOK_AND_QUIL = false
+    const val DEFAULT_REMOVE_LORE_BOOK_AND_QUIL = false
+    const val DEFAULT_APPEND_LORE_LINE_PAPER = false
+    const val DEFAULT_REMOVE_LORE_LINE_PAPER = false
+    const val DEFAULT_LORE_LINE_WITH_PAPER_ORDER = "end"
 
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
@@ -466,5 +481,70 @@ object ConfigOptions {
             .getInt(path, ENCHANT_LIMIT_RANGE.min() - 1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
     }
+
+    // ----------
+    // Lore edits
+    // ----------
+
+    /*
+
+    const val DEFAULT_APPEND_LORE_WITH_BOOK_AND_QUIL = false
+    const val DEFAULT_REMOVE_LORE_WITH_BOOK_AND_QUIL = false
+    const val DEFAULT_APPEND_LORE_LINE_WITH_PAPER = false
+    const val DEFAULT_REMOVE_LORE_LINE_WITH_PAPER = false
+    const val DEFAULT_LORE_LINE_WITH_PAPER_ORDER = "end"
+     */
+
+    /**
+     * If we should allow appending lore via book and quil
+     */
+    val appendLoreBookAndQuil: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL)
+        }
+
+    /**
+     * If we should allow appending lore line via paper
+     */
+    val appendLoreLinePaper: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER)
+        }
+
+    /**
+     * If we should allow removing lore via book and quil
+     */
+    val removeLoreBookAndQuil: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL)
+        }
+
+    /**
+     * If we should allow removing lore line via paper
+     */
+    val removeLoreLinePaper: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER)
+        }
+
+    /**
+     * Get if we should append/remove at the end or at the start of the lore list
+     * This may change to an "OrderType" enum or equivalent later
+     */
+    val paperLoreOrderIsEnd: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getString(LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER)
+                .equals(DEFAULT_LORE_LINE_WITH_PAPER_ORDER, ignoreCase = true)
+        }
 
 }

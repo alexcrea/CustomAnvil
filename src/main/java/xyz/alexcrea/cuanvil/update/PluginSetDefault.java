@@ -1,10 +1,11 @@
 package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
-import io.delilaheve.util.ConfigOptions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+
+import static io.delilaheve.util.ConfigOptions.*;
 
 public class PluginSetDefault {
 
@@ -13,19 +14,25 @@ public class PluginSetDefault {
 
         int nbSet = 0;
 
-        nbSet+= trySetDefault(config, ConfigOptions.CAP_ANVIL_COST, ConfigOptions.DEFAULT_CAP_ANVIL_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.MAX_ANVIL_COST, ConfigOptions.DEFAULT_MAX_ANVIL_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.REMOVE_ANVIL_COST_LIMIT, ConfigOptions.DEFAULT_REMOVE_ANVIL_COST_LIMIT);
-        nbSet+= trySetDefault(config, ConfigOptions.REPLACE_TOO_EXPENSIVE, ConfigOptions.DEFAULT_REPLACE_TOO_EXPENSIVE);
-        nbSet+= trySetDefault(config, ConfigOptions.ITEM_REPAIR_COST, ConfigOptions.DEFAULT_ITEM_REPAIR_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.UNIT_REPAIR_COST, ConfigOptions.DEFAULT_UNIT_REPAIR_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.ITEM_RENAME_COST, ConfigOptions.DEFAULT_ITEM_RENAME_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE);
-        nbSet+= trySetDefault(config, ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR);
-        nbSet+= trySetDefault(config, ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR);
-        nbSet+= trySetDefault(config, ConfigOptions.USE_OF_COLOR_COST, ConfigOptions.DEFAULT_USE_OF_COLOR_COST);
-        nbSet+= trySetDefault(config, ConfigOptions.DEFAULT_LIMIT_PATH, ConfigOptions.DEFAULT_ENCHANT_LIMIT);
+        nbSet+= trySetDefault(config, CAP_ANVIL_COST, DEFAULT_CAP_ANVIL_COST);
+        nbSet+= trySetDefault(config, MAX_ANVIL_COST, DEFAULT_MAX_ANVIL_COST);
+        nbSet+= trySetDefault(config, REMOVE_ANVIL_COST_LIMIT, DEFAULT_REMOVE_ANVIL_COST_LIMIT);
+        nbSet+= trySetDefault(config, REPLACE_TOO_EXPENSIVE, DEFAULT_REPLACE_TOO_EXPENSIVE);
+        nbSet+= trySetDefault(config, ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST);
+        nbSet+= trySetDefault(config, UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST);
+        nbSet+= trySetDefault(config, ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST);
+        nbSet+= trySetDefault(config, SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST);
+        nbSet+= trySetDefault(config, ALLOW_COLOR_CODE, DEFAULT_ALLOW_COLOR_CODE);
+        nbSet+= trySetDefault(config, ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR);
+        nbSet+= trySetDefault(config, PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR);
+        nbSet+= trySetDefault(config, USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST);
+        nbSet+= trySetDefault(config, DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT);
+
+        nbSet+= trySetDefault(config, APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL);
+        nbSet+= trySetDefault(config, APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER);
+        nbSet+= trySetDefault(config, REMOVE_LORE_BOOK_AND_QUIL, DEFAULT_REMOVE_LORE_BOOK_AND_QUIL);
+        nbSet+= trySetDefault(config, REMOVE_LORE_LINE_PAPER, DEFAULT_REMOVE_LORE_LINE_PAPER);
+        nbSet+= trySetDefault(config, LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER);
 
         if(nbSet > 0){
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");
