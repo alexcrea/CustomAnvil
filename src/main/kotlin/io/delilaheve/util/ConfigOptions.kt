@@ -54,9 +54,13 @@ object ConfigOptions {
     // Lore edit configs
     const val APPEND_LORE_BOOK_AND_QUIL = "lore_edit.book_and_quil.append"
     const val REMOVE_LORE_BOOK_AND_QUIL = "lore_edit.book_and_quil.remove"
+
     const val APPEND_LORE_LINE_PAPER = "lore_edit.paper.append_line"
     const val REMOVE_LORE_LINE_PAPER = "lore_edit.paper.remove_line"
     const val LORE_LINE_WITH_PAPER_ORDER = "lore_edit.paper.order"
+
+    const val EDIT_LORE_WITH_BOOK_NEED_PERMISSION = "lore_edit.book_and_quil.use_permission"
+    const val EDIT_LORE_WITH_PAPER_NEED_PERMISSION = "lore_edit.paper.use_permission"
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
@@ -94,9 +98,13 @@ object ConfigOptions {
     // lore edit config
     const val DEFAULT_APPEND_LORE_BOOK_AND_QUIL = false
     const val DEFAULT_REMOVE_LORE_BOOK_AND_QUIL = false
+
     const val DEFAULT_APPEND_LORE_LINE_PAPER = false
     const val DEFAULT_REMOVE_LORE_LINE_PAPER = false
     const val DEFAULT_LORE_LINE_WITH_PAPER_ORDER = "end"
+
+    const val DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION = true
+    const val DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION = true
 
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
@@ -486,15 +494,6 @@ object ConfigOptions {
     // Lore edits
     // ----------
 
-    /*
-
-    const val DEFAULT_APPEND_LORE_WITH_BOOK_AND_QUIL = false
-    const val DEFAULT_REMOVE_LORE_WITH_BOOK_AND_QUIL = false
-    const val DEFAULT_APPEND_LORE_LINE_WITH_PAPER = false
-    const val DEFAULT_REMOVE_LORE_LINE_WITH_PAPER = false
-    const val DEFAULT_LORE_LINE_WITH_PAPER_ORDER = "end"
-     */
-
     /**
      * If we should allow appending lore via book and quil
      */
@@ -545,6 +544,26 @@ object ConfigOptions {
                 .config
                 .getString(LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER)
                 .equals(DEFAULT_LORE_LINE_WITH_PAPER_ORDER, ignoreCase = true)
+        }
+
+    /**
+     * If lore edit via book need permission
+     */
+    val BookLoreEditNeedPermission: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(EDIT_LORE_WITH_BOOK_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION)
+        }
+
+    /**
+     * If lore edit via paper need permission
+     */
+    val PaperLoreEditNeedPermission: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(EDIT_LORE_WITH_PAPER_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION)
         }
 
 }
