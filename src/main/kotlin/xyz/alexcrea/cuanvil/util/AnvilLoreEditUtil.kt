@@ -37,27 +37,14 @@ object AnvilLoreEditUtil {
         return result
     }
 
-    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, second: ItemStack, book: BookMeta): ItemStack? {
+    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack): ItemStack? {
         if (!hasLoreEditByBookPermission(player)) return null
 
-        val meta = first.itemMeta
-        if (meta == null || !meta.hasLore()) return null
-        val lore = meta.lore!!
-        if(lore.isEmpty()) return null
-
-        val bookPage = StringBuilder()
-        lore.forEach {
-            if (bookPage.isNotEmpty()) bookPage.append('\n')
-            //TODO check & do color
-            bookPage.append(it)
-        }
-
-        val resultPage = bookPage.toString()
-        //TODO maybe check page size ? bc it may be too big ???
-
-        val result = second.clone()
-        book.setPages(resultPage)
-        result.itemMeta = book
+        // remove lore
+        val result = first.clone()
+        val leftMeta = result.itemMeta!!
+        leftMeta.lore = null
+        result.itemMeta = leftMeta
 
         return result
     }
@@ -98,7 +85,7 @@ object AnvilLoreEditUtil {
 
         val meta = second.itemMeta as BookMeta
         return if (bookType) handleLoreAppendByBook(player, first, meta)
-        else handleLoreRemoveByBook(player, first, second, meta)
+        else handleLoreRemoveByBook(player, first)
     }
 
     // Return true if append, false if remove, null if neither
@@ -144,26 +131,21 @@ object AnvilLoreEditUtil {
         return result
     }
 
-    fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack, second: ItemStack): ItemStack? {
+    fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack): ItemStack? {
         if (!hasLoreEditByPaperPermission(player)) return null
 
-        val meta = first.itemMeta
-        if (meta == null || !meta.hasLore()) return null
-        val lore = meta.lore!!
-        if(lore.isEmpty()) return null
+        // remove lore line
+        val result = first.clone()
+        val meta = result.itemMeta!!
 
         val removeEnd = ConfigOptions.paperLoreOrderIsEnd
-        //TODO check & do color
-        val line = if(removeEnd) lore[lore.size-1]
-        else lore[0]
+        val lore: ArrayList<String> = ArrayList(meta.lore!!)
 
-        // Create result item
-        val result = second.clone()
-        result.amount = 1
+        if(removeEnd) lore.removeAt(lore.size - 1)
+        else lore.removeAt(0)
 
-        val resultMeta = result.itemMeta ?: return null
-        resultMeta.setDisplayName(line)
-        result.itemMeta = resultMeta
+        meta.lore = if(lore.isEmpty()) null else lore
+        result.itemMeta = meta
 
         return result
     }
@@ -172,7 +154,7 @@ object AnvilLoreEditUtil {
         val bookType = paperLoreEditIsAppend(first, second) ?: return null
 
         return if (bookType) handleLoreAppendByPaper(player, first, second)
-        else handleLoreRemoveByPaper(player, first, second)
+        else handleLoreRemoveByPaper(player, first)
     }
 
 }
