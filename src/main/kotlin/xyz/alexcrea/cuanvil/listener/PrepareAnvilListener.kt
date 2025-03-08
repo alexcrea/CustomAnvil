@@ -245,7 +245,7 @@ class PrepareAnvilListener : Listener {
         event.result = result
 
         // TODO forgot about xp config & logic
-        // AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, 1)
 
         return true
     }
