@@ -19,26 +19,27 @@ object AnvilLoreEditUtil {
         return ConfigOptions.PaperLoreEditNeedPermission && player.hasPermission(LORE_BY_PAPER)
     }
 
-    private fun handleLoreAppendByBook(player: Permissible, first: ItemStack, book: BookMeta): ItemStack? {
-        if(!hasLoreEditByBookPermission(player)) return null
+    fun handleLoreAppendByBook(player: Permissible, first: ItemStack, book: BookMeta): ItemStack? {
+        if (!hasLoreEditByBookPermission(player)) return null
 
         val result = first.clone()
         val meta = result.itemMeta
+        //TODO take into account previous lore
         meta?.lore = book.pages[0].split("\n") //TODO check color if color is enabled
         result.itemMeta = meta
 
         return result
     }
 
-    private fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, second: ItemStack, book: BookMeta): ItemStack? {
-        if(!hasLoreEditByBookPermission(player)) return null
+    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, second: ItemStack, book: BookMeta): ItemStack? {
+        if (!hasLoreEditByBookPermission(player)) return null
 
         val meta = first.itemMeta
-        if(meta == null || !meta.hasLore()) return null
+        if (meta == null || !meta.hasLore()) return null
 
         val bookPage = StringBuilder()
         meta.lore!!.forEach {
-            if(bookPage.isNotEmpty()) bookPage.append('\n')
+            if (bookPage.isNotEmpty()) bookPage.append('\n')
             bookPage.append(it)
         }
 
@@ -52,15 +53,16 @@ object AnvilLoreEditUtil {
         return result
     }
 
-    fun bookLoreEditType(second: ItemStack) : Boolean? {
+    // Return true if append, false if remove, null if neither
+    fun bookLoreEditTypeAppend(first: ItemStack, second: ItemStack): Boolean? {
         // Test if the book & quil contain content
         val meta = second.itemMeta as BookMeta
 
         var hasContent = false
-        if(meta.hasPages() && meta.pageCount >= 1){
+        if (meta.hasPages() && meta.pageCount >= 1) {
             // Test if the pages is ok
             for (page in meta.pages) {
-                if(page.isNotEmpty()) {
+                if (page.isNotEmpty()) {
                     hasContent = true
                     break
                 }
@@ -68,23 +70,26 @@ object AnvilLoreEditUtil {
         }
 
         // We don't want to "add" the first page is there is content and the first page is empty
-        if(hasContent){
-            if(meta.pages[0].isEmpty()) return null
-            if(ConfigOptions.appendLoreBookAndQuil)
+        if (hasContent) {
+            if (meta.pages[0].isEmpty()) return null
+            if (ConfigOptions.appendLoreBookAndQuil)
                 return true
-        }
-        else if(ConfigOptions.removeLoreBookAndQuil) {
-            return false
+        } else if (ConfigOptions.removeLoreBookAndQuil) {
+            if (!first.hasItemMeta()) return null
+
+            val leftMeta = first.itemMeta!!
+            return if (leftMeta.hasLore()) false
+            else null
         }
         return null
     }
 
     fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack): ItemStack? {
-        val bookType = bookLoreEditType(second) ?: return null
+        val bookType = bookLoreEditTypeAppend(first, second) ?: return null
 
         val meta = second.itemMeta as BookMeta
-        return  if(bookType) handleLoreAppendByBook(player, first, meta)
-                else handleLoreRemoveByBook(player, first, second, meta)
+        return if (bookType) handleLoreAppendByBook(player, first, meta)
+        else handleLoreRemoveByBook(player, first, second, meta)
     }
 
 }
