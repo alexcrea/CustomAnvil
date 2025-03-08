@@ -12,6 +12,7 @@ import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.entity.AbstractVillager
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -233,7 +234,7 @@ class PrepareAnvilListener : Listener {
             result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second)
         }
         else if(Material.PAPER == type) {
-
+            result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second)
         }
 
         if(result == null || first == result) {
