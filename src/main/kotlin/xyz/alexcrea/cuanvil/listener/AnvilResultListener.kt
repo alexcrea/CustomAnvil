@@ -27,6 +27,7 @@ import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
 class AnvilResultListener : Listener {
@@ -105,8 +106,8 @@ class AnvilResultListener : Listener {
         // For lore edit
         if (handleBookLoreEdit(event, inventory, player, leftItem, rightItem, output)) {
             return
-        } else if (Material.PAPER == rightItem.type) {
-            //TODO
+        } else if (handlePaperLoreEdit(event, inventory, player, leftItem, rightItem, output)) {
+            return
         }
 
         // Else there was no working situation somehow so we deny
@@ -315,14 +316,14 @@ class AnvilResultListener : Listener {
         output: ItemStack,
     ): Boolean {
         if (Material.WRITABLE_BOOK != rightItem.type) return false
-        val bookMeta = rightItem.itemMeta as BookMeta
+        val bookMeta = rightItem.itemMeta as BookMeta? ?: return false
 
-        val editType = AnvilLoreEditUtil.bookLoreEditTypeAppend(leftItem, rightItem) ?: return false
+        val editType = AnvilLoreEditUtil.bookLoreEditIsAppend(leftItem, rightItem) ?: return false
 
         if (editType) {
             if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta)) return false
 
-            // Remove pages to
+            // Remove pages to book
             val bookCopy = rightItem.clone()
             bookMeta.pages = Collections.emptyList()
             bookCopy.itemMeta = bookMeta
@@ -338,8 +339,8 @@ class AnvilResultListener : Listener {
 
             // remove lore
             val leftCopy = leftItem.clone()
-            val leftMeta = leftCopy.itemMeta
-            leftMeta!!.lore = null
+            val leftMeta = leftCopy.itemMeta!!
+            leftMeta.lore = null
             leftCopy.itemMeta = leftMeta
 
             return extractAnvilResult(
@@ -349,6 +350,59 @@ class AnvilResultListener : Listener {
                 output, 0
             ) //TODO DO REPAIR COST
         }
+    }
+
+    private fun handlePaperLoreEdit(
+        event: InventoryClickEvent,
+        inventory: AnvilInventory,
+        player: Player,
+        leftItem: ItemStack,
+        rightItem: ItemStack,
+        output: ItemStack,
+    ): Boolean {
+        if (Material.PAPER != rightItem.type) return false
+        val paperMeta = rightItem.itemMeta ?: return false
+
+        val editType = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
+
+        if (editType) {
+            if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem)) return false
+
+            // Remove custom name to paper
+            val paperCopy = rightItem.clone()
+            paperMeta.setDisplayName(null)
+            paperCopy.itemMeta = paperMeta
+
+            return extractAnvilResult(
+                event, player, inventory,
+                leftItem, 1,
+                paperCopy, 0,
+                output, 0
+            ) //TODO DO REPAIR COST
+        } else {
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem, rightItem)) return false
+
+            // remove lore line
+            val leftCopy = leftItem.clone()
+            val leftMeta = leftCopy.itemMeta!!
+
+            val removeEnd = ConfigOptions.paperLoreOrderIsEnd
+            val lore: ArrayList<String> = ArrayList(leftMeta.lore!!)
+
+            if(removeEnd) lore.removeAt(lore.size - 1)
+            else lore.removeAt(0)
+
+            leftMeta.lore = if(lore.isEmpty()) null else lore
+            leftCopy.itemMeta = leftMeta
+
+            return extractAnvilResult(
+                event, player, inventory,
+                leftCopy, 0,
+                rightItem, 1,
+                output, 0
+            ) //TODO DO REPAIR COST
+        }
+
     }
 
     /**
