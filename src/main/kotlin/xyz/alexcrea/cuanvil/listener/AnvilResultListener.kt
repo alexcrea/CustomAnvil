@@ -27,7 +27,6 @@ import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.min
 
 class AnvilResultListener : Listener {
@@ -198,9 +197,9 @@ class AnvilResultListener : Listener {
         event: InventoryClickEvent,
         player: Player,
         inventory: AnvilInventory,
-        leftItem: ItemStack,
+        leftItem: ItemStack?,
         leftRemoveCount: Int,
-        rightItem: ItemStack,
+        rightItem: ItemStack?,
         rightRemoveCount: Int,
         output: ItemStack,
         repairCost: Int,
@@ -215,10 +214,10 @@ class AnvilResultListener : Listener {
         // If not creative middle click...
         if (event.click != ClickType.MIDDLE) {
             // We remove what should be removed
-            leftItem.amount -= leftRemoveCount
+            if (leftItem != null) leftItem.amount -= leftRemoveCount
             inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
 
-            rightItem.amount -= rightRemoveCount
+            if (rightItem != null) rightItem.amount -= rightRemoveCount
             inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
 
             inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -335,18 +334,32 @@ class AnvilResultListener : Listener {
                 output, 0
             ) //TODO DO REPAIR COST
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, rightItem, bookMeta)) return false
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem)) return false
 
-            // remove lore
-            val leftCopy = leftItem.clone()
-            val leftMeta = leftCopy.itemMeta!!
-            leftMeta.lore = null
-            leftCopy.itemMeta = leftMeta
+            // fill book meta
+            val meta = leftItem.itemMeta
+            if (meta == null || !meta.hasLore()) return false
+            val lore = meta.lore!!
+            if (lore.isEmpty()) return false
+
+            val bookPage = StringBuilder()
+            lore.forEach {
+                if (bookPage.isNotEmpty()) bookPage.append('\n')
+                //TODO check & do color
+                bookPage.append(it)
+            }
+
+            val resultPage = bookPage.toString()
+            //TODO maybe check page size ? bc it may be too big ???
+
+            val rightCopy = rightItem.clone()
+            bookMeta.setPages(resultPage)
+            rightCopy.itemMeta = bookMeta
 
             return extractAnvilResult(
                 event, player, inventory,
-                leftCopy, 0,
-                rightItem, 1,
+                leftItem, 1,
+                rightCopy, 0,
                 output, 0
             ) //TODO DO REPAIR COST
         }
@@ -370,37 +383,62 @@ class AnvilResultListener : Listener {
 
             // Remove custom name to paper
             val paperCopy = rightItem.clone()
+            paperCopy.amount = 1
             paperMeta.setDisplayName(null)
             paperCopy.itemMeta = paperMeta
 
-            return extractAnvilResult(
-                event, player, inventory,
-                leftItem, 1,
-                paperCopy, 0,
-                output, 0
-            ) //TODO DO REPAIR COST
+            // TODO CONSUME PAPER CONFIG
+            return if (rightItem.amount > 1) {
+                extractAnvilResult(
+                    event, player, inventory,
+                    paperCopy, 0,
+                    rightItem, 1,
+                    output, 0
+                ) //TODO DO REPAIR COST
+            } else {
+                extractAnvilResult(
+                    event, player, inventory,
+                    null, 0,
+                    paperCopy, 0,
+                    output, 0
+                ) //TODO DO REPAIR COST
+            }
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem, rightItem)) return false
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem)) return false
 
-            // remove lore line
-            val leftCopy = leftItem.clone()
-            val leftMeta = leftCopy.itemMeta!!
+            val leftMeta = leftItem.itemMeta
+            if (leftMeta == null || !leftMeta.hasLore()) return false
+            val lore = leftMeta.lore!!
+            if (lore.isEmpty()) return false
 
             val removeEnd = ConfigOptions.paperLoreOrderIsEnd
-            val lore: ArrayList<String> = ArrayList(leftMeta.lore!!)
+            //TODO check & do color
+            val line = if (removeEnd) lore[lore.size - 1]
+            else lore[0]
 
-            if(removeEnd) lore.removeAt(lore.size - 1)
-            else lore.removeAt(0)
+            // Create result item
+            val rightClone = rightItem.clone()
+            rightClone.amount = 1
 
-            leftMeta.lore = if(lore.isEmpty()) null else lore
-            leftCopy.itemMeta = leftMeta
+            val resultMeta = rightClone.itemMeta ?: return false
+            resultMeta.setDisplayName(line)
+            rightClone.itemMeta = resultMeta
 
-            return extractAnvilResult(
-                event, player, inventory,
-                leftCopy, 0,
-                rightItem, 1,
-                output, 0
-            ) //TODO DO REPAIR COST
+            return if (rightItem.amount > 1) {
+                extractAnvilResult(
+                    event, player, inventory,
+                    rightClone, 0,
+                    rightItem, 1,
+                    output, 0
+                ) //TODO DO REPAIR COST
+            } else {
+                extractAnvilResult(
+                    event, player, inventory,
+                    null, 0,
+                    rightClone, 0,
+                    output, 0
+                ) //TODO DO REPAIR COST
+            }
         }
 
     }
