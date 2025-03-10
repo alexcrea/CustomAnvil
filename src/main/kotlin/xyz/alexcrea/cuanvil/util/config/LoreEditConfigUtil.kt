@@ -33,7 +33,7 @@ object LoreEditConfigUtil {
     // --------------
 
     // Per edit type configs defaults
-    const val DEFAULT_IS_ENABLED = true
+    const val DEFAULT_IS_ENABLED = false
     const val DEFAULT_FIXED_COST = 1
     const val DEFAULT_PER_LINE_COST = 0
     const val DEFAULT_USE_COST_PENALTY = false
