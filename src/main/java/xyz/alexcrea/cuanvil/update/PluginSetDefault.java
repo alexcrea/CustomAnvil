@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
 import static io.delilaheve.util.ConfigOptions.*;
+import static xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.*;
 
 public class PluginSetDefault {
 
@@ -28,7 +29,8 @@ public class PluginSetDefault {
         nbSet+= trySetDefault(config, USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST);
         nbSet+= trySetDefault(config, DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT);
 
-        nbSet+= trySetDefault(config, APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL);
+        // TODO rework lore edit defaults
+        /*nbSet+= trySetDefault(config, APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL);
         nbSet+= trySetDefault(config, APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER);
 
         nbSet+= trySetDefault(config, REMOVE_LORE_BOOK_AND_QUIL, DEFAULT_REMOVE_LORE_BOOK_AND_QUIL);
@@ -36,7 +38,7 @@ public class PluginSetDefault {
         nbSet+= trySetDefault(config, LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER);
 
         nbSet+= trySetDefault(config, EDIT_LORE_WITH_BOOK_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION);
-        nbSet+= trySetDefault(config, EDIT_LORE_WITH_PAPER_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION);
+        nbSet+= trySetDefault(config, EDIT_LORE_WITH_PAPER_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION);*/
 
         if(nbSet > 0){
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");
