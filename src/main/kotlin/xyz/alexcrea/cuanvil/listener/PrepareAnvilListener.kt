@@ -142,15 +142,16 @@ class PrepareAnvilListener : Listener {
 
         // Rename item and add renaming cost
         resultItem.itemMeta?.let {
-            val displayName =
-                if (useColor) it.displayName
-                else ChatColor.stripColor(it.displayName)
+            val hasDisplayName = it.hasDisplayName()
+            val displayName = if (!hasDisplayName) null
+            else if (useColor) it.displayName
+            else ChatColor.stripColor(it.displayName)
 
             if (!displayName.contentEquals(inventoryName)) {
                 it.setDisplayName(inventoryName)
                 resultItem.itemMeta = it
 
-                sumCost+= ConfigOptions.itemRenameCost
+                sumCost += ConfigOptions.itemRenameCost
             }
 
             return sumCost

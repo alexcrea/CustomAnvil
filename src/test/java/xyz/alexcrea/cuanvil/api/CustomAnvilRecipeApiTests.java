@@ -52,8 +52,7 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestData legalResultData = new AnvilFuseTestData(
                 stick, stick,
                 null, stick, null,
-                // TODO add expected price
-                null,
+                2,
                 null, null
         );
 
@@ -109,16 +108,14 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestData legalResultData1 = new AnvilFuseTestData(
                 stick, stick,
                 null, stick2, null,
-                // TODO add expected price
-                null,
+                2,
                 null, null
         );
 
         AnvilFuseTestData legalResultData2 = new AnvilFuseTestData(
                 stick5, stick,
                 null, stick10, null,
-                // TODO add expected price
-                null,
+                10, // 2 * 5
                 null, null
         );
 

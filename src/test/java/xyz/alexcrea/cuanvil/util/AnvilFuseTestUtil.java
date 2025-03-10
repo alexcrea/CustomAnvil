@@ -136,6 +136,7 @@ public class AnvilFuseTestUtil {
 
         ItemStack result = anvil.getItem(2);
         assertEqual(expectedResult, result);
+
         assertPriceEqual(expectedPrice, anvil.getRepairCost());
     }
 
@@ -158,7 +159,7 @@ public class AnvilFuseTestUtil {
 
     public static void assertPriceEqual(Integer expectedPrice, int price){
         if(expectedPrice == null) return;
-        Assertions.assertEquals(price, expectedPrice);
+        Assertions.assertEquals(expectedPrice, price);
     }
 
 }

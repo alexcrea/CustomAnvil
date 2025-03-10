@@ -55,8 +55,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestData legalResultData = new AnvilFuseTestData(
                 damagedPickaxe, diamond2,
                 resultPickaxe,
-                // TODO add expected price
-                null
+                2
         );
 
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
@@ -105,8 +104,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestData legalResultData = new AnvilFuseTestData(
                 damagedPickaxe, stick2,
                 resultPickaxe,
-                // TODO add expected price
-                null
+                2
         );
 
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);

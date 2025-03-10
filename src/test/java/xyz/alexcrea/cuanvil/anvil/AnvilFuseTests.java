@@ -64,8 +64,8 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
 
         AnvilFuseTestData data = new AnvilFuseTestData(
                 sharpness4, sharpness4,
-                sharpness5Result
-                // TODO add expected price
+                sharpness5Result,
+                5
         );
 
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
@@ -84,8 +84,8 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
 
         AnvilFuseTestData data = new AnvilFuseTestData(
                 sharpness4, sharpness5,
-                sharpness5Result
-                // TODO add expected price
+                sharpness5Result,
+                5
         );
 
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
@@ -117,8 +117,8 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
 
         AnvilFuseTestData data = new AnvilFuseTestData(
                 base, null,
-                expected, expected, null
-                // TODO add expected price
+                expected, expected, null,
+                1, 1, null
         );
 
         AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);

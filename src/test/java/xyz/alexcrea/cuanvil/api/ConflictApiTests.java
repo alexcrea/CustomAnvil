@@ -64,8 +64,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestData legalResultData = new AnvilFuseTestData(
                 sharpness1, arthropods1,
                 illegalResult,
-                // TODO add expected price
-                null
+                2
         );
 
         CAEnchantment sharpness = EnchantmentApi.getByKey(Enchantment.SHARPNESS.getKey());

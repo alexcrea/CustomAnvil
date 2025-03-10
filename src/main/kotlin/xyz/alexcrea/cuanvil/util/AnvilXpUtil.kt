@@ -45,35 +45,42 @@ object AnvilXpUtil {
             anvilCost
         }
 
+        val maximumRepairCost =
+            if (ConfigOptions.doRemoveCostLimit || ignoreRules) {
+                Int.MAX_VALUE
+            } else {
+                ConfigOptions.maxAnvilCost + 1
+            }
+
+        // Try first just in case another plugin, or the test need this
+        inventory.maximumRepairCost = maximumRepairCost
+        inventory.repairCost = finalAnvilCost
+        // TODO for 2.x.x use anvil view & set directly there
+
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that
             * we have the final say in the process. */
         DependencyManager.scheduler.scheduleOnEntity(
-            CustomAnvil.instance, player,
-            Runnable {
-                inventory.maximumRepairCost =
-                    if (ConfigOptions.doRemoveCostLimit || ignoreRules) {
-                        Int.MAX_VALUE
-                    } else {
-                        ConfigOptions.maxAnvilCost + 1
-                    }
+            CustomAnvil.instance, player
+        ) {
+            // retry after a tick
+            inventory.maximumRepairCost = maximumRepairCost
+            inventory.repairCost = finalAnvilCost
+            // TODO for 2.x.x use anvil view & set directly there
 
-                inventory.repairCost = finalAnvilCost
-                view.setProperty(REPAIR_COST, finalAnvilCost)
-                player.openInventory.setProperty(REPAIR_COST, finalAnvilCost)
+            if (player !is Player) return@scheduleOnEntity
 
-                if (player is Player) {
-                    if (player.gameMode != GameMode.CREATIVE) {
-                        val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
-                                (finalAnvilCost >= 40) &&
-                                finalAnvilCost < inventory.maximumRepairCost
+            if (player.gameMode != GameMode.CREATIVE) {
+                val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
+                        (finalAnvilCost >= 40) &&
+                        finalAnvilCost < inventory.maximumRepairCost
 
-                        DependencyManager.packetManager.setInstantBuild(player, bypassToExpensive)
-                    }
+                DependencyManager.packetManager.setInstantBuild(player, bypassToExpensive)
+            }
 
-                    player.updateInventory()
-                }
-            })
+            player.updateInventory()
+
+        }
     }
 
     /**
