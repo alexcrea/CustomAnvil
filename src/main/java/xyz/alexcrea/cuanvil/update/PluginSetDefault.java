@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.util.config.LoreEditType;
 
 import static io.delilaheve.util.ConfigOptions.*;
 import static xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.*;
@@ -29,16 +30,32 @@ public class PluginSetDefault {
         nbSet+= trySetDefault(config, USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST);
         nbSet+= trySetDefault(config, DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT);
 
-        // TODO rework lore edit defaults
-        /*nbSet+= trySetDefault(config, APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL);
-        nbSet+= trySetDefault(config, APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER);
+        // Lore Edit defaults
+        for (@NotNull LoreEditType value : LoreEditType.values()) {
+            String path = value.getRootPath() + ".";
 
-        nbSet+= trySetDefault(config, REMOVE_LORE_BOOK_AND_QUIL, DEFAULT_REMOVE_LORE_BOOK_AND_QUIL);
-        nbSet+= trySetDefault(config, REMOVE_LORE_LINE_PAPER, DEFAULT_REMOVE_LORE_LINE_PAPER);
-        nbSet+= trySetDefault(config, LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER);
+            nbSet+= trySetDefault(config, path + IS_ENABLED, DEFAULT_IS_ENABLED);
+            nbSet+= trySetDefault(config, path + FIXED_COST, DEFAULT_FIXED_COST);
+            nbSet+= trySetDefault(config, path + PER_LINE_COST, DEFAULT_PER_LINE_COST);
+            nbSet+= trySetDefault(config, path + USE_COST_PENALTY, DEFAULT_USE_COST_PENALTY);
+            nbSet+= trySetDefault(config, path + INCREASE_COST_PENALTY, DEFAULT_INCREASE_COST_PENALTY);
+            if(value.isAppend()){
+                nbSet+= trySetDefault(config, path + DO_CONSUME, DEFAULT_DO_CONSUME);
+            }
+        }
 
-        nbSet+= trySetDefault(config, EDIT_LORE_WITH_BOOK_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION);
-        nbSet+= trySetDefault(config, EDIT_LORE_WITH_PAPER_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION);*/
+        nbSet+= trySetDefault(config, BOOK_PERMISSION_NEEDED, DEFAULT_BOOK_PERMISSION_NEEDED);
+        nbSet+= trySetDefault(config, PAPER_PERMISSION_NEEDED, DEFAULT_PAPER_PERMISSION_NEEDED);
+
+        nbSet+= trySetDefault(config, COLOR_BOOK_COLOR_CODE, DEFAULT_COLOR_BOOK_COLOR_CODE);
+        nbSet+= trySetDefault(config, COLOR_BOOK_HEX, DEFAULT_COLOR_BOOK_HEX);
+        nbSet+= trySetDefault(config, COLOR_BOOK_COST, DEFAULT_COLOR_BOOK_COST);
+
+        nbSet+= trySetDefault(config, COLOR_PAPER_COLOR_CODE, DEFAULT_COLOR_PAPER_COLOR_CODE);
+        nbSet+= trySetDefault(config, COLOR_PAPER_HEX, DEFAULT_COLOR_PAPER_HEX);
+        nbSet+= trySetDefault(config, COLOR_PAPER_COST, DEFAULT_COLOR_PAPER_COST);
+
+        nbSet+= trySetDefault(config, PAPER_EDIT_ORDER, DEFAULT_PAPER_EDIT_ORDER);
 
         if(nbSet > 0){
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");
