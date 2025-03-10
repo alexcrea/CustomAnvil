@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.8.3"
+version = "1.9.0"
 
 repositories {
     // EcoEnchants
@@ -47,7 +47,7 @@ dependencies {
     compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar")) // For legacy excellent enchants
 
     // Disenchantment
-    compileOnly(files("libs/Disenchantment-6.1.0.jar"))
+    compileOnly(files("libs/Disenchantment-6.1.5.jar"))
 
     // HavenBags
     compileOnly(files("libs/HavenBags-1.31.0.1760.jar"))
