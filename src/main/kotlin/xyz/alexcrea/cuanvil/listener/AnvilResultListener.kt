@@ -26,6 +26,7 @@ import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import java.util.*
 import kotlin.math.min
 
@@ -411,7 +412,7 @@ class AnvilResultListener : Listener {
             val lore = leftMeta.lore!!
             if (lore.isEmpty()) return false
 
-            val removeEnd = ConfigOptions.paperLoreOrderIsEnd
+            val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
             //TODO check & do color
             val line = if (removeEnd) lore[lore.size - 1]
             else lore[0]

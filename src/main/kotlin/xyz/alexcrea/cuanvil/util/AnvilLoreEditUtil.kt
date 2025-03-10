@@ -1,10 +1,11 @@
 package xyz.alexcrea.cuanvil.util
 
-import io.delilaheve.util.ConfigOptions
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.permissions.Permissible
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
+import xyz.alexcrea.cuanvil.util.config.LoreEditType
 
 object AnvilLoreEditUtil {
 
@@ -12,11 +13,11 @@ object AnvilLoreEditUtil {
     private const val LORE_BY_PAPER: String = "ca.lore_edit.paper"
 
     private fun hasLoreEditByBookPermission(player: Permissible): Boolean {
-        return ConfigOptions.BookLoreEditNeedPermission && player.hasPermission(LORE_BY_BOOK)
+        return LoreEditConfigUtil.bookLoreEditNeedPermission && player.hasPermission(LORE_BY_BOOK)
     }
 
     private fun hasLoreEditByPaperPermission(player: Permissible): Boolean {
-        return ConfigOptions.PaperLoreEditNeedPermission && player.hasPermission(LORE_BY_PAPER)
+        return LoreEditConfigUtil.paperLoreEditNeedPermission && player.hasPermission(LORE_BY_PAPER)
     }
 
     fun handleLoreAppendByBook(player: Permissible, first: ItemStack, book: BookMeta): ItemStack? {
@@ -58,7 +59,7 @@ object AnvilLoreEditUtil {
         if (meta.hasPages() && meta.pageCount >= 1) {
             // Test if the pages is ok
             for (page in meta.pages) {
-                if (page.isNotEmpty()) {
+                if (page.isNotBlank()) {
                     hasContent = true
                     break
                 }
@@ -68,9 +69,9 @@ object AnvilLoreEditUtil {
         // We don't want to "add" the first page is there is content and the first page is empty
         if (hasContent) {
             if (meta.pages[0].isEmpty()) return null
-            if (ConfigOptions.appendLoreBookAndQuil)
+            if (LoreEditType.APPEND_BOOK.enabled)
                 return true
-        } else if (ConfigOptions.removeLoreBookAndQuil) {
+        } else if (LoreEditType.REMOVE_BOOK.enabled) {
             if (!first.hasItemMeta()) return null
 
             val leftMeta = first.itemMeta!!
@@ -95,9 +96,9 @@ object AnvilLoreEditUtil {
 
         val hasContent = meta.hasDisplayName()
         if (hasContent) {
-            if (ConfigOptions.appendLoreBookAndQuil)
+            if (LoreEditType.APPEND_PAPER.enabled)
                 return true
-        } else if (ConfigOptions.removeLoreBookAndQuil) {
+        } else if (LoreEditType.REMOVE_PAPER.enabled) {
             if (!first.hasItemMeta()) return null
 
             val leftMeta = first.itemMeta!!
@@ -116,7 +117,7 @@ object AnvilLoreEditUtil {
             ArrayList<String>(meta.lore!!)
         } else ArrayList()
 
-        val appendEnd = ConfigOptions.paperLoreOrderIsEnd
+        val appendEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
 
         //TODO check color if color if enabled
         val line = second.itemMeta!!.displayName
@@ -138,7 +139,7 @@ object AnvilLoreEditUtil {
         val result = first.clone()
         val meta = result.itemMeta!!
 
-        val removeEnd = ConfigOptions.paperLoreOrderIsEnd
+        val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
         val lore: ArrayList<String> = ArrayList(meta.lore!!)
 
         if(removeEnd) lore.removeAt(lore.size - 1)

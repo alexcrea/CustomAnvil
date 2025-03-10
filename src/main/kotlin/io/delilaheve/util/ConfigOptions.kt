@@ -7,7 +7,7 @@ import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.AnvilUseType
-import java.util.EnumMap
+import java.util.*
 
 /**
  * Config option accessors
@@ -51,17 +51,6 @@ object ConfigOptions {
 
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
 
-    // Lore edit configs
-    const val APPEND_LORE_BOOK_AND_QUIL = "lore_edit.book_and_quil.append"
-    const val REMOVE_LORE_BOOK_AND_QUIL = "lore_edit.book_and_quil.remove"
-
-    const val APPEND_LORE_LINE_PAPER = "lore_edit.paper.append_line"
-    const val REMOVE_LORE_LINE_PAPER = "lore_edit.paper.remove_line"
-    const val LORE_LINE_WITH_PAPER_ORDER = "lore_edit.paper.order"
-
-    const val EDIT_LORE_WITH_BOOK_NEED_PERMISSION = "lore_edit.book_and_quil.use_permission"
-    const val EDIT_LORE_WITH_PAPER_NEED_PERMISSION = "lore_edit.paper.use_permission"
-
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
     private const val KEY_ITEM = "item"
@@ -95,17 +84,6 @@ object ConfigOptions {
 
     const val DEFAULT_ENCHANT_LIMIT = 5
 
-    // lore edit config
-    const val DEFAULT_APPEND_LORE_BOOK_AND_QUIL = false
-    const val DEFAULT_REMOVE_LORE_BOOK_AND_QUIL = false
-
-    const val DEFAULT_APPEND_LORE_LINE_PAPER = false
-    const val DEFAULT_REMOVE_LORE_LINE_PAPER = false
-    const val DEFAULT_LORE_LINE_WITH_PAPER_ORDER = "end"
-
-    const val DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION = true
-    const val DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION = true
-
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
     private const val DEFAULT_VERBOSE_DEBUG_LOG = false
@@ -138,6 +116,9 @@ object ConfigOptions {
     @JvmField
     val ENCHANT_LIMIT_RANGE = 1..255
 
+    // --------------
+    // Other defaults
+    // --------------
 
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
@@ -262,7 +243,10 @@ object ConfigOptions {
     /**
      * If one of the color component is enabled
      */
-    val renameColorPossible: Boolean get() { return allowColorCode || allowHexadecimalColor }
+    val renameColorPossible: Boolean
+        get() {
+            return allowColorCode || allowHexadecimalColor
+        }
 
     /**
      * If players need a permission to use color
@@ -313,8 +297,10 @@ object ConfigOptions {
 
         val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
         val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)
-        val exclusivePenaltyIncrease = section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
-        val exclusivePenaltyAdditive = section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
+        val exclusivePenaltyIncrease =
+            section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
+        val exclusivePenaltyAdditive =
+            section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
 
         return WorkPenaltyPart(penaltyIncrease, penaltyAdditive, exclusivePenaltyIncrease, exclusivePenaltyAdditive)
     }
@@ -355,11 +341,11 @@ object ConfigOptions {
     fun enchantLimit(enchantment: CAEnchantment): Int {
         // Test namespace
         var limit = enchantLimit(enchantment.key.toString())
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // Test legacy (name only)
         limit = enchantLimit(enchantment.enchantmentName)
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // get default (and test old legacy if present)
         return getDefaultLevel(enchantment.enchantmentName)
@@ -373,18 +359,19 @@ object ConfigOptions {
         val path = "${ENCHANT_LIMIT_ROOT}.$enchantmentName"
         return CustomAnvil.instance
             .config
-            .getInt(path, ENCHANT_LIMIT_RANGE.first-1)
+            .getInt(path, ENCHANT_LIMIT_RANGE.first - 1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
     }
 
     /**
      * Get default value if enchantment do not exist on config
      */
-    private fun getDefaultLevel(enchantmentName: String, // compatibility with 1.20.5. TODO better update system
-        ) : Int {
-        if(enchantmentName == "sweeping_edge"){
-            val limit =  enchantLimit("sweeping")
-            if(limit != null) return limit
+    private fun getDefaultLevel(
+        enchantmentName: String, // compatibility with 1.20.5. TODO better update system
+    ): Int {
+        if (enchantmentName == "sweeping_edge") {
+            val limit = enchantLimit("sweeping")
+            if (limit != null) return limit
 
         }
         return defaultEnchantLimit
@@ -400,11 +387,11 @@ object ConfigOptions {
     ): Int {
         // Test namespace
         var limit = enchantmentValue(enchantment.key.toString(), isFromBook)
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // Test legacy (name only)
         limit = enchantmentValue(enchantment.enchantmentName, isFromBook)
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // get default (and test old legacy if present)
         return getDefaultValue(enchantment, isFromBook)
@@ -430,21 +417,23 @@ object ConfigOptions {
     /**
      * Get default value if enchantment do not exist on config
      */
-    private fun getDefaultValue(enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
-                                isFromBook: Boolean) : Int {
+    private fun getDefaultValue(
+        enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
+        isFromBook: Boolean
+    ): Int {
 
         val enchantmentName = enchantment.key.toString()
-        if(enchantmentName == "minecraft:sweeping_edge"){
+        if (enchantmentName == "minecraft:sweeping_edge") {
             var limit = enchantmentValue("minecraft:sweeping", isFromBook)
-            if(limit != null) return limit
-            
+            if (limit != null) return limit
+
             // legacy name
             limit = enchantmentValue("sweeping", isFromBook)
-            if(limit != null) return limit
+            if (limit != null) return limit
         }
 
         val rarity = enchantment.defaultRarity()
-        return if(isFromBook)
+        return if (isFromBook)
             rarity.bookValue
         else
             rarity.itemValue
@@ -457,20 +446,20 @@ object ConfigOptions {
     fun maxBeforeMergeDisabled(enchantment: CAEnchantment): Int {
         val key = enchantment.key.toString()
         var value = maxBeforeMergeDisabled(key)
-        if(value != null) return value
+        if (value != null) return value
 
         // Legacy name
         val legacy = enchantment.enchantmentName
         value = maxBeforeMergeDisabled(legacy)
-        if(value != null) return value
+        if (value != null) return value
 
-        if(key == "minecraft:sweeping_edge"){
+        if (key == "minecraft:sweeping_edge") {
             value = maxBeforeMergeDisabled("minecraft:sweeping")
-            if(value != null) return value
+            if (value != null) return value
 
             // legacy name of legacy enchantment name
             value = maxBeforeMergeDisabled("sweeping")
-            if(value != null) return value
+            if (value != null) return value
         }
 
         return DEFAULT_MAX_BEFORE_MERGE_DISABLED
@@ -480,7 +469,7 @@ object ConfigOptions {
      * Get the given [enchantmentName]'s level before merge is disabled
      * a negative value would mean never disabled
      */
-    private fun maxBeforeMergeDisabled(enchantmentName: String) : Int? {
+    private fun maxBeforeMergeDisabled(enchantmentName: String): Int? {
         // find if set
         val path = "${DISABLE_MERGE_OVER_ROOT}.$enchantmentName"
 
@@ -489,81 +478,5 @@ object ConfigOptions {
             .getInt(path, ENCHANT_LIMIT_RANGE.min() - 1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
     }
-
-    // ----------
-    // Lore edits
-    // ----------
-
-    /**
-     * If we should allow appending lore via book and quil
-     */
-    val appendLoreBookAndQuil: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL)
-        }
-
-    /**
-     * If we should allow appending lore line via paper
-     */
-    val appendLoreLinePaper: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER)
-        }
-
-    /**
-     * If we should allow removing lore via book and quil
-     */
-    val removeLoreBookAndQuil: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(APPEND_LORE_BOOK_AND_QUIL, DEFAULT_APPEND_LORE_BOOK_AND_QUIL)
-        }
-
-    /**
-     * If we should allow removing lore line via paper
-     */
-    val removeLoreLinePaper: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(APPEND_LORE_LINE_PAPER, DEFAULT_APPEND_LORE_LINE_PAPER)
-        }
-
-    /**
-     * Get if we should append/remove at the end or at the start of the lore list
-     * This may change to an "OrderType" enum or equivalent later
-     */
-    val paperLoreOrderIsEnd: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getString(LORE_LINE_WITH_PAPER_ORDER, DEFAULT_LORE_LINE_WITH_PAPER_ORDER)
-                .equals(DEFAULT_LORE_LINE_WITH_PAPER_ORDER, ignoreCase = true)
-        }
-
-    /**
-     * If lore edit via book need permission
-     */
-    val BookLoreEditNeedPermission: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(EDIT_LORE_WITH_BOOK_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_BOOK_NEED_PERMISSION)
-        }
-
-    /**
-     * If lore edit via paper need permission
-     */
-    val PaperLoreEditNeedPermission: Boolean
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(EDIT_LORE_WITH_PAPER_NEED_PERMISSION, DEFAULT_EDIT_LORE_WITH_PAPER_NEED_PERMISSION)
-        }
 
 }
