@@ -27,6 +27,7 @@ import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
+import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
 import kotlin.math.min
 
@@ -324,9 +325,14 @@ class AnvilResultListener : Listener {
             if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta)) return false
 
             // Remove pages to book
-            val bookCopy = rightItem.clone()
-            bookMeta.pages = Collections.emptyList()
-            bookCopy.itemMeta = bookMeta
+            val bookCopy: ItemStack?
+            if (LoreEditType.APPEND_BOOK.doConsume) {
+                bookCopy = rightItem.clone()
+                bookMeta.pages = Collections.emptyList()
+                bookCopy.itemMeta = bookMeta
+            } else {
+                bookCopy = null
+            }
 
             return extractAnvilResult(
                 event, player, inventory,
@@ -382,13 +388,17 @@ class AnvilResultListener : Listener {
         if (editType) {
             if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem)) return false
 
-            // Remove custom name to paper
-            val paperCopy = rightItem.clone()
-            paperCopy.amount = 1
-            paperMeta.setDisplayName(null)
-            paperCopy.itemMeta = paperMeta
+            val paperCopy: ItemStack?
+            if (LoreEditType.APPEND_PAPER.doConsume) {
+                paperCopy = null
+            } else {
+                // Remove custom name to paper
+                paperCopy = rightItem.clone()
+                paperCopy.amount = 1
+                paperMeta.setDisplayName(null)
+                paperCopy.itemMeta = paperMeta
+            }
 
-            // TODO CONSUME PAPER CONFIG
             return if (rightItem.amount > 1) {
                 extractAnvilResult(
                     event, player, inventory,
