@@ -1,6 +1,7 @@
 import cn.lalaki.pub.BaseCentralPortalPlusExtension
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.net.URI
 
 plugins {
     kotlin("jvm") version "2.1.0"
@@ -15,8 +16,8 @@ plugins {
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.14" apply false
 }
 
-group = "xyz.alexcrea"
-version = "1.9.0"
+group = "xyz.alexcrea.cuanvil"
+version = "1.9.1"
 
 repositories {
     // EcoEnchants
@@ -79,6 +80,10 @@ dependencies {
 allprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
+    apply(plugin = "cn.lalaki.central")
+    apply(plugin = "org.jetbrains.dokka")
 
     repositories {
         mavenCentral()
@@ -98,22 +103,36 @@ allprojects {
         testImplementation("org.junit.jupiter:junit-jupiter")
     }
 
-    tasks.getByName<Test>("test") {
-        useJUnitPlatform()
-    }
-
     // Configure used version of kotlin and java
     java {
         disableAutoTargetJvm()
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
-    // Set target version
-    tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
-        targetCompatibility = "16"
+    tasks {
+        getByName<Test>("test") {
+            useJUnitPlatform()
+        }
 
-        options.encoding = "UTF-8"
+        // Set target version
+        withType<JavaCompile>().configureEach {
+            sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
+            targetCompatibility = "16"
+
+            options.encoding = "UTF-8"
+        }
+
+        val javadocJar by registering(Jar::class, fun Jar.() {
+            group = JavaBasePlugin.DOCUMENTATION_GROUP
+            description = "Assembles Javadoc JAR"
+            archiveClassifier.set("javadoc")
+            from(named("dokkaHtml"))
+        })
+
+        val sourcesJar by registering(Jar::class) {
+            archiveClassifier.set("sources")
+            from(kotlin.sourceSets.main.get().kotlin)
+        }
     }
 
     kotlin {
@@ -199,54 +218,38 @@ tasks {
 
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(kotlin.sourceSets.main.get().kotlin)
-}
-
-val javadocJar by tasks.registering(Jar::class, fun Jar.() {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles Javadoc JAR"
-    archiveClassifier.set("javadoc")
-    from(tasks.named("dokkaHtml"))
-})
-
-signing {
-    useGpgCmd()
-    val extension = extensions
-        .getByName("publishing") as PublishingExtension
-    sign(extension.publications)
-}
-
 // ------------------------------------
 // PUBLISHING TO SONATYPE CONFIGURATION
 // ------------------------------------
 
-// The path is recommended to be set to an empty directory
-val localMavenRepo = uri(
-    project.findProperty("localMavenRepo") as String?
-        ?: rootProject.layout.buildDirectory.dir("local-maven-repo").get().asFile.toURI() // Convert to URI
-)
-
-centralPortalPlus {
-    url = localMavenRepo
-    username = System.getenv("SONATYPE_USERNAME")
-    password = System.getenv("SONATYPE_PASSWORD")
-    publishingType = BaseCentralPortalPlusExtension.PublishingType.USER_MANAGED // or PublishingType.AUTOMATIC
-}
-
 object Meta {
     const val desc = "spigot plugin to control every aspect of the anvil."
-    const val license = "GPL-3.0"
-    const val githubRepo = "alexcrea/CustomAnvil"
     const val release = "https://s01.oss.sonatype.org/service/local/"
     const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+}
+
+allprojects {
+    apply(from = rootProject.file("publication.gradle.kts"))
+
+    signing {
+        useGpgCmd()
+        val extension = extensions
+            .getByName("publishing") as PublishingExtension
+        sign(extension.publications)
+    }
+
+    centralPortalPlus {
+        url = project.extra["localMavenRepoURL"] as URI
+        username = System.getenv("SONATYPE_USERNAME")
+        password = System.getenv("SONATYPE_PASSWORD")
+        publishingType = BaseCentralPortalPlusExtension.PublishingType.USER_MANAGED // or PublishingType.AUTOMATIC
+    }
 }
 
 publishing {
     repositories {
         maven {
-            url = localMavenRepo // Specify the same local repo path in the configuration.
+            url =  project.extra["localMavenRepoURL"] as URI // Specify the same local repo path in the configuration.
         }
     }
 
@@ -258,37 +261,41 @@ publishing {
             from(components["kotlin"])
             artifact(tasks["sourcesJar"])
             artifact(tasks["javadocJar"])
+
+            val githubRepo = project.extra["gitRepo"] as String
             pom {
                 name.set(project.name)
                 description.set(Meta.desc)
-                url.set("https://github.com/${Meta.githubRepo}")
+                url.set("https://${githubRepo}")
                 licenses {
                     license {
-                        name.set(Meta.license)
-                        url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                        name.set(project.extra["license"] as String)
+                        url.set( project.extra["licenseLink"] as String)
                     }
                 }
                 developers {
-                    developer {
-                        id.set("alexcrea")
-                        name.set("alexcrea")
-                        email.set("alexcrea.of@laposte.net")
-                        url.set("https://github.com/alexcrea")
+                    for (developerData in project.extra["developers"] as List<Map<String, String>>) {
+                        developer {
+                            id.set(developerData["id"])
+                            name.set(developerData["name"])
+                            email.set(developerData.getOrDefault("email",null))
+                            url.set(developerData.getOrDefault("url",null))
+                        }
                     }
                 }
                 scm {
                     url.set(
-                        "https://github.com/${Meta.githubRepo}.git"
+                        "https://${githubRepo}.git"
                     )
                     connection.set(
-                        "scm:git:git://github.com/${Meta.githubRepo}.git"
+                        "scm:git:git://${githubRepo}.git"
                     )
                     developerConnection.set(
-                        "scm:git:git://github.com/${Meta.githubRepo}.git"
+                        "scm:git:git://${githubRepo}.git"
                     )
                 }
                 issueManagement {
-                    url.set("https://github.com/${Meta.githubRepo}/issues")
+                    url.set("https://${githubRepo}/issues")
                 }
             }
         }

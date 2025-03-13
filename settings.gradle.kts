@@ -1,4 +1,4 @@
-rootProject.name = "CustomAnvil"
+rootProject.name = "custom-anvil"
 
 // NMS subproject
 include("nms:nms-common")
