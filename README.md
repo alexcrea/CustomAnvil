@@ -53,17 +53,17 @@ Custom Anvil can be compatible with some custom enchantments and anvil mechanics
 
 Here is a list of supported custom enchantment plugins with support status:
 - [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
-support by Custom Anvil but still experimental. Automatic configuration.
+Support by Custom Anvil but still experimental. Automatic configuration.
 
 - [EcoEnchant](https://www.spigotmc.org/resources/ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/):
-support by Custom Anvil but still experimental. Need to use /anvilconfigreload or a server restart to add newly added enchantment. 
+Support by Custom Anvil but still experimental. Need to use /anvilconfigreload or a server restart to add newly added enchantment. 
 Use EcoEnchant restriction system by default.
 
 - [ExcellentEnchants](https://www.spigotmc.org/resources/excellentenchants-%E2%AD%90-75-vanilla-like-enchantments.61693/):
-support by Custom Anvil but still experimental. use ExcellentEnchants item type.
+Support by Custom Anvil but still experimental. Use ExcellentEnchants item type.
 
 - [Superenchants](https://modrinth.com/plugin/superenchants)
-support by Superenchants. used CustomAnvil to combine enchantment in anvil in survival.
+support by Superenchants. Use CustomAnvil to combine enchantment in anvil in survival.
 
 Here is a list of supported anvil mechanic plugins with support status:
 - [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/)
