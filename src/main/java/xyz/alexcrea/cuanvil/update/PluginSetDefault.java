@@ -36,7 +36,9 @@ public class PluginSetDefault {
 
             nbSet+= trySetDefault(config, path + IS_ENABLED, DEFAULT_IS_ENABLED);
             nbSet+= trySetDefault(config, path + FIXED_COST, DEFAULT_FIXED_COST);
-            nbSet+= trySetDefault(config, path + PER_LINE_COST, DEFAULT_PER_LINE_COST);
+            if(value.isMultiLine()){
+                nbSet+= trySetDefault(config, path + PER_LINE_COST, DEFAULT_PER_LINE_COST);
+            }
             if(value.isAppend()){
                 nbSet+= trySetDefault(config, path + DO_CONSUME, DEFAULT_DO_CONSUME);
             }
