@@ -227,21 +227,10 @@ object AnvilLoreEditUtil {
         return xpCost
     }
 
-    private fun colorLines(player: Permissible, lines: ArrayList<String>, useType: LoreEditType): Int {
-        val canUseHex: Boolean
-        val canUseColorCode: Boolean
-        val colorCost: Int
-        // If is book
-        if (useType == LoreEditType.REMOVE_BOOK || useType == LoreEditType.APPEND_BOOK) {
-            canUseHex = LoreEditConfigUtil.bookAllowHexColor
-            canUseColorCode = LoreEditConfigUtil.bookAllowColorCode
-            colorCost = LoreEditConfigUtil.bookUseColorCost
-        } // Else if is paper
-        else {
-            canUseHex = LoreEditConfigUtil.paperAllowHexColor
-            canUseColorCode = LoreEditConfigUtil.paperAllowColorCode
-            colorCost = LoreEditConfigUtil.paperUseColorCost
-        }
+    private fun colorLines(player: Permissible, lines: ArrayList<String>, editType: LoreEditType): Int {
+        val canUseHex = editType.allowHexColor
+        val canUseColorCode = editType.allowColorCode
+        val colorCost = editType.useColorCost
 
         // Now handle color of each lines
         var hasUsedColor = false
@@ -268,21 +257,8 @@ object AnvilLoreEditUtil {
         }
     }
 
-    fun uncolorLines(player: Permissible, lines: ArrayList<String>, useType: LoreEditType): Int {
-        val canUseHex: Boolean
-        val canUseColorCode: Boolean
-        val colorCost: Int
-        // If is book
-        if (useType == LoreEditType.REMOVE_BOOK || useType == LoreEditType.APPEND_BOOK) {
-            canUseHex = LoreEditConfigUtil.bookAllowHexColor
-            canUseColorCode = LoreEditConfigUtil.bookAllowColorCode
-            colorCost = LoreEditConfigUtil.bookUseColorCost
-        } // Else if is paper
-        else {
-            canUseHex = LoreEditConfigUtil.paperAllowHexColor
-            canUseColorCode = LoreEditConfigUtil.paperAllowColorCode
-            colorCost = LoreEditConfigUtil.paperUseColorCost
-        }
+    fun uncolorLines(player: Permissible, lines: ArrayList<String>, editType: LoreEditType): Int {
+        if(!editType.shouldRemoveColorOnLoreRemoval) return 0
 
         // Now handle color of each lines
         var hasUndidColor = false
@@ -292,7 +268,7 @@ object AnvilLoreEditUtil {
             val lineUndidColor = AnvilColorUtil.revertColor(
                 uncoloredLine,
                 player,
-                false, canUseColorCode, canUseHex,
+                false, true, true,
                 AnvilColorUtil.ColorUseType.LORE_EDIT
             )
 
@@ -303,7 +279,7 @@ object AnvilLoreEditUtil {
         }
 
         return if (hasUndidColor) {
-            colorCost
+            editType.removeColorCost
         } else {
             0
         }

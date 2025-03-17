@@ -1,6 +1,18 @@
 package xyz.alexcrea.cuanvil.util.config
 
 import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_COLOR_CODE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_COLOR_CODE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_USE_COLOR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_COST_RANGE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOR_COST_RANGE
 import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT_CONFIG as CONFIG
 
 enum class LoreEditType(
@@ -10,9 +22,9 @@ enum class LoreEditType(
     val isMultiLine: Boolean,
 ) {
     APPEND_BOOK("lore_edit.book_and_quil.append", AnvilUseType.LORE_EDIT_BOOK_APPEND, true, true),
-    REMOVE_BOOK("lore_edit.book_and_quil.remove", AnvilUseType.LORE_EDIT_BOOK_REMOVE,false, true),
-    APPEND_PAPER("lore_edit.paper.append_line", AnvilUseType.LORE_EDIT_PAPER_APPEND,true, false),
-    REMOVE_PAPER("lore_edit.paper.remove_line", AnvilUseType.LORE_EDIT_PAPER_REMOVE,false, false),
+    REMOVE_BOOK("lore_edit.book_and_quil.remove", AnvilUseType.LORE_EDIT_BOOK_REMOVE, false, true),
+    APPEND_PAPER("lore_edit.paper.append_line", AnvilUseType.LORE_EDIT_PAPER_APPEND, true, false),
+    REMOVE_PAPER("lore_edit.paper.remove_line", AnvilUseType.LORE_EDIT_PAPER_REMOVE, false, false),
     ;
 
     /**
@@ -55,10 +67,70 @@ enum class LoreEditType(
      */
     val doConsume: Boolean
         get() {
-            if (!isAppend) throw IllegalStateException("Lore edit Consume test should not happen on append")
             return CONFIG
                 .config
                 .getBoolean("${rootPath}.${LoreEditConfigUtil.DO_CONSUME}", LoreEditConfigUtil.DEFAULT_DO_CONSUME)
+        }
+
+    /**
+     * Allow usage of color code on lore add
+     */
+    val allowColorCode: Boolean
+        get() {
+            if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
+            return CONFIG
+                .config
+                .getBoolean("$rootPath.$ALLOW_COLOR_CODE", DEFAULT_ALLOW_COLOR_CODE)
+        }
+
+    /**
+     * Allow usage of hexadecimal color on lore add
+     */
+    val allowHexColor: Boolean
+        get() {
+            if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
+            return CONFIG
+                .config
+                .getBoolean("${rootPath}.$ALLOW_HEX_COLOR", DEFAULT_ALLOW_HEX_COLOR)
+        }
+
+    /**
+     * Cost when using either color code and hex color on lore add
+     */
+    val useColorCost: Int
+        get() {
+            if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
+            return CONFIG
+                .config
+                .getInt("${rootPath}.$USE_COLOR_COST", DEFAULT_USE_COLOR_COST)
+                .takeIf { it in USE_COLOR_COST_RANGE }
+                ?: DEFAULT_USE_COLOR_COST
+
+        }
+
+    /**
+     * Should the color code & hex color should get removed on lore remove
+     */
+    val shouldRemoveColorOnLoreRemoval: Boolean
+        get() {
+            if (isAppend) throw IllegalStateException("Can only call with a remove edit type")
+            return CONFIG
+                .config
+                .getBoolean("${rootPath}.$REMOVE_COLOR_ON_LORE_REMOVE", DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE)
+        }
+
+    /**
+     * Cost when using either color code and hex color on lore remove
+     */
+    val removeColorCost: Int
+        get() {
+            if (isAppend) throw IllegalStateException("Can only call with a remove edit type")
+            return CONFIG
+                .config
+                .getInt("${rootPath}.$REMOVE_COLOR_COST", DEFAULT_REMOVE_COLOR_COST)
+                .takeIf { it in REMOVE_COLOR_COST_RANGE }
+                ?: DEFAULT_REMOVE_COLOR_COST
+
         }
 
 }
