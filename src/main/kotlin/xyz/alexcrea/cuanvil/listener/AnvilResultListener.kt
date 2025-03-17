@@ -208,6 +208,10 @@ class AnvilResultListener : Listener {
         output: ItemStack,
         repairCost: Int,
     ): Boolean {
+        // To avoid vanilla, we cancel the event
+        event.result = Event.Result.DENY
+        event.isCancelled = true
+
         // Assumed if player do not have enough xp then it returned MIN_VALUE
         if (repairCost == Int.MIN_VALUE) return false
 
@@ -253,19 +257,15 @@ class AnvilResultListener : Listener {
             rightItem.amount, unitRepairResult
         )
 
-        // To avoid vanilla, we cancel the event for unit repair
-        event.result = Event.Result.DENY
-        event.isCancelled = true
-
         // Get repair cost
         val repairCost = getUnitRepairCost(inventory, player, leftItem, output, resultCopy, resultAmount)
 
         // And then we give the item manually
         extractAnvilResult(
             event, player, inventory,
-            leftItem, 1,
+            null, 0,
             rightItem, resultAmount,
-            output, repairCost
+            resultCopy, repairCost
         )
     }
 
@@ -328,19 +328,19 @@ class AnvilResultListener : Listener {
             if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta, xpCost)) return false
 
             // Remove pages to book
-            val bookCopy: ItemStack?
+            val clearedBook: ItemStack?
             if (LoreEditType.APPEND_BOOK.doConsume) {
-                bookCopy = rightItem.clone()
+                clearedBook = rightItem.clone()
                 bookMeta.pages = Collections.emptyList()
-                bookCopy.itemMeta = bookMeta
+                clearedBook.itemMeta = bookMeta
             } else {
-                bookCopy = null
+                clearedBook = null
             }
 
             return extractAnvilResult(
                 event, player, inventory,
-                leftItem, 1,
-                bookCopy, 0,
+                null, 0,
+                clearedBook, 0,
                 output, xpCost.get()
             )
         } else {
@@ -370,7 +370,7 @@ class AnvilResultListener : Listener {
 
             return extractAnvilResult(
                 event, player, inventory,
-                leftItem, 1,
+                null, 0,
                 rightCopy, 0,
                 output, xpCost.get()
             )
