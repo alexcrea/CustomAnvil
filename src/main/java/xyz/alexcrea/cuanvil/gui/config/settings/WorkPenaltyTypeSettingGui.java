@@ -219,12 +219,11 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
     }
 
     public static boolean saveWorkPenalty(Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> partEnum) {
-        String path = ConfigOptions.WORK_PENALTY_ROOT;
         ConfigHolder configHolder = ConfigHolder.DEFAULT_CONFIG;
         FileConfiguration config = configHolder.getConfig();
 
         partEnum.forEach((key, value) -> {
-            String partPath = path + "." + key.getTypeName();
+            String partPath =  key.getPath();
 
             if (key.getDefaultPenalty().equals(value)) {
                 config.set(partPath, null);
