@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.util
 
 import org.bukkit.Material
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
+import xyz.alexcrea.cuanvil.util.config.LoreEditType
 
 enum class AnvilUseType(
     val typeName: String, val path: String,
@@ -30,22 +31,22 @@ enum class AnvilUseType(
         "Custom Craft", Material.CRAFTING_TABLE
     ),
     LORE_EDIT_BOOK_APPEND(
-        "lore_edit_book_append", "lore_edit.book_and_quil.append",
+        "lore_edit_book_append", LoreEditType.APPEND_BOOK.rootPath,
         WorkPenaltyPart(false, false),
         "Book Add", Material.WRITABLE_BOOK
     ),
     LORE_EDIT_BOOK_REMOVE(
-        "lore_edit_book_remove", "lore_edit.book_and_quil.remove",
+        "lore_edit_book_remove", LoreEditType.REMOVE_BOOK.rootPath,
         WorkPenaltyPart(false, false),
         "Book Remove", Material.WRITABLE_BOOK
     ),
     LORE_EDIT_PAPER_APPEND(
-        "lore_edit_paper_append", "lore_edit.paper.append",
+        "lore_edit_paper_append", LoreEditType.APPEND_PAPER.rootPath,
         WorkPenaltyPart(false, false),
         "Paper Add", Material.WRITABLE_BOOK
     ),
     LORE_EDIT_PAPER_REMOVE(
-        "lore_edit_paper_remove", "lore_edit.paper.remove",
+        "lore_edit_paper_remove", LoreEditType.REMOVE_PAPER.rootPath,
         WorkPenaltyPart(false, false),
         "Paper Remove", Material.WRITABLE_BOOK
     ),
