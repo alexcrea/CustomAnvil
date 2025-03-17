@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.util
 
-import io.delilaheve.util.ConfigOptions
 import org.bukkit.Material
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 
@@ -52,20 +51,14 @@ enum class AnvilUseType(
     ),
     ;
 
-    companion object {
-        private fun defaultPath(typeName: String): String {
-            return "${ConfigOptions.WORK_PENALTY_ROOT}.$typeName"
-        }
-
-    }
-
     constructor(
         typeName: String,
         defaultPenalty: WorkPenaltyPart,
         displayName: String, displayMat: Material
     ) :
             this(
-                typeName, defaultPath(typeName),
+                typeName,
+                AnvilUseTypeUtil.defaultPath(typeName), // stupid util class
                 defaultPenalty,
                 displayName, displayMat
             )
