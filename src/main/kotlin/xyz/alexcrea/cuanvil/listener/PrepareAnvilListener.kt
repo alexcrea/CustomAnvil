@@ -12,7 +12,6 @@ import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.Material
-import org.bukkit.entity.AbstractVillager
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -20,10 +19,11 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.BookMeta
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.concurrent.atomic.AtomicInteger
+
 /**
  * Listener for anvil events
  */
@@ -230,11 +230,12 @@ class PrepareAnvilListener : Listener {
         val type = second.type
         var result: ItemStack? = null
 
+        val xpCost = AtomicInteger()
         if(Material.WRITABLE_BOOK == type) {
-            result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second)
+            result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, xpCost)
         }
         else if(Material.PAPER == type) {
-            result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second)
+            result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
         }
 
         if(result == null || first == result) {
@@ -244,10 +245,7 @@ class PrepareAnvilListener : Listener {
         }
 
         event.result = result
-
-        // TODO forgot about xp config & logic
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, 1)
-
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, xpCost.get())
         return true
     }
 }

@@ -36,8 +36,6 @@ object LoreEditConfigUtil {
     const val DEFAULT_IS_ENABLED = false
     const val DEFAULT_FIXED_COST = 1
     const val DEFAULT_PER_LINE_COST = 0
-    const val DEFAULT_USE_COST_PENALTY = false
-    const val DEFAULT_INCREASE_COST_PENALTY = false
     const val DEFAULT_DO_CONSUME = false
 
     // Permission configs defaults
