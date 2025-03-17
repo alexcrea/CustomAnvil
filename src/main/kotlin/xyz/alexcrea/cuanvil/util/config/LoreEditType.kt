@@ -7,11 +7,12 @@ enum class LoreEditType(
     val rootPath: String,
     val useType: AnvilUseType,
     val isAppend: Boolean,
+    val isMultiLine: Boolean,
 ) {
-    APPEND_BOOK("lore_edit.book_and_quil.append", AnvilUseType.LORE_EDIT_BOOK_APPEND, true),
-    REMOVE_BOOK("lore_edit.book_and_quil.remove", AnvilUseType.LORE_EDIT_BOOK_REMOVE,false),
-    APPEND_PAPER("lore_edit.paper.append", AnvilUseType.LORE_EDIT_PAPER_APPEND,true),
-    REMOVE_PAPER("lore_edit.paper.remove", AnvilUseType.LORE_EDIT_PAPER_REMOVE,false),
+    APPEND_BOOK("lore_edit.book_and_quil.append", AnvilUseType.LORE_EDIT_BOOK_APPEND, true, true),
+    REMOVE_BOOK("lore_edit.book_and_quil.remove", AnvilUseType.LORE_EDIT_BOOK_REMOVE,false, true),
+    APPEND_PAPER("lore_edit.paper.append", AnvilUseType.LORE_EDIT_PAPER_APPEND,true, false),
+    REMOVE_PAPER("lore_edit.paper.remove", AnvilUseType.LORE_EDIT_PAPER_REMOVE,false, false),
     ;
 
     /**
@@ -41,6 +42,7 @@ enum class LoreEditType(
      */
     val perLineCost: Int
         get() {
+            if (!isMultiLine) throw IllegalStateException("Per line cost get on single line edit type")
             return CONFIG
                 .config
                 .getInt("${rootPath}.${LoreEditConfigUtil.PER_LINE_COST}", LoreEditConfigUtil.DEFAULT_PER_LINE_COST)
