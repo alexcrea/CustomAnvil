@@ -30,21 +30,26 @@ object AnvilLoreEditUtil {
         if (!hasLoreEditByBookPermission(player)) return null
 
         val result = first.clone()
-        val meta = result.itemMeta?: return null
+        val meta = result.itemMeta ?: return null
         val lore = if (meta.hasLore()) {
             ArrayList<String>(meta.lore!!)
         } else ArrayList()
 
-        //TODO check color if color if enabled
-        val lines = book.pages[0].split("\n")
+        val page = book.pages[0]
+        val lines = ArrayList<String>(page.split("\n"))
+        val colorCost = colorLines(player, lines, LoreEditType.APPEND_BOOK)
+
         lore.addAll(lines)
 
         meta.lore = lore
         result.itemMeta = meta
 
-        // Handle other xp
-        xpCost.addAndGet(lines.size * LoreEditType.APPEND_BOOK.perLineCost)
-        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_BOOK))
+        if (result == first) return null
+
+        // Handle xp
+        xpCost.addAndGet(colorCost) // Cost of using color
+        xpCost.addAndGet(lines.size * LoreEditType.APPEND_BOOK.perLineCost) // per line cost
+        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_BOOK)) // Fixed cost and work penalty
 
         return result
     }
@@ -54,20 +59,25 @@ object AnvilLoreEditUtil {
 
         // remove lore
         val result = first.clone()
-        val leftMeta = result.itemMeta?: return null
-        val currentLore = leftMeta.lore?: return null
+        val leftMeta = result.itemMeta ?: return null
+        val currentLore = ArrayList<String>(leftMeta.lore ?: return null)
+
+        val uncolorCost = uncolorLines(player, currentLore, LoreEditType.REMOVE_BOOK)
 
         leftMeta.lore = null
         result.itemMeta = leftMeta
 
-        // Handle other xp
+        if (result == first) return null
+
+        // Handle xp
+        xpCost.addAndGet(uncolorCost)
         xpCost.addAndGet(currentLore.size * LoreEditType.REMOVE_BOOK.perLineCost)
         xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_BOOK))
 
         return result
     }
 
-    // Return true if append, false if remove, null if neither
+    // Return true if appended, false if removed, null if neither
     fun bookLoreEditIsAppend(first: ItemStack, second: ItemStack): Boolean? {
         // Test if the book & quil contain content
         val meta = second.itemMeta as BookMeta? ?: return false
@@ -106,7 +116,7 @@ object AnvilLoreEditUtil {
         else handleLoreRemoveByBook(player, first, xpCost)
     }
 
-    // Return true if append, false if remove, null if neither
+    // Return true if appended, false if removed, null if neither
     fun paperLoreEditIsAppend(first: ItemStack, second: ItemStack): Boolean? {
         // Test if the paper contain a display name
         val meta = second.itemMeta ?: return false
@@ -134,24 +144,31 @@ object AnvilLoreEditUtil {
         if (!hasLoreEditByPaperPermission(player)) return null
 
         val result = first.clone()
-        val meta = result.itemMeta
-        val lore = if (meta?.hasLore() == true) {
+        val meta = result.itemMeta?: return null
+        val lore = if (meta.hasLore()) {
             ArrayList<String>(meta.lore!!)
         } else ArrayList()
 
         val appendEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
 
-        //TODO check color if color if enabled
-        val line = second.itemMeta!!.displayName
+        // A bit overdone to color 1 line but hey
+        val tempList = ArrayList<String>(1)
+        tempList.add(second.itemMeta!!.displayName)
+        val colorCost = colorLines(player, tempList, LoreEditType.APPEND_PAPER)
+
+        val line = tempList[0]
         if (appendEnd)
             lore.add(line)
         else
             lore.add(0, line)
 
-        meta?.lore = lore
+        meta.lore = lore
         result.itemMeta = meta
 
-        // Handle other xp
+        if (result == first) return null
+
+        // Handle xp
+        xpCost.addAndGet(colorCost)
         xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_PAPER))
 
         return result
@@ -167,13 +184,21 @@ object AnvilLoreEditUtil {
         val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
         val lore: ArrayList<String> = ArrayList(meta.lore!!)
 
-        if (removeEnd) lore.removeAt(lore.size - 1)
+        val line = if (removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)
 
         meta.lore = if (lore.isEmpty()) null else lore
         result.itemMeta = meta
 
+        // Get color cost to uncolor this line
+        val tempList = ArrayList<String>(1)
+        tempList.add(line)
+        val uncolorCost = uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
+
+        if (result == first) return null
+
         // Handle other xp
+        xpCost.addAndGet(uncolorCost)
         xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_PAPER))
 
         return result
@@ -200,6 +225,88 @@ object AnvilLoreEditUtil {
 
         xpCost += AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
         return xpCost
+    }
+
+    private fun colorLines(player: Permissible, lines: ArrayList<String>, useType: LoreEditType): Int {
+        val canUseHex: Boolean
+        val canUseColorCode: Boolean
+        val colorCost: Int
+        // If is book
+        if (useType == LoreEditType.REMOVE_BOOK || useType == LoreEditType.APPEND_BOOK) {
+            canUseHex = LoreEditConfigUtil.bookAllowHexColor
+            canUseColorCode = LoreEditConfigUtil.bookAllowColorCode
+            colorCost = LoreEditConfigUtil.bookUseColorCost
+        } // Else if is paper
+        else {
+            canUseHex = LoreEditConfigUtil.paperAllowHexColor
+            canUseColorCode = LoreEditConfigUtil.paperAllowColorCode
+            colorCost = LoreEditConfigUtil.paperUseColorCost
+        }
+
+        // Now handle color of each lines
+        var hasUsedColor = false
+        for ((index, line) in lines.withIndex()) {
+            val coloredLine = StringBuilder(line)
+
+            val lineUsedColor = AnvilColorUtil.handleColor(
+                coloredLine,
+                player,
+                false, canUseColorCode, canUseHex,
+                AnvilColorUtil.ColorUseType.LORE_EDIT
+            )
+
+            if (lineUsedColor) {
+                hasUsedColor = true
+                lines[index] = coloredLine.toString()
+            }
+        }
+
+        return if (hasUsedColor) {
+            colorCost
+        } else {
+            0
+        }
+    }
+
+    fun uncolorLines(player: Permissible, lines: ArrayList<String>, useType: LoreEditType): Int {
+        val canUseHex: Boolean
+        val canUseColorCode: Boolean
+        val colorCost: Int
+        // If is book
+        if (useType == LoreEditType.REMOVE_BOOK || useType == LoreEditType.APPEND_BOOK) {
+            canUseHex = LoreEditConfigUtil.bookAllowHexColor
+            canUseColorCode = LoreEditConfigUtil.bookAllowColorCode
+            colorCost = LoreEditConfigUtil.bookUseColorCost
+        } // Else if is paper
+        else {
+            canUseHex = LoreEditConfigUtil.paperAllowHexColor
+            canUseColorCode = LoreEditConfigUtil.paperAllowColorCode
+            colorCost = LoreEditConfigUtil.paperUseColorCost
+        }
+
+        // Now handle color of each lines
+        var hasUndidColor = false
+        for ((index, line) in lines.withIndex()) {
+            val uncoloredLine = StringBuilder(line)
+
+            val lineUndidColor = AnvilColorUtil.revertColor(
+                uncoloredLine,
+                player,
+                false, canUseColorCode, canUseHex,
+                AnvilColorUtil.ColorUseType.LORE_EDIT
+            )
+
+            if (lineUndidColor) {
+                hasUndidColor = true
+                lines[index] = uncoloredLine.toString()
+            }
+        }
+
+        return if (hasUndidColor) {
+            colorCost
+        } else {
+            0
+        }
     }
 
 }

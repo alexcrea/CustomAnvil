@@ -80,7 +80,7 @@ class PrepareAnvilListener : Listener {
 
     }
 
-    // return true if a custom recipe exist with these ingredient
+    // return true if a custom recipe exist with these ingredients
     private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory,
                                  player: HumanEntity,
                                  first: ItemStack, second: ItemStack?): Boolean {
@@ -134,7 +134,10 @@ class PrepareAnvilListener : Listener {
         if(ConfigOptions.renameColorPossible && inventoryName != null){
             val resultString = StringBuilder(inventoryName)
 
-            useColor = AnvilColorUtil.handleRenamingColor(resultString, player)
+            useColor = AnvilColorUtil.handleColor(resultString, player,
+                ConfigOptions.permissionNeededForColor,
+                ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor,
+                AnvilColorUtil.ColorUseType.RENAME)
 
             if(useColor) {
                 inventoryName = resultString.toString()

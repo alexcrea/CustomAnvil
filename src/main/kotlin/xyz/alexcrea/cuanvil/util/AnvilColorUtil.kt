@@ -1,36 +1,97 @@
 package xyz.alexcrea.cuanvil.util
 
-import io.delilaheve.util.ConfigOptions
-import org.bukkit.entity.HumanEntity
+import org.bukkit.permissions.Permissible
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 object AnvilColorUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
+    private val TRANSFORMED_HEX_PATTERN = Pattern.compile("§x(§[0-9a-fA-F]){6}") // pattern to find minecraft hex string
 
-    fun handleRenamingColor(textToColor: StringBuilder, player: HumanEntity): Boolean {
-        val usePermission = ConfigOptions.permissionNeededForColor
-        val canUseColorCode = ConfigOptions.allowColorCode && (!usePermission || player.hasPermission("ca.color.code"))
-        val canUseHexColor = ConfigOptions.allowHexadecimalColor && (!usePermission || player.hasPermission("ca.color.hex"))
+    /**
+     * Color a stringbuilder object depending on allowed color type and player permissions on color use type
+     * @return if the stringbuilder was changed and color applied
+     */
+    fun handleColor(
+        textToColor: StringBuilder,
+        player: Permissible,
+        usePermission: Boolean,
+        allowColorCode: Boolean,
+        allowHexadecimalColor: Boolean,
+        useType: ColorUseType
+    ): Boolean {
+        if (!allowColorCode && !allowHexadecimalColor) return false
 
-        if((!canUseColorCode) && (!canUseHexColor)) return false
+        val canUseColorCode =
+            allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
+                useType.colorCodePerm
+            ))
+        val canUseHexColor =
+            allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
+                useType.hexColorPerm
+            ))
+
+        if ((!canUseColorCode) && (!canUseHexColor)) return false
 
         var useColor = false
         // Handle color code
-        if(canUseColorCode){
+        if (canUseColorCode) {
             var nbReplacement = replaceAll(textToColor, "&", "§", 2)
             nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
 
-            if(nbReplacement > 0) useColor = true
+            if (nbReplacement > 0) useColor = true
         }
 
-        if(canUseHexColor){
+        if (canUseHexColor) {
             val nbReplacement = replaceHexToColor(textToColor, 7)
 
-            if(nbReplacement > 0) useColor = true
+            if (nbReplacement > 0) useColor = true
         }
 
         return useColor
+    }
+
+    /**
+     * Revert a stringbuilder to a state where applying handleColor with the same options would give the same result
+     * @return if the stringbuilder was changed and color unapplied
+     */
+    fun revertColor(
+        colorToText: StringBuilder,
+        player: Permissible,
+        usePermission: Boolean,
+        allowColorCode: Boolean,
+        allowHexadecimalColor: Boolean,
+        useType: ColorUseType
+    ): Boolean {
+        if (!allowColorCode && !allowHexadecimalColor) return false
+
+        val canUseColorCode =
+            allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
+                useType.colorCodePerm
+            ))
+        val canUseHexColor =
+            allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
+                useType.hexColorPerm
+            ))
+
+        if ((!canUseColorCode) && (!canUseHexColor)) return false
+        var hasReversed = false
+
+        // Reverse hex pattern
+        if (canUseHexColor) {
+            val nbReplacement = replaceHexToColor(colorToText, 14)
+
+            if (nbReplacement > 0) hasReversed = true
+        }
+
+        if (canUseColorCode) {
+            replaceAll(colorToText, "&", "&&", 1)
+            val nbReplacement = replaceAll(colorToText, "§", "&", 2)
+
+            if (nbReplacement > 0) hasReversed = true
+        }
+
+        return hasReversed
     }
 
     /**
@@ -50,7 +111,7 @@ object AnvilColorUtil {
             index += to.length
             index = builder.indexOf(from, index)
 
-            numberOfChanges+=1
+            numberOfChanges += 1
         }
 
         return numberOfChanges
@@ -68,21 +129,58 @@ object AnvilColorUtil {
         var numberOfChanges = 0
         var startIndex = 0
 
-        while(matcher.find(startIndex)){
+        while (matcher.find(startIndex)) {
             startIndex = matcher.start()
-            if(startIndex >= builder.length - endOffset) break
+            if (startIndex >= builder.length - endOffset) break //HOW AND WHERE WOULD THIS HAPPEN ?????
 
             builder.replace(startIndex, startIndex + 1, "§x")
-            startIndex+=2
+            startIndex += 2
             for (i in 0..5) {
                 builder.insert(startIndex, '§')
-                startIndex+=2
+                startIndex += 2
             }
 
-            numberOfChanges+=1
+            numberOfChanges += 1
         }
 
         return numberOfChanges
+    }
+
+    /**
+     * Replace every hex color from the minecraft format to a format like #000000
+     * @param builder The builder to replace the minecraft hex color from.
+     * @param endOffset Amount of character that should be ignored at the end.
+     * @return The number of replacement was that was done.
+     */
+    private fun replaceColorToHex(builder: StringBuilder, endOffset: Int): Int {
+        val matcher: Matcher = TRANSFORMED_HEX_PATTERN.matcher(builder)
+
+        var numberOfChanges = 0
+        var startIndex = 0
+
+        while (matcher.find(startIndex)) {
+            startIndex = matcher.start()
+            if (startIndex >= builder.length - endOffset) break //HOW AND WHERE WOULD THIS HAPPEN ?????
+
+            builder.replace(startIndex, startIndex + 2, "#")
+            startIndex += 1
+            for (i in 0..5) {
+                builder.deleteCharAt(startIndex)
+                startIndex += 1
+            }
+
+            numberOfChanges += 1
+        }
+
+        return numberOfChanges
+    }
+
+    enum class ColorUseType(
+        val colorCodePerm: String?,
+        val hexColorPerm: String?
+    ) {
+        RENAME("ca.color.code", "ca.color.hex"),
+        LORE_EDIT(null, null)
     }
 
 }

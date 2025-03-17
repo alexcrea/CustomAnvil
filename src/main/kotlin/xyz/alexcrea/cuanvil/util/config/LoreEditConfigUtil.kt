@@ -8,8 +8,6 @@ object LoreEditConfigUtil {
     const val IS_ENABLED = "enabled"
     const val FIXED_COST = "fixed_cost"
     const val PER_LINE_COST = "per_line_cost"
-    const val USE_COST_PENALTY = "use_cost_penalty"
-    const val INCREASE_COST_PENALTY = "increase_cost_penalty"
     const val DO_CONSUME = "do_consume"
 
     // Permission configs path
@@ -61,8 +59,8 @@ object LoreEditConfigUtil {
     val FIXED_COST_RANGE = 0..1000
     val PER_LINE_COST_RANGE = 0..1000
 
-    val COLOR_BOOK_COST_RANGE = 0..1000
-    val COLOR_PAPER_COST_RANGE = 0..1000
+    private val COLOR_BOOK_COST_RANGE = 0..1000
+    private val COLOR_PAPER_COST_RANGE = 0..1000
 
     // -------------------
     // Generic Get methods
