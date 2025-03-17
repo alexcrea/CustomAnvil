@@ -352,21 +352,26 @@ class AnvilResultListener : Listener {
             val lore = ArrayList<String>(meta.lore!!)
             if (lore.isEmpty()) return false
 
-            // Uncolor the page
-            AnvilLoreEditUtil.uncolorLines(player, lore, LoreEditType.REMOVE_BOOK)
+            val rightCopy : ItemStack?
+            if (LoreEditType.APPEND_PAPER.doConsume) {
+                rightCopy = null
+            } else {
+                // Uncolor the page
+                AnvilLoreEditUtil.uncolorLines(player, lore, LoreEditType.REMOVE_BOOK)
 
-            val bookPage = StringBuilder()
-            lore.forEach {
-                if (bookPage.isNotEmpty()) bookPage.append('\n')
-                bookPage.append(it)
+                val bookPage = StringBuilder()
+                lore.forEach {
+                    if (bookPage.isNotEmpty()) bookPage.append('\n')
+                    bookPage.append(it)
+                }
+
+                val resultPage = bookPage.toString()
+                //TODO maybe check page size ? bc it may be too big ???
+
+                rightCopy = rightItem.clone()
+                bookMeta.setPages(resultPage)
+                rightCopy.itemMeta = bookMeta
             }
-
-            val resultPage = bookPage.toString()
-            //TODO maybe check page size ? bc it may be too big ???
-
-            val rightCopy = rightItem.clone()
-            bookMeta.setPages(resultPage)
-            rightCopy.itemMeta = bookMeta
 
             return extractAnvilResult(
                 event, player, inventory,
@@ -428,23 +433,28 @@ class AnvilResultListener : Listener {
             val lore = leftMeta.lore!!
             if (lore.isEmpty()) return false
 
-            val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
-            var line = if (removeEnd) lore[lore.size - 1]
-            else lore[0]
-
-            // Overkill but uncolor the line
-            val tempList = ArrayList<String>(1)
-            tempList.add(line)
-            AnvilLoreEditUtil.uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
-            line = tempList[0]
-
             // Create result item
-            val rightClone = rightItem.clone()
-            rightClone.amount = 1
+            val rightClone: ItemStack?
+            if(LoreEditType.REMOVE_PAPER.doConsume){
+                rightClone = null
+            }else{
+                val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
+                var line = if (removeEnd) lore[lore.size - 1]
+                else lore[0]
 
-            val resultMeta = rightClone.itemMeta ?: return false
-            resultMeta.setDisplayName(line)
-            rightClone.itemMeta = resultMeta
+                // Overkill but uncolor the line
+                val tempList = ArrayList<String>(1)
+                tempList.add(line)
+                AnvilLoreEditUtil.uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
+                line = tempList[0]
+
+                rightClone = rightItem.clone()
+                rightClone.amount = 1
+
+                val resultMeta = rightClone.itemMeta ?: return false
+                resultMeta.setDisplayName(line)
+                rightClone.itemMeta = resultMeta
+            }
 
             return if (rightItem.amount > 1) {
                 extractAnvilResult(

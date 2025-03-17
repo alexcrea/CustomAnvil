@@ -15,13 +15,12 @@ object LoreEditConfigUtil {
     const val PAPER_PERMISSION_NEEDED = "lore_edit.paper.use_permission"
 
     // Color configs path
-    const val COLOR_BOOK_COLOR_CODE = "lore_edit.book_and_quil.color.allow_color_code"
-    const val COLOR_BOOK_HEX = "lore_edit.book_and_quil.color.allow_hexadecimal_color"
-    const val COLOR_BOOK_COST = "lore_edit.book_and_quil.color.use_cost"
+    const val ALLOW_COLOR_CODE = "allow_color_code"
+    const val ALLOW_HEX_COLOR = "allow_hexadecimal_color"
+    const val USE_COLOR_COST = "use_cost"
 
-    const val COLOR_PAPER_COLOR_CODE = "lore_edit.paper.color.allow_color_code"
-    const val COLOR_PAPER_HEX = "lore_edit.paper.color.allow_hexadecimal_color"
-    const val COLOR_PAPER_COST = "lore_edit.paper.color.use_cost"
+    const val REMOVE_COLOR_ON_LORE_REMOVE = "remove_color_on_remove"
+    const val REMOVE_COLOR_COST = "remove_color_cost"
 
     // Lore order config path
     const val PAPER_EDIT_ORDER = "lore_edit.paper.order"
@@ -41,13 +40,12 @@ object LoreEditConfigUtil {
     const val DEFAULT_PAPER_PERMISSION_NEEDED = true
 
     // Color configs defaults
-    const val DEFAULT_COLOR_BOOK_COLOR_CODE = true
-    const val DEFAULT_COLOR_BOOK_HEX = true
-    const val DEFAULT_COLOR_BOOK_COST = 0
+    const val DEFAULT_ALLOW_COLOR_CODE = true
+    const val DEFAULT_ALLOW_HEX_COLOR = true
+    const val DEFAULT_USE_COLOR_COST = 0
 
-    const val DEFAULT_COLOR_PAPER_COLOR_CODE = true
-    const val DEFAULT_COLOR_PAPER_HEX = true
-    const val DEFAULT_COLOR_PAPER_COST = 0
+    const val DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE = false
+    const val DEFAULT_REMOVE_COLOR_COST = 0
 
     // Lore order config default
     const val DEFAULT_PAPER_EDIT_ORDER = "end"
@@ -59,8 +57,8 @@ object LoreEditConfigUtil {
     val FIXED_COST_RANGE = 0..1000
     val PER_LINE_COST_RANGE = 0..1000
 
-    private val COLOR_BOOK_COST_RANGE = 0..1000
-    private val COLOR_PAPER_COST_RANGE = 0..1000
+    val USE_COLOR_COST_RANGE = 0..1000
+    val REMOVE_COLOR_COST_RANGE = 0..1000
 
     // -------------------
     // Generic Get methods
@@ -101,73 +99,5 @@ object LoreEditConfigUtil {
     // -----------------
     // Color Get methods
     // -----------------
-
-    // book edit functions
-    /**
-     * Allow usage of color code on book lore edit
-     */
-    val bookAllowColorCode: Boolean
-        get() {
-            return CONFIG
-                .config
-                .getBoolean(COLOR_BOOK_COLOR_CODE, DEFAULT_COLOR_BOOK_COLOR_CODE)
-        }
-
-    /**
-     * Allow usage of hexadecimal color on book lore edit
-     */
-    val bookAllowHexColor: Boolean
-        get() {
-            return CONFIG
-                .config
-                .getBoolean(COLOR_BOOK_HEX, DEFAULT_COLOR_BOOK_HEX)
-        }
-
-    /**
-     * Cost when using either color code and hex color on book edit
-     */
-    val bookUseColorCost: Int
-        get() {
-            return CONFIG
-                .config
-                .getInt(COLOR_BOOK_COST, DEFAULT_COLOR_BOOK_COST)
-                .takeIf { it in COLOR_BOOK_COST_RANGE }
-                ?: DEFAULT_COLOR_BOOK_COST
-
-        }
-
-    // paper edit functions
-    /**
-     * Allow usage of color code on paper lore edit
-     */
-    val paperAllowColorCode: Boolean
-        get() {
-            return CONFIG
-                .config
-                .getBoolean(COLOR_PAPER_COLOR_CODE, DEFAULT_COLOR_PAPER_COLOR_CODE)
-        }
-
-    /**
-     * Allow usage of hexadecimal color on paper lore edit
-     */
-    val paperAllowHexColor: Boolean
-        get() {
-            return CONFIG
-                .config
-                .getBoolean(COLOR_PAPER_HEX, DEFAULT_COLOR_PAPER_HEX)
-        }
-
-    /**
-     * Cost when using either color code and hex color on paper edit
-     */
-    val paperUseColorCost: Int
-        get() {
-            return CONFIG
-                .config
-                .getInt(COLOR_PAPER_COST, DEFAULT_COLOR_PAPER_COST)
-                .takeIf { it in COLOR_PAPER_COST_RANGE }
-                ?: DEFAULT_COLOR_PAPER_COST
-
-        }
 
 }
