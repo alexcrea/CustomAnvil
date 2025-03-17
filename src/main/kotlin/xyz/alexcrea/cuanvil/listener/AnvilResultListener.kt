@@ -330,11 +330,11 @@ class AnvilResultListener : Listener {
             // Remove pages to book
             val clearedBook: ItemStack?
             if (LoreEditType.APPEND_BOOK.doConsume) {
+                clearedBook = null
+            } else {
                 clearedBook = rightItem.clone()
                 bookMeta.pages = Collections.emptyList()
                 clearedBook.itemMeta = bookMeta
-            } else {
-                clearedBook = null
             }
 
             return extractAnvilResult(
