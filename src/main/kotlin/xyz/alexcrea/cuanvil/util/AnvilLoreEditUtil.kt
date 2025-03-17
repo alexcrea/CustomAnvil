@@ -30,18 +30,20 @@ object AnvilLoreEditUtil {
         if (!hasLoreEditByBookPermission(player)) return null
 
         val result = first.clone()
-        val meta = result.itemMeta
-        val lore = if (meta?.hasLore() == true) {
+        val meta = result.itemMeta?: return null
+        val lore = if (meta.hasLore()) {
             ArrayList<String>(meta.lore!!)
         } else ArrayList()
 
         //TODO check color if color if enabled
-        lore.addAll(book.pages[0].split("\n"))
+        val lines = book.pages[0].split("\n")
+        lore.addAll(lines)
 
-        meta?.lore = lore
+        meta.lore = lore
         result.itemMeta = meta
 
         // Handle other xp
+        xpCost.addAndGet(lines.size * LoreEditType.APPEND_BOOK.perLineCost)
         xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_BOOK))
 
         return result
@@ -52,11 +54,14 @@ object AnvilLoreEditUtil {
 
         // remove lore
         val result = first.clone()
-        val leftMeta = result.itemMeta!!
+        val leftMeta = result.itemMeta?: return null
+        val currentLore = leftMeta.lore?: return null
+
         leftMeta.lore = null
         result.itemMeta = leftMeta
 
         // Handle other xp
+        xpCost.addAndGet(currentLore.size * LoreEditType.REMOVE_BOOK.perLineCost)
         xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_BOOK))
 
         return result
