@@ -29,6 +29,7 @@ import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.min
 
 class AnvilResultListener : Listener {
@@ -321,8 +322,9 @@ class AnvilResultListener : Listener {
 
         val editType = AnvilLoreEditUtil.bookLoreEditIsAppend(leftItem, rightItem) ?: return false
 
+        val xpCost = AtomicInteger()
         if (editType) {
-            if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta)) return false
+            if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta, xpCost)) return false
 
             // Remove pages to book
             val bookCopy: ItemStack?
@@ -338,10 +340,10 @@ class AnvilResultListener : Listener {
                 event, player, inventory,
                 leftItem, 1,
                 bookCopy, 0,
-                output, 0
-            ) //TODO DO REPAIR COST
+                output, xpCost.get()
+            )
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem)) return false
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, xpCost)) return false
 
             // fill book meta
             val meta = leftItem.itemMeta
@@ -367,8 +369,8 @@ class AnvilResultListener : Listener {
                 event, player, inventory,
                 leftItem, 1,
                 rightCopy, 0,
-                output, 0
-            ) //TODO DO REPAIR COST
+                output, xpCost.get()
+            )
         }
     }
 
@@ -385,8 +387,9 @@ class AnvilResultListener : Listener {
 
         val editType = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
 
+        val xpCost = AtomicInteger()
         if (editType) {
-            if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem)) return false
+            if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem, xpCost)) return false
 
             val paperCopy: ItemStack?
             if (LoreEditType.APPEND_PAPER.doConsume) {
@@ -404,18 +407,18 @@ class AnvilResultListener : Listener {
                     event, player, inventory,
                     paperCopy, 0,
                     rightItem, 1,
-                    output, 0
-                ) //TODO DO REPAIR COST
+                    output, xpCost.get()
+                )
             } else {
                 extractAnvilResult(
                     event, player, inventory,
                     null, 0,
                     paperCopy, 0,
-                    output, 0
-                ) //TODO DO REPAIR COST
+                    output, xpCost.get()
+                )
             }
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem)) return false
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem, xpCost)) return false
 
             val leftMeta = leftItem.itemMeta
             if (leftMeta == null || !leftMeta.hasLore()) return false
@@ -440,15 +443,15 @@ class AnvilResultListener : Listener {
                     event, player, inventory,
                     rightClone, 0,
                     rightItem, 1,
-                    output, 0
-                ) //TODO DO REPAIR COST
+                    output, xpCost.get()
+                )
             } else {
                 extractAnvilResult(
                     event, player, inventory,
                     null, 0,
                     rightClone, 0,
-                    output, 0
-                ) //TODO DO REPAIR COST
+                    output, xpCost.get()
+                )
             }
         }
 

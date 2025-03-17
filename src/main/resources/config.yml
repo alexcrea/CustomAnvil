@@ -282,10 +282,10 @@ lore_edit:
       fixed_cost: 1
       # Cost used for every lore line added
       per_line_cost: 0
-      # Use left item cost penalty if any
-      use_cost_penalty: false
-      # Increase left item cost penalty
-      increase_cost_penalty: false
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
       # If adding the lore consume the book & quil
       do_consume: false
 
@@ -296,10 +296,10 @@ lore_edit:
       fixed_cost: 1
       # Cost used for every lore line removed
       per_line_cost: 0
-      # Use left item cost penalty if any
-      use_cost_penalty: false
-      # Increase left item cost penalty
-      increase_cost_penalty: false
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
 
     # Allow using color code and hexadecimal color when editing lore via book & quil
     #
@@ -321,10 +321,10 @@ lore_edit:
       enabled: false
       # Cost used every time
       fixed_cost: 1
-      # Use left item cost penalty if any
-      use_cost_penalty: false
-      # Increase left item cost penalty
-      increase_cost_penalty: false
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
       # If adding the lore line consume the paper
       do_consume: false
 
@@ -333,10 +333,10 @@ lore_edit:
       enabled: false
       # Cost used every time
       fixed_cost: 1
-      # Use left item cost penalty if any
-      use_cost_penalty: false
-      # Increase left item cost penalty
-      increase_cost_penalty: false
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
 
     # Allow using color code and hexadecimal color when editing lore via book & quil
     #

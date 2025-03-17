@@ -289,11 +289,10 @@ object ConfigOptions {
      */
     fun workPenaltyPart(type: AnvilUseType): WorkPenaltyPart {
         val config = ConfigHolder.DEFAULT_CONFIG.config
-        val path = WORK_PENALTY_ROOT + "." + type.typeName
 
         // Find values
         val defaultPenalty = type.defaultPenalty
-        val section = config.getConfigurationSection(path) ?: return defaultPenalty
+        val section = config.getConfigurationSection(type.path) ?: return defaultPenalty
 
         val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
         val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)

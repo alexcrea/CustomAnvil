@@ -11,7 +11,6 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
-import org.bukkit.inventory.InventoryView.Property.REPAIR_COST
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import org.bukkit.persistence.PersistentDataType
@@ -129,13 +128,16 @@ object AnvilXpUtil {
         return resultSum
     }
 
+    private fun exclusivePenaltyKey(useType: AnvilUseType): NamespacedKey {
+        return NamespacedKey(CustomAnvil.instance, "${EXCLUSIVE_PENALTY_PREFIX}_${useType.typeName}")
+    }
+
     private fun setExclusivePenalty(
         result: ItemStack,
         resultPenalty: Int,
         useType: AnvilUseType
     ) {
-        val tagPath = EXCLUSIVE_PENALTY_PREFIX + "_" + useType.typeName
-        val key = NamespacedKey(CustomAnvil.instance, tagPath)
+        val key = exclusivePenaltyKey(useType)
 
         val meta = result.itemMeta!!
         meta.persistentDataContainer.set(key, PersistentDataType.INTEGER, resultPenalty)
@@ -143,14 +145,13 @@ object AnvilXpUtil {
     }
 
     private fun findExclusivePenalty(
-        left: ItemStack?,
+        item: ItemStack?,
         useType: AnvilUseType
     ): Int {
-        if (left == null) return 0
-        val tagPath = EXCLUSIVE_PENALTY_PREFIX + "_" + useType.typeName
-        val key = NamespacedKey(CustomAnvil.instance, tagPath)
+        if (item == null || !item.hasItemMeta()) return 0
+        val key = exclusivePenaltyKey(useType)
 
-        val meta = left.itemMeta!!
+        val meta = item.itemMeta!!
         return meta.persistentDataContainer.get(key, PersistentDataType.INTEGER) ?: return 0
     }
 

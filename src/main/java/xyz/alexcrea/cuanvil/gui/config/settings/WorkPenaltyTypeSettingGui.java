@@ -39,7 +39,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         this.currentType = ConfigOptions.INSTANCE.getWorkPenaltyType();
         this.items = new EnumMap<>(this.currentType.getPartMap());
 
-        for (AnvilUseType type : AnvilUseType.getEntries()) {
+        for (AnvilUseType type : useTypes.keySet()) {
             updateGuiForType(type);
         }
     }
@@ -80,6 +80,14 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         }, CustomAnvil.instance);
     }
 
+    private static final Map<AnvilUseType, String> useTypes =
+            Map.of(
+                    AnvilUseType.RENAME_ONLY, "a1z9Z",
+                    AnvilUseType.MERGE, "b2y8Y",
+                    AnvilUseType.UNIT_REPAIR, "c3x7X",
+                    AnvilUseType.CUSTOM_CRAFT, "d4w6W"
+            );
+
     @Override
     protected Pattern getGuiPattern() {
         return new Pattern( // Yeah that a mess
@@ -92,13 +100,14 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
     public void updateGuiForType(AnvilUseType type) {
         PatternPane pane = getPane();
-        int ordinal = type.ordinal();
 
-        int display = 'z' - ordinal;
-        int increment = 'a' + ordinal;
-        int additive = '1' + ordinal;
-        int exclusiveIncrement = 'Z' - ordinal;
-        int exclusiveAdditive = '9' - ordinal;
+        String typeVals = useTypes.get(type);
+
+        char increment = typeVals.charAt(0);
+        char additive = typeVals.charAt(1);
+        char display = typeVals.charAt(2);
+        char exclusiveIncrement = typeVals.charAt(3);
+        char exclusiveAdditive = typeVals.charAt(4);
 
         WorkPenaltyType.WorkPenaltyPart part = items.get(type);
         String increasingStr = (part.penaltyIncrease() ? "§a" : "§c") + "Increasing";

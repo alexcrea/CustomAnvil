@@ -6,6 +6,7 @@ import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.permissions.Permissible
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
+import java.util.concurrent.atomic.AtomicInteger
 
 object AnvilLoreEditUtil {
 
@@ -20,7 +21,12 @@ object AnvilLoreEditUtil {
         return LoreEditConfigUtil.paperLoreEditNeedPermission && player.hasPermission(LORE_BY_PAPER)
     }
 
-    fun handleLoreAppendByBook(player: Permissible, first: ItemStack, book: BookMeta): ItemStack? {
+    fun handleLoreAppendByBook(
+        player: Permissible,
+        first: ItemStack,
+        book: BookMeta,
+        xpCost: AtomicInteger
+    ): ItemStack? {
         if (!hasLoreEditByBookPermission(player)) return null
 
         val result = first.clone()
@@ -35,10 +41,13 @@ object AnvilLoreEditUtil {
         meta?.lore = lore
         result.itemMeta = meta
 
+        // Handle other xp
+        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_BOOK))
+
         return result
     }
 
-    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack): ItemStack? {
+    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, xpCost: AtomicInteger): ItemStack? {
         if (!hasLoreEditByBookPermission(player)) return null
 
         // remove lore
@@ -46,6 +55,9 @@ object AnvilLoreEditUtil {
         val leftMeta = result.itemMeta!!
         leftMeta.lore = null
         result.itemMeta = leftMeta
+
+        // Handle other xp
+        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_BOOK))
 
         return result
     }
@@ -81,12 +93,12 @@ object AnvilLoreEditUtil {
         return null
     }
 
-    fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack): ItemStack? {
+    fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack, xpCost: AtomicInteger): ItemStack? {
         val bookType = bookLoreEditIsAppend(first, second) ?: return null
 
         val meta = second.itemMeta as BookMeta
-        return if (bookType) handleLoreAppendByBook(player, first, meta)
-        else handleLoreRemoveByBook(player, first)
+        return if (bookType) handleLoreAppendByBook(player, first, meta, xpCost)
+        else handleLoreRemoveByBook(player, first, xpCost)
     }
 
     // Return true if append, false if remove, null if neither
@@ -108,7 +120,12 @@ object AnvilLoreEditUtil {
         return null
     }
 
-    fun handleLoreAppendByPaper(player: Permissible, first: ItemStack, second: ItemStack): ItemStack? {
+    fun handleLoreAppendByPaper(
+        player: Permissible,
+        first: ItemStack,
+        second: ItemStack,
+        xpCost: AtomicInteger
+    ): ItemStack? {
         if (!hasLoreEditByPaperPermission(player)) return null
 
         val result = first.clone()
@@ -121,7 +138,7 @@ object AnvilLoreEditUtil {
 
         //TODO check color if color if enabled
         val line = second.itemMeta!!.displayName
-        if(appendEnd)
+        if (appendEnd)
             lore.add(line)
         else
             lore.add(0, line)
@@ -129,10 +146,13 @@ object AnvilLoreEditUtil {
         meta?.lore = lore
         result.itemMeta = meta
 
+        // Handle other xp
+        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_PAPER))
+
         return result
     }
 
-    fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack): ItemStack? {
+    fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack, xpCost: AtomicInteger): ItemStack? {
         if (!hasLoreEditByPaperPermission(player)) return null
 
         // remove lore line
@@ -142,20 +162,39 @@ object AnvilLoreEditUtil {
         val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
         val lore: ArrayList<String> = ArrayList(meta.lore!!)
 
-        if(removeEnd) lore.removeAt(lore.size - 1)
+        if (removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)
 
-        meta.lore = if(lore.isEmpty()) null else lore
+        meta.lore = if (lore.isEmpty()) null else lore
         result.itemMeta = meta
+
+        // Handle other xp
+        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_PAPER))
 
         return result
     }
 
-    fun tryLoreEditByPaper(player: HumanEntity, first: ItemStack, second: ItemStack): ItemStack? {
+    fun tryLoreEditByPaper(
+        player: HumanEntity,
+        first: ItemStack,
+        second: ItemStack,
+        xpCost: AtomicInteger
+    ): ItemStack? {
         val bookType = paperLoreEditIsAppend(first, second) ?: return null
 
-        return if (bookType) handleLoreAppendByPaper(player, first, second)
-        else handleLoreRemoveByPaper(player, first)
+        return if (bookType) handleLoreAppendByPaper(player, first, second, xpCost)
+        else handleLoreRemoveByPaper(player, first, xpCost)
+    }
+
+    private fun baseEditLoreXpCost(
+        first: ItemStack,
+        result: ItemStack,
+        editType: LoreEditType
+    ): Int {
+        var xpCost = editType.fixedCost
+
+        xpCost += AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
+        return xpCost
     }
 
 }

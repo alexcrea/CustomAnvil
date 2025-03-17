@@ -1,15 +1,17 @@
 package xyz.alexcrea.cuanvil.util.config
 
+import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT_CONFIG as CONFIG
 
 enum class LoreEditType(
     val rootPath: String,
+    val useType: AnvilUseType,
     val isAppend: Boolean,
 ) {
-    APPEND_BOOK("lore_edit.book_and_quil.append", true),
-    REMOVE_BOOK("lore_edit.book_and_quil.remove", false),
-    APPEND_PAPER("lore_edit.paper.append", true),
-    REMOVE_PAPER("lore_edit.paper.remove", false),
+    APPEND_BOOK("lore_edit.book_and_quil.append", AnvilUseType.LORE_EDIT_BOOK_APPEND, true),
+    REMOVE_BOOK("lore_edit.book_and_quil.remove", AnvilUseType.LORE_EDIT_BOOK_REMOVE,false),
+    APPEND_PAPER("lore_edit.paper.append", AnvilUseType.LORE_EDIT_PAPER_APPEND,true),
+    REMOVE_PAPER("lore_edit.paper.remove", AnvilUseType.LORE_EDIT_PAPER_REMOVE,false),
     ;
 
     /**
@@ -44,33 +46,6 @@ enum class LoreEditType(
                 .getInt("${rootPath}.${LoreEditConfigUtil.PER_LINE_COST}", LoreEditConfigUtil.DEFAULT_PER_LINE_COST)
                 .takeIf { it in LoreEditConfigUtil.PER_LINE_COST_RANGE }
                 ?: LoreEditConfigUtil.DEFAULT_PER_LINE_COST
-        }
-
-    /**
-     * If the edit should use the item's cost penalty
-     */
-    val useCostPenalty: Boolean
-        get() {
-            return CONFIG
-                .config
-                .getBoolean(
-                    "${rootPath}.${LoreEditConfigUtil.USE_COST_PENALTY}",
-                    LoreEditConfigUtil.DEFAULT_USE_COST_PENALTY
-                )
-        }
-
-    /**
-     * If the edit should increase the items cost penalty
-     */
-    val increaseCostPenalty: Boolean
-        get() {
-
-            return CONFIG
-                .config
-                .getBoolean(
-                    "${rootPath}.${LoreEditConfigUtil.INCREASE_COST_PENALTY}",
-                    LoreEditConfigUtil.DEFAULT_INCREASE_COST_PENALTY
-                )
         }
 
     /**
