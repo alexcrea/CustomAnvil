@@ -30,6 +30,7 @@ import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
 class AnvilResultListener : Listener {
@@ -348,13 +349,15 @@ class AnvilResultListener : Listener {
             // fill book meta
             val meta = leftItem.itemMeta
             if (meta == null || !meta.hasLore()) return false
-            val lore = meta.lore!!
+            val lore = ArrayList<String>(meta.lore!!)
             if (lore.isEmpty()) return false
+
+            // Uncolor the page
+            AnvilLoreEditUtil.uncolorLines(player, lore, LoreEditType.REMOVE_BOOK)
 
             val bookPage = StringBuilder()
             lore.forEach {
                 if (bookPage.isNotEmpty()) bookPage.append('\n')
-                //TODO check & do color
                 bookPage.append(it)
             }
 
@@ -426,9 +429,14 @@ class AnvilResultListener : Listener {
             if (lore.isEmpty()) return false
 
             val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
-            //TODO check & do color
-            val line = if (removeEnd) lore[lore.size - 1]
+            var line = if (removeEnd) lore[lore.size - 1]
             else lore[0]
+
+            // Overkill but uncolor the line
+            val tempList = ArrayList<String>(1)
+            tempList.add(line)
+            AnvilLoreEditUtil.uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
+            line = tempList[0]
 
             // Create result item
             val rightClone = rightItem.clone()
