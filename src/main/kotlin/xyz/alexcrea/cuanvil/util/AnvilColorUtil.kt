@@ -79,7 +79,7 @@ object AnvilColorUtil {
 
         // Reverse hex pattern
         if (canUseHexColor) {
-            val nbReplacement = replaceHexToColor(colorToText, 14)
+            val nbReplacement = replaceColorToHex(colorToText, 14)
 
             if (nbReplacement > 0) hasReversed = true
         }
