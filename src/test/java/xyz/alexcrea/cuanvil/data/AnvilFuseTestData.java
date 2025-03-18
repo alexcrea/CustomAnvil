@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.util;
+package xyz.alexcrea.cuanvil.data;
 
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
