@@ -13,7 +13,7 @@ import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,14 +57,14 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         );
 
         // Testing default conflict (no recipe exist)
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         // Add and test recipe
         AnvilRecipeBuilder builder = new AnvilRecipeBuilder(recipeName);
         builder.setExactCount(true).setLeftItem(stick).setResultItem(stick).setXpCostPerCraft(2);
 
         assertTrue(builder.registerIfAbsent());
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
 
         AnvilCustomRecipe recipe = getByName(recipeName);
         assertNotNull(recipe);
@@ -72,21 +72,21 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         // Remove recipe
         assertTrue(CustomAnvilRecipeApi.removeRecipe(recipe));
         assertFalse(CustomAnvilRecipeApi.removeRecipe(recipe));
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         recipe = getByName(recipeName);
         assertNull(recipe);
 
         // Try to add deleted recipe with no override (should not add)
         assertFalse(CustomAnvilRecipeApi.addRecipe(builder, false));
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         recipe = getByName(recipeName);
         assertNull(recipe);
 
         // Try to add deleted recipe with override (should add)
         assertTrue(CustomAnvilRecipeApi.addRecipe(builder, true));
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
 
         recipe = getByName(recipeName);
         assertNotNull(recipe);
@@ -119,7 +119,7 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
                 null, null
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         AnvilRecipeBuilder builder = new AnvilRecipeBuilder(recipeName);
         builder.setExactCount(false)
@@ -130,8 +130,8 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         assertTrue(builder.registerIfAbsent());
 
         // Now working test
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData1);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData2);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData1);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
     }
 
     @Nullable

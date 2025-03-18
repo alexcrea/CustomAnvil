@@ -14,7 +14,7 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 import java.util.List;
@@ -88,16 +88,16 @@ public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
         );
 
         // Test with no permission
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData2);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData2);
 
         // Add permission
         PermissionAttachment attachment = player.addAttachment(plugin);
         attachment.setPermission(permission, true);
 
         // Test with new permission
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData2);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
     }
 
     @Test
@@ -161,24 +161,24 @@ public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
         );
 
         // Test failing result first
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData2);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData3);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData2);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData3);
 
         // Test working sharpness 2
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
 
         // Set merge limit to 2 & test
         ConfigHolder.DEFAULT_CONFIG.getConfig().set("disable-merge-over.minecraft:sharpness", 1);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         // Add permission
         PermissionAttachment attachment = player.addAttachment(plugin);
         attachment.setPermission(permission, true);
 
         // Test working sharpness 2
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData2);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData3);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData3);
     }
 
 }

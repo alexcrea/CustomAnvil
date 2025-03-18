@@ -9,7 +9,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
-import org.eclipse.aether.util.ConfigUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
@@ -68,7 +67,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 5
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
     }
 
     @Test
@@ -88,7 +87,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 5
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
     }
 
     @Test
@@ -102,7 +101,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 null
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
     }
 
     // Note: currently anvil can only have null name. maybe handle differently later
@@ -121,7 +120,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 1, 1, null
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, data);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
     }
 
 }
