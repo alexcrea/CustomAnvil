@@ -14,11 +14,11 @@ object AnvilLoreEditUtil {
     private const val LORE_BY_PAPER: String = "ca.lore_edit.paper"
 
     private fun hasLoreEditByBookPermission(player: Permissible): Boolean {
-        return LoreEditConfigUtil.bookLoreEditNeedPermission && player.hasPermission(LORE_BY_BOOK)
+        return !LoreEditConfigUtil.bookLoreEditNeedPermission || player.hasPermission(LORE_BY_BOOK)
     }
 
     private fun hasLoreEditByPaperPermission(player: Permissible): Boolean {
-        return LoreEditConfigUtil.paperLoreEditNeedPermission && player.hasPermission(LORE_BY_PAPER)
+        return !LoreEditConfigUtil.paperLoreEditNeedPermission || player.hasPermission(LORE_BY_PAPER)
     }
 
     fun handleLoreAppendByBook(
