@@ -6,6 +6,7 @@ import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -310,6 +311,20 @@ class AnvilResultListener : Listener {
         return repairCost
     }
 
+    private fun getFromLoreEditXpCost(
+        xpCost: AtomicInteger,
+        player: Player,
+        inventory: AnvilInventory,
+    ): Int {
+        if(GameMode.CREATIVE == player.gameMode) return 0
+
+        val repairCost = xpCost.get()
+        return if ((inventory.maximumRepairCost <= repairCost)
+            || (player.level < repairCost))  Int.MIN_VALUE
+
+        else repairCost
+    }
+
     private fun handleBookLoreEdit(
         event: InventoryClickEvent,
         inventory: AnvilInventory,
@@ -341,7 +356,7 @@ class AnvilResultListener : Listener {
                 event, player, inventory,
                 null, 0,
                 clearedBook, 0,
-                output, xpCost.get()
+                output, getFromLoreEditXpCost(xpCost, player, inventory)
             )
         } else {
             if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, xpCost)) return false
@@ -377,7 +392,7 @@ class AnvilResultListener : Listener {
                 event, player, inventory,
                 null, 0,
                 rightCopy, 0,
-                output, xpCost.get()
+                output, getFromLoreEditXpCost(xpCost, player, inventory)
             )
         }
     }
@@ -415,14 +430,14 @@ class AnvilResultListener : Listener {
                     event, player, inventory,
                     paperCopy, 0,
                     rightItem, 1,
-                    output, xpCost.get()
+                    output, getFromLoreEditXpCost(xpCost, player, inventory)
                 )
             } else {
                 extractAnvilResult(
                     event, player, inventory,
                     null, 0,
                     paperCopy, 0,
-                    output, xpCost.get()
+                    output, getFromLoreEditXpCost(xpCost, player, inventory)
                 )
             }
         } else {
@@ -461,14 +476,14 @@ class AnvilResultListener : Listener {
                     event, player, inventory,
                     rightClone, 0,
                     rightItem, 1,
-                    output, xpCost.get()
+                    output, getFromLoreEditXpCost(xpCost, player, inventory)
                 )
             } else {
                 extractAnvilResult(
                     event, player, inventory,
                     null, 0,
                     rightClone, 0,
-                    output, xpCost.get()
+                    output, getFromLoreEditXpCost(xpCost, player, inventory)
                 )
             }
         }
