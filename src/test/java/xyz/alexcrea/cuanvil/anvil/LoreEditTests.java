@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.data.AnvilClickTestData;
@@ -24,6 +25,7 @@ import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil;
 import xyz.alexcrea.cuanvil.util.config.LoreEditType;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class LoreEditTests extends SharedCustomAnvilTest {
@@ -269,37 +271,37 @@ public class LoreEditTests extends SharedCustomAnvilTest {
         );
     }
 
-    public @Nullable ItemStack uncoloredEquivalent(@Nullable ItemStack colored){
+    public @Nullable ItemStack uncoloredEquivalent(@Nullable ItemStack colored) {
         // null check
-        if(null == colored) return null;
+        if (null == colored) return null;
 
-        if(oneColoredLoreItem == colored) return oneUncoloredLoreItem;
-        if(twoColoredLoreItem == colored) return twoUncoloredLoreItem;
+        if (oneColoredLoreItem == colored) return oneUncoloredLoreItem;
+        if (twoColoredLoreItem == colored) return twoUncoloredLoreItem;
 
-        if(coloredPaperStack == colored) return uncoloredPaperStack;
-        if(coloredPaper63Item == colored) return uncoloredPaper63Item;
-        if(coloredPaperOne == colored) return uncoloredPaperOne;
+        if (coloredPaperStack == colored) return uncoloredPaperStack;
+        if (coloredPaper63Item == colored) return uncoloredPaper63Item;
+        if (coloredPaperOne == colored) return uncoloredPaperOne;
 
-        if(coloredBook1Line == colored) return uncoloredBook1Line;
-        if(coloredBook2Line == colored) return uncoloredBook2Line;
+        if (coloredBook1Line == colored) return uncoloredBook1Line;
+        if (coloredBook2Line == colored) return uncoloredBook2Line;
 
         // They already are uncolored
-        if(oneUncoloredLoreItem == colored) return oneUncoloredLoreItem;
-        if(twoUncoloredLoreItem == colored) return twoUncoloredLoreItem;
+        if (oneUncoloredLoreItem == colored) return oneUncoloredLoreItem;
+        if (twoUncoloredLoreItem == colored) return twoUncoloredLoreItem;
 
-        if(uncoloredPaperStack == colored) return uncoloredPaperStack;
-        if(uncoloredPaper63Item == colored) return uncoloredPaper63Item;
-        if(uncoloredPaperOne == colored) return uncoloredPaperOne;
+        if (uncoloredPaperStack == colored) return uncoloredPaperStack;
+        if (uncoloredPaper63Item == colored) return uncoloredPaper63Item;
+        if (uncoloredPaperOne == colored) return uncoloredPaperOne;
 
-        if(uncoloredBook1Line == colored) return uncoloredBook1Line;
-        if(uncoloredBook2Line == colored) return uncoloredBook2Line;
+        if (uncoloredBook1Line == colored) return uncoloredBook1Line;
+        if (uncoloredBook2Line == colored) return uncoloredBook2Line;
 
         // No lore items return themself
-        if(emptyItem == colored) return emptyItem;
-        if(emptyBook == colored) return emptyBook;
-        if(emptyPaperStack == colored) return emptyPaperStack;
-        if(emptyPaper63Item == colored) return emptyPaper63Item;
-        if(emptyPaperOne == colored) return emptyPaperOne;
+        if (emptyItem == colored) return emptyItem;
+        if (emptyBook == colored) return emptyBook;
+        if (emptyPaperStack == colored) return emptyPaperStack;
+        if (emptyPaper63Item == colored) return emptyPaper63Item;
+        if (emptyPaperOne == colored) return emptyPaperOne;
 
         Assertions.fail("Could not find uncolored version of " + colored);
         return null;
@@ -340,6 +342,22 @@ public class LoreEditTests extends SharedCustomAnvilTest {
     public static void tearDown() {
         player = null;
         anvil = null;
+    }
+
+    public static List<LoreEditType> onlyAppendTypes() {
+        ArrayList<LoreEditType> typeList = new ArrayList<>();
+        for (@NotNull LoreEditType type : LoreEditType.values()) {
+            if (type.isAppend()) typeList.add(type);
+        }
+        return typeList;
+    }
+
+    public static List<LoreEditType> onlyRemoveTypes() {
+        ArrayList<LoreEditType> typeList = new ArrayList<>();
+        for (@NotNull LoreEditType type : LoreEditType.values()) {
+            if (!type.isAppend()) typeList.add(type);
+        }
+        return typeList;
     }
 
     @Test
@@ -440,9 +458,8 @@ public class LoreEditTests extends SharedCustomAnvilTest {
     }
 
     @ParameterizedTest
-    @EnumSource(LoreEditType.class)
+    @MethodSource("onlyAppendTypes")
     public void testColorDisabled(LoreEditType type) {
-        if(!type.isAppend()) return;
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.USE_COLOR_COST, COLOR_USE_COST);
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_HEX_COLOR, false);
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_COLOR_CODE, false);
@@ -460,9 +477,8 @@ public class LoreEditTests extends SharedCustomAnvilTest {
     }
 
     @ParameterizedTest
-    @EnumSource(LoreEditType.class)
+    @MethodSource("onlyRemoveTypes")
     public void testColorRemoveEnabled(LoreEditType type) {
-        if(type.isAppend()) return;
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE, true);
 
         TestDataContainer singleLData = singleLineTypeToTest.get(type);
@@ -479,9 +495,8 @@ public class LoreEditTests extends SharedCustomAnvilTest {
     }
 
     @ParameterizedTest
-    @EnumSource(LoreEditType.class)
+    @MethodSource("onlyRemoveTypes")
     public void testDoConsume(LoreEditType type) {
-        if(type.isAppend()) return;
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.DO_CONSUME, true);
 
         TestDataContainer singleLData = singleLineTypeToTest.get(type);
@@ -497,13 +512,41 @@ public class LoreEditTests extends SharedCustomAnvilTest {
                 .setClickLeft(null);
         multiLData.executeTest(anvil, player);
 
-        if(!type.isMultiLine()){
+        // Single paper consumed
+        if (!type.isMultiLine()) {
             singleLData.setFuseRight(emptyPaperOne).setClickRight(null).executeTest(anvil, player);
             multiLData.setFuseRight(emptyPaperOne).setClickRight(null).executeTest(anvil, player);
         }
     }
 
-    //TODO single paper test
+    private void SinglePaperTestPart(LoreEditType type, TestDataContainer data, ItemStack expectedFuse, ItemStack postFuse) {
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.DO_CONSUME, false);
+        data = data.setFuseRight(expectedFuse).setClickLeft(null).setClickRight(postFuse);
+        data.executeTest(anvil, player);
+
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.DO_CONSUME, true);
+        data.setClickRight(null).executeTest(anvil, player);
+    }
+
+    @Test
+    public void testSinglePaper_Append() {
+        SinglePaperTestPart(LoreEditType.APPEND_PAPER,
+                singleLineTypeToTest.get(LoreEditType.APPEND_PAPER),
+                uncoloredPaperOne, emptyPaperOne);
+        SinglePaperTestPart(LoreEditType.APPEND_PAPER,
+                multiLineTypeToTest.get(LoreEditType.APPEND_PAPER),
+                uncoloredPaperOne, emptyPaperOne);
+    }
+
+    @Test
+    public void testSinglePaper_Remove() {
+        SinglePaperTestPart(LoreEditType.REMOVE_PAPER,
+                singleLineTypeToTest.get(LoreEditType.REMOVE_PAPER),
+                emptyPaperOne, coloredPaperOne);
+        SinglePaperTestPart(LoreEditType.REMOVE_PAPER,
+                multiLineTypeToTest.get(LoreEditType.REMOVE_PAPER),
+                emptyPaperOne, coloredPaperOne);
+    }
 
     //TODO remove order test
     //TODO work penalty test
