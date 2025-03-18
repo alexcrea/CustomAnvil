@@ -368,7 +368,7 @@ class AnvilResultListener : Listener {
             if (lore.isEmpty()) return false
 
             val rightCopy : ItemStack?
-            if (LoreEditType.APPEND_PAPER.doConsume) {
+            if (LoreEditType.REMOVE_BOOK.doConsume) {
                 rightCopy = null
             } else {
                 // Uncolor the page
