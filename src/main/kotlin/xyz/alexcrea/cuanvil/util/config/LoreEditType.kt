@@ -21,11 +21,17 @@ enum class LoreEditType(
     val isAppend: Boolean,
     val isMultiLine: Boolean,
 ) {
-    APPEND_BOOK("lore_edit.book_and_quil.append", AnvilUseType.LORE_EDIT_BOOK_APPEND, true, true),
-    REMOVE_BOOK("lore_edit.book_and_quil.remove", AnvilUseType.LORE_EDIT_BOOK_REMOVE, false, true),
-    APPEND_PAPER("lore_edit.paper.append_line", AnvilUseType.LORE_EDIT_PAPER_APPEND, true, false),
-    REMOVE_PAPER("lore_edit.paper.remove_line", AnvilUseType.LORE_EDIT_PAPER_REMOVE, false, false),
+    APPEND_BOOK(AnvilUseType.LORE_EDIT_BOOK_APPEND, true, true),
+    REMOVE_BOOK(AnvilUseType.LORE_EDIT_BOOK_REMOVE, false, true),
+    APPEND_PAPER(AnvilUseType.LORE_EDIT_PAPER_APPEND, true, false),
+    REMOVE_PAPER(AnvilUseType.LORE_EDIT_PAPER_REMOVE, false, false),
     ;
+
+    constructor(
+        useType: AnvilUseType,
+        isAppend: Boolean,
+        isMultiLine: Boolean,
+    ) : this(useType.path, useType, isAppend, isMultiLine)
 
     /**
      * If this edit type is enabled
