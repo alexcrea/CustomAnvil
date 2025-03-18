@@ -288,6 +288,13 @@ lore_edit:
       shared_additive: false
       # If adding the lore consume the book & quil
       do_consume: false
+      # Allow using color code and hexadecimal color when editing lore via book & quil
+      #
+      # Color code are prefixed by "&" and hexadecimal color by "#"
+      # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
+      allow_color_code: true
+      allow_hexadecimal_color: true
+      use_cost: 0
 
     remove:
       # If removing lore using book & quil is enabled
@@ -300,15 +307,12 @@ lore_edit:
       shared_increase: false
       # Increase shared left item cost penalty
       shared_additive: false
-
-    # Allow using color code and hexadecimal color when editing lore via book & quil
-    #
-    # Color code are prefixed by "&" and hexadecimal color by "#"
-    # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
-    color:
-      allow_color_code: true
-      allow_hexadecimal_color: true
-      use_cost: 0
+      # If removing the lore consume the book & quil
+      do_consume: false
+      # If the color should get back to color code or hex format
+      remove_color_on_remove: true
+      # Cost of replacing colors
+      remove_color_cost: 0
 
   paper:
     # Permission is ca.lore_edit.paper
@@ -327,6 +331,13 @@ lore_edit:
       shared_additive: false
       # If adding the lore line consume the paper
       do_consume: false
+      # Allow using color code and hexadecimal color when editing lore via book & quil
+      #
+      # Color code are prefixed by "&" and hexadecimal color by "#"
+      # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
+      allow_color_code: true
+      allow_hexadecimal_color: true
+      color_use_cost: 0
 
     remove_line:
       # If removing lore line using paper is enabled
@@ -337,15 +348,12 @@ lore_edit:
       shared_increase: false
       # Increase shared left item cost penalty
       shared_additive: false
-
-    # Allow using color code and hexadecimal color when editing lore via book & quil
-    #
-    # Color code are prefixed by "&" and hexadecimal color by "#"
-    # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
-    color:
-      allow_color_code: true
-      allow_hexadecimal_color: true
-      use_cost: 0
+      # If removing the lore line consume the paper
+      do_consume: false
+      # If the color should get back to color code or hex format
+      remove_color_on_remove: true
+      # Cost of replacing colors
+      remove_color_cost: 0
 
 # Whether to show debug logging
 debug_log: false
