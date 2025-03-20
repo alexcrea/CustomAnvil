@@ -4,8 +4,16 @@
 /out/
 .lastDeploymentsId
 
-#nms submodule build directory ignored
+#nms & impl submodule build directory ignored
 /nms/build
 /nms/.gradle
 /nms/*/build
 /nms/*/.gradle
+/impl/build
+/impl/.gradle
+/impl/*/build
+/impl/*/.gradle
+
+# other random folders
+/htmlReport
+/.kotlin/errors
