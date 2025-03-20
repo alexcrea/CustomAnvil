@@ -15,6 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.data.AnvilClickTestData;
@@ -271,6 +272,44 @@ public class LoreEditTests extends SharedCustomAnvilTest {
         );
     }
 
+    @BeforeEach
+    public void prepareAnvil() {
+        anvil.clear();
+
+        // Make sure we reset value in case it got modified
+        for (@NotNull LoreEditType type : LoreEditType.values()) {
+            // Make sure it is enabled for the tests (unless its is enabled test)
+            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.IS_ENABLED, true);
+
+            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.DO_CONSUME, false);
+            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.FIXED_COST, 1);
+            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.PER_LINE_COST, 0);
+
+            // Make sur color is enabled by default
+            if (type.isAppend()) {
+                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_HEX_COLOR, true);
+                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_COLOR_CODE, true);
+                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.USE_COLOR_COST, 0);
+            } else {
+                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE, false);
+                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_COST, 0);
+            }
+
+        }
+
+        // Disable them by default and test them on specific tests
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.BOOK_PERMISSION_NEEDED, false);
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.PAPER_PERMISSION_NEEDED, false);
+
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.PAPER_EDIT_ORDER, LoreEditConfigUtil.DEFAULT_PAPER_EDIT_ORDER);
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        player = null;
+        anvil = null;
+    }
+
     public @Nullable ItemStack uncoloredEquivalent(@Nullable ItemStack colored) {
         // null check
         if (null == colored) return null;
@@ -305,43 +344,6 @@ public class LoreEditTests extends SharedCustomAnvilTest {
 
         Assertions.fail("Could not find uncolored version of " + colored);
         return null;
-    }
-
-    @BeforeEach
-    public void prepareAnvil() {
-        anvil.clear();
-
-        // Make sure we reset value in case it got modified
-        for (@NotNull LoreEditType type : LoreEditType.values()) {
-            // Make sure it is enabled for the tests (unless its is enabled test)
-            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.IS_ENABLED, true);
-
-            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.DO_CONSUME, false);
-            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.FIXED_COST, 1);
-            ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.PER_LINE_COST, 0);
-
-
-            // Make sur color is enabled by default
-            if (type.isAppend()) {
-                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_HEX_COLOR, true);
-                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_COLOR_CODE, true);
-                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.USE_COLOR_COST, 0);
-            } else {
-                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE, false);
-                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_COST, 0);
-            }
-
-        }
-
-        // Disable them by default and test them on specific tests
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.BOOK_PERMISSION_NEEDED, false);
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.PAPER_PERMISSION_NEEDED, false);
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        player = null;
-        anvil = null;
     }
 
     public static List<LoreEditType> onlyAppendTypes() {
@@ -548,7 +550,74 @@ public class LoreEditTests extends SharedCustomAnvilTest {
                 emptyPaperOne, coloredPaperOne);
     }
 
-    //TODO remove order test
+    @NotNull
+    private static ItemStack insertToLore(@NotNull ItemStack item, int index, @NotNull String toAppend) {
+        item = item.clone();
+        ItemMeta meta = item.getItemMeta();
+        Assertions.assertNotNull(meta);
+        Assertions.assertTrue(meta.hasLore());
+
+        ArrayList<String> lore = new ArrayList<>(meta.getLore());
+        lore.add(index, toAppend);
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    @NotNull
+    private static ItemStack setDisplayedName(@NotNull ItemStack item, @NotNull String name) {
+        item = item.clone();
+        ItemMeta meta = item.getItemMeta();
+        Assertions.assertNotNull(meta);
+
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private static final String TESTED_LORE = "tested_lore";
+
+    @ParameterizedTest
+    @ValueSource(strings = {"sTaRt", "eNd"})
+    public void testPaperOrder_Append(String order) {
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.PAPER_EDIT_ORDER, order);
+
+        ItemStack result = insertToLore(oneColoredLoreItem, "start".equalsIgnoreCase(order) ? 0 : 1, TESTED_LORE);
+        ItemStack paper = setDisplayedName(emptyPaperOne, TESTED_LORE);
+
+        new TestDataContainer(
+                new AnvilFuseTestData(
+                        oneColoredLoreItem, paper, result, 1
+                ),
+                new AnvilClickTestData(
+                        null, emptyPaperOne, null, result,
+                        1,
+                        Event.Result.DENY, true, Event.Result.DENY
+                )
+        ).executeTest(anvil, player);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"sTaRt", "eNd"})
+    public void testPaperOrder_Remove(String order) {
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(LoreEditConfigUtil.PAPER_EDIT_ORDER, order);
+
+        ItemStack from = insertToLore(oneColoredLoreItem, "start".equalsIgnoreCase(order) ? 0 : 1, TESTED_LORE);
+        ItemStack paper = setDisplayedName(emptyPaperOne, TESTED_LORE);
+
+        new TestDataContainer(
+                new AnvilFuseTestData(
+                        from, emptyPaperOne, oneColoredLoreItem, 1
+                ),
+                new AnvilClickTestData(
+                        null, paper, null, oneColoredLoreItem,
+                        1,
+                        Event.Result.DENY, true, Event.Result.DENY
+                )
+        ).executeTest(anvil, player);
+    }
+
     //TODO work penalty test
 
 }
