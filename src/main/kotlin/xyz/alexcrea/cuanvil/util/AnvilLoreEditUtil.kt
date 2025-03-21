@@ -1,9 +1,11 @@
 package xyz.alexcrea.cuanvil.util
 
+import com.willfp.eco.util.toNiceString
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.permissions.Permissible
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.concurrent.atomic.AtomicInteger
@@ -60,13 +62,14 @@ object AnvilLoreEditUtil {
         // remove lore
         val result = first.clone()
         val leftMeta = result.itemMeta ?: return null
-        val currentLore = ArrayList<String>(leftMeta.lore ?: return null)
+        val currentLore: ArrayList<String> = DependencyManager.stripLore(result)
 
         val uncolorCost = uncolorLines(player, currentLore, LoreEditType.REMOVE_BOOK)
 
         leftMeta.lore = null
         result.itemMeta = leftMeta
 
+        DependencyManager.updateLore(result)
         if (result == first) return null
 
         // Handle xp
@@ -182,7 +185,7 @@ object AnvilLoreEditUtil {
         val meta = result.itemMeta!!
 
         val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
-        val lore: ArrayList<String> = ArrayList(meta.lore!!)
+        val lore: ArrayList<String> = DependencyManager.stripLore(result)
 
         val line = if (removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)
@@ -195,6 +198,7 @@ object AnvilLoreEditUtil {
         tempList.add(line)
         val uncolorCost = uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
 
+        DependencyManager.updateLore(result)
         if (result == first) return null
 
         // Handle other xp
