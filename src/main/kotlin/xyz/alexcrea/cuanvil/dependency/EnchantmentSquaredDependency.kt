@@ -2,9 +2,11 @@ package xyz.alexcrea.cuanvil.dependency
 
 import io.delilaheve.CustomAnvil
 import me.athlaeos.enchantssquared.enchantments.CustomEnchant
+import me.athlaeos.enchantssquared.listeners.AnvilListener
 import me.athlaeos.enchantssquared.managers.CustomEnchantManager
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
@@ -33,6 +35,20 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     fun disableAnvilListener(){
         PrepareAnvilEvent.getHandlerList().unregister(this.enchantmentSquaredPlugin)
+
+        // Find the anvil click event
+        var toRemove: AnvilListener? = null
+        for (registered in InventoryClickEvent.getHandlerList().registeredListeners) {
+            val listener = registered.listener
+            if(listener is AnvilListener) {
+                toRemove = listener
+                break
+            }
+        }
+
+        if(toRemove != null)
+            InventoryClickEvent.getHandlerList().unregister(toRemove)
+
     }
 
     fun registerEnchantments(){
