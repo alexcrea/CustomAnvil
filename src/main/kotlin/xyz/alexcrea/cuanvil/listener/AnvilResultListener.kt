@@ -6,7 +6,6 @@ import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
 import org.bukkit.Material
-import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -31,7 +30,6 @@ import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.collections.ArrayList
 import kotlin.math.min
 
 class AnvilResultListener : Listener {
@@ -316,12 +314,12 @@ class AnvilResultListener : Listener {
         player: Player,
         inventory: AnvilInventory,
     ): Int {
-        if(GameMode.CREATIVE == player.gameMode) return 0
+        if (GameMode.CREATIVE == player.gameMode) return 0
 
         val repairCost = xpCost.get()
         return if ((inventory.maximumRepairCost <= repairCost)
-            || (player.level < repairCost))  Int.MIN_VALUE
-
+            || (player.level < repairCost)
+        ) Int.MIN_VALUE
         else repairCost
     }
 
@@ -364,10 +362,10 @@ class AnvilResultListener : Listener {
             // fill book meta
             val meta = leftItem.itemMeta
             if (meta == null || !meta.hasLore()) return false
-            val lore = ArrayList<String>(meta.lore!!)
+            val lore = DependencyManager.stripLore(leftItem)
             if (lore.isEmpty()) return false
 
-            val rightCopy : ItemStack?
+            val rightCopy: ItemStack?
             if (LoreEditType.REMOVE_BOOK.doConsume) {
                 rightCopy = null
             } else {
@@ -445,14 +443,14 @@ class AnvilResultListener : Listener {
 
             val leftMeta = leftItem.itemMeta
             if (leftMeta == null || !leftMeta.hasLore()) return false
-            val lore = leftMeta.lore!!
+            val lore = DependencyManager.stripLore(leftItem)
             if (lore.isEmpty()) return false
 
             // Create result item
             val rightClone: ItemStack?
-            if(LoreEditType.REMOVE_PAPER.doConsume){
+            if (LoreEditType.REMOVE_PAPER.doConsume) {
                 rightClone = null
-            }else{
+            } else {
                 val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
                 var line = if (removeEnd) lore[lore.size - 1]
                 else lore[0]
