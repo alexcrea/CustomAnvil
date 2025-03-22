@@ -192,16 +192,23 @@ object AnvilLoreEditUtil {
         val line = if (removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)
 
-        meta.lore = if (lore.isEmpty()) null else lore
+        meta.lore = null
         result.itemMeta = meta
+
+        // Update lore but make sure custom lore is put last
+        DependencyManager.updateLore(result)
+
+        val finalLore = ArrayList<String>()
+        finalLore.addAll(meta.lore!!)
+        finalLore.addAll(lore)
+
+        meta.lore = lore
+        if (result == first) return null
 
         // Get color cost to uncolor this line
         val tempList = ArrayList<String>(1)
         tempList.add(line)
         val uncolorCost = uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
-
-        DependencyManager.updateLore(result)
-        if (result == first) return null
 
         // Handle other xp
         xpCost.addAndGet(uncolorCost)
