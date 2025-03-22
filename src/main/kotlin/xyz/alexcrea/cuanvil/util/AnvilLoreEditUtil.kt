@@ -63,6 +63,7 @@ object AnvilLoreEditUtil {
         val result = first.clone()
         val leftMeta = result.itemMeta ?: return null
         val currentLore: ArrayList<String> = DependencyManager.stripLore(result)
+        if(currentLore.isEmpty()) return null
 
         val uncolorCost = uncolorLines(player, currentLore, LoreEditType.REMOVE_BOOK)
 
@@ -186,6 +187,7 @@ object AnvilLoreEditUtil {
 
         val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
         val lore: ArrayList<String> = DependencyManager.stripLore(result)
+        if(lore.isEmpty()) return null
 
         val line = if (removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)

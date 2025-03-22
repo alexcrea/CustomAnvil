@@ -209,7 +209,7 @@ object DependencyManager {
 
         enchantmentSquaredCompatibility?.stripLore(dummy)
 
-        val itemLore = item.itemMeta!!.lore
+        val itemLore = dummy.itemMeta!!.lore
         if (itemLore != null) lore.addAll(itemLore)
 
         return lore
