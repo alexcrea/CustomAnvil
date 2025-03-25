@@ -1,7 +1,7 @@
 # Custom Anvil
 
 **Custom Anvil** is a plugin that allows server administrators to customize every aspect of the anvil's mechanics. 
-It is expected to work on 1.18 to 1.21.3 minecraft servers running spigot or paper.
+It is expected to work on 1.18 to 1.21.5 minecraft servers running spigot or paper.
 (the plugin support of 1.16.5 to 1.17.1 is experimental and may encounter issues)
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
@@ -80,7 +80,7 @@ as low priority as I work for the plugin on my free time for free.
 
 One of the configurations allow displaying price about 40 and removing Too Expensive. \
 By how the minecraft client work: price above 40 can only be displayed green, even if the player does not own enough experience level. 
-Minecraft version 1.17 to 1.21.1 do not need any dependency. Other version need ProtocoLib enabled on your server for this feature. \
+Minecraft version 1.17 to 1.21.5 do not need any dependency. Other version need ProtocoLib enabled on your server for this feature. \
 You can also wait for an update of the plugin to support a newer version.
 
 Please note that 1.16.5 to 1.17.1 are not officially supported. Run at your own risk.
@@ -93,7 +93,7 @@ For information about the API, please refer to [the Wiki](https://github.com/ale
 
 ### Default Plugin's Configurations
 For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.18)\
-For 1.21 to 1.21.1 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
+For 1.21 to 1.21.5 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
 
 ---
 Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) for metric. You can [disable it](https://bstats.org/getting-started) if you like.
