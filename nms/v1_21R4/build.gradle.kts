@@ -3,18 +3,15 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 group = rootProject.group
 version = rootProject.version
 
-//TODO uncomment when paperDevBundle 1.21.4 release
-/*plugins {
+plugins {
     id("io.papermc.paperweight.userdev")
-}*/
+}
 
 dependencies {
     implementation(project(":nms:nms-common"))
 
     // Used for nms
-    compileOnly("org.spigotmc:spigot-api:1.20.5-R0.1-SNAPSHOT") //TODO remove when paperDevBundle 1.21.5 release
-    compileOnly("org.spigotmc:spigot:1.21.5-R0.1-SNAPSHOT") //TODO remove when paperDevBundle 1.21.5 release
-    //paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT") //TODO uncomment when paperDevBundle 1.21.5 release
+    paperweight.paperDevBundle("1.21.5-no-moonrise-SNAPSHOT")
 }
 
 repositories {
