@@ -41,7 +41,7 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew build --parallel
 
     - name: Summarize tests results
       uses: jeantessier/test-summary-action@v1
