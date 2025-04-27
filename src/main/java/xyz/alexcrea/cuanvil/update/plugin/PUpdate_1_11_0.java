@@ -124,7 +124,7 @@ public class PUpdate_1_11_0 {
                 "minecraft:density", "minecraft:breach");
 
         config.set("mace_enchant_conflict", null);
-        toSave.add(ConfigHolder.DEFAULT_CONFIG);
+        toSave.add(ConfigHolder.CONFLICT_HOLDER);
     }
 
 }
