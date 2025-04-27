@@ -222,6 +222,7 @@ object DataPackDependency {
                 }
 
                 conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
+                return false
             }
             // Find current conflict
             val manager = ConfigHolder.CONFLICT_HOLDER.conflictManager
@@ -229,11 +230,12 @@ object DataPackDependency {
             // This assumes that:
             // - the conflict existing in the config exist in the runtime config
             // - the enchantment exist and is provided correctly
-            val conflict = manager.conflictList.find { it.name == group }!!
-            conflict.addEnchantment(EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!)!!)
+            val conflict = manager.conflictList.find {
+                it.name.equals(group, ignoreCase = true)
+            }
+            conflict!!.addEnchantment(EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!)!!)
 
             UpdateUtils.addAbsentToList(config, "$group.enchantments", ench)
-
             return true
         }
     }
