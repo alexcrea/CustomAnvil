@@ -12,7 +12,7 @@ plugins {
     signing
     id("cn.lalaki.central").version("1.2.5")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.14" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.16" apply false
 }
 
 group = "xyz.alexcrea"
@@ -72,7 +72,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Test dependency
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.37.0")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.45.1")
     testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
@@ -94,8 +94,9 @@ allprojects {
         compileOnly(kotlin("stdlib"))
 
         // Test dependency
-        testImplementation(platform("org.junit:junit-bom:5.11.3"))
+        testImplementation(platform("org.junit:junit-bom:5.12.2"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 
     tasks.getByName<Test>("test") {

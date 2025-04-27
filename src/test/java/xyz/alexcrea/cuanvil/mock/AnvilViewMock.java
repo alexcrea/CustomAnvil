@@ -60,17 +60,22 @@ public class AnvilViewMock extends PlayerInventoryViewMock implements AnvilView 
 
     @Override
     public boolean bypassesEnchantmentLevelRestriction() {
-        throw new UnsupportedOperationException("Custom anvil was not think with this existing");
+        throw new UnsupportedOperationException("This is currently is not used in CustomAnvil");
     }
 
     @Override
     public void bypassEnchantmentLevelRestriction(boolean bypassEnchantmentLevelRestriction) {
-        throw new UnsupportedOperationException("Custom anvil was not think with this existing");
+        throw new UnsupportedOperationException("This is currently is not used in CustomAnvil");
     }
 
     @Override
     public @NotNull AnvilInventory getTopInventory() {
         return top;
+    }
+
+    @Override
+    public void open() {
+        throw new UnsupportedOperationException("This is currently is not used in CustomAnvil");
     }
 
 }
