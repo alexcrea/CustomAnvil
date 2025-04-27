@@ -7,7 +7,7 @@ import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.AnvilUseType
-import java.util.EnumMap
+import java.util.*
 
 /**
  * Config option accessors
@@ -37,6 +37,7 @@ object ConfigOptions {
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
+    // Work penalty config
     const val WORK_PENALTY_ROOT = "work_penalty"
     const val WORK_PENALTY_INCREASE = "shared_increase"
     const val WORK_PENALTY_ADDITIVE = "shared_additive"
@@ -115,6 +116,9 @@ object ConfigOptions {
     @JvmField
     val ENCHANT_LIMIT_RANGE = 1..255
 
+    // --------------
+    // Other defaults
+    // --------------
 
     // Default value for an enchantment multiplier
     private const val DEFAULT_ENCHANT_VALUE = 0
@@ -239,7 +243,10 @@ object ConfigOptions {
     /**
      * If one of the color component is enabled
      */
-    val renameColorPossible: Boolean get() { return allowColorCode || allowHexadecimalColor }
+    val renameColorPossible: Boolean
+        get() {
+            return allowColorCode || allowHexadecimalColor
+        }
 
     /**
      * If players need a permission to use color
@@ -282,16 +289,17 @@ object ConfigOptions {
      */
     fun workPenaltyPart(type: AnvilUseType): WorkPenaltyPart {
         val config = ConfigHolder.DEFAULT_CONFIG.config
-        val path = WORK_PENALTY_ROOT + "." + type.typeName
 
         // Find values
         val defaultPenalty = type.defaultPenalty
-        val section = config.getConfigurationSection(path) ?: return defaultPenalty
+        val section = config.getConfigurationSection(type.path) ?: return defaultPenalty
 
         val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
         val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)
-        val exclusivePenaltyIncrease = section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
-        val exclusivePenaltyAdditive = section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
+        val exclusivePenaltyIncrease =
+            section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
+        val exclusivePenaltyAdditive =
+            section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
 
         return WorkPenaltyPart(penaltyIncrease, penaltyAdditive, exclusivePenaltyIncrease, exclusivePenaltyAdditive)
     }
@@ -332,11 +340,11 @@ object ConfigOptions {
     fun enchantLimit(enchantment: CAEnchantment): Int {
         // Test namespace
         var limit = enchantLimit(enchantment.key.toString())
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // Test legacy (name only)
         limit = enchantLimit(enchantment.enchantmentName)
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // get default (and test old legacy if present)
         return getDefaultLevel(enchantment.enchantmentName)
@@ -350,18 +358,19 @@ object ConfigOptions {
         val path = "${ENCHANT_LIMIT_ROOT}.$enchantmentName"
         return CustomAnvil.instance
             .config
-            .getInt(path, ENCHANT_LIMIT_RANGE.first-1)
+            .getInt(path, ENCHANT_LIMIT_RANGE.first - 1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
     }
 
     /**
      * Get default value if enchantment do not exist on config
      */
-    private fun getDefaultLevel(enchantmentName: String, // compatibility with 1.20.5. TODO better update system
-        ) : Int {
-        if(enchantmentName == "sweeping_edge"){
-            val limit =  enchantLimit("sweeping")
-            if(limit != null) return limit
+    private fun getDefaultLevel(
+        enchantmentName: String, // compatibility with 1.20.5. TODO better update system
+    ): Int {
+        if (enchantmentName == "sweeping_edge") {
+            val limit = enchantLimit("sweeping")
+            if (limit != null) return limit
 
         }
         return defaultEnchantLimit
@@ -377,11 +386,11 @@ object ConfigOptions {
     ): Int {
         // Test namespace
         var limit = enchantmentValue(enchantment.key.toString(), isFromBook)
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // Test legacy (name only)
         limit = enchantmentValue(enchantment.enchantmentName, isFromBook)
-        if(limit != null) return limit
+        if (limit != null) return limit
 
         // get default (and test old legacy if present)
         return getDefaultValue(enchantment, isFromBook)
@@ -407,21 +416,23 @@ object ConfigOptions {
     /**
      * Get default value if enchantment do not exist on config
      */
-    private fun getDefaultValue(enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
-                                isFromBook: Boolean) : Int {
+    private fun getDefaultValue(
+        enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
+        isFromBook: Boolean
+    ): Int {
 
         val enchantmentName = enchantment.key.toString()
-        if(enchantmentName == "minecraft:sweeping_edge"){
+        if (enchantmentName == "minecraft:sweeping_edge") {
             var limit = enchantmentValue("minecraft:sweeping", isFromBook)
-            if(limit != null) return limit
-            
+            if (limit != null) return limit
+
             // legacy name
             limit = enchantmentValue("sweeping", isFromBook)
-            if(limit != null) return limit
+            if (limit != null) return limit
         }
 
         val rarity = enchantment.defaultRarity()
-        return if(isFromBook)
+        return if (isFromBook)
             rarity.bookValue
         else
             rarity.itemValue
@@ -434,20 +445,20 @@ object ConfigOptions {
     fun maxBeforeMergeDisabled(enchantment: CAEnchantment): Int {
         val key = enchantment.key.toString()
         var value = maxBeforeMergeDisabled(key)
-        if(value != null) return value
+        if (value != null) return value
 
         // Legacy name
         val legacy = enchantment.enchantmentName
         value = maxBeforeMergeDisabled(legacy)
-        if(value != null) return value
+        if (value != null) return value
 
-        if(key == "minecraft:sweeping_edge"){
+        if (key == "minecraft:sweeping_edge") {
             value = maxBeforeMergeDisabled("minecraft:sweeping")
-            if(value != null) return value
+            if (value != null) return value
 
             // legacy name of legacy enchantment name
             value = maxBeforeMergeDisabled("sweeping")
-            if(value != null) return value
+            if (value != null) return value
         }
 
         return DEFAULT_MAX_BEFORE_MERGE_DISABLED
@@ -457,7 +468,7 @@ object ConfigOptions {
      * Get the given [enchantmentName]'s level before merge is disabled
      * a negative value would mean never disabled
      */
-    private fun maxBeforeMergeDisabled(enchantmentName: String) : Int? {
+    private fun maxBeforeMergeDisabled(enchantmentName: String): Int? {
         // find if set
         val path = "${DISABLE_MERGE_OVER_ROOT}.$enchantmentName"
 

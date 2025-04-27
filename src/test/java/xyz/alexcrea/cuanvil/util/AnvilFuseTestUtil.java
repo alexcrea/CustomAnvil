@@ -3,7 +3,9 @@ package xyz.alexcrea.cuanvil.util;
 import io.delilaheve.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,7 +13,10 @@ import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
+import xyz.alexcrea.cuanvil.data.AnvilClickTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.listener.AnvilResultListener;
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener;
 import xyz.alexcrea.cuanvil.mock.AnvilViewMock;
 
@@ -21,16 +26,19 @@ import java.util.List;
 
 public class AnvilFuseTestUtil {
 
+    private static PrepareAnvilListener PREPARE_LISTENER = new PrepareAnvilListener();
+    private static AnvilResultListener RESULT_LISTENER = new AnvilResultListener();
+
     public static ItemStack prepareItem(@NotNull Material material,
                                         @NotNull List<CAEnchantment> enchantments,
-                                        @NotNull List<Integer> level){
+                                        @NotNull List<Integer> level) {
         return prepareItem(material, 0, enchantments, level);
     }
 
     public static ItemStack prepareItem(@NotNull Material material,
                                         int repairCost,
                                         @NotNull List<CAEnchantment> enchantments,
-                                        @NotNull List<Integer> level){
+                                        @NotNull List<Integer> level) {
         Assertions.assertEquals(enchantments.size(), level.size());
 
         HashMap<CAEnchantment, Integer> enchantmentMap = new HashMap<>();
@@ -51,13 +59,14 @@ public class AnvilFuseTestUtil {
 
     public static ItemStack prepareItem(@NotNull Material material,
                                         @NotNull List<String> enchantmentNames,
-                                        Integer... levels){
+                                        Integer... levels) {
         return prepareItem(material, 0, enchantmentNames, levels);
     }
+
     public static ItemStack prepareItem(@NotNull Material material,
                                         int repairCost,
                                         @NotNull List<String> enchantmentNames,
-                                        Integer... levels){
+                                        Integer... levels) {
         List<CAEnchantment> enchantments = new ArrayList<>();
 
         for (String enchantmentName : enchantmentNames) {
@@ -86,18 +95,18 @@ public class AnvilFuseTestUtil {
             PrepareAnvilEvent event = new PrepareAnvilEvent(view, anvil.getItem(2));
 
             // Not ideal but possible and the easiest so why not
-            new PrepareAnvilListener().anvilCombineCheck(event);
+            PREPARE_LISTENER.anvilCombineCheck(event);
             anvil.setResult(event.getResult());
-        } catch (Exception e){
+        } catch (Exception e) {
             Assertions.fail(e);
         }
     }
 
-    public static void executeAnvilTest(
+    public static void executeAnvilFuseTest(
             @NotNull AnvilInventory anvil,
             @NotNull HumanEntity player,
             @NotNull AnvilFuseTestData data
-            ){
+    ) {
         Assertions.assertEquals(player.getOpenInventory().getTopInventory(), anvil,
                 "Openned inventory is not anvil");
 
@@ -117,9 +126,65 @@ public class AnvilFuseTestUtil {
         testPlacingItem(anvil, player,
                 0, data.expectedPriceAfterBothPlaced(),
                 data.leftItem(), data.expectedResult());
+    }
 
-        // Sadly, can't currently test player click
+    public static void executeAnvilClickTest(
+            @NotNull AnvilInventory anvil,
+            @NotNull Player player,
+            @NotNull AnvilClickTestData data
+    ) {
+        if (data.testNoLevelNoChange()) {
+            ItemStack left = anvil.getFirstItem();
+            ItemStack right = anvil.getSecondItem();
+            ItemStack result = anvil.getResult();
 
+            player.setLevel(0);
+            player.setItemOnCursor(null);
+
+            // Do a test with not enough level
+            simulateClick(anvil, player, data.npChangeResult());
+
+            // Nothing should have changed
+            assertEqual(left, anvil.getFirstItem());
+            assertEqual(right, anvil.getSecondItem());
+            assertEqual(result, anvil.getResult());
+            assertEqual(null, player.getItemOnCursor());
+        }
+        player.setLevel(data.levelCost());
+        player.setItemOnCursor(null);
+
+        simulateClick(anvil, player, data.expectedResult());
+
+        // Should have similated the click
+        assertEqual(data.leftItem(), anvil.getFirstItem());
+        assertEqual(data.rightItem(), anvil.getSecondItem());
+        assertEqual(data.resultSlotItem(), anvil.getResult());
+        assertEqual(data.expectedCursor(), data.expectedCursor());
+
+        // Test if the player has no more xp
+        Assertions.assertEquals(0, player.getLevel(), "Player has more level than expected");
+    }
+
+    private static void simulateClick(
+            @NotNull AnvilInventory anvil,
+            @NotNull Player player,
+            @Nullable Event.Result expectedResult
+    ) {
+        AnvilViewMock view = new AnvilViewMock(player, anvil);
+        try {
+            InventoryClickEvent event = new InventoryClickEvent(view,
+                    InventoryType.SlotType.RESULT,
+                    PrepareAnvilListener.ANVIL_OUTPUT_SLOT,
+                    ClickType.LEFT,
+                    InventoryAction.PICKUP_ALL);
+
+            RESULT_LISTENER.anvilExtractionCheck(event);
+            if (expectedResult != null) {
+                Assertions.assertEquals(expectedResult, event.getResult());
+            }
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
 
     @SuppressWarnings({"removal"})
@@ -129,7 +194,7 @@ public class AnvilFuseTestUtil {
             int slot,
             Integer expectedPrice,
             @Nullable ItemStack toPlace,
-            @Nullable ItemStack expectedResult){
+            @Nullable ItemStack expectedResult) {
         anvil.setItem(slot, toPlace);
         anvil.setItem(2, null);
         AnvilFuseTestUtil.imitateAnvilUpdate(player, anvil);
@@ -140,25 +205,26 @@ public class AnvilFuseTestUtil {
         assertPriceEqual(expectedPrice, anvil.getRepairCost());
     }
 
-    public static void assertEqual(@Nullable ItemStack item1, @Nullable ItemStack item2) {
-        boolean secondIsAir = isAir(item2);
-        if(isAir(item1)) Assertions.assertTrue(secondIsAir,"Item "+item2+" was not AIR but was expected to be air");
+    public static void assertEqual(@Nullable ItemStack expected, @Nullable ItemStack other) {
+        boolean secondIsAir = isAir(other);
+        if (isAir(expected))
+            Assertions.assertTrue(secondIsAir, "Item " + other + " was not air but was expected to be");
         else {
-            Assertions.assertFalse(secondIsAir,"Item "+item2+" was expected not to be air");
+            Assertions.assertFalse(secondIsAir, "Item " + other + " is air but was expected to be " + expected);
 
-            item1.setDurability(item1.getDurability());
-            item2.setDurability(item2.getDurability());
-            Assertions.assertEquals(item1, item2);
+            expected.setDurability(expected.getDurability());
+            other.setDurability(other.getDurability());
+            Assertions.assertEquals(expected, other);
         }
 
     }
 
-    public static boolean isAir(@Nullable ItemStack item){
+    public static boolean isAir(@Nullable ItemStack item) {
         return item == null || item.isEmpty();
     }
 
-    public static void assertPriceEqual(Integer expectedPrice, int price){
-        if(expectedPrice == null) return;
+    public static void assertPriceEqual(Integer expectedPrice, int price) {
+        if (expectedPrice == null) return;
         Assertions.assertEquals(expectedPrice, price);
     }
 

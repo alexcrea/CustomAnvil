@@ -105,8 +105,12 @@ object DependencyManager {
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
-        } catch (e: Exception){
-            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+        } catch (e: Exception) {
+            CustomAnvil.instance.logger.log(
+                Level.SEVERE,
+                "Error while trying to handle custom anvil supported plugin: ",
+                e
+            )
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -141,8 +145,12 @@ object DependencyManager {
         try {
             unsafeTryTreatAnvilResult(event, result)
             return false
-        } catch (e: Exception){
-            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+        } catch (e: Exception) {
+            CustomAnvil.instance.logger.log(
+                Level.SEVERE,
+                "Error while trying to handle custom anvil supported plugin: ",
+                e
+            )
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -160,9 +168,13 @@ object DependencyManager {
     // Return true if should bypass (either by a dependency or error)
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         try {
-           return unsafeTryClickAnvilResultBypass(event, inventory)
-        } catch (e: Exception){
-            CustomAnvil.instance.logger.log(Level.SEVERE, "Error while trying to handle custom anvil supported plugin: ", e)
+            return unsafeTryClickAnvilResultBypass(event, inventory)
+        } catch (e: Exception) {
+            CustomAnvil.instance.logger.log(
+                Level.SEVERE,
+                "Error while trying to handle custom anvil supported plugin: ",
+                e
+            )
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -191,6 +203,21 @@ object DependencyManager {
         return bypass
     }
 
+    fun stripLore(item: ItemStack): ArrayList<String> {
+        val lore = ArrayList<String>()
+        val dummy = item.clone()
+
+        enchantmentSquaredCompatibility?.stripLore(dummy)
+
+        val itemLore = dummy.itemMeta!!.lore
+        if (itemLore != null) lore.addAll(itemLore)
+
+        return lore
+    }
+
+    fun updateLore(item: ItemStack) {
+        enchantmentSquaredCompatibility?.updateLore(item)
+    }
 
     private fun testIsFolia(): Boolean {
         try {

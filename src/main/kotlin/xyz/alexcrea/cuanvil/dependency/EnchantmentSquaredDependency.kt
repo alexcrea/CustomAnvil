@@ -203,4 +203,12 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         }
     }
 
+    fun stripLore(item: ItemStack) {
+        CustomEnchantManager.getInstance().removeAllEnchants(item)
+    }
+
+    fun updateLore(item: ItemStack) {
+        CustomEnchantManager.getInstance().updateLore(item)
+    }
+
 }

@@ -16,7 +16,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
@@ -71,7 +71,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         Assertions.assertNotNull(sharpness);
 
         // Testing default conflict (illegal item should not be produced)
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         // Try to find & remove conflict
         EnchantConflictGroup conflict = findGroup("sword_enchant_conflict");
@@ -79,7 +79,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
 
         // Test what happen when we remove the conflict (illegal item should be allowed)
         ConflictAPI.removeConflict(conflict);
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
 
         // We create and add a new conflict
         ConflictBuilder builder = new ConflictBuilder("sword_enchant_conflict");
@@ -88,11 +88,11 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
 
         // Nothing should change as it is not new: it was previously deleted
         Assertions.assertFalse(builder.registerIfNew());
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
 
         // Now the conflict should be registered and conflict should exist
         Assertions.assertTrue(builder.registerIfAbsent());
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
     }
 
     @Test

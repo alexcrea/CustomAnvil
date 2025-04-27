@@ -13,7 +13,7 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,7 +58,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
                 2
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         // Remove unit repair
         assertTrue(UnitRepairApi.removeUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE));
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         // see override
         assertFalse(UnitRepairApi.addUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE, 0.25));
@@ -107,12 +107,12 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
                 2
         );
 
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, nullResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
 
         // Add unit repair
         assertTrue(UnitRepairApi.addUnitRepair(Material.STICK, Material.DIAMOND_PICKAXE));
         assertFalse(UnitRepairApi.addUnitRepair(Material.STICK, Material.DIAMOND_PICKAXE));
-        AnvilFuseTestUtil.executeAnvilTest(anvil, player, legalResultData);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
     }
 
 }

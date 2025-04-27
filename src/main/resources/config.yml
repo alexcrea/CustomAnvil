@@ -270,6 +270,91 @@ disable-merge-over:
   # If uncommented. 2 unbreaking II book would not give an unbreaking III book. but unbreaking III book can still be applied
   #minecraft:unbreaking: 2
 
+# Settings for lore modification
+lore_edit:
+  book_and_quil:
+    # Permission is ca.lore_edit.book
+    use_permission: true
+    append:
+      # If adding lore using book & quil is enabled
+      enabled: false
+      # Cost used every time
+      fixed_cost: 1
+      # Cost used for every lore line added
+      per_line_cost: 0
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
+      # If adding the lore consume the book & quil
+      do_consume: false
+      # Allow using color code and hexadecimal color when editing lore via book & quil
+      #
+      # Color code are prefixed by "&" and hexadecimal color by "#"
+      # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
+      allow_color_code: true
+      allow_hexadecimal_color: true
+      use_cost: 0
+
+    remove:
+      # If removing lore using book & quil is enabled
+      enabled: false
+      # Cost used every time
+      fixed_cost: 1
+      # Cost used for every lore line removed
+      per_line_cost: 0
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
+      # If removing the lore consume the book & quil
+      do_consume: false
+      # If the color should get back to color code or hex format
+      remove_color_on_remove: true
+      # Cost of replacing colors
+      remove_color_cost: 0
+
+  paper:
+    # Permission is ca.lore_edit.paper
+    use_permission: true
+    # what order should the lines should get added/removed (start/end, if invalid or not present will be end)
+    order: "end"
+
+    append_line:
+      # If adding lore line using paper is enabled
+      enabled: false
+      # Cost used every time
+      fixed_cost: 1
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
+      # If adding the lore line consume the paper
+      do_consume: false
+      # Allow using color code and hexadecimal color when editing lore via book & quil
+      #
+      # Color code are prefixed by "&" and hexadecimal color by "#"
+      # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
+      allow_color_code: true
+      allow_hexadecimal_color: true
+      color_use_cost: 0
+
+    remove_line:
+      # If removing lore line using paper is enabled
+      enabled: false
+      # Cost used every time
+      fixed_cost: 1
+      # Use left item vanilla cost penalty if any
+      shared_increase: false
+      # Increase shared left item cost penalty
+      shared_additive: false
+      # If removing the lore line consume the paper
+      do_consume: false
+      # If the color should get back to color code or hex format
+      remove_color_on_remove: true
+      # Cost of replacing colors
+      remove_color_cost: 0
+
 # Whether to show debug logging
 debug_log: false
 

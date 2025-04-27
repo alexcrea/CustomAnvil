@@ -11,6 +11,7 @@ import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -19,11 +20,10 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
-import xyz.alexcrea.cuanvil.util.AnvilColorUtil
-import xyz.alexcrea.cuanvil.util.AnvilUseType
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
+import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import java.util.concurrent.atomic.AtomicInteger
+
 /**
  * Listener for anvil events
  */
@@ -72,12 +72,15 @@ class PrepareAnvilListener : Listener {
         // Test for unit repair
         if(testUnitRepair(event, inventory, player, first, second)) return
 
+        // Test for lore edit
+        if(testLoreEdit(event, inventory, player, first, second)) return
+
         CustomAnvil.log("no anvil fuse type found")
         event.result = null
 
     }
 
-    // return true if a custom recipe exist with these ingredient
+    // return true if a custom recipe exist with these ingredients
     private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory,
                                  player: HumanEntity,
                                  first: ItemStack, second: ItemStack?): Boolean {
@@ -131,7 +134,10 @@ class PrepareAnvilListener : Listener {
         if(ConfigOptions.renameColorPossible && inventoryName != null){
             val resultString = StringBuilder(inventoryName)
 
-            useColor = AnvilColorUtil.handleRenamingColor(resultString, player)
+            useColor = AnvilColorUtil.handleColor(resultString, player,
+                ConfigOptions.permissionNeededForColor,
+                ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor,
+                AnvilColorUtil.ColorUseType.RENAME)
 
             if(useColor) {
                 inventoryName = resultString.toString()
@@ -222,4 +228,27 @@ class PrepareAnvilListener : Listener {
         return true
     }
 
+    private fun testLoreEdit(event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
+                             first: ItemStack, second: ItemStack): Boolean {
+        val type = second.type
+        var result: ItemStack? = null
+
+        val xpCost = AtomicInteger()
+        if(Material.WRITABLE_BOOK == type) {
+            result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, xpCost)
+        }
+        else if(Material.PAPER == type) {
+            result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
+        }
+
+        if(result == null || first == result) {
+            CustomAnvil.log("lore edit, But input is same as output")
+            event.result = null
+            return false
+        }
+
+        event.result = result
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, xpCost.get())
+        return true
+    }
 }
