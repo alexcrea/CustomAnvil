@@ -53,14 +53,17 @@ object DataPackDependency {
         val version = LASTEST_VERSION[pack]
 
         val currentVersion = Version.fromString(defConfig.config.getString("datapack.$pack"))
-        if (currentVersion.greaterEqual(version!!)) return
+        if (currentVersion.greaterEqual(version!!)) {
+            handleEnchantAllConflict(pack)
+            return
+        }
 
         // Add pack value or do update from previous version
         // note: update thingy is not yet implemented
         configureDatapack(pack)
 
         // Finally, set current pack version to config
-        //defConfig.config.set("datapack.$pack", version.toString()) // temporary disabled for easier test
+        defConfig.config.set("datapack.$pack", version.toString())
         defConfig.saveToDisk(true)
     }
 
@@ -89,7 +92,7 @@ object DataPackDependency {
             val reader = InputStreamReader(enchantConflict.openStream())
             val yml = YamlConfiguration.loadConfiguration(reader)
 
-            needSave = needSave || addEnchantConflict(yml, newConflictList)
+            needSave = addEnchantConflict(yml, newConflictList)
         }
 
         for (conflict in newConflictList) {
@@ -110,11 +113,11 @@ object DataPackDependency {
             var group = MaterialGroupApi.getGroup(groupName)
             val exist = group != null
 
-            if(group == null) group = IncludeGroup(groupName)
+            if (group == null) group = IncludeGroup(groupName)
 
             for (name in section.getStringList("items")) {
                 val mat = Material.getMaterial(name.uppercase())
-                if(mat == null){
+                if (mat == null) {
                     CustomAnvil.instance.logger.warning("Could not find material $name for item group $groupName")
                     continue
                 }
@@ -122,7 +125,7 @@ object DataPackDependency {
             }
             for (name in section.getStringList("groups")) {
                 val otherGroup = MaterialGroupApi.getGroup(name)
-                if(otherGroup == null){
+                if (otherGroup == null) {
                     CustomAnvil.instance.logger.warning("Could not find sub group $name for group $groupName")
                     continue
                 }
@@ -132,9 +135,9 @@ object DataPackDependency {
 
             group.updateMaterials()
 
-            if(exist){
+            if (exist) {
                 MaterialGroupApi.writeMaterialGroup(group)
-            }else{
+            } else {
                 MaterialGroupApi.addMaterialGroup(group, true)
             }
         }
@@ -146,7 +149,8 @@ object DataPackDependency {
 
             val conflict = ConflictBuilder(
                 "restriction_${ench.replace(":", "_")}",
-                CustomAnvil.instance)
+                CustomAnvil.instance
+            )
             conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
             for (group in groups) {
                 conflict.addExcludedGroup(group)
@@ -166,7 +170,7 @@ object DataPackDependency {
 
             for (group in groups) {
                 if (group.startsWith('#')) {
-                    needSave = needSave || joinGroup(conflicts, group.substring(1), ench)
+                    needSave = joinGroup(conflicts, group.substring(1), ench) || needSave
                 } else {
                     createConflict(conflictList, ench, group)
                 }
@@ -193,21 +197,24 @@ object DataPackDependency {
         conflictList.add(conflict)
     }
 
+    private fun setEnchantAsAll(ench: String) {
+        // We assume current is not null and of type CABukkitEnchantment
+        val current = EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!) as CABukkitEnchantment
+
+        // We need to replace current wrapped enchantment with the all conflict wrapper
+        EnchantmentApi.unregisterEnchantment(current)
+        EnchantmentApi.registerEnchantment(CAIncompatibleAllEnchant(current.bukkit, current.defaultRarity()))
+    }
+
     private fun joinGroup(conflicts: HashMap<String, ConflictBuilder>, group: String, ench: String): Boolean {
         if ("all".equals(group, ignoreCase = true)) {
-            // We assume current is not null and of type CABukkitEnchantment
-            val current = EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!) as CABukkitEnchantment
-
-            // We need to replace current wrapped enchantment with the all conflict wrapper
-            EnchantmentApi.unregisterEnchantment(current)
-            EnchantmentApi.registerEnchantment(CAIncompatibleAllEnchant(current.bukkit, current.defaultRarity()))
-
+            setEnchantAsAll(ench)
             return false
         } else {
             val config = ConfigHolder.CONFLICT_HOLDER.config
 
             // If conflict do not yet exist
-            if(!config.isConfigurationSection(group)) {
+            if (!config.isConfigurationSection(group)) {
                 val conflict = conflicts.getOrPut(group) {
                     val conflict = ConflictBuilder(group, CustomAnvil.instance)
                     conflict.setMaxBeforeConflict(1)
@@ -230,4 +237,20 @@ object DataPackDependency {
             return true
         }
     }
+
+    private fun handleEnchantAllConflict(pack: String) {
+        val enchantConflict = javaClass.getResource("/datapack/$pack/enchant_conflict.yml") ?: return
+
+        val reader = InputStreamReader(enchantConflict.openStream())
+        val yml = YamlConfiguration.loadConfiguration(reader)
+
+        for (ench in yml.getKeys(false)) {
+            val groups = yml.getStringList(ench)
+
+            if (groups.contains("#all")) {
+                setEnchantAsAll(ench)
+            }
+        }
+    }
+
 }
