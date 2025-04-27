@@ -1,13 +1,12 @@
 package xyz.alexcrea.cuanvil.update.plugin;
 
-import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-import static xyz.alexcrea.cuanvil.update.UpdateUtils.addToStringList;
+import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
 public class PUpdate_1_6_2 {
 
@@ -30,7 +29,7 @@ public class PUpdate_1_6_2 {
             }
 
             if(!contained){
-                addToStringList(config, path, "enchanted_book");
+                addAbsentToList(config, path, "enchanted_book");
                 conflictUpdated = true;
             }
         }

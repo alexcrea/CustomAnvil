@@ -1,0 +1,183 @@
+package xyz.alexcrea.cuanvil.dependency.datapack
+
+import io.delilaheve.CustomAnvil
+import org.bukkit.NamespacedKey
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
+import xyz.alexcrea.cuanvil.api.ConflictBuilder
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment
+import xyz.alexcrea.cuanvil.enchant.wrapped.CAIncompatibleAllEnchant
+import xyz.alexcrea.cuanvil.update.UpdateUtils
+import xyz.alexcrea.cuanvil.update.Version
+import java.io.InputStreamReader
+
+object DataPackTest {
+    private val START_DETECT_VERSION = Version(1, 19, 0)
+
+    /**
+     * Map of the latest CA update related to the pack
+     */
+    private val LASTEST_VERSION = mapOf(
+        Pair("bracken", Version(1, 11, 0))
+    )
+
+    val enabledDatapack: List<String>
+        get() {
+            val version: Version = UpdateUtils.currentMinecraftVersion()
+            if (version.lesserThan(START_DETECT_VERSION)) return emptyList()
+
+            return DataPackTester.enabledPacks
+        }
+
+    fun handleDatapackConfigs() {
+        val enabledDatapack = enabledDatapack
+        for (packName in enabledDatapack) {
+            // Handling of pack name is horrible: it is based on file name
+            // So if someone rename a datapack it will make me sad
+
+            if (packName.startsWith("file/bp_post_scarcity")) {
+                handlePack("bracken")
+                continue
+            }
+
+        }
+    }
+
+    private fun handlePack(pack: String) {
+        val defConfig = ConfigHolder.DEFAULT_CONFIG
+        val version = LASTEST_VERSION[pack]
+
+        val currentVersion = Version.fromString(defConfig.config.getString("datapack.$pack"))
+        if (currentVersion.greaterEqual(version!!)) return
+
+        // Add pack value or do update from previous version
+        // note: update thingy is not yet implemented
+        configureDatapack(pack)
+
+        // Finally, set current pack version to config
+        //defConfig.config.set("datapack.$pack", version.toString()) // temporary disabled for easier test
+        defConfig.saveToDisk(true)
+    }
+
+    private fun configureDatapack(pack: String) {
+        val itemConflict = javaClass.getResource("/datapack/$pack/item_conflict.yml")
+        val enchantConflict = javaClass.getResource("/datapack/$pack/enchant_conflict.yml")
+
+        val newConflictList = ArrayList<ConflictBuilder>()
+        var needSave = false
+        if (itemConflict != null) {
+            val reader = InputStreamReader(itemConflict.openStream())
+            val yml = YamlConfiguration.loadConfiguration(reader)
+
+            addItemConflicts(yml, newConflictList)
+        }
+
+        if (enchantConflict != null) {
+            val reader = InputStreamReader(enchantConflict.openStream())
+            val yml = YamlConfiguration.loadConfiguration(reader)
+
+            needSave = needSave || addEnchantConflict(yml, newConflictList)
+        }
+
+        for (conflict in newConflictList) {
+            needSave = !conflict.registerIfAbsent() && needSave
+        }
+
+        if (needSave) {
+            ConfigHolder.CONFLICT_HOLDER.saveToDisk(true)
+        }
+    }
+
+    private fun addItemConflicts(yml: FileConfiguration, conflictList: MutableList<ConflictBuilder>) {
+        for (ench in yml.getKeys(false)) {
+            val groups = yml.getStringList(ench)
+
+            val conflict = ConflictBuilder(
+                "restriction_${ench.replace(":", "_")}",
+                CustomAnvil.instance)
+            conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
+            for (group in groups) {
+                conflict.addExcludedGroup(group)
+            }
+            conflict.addExcludedGroup("enchanted_book")
+
+            conflictList.add(conflict)
+        }
+    }
+
+    private fun addEnchantConflict(yml: YamlConfiguration, conflictList: MutableList<ConflictBuilder>): Boolean {
+        var needSave = false
+
+        val conflicts = HashMap<String, ConflictBuilder>()
+        for (ench in yml.getKeys(false)) {
+            val groups = yml.getStringList(ench)
+
+            for (group in groups) {
+                if (group.startsWith('#')) {
+                    needSave = needSave || joinGroup(conflicts, group.substring(1), ench)
+                } else {
+                    createConflict(conflictList, ench, group)
+                }
+            }
+        }
+
+        conflictList.addAll(conflicts.values)
+        return needSave
+    }
+
+    private fun createConflict(conflictList: MutableList<ConflictBuilder>, ench: String, other: String) {
+
+        val conflict = ConflictBuilder(
+            "conflict_" +
+                    "${ench.replace(":", "_")}_" +
+                    other.replace(":", "_"),
+            CustomAnvil.instance
+        )
+        conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
+        conflict.addEnchantment(NamespacedKey.fromString(other)!!)
+
+        conflict.setMaxBeforeConflict(1)
+
+        conflictList.add(conflict)
+    }
+
+    private fun joinGroup(conflicts: HashMap<String, ConflictBuilder>, group: String, ench: String): Boolean {
+        if ("all".equals(group, ignoreCase = true)) {
+            // We assume current is not null and of type CABukkitEnchantment
+            val current = EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!) as CABukkitEnchantment
+
+            // We need to replace current wrapped enchantment with the all conflict wrapper
+            EnchantmentApi.unregisterEnchantment(current)
+            EnchantmentApi.registerEnchantment(CAIncompatibleAllEnchant(current.bukkit, current.defaultRarity()))
+
+            return false
+        } else {
+            val config = ConfigHolder.CONFLICT_HOLDER.config
+
+            // If conflict do not yet exist
+            if(!config.isConfigurationSection(group)) {
+                val conflict = conflicts.getOrPut(group) {
+                    val conflict = ConflictBuilder(group, CustomAnvil.instance)
+                    conflict.setMaxBeforeConflict(1)
+                    conflict
+                }
+
+                conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
+            }
+            // Find current conflict
+            val manager = ConfigHolder.CONFLICT_HOLDER.conflictManager
+
+            // This assumes that:
+            // - the conflict existing in the config exist in the runtime config
+            // - the enchantment exist and is provided correctly
+            val conflict = manager.conflictList.find { it.name == group }!!
+            conflict.addEnchantment(EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!)!!)
+
+            UpdateUtils.addAbsentToList(config, "$group.enchantments", ench)
+
+            return true
+        }
+    }
+}

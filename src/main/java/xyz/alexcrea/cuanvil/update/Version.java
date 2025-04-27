@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.update;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public record Version(int major, int minor, int patch) {
 
@@ -11,7 +12,9 @@ public record Version(int major, int minor, int patch) {
         this(major, 0, 0);
     }
 
-    public static Version fromString(@Nonnull String versionString){
+    public static Version fromString(@Nullable String versionString){
+        if(versionString == null) return new Version(0, 0, 0);
+
         String[] partialVersion = versionString.split("\\.");
         int[] versionParts = new int[]{0, 0, 0};
 
@@ -45,4 +48,8 @@ public record Version(int major, int minor, int patch) {
                         this.patch <= other.patch)));
     }
 
+    @Override
+    public String toString() {
+        return major + "." + minor + "." + patch;
+    }
 }

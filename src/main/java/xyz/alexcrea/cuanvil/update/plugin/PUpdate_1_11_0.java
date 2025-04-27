@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
-import static xyz.alexcrea.cuanvil.update.UpdateUtils.addToStringList;
+import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
 public class PUpdate_1_11_0 {
 
@@ -57,7 +57,7 @@ public class PUpdate_1_11_0 {
         }
 
         // Finally we know both conflict are default. so we fix
-        addToStringList(config, "sword_enchant_conflict.enchantments",
+        addAbsentToList(config, "sword_enchant_conflict.enchantments",
                 "minecraft:density", "minecraft:breach");
 
         config.set("mace_enchant_conflict", null);

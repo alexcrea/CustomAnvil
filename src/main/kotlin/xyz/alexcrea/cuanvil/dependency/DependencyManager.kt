@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.datapack.DataPackTest
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
 import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
@@ -78,12 +79,13 @@ object DependencyManager {
             havenBagsCompatibility = HavenBagsDependency()
             havenBagsCompatibility!!.redirectListeners()
         }
-
     }
 
     fun handleCompatibilityConfig() {
         enchantmentSquaredCompatibility?.registerPluginConfiguration()
 
+        // datapacks
+        DataPackTest.handleDatapackConfigs()
     }
 
     fun registerEnchantments() {
