@@ -1,19 +1,22 @@
 package xyz.alexcrea.cuanvil.dependency.datapack
 
 import io.delilaheve.CustomAnvil
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import xyz.alexcrea.cuanvil.api.ConflictBuilder
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.api.MaterialGroupApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAIncompatibleAllEnchant
+import xyz.alexcrea.cuanvil.group.IncludeGroup
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.update.Version
 import java.io.InputStreamReader
 
-object DataPackTest {
+object DataPackDependency {
     private val START_DETECT_VERSION = Version(1, 19, 0)
 
     /**
@@ -62,8 +65,16 @@ object DataPackTest {
     }
 
     private fun configureDatapack(pack: String) {
+        val itemGroups = javaClass.getResource("/datapack/$pack/item_groups.yml")
         val itemConflict = javaClass.getResource("/datapack/$pack/item_conflict.yml")
         val enchantConflict = javaClass.getResource("/datapack/$pack/enchant_conflict.yml")
+
+        if (itemGroups != null) {
+            val reader = InputStreamReader(itemGroups.openStream())
+            val yml = YamlConfiguration.loadConfiguration(reader)
+
+            handleItemGroups(yml)
+        }
 
         val newConflictList = ArrayList<ConflictBuilder>()
         var needSave = false
@@ -87,6 +98,45 @@ object DataPackTest {
 
         if (needSave) {
             ConfigHolder.CONFLICT_HOLDER.saveToDisk(true)
+        }
+    }
+
+    // Order matter for this file
+    // Could rewrite to not matter but not really important, so I keep it like that
+    private fun handleItemGroups(yml: YamlConfiguration) {
+        for (groupName in yml.getKeys(false)) {
+            val section = yml.getConfigurationSection(groupName) ?: continue
+
+            var group = MaterialGroupApi.getGroup(groupName)
+            val exist = group != null
+
+            if(group == null) group = IncludeGroup(groupName)
+
+            for (name in section.getStringList("items")) {
+                val mat = Material.getMaterial(name.uppercase())
+                if(mat == null){
+                    CustomAnvil.instance.logger.warning("Could not find material $name for item group $groupName")
+                    continue
+                }
+                group.addToPolicy(mat)
+            }
+            for (name in section.getStringList("groups")) {
+                val otherGroup = MaterialGroupApi.getGroup(name)
+                if(otherGroup == null){
+                    CustomAnvil.instance.logger.warning("Could not find sub group $name for group $groupName")
+                    continue
+                }
+
+                group.addToPolicy(otherGroup)
+            }
+
+            group.updateMaterials()
+
+            if(exist){
+                MaterialGroupApi.writeMaterialGroup(group)
+            }else{
+                MaterialGroupApi.addMaterialGroup(group, true)
+            }
         }
     }
 
