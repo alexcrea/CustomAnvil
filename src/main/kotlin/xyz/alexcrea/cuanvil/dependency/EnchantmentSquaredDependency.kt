@@ -101,19 +101,6 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     private fun writeMissingGroups(){
         // Write group that do not exist on custom anvil.
-        // (Tools group regroup most of the tool items. I did not create a seperated group for theses)
-        val pickaxes = IncludeGroup("pickaxes")
-        pickaxes.addAll(Material.WOODEN_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE, Material.DIAMOND_PICKAXE, Material.GOLDEN_PICKAXE, Material.NETHERITE_PICKAXE)
-        MaterialGroupApi.addMaterialGroup(pickaxes)
-
-        val shovels = IncludeGroup("shovels")
-        shovels.addAll(Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.NETHERITE_SHOVEL)
-        MaterialGroupApi.addMaterialGroup(shovels)
-
-        val hoes = IncludeGroup("hoes")
-        hoes.addAll(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.NETHERITE_HOE)
-        MaterialGroupApi.addMaterialGroup(hoes)
-
         val shield = IncludeGroup("shield")
         shield.addToPolicy(Material.SHIELD)
         MaterialGroupApi.addMaterialGroup(shield)
@@ -125,7 +112,6 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         val trinkets = IncludeGroup("trinkets")
         trinkets.addToPolicy(Material.ROTTEN_FLESH)
         MaterialGroupApi.addMaterialGroup(trinkets)
-
     }
 
     private fun writeMaterialRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>){
