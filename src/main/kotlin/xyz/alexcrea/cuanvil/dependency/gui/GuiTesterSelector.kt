@@ -41,6 +41,9 @@ object GuiTesterSelector {
 
                 21 -> when (versionParts[2]) {
                     0, 1 -> v1_21R1_ExternGuiTester()
+                    2, 3 -> v1_21R2_ExternGuiTester()
+                    4 -> v1_21R3_ExternGuiTester()
+                    5 -> v1_21R4_ExternGuiTester()
                     else -> null
                 }
 
