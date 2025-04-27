@@ -362,13 +362,13 @@ public class LoreEditTests extends SharedCustomAnvilTest {
         return typeList;
     }
 
-    @Test
-    public void simpleTest() {
+    @ParameterizedTest
+    @EnumSource(LoreEditType.class)
+    public void simpleTest(LoreEditType type) {
         // Test all defaults to make sure they works
-        for (LoreEditType type : LoreEditType.values()) {
-            singleLineTypeToTest.get(type).executeTest(anvil, player);
-            multiLineTypeToTest.get(type).executeTest(anvil, player);
-        }
+        singleLineTypeToTest.get(type).executeTest(anvil, player);
+        multiLineTypeToTest.get(type).executeTest(anvil, player);
+
     }
 
     @ParameterizedTest

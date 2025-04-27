@@ -201,7 +201,8 @@ object AnvilLoreEditUtil {
         finalLore.addAll(meta.lore ?: emptyList())
         finalLore.addAll(lore)
 
-        meta.lore = lore
+        meta.lore = finalLore
+        result.itemMeta = meta
         if (result == first) return null
 
         // Get color cost to uncolor this line
