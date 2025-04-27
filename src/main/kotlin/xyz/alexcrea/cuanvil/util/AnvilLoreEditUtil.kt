@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.util
 
-import com.willfp.eco.util.toNiceString
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
@@ -63,7 +62,7 @@ object AnvilLoreEditUtil {
         val result = first.clone()
         val leftMeta = result.itemMeta ?: return null
         val currentLore: ArrayList<String> = DependencyManager.stripLore(result)
-        if(currentLore.isEmpty()) return null
+        if (currentLore.isEmpty()) return null
 
         val uncolorCost = uncolorLines(player, currentLore, LoreEditType.REMOVE_BOOK)
 
@@ -148,7 +147,7 @@ object AnvilLoreEditUtil {
         if (!hasLoreEditByPaperPermission(player)) return null
 
         val result = first.clone()
-        val meta = result.itemMeta?: return null
+        val meta = result.itemMeta ?: return null
         val lore = if (meta.hasLore()) {
             ArrayList<String>(meta.lore!!)
         } else ArrayList()
@@ -187,7 +186,7 @@ object AnvilLoreEditUtil {
 
         val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
         val lore: ArrayList<String> = DependencyManager.stripLore(result)
-        if(lore.isEmpty()) return null
+        if (lore.isEmpty()) return null
 
         val line = if (removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)
@@ -199,7 +198,7 @@ object AnvilLoreEditUtil {
         DependencyManager.updateLore(result)
 
         val finalLore = ArrayList<String>()
-        finalLore.addAll(meta.lore!!)
+        finalLore.addAll(meta.lore ?: emptyList())
         finalLore.addAll(lore)
 
         meta.lore = lore
@@ -271,7 +270,7 @@ object AnvilLoreEditUtil {
     }
 
     fun uncolorLines(player: Permissible, lines: ArrayList<String>, editType: LoreEditType): Int {
-        if(!editType.shouldRemoveColorOnLoreRemoval) return 0
+        if (!editType.shouldRemoveColorOnLoreRemoval) return 0
 
         // Now handle color of each lines
         var hasUndidColor = false
