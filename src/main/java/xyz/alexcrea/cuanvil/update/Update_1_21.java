@@ -59,9 +59,8 @@ public class Update_1_21 {
         addToStringList(conflictConfig, "restriction_smite.notAffectedGroups", "mace");
         addToStringList(conflictConfig, "restriction_bane_of_arthropods.notAffectedGroups", "mace");
 
-        addToStringList(conflictConfig, "mace_enchant_conflict.enchantments",
-                "minecraft:density", "minecraft:breach", "minecraft:smite", "minecraft:bane_of_arthropods");
-        conflictConfig.set("mace_enchant_conflict.maxEnchantmentBeforeConflict", 1);
+        addToStringList(conflictConfig, "sword_enchant_conflict.enchantments",
+                "minecraft:density", "minecraft:breach");
 
         // Add level limit
         baseConfig.set("enchant_limits.minecraft:density", 5);
