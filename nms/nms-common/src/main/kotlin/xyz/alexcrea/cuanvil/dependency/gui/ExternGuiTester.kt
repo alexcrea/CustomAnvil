@@ -9,6 +9,9 @@ interface ExternGuiTester {
     fun getContainerClass(inventory: InventoryView): Class<Any>?
 
     fun testIfGui(inventory: InventoryView): Boolean {
+        // this mean we are on test
+        if(inventory.javaClass.name.endsWith("AnvilViewMock")) return false
+
         val clazz = getContainerClass(inventory) ?: return false
 
         val clazzName = clazz.name
