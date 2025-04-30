@@ -25,7 +25,7 @@ public class CAIncompatibleAllEnchant extends CABukkitEnchantment implements Add
 
     @Override
     public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
-        return !enchantments.isEmpty();
+        return !enchantments.isEmpty() && !(enchantments.size() == 1 && enchantments.containsKey(this));
     }
 
     @Override
