@@ -39,8 +39,10 @@ object DataPackDependency {
         for (packName in enabledDatapack) {
             // Handling of pack name is horrible: it is based on file name
             // So if someone rename a datapack it will make me sad
+            if(!packName.startsWith("file/")) continue
 
-            if (packName.startsWith("file/bp_post_scarcity")) {
+            if (packName.contains("bp_post_scarcity", ignoreCase = true)
+                || packName.contains("bracken", ignoreCase = true)) {
                 handlePack("bracken")
                 continue
             }
