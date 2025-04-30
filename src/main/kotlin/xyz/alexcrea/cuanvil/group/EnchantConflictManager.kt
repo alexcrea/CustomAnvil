@@ -31,8 +31,9 @@ class EnchantConflictManager {
 
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT = Collections.singletonList<CAEnchantment>(
-            CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge")) ?:
-            CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key))
+            CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge"))
+                ?: CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
+        )
 
     }
 
@@ -46,7 +47,7 @@ class EnchantConflictManager {
         for (enchant in CAEnchantmentRegistry.getInstance().values()) {
             enchant.clearConflict()
         }
-        
+
         val keys = config.getKeys(false)
         for (key in keys) {
             val section = config.getConfigurationSection(key)!!
@@ -57,12 +58,12 @@ class EnchantConflictManager {
 
     }
 
-    fun addConflict(conflict: EnchantConflictGroup){
+    fun addConflict(conflict: EnchantConflictGroup) {
         addConflictToEnchantments(conflict)
         conflictList.add(conflict)
     }
 
-    fun removeConflict(conflict: EnchantConflictGroup){
+    fun removeConflict(conflict: EnchantConflictGroup) {
         removeConflictFromEnchantments(conflict)
         conflictList.remove(conflict)
     }
@@ -114,14 +115,14 @@ class EnchantConflictManager {
 
     private fun getEnchantByIdentifier(enchantName: String): List<CAEnchantment> {
         val key = NamespacedKey.fromString(enchantName)
-        if(key != null){
+        if (key != null) {
             val enchantment = CAEnchantment.getByKey(key)
-            if(enchantment != null) return Collections.singletonList(enchantment)
+            if (enchantment != null) return Collections.singletonList(enchantment)
 
         }
 
         // Temporary solution for 1.20.5
-        when(enchantName){
+        when (enchantName) {
             "minecraft:sweeping", "sweeping",
             "minecraft:sweeping_edge", "sweeping_edge" -> {
                 return SWEEPING_EDGE_ENCHANT
@@ -169,22 +170,31 @@ class EnchantConflictManager {
         return group
     }
 
-    fun isConflicting(appliedEnchants: Map<CAEnchantment, Int>, item: ItemStack, newEnchant: CAEnchantment): ConflictType {
+    fun isConflicting(
+        appliedEnchants: Map<CAEnchantment, Int>,
+        item: ItemStack,
+        newEnchant: CAEnchantment
+    ): ConflictType {
         val mat = item.type
         CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
         val conflictList = newEnchant.conflicts
 
         var result = ConflictType.NO_CONFLICT
         for (conflict in conflictList) {
-            CustomAnvil.verboseLog("Is against $conflict")
+            val isBigConflict = conflict.getEnchants().size > 1
+            if (result == ConflictType.ITEM_CONFLICT && !isBigConflict) {
+                CustomAnvil.verboseLog("skipping small conflict ${conflict.name}")
+                continue
+            }
+
             val allowed = conflict.allowed(appliedEnchants.keys, mat)
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {
                     result = ConflictType.ITEM_CONFLICT
-                    CustomAnvil.verboseLog("Small conflict, continuing")
+                    CustomAnvil.verboseLog("Small conflict (${conflict.name}), continuing")
                 } else {
-                    CustomAnvil.verboseLog("Big conflict, probably stoping")
+                    CustomAnvil.verboseLog("Big conflict (${conflict.name}), stopping")
                     return ConflictType.ENCHANTMENT_CONFLICT
                 }
             }
@@ -192,19 +202,20 @@ class EnchantConflictManager {
 
         val immutableEnchants = Collections.unmodifiableMap(appliedEnchants)
         for (appliedEnchant in appliedEnchants.keys) {
-            if(appliedEnchant is AdditionalTestEnchantment){
+            if (appliedEnchant is AdditionalTestEnchantment) {
                 val doConflict = appliedEnchant.isEnchantConflict(immutableEnchants, mat)
-                if(doConflict){
+                if (doConflict) {
+                    CustomAnvil.verboseLog("Big conflict by additional test, stopping")
                     return ConflictType.ENCHANTMENT_CONFLICT
                 }
 
             }
         }
 
-        if((result != ConflictType.ITEM_CONFLICT) && (newEnchant is AdditionalTestEnchantment)){
+        if ((result != ConflictType.ITEM_CONFLICT) && (newEnchant is AdditionalTestEnchantment)) {
             val partialItem = createPartialResult(item, immutableEnchants)
 
-            if(newEnchant.isItemConflict(immutableEnchants, mat, partialItem)){
+            if (newEnchant.isItemConflict(immutableEnchants, mat, partialItem)) {
                 return ConflictType.ITEM_CONFLICT
             }
 
@@ -214,14 +225,14 @@ class EnchantConflictManager {
     }
 
     private fun createPartialResult(item: ItemStack, enchantments: Map<CAEnchantment, Int>): ItemStack {
-       val newItem = item.clone()
+        val newItem = item.clone()
 
-       CAEnchantment.clearEnchants(newItem)
-       enchantments.forEach{
-           enchantment -> enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
-       }
+        CAEnchantment.clearEnchants(newItem)
+        enchantments.forEach { enchantment ->
+            enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
+        }
 
-       return newItem
+        return newItem
     }
 
 }
@@ -247,7 +258,7 @@ enum class ConflictType(private val importance: Int) {
     ENCHANTMENT_CONFLICT(2);
 
     fun getWorstConflict(otherConflict: ConflictType): ConflictType {
-        return if(this.importance > otherConflict.importance) this
+        return if (this.importance > otherConflict.importance) this
         else otherConflict
 
     }
