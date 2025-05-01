@@ -44,6 +44,7 @@ object DataPackDependency {
             if (packName.contains("bp_post_scarcity", ignoreCase = true)
                 || packName.contains("bracken", ignoreCase = true)) {
                 handlePack("bracken")
+                writeDefaultByNamespace("bracken")
                 continue
             }
 
@@ -255,6 +256,15 @@ object DataPackDependency {
                 setEnchantAsAll(ench)
             }
         }
+    }
+
+    private fun writeDefaultByNamespace(namespace: String) {
+        for (enchantment in EnchantmentApi.getRegisteredEnchantments().values) {
+            if(!enchantment.key.namespace.equals(namespace, ignoreCase = true)) continue
+
+            EnchantmentApi.writeDefaultConfig(enchantment, false)
+        }
+
     }
 
 }
