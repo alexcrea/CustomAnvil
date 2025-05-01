@@ -47,15 +47,9 @@ class PrepareAnvilListener : Listener {
         // Should find player
         val player: HumanEntity = InventoryViewUtil.getInstance().getPlayer(event.view)
 
-        // Test if the event should bypass custom anvil.
-        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
-
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
-
-
-        if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         if (isImmutable(first) || isImmutable(second)) {
             CustomAnvil.verboseLog("Skipping anvil process as one of the two item is immutable")
@@ -63,6 +57,11 @@ class PrepareAnvilListener : Listener {
             event.result = null
             return
         }
+
+        // Test if the event should bypass custom anvil.
+        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
+
+        if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         // Test custom recipe
         if (testCustomRecipe(event, inventory, player, first, second)) return
