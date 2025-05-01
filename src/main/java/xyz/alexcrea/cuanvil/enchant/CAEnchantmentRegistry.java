@@ -76,12 +76,12 @@ public class CAEnchantmentRegistry {
      */
     public boolean register(@NotNull CAEnchantment enchantment) {
         if (byKeyMap.containsKey(enchantment.getKey())) {
-            if (!enchantment.equals(byKeyMap.get(enchantment.getKey()))) {
+            if (Objects.equals(enchantment, byKeyMap.get(enchantment.getKey()))) {
                 // We are trying to register the exact same enchantment. so we just skip it.
                 return false;
             }
 
-            if(ConfigHolder.DEFAULT_CONFIG.getConfig().getBoolean("caution_secret_do_not_log_duplicated_registered_key", false)){
+            if (ConfigHolder.DEFAULT_CONFIG.getConfig().getBoolean("caution_secret_do_not_log_duplicated_registered_key", false)) {
                 return false;
             }
 

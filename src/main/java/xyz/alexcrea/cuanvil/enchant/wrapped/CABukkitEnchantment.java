@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -163,7 +164,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
             return false;
         }
 
-        return this.bukkit.equals(other.getEnchant());
+        return Objects.equals(this.bukkit, other.getEnchant());
     }
 
 }
