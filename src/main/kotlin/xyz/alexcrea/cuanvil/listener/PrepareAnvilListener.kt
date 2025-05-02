@@ -47,6 +47,9 @@ class PrepareAnvilListener : Listener {
         // Should find player
         val player: HumanEntity = InventoryViewUtil.getInstance().getPlayer(event.view)
 
+        // Test if custom anvil is bypassed before immutability test
+        if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) return
+
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
