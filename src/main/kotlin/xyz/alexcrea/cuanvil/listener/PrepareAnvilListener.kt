@@ -19,6 +19,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.inventory.meta.ItemMeta
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
@@ -45,20 +47,30 @@ class PrepareAnvilListener : Listener {
         // Should find player
         val player: HumanEntity = InventoryViewUtil.getInstance().getPlayer(event.view)
 
-        // Test if the event should bypass custom anvil.
-        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
+        // Test if custom anvil is bypassed before immutability test
+        if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) return
 
         val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
 
+        if (isImmutable(first) || isImmutable(second)) {
+            CustomAnvil.verboseLog("Skipping anvil process as one of the two item is immutable")
+
+            event.result = null
+            return
+        }
+
+        // Test if the event should bypass custom anvil.
+        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
+
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         // Test custom recipe
-        if(testCustomRecipe(event, inventory, player, first, second)) return
+        if (testCustomRecipe(event, inventory, player, first, second)) return
 
         // Test rename lonely item
-        if(second == null) {
+        if (second == null) {
             doRenaming(event, inventory, player, first)
             return
         }
@@ -70,23 +82,51 @@ class PrepareAnvilListener : Listener {
         }
 
         // Test for unit repair
-        if(testUnitRepair(event, inventory, player, first, second)) return
+        if (testUnitRepair(event, inventory, player, first, second)) return
 
         // Test for lore edit
-        if(testLoreEdit(event, inventory, player, first, second)) return
+        if (testLoreEdit(event, inventory, player, first, second)) return
 
         CustomAnvil.log("no anvil fuse type found")
         event.result = null
 
     }
 
+    private fun isImmutable(item: ItemStack?): Boolean {
+        if (item == null) return false
+
+        val meta = item.itemMeta
+        return meta != null &&
+                (hasImmutableEnchants(meta) || hasImmutableStoredEnchants(meta))
+    }
+
+    private fun hasImmutableEnchants(meta: ItemMeta): Boolean {
+        if (!meta.hasEnchants()) return false
+
+        for (enchant in meta.enchants.keys) {
+            if (ConfigOptions.isImmutable(enchant.key)) return true
+        }
+        return false
+    }
+
+    private fun hasImmutableStoredEnchants(meta: ItemMeta): Boolean {
+        if (meta !is EnchantmentStorageMeta || !meta.hasStoredEnchants()) return false
+
+        for (enchant in meta.storedEnchants.keys) {
+            if (ConfigOptions.isImmutable(enchant.key)) return true
+        }
+        return false
+    }
+
     // return true if a custom recipe exist with these ingredients
-    private fun testCustomRecipe(event: PrepareAnvilEvent, inventory: AnvilInventory,
-                                 player: HumanEntity,
-                                 first: ItemStack, second: ItemStack?): Boolean {
+    private fun testCustomRecipe(
+        event: PrepareAnvilEvent, inventory: AnvilInventory,
+        player: HumanEntity,
+        first: ItemStack, second: ItemStack?
+    ): Boolean {
         val recipe = CustomRecipeUtil.getCustomRecipe(first, second)
         CustomAnvil.verboseLog("custom recipe not null? ${recipe != null}")
-        if(recipe == null) return false
+        if (recipe == null) return false
 
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, first, second)
 
@@ -94,7 +134,7 @@ class PrepareAnvilListener : Listener {
         resultItem.amount *= amount
 
         event.result = resultItem
-        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
+        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
         // Maybe add an option on custom craft to ignore/not ignore penalty ??
         var xpCost = recipe.xpCostPerCraft * amount
@@ -105,8 +145,10 @@ class PrepareAnvilListener : Listener {
         return true
     }
 
-    private fun doRenaming(event: PrepareAnvilEvent, inventory: AnvilInventory,
-                           player: HumanEntity, first: ItemStack) {
+    private fun doRenaming(
+        event: PrepareAnvilEvent, inventory: AnvilInventory,
+        player: HumanEntity, first: ItemStack
+    ) {
         val resultItem = first.clone()
         var anvilCost = handleRename(resultItem, inventory, player)
 
@@ -118,7 +160,7 @@ class PrepareAnvilListener : Listener {
         }
 
         event.result = resultItem
-        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
+        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
         anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
 
@@ -131,18 +173,20 @@ class PrepareAnvilListener : Listener {
 
         var sumCost = 0
         var useColor = false
-        if(ConfigOptions.renameColorPossible && inventoryName != null){
+        if (ConfigOptions.renameColorPossible && inventoryName != null) {
             val resultString = StringBuilder(inventoryName)
 
-            useColor = AnvilColorUtil.handleColor(resultString, player,
+            useColor = AnvilColorUtil.handleColor(
+                resultString, player,
                 ConfigOptions.permissionNeededForColor,
                 ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor,
-                AnvilColorUtil.ColorUseType.RENAME)
+                AnvilColorUtil.ColorUseType.RENAME
+            )
 
-            if(useColor) {
+            if (useColor) {
                 inventoryName = resultString.toString()
 
-                sumCost+= ConfigOptions.useOfColorCost
+                sumCost += ConfigOptions.useOfColorCost
             }
         }
 
@@ -165,9 +209,11 @@ class PrepareAnvilListener : Listener {
         return 0
     }
 
-    private fun doMerge(event: PrepareAnvilEvent, inventory: AnvilInventory,
-                        player: HumanEntity,
-                        first: ItemStack, second: ItemStack) {
+    private fun doMerge(
+        event: PrepareAnvilEvent, inventory: AnvilInventory,
+        player: HumanEntity,
+        first: ItemStack, second: ItemStack
+    ) {
         val newEnchants = first.findEnchantments()
             .combineWith(second.findEnchantments(), first, player)
         val resultItem = first.clone()
@@ -195,14 +241,16 @@ class PrepareAnvilListener : Listener {
 
         // Finally, we set result
         event.result = resultItem
-        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return
+        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
     }
 
     // return true if there is a valid unit repair with these ingredients
-    private fun testUnitRepair(event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
-                               first: ItemStack, second: ItemStack): Boolean {
+    private fun testUnitRepair(
+        event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
+        first: ItemStack, second: ItemStack
+    ): Boolean {
         val unitRepairAmount = first.getRepair(second) ?: return false
 
         val resultItem = first.clone()
@@ -222,26 +270,27 @@ class PrepareAnvilListener : Listener {
             return true
         }
         event.result = resultItem
-        if(DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
+        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
         return true
     }
 
-    private fun testLoreEdit(event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
-                             first: ItemStack, second: ItemStack): Boolean {
+    private fun testLoreEdit(
+        event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
+        first: ItemStack, second: ItemStack
+    ): Boolean {
         val type = second.type
         var result: ItemStack? = null
 
         val xpCost = AtomicInteger()
-        if(Material.WRITABLE_BOOK == type) {
+        if (Material.WRITABLE_BOOK == type) {
             result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, xpCost)
-        }
-        else if(Material.PAPER == type) {
+        } else if (Material.PAPER == type) {
             result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
         }
 
-        if(result == null || first == result) {
+        if (result == null || first == result) {
             CustomAnvil.log("lore edit, But input is same as output")
             event.result = null
             return false

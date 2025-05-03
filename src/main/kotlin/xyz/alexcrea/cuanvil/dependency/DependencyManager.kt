@@ -102,6 +102,35 @@ object DependencyManager {
         // Then handle plugin reload
         ecoEnchantCompatibility?.handleConfigReload()
     }
+    // Return true if should bypass (either by a dependency or error)
+    // called before immutability test
+    fun earlyTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+        try {
+            return earlyUnsafeTryEventPreAnvilBypass(event, player)
+        } catch (e: Exception) {
+            CustomAnvil.instance.logger.log(
+                Level.SEVERE,
+                "Error while trying to handle custom anvil supported plugin: ",
+                e
+            )
+
+            // Just in case to avoid illegal items
+            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+            // Finally, warn the player, maybe a lot of time but better warn than do nothing
+            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            return true
+        }
+    }
+
+    private fun earlyUnsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+        var bypass = false
+
+        // Test if the inventory is a gui(version specific)
+        if (externGuiTester?.testIfGui(event.view) == true) bypass = true
+
+        return bypass
+    }
 
     // Return true if should bypass (either by a dependency or error)
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
@@ -134,10 +163,6 @@ object DependencyManager {
 
         // Test excellent enchantments used prepare anvil
         if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
-
-        // Test if the inventory is a gui(version specific)
-        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
-
 
         return bypass
     }
