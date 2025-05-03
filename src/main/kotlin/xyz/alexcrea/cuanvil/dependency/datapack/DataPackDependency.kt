@@ -51,7 +51,7 @@ object DataPackDependency {
     }
 
     private fun handlePack(pack: String){
-        CustomAnvil.instance.logger.info("handling datapack $pack")
+        CustomAnvil.instance.logger.info("trying to handle datapack $pack")
         handlePackInitialConfig(pack)
         writeDefaultByNamespace(pack)
         CustomAnvil.instance.logger.info("configuration done for $pack")
@@ -237,12 +237,25 @@ object DataPackDependency {
             val manager = ConfigHolder.CONFLICT_HOLDER.conflictManager
 
             // This assumes that:
-            // - the conflict existing in the config exist in the runtime config
+            // - the conflict existing in the config exist in the runtime config (as configuration section exist)
             // - the enchantment exist and is provided correctly
             val conflict = manager.conflictList.find {
                 it.name.equals(group, ignoreCase = true)
             }
-            conflict!!.addEnchantment(EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!)!!)
+            if(conflict == null) {
+                // This should not happen as configuration section
+                CustomAnvil.instance.logger.severe("Could not find  $group while its configuration section exist... this should NOT happen")
+                return false
+            }
+
+            val key = NamespacedKey.fromString(ench)!!
+            val enchant = EnchantmentApi.getByKey(key)
+            if (enchant == null){
+                CustomAnvil.instance.logger.severe("Could not find enchantment $ench while configuring pack a datapack")
+                return false
+            }
+
+            conflict.addEnchantment(enchant)
 
             UpdateUtils.addAbsentToList(config, "$group.enchantments", ench)
             return true
@@ -268,6 +281,7 @@ object DataPackDependency {
         for (enchantment in EnchantmentApi.getRegisteredEnchantments().values) {
             if(!enchantment.key.namespace.equals(namespace, ignoreCase = true)) continue
 
+            CustomAnvil.log("Writing default for $enchantment")
             EnchantmentApi.writeDefaultConfig(enchantment, false)
         }
 
