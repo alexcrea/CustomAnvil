@@ -20,13 +20,13 @@ object DataPackDependency {
     private val START_DETECT_VERSION = Version(1, 19, 0)
 
     /**
-     * Map of the latest CA update related to the pack
+     * Map of the latest CustomAnvil update related to the pack
      */
     private val LASTEST_VERSION = mapOf(
         Pair("bracken", Version(1, 11, 0))
     )
 
-    val enabledDatapack: List<String>
+    val enabledDatapacks: List<String>
         get() {
             val version: Version = UpdateUtils.currentMinecraftVersion()
             if (version.lesserThan(START_DETECT_VERSION)) return emptyList()
@@ -35,7 +35,7 @@ object DataPackDependency {
         }
 
     fun handleDatapackConfigs() {
-        val enabledDatapack = enabledDatapack
+        val enabledDatapack = enabledDatapacks
         for (packName in enabledDatapack) {
             // Handling of pack name is horrible: it is based on file name
             // So if someone rename a datapack it will make me sad
@@ -44,14 +44,20 @@ object DataPackDependency {
             if (packName.contains("bp_post_scarcity", ignoreCase = true)
                 || packName.contains("bracken", ignoreCase = true)) {
                 handlePack("bracken")
-                writeDefaultByNamespace("bracken")
                 continue
             }
 
         }
     }
 
-    private fun handlePack(pack: String) {
+    private fun handlePack(pack: String){
+        CustomAnvil.instance.logger.info("handling datapack $pack")
+        handlePackInitialConfig(pack)
+        writeDefaultByNamespace(pack)
+        CustomAnvil.instance.logger.info("configuration done for $pack")
+    }
+
+    private fun handlePackInitialConfig(pack: String) {
         val defConfig = ConfigHolder.DEFAULT_CONFIG
         val version = LASTEST_VERSION[pack]
 
