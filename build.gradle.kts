@@ -73,7 +73,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Test dependency
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.45.1")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.48.0")
     testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
