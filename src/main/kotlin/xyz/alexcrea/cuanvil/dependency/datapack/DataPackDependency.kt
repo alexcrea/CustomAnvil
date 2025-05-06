@@ -281,7 +281,7 @@ object DataPackDependency {
         for (enchantment in EnchantmentApi.getRegisteredEnchantments().values) {
             if(!enchantment.key.namespace.equals(namespace, ignoreCase = true)) continue
 
-            CustomAnvil.log("Writing default for $enchantment")
+            CustomAnvil.log("Writing default for ${enchantment.key}")
             EnchantmentApi.writeDefaultConfig(enchantment, false)
         }
 
