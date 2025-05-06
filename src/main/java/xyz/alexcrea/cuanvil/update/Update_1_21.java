@@ -4,7 +4,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
-import static xyz.alexcrea.cuanvil.update.UpdateUtils.addToStringList;
+import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
 // This is a temporary class that aim to handle 1.21 update.
 // It will be replaced by a better system later.
@@ -40,28 +40,27 @@ public class Update_1_21 {
 
         // Add mace to groups
         groupConfig.set("mace.type", "include");
-        addToStringList(groupConfig, "mace.items", "mace");
+        addAbsentToList(groupConfig, "mace.items", "mace");
 
-        addToStringList(groupConfig, "can_unbreak.groups", "mace");
+        addAbsentToList(groupConfig, "can_unbreak.groups", "mace");
 
         // Add new enchant conflicts
-        addToStringList(conflictConfig, "restriction_density.enchantments", "minecraft:density");
-        addToStringList(conflictConfig, "restriction_density.notAffectedGroups", "mace", "enchanted_book");
+        addAbsentToList(conflictConfig, "restriction_density.enchantments", "minecraft:density");
+        addAbsentToList(conflictConfig, "restriction_density.notAffectedGroups", "mace", "enchanted_book");
 
-        addToStringList(conflictConfig, "restriction_breach.enchantments", "minecraft:breach");
-        addToStringList(conflictConfig, "restriction_breach.notAffectedGroups", "mace", "enchanted_book");
+        addAbsentToList(conflictConfig, "restriction_breach.enchantments", "minecraft:breach");
+        addAbsentToList(conflictConfig, "restriction_breach.notAffectedGroups", "mace", "enchanted_book");
 
-        addToStringList(conflictConfig, "restriction_wind_burst.enchantments", "minecraft:wind_burst");
-        addToStringList(conflictConfig, "restriction_wind_burst.notAffectedGroups", "mace", "enchanted_book");
+        addAbsentToList(conflictConfig, "restriction_wind_burst.enchantments", "minecraft:wind_burst");
+        addAbsentToList(conflictConfig, "restriction_wind_burst.notAffectedGroups", "mace", "enchanted_book");
 
         // Add mace to conflicts
-        addToStringList(conflictConfig, "restriction_fire_aspect.notAffectedGroups", "mace");
-        addToStringList(conflictConfig, "restriction_smite.notAffectedGroups", "mace");
-        addToStringList(conflictConfig, "restriction_bane_of_arthropods.notAffectedGroups", "mace");
+        addAbsentToList(conflictConfig, "restriction_fire_aspect.notAffectedGroups", "mace");
+        addAbsentToList(conflictConfig, "restriction_smite.notAffectedGroups", "mace");
+        addAbsentToList(conflictConfig, "restriction_bane_of_arthropods.notAffectedGroups", "mace");
 
-        addToStringList(conflictConfig, "mace_enchant_conflict.enchantments",
-                "minecraft:density", "minecraft:breach", "minecraft:smite", "minecraft:bane_of_arthropods");
-        conflictConfig.set("mace_enchant_conflict.maxEnchantmentBeforeConflict", 1);
+        addAbsentToList(conflictConfig, "sword_enchant_conflict.enchantments",
+                "minecraft:density", "minecraft:breach");
 
         // Add level limit
         baseConfig.set("enchant_limits.minecraft:density", 5);

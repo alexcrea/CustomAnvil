@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -25,17 +26,17 @@ import java.util.logging.Level;
  */
 public class CABukkitEnchantment extends CAEnchantmentBase {
 
-    private final @NotNull Enchantment enchantment;
+    public final @NotNull Enchantment bukkit;
 
-    public CABukkitEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity rarity){
-        super(enchantment.getKey(),
+    public CABukkitEnchantment(@NotNull Enchantment bukkit, @Nullable EnchantmentRarity rarity){
+        super(bukkit.getKey(),
                 rarity,
-                enchantment.getMaxLevel());
-        this.enchantment = enchantment;
+                bukkit.getMaxLevel());
+        this.bukkit = bukkit;
     }
 
-    public CABukkitEnchantment(@NotNull Enchantment enchantment){
-        this(enchantment, getRarity(enchantment));
+    public CABukkitEnchantment(@NotNull Enchantment bukkit){
+        this(bukkit, getRarity(bukkit));
     }
 
     @Override
@@ -51,9 +52,9 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @Override
     public int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            return ((EnchantmentStorageMeta)meta).getStoredEnchantLevel(this.enchantment);
+            return ((EnchantmentStorageMeta)meta).getStoredEnchantLevel(this.bukkit);
         } else {
-            return meta.getEnchantLevel(this.enchantment);
+            return meta.getEnchantLevel(this.bukkit);
         }
     }
 
@@ -62,9 +63,9 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
             EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)meta);
 
-            return bookMeta.getStoredEnchants().containsKey(this.enchantment);
+            return bookMeta.getStoredEnchants().containsKey(this.bukkit);
         }else{
-            return item.containsEnchantment(this.enchantment);
+            return item.containsEnchantment(this.bukkit);
         }
     }
 
@@ -74,10 +75,10 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
             EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
 
             assert bookMeta != null;
-            bookMeta.addStoredEnchant(this.enchantment, level, true);
+            bookMeta.addStoredEnchant(this.bukkit, level, true);
             item.setItemMeta(bookMeta);
         } else {
-            item.addUnsafeEnchantment(this.enchantment, level);
+            item.addUnsafeEnchantment(this.bukkit, level);
         }
 
     }
@@ -88,10 +89,10 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
             EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
 
             assert bookMeta != null;
-            bookMeta.removeStoredEnchant(this.enchantment);
+            bookMeta.removeStoredEnchant(this.bukkit);
             item.setItemMeta(bookMeta);
         }else{
-            item.removeEnchantment(this.enchantment);
+            item.removeEnchantment(this.bukkit);
         }
 
     }
@@ -107,7 +108,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
 
     @NotNull
     protected Enchantment getEnchant() {
-        return this.enchantment;
+        return this.bukkit;
     }
 
     private static Method getAnvilCostMethod;
@@ -163,7 +164,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
             return false;
         }
 
-        return this.enchantment.equals(other.getEnchant());
+        return Objects.equals(this.bukkit, other.getEnchant());
     }
 
 }

@@ -1,0 +1,15 @@
+horse_armor:
+  items:
+    - leather_horse_armor
+    - iron_horse_armor
+    - golden_horse_armor
+    - diamond_horse_armor
+
+wolf_armor:
+  items:
+    - wolf_armor
+
+pet_armor:
+  groups:
+    - wolf_armor
+    - horse_armor

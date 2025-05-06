@@ -20,18 +20,21 @@ public class PluginUpdates {
 
         if (new Version(1, 6, 2).greaterThan(current)) {
             PUpdate_1_6_2.handleUpdate(toSave);
-
             // We assume 1.6.7 will run. TODO a better system instead of that I guess
         }
         if (new Version(1, 6, 7).greaterThan(current)) {
             PUpdate_1_6_7.handleUpdate(toSave);
-
             // We assume 1.8.0 will run.
         }
         if (new Version(1, 8, 0).greaterThan(current)) {
             PUpdate_1_8_0.handleUpdate(toSave);
+            // We assume 1.11.0 will run.
+        }
 
-            finishConfiguration("1.8.0", toSave);
+        if (new Version(1, 11, 0).greaterThan(current)) {
+            PUpdate_1_11_0.handleUpdate(toSave);
+
+            finishConfiguration("1.11.0", toSave);
         }
 
     }

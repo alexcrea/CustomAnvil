@@ -10,18 +10,18 @@ import java.util.List;
 public class UpdateUtils {
     public static final String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
 
-    public static Version currentMinecraftVersion(){
+    public static Version currentMinecraftVersion() {
         String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
         return Version.fromString(versionString);
     }
 
     @Deprecated
-    public static int[] currentMinecraftVersionArray(){
+    public static int[] currentMinecraftVersionArray() {
         String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
         return UpdateUtils.readVersionFromString(versionString);
     }
 
-    public static int[] readVersionFromString(String versionString){
+    public static int[] readVersionFromString(String versionString) {
         String[] partialVersion = versionString.split("\\.");
         int[] versionParts = new int[]{0, 0, 0};
 
@@ -31,9 +31,20 @@ public class UpdateUtils {
         return versionParts;
     }
 
-    public static void addToStringList(FileConfiguration config, String path, String... toAdd){
+    public static void addToStringList(FileConfiguration config, String path, String... toAdd) {
         List<String> groups = new ArrayList<>(config.getStringList(path));
         groups.addAll(Arrays.asList(toAdd));
+        config.set(path, groups);
+
+    }
+
+    public static void addAbsentToList(FileConfiguration config, String path, String... toAdd) {
+        List<String> groups = new ArrayList<>(config.getStringList(path));
+        for (String val : toAdd) {
+            if (groups.contains(val)) continue;
+
+            groups.add(val);
+        }
         config.set(path, groups);
 
     }

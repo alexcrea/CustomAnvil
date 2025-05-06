@@ -105,7 +105,9 @@ public class MaterialGroupApi {
         if (group instanceof IncludeGroup includeGroup) {
             changed = writeKnownGroup("include", includeGroup);
         } else if (group instanceof ExcludeGroup excludeGroup) {
-            changed = writeKnownGroup("exclude", excludeGroup);
+            throw new UnsupportedOperationException("exclude group is temporarily disable for the time being. sorry");
+            // This code do not do what is intended ? idk why do it exist
+            //changed = writeKnownGroup("exclude", excludeGroup);
         } else {
             changed = writeUnknownGroup(group);
         }
@@ -124,13 +126,24 @@ public class MaterialGroupApi {
         Set<Material> materialSet = group.getNonGroupInheritedMaterials();
         Set<AbstractMaterialGroup> groupSet = group.getGroups();
 
+        boolean empty = true;
         if (!materialSet.isEmpty()) {
             config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materialSet));
+            empty = false;
+        } else {
+            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, null);
         }
         if (!groupSet.isEmpty()) {
             config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSetToStringList(groupSet));
+            empty = false;
+        } else {
+            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, null);
         }
-        if (!config.isConfigurationSection(group.getName())) return false;
+
+        if (empty) {
+            config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, null);
+            return false;
+        }
 
         config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, groupType);
         return true;

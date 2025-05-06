@@ -2,6 +2,7 @@ package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
+import org.bukkit.NamespacedKey
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
@@ -50,6 +51,8 @@ object ConfigOptions {
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
+
+    const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
@@ -476,6 +479,19 @@ object ConfigOptions {
             .config
             .getInt(path, ENCHANT_LIMIT_RANGE.min() - 1)
             .takeIf { it in ENCHANT_LIMIT_RANGE }
+    }
+
+    fun isImmutable(key: NamespacedKey): Boolean {
+        val immutables = ConfigHolder.DEFAULT_CONFIG.config.getStringList(IMMUTABLE_ENCHANTMENT_LIST)
+
+        // We need to ignore case so can't just check "contain"
+        for (ench in immutables) {
+            if (ench.equals(key.toString(), ignoreCase = true) ||
+                ench.equals(key.key, ignoreCase = true)
+            )
+                return true
+        }
+        return false
     }
 
 }
