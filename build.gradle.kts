@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.11.1"
+version = "1.11.2"
 
 repositories {
     // EcoEnchants
@@ -52,6 +52,9 @@ dependencies {
     // HavenBags
     compileOnly(files("libs/HavenBags-1.31.0.1760.jar"))
 
+    // ToolStats
+    compileOnly(files("libs/toolstats-1.9.6-stripped.jar"))
+
     // Include nms
     implementation(project(":nms:nms-common"))
     implementation(project(":nms:v1_17R1", configuration = "reobf"))
@@ -67,7 +70,7 @@ dependencies {
     implementation(project(":nms:v1_21R1", configuration = "reobf"))
     implementation(project(":nms:v1_21R2", configuration = "reobf"))
     implementation(project(":nms:v1_21R3", configuration = "reobf"))
-    implementation(project(":nms:v1_21R4"))//, configuration = "reobf")) // TODO add again when paperweigh 1.21.5 update
+    implementation(project(":nms:v1_21R4", configuration = "reobf"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
