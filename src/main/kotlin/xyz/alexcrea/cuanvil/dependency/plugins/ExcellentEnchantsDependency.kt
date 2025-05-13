@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.dependency
+package xyz.alexcrea.cuanvil.dependency.plugins
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
@@ -146,7 +146,7 @@ class ExcellentEnchantsDependency {
             return event.inventory.getItem(2) == null
         }
 
-        return false;
+        return false
     }
 
     private fun treatInput(item: ItemStack?): ItemStack {

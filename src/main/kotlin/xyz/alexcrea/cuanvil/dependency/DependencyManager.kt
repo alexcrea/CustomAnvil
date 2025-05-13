@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
 import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
+import xyz.alexcrea.cuanvil.dependency.plugins.*
 import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
@@ -33,6 +34,8 @@ object DependencyManager {
 
     var disenchantmentCompatibility: DisenchantmentDependency? = null
     var havenBagsCompatibility: HavenBagsDependency? = null
+
+    val genericDependencies = ArrayList<GenericPluginDependency>()
 
     fun loadDependency() {
         val pluginManager = Bukkit.getPluginManager()
@@ -79,6 +82,14 @@ object DependencyManager {
             havenBagsCompatibility = HavenBagsDependency()
             havenBagsCompatibility!!.redirectListeners()
         }
+
+        // "Generic" dependencies
+        if (pluginManager.isPluginEnabled("ToolStats"))
+            genericDependencies.add(ToolStatsDependency(pluginManager.getPlugin("ToolStats")!!))
+
+        for (dependency in genericDependencies)
+            dependency.redirectListeners()
+
     }
 
     fun handleCompatibilityConfig() {
@@ -102,6 +113,7 @@ object DependencyManager {
         // Then handle plugin reload
         ecoEnchantCompatibility?.handleConfigReload()
     }
+
     // Return true if should bypass (either by a dependency or error)
     // called before immutability test
     fun earlyTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
@@ -118,7 +130,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.view.player.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -147,7 +162,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.view.player.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -163,6 +181,10 @@ object DependencyManager {
 
         // Test excellent enchantments used prepare anvil
         if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
+
+        for (genericDependency in genericDependencies) {
+            if (!bypass && genericDependency.testPrepareAnvil(event)) bypass = true
+        }
 
         return bypass
     }
@@ -183,7 +205,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.view.player.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -207,7 +232,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.whoClicked.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.whoClicked.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -223,6 +251,10 @@ object DependencyManager {
 
         // Test if disenchantment used event click
         if (!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
+
+        for (genericDependency in genericDependencies) {
+            if (!bypass && genericDependency.testAnvilResult(event)) bypass = true
+        }
 
         // Test if the inventory is a gui(version specific)
         if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true

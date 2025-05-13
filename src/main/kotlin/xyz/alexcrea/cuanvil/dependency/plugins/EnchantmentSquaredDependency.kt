@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.dependency
+package xyz.alexcrea.cuanvil.dependency.plugins
 
 import io.delilaheve.CustomAnvil
 import me.athlaeos.enchantssquared.enchantments.CustomEnchant
