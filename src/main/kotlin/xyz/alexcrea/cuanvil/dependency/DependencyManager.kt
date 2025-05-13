@@ -84,11 +84,12 @@ object DependencyManager {
         }
 
         // "Generic" dependencies
+        if (pluginManager.isPluginEnabled("ToolStats"))
+            genericDependencies.add(ToolStatsDependency(pluginManager.getPlugin("ToolStats")!!))
 
-
-        for (dependency in genericDependencies) {
+        for (dependency in genericDependencies)
             dependency.redirectListeners()
-        }
+
     }
 
     fun handleCompatibilityConfig() {
