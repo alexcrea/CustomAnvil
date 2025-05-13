@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 
-abstract class GenericPluginDependency(protected val plugin: Plugin) {
+abstract class GenericPluginDependency(val plugin: Plugin) {
 
     protected val preAnvil = ArrayList<RegisteredListener>()
     protected val postAnvil = ArrayList<RegisteredListener>()

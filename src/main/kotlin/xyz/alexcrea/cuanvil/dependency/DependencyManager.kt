@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.dependency
 
 import io.delilaheve.CustomAnvil
+import io.delilaheve.util.ConfigOptions
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
@@ -86,6 +87,13 @@ object DependencyManager {
         // "Generic" dependencies
         if (pluginManager.isPluginEnabled("ToolStats"))
             genericDependencies.add(ToolStatsDependency(pluginManager.getPlugin("ToolStats")!!))
+
+        if(ConfigOptions.verboseDebugLog){
+            CustomAnvil.verboseLog("Number of generics comp: " + genericDependencies.size)
+            for (dependency in genericDependencies) {
+                CustomAnvil.verboseLog("- " + dependency.plugin)
+            }
+        }
 
         for (dependency in genericDependencies)
             dependency.redirectListeners()
