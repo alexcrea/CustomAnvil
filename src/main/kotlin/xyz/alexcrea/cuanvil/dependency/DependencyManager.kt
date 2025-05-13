@@ -130,7 +130,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.view.player.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -159,7 +162,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.view.player.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -177,7 +183,7 @@ object DependencyManager {
         if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
 
         for (genericDependency in genericDependencies) {
-            genericDependency.testPrepareAnvil(event)
+            if (!bypass && genericDependency.testPrepareAnvil(event)) bypass = true
         }
 
         return bypass
@@ -199,7 +205,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.view.player.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }
@@ -223,7 +232,10 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.whoClicked.sendMessage(ChatColor.RED.toString() + "Error while handling the anvil.")
+            event.whoClicked.sendMessage(
+                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                        ChatColor.RED.toString() + "Error while handling the anvil."
+            )
             return true
         }
     }

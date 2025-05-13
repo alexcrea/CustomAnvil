@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.dependency.plugins
 
+import lol.hyper.toolstats.ToolStats
 import lol.hyper.toolstats.tools.ItemChecker
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
@@ -27,8 +28,10 @@ class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
         val left = event.inventory.getItem(PrepareAnvilListener.ANVIL_INPUT_LEFT)
         val result = event.inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)
 
-        val leftTokens = getTokenMethod.invoke(left) as Array<String>
-        val resultToken = getTokenMethod.invoke(result) as Array<String>
+        val itemChecker = (plugin as ToolStats).itemChecker
+
+        val leftTokens = getTokenMethod.invoke(itemChecker, left) as Array<String>
+        val resultToken = getTokenMethod.invoke(itemChecker, result) as Array<String>
 
         return !leftTokens.contentDeepEquals(resultToken);
     }
