@@ -82,6 +82,13 @@ object DependencyManager {
             havenBagsCompatibility = HavenBagsDependency()
             havenBagsCompatibility!!.redirectListeners()
         }
+
+        // "Generic" dependencies
+
+
+        for (dependency in genericDependencies) {
+            dependency.redirectListeners()
+        }
     }
 
     fun handleCompatibilityConfig() {

@@ -10,7 +10,7 @@ abstract class GenericPluginDependency(private val plugin: Plugin) {
     protected val preAnvil = ArrayList<RegisteredListener>()
     protected val postAnvil = ArrayList<RegisteredListener>()
 
-    fun redirectListeners() {
+    open fun redirectListeners() {
         // get PreAnvil and PostAnvil listeners
         for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
 
@@ -33,13 +33,13 @@ abstract class GenericPluginDependency(private val plugin: Plugin) {
 
     protected abstract fun postAnvilEvents(): Collection<RegisteredListener>
 
-    fun testPrepareAnvil(event: PrepareAnvilEvent) {
+    open fun testPrepareAnvil(event: PrepareAnvilEvent) {
         for (registeredListener in preAnvil) {
             registeredListener.callEvent(event)
         }
     }
 
-    fun testAnvilResult(event: InventoryClickEvent): Boolean {
+    open fun testAnvilResult(event: InventoryClickEvent): Boolean {
         for (registeredListener in postAnvil) {
             registeredListener.callEvent(event)
         }
