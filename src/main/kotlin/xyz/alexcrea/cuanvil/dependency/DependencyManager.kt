@@ -35,6 +35,8 @@ object DependencyManager {
     var disenchantmentCompatibility: DisenchantmentDependency? = null
     var havenBagsCompatibility: HavenBagsDependency? = null
 
+    val genericDependencies = ArrayList<GenericPluginDependency>()
+
     fun loadDependency() {
         val pluginManager = Bukkit.getPluginManager()
 
@@ -103,6 +105,7 @@ object DependencyManager {
         // Then handle plugin reload
         ecoEnchantCompatibility?.handleConfigReload()
     }
+
     // Return true if should bypass (either by a dependency or error)
     // called before immutability test
     fun earlyTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
@@ -165,6 +168,10 @@ object DependencyManager {
         // Test excellent enchantments used prepare anvil
         if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
 
+        for (genericDependency in genericDependencies) {
+            genericDependency.testPrepareAnvil(event)
+        }
+
         return bypass
     }
 
@@ -224,6 +231,10 @@ object DependencyManager {
 
         // Test if disenchantment used event click
         if (!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
+
+        for (genericDependency in genericDependencies) {
+            if (!bypass && genericDependency.testAnvilResult(event)) bypass = true
+        }
 
         // Test if the inventory is a gui(version specific)
         if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
