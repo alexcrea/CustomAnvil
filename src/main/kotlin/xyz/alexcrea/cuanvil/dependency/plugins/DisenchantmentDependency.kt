@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.dependency
+package xyz.alexcrea.cuanvil.dependency.plugins
 
 import com.jankominek.disenchantment.Disenchantment
 import com.jankominek.disenchantment.events.DisenchantClickEvent

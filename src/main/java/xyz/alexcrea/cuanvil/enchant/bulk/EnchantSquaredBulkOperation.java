@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
-import xyz.alexcrea.cuanvil.dependency.EnchantmentSquaredDependency;
+import xyz.alexcrea.cuanvil.dependency.plugins.EnchantmentSquaredDependency;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 
 import java.util.Collections;
