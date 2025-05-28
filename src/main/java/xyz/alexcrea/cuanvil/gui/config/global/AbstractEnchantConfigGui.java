@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
-public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T> implements ValueUpdatableGui {
+public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T>{
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.

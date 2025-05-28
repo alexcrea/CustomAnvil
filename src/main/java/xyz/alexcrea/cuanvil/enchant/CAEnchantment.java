@@ -207,7 +207,6 @@ public interface CAEnchantment {
             @NotNull ItemMeta meta,
             @NotNull Map<CAEnchantment, Integer> enchantments,
             @NotNull Collection<CAEnchantment> enchantmentToTest){
-
         for (CAEnchantment enchantment : enchantmentToTest) {
             if(enchantment.isEnchantmentPresent(item, meta)){
                 enchantments.put(enchantment, enchantment.getLevel(item, meta));

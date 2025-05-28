@@ -31,6 +31,7 @@ object ConfigOptions {
     const val ITEM_RENAME_COST = "item_rename_cost"
 
     const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
+    const val ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = "add_book_enchantment_as_stored_enchantment"
 
     // Color related config
     const val ALLOW_COLOR_CODE = "allow_color_code"
@@ -78,6 +79,7 @@ object ConfigOptions {
     const val DEFAULT_ITEM_RENAME_COST = 1
 
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
+    const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false;
 
     // Color related config
     const val DEFAULT_ALLOW_COLOR_CODE = false
@@ -221,6 +223,16 @@ object ConfigOptions {
                 .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
                 ?: DEFAULT_SACRIFICE_ILLEGAL_COST
+        }
+
+    /**
+     * Consider book enchantment as book stored enchantment
+     */
+    val addBookEnchantmentAsStoredEnchantment : Boolean
+        get(){
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT, DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT)
         }
 
     /**

@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.bulk;
 
 import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ConfigOptions;
 import io.delilaheve.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,11 +18,14 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
 
     @Override
     public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull ItemStack item, @NotNull ItemMeta meta) {
-        if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
+        boolean isBook = ItemUtil.INSTANCE.isEnchantedBook(item);
+
+        if (isBook) {
             ((EnchantmentStorageMeta) meta).getStoredEnchants().forEach((enchantment, level) ->
                     addEnchantment(enchantmentMap, enchantment, level)
             );
-        } else {
+        }
+        if(!isBook || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()){
             item.getEnchantments().forEach((enchantment, level) ->
                     addEnchantment(enchantmentMap, enchantment, level)
             );
@@ -41,7 +45,7 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
 
     @Override
     public void bulkClear(@NotNull ItemStack item) {
-        if (item.getType() != Material.ENCHANTED_BOOK) {
+        if (item.getType() != Material.ENCHANTED_BOOK || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
 
             item.getEnchantments().forEach((enchantment, level) ->
                     item.removeEnchantment(enchantment)

@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ConfigOptions;
 import io.delilaheve.util.ItemUtil;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -28,14 +29,14 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
 
     public final @NotNull Enchantment bukkit;
 
-    public CABukkitEnchantment(@NotNull Enchantment bukkit, @Nullable EnchantmentRarity rarity){
+    public CABukkitEnchantment(@NotNull Enchantment bukkit, @Nullable EnchantmentRarity rarity) {
         super(bukkit.getKey(),
                 rarity,
                 bukkit.getMaxLevel());
         this.bukkit = bukkit;
     }
 
-    public CABukkitEnchantment(@NotNull Enchantment bukkit){
+    public CABukkitEnchantment(@NotNull Enchantment bukkit) {
         this(bukkit, getRarity(bukkit));
     }
 
@@ -52,7 +53,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @Override
     public int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            return ((EnchantmentStorageMeta)meta).getStoredEnchantLevel(this.bukkit);
+            return ((EnchantmentStorageMeta) meta).getStoredEnchantLevel(this.bukkit);
         } else {
             return meta.getEnchantLevel(this.bukkit);
         }
@@ -61,10 +62,11 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @Override
     public boolean isEnchantmentPresent(@NotNull ItemStack item, @NotNull ItemMeta meta) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)meta);
+            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta) meta);
 
-            return bookMeta.getStoredEnchants().containsKey(this.bukkit);
-        }else{
+            return bookMeta.getStoredEnchants().containsKey(this.bukkit) ||
+                    (ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment() && item.containsEnchantment(this.bukkit));
+        } else {
             return item.containsEnchantment(this.bukkit);
         }
     }
@@ -72,7 +74,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @Override
     public void addEnchantmentUnsafe(@NotNull ItemStack item, int level) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
+            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta) item.getItemMeta());
 
             assert bookMeta != null;
             bookMeta.addStoredEnchant(this.bukkit, level, true);
@@ -86,19 +88,20 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @Override
     public void removeFrom(@NotNull ItemStack item) {
         if (ItemUtil.INSTANCE.isEnchantedBook(item)) {
-            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta)item.getItemMeta());
+            EnchantmentStorageMeta bookMeta = ((EnchantmentStorageMeta) item.getItemMeta());
 
             assert bookMeta != null;
             bookMeta.removeStoredEnchant(this.bukkit);
+            bookMeta.removeEnchant(this.bukkit);
             item.setItemMeta(bookMeta);
-        }else{
+        } else {
             item.removeEnchantment(this.bukkit);
         }
 
     }
 
     @NotNull
-    public static EnchantmentRarity getRarity(Enchantment enchantment){
+    public static EnchantmentRarity getRarity(Enchantment enchantment) {
         try {
             return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
         } catch (IllegalArgumentException ignored) {
@@ -112,6 +115,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     }
 
     private static Method getAnvilCostMethod;
+
     static {
         Class<Enchantment> clazz = Enchantment.class;
         try {
@@ -144,14 +148,14 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     }
 
     private static EnchantmentRarity findRarity(Enchantment enchantment) {
-        if(getAnvilCostMethod == null) return EnchantmentRarity.COMMON;
+        if (getAnvilCostMethod == null) return EnchantmentRarity.COMMON;
 
         try {
             int itemCost = (int) getAnvilCostMethod.invoke(enchantment);
 
             return EnchantmentRarity.getRarity(itemCost);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            CustomAnvil.instance.getLogger().log(Level.SEVERE, "could not find cost for enchantment "+enchantment.getKey(), e);
+            CustomAnvil.instance.getLogger().log(Level.SEVERE, "could not find cost for enchantment " + enchantment.getKey(), e);
 
             return EnchantmentRarity.COMMON;
         }
@@ -160,7 +164,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof CABukkitEnchantment other)){
+        if (!(obj instanceof CABukkitEnchantment other)) {
             return false;
         }
 
