@@ -43,7 +43,8 @@ dependencies {
 
     // ExcellentEnchants
     compileOnly(files("libs/nightcore-2.7.3.jar"))
-    compileOnly(files("libs/ExcellentEnchants-4.3.1.jar"))
+    compileOnly(files("libs/ExcellentEnchants-5.0.0.jar"))
+    compileOnly(files("libs/ExcellentEnchants-4.3.1.jar")) // For legacy excellent enchants (can/should be stripped)
     compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar")) // For legacy excellent enchants
 
     // Disenchantment

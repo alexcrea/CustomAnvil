@@ -7,55 +7,98 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
-import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant
-import su.nightexpress.excellentenchants.enchantment.listener.AnvilListener
-import su.nightexpress.excellentenchants.enchantment.listener.EnchantAnvilListener
-import su.nightexpress.excellentenchants.registry.EnchantRegistry
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
-import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEEnchantment
+import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
+import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
 import java.lang.reflect.Method
+import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
+import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant as LegacyCurseOfFragilityEnchant
+import su.nightexpress.excellentenchants.manager.listener.AnvilListener as V5AnvilListener
+import su.nightexpress.excellentenchants.enchantment.listener.AnvilListener as PreV5AnvilListener
+import su.nightexpress.excellentenchants.enchantment.listener.EnchantAnvilListener as LegacyAnvilListener
+import su.nightexpress.excellentenchants.enchantment.registry.EnchantRegistry as LegacyEnchantRegistry
+import su.nightexpress.excellentenchants.registry.EnchantRegistry as PreV5EnchantRegistry
 
+// I don't like that I need to support older version. if I could just drop older support it would be sooo nice
 class ExcellentEnchantsDependency {
 
-    private val isModern: Boolean
+    enum class ListenerVersion(val classPath: String) {
+        V5("su.nightexpress.excellentenchants.manager.listener.AnvilListener"),
+        PRE_V5("su.nightexpress.excellentenchants.enchantment.listener.AnvilListener"),
+        LEGACY("su.nightexpress.excellentenchants.enchantment.listener.EnchantAnvilListener"),
+    }
+
+    private val listenerVersion: ListenerVersion?
+    private val isModernCurseOfFragility: Boolean
 
     init {
         CustomAnvil.instance.logger.info("Excellent Enchants Detected !")
 
-        var isModern = true;
-        try {
-            Class.forName("su.nightexpress.excellentenchants.enchantment.listener.AnvilListener")
-        } catch (ignored: ClassNotFoundException) {
-            isModern = false
+        var listenerVersion: ListenerVersion? = null
+        for (value in ListenerVersion.entries) {
+            try {
+                Class.forName(value.classPath)
+
+                listenerVersion = value
+                break
+            } catch (ignored: ClassNotFoundException) {
+            }
         }
 
-        this.isModern = isModern
+        if(listenerVersion == null){
+            CustomAnvil.instance.logger.severe("Found issue with listener of Excellent Enchants. compatiblity is broken. please contact CustomAnvil devs")
+        }
+
+        var isModernCurseOfFragility = true
+        try {
+            Class.forName("su.nightexpress.excellentenchants.enchantment.universal.CurseOfFragilityEnchant")
+        } catch (ignored: ClassNotFoundException) {
+            isModernCurseOfFragility = false
+        }
+
+        this.listenerVersion = listenerVersion
+        this.isModernCurseOfFragility = isModernCurseOfFragility
     }
 
     fun registerEnchantments() {
         CustomAnvil.instance.logger.info("Preparing Excellent Enchants compatibility...")
 
         // As excellent enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
-        if (this.isModern) {
-            for (enchantment in EnchantRegistry.getRegistered()) {
-                EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
-                EnchantmentApi.registerEnchantment(CAEEEnchantment(enchantment))
+        when (listenerVersion) {
+            ListenerVersion.V5 -> {
+                for (enchantment in V5EnchantRegistry.getRegistered()) {
+                    EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
+                    EnchantmentApi.registerEnchantment(CAEEV5Enchantment(enchantment))
+                }
             }
-        } else {
-            for (enchantment in su.nightexpress.excellentenchants.enchantment.registry.EnchantRegistry.getRegistered()) {
-                EnchantmentApi.unregisterEnchantment(enchantment.enchantment.key)
-                EnchantmentApi.registerEnchantment(CALegacyEEEnchantment(enchantment))
+
+            ListenerVersion.PRE_V5 -> {
+                for (enchantment in PreV5EnchantRegistry.getRegistered()) {
+                    EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
+                    EnchantmentApi.registerEnchantment(CAEEPreV5Enchantment(enchantment))
+                }
             }
+
+            ListenerVersion.LEGACY -> {
+                for (enchantment in LegacyEnchantRegistry.getRegistered()) {
+                    EnchantmentApi.unregisterEnchantment(enchantment.enchantment.key)
+                    EnchantmentApi.registerEnchantment(CALegacyEEEnchantment(enchantment))
+                }
+            }
+
+            null -> return
+
         }
 
         CustomAnvil.instance.logger.info("Excellent Enchants should now work as expected !")
     }
 
-    private var fragilityCurse: CurseOfFragilityEnchant? = null
+    private var legacyFragilityCurse: LegacyCurseOfFragilityEnchant? = null
 
-    private var modernAnvilListener: AnvilListener? = null
-    private var legacyAnvilListener: EnchantAnvilListener? = null
+    private var v5AnvilListener: V5AnvilListener? = null
+    private var preV5AnvilListener: PreV5AnvilListener? = null
+    private var legacyAnvilListener: LegacyAnvilListener? = null
     private lateinit var usedAnvilListener: Listener
 
     private lateinit var handleRechargeMethod: Method
@@ -67,21 +110,34 @@ class ExcellentEnchantsDependency {
         for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
             val listener = registeredListener.listener
 
-            if (listener is CurseOfFragilityEnchant) {
-                this.fragilityCurse = listener
-                toUnregister.add(registeredListener)
+            if (!isModernCurseOfFragility) {
+                if (listener is LegacyCurseOfFragilityEnchant) {
+                    this.legacyFragilityCurse = listener
+                    toUnregister.add(registeredListener)
+                }
             }
 
-            if (this.isModern) {
-                if (listener is AnvilListener) {
-                    this.modernAnvilListener = listener;
-                    toUnregister.add(registeredListener)
+            when (listenerVersion) {
+                ListenerVersion.V5 -> {
+                    if (listener is V5AnvilListener) {
+                        this.v5AnvilListener = listener
+                        toUnregister.add(registeredListener)
+                    }
                 }
-            } else {
-                if (listener is EnchantAnvilListener) {
-                    this.legacyAnvilListener = listener;
-                    toUnregister.add(registeredListener)
+                ListenerVersion.PRE_V5 -> {
+                    if (listener is PreV5AnvilListener) {
+                        this.preV5AnvilListener = listener
+                        toUnregister.add(registeredListener)
+                    }
                 }
+                ListenerVersion.LEGACY -> {
+                    if (listener is LegacyAnvilListener) {
+                        this.legacyAnvilListener = listener
+                        toUnregister.add(registeredListener)
+                    }
+                }
+                null -> {
+                    }
             }
 
         }
@@ -90,10 +146,11 @@ class ExcellentEnchantsDependency {
             PrepareAnvilEvent.getHandlerList().unregister(listener)
         }
 
-        if (this.isModern) {
-            this.usedAnvilListener = this.modernAnvilListener!!
-        } else {
-            this.usedAnvilListener = this.legacyAnvilListener!!
+        when (listenerVersion) {
+            ListenerVersion.V5 -> this.usedAnvilListener = v5AnvilListener!!
+            ListenerVersion.PRE_V5 -> this.usedAnvilListener = preV5AnvilListener!!
+            ListenerVersion.LEGACY -> this.usedAnvilListener = legacyAnvilListener!!
+            null -> {}
         }
 
         // Unregister inventory click event
@@ -119,7 +176,9 @@ class ExcellentEnchantsDependency {
 
     fun testPrepareAnvil(event: PrepareAnvilEvent): Boolean {
         if (event.result != null) {
-            this.fragilityCurse?.onItemAnvil(event)
+            if (!isModernCurseOfFragility) {
+                this.legacyFragilityCurse?.onItemAnvil(event)
+            }
             if (event.result == null) return true
         }
 
@@ -138,10 +197,11 @@ class ExcellentEnchantsDependency {
 
     fun testAnvilResult(event: InventoryClickEvent): Any {
         if (event.inventory.getItem(2) != null) {
-            if (this.isModern) {
-                this.modernAnvilListener!!.onClickAnvil(event)
-            } else {
-                this.legacyAnvilListener!!.onClickAnvil(event)
+            when (listenerVersion) {
+                ListenerVersion.V5 -> v5AnvilListener!!.onClickAnvil(event)
+                ListenerVersion.PRE_V5 -> preV5AnvilListener!!.onClickAnvil(event)
+                ListenerVersion.LEGACY -> legacyAnvilListener!!.onClickAnvil(event)
+                null -> {}
             }
             return event.inventory.getItem(2) == null
         }
