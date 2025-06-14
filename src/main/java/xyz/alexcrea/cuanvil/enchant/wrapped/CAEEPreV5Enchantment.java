@@ -12,15 +12,15 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import java.util.Map;
 import java.util.Set;
 
-public class CAEEEnchantment extends CABukkitEnchantment implements AdditionalTestEnchantment {
+public class CAEEPreV5Enchantment extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
     @NotNull CustomEnchantment eeenchantment;
     @NotNull Definition definition;
 
-    public CAEEEnchantment(@NotNull CustomEnchantment enchantment) {
+    public CAEEPreV5Enchantment(@NotNull CustomEnchantment enchantment) {
         super(enchantment.getBukkitEnchantment(), EnchantmentRarity.getRarity(enchantment.getDefinition().getAnvilCost()));
         this.eeenchantment = enchantment;
-        this.definition = enchantment.getDefinition();
+        this.definition = (Definition) enchantment.getDefinition();
 
     }
 
