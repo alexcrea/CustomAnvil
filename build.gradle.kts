@@ -19,7 +19,7 @@ group = "xyz.alexcrea"
 version = "1.11.3"
 
 val effectiveVersion = "$version" +
-        {(if(project.hasProperty("smallCommitHash")) "-${project.property("smallCommitHash")}" else "")}
+        { (if (System.getenv("SMALL_COMMIT_HASH") != null) "-${System.getenv("SMALL_COMMIT_HASH")!!}" else "") }
 
 repositories {
     // EcoEnchants
@@ -118,7 +118,8 @@ allprojects {
 
     // Set target version
     tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
+        sourceCompatibility =
+            "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
         targetCompatibility = "16"
 
         options.encoding = "UTF-8"
