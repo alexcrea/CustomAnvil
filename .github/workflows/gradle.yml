@@ -44,8 +44,14 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Get small commit hash
+        run: echo "small_commit_hash=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
       - name: Build with Gradle Wrapper
         run: ./gradlew build --parallel
+        env:
+          SMALL_COMMIT_HASH: ${{ env.small_commit_hash }}
 
       # only submit dependency on push
       - name: Generate and submit dependency graph
