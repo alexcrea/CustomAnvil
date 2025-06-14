@@ -179,9 +179,6 @@ object DependencyManager {
         // Test heaven bags used prepare anvil
         if (!bypass && (havenBagsCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
 
-        // Test excellent enchantments used prepare anvil
-        if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
-
         for (genericDependency in genericDependencies) {
             if (!bypass && genericDependency.testPrepareAnvil(event)) bypass = true
         }
