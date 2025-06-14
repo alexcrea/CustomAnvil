@@ -14,7 +14,7 @@ on:
     branches: [ "master", "v2.0.0" ]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -75,3 +75,15 @@ jobs:
     - name: Summarize tests results
       uses: jeantessier/test-summary-action@v1
       if: ${{ always() }}
+
+  dependency-submission:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
+      # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
