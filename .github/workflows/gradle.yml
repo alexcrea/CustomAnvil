@@ -53,7 +53,7 @@ jobs:
       # only submit dependency on push
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@v4
-        #if: ${{ github.event_name == 'push' && success() }} #temporarly disabled for test
+        if: ${{ github.event_name == 'push' && success() }}
         continue-on-error: true
 
       # Get the names of the online and offline jars
