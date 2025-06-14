@@ -18,6 +18,9 @@ plugins {
 group = "xyz.alexcrea"
 version = "1.11.3"
 
+val effectiveVersion = "$version" +
+        {(if(project.hasProperty("smallCommitHash")) "-${project.property("smallCommitHash")}" else "")}
+
 repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
@@ -135,7 +138,8 @@ val fatJar = tasks.register<Jar>("fatJar") {
     manifest {
         attributes.apply { put("Main-Class", "io.delilaheve.CustomAnvil") }
     }
-    archiveFileName.set("${rootProject.name}-${project.version}.jar")
+
+    archiveFileName.set("${rootProject.name}-${effectiveVersion}.jar")
     exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     duplicatesStrategy = DuplicatesStrategy.WARN
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
@@ -158,7 +162,7 @@ tasks {
         // Replace version and example fields in plugin.yml
         filesMatching("plugin.yml") {
             expand(
-                "version" to project.version,
+                "version" to effectiveVersion,
                 "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" "
             )
         }
@@ -183,7 +187,7 @@ tasks {
 
             filesMatching("plugin.yml") {
                 expand(
-                    "version" to "${project.version}-offline",
+                    "version" to "$effectiveVersion-offline",
                     "libraries" to ""
                 )
             }
