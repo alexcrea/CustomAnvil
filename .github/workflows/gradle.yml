@@ -45,12 +45,10 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Get small commit hash
-        run: echo "small_commit_hash=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        run: echo "SMALL_COMMIT_HASH=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build --parallel
-        env:
-          SMALL_COMMIT_HASH: ${{ env.small_commit_hash }}
 
       # only submit dependency on push
       - name: Generate and submit dependency graph
@@ -65,21 +63,21 @@ jobs:
           ONLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline") 
           OFFLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*-offline.jar)
           
-          echo "online_jar_name=$(basename $ONLINE_JAR_PATH)" >> $GITHUB_ENV
-          echo "offline_jar_name=$(basename $OFFLINE_JAR_PATH)" >> $GITHUB_ENV
+          echo "ONLINE_JAR_NAME=$(basename $ONLINE_JAR_PATH)" >> $GITHUB_ENV
+          echo "OFFLINE_JAR_NAME=$(basename $OFFLINE_JAR_PATH)" >> $GITHUB_ENV
 
       # upload the named jars
       - name: Upload online JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.online_jar_name }}
-          path: build/libs/${{ env.online_jar_name }}
+          name: ${{ env.ONLINE_JAR_NAME }}
+          path: build/libs/${{ env.ONLINE_JAR_NAME }}
 
       - name: Upload offline JAR file
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.offline_jar_name }}
-          path: build/libs/${{ env.offline_jar_name }}
+          name: ${{ env.OFFLINE_JAR_NAME }}
+          path: build/libs/${{ env.OFFLINE_JAR_NAME }}
 
       - name: Summarize tests results
         uses: jeantessier/test-summary-action@v1

@@ -19,7 +19,7 @@ group = "xyz.alexcrea"
 version = "1.11.3"
 
 val effectiveVersion = "$version" +
-        { (if (System.getenv("SMALL_COMMIT_HASH") != null) "-${System.getenv("SMALL_COMMIT_HASH")!!}" else "") }
+        (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
 
 repositories {
     // EcoEnchants
@@ -134,24 +134,13 @@ allprojects {
 
 }
 
-// Fat-jar builder
-val fatJar = tasks.register<Jar>("fatJar") {
-    manifest {
-        attributes.apply { put("Main-Class", "io.delilaheve.CustomAnvil") }
-    }
-
-    archiveFileName.set("${rootProject.name}-${effectiveVersion}.jar")
-    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
-    duplicatesStrategy = DuplicatesStrategy.WARN
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    with(tasks.jar.get() as CopySpec)
-}
-
 tasks {
+
     // Online jar (use of libraries)
     shadowJar {
         // No suffix for this jar
-        archiveClassifier.set("")
+        val name = "${rootProject.name}-${effectiveVersion}.jar"
+        archiveFileName.set(name)
 
         // Exclude kotlin std and its annotation
         exclude("**/kotlin-stdlib*.jar")
@@ -181,7 +170,8 @@ tasks {
 
         // Add custom anvil compiled
         ::class, fun ShadowJar.() {
-            archiveClassifier.set("offline")
+            val name = "${rootProject.name}-${effectiveVersion}-offline.jar"
+            archiveFileName.set(name)
 
             // Shadow necessary dependency
             relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
