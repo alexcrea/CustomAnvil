@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
 
     // Gui library
     val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"

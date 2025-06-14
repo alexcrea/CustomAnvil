@@ -141,10 +141,10 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
 
         meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
         if (isIn) {
-            meta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
+            meta.addEnchant(Enchantment.SMITE, 1, true);
             meta.setLore(TRUE_LORE);
         } else {
-            meta.removeEnchant(Enchantment.DAMAGE_UNDEAD);
+            meta.removeEnchant(Enchantment.SMITE);
             meta.setLore(FALSE_LORE);
         }
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
