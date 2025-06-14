@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.api.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when the configuration of CustomAnvil is ready.
@@ -29,7 +30,7 @@ public class CAConfigReadyEvent extends Event {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

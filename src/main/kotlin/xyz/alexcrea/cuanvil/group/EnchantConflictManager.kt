@@ -32,7 +32,7 @@ class EnchantConflictManager {
         // 1.20.5 compatibility TODO better update system
         private val SWEEPING_EDGE_ENCHANT = Collections.singletonList<CAEnchantment>(
             CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge"))
-                ?: CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
+                ?: CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.keyOrThrow)
         )
 
     }
@@ -176,7 +176,7 @@ class EnchantConflictManager {
         newEnchant: CAEnchantment
     ): ConflictType {
         val mat = item.type
-        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
+        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.keyOrThrow}")
         val conflictList = newEnchant.conflicts
 
         var result = ConflictType.NO_CONFLICT

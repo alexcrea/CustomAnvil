@@ -27,6 +27,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Global config to edit basic basic settings.
@@ -188,7 +189,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
         this.itemRenameCost = new IntSettingsGui.IntSettingFactory("§8Rename Cost", this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
+                List.of(
                         "§7XP Level amount added to the anvil when the item is renamed."
                 ),
                 range.getFirst(), range.getLast(),

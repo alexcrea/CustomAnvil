@@ -11,13 +11,14 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import java.util.logging.Level
 import kotlin.reflect.KClass
 
+@Suppress("unstableApiUsage")
 class DisenchantmentDependency {
 
     init {
@@ -55,14 +56,14 @@ class DisenchantmentDependency {
         DisenchantEvent.onEvent(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil item extract bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.view, player)
             return true
         }
 
         ShatterEvent.onEvent(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil split enchant bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.view, player)
             return true
         }
 
@@ -70,18 +71,18 @@ class DisenchantmentDependency {
         return false
     }
 
-    fun testAnvilResult(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
-        val previousResultSlot = inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)?.clone()
+    fun testAnvilResult(event: InventoryClickEvent, view: AnvilView): Boolean {
+        val previousResultSlot = view.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)?.clone()
 
         // Test event if change the result
         DisenchantClickEvent.onEvent(event)
-        if (!testAnvilInventoryChange(inventory, previousResultSlot) || event.isCancelled) {
+        if (!testAnvilInventoryChange(view, previousResultSlot) || event.isCancelled) {
             CustomAnvil.log("Detected anvil click item extract bypass.")
             return true
         }
 
         ShatterClickEvent.onEvent(event)
-        if (!testAnvilInventoryChange(inventory, previousResultSlot) || event.isCancelled) {
+        if (!testAnvilInventoryChange(view, previousResultSlot) || event.isCancelled) {
             CustomAnvil.log("Detected anvil click split enchant bypass.")
             return true
         }
@@ -89,8 +90,8 @@ class DisenchantmentDependency {
         return false
     }
 
-    private fun testAnvilInventoryChange(inventory: AnvilInventory, previous: ItemStack?): Boolean {
-        val currentResult = inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)
+    private fun testAnvilInventoryChange(view: AnvilView, previous: ItemStack?): Boolean {
+        val currentResult = view.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)
 
         return currentResult == previous
     }

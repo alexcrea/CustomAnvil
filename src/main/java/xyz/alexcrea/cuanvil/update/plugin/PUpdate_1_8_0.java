@@ -26,25 +26,24 @@ public class PUpdate_1_8_0 {
         partEnum = new EnumMap<>(ConfigOptions.INSTANCE.getWorkPenaltyType().getPartMap());
 
         boolean keepIncrease;
-        boolean keepAdditive;
-
-        switch (penaltyTypeValue.toLowerCase()) {
-            case "add_only":
+        boolean keepAdditive = switch (penaltyTypeValue.toLowerCase()) {
+            case "add_only" -> {
                 keepIncrease = false;
-                keepAdditive = true;
-                break;
-            case "increase_only":
+                yield true;
+            }
+            case "increase_only" -> {
                 keepIncrease = true;
-                keepAdditive = false;
-                break;
-            case "disabled":
+                yield false;
+            }
+            case "disabled" -> {
                 keepIncrease = false;
-                keepAdditive = false;
-                break;
-            default:
+                yield false;
+            }
+            default -> {
                 keepIncrease = true;
-                keepAdditive = true;
-        }
+                yield true;
+            }
+        };
 
         for (AnvilUseType type : partEnum.keySet()) {
             WorkPenaltyType.WorkPenaltyPart part = partEnum.get(type);

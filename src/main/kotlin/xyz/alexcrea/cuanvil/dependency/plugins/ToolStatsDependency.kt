@@ -13,7 +13,7 @@ class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
 
     // Sadly, getTokens function is private, so I need to do that
     private val getTokenMethod: Method =
-        ItemChecker::class.java.getDeclaredMethod("getTokens", ItemStack::class.java);
+        ItemChecker::class.java.getDeclaredMethod("getTokens", ItemStack::class.java)
 
     init {
         getTokenMethod.trySetAccessible()
@@ -38,6 +38,6 @@ class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
         val leftTokens = itemChecker.getTokenSafe(left)
         val resultToken = itemChecker.getTokenSafe(result)
 
-        return !leftTokens.contentDeepEquals(resultToken);
+        return !leftTokens.contentDeepEquals(resultToken)
     }
 }

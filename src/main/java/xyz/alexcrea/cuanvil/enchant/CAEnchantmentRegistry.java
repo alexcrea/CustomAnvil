@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.enchant;
 
 import io.delilaheve.CustomAnvil;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -53,9 +53,9 @@ public class CAEnchantmentRegistry {
      */
     public void registerBukkit() {
         // Register enchantment
-        for (Enchantment enchantment : Enchantment.values()) {
-            register(new CABukkitEnchantment(enchantment));
-        }
+        Registry.ENCHANTMENT.iterator().forEachRemaining(enchantment ->
+                register(new CABukkitEnchantment(enchantment))
+        );
 
         // Add bukkit enchantment bulk operation
         BukkitEnchantBulkOperation bukkitOperation = new BukkitEnchantBulkOperation();

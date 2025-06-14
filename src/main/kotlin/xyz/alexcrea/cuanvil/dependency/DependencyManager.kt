@@ -8,12 +8,12 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
@@ -28,23 +28,25 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.logging.Level
 
+
+@Suppress("unstableApiUsage")
 object DependencyManager {
 
     var isFolia: Boolean = false
     lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManager
-    var externGuiTester: ExternGuiTester? = null
+    private var externGuiTester: ExternGuiTester? = null
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
-    var ecoEnchantCompatibility: EcoEnchantDependency? = null
-    var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
+    private var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    private var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
 
-    var disenchantmentCompatibility: DisenchantmentDependency? = null
-    var havenBagsCompatibility: HavenBagsDependency? = null
+    private var disenchantmentCompatibility: DisenchantmentDependency? = null
+    private var havenBagsCompatibility: HavenBagsDependency? = null
 
     var axPlayerWarpsCompatibility: AxPlayerWarpsDependency? = null
 
-    val genericDependencies = ArrayList<GenericPluginDependency>()
+    private val genericDependencies = ArrayList<GenericPluginDependency>()
 
     fun loadDependency() {
         val pluginManager = Bukkit.getPluginManager()
@@ -128,7 +130,7 @@ object DependencyManager {
         ecoEnchantCompatibility?.handleConfigReload()
     }
 
-    // Return true if should bypass (either by a dependency or error)
+    // Return true if we should bypass (either by a dependency or error)
     // called before immutability test
     fun earlyTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         try {
@@ -168,7 +170,7 @@ object DependencyManager {
         return bypass
     }
 
-    // Return true if should bypass (either by a dependency or error)
+    // Return true if we should bypass (either by a dependency or error)
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
@@ -247,10 +249,10 @@ object DependencyManager {
         excellentEnchantsCompatibility?.treatAnvilResult(event)
     }
 
-    // Return true if should bypass (either by a dependency or error)
-    fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
+    // Return true if we should bypass (either by a dependency or error)
+    fun tryClickAnvilResultBypass(event: InventoryClickEvent, view: AnvilView): Boolean {
         try {
-            return unsafeTryClickAnvilResultBypass(event, inventory)
+            return unsafeTryClickAnvilResultBypass(event, view)
         } catch (e: Exception) {
             CustomAnvil.instance.logger.log(
                 Level.SEVERE,
@@ -270,7 +272,7 @@ object DependencyManager {
         }
     }
 
-    private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
+    private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, view: AnvilView): Boolean {
         // Run the event
         val bypassEvent = CAClickResultBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
@@ -278,10 +280,10 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if disenchantment used event click
-        if (!bypass && (disenchantmentCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true
+        if (!bypass && (disenchantmentCompatibility?.testAnvilResult(event, view) == true)) bypass = true
 
         // Test if haven bag used event click
-        if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true
+        if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, view) == true)) bypass = true
 
         // Test if disenchantment used event click
         if (!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true

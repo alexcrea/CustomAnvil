@@ -26,6 +26,7 @@ public abstract class ConfigHolder {
 
     /**
      * Load default configuration.
+     *
      * @return True if successful.
      */
     public static boolean loadDefaultConfig() {
@@ -36,6 +37,7 @@ public abstract class ConfigHolder {
 
     /**
      * Load non default configuration.
+     *
      * @return True if successful.
      */
     public static boolean loadNonDefaultConfig() {
@@ -54,7 +56,7 @@ public abstract class ConfigHolder {
         return removeNonDefaultFromDisk(hardfail);
     }
 
-    private static boolean removeNonDefaultFromDisk(boolean hardfail){
+    private static boolean removeNonDefaultFromDisk(boolean hardfail) {
         boolean sucess = ITEM_GROUP_HOLDER.reloadFromDisk(hardfail);
         if (!sucess) return false;
         sucess = CONFLICT_HOLDER.reloadFromDisk(hardfail);
@@ -105,7 +107,7 @@ public abstract class ConfigHolder {
 
     // Save logic
     public boolean saveToDisk(boolean doBackup) {
-        CustomAnvil.Companion.log("Saving "+getConfigFileName());
+        CustomAnvil.Companion.log("Saving " + getConfigFileName());
         if (doBackup) {
             if (!saveBackup()) {
                 CustomAnvil.instance.getLogger().severe("Could not save backup. see above.");
@@ -122,12 +124,11 @@ public abstract class ConfigHolder {
         try {
             config.save(base);
         } catch (IOException e) {
-            e.printStackTrace();
-            CustomAnvil.instance.getLogger().severe("Could not save config...");
+            CustomAnvil.instance.getLogger().log(Level.SEVERE, "Could not save config...", e);
             return false;
         }
 
-        CustomAnvil.Companion.log(getConfigFileName()+" saved successfully");
+        CustomAnvil.Companion.log(getConfigFileName() + " saved successfully");
         return true;
     }
 
@@ -137,6 +138,7 @@ public abstract class ConfigHolder {
         boolean sufficientSuccess = false;
 
         BACKUP_FOLDER.mkdirs();
+
         // save first backup if do not exist
         File firstBackup = getFirstBackup();
         if (!firstBackup.exists()) {
@@ -158,7 +160,7 @@ public abstract class ConfigHolder {
             Files.move(base, lastBackup);
             sufficientSuccess = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            CustomAnvil.instance.getLogger().log(Level.SEVERE, "Exception while moving backup file " + base.getName(), e);
         }
 
         return sufficientSuccess;
@@ -213,7 +215,7 @@ public abstract class ConfigHolder {
 
     }
 
-    public abstract static class DeletableResource extends ResourceConfigHolder{
+    public abstract static class DeletableResource extends ResourceConfigHolder {
 
         private static final String DELETED_FOLDER_PATH = "deleted";
 
@@ -221,6 +223,7 @@ public abstract class ConfigHolder {
         private final @NotNull File deletedConfigFile;
 
         private @Nullable YamlConfiguration deletedListConfig;
+
         private DeletableResource(String resourceName) {
             super(resourceName);
             this.parent = new File(CustomAnvil.instance.getDataFolder(), DELETED_FOLDER_PATH);
@@ -229,57 +232,62 @@ public abstract class ConfigHolder {
 
         @Override
         public boolean reloadFromDisk(boolean hardFail) {
-            if(!super.reloadFromDisk(hardFail)) return false;
+            if (!super.reloadFromDisk(hardFail)) return false;
             loadDeletedListFile(hardFail);
 
             return true;
         }
 
-        private void loadDeletedListFile(boolean hardFail){
+        private void loadDeletedListFile(boolean hardFail) {
             this.deletedListConfig = CustomAnvil.instance.reloadResource(this.deletedConfigFile, hardFail);
 
         }
 
         /**
          * Test if the provided element was deleted.
+         *
          * @param objectPath The object path to delete.
          * @return True if successful.
          */
-        public boolean isDeleted(String objectPath){
-            if(this.deletedListConfig == null) return false;
+        public boolean isDeleted(String objectPath) {
+            if (this.deletedListConfig == null) return false;
 
             return this.deletedListConfig.getBoolean(objectPath, false);
         }
 
         /**
          * Delete a certain object by its path. do not save the config.
+         *
          * @param objectPath The object path to delete.
          * @return True if successful.
          */
-        public boolean delete(String objectPath){
+        public boolean delete(String objectPath) {
             return delete(objectPath, false, false);
         }
 
         /**
          * Delete a certain object by its path.
+         *
          * @param objectPath The object path to delete.
-         * @param doSave If we should save the config after deleting.
-         * @param doBackup If we should create a backup.
+         * @param doSave     If we should save the config after deleting.
+         * @param doBackup   If we should create a backup.
          * @return True if successful.
          */
-        public boolean delete(String objectPath, boolean doSave, boolean doBackup){
+        public boolean delete(String objectPath, boolean doSave, boolean doBackup) {
             // Create deleted list if it does not yet exist
-            if(this.deletedListConfig == null){
+            if (this.deletedListConfig == null) {
                 this.parent.mkdirs();
                 try {
-                    this.deletedConfigFile.createNewFile();
+                    if (!this.deletedConfigFile.createNewFile()) {
+                        throw new RuntimeException("Could not create \"deleted config\" file");
+                    }
                 } catch (IOException e) {
                     CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not create " + this.deletedConfigFile.getPath(), e);
                 }
                 loadDeletedListFile(false);
 
                 // Something was wrong somehow
-                if(this.deletedListConfig == null) return false;
+                if (this.deletedListConfig == null) return false;
             }
 
             // Add to the deleted config
@@ -287,7 +295,7 @@ public abstract class ConfigHolder {
             this.getConfig().set(objectPath, null);
 
             // Save the deleted config (may not be the most efficient, but I will handle it later)
-            if(doSave){
+            if (doSave) {
                 return saveToDisk(doBackup);
             }
 
@@ -303,10 +311,11 @@ public abstract class ConfigHolder {
 
         /**
          * Save list of deleted elements.
+         *
          * @return true if successful.
          */
         public boolean saveDeletedList() {
-            if(this.deletedListConfig == null) return true;
+            if (this.deletedListConfig == null) return true;
 
             try {
                 this.deletedListConfig.save(this.deletedConfigFile);
