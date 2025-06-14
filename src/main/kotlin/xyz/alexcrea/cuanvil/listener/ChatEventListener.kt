@@ -15,7 +15,7 @@ class ChatEventListener : Listener {
 
     private val playerListenMap: ConcurrentHashMap<UUID, Consumer<String?>> = ConcurrentHashMap()
 
-    fun setListenedCallback(playeruuid: UUID, callback: Consumer<String?>) {
+    private fun setListenedCallback(playeruuid: UUID, callback: Consumer<String?>) {
         playerListenMap[playeruuid] = callback
     }
 
@@ -41,9 +41,10 @@ class ChatEventListener : Listener {
         // sync callback with default server thread
         DependencyManager.scheduler.scheduleOnEntity(
             CustomAnvil.instance, player,
-            Runnable {
-            eventCallback.accept(event.message)
-        }, 0L)
+            {
+                eventCallback.accept(event.message)
+            }, 0L
+        )
     }
 
 }

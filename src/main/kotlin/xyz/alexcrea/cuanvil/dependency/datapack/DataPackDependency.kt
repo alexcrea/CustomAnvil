@@ -22,13 +22,13 @@ object DataPackDependency {
     /**
      * Map of the latest CustomAnvil update related to the pack
      */
-    private val LASTEST_VERSION = mapOf(
+    private val LATEST_VERSION = mapOf(
         Pair("bracken", Version(1, 11, 0)),
         Pair("enchantplus", Version(1, 13, 0)),
         Pair("dungeons_and_taverns", Version(1, 13, 0))
     )
 
-    val enabledDatapacks: List<String>
+    private val enabledDatapacks: List<String>
         get() {
             val version: Version = UpdateUtils.currentMinecraftVersion()
             if (version.lesserThan(START_DETECT_VERSION)) return emptyList()
@@ -71,7 +71,7 @@ object DataPackDependency {
 
     private fun handlePackInitialConfig(pack: String) {
         val defConfig = ConfigHolder.DEFAULT_CONFIG
-        val version = LASTEST_VERSION[pack]
+        val version = LATEST_VERSION[pack]
         if(version == null) {
             throw RuntimeException("The pack $pack has no latest version hard coded in the plugin")
         }

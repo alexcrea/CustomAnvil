@@ -6,14 +6,14 @@ interface ExternGuiTester {
 
     val wesjdAnvilGuiName: String?
 
-    fun getContainerClass(inventory: InventoryView): Class<Any>?
+    fun getContainerClass(view: InventoryView): Class<Any>?
 
-    fun testIfGui(inventory: InventoryView): Boolean {
+    fun testIfGui(view: InventoryView): Boolean {
         // this mean we are on test
         //TODO review why needed knowing previous mitigations should works
-        if(inventory.javaClass.name.endsWith("AnvilViewMock")) return false
+        if(view.javaClass.name.endsWith("AnvilViewMock")) return false
 
-        val clazz = getContainerClass(inventory) ?: return false
+        val clazz = getContainerClass(view) ?: return false
 
         val clazzName = clazz.name
         //TODO maybe instead of testing non default, better to be testing we are default ?
