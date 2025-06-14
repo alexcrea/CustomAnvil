@@ -60,24 +60,21 @@ jobs:
       # grep -v "offline" to exclude offline jar as the regex would catch it otherwise
       - name: Get file name for jars
         run: |
-          ONLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline") 
-          OFFLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*-offline.jar)
-          
-          echo "ONLINE_JAR_NAME=$(basename $ONLINE_JAR_PATH)" >> $GITHUB_ENV
-          echo "OFFLINE_JAR_NAME=$(basename $OFFLINE_JAR_PATH)" >> $GITHUB_ENV
+          echo "ONLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline")" >> $GITHUB_ENV
+          echo "OFFLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*-offline.jar)" >> $GITHUB_ENV
 
       # upload the named jars
       - name: Upload online JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ONLINE_JAR_NAME }}
-          path: build/libs/${{ env.ONLINE_JAR_NAME }}
+          name: CustomAnvil.jar
+          path: ${{ env.ONLINE_JAR_PATH }}
 
       - name: Upload offline JAR file
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.OFFLINE_JAR_NAME }}
-          path: build/libs/${{ env.OFFLINE_JAR_NAME }}
+          name: CustomAnvil-offline.jar
+          path: ${{ env.OFFLINE_JAR_PATH }}
 
       - name: Summarize tests results
         uses: jeantessier/test-summary-action@v1
