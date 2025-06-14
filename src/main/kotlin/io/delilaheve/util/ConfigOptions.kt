@@ -79,7 +79,7 @@ object ConfigOptions {
     const val DEFAULT_ITEM_RENAME_COST = 1
 
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
-    const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false;
+    const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false
 
     // Color related config
     const val DEFAULT_ALLOW_COLOR_CODE = false

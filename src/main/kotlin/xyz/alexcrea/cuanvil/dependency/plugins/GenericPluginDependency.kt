@@ -42,7 +42,7 @@ abstract class GenericPluginDependency(protected val plugin: Plugin) {
             if (event.result != null) return true
         }
 
-        event.result = previousResult;
+        event.result = previousResult
         return false
     }
 

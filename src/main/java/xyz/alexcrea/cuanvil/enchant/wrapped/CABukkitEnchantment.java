@@ -30,7 +30,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     public final @NotNull Enchantment bukkit;
 
     public CABukkitEnchantment(@NotNull Enchantment bukkit, @Nullable EnchantmentRarity rarity) {
-        super(bukkit.getKey(),
+        super(bukkit.getKeyOrThrow(),
                 rarity,
                 bukkit.getMaxLevel());
         this.bukkit = bukkit;
@@ -103,8 +103,8 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @NotNull
     public static EnchantmentRarity getRarity(Enchantment enchantment) {
         try {
-            return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
-        } catch (IllegalArgumentException ignored) {
+            return EnchantmentProperties.valueOf(enchantment.getKeyOrThrow().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
+        } catch (Exception ignored) {
             return findRarity(enchantment);
         }
     }

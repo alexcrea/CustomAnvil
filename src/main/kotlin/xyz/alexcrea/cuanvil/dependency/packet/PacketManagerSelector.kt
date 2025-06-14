@@ -1,7 +1,10 @@
 package xyz.alexcrea.cuanvil.dependency.packet
 
 import org.bukkit.Bukkit
-import xyz.alexcrea.cuanvil.dependency.packet.versions.*
+import xyz.alexcrea.cuanvil.dependency.packet.versions.V1_21R1_PacketManager
+import xyz.alexcrea.cuanvil.dependency.packet.versions.V1_21R2_PacketManager
+import xyz.alexcrea.cuanvil.dependency.packet.versions.V1_21R3_PacketManager
+import xyz.alexcrea.cuanvil.dependency.packet.versions.V1_21R4_PacketManager
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 
 object PacketManagerSelector {

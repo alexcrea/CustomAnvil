@@ -22,11 +22,11 @@ object DataPackDependency {
     /**
      * Map of the latest CustomAnvil update related to the pack
      */
-    private val LASTEST_VERSION = mapOf(
+    private val LATEST_VERSION = mapOf(
         Pair("bracken", Version(1, 11, 0))
     )
 
-    val enabledDatapacks: List<String>
+    private val enabledDatapacks: List<String>
         get() {
             val version: Version = UpdateUtils.currentMinecraftVersion()
             if (version.lesserThan(START_DETECT_VERSION)) return emptyList()
@@ -59,7 +59,7 @@ object DataPackDependency {
 
     private fun handlePackInitialConfig(pack: String) {
         val defConfig = ConfigHolder.DEFAULT_CONFIG
-        val version = LASTEST_VERSION[pack]
+        val version = LATEST_VERSION[pack]
 
         val currentVersion = Version.fromString(defConfig.config.getString("datapack.$pack"))
         if (currentVersion.greaterEqual(version!!)) {

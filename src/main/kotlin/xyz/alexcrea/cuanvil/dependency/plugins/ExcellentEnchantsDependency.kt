@@ -23,7 +23,7 @@ class ExcellentEnchantsDependency {
 
         // As excellent enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
         for (enchantment in V5EnchantRegistry.getRegistered()) {
-            EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
+            EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.keyOrThrow)
             EnchantmentApi.registerEnchantment(CAEEV5Enchantment(enchantment))
         }
 

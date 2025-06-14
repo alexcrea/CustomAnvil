@@ -13,6 +13,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
+import org.bukkit.inventory.view.AnvilView
 import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -25,10 +26,21 @@ object AnvilXpUtil {
 
     /**
      * Display xp needed for the work on the anvil inventory
+     * Use the current view repair cost. used to force our price
      */
     fun setAnvilInvXp(
-        inventory: AnvilInventory,
-        view: InventoryView,
+        view: AnvilView,
+        player: HumanEntity,
+        ignoreRules: Boolean = false
+    ) {
+        setAnvilInvXp(view, player, view.repairCost, ignoreRules)
+    }
+
+    /**
+     * Display xp needed for the work on the anvil inventory
+     */
+    fun setAnvilInvXp(
+        view: AnvilView,
         player: HumanEntity,
         anvilCost: Int,
         ignoreRules: Boolean = false
@@ -52,9 +64,8 @@ object AnvilXpUtil {
             }
 
         // Try first just in case another plugin, or the test need this
-        inventory.maximumRepairCost = maximumRepairCost
-        inventory.repairCost = finalAnvilCost
-        // TODO for 2.x.x use anvil view & set directly there
+        view.maximumRepairCost = maximumRepairCost
+        view.repairCost = finalAnvilCost
 
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that
@@ -63,22 +74,20 @@ object AnvilXpUtil {
             CustomAnvil.instance, player
         ) {
             // retry after a tick
-            inventory.maximumRepairCost = maximumRepairCost
-            inventory.repairCost = finalAnvilCost
-            // TODO for 2.x.x use anvil view & set directly there
+            view.maximumRepairCost = maximumRepairCost
+            view.repairCost = finalAnvilCost
 
             if (player !is Player) return@scheduleOnEntity
 
             if (player.gameMode != GameMode.CREATIVE) {
                 val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
                         (finalAnvilCost >= 40) &&
-                        finalAnvilCost < inventory.maximumRepairCost
+                        finalAnvilCost < view.maximumRepairCost
 
                 DependencyManager.packetManager.setInstantBuild(player, bypassToExpensive)
             }
 
             player.updateInventory()
-
         }
     }
 

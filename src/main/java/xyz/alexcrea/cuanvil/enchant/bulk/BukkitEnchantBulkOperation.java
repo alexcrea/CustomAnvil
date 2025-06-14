@@ -33,9 +33,9 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
     }
 
     public void addEnchantment(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull Enchantment enchantment, int level) {
-        CAEnchantment enchant = EnchantmentApi.getByKey(enchantment.getKey());
+        CAEnchantment enchant = EnchantmentApi.getByKey(enchantment.getKeyOrThrow());
         if (enchant == null) {
-            CustomAnvil.instance.getLogger().warning("Enchantment of key " + enchantment.getKey() +
+            CustomAnvil.instance.getLogger().warning("Enchantment of key " + enchantment.getKeyOrThrow() +
                     " somehow not found in CustomAnvil ?");
             return;
         }

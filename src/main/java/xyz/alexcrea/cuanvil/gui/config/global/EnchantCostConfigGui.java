@@ -7,8 +7,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
-import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -37,7 +35,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      */
     public EnchantCostConfigGui() {
         super("§8Enchantment Level Cost");
-        if(INSTANCE == null) INSTANCE = this;
+        if (INSTANCE == null) INSTANCE = this;
 
         init();
     }
@@ -74,7 +72,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         lore.add("§7Book Cost: §e" + bookCost);
 
         List<String> displayLore = factory.getDisplayLore();
-        if(!displayLore.isEmpty()){
+        if (!displayLore.isEmpty()) {
             lore.add("");
             lore.addAll(displayLore);
         }

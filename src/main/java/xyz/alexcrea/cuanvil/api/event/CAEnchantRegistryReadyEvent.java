@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.api.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class CAEnchantRegistryReadyEvent extends Event {
 
@@ -12,7 +13,7 @@ public class CAEnchantRegistryReadyEvent extends Event {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

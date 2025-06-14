@@ -15,7 +15,6 @@ import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
-import xyz.alexcrea.cuanvil.util.LazyValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +25,13 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     private static GroupConfigGui INSTANCE;
 
     @Nullable
-    public static GroupConfigGui getCurrentInstance(){
+    public static GroupConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
     @NotNull
-    public static GroupConfigGui getInstance(){
-        if(INSTANCE == null) INSTANCE = new GroupConfigGui();
+    public static GroupConfigGui getInstance() {
+        if (INSTANCE == null) INSTANCE = new GroupConfigGui();
 
         return INSTANCE;
     }
@@ -50,12 +49,12 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " §fGroup");
+        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §fGroup");
         meta.setLore(Arrays.asList(
                 "§7Number of selected groups : " + group.getGroups().size(),
                 "§7Number of included material : " + group.getNonGroupInheritedMaterials().size(),
                 "",
-                "§7Total number of included material "+group.getMaterials().size()));
+                "§7Total number of included material " + group.getMaterials().size()));
 
         item.setItemMeta(meta);
         return item;
@@ -66,7 +65,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
 
         for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if(group instanceof IncludeGroup){
+            if (group instanceof IncludeGroup) {
                 includeGroups.add((IncludeGroup) group);
             }
         }
@@ -86,10 +85,10 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     @Override
     protected IncludeGroup createAndSaveNewEmptyGeneric(String name) {
         ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        if(manager.getGroupMap().containsKey(name)) return null;
+        if (manager.getGroupMap().containsKey(name)) return null;
 
         ConfigurationSection config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
-        config.set(name+"."+ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
+        config.set(name + "." + ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
 
         return (IncludeGroup) manager.createGroup(config, name);
     }

@@ -116,7 +116,7 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean unregisterEnchantment(@NotNull Enchantment enchantment){
-        return unregisterEnchantment(enchantment.getKey());
+        return unregisterEnchantment(enchantment.getKeyOrThrow());
     }
 
     /**
