@@ -73,8 +73,8 @@ jobs:
       - name: Upload offline JAR file
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.online_jar_name }}
-          path: build/libs/${{ env.online_jar_name }}
+          name: ${{ env.offline_jar_name }}
+          path: build/libs/${{ env.offline_jar_name }}
 
       - name: Summarize tests results
         uses: jeantessier/test-summary-action@v1
