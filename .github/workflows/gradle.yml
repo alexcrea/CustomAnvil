@@ -9,74 +9,76 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "v2.0.0" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "v2.0.0" ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDKs
-      uses: actions/setup-java@v4
-      with:
-        java-version: |
-            16
-            17
-            20
-            21
-        distribution: 'temurin'
-        cache: 'gradle'
-
-    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build --parallel
-
-    - name: Summarize tests results
-      uses: jeantessier/test-summary-action@v1
-      if: ${{ always() }}
-
-    # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
-    # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
-    #
-    # - name: Setup Gradle
-    #   uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-    #   with:
-    #     gradle-version: '8.9'
-    #
-    # - name: Build with Gradle 8.9
-    #   run: gradle build
-
-  dependency-submission:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDKs
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: |
+      - uses: actions/checkout@v4
+      - name: Set up JDKs
+        uses: actions/setup-java@v4
+        with:
+          java-version: |
             16
             17
             20
             21
+          distribution: 'temurin'
+          cache: 'gradle'
 
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-    - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
+      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Get small commit hash
+        run: echo "SMALL_COMMIT_HASH=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build --parallel
+
+      # only submit dependency on push
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v4
+        if: ${{ github.event_name == 'push' && success() }}
+        continue-on-error: true
+
+      # Get the names of the online and offline jars
+      # grep -v "offline" to exclude offline jar as the regex would catch it otherwise
+      - name: Get file name for jars
+        run: |
+          ONLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline") 
+          OFFLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*-offline.jar)
+          
+          echo "ONLINE_JAR_NAME=$(basename $ONLINE_JAR_PATH)" >> $GITHUB_ENV
+          echo "OFFLINE_JAR_NAME=$(basename $OFFLINE_JAR_PATH)" >> $GITHUB_ENV
+
+      # upload the named jars
+      - name: Upload online JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ONLINE_JAR_NAME }}
+          path: build/libs/${{ env.ONLINE_JAR_NAME }}
+
+      - name: Upload offline JAR file
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OFFLINE_JAR_NAME }}
+          path: build/libs/${{ env.OFFLINE_JAR_NAME }}
+
+      - name: Summarize tests results
+        uses: jeantessier/test-summary-action@v1
+        if: ${{ always() }}

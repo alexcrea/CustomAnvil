@@ -18,6 +18,9 @@ plugins {
 group = "xyz.alexcrea"
 version = "1.11.3"
 
+val effectiveVersion = "$version" +
+        (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
+
 repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
@@ -115,7 +118,8 @@ allprojects {
 
     // Set target version
     tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
+        sourceCompatibility =
+            "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
         targetCompatibility = "16"
 
         options.encoding = "UTF-8"
@@ -130,23 +134,13 @@ allprojects {
 
 }
 
-// Fat-jar builder
-val fatJar = tasks.register<Jar>("fatJar") {
-    manifest {
-        attributes.apply { put("Main-Class", "io.delilaheve.CustomAnvil") }
-    }
-    archiveFileName.set("${rootProject.name}-${project.version}.jar")
-    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
-    duplicatesStrategy = DuplicatesStrategy.WARN
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    with(tasks.jar.get() as CopySpec)
-}
-
 tasks {
+
     // Online jar (use of libraries)
     shadowJar {
         // No suffix for this jar
-        archiveClassifier.set("")
+        val name = "${rootProject.name}-${effectiveVersion}.jar"
+        archiveFileName.set(name)
 
         // Exclude kotlin std and its annotation
         exclude("**/kotlin-stdlib*.jar")
@@ -158,7 +152,7 @@ tasks {
         // Replace version and example fields in plugin.yml
         filesMatching("plugin.yml") {
             expand(
-                "version" to project.version,
+                "version" to effectiveVersion,
                 "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" "
             )
         }
@@ -176,14 +170,15 @@ tasks {
 
         // Add custom anvil compiled
         ::class, fun ShadowJar.() {
-            archiveClassifier.set("offline")
+            val name = "${rootProject.name}-${effectiveVersion}-offline.jar"
+            archiveFileName.set(name)
 
             // Shadow necessary dependency
             relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
 
             filesMatching("plugin.yml") {
                 expand(
-                    "version" to "${project.version}-offline",
+                    "version" to "$effectiveVersion-offline",
                     "libraries" to ""
                 )
             }
