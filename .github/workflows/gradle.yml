@@ -47,12 +47,31 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build --parallel
 
-    - name: Upload build artifacts
+    # Get the names of the online and offline jars
+    - name: Get file name for online JAR of CustomAnvil # grep -v "offline" to exclude offline jar
+      run: |
+        ONLINE_JAR_NAME=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline") 
+        echo "online_jar_name=${ONLINE_JAR_NAME}" >> $GITHUB_ENV
+
+    - name: Get file name for offline JAR of CustomAnvil
+      run: |
+        OFFLINE_JAR_NAME=$(ls build/libs/CustomAnvil-*-offline.jar)
+        echo "offline_jar_name=${OFFLINE_JAR_NAME}" >> $GITHUB_ENV
+
+    # upload the named jars
+    - name: Upload online JAR artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Package
-        path: build/libs/*
+        name: ${{ env.online_jar_name }}
+        path: build/libs/${{ env.online_jar_name }}
 
+    - name: Upload offline JAR file
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.online_jar_name }}
+        path: build/libs/${{ env.online_jar_name }}
+
+    # Finally, upload test result
     - name: Summarize tests results
       uses: jeantessier/test-summary-action@v1
       if: ${{ always() }}
