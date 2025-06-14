@@ -23,6 +23,11 @@ class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
         return listOf()
     }
 
+    private fun ItemChecker.getTokenSafe(item: ItemStack?): Array<String> {
+        if (item == null) return arrayOf()
+        return getTokenMethod.invoke(this, item) as Array<String>
+    }
+
     override fun testAnvilResult(event: InventoryClickEvent): Boolean {
         // Check if token changes from left with result
         val left = event.inventory.getItem(PrepareAnvilListener.ANVIL_INPUT_LEFT)
@@ -30,8 +35,8 @@ class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
 
         val itemChecker = (plugin as ToolStats).itemChecker
 
-        val leftTokens = getTokenMethod.invoke(itemChecker, left) as Array<String>
-        val resultToken = getTokenMethod.invoke(itemChecker, result) as Array<String>
+        val leftTokens = itemChecker.getTokenSafe(left)
+        val resultToken = itemChecker.getTokenSafe(result)
 
         return !leftTokens.contentDeepEquals(resultToken);
     }
