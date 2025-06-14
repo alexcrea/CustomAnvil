@@ -42,13 +42,10 @@ dependencies {
     // EcoEnchants
     compileOnly("com.willfp:EcoEnchants:12.11.1")
     compileOnly("com.willfp:eco:6.74.5")
-    compileOnly(project(":impl:LegacyEcoEnchant"))
 
     // ExcellentEnchants
     compileOnly(files("libs/nightcore-2.7.3.jar"))
     compileOnly(files("libs/ExcellentEnchants-5.0.0.jar"))
-    compileOnly(files("libs/ExcellentEnchants-4.3.1.jar")) // For legacy excellent enchants (can/should be stripped)
-    compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar")) // For legacy excellent enchants
 
     // Disenchantment
     compileOnly(files("libs/Disenchantment-6.1.5.jar"))
@@ -61,16 +58,6 @@ dependencies {
 
     // Include nms
     implementation(project(":nms:nms-common"))
-    implementation(project(":nms:v1_17R1", configuration = "reobf"))
-    implementation(project(":nms:v1_18R1", configuration = "reobf"))
-    implementation(project(":nms:v1_18R2", configuration = "reobf"))
-    implementation(project(":nms:v1_19R1", configuration = "reobf"))
-    implementation(project(":nms:v1_19R2", configuration = "reobf"))
-    implementation(project(":nms:v1_19R3", configuration = "reobf"))
-    implementation(project(":nms:v1_20R1", configuration = "reobf"))
-    implementation(project(":nms:v1_20R2", configuration = "reobf"))
-    implementation(project(":nms:v1_20R3", configuration = "reobf"))
-    implementation(project(":nms:v1_20R4", configuration = "reobf"))
     implementation(project(":nms:v1_21R1", configuration = "reobf"))
     implementation(project(":nms:v1_21R2", configuration = "reobf"))
     implementation(project(":nms:v1_21R3", configuration = "reobf"))
