@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Package
-        path: build/libs
+        path: build/libs/*
 
     - name: Summarize tests results
       uses: jeantessier/test-summary-action@v1
