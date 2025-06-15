@@ -9,9 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main", "v2.x.x" ]
+    branches: [ "v1.x.x", "v2.x.x" ]
   pull_request:
-    branches: [ "main", "v2.x.x" ]
+    branches: [ "v1.x.x", "v2.x.x" ]
 
 concurrency:
   group: ${{ github.ref }}
