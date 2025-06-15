@@ -6,11 +6,11 @@ plugins {
     kotlin("jvm") version "2.1.0"
     java
     id("org.jetbrains.dokka").version("1.9.20")
-    id("com.gradleup.shadow").version("8.3.5")
+    id("com.gradleup.shadow").version("9.0.0-beta16")
     // Maven publish
     `maven-publish`
     signing
-    id("cn.lalaki.central").version("1.2.5")
+    id("cn.lalaki.central").version("1.2.8")
     // Paper
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.16" apply false
 }
