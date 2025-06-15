@@ -39,7 +39,7 @@ jobs:
       # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
@@ -63,8 +63,8 @@ jobs:
           online_jar_path=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline") 
           offline_jar_path=$(ls build/libs/CustomAnvil-*-offline.jar)
           
-          echo "ONLINE_JAR_PATH=$($online_jar_path)" >> $GITHUB_ENV
-          echo "ONLINE_JAR_PATH=$($offline_jar_path)" >> $GITHUB_ENV
+          echo "ONLINE_JAR_PATH=$online_jar_path" >> $GITHUB_ENV
+          echo "ONLINE_JAR_PATH=$offline_jar_path" >> $GITHUB_ENV
 
       # upload the named jars
       - name: Upload online JAR artifact
