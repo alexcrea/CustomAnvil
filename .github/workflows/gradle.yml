@@ -63,8 +63,8 @@ jobs:
           ONLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*.jar | grep -v "offline") 
           OFFLINE_JAR_PATH=$(ls build/libs/CustomAnvil-*-offline.jar)
           
-          echo "ONLINE_JAR_PATH=${ONLINE_JAR_PATH}" >> $GITHUB_ENV
-          echo "OFFLINE_JAR_PATH=${OFFLINE_JAR_PATH}" >> $GITHUB_ENV
+          echo "ONLINE_JAR_PATH=$ONLINE_JAR_PATH" >> $GITHUB_ENV
+          echo "OFFLINE_JAR_PATH=$OFFLINE_JAR_PATH" >> $GITHUB_ENV
 
       # upload the named jars
       - name: Upload online JAR artifact
