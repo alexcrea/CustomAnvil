@@ -75,7 +75,7 @@ dependencies {
     implementation(project(":nms:v1_21R2", configuration = "reobf"))
     implementation(project(":nms:v1_21R3", configuration = "reobf"))
     implementation(project(":nms:v1_21R4", configuration = "reobf"))
-    implementation(project(":nms:v1_21R5", configuration = "reobf"))
+    implementation(project(":nms:v1_21R5"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
