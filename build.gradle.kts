@@ -12,7 +12,7 @@ plugins {
     signing
     id("cn.lalaki.central").version("1.2.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.16" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" apply false
 }
 
 group = "xyz.alexcrea"
