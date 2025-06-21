@@ -12,11 +12,11 @@ plugins {
     signing
     id("cn.lalaki.central").version("1.2.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.16" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" apply false
 }
 
 group = "xyz.alexcrea"
-version = "1.11.4"
+version = "1.12.0"
 
 val effectiveVersion = "$version" +
         (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
@@ -75,6 +75,7 @@ dependencies {
     implementation(project(":nms:v1_21R2", configuration = "reobf"))
     implementation(project(":nms:v1_21R3", configuration = "reobf"))
     implementation(project(":nms:v1_21R4", configuration = "reobf"))
+    implementation(project(":nms:v1_21R5", configuration = "reobf"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))

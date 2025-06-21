@@ -11,13 +11,11 @@ dependencies {
     implementation(project(":nms:nms-common"))
 
     // Used for nms
-    paperweight.paperDevBundle("1.21.5-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.6-R0.1-SNAPSHOT")
 }
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
-
-    mavenLocal()//TODO remove when paperDevBundle 1.21.5 release
 }
 
 // minecraft 1.21 java version is 21.
