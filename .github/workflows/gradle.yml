@@ -29,9 +29,6 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: |
-            16
-            17
-            20
             21
           distribution: 'temurin'
           cache: 'gradle'

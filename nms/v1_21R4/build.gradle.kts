@@ -16,16 +16,6 @@ dependencies {
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
-
-    mavenLocal()//TODO remove when paperDevBundle 1.21.5 release
-}
-
-// minecraft 1.21 java version is 21.
-
-// Configure used version of kotlin and java
-java {
-    disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 // Set target version

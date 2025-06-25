@@ -19,18 +19,10 @@ repositories {
 
 }
 
-// minecraft 1.20 recommended java version is 18. but we assume 17 is good enough as lts
-
-// Configure used version of kotlin and java
-java {
-    disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
-
 // Set target version
 tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "17"
-    targetCompatibility = "17"
+    sourceCompatibility = "18"
+    targetCompatibility = "18"
 
     options.encoding = "UTF-8"
 }
@@ -38,6 +30,6 @@ tasks.withType<JavaCompile>().configureEach {
 kotlin {
     compilerOptions {
         apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        jvmTarget.set(JvmTarget.JVM_17)
+        jvmTarget.set(JvmTarget.JVM_18)
     }
 }

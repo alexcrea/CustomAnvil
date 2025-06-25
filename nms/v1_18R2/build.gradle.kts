@@ -19,14 +19,6 @@ repositories {
 
 }
 
-// As minecraft 1.18 work with java 1.17 or above. we set language version to 1.17
-
-// Configure used version of kotlin and java
-java {
-    disableAutoTargetJvm()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
-
 // Set target version
 tasks.withType<JavaCompile>().configureEach {
     sourceCompatibility = "17"
