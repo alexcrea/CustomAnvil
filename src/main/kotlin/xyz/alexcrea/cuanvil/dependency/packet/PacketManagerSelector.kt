@@ -58,7 +58,7 @@ object PacketManagerSelector {
                     2, 3 -> V1_21R2_PacketManager()
                     4 -> V1_21R3_PacketManager()
                     5 -> V1_21R4_PacketManager()
-                    6 -> V1_21R5_PacketManager()
+                    6, 7 -> V1_21R5_PacketManager()
                     else -> null
                 }
 
