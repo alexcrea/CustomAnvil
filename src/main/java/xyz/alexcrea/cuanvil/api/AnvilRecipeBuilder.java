@@ -14,7 +14,10 @@ public class AnvilRecipeBuilder {
     private @NotNull String name;
     private boolean exactCount;
 
-    private int xpCostPerCraft;
+    private int levelCostPerCraft;
+    private int linearXpCostPerCraft;
+
+    private boolean removeExactLinearXp;
 
     private @Nullable ItemStack leftItem;
     private @Nullable ItemStack rightItem;
@@ -31,7 +34,7 @@ public class AnvilRecipeBuilder {
         this.name = name;
 
         this.exactCount = true;
-        this.xpCostPerCraft = 1;
+        this.levelCostPerCraft = 1;
 
         this.leftItem = null;
         this.rightItem = null;
@@ -89,9 +92,11 @@ public class AnvilRecipeBuilder {
      * Get the xp level cost per craft.
      *
      * @return The xp level cost per craft
+     * @deprecated use {@link #getLevelCostPerCraft() getLevelCostPerCraft} instead
      */
+    @Deprecated(since = "1.13.0")
     public int getXpCostPerCraft() {
-        return xpCostPerCraft;
+        return getLevelCostPerCraft();
     }
 
     /**
@@ -99,9 +104,78 @@ public class AnvilRecipeBuilder {
      *
      * @param xpCostPerCraft The xp level cost per craft
      * @return This recipe builder instance.
+     * @deprecated use {@link #setLevelCostPerCraft(int) setLevelCostPerCraft} instead
      */
+    @Deprecated(since = "1.13.0")
     public AnvilRecipeBuilder setXpCostPerCraft(int xpCostPerCraft) {
-        this.xpCostPerCraft = xpCostPerCraft;
+        return setLevelCostPerCraft(xpCostPerCraft);
+    }
+
+    /**
+     * Get the xp level cost per craft.
+     *
+     * @return The xp level cost per craft
+     */
+    public int getLevelCostPerCraft() {
+        return levelCostPerCraft;
+    }
+
+    /**
+     * Sets the xp level cost per craft.
+     *
+     * @param levelCostPerCraft The xp level cost per craft
+     * @return This recipe builder instance.
+     */
+    public AnvilRecipeBuilder setLevelCostPerCraft(int levelCostPerCraft) {
+        this.levelCostPerCraft = levelCostPerCraft;
+        return this;
+    }
+
+    /**
+     * Get the linear xp cost (not xp level cost) per craft.
+     *
+     * @return The xp level cost per craft
+     */
+    public int getLinearXpCostPerCraft() {
+        return linearXpCostPerCraft;
+    }
+
+    /**
+     * Sets the linear xp cost (not xp level cost) per craft.
+     *
+     * @param linearXpCostPerCraft The linear xp cost per craft
+     * @return This recipe builder instance.
+     */
+    public AnvilRecipeBuilder setLinearXpCostPerCraft(int linearXpCostPerCraft) {
+        this.linearXpCostPerCraft = linearXpCostPerCraft;
+        return this;
+    }
+
+    /**
+     * Get if the linear xp should get removed by an exact amount.
+     * <p>
+     * If false (default) level cost will be the level that would be reached by a player with this amount of xp.
+     * If true will require the level that has at least the specified level of xp then on click remove only the necessary xp
+     * <p>
+     * linear xp cost are applied after level cost
+     * @return if we should remove the exact amount of linear xp
+     */
+    public boolean isRemoveExactLinearXp() {
+        return removeExactLinearXp;
+    }
+
+    /**
+     * Set if the linear xp should get removed by an exact amount.
+     * <p>
+     * If false (default) level cost will be the level that would be reached by a player with this amount of xp.
+     * If true will require the level that has at least the specified level of xp then on click remove only the necessary xp
+     * <p>
+     * linear xp cost are applied after level cost
+     * @param removeExactLinearXp if we should remove the exact amount of linear xp
+     * @return This recipe builder instance.
+     */
+    public AnvilRecipeBuilder setRemoveExactLinearXp(boolean removeExactLinearXp) {
+        this.removeExactLinearXp = removeExactLinearXp;
         return this;
     }
 
@@ -182,12 +256,14 @@ public class AnvilRecipeBuilder {
      */
     @Nullable // null if missing argument
     public AnvilCustomRecipe build() {
-        if(leftItem == null || resultItem == null) return null;
+        if (leftItem == null || resultItem == null) return null;
 
         return new AnvilCustomRecipe(
                 this.name,
                 this.exactCount,
-                this.xpCostPerCraft,
+                this.levelCostPerCraft,
+                this.linearXpCostPerCraft,
+                this.removeExactLinearXp,
                 this.leftItem, this.rightItem, this.resultItem
         );
     }
@@ -198,7 +274,7 @@ public class AnvilRecipeBuilder {
      *
      * @return True if successful.
      */
-    public boolean registerIfAbsent(){
+    public boolean registerIfAbsent() {
         return CustomAnvilRecipeApi.addRecipe(this);
     }
 

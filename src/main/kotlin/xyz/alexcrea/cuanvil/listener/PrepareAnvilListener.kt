@@ -139,7 +139,7 @@ class PrepareAnvilListener : Listener {
         val xpCost = recipe.determineCost(amount, first, resultItem)
 
         val levelCost =
-            if (recipe.removeExactXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
+            if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
             else AnvilXpUtil.calculateLevelForXp(xpCost)
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, levelCost, true)

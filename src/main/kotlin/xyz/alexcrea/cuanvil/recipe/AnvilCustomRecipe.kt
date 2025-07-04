@@ -17,7 +17,7 @@ class AnvilCustomRecipe(
     var levelCostPerCraft: Int,
 
     var XpCostPerCraft: Int,
-    var removeExactXp: Boolean,
+    var removeExactLinearXp: Boolean,
 
     var leftItem: ItemStack?,
     var rightItem: ItemStack?,
@@ -96,7 +96,7 @@ class AnvilCustomRecipe(
 
         fileConfig["$name.$XP_LEVEL_COST_CONFIG"] = levelCostPerCraft
         fileConfig["$name.$LINEAR_XP_COST_CONFIG"] = XpCostPerCraft
-        fileConfig["$name.$REMOVE_EXACT_XP_CONFIG"] = removeExactXp
+        fileConfig["$name.$REMOVE_EXACT_XP_CONFIG"] = removeExactLinearXp
 
         fileConfig["$name.$LEFT_ITEM_CONFIG"] = leftItem
         fileConfig["$name.$RIGHT_ITEM_CONFIG"] = rightItem
@@ -132,7 +132,7 @@ class AnvilCustomRecipe(
             DEFAULT_LINEAR_XP_COST_CONFIG
         )
 
-        this.removeExactXp = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getBoolean(
+        this.removeExactLinearXp = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getBoolean(
             "$name.$REMOVE_EXACT_XP_CONFIG",
             DEFAULT_REMOVE_EXACT_XP_CONFIG
         )

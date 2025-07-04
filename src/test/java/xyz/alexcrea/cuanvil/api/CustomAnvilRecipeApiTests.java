@@ -61,7 +61,7 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
 
         // Add and test recipe
         AnvilRecipeBuilder builder = new AnvilRecipeBuilder(recipeName);
-        builder.setExactCount(true).setLeftItem(stick).setResultItem(stick).setXpCostPerCraft(2);
+        builder.setExactCount(true).setLeftItem(stick).setResultItem(stick).setLevelCostPerCraft(2);
 
         assertTrue(builder.registerIfAbsent());
         AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
@@ -125,7 +125,7 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         builder.setExactCount(false)
                 .setLeftItem(stick)
                 .setResultItem(stick2)
-                .setXpCostPerCraft(2);
+                .setLevelCostPerCraft(2);
 
         assertTrue(builder.registerIfAbsent());
 

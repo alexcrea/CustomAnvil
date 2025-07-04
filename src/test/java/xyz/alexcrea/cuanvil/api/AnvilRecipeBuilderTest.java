@@ -63,9 +63,9 @@ public class AnvilRecipeBuilderTest extends SharedOnlyMockBukkit {
 
     @Test
     void setXpCostPerCraft(){
-        assertEquals(1, builder.getXpCostPerCraft());
-        builder.setXpCostPerCraft(2);
-        assertEquals(2, builder.getXpCostPerCraft());
+        assertEquals(1, builder.getLevelCostPerCraft());
+        builder.setLevelCostPerCraft(2);
+        assertEquals(2, builder.getLevelCostPerCraft());
     }
 
     @Test

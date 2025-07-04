@@ -132,12 +132,12 @@ class AnvilResultListener : Listener {
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
         val xpCost = recipe.determineCost(amount, leftItem, output)
         val finalCost =
-            if (recipe.removeExactXp) xpCost
+            if (recipe.removeExactLinearXp) xpCost
             else AnvilXpUtil.calculateLevelForXp(xpCost)
 
         CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $finalCost, level: ${player.level}, result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
         if (player.gameMode != GameMode.CREATIVE){
-            if(recipe.removeExactXp){
+            if(recipe.removeExactLinearXp){
                 if(player.totalExperience < finalCost) return
             }else if(player.level < finalCost) return
         }
@@ -149,7 +149,7 @@ class AnvilResultListener : Listener {
 
         // Handle not creative middle click...
         if (event.click != ClickType.MIDDLE &&
-            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, finalCost, recipe.removeExactXp)
+            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, finalCost, recipe.removeExactLinearXp)
         ) return
 
         // Finally, we add the item to the player
