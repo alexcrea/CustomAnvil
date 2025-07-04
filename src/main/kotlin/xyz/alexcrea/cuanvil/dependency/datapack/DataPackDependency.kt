@@ -23,7 +23,8 @@ object DataPackDependency {
      * Map of the latest CustomAnvil update related to the pack
      */
     private val LASTEST_VERSION = mapOf(
-        Pair("bracken", Version(1, 11, 0))
+        Pair("bracken", Version(1, 11, 0)),
+        Pair("enchantplus", Version(1, 13, 0))
     )
 
     val enabledDatapacks: List<String>
@@ -47,6 +48,11 @@ object DataPackDependency {
                 continue
             }
 
+            if (packName.contains("neoenchant", ignoreCase = true)) {
+                handlePack("enchantplus")
+                continue
+            }
+
         }
     }
 
@@ -60,9 +66,12 @@ object DataPackDependency {
     private fun handlePackInitialConfig(pack: String) {
         val defConfig = ConfigHolder.DEFAULT_CONFIG
         val version = LASTEST_VERSION[pack]
+        if(version == null) {
+            throw RuntimeException("The pack $pack has no latest version hard coded in the plugin")
+        }
 
         val currentVersion = Version.fromString(defConfig.config.getString("datapack.$pack"))
-        if (currentVersion.greaterEqual(version!!)) {
+        if (currentVersion.greaterEqual(version)) {
             handleEnchantAllConflict(pack)
             return
         }
