@@ -203,4 +203,43 @@ object AnvilXpUtil {
         return rightValue + illegalPenalty
     }
 
+    /**
+     * Calculate the maximum level reachable with this amount of `xp`
+     * This is equivalent of the displayed level on client
+     * @author provided by kFor
+     */
+    fun calculateLevelForXp(xp: Int): Int {
+        return when {
+            xp <= 352 -> (Math.sqrt((xp + 9).toDouble()) - 3).toInt()
+            xp <= 1507 -> {
+                val inner = (2.0 / 5.0) * (xp - 7839.0 / 40.0)
+                (81.0 / 10.0 + Math.sqrt(inner)).toInt()
+            }
+
+            else -> {
+                val inner = (2.0 / 9.0) * (xp - 54215.0 / 72.0)
+                (325.0 / 18.0 + Math.sqrt(inner)).toInt()
+            }
+        }
+    }
+
+    /**
+     * Calculate the minimum level necessary to have at least `xp`
+     */
+    fun calculateMinimumLevelForXp(xp: Int): Int {
+        return calculateLevelForXp(xp - 1) + 1
+    }
+
+    /**
+     * Calculate the minimum amount of xp necessary to reach `level`
+     * @author provided by kFor
+     */
+    fun calculateXpForLevel(level: Int): Int {
+        return when {
+            level <= 16 -> (level * level + 6 * level)
+            level <= 31 -> (2.5 * level * level - 40.5 * level + 360).toInt()
+            else -> (4.5 * level * level - 162.5 * level + 2220).toInt()
+        }
+    }
+
 }
