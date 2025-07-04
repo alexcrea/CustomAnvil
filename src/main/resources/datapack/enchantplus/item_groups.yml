@@ -24,3 +24,7 @@ mounted_armor:
     - leather_horse_armor
   groups:
     - wolf_armor
+
+elytra:
+  items:
+    - elytra
