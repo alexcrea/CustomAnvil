@@ -36,7 +36,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     public CustomRecipeSubSettingGui(
             @NotNull CustomRecipeConfigGui parent,
             @NotNull AnvilCustomRecipe anvilRecipe) {
-        super(3, "§e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " §8Config");
+        super(4, "§e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " §8Config");
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
 
@@ -46,7 +46,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 "0ab000000",
                 "B00000000"
         );
-        this.pane = new PatternPane(0, 0, 9, 3, pattern);
+        this.pane = new PatternPane(0, 0, 9, 4, pattern);
         addPane(this.pane);
 
         prepareStaticValues();
@@ -183,7 +183,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         GuiItem exactCountItem = this.exactCountFactory.getItem();
         this.pane.bindItem('1', exactCountItem);
 
-        if (anvilRecipe.getXpCostPerCraft() != 0) {
+        if (anvilRecipe.getXpCostPerCraft() == 0) {
             this.pane.bindItem('a', noRemoveExactLinearXp);
         } else {
             this.pane.bindItem('a', removeExactLinearXpFactory.getItem());
