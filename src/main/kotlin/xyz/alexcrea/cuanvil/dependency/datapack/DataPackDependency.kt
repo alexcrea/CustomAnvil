@@ -47,6 +47,11 @@ object DataPackDependency {
                 continue
             }
 
+            if (packName.contains("neoenchant", ignoreCase = true)) {
+                handlePack("enchantplus")
+                continue
+            }
+
         }
     }
 

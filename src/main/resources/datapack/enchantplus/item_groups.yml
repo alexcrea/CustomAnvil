@@ -1,0 +1,26 @@
+mining_and_damage:
+  groups:
+      - melee_weapons
+      - mace
+      - bow
+      - crossbow
+      - mace
+      - trident
+      - tools
+
+stick:
+  items:
+    - stick
+
+wolf_armor:
+  items:
+    - wolf_armor
+
+mounted_armor:
+  items:
+    - diamond_horse_armor
+    - golden_horse_armor
+    - iron_horse_armor
+    - leather_horse_armor
+  groups:
+    - wolf_armor
