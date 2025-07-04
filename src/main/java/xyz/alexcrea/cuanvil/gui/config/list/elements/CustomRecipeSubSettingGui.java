@@ -43,6 +43,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "01203450D",
+                "0ab000000",
                 "B00000000"
         );
         this.pane = new PatternPane(0, 0, 9, 3, pattern);
@@ -51,11 +52,16 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         prepareStaticValues();
     }
 
-    BoolSettingsGui.BoolSettingFactory exactCountFactory;
-    IntSettingsGui.IntSettingFactory xpCostFactory;
-    ItemSettingGui.ItemSettingFactory leftItemFactory;
-    ItemSettingGui.ItemSettingFactory rightItemFactory;
-    ItemSettingGui.ItemSettingFactory resultItemFactory;
+    private BoolSettingsGui.BoolSettingFactory exactCountFactory;
+    private BoolSettingsGui.BoolSettingFactory removeExactLinearXpFactory;
+    private GuiItem noRemoveExactLinearXp;
+
+    private IntSettingsGui.IntSettingFactory levelCostFactory;
+    private IntSettingsGui.IntSettingFactory linearXpCostFactory;
+
+    private ItemSettingGui.ItemSettingFactory leftItemFactory;
+    private ItemSettingGui.ItemSettingFactory rightItemFactory;
+    private ItemSettingGui.ItemSettingFactory resultItemFactory;
 
     private void prepareStaticValues() {
 
@@ -74,19 +80,38 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
 
         // Displayed item will be updated later
-
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = new BoolSettingsGui.BoolSettingFactory("§8Exact count ?", this,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
-        this.xpCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Xp Cost", this,
-                this.anvilRecipe +"."+AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
+        this.removeExactLinearXpFactory = new BoolSettingsGui.BoolSettingFactory("§8Remove exact linear xp ?", this,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                this.anvilRecipe + "." + AnvilCustomRecipe.REMOVE_EXACT_XP_CONFIG, AnvilCustomRecipe.DEFAULT_REMOVE_EXACT_XP_CONFIG);
+
+        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§cRemove exact linear xp ?");
+        meta.setLore(Collections.singletonList("§7Not usable if linear cost is 0"));
+        item.setItemMeta(meta);
+        this.noRemoveExactLinearXp = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+
+        this.levelCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Level Cost", this,
+                this.anvilRecipe + "." + AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG, 1, 5, 10);
 
+        this.linearXpCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Linear Xp Cost", this,
+                this.anvilRecipe + "." + AnvilCustomRecipe.LINEAR_XP_COST_CONFIG,
+                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                null,
+                0, Integer.MAX_VALUE, AnvilCustomRecipe.DEFAULT_LINEAR_XP_COST_CONFIG, 1, 10, 100, 1000, 10000);
 
+
+        // Right part of the gui
         this.leftItemFactory = new ItemSettingGui.ItemSettingFactory("§eRecipe Left §8Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
@@ -158,8 +183,18 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         GuiItem exactCountItem = this.exactCountFactory.getItem();
         this.pane.bindItem('1', exactCountItem);
 
-        GuiItem xpCostItem = this.xpCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
-        this.pane.bindItem('2', xpCostItem);
+        if (anvilRecipe.getXpCostPerCraft() != 0) {
+            this.pane.bindItem('a', noRemoveExactLinearXp);
+        } else {
+            this.pane.bindItem('a', removeExactLinearXpFactory.getItem());
+        }
+
+        GuiItem levelCostItem = this.levelCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
+        this.pane.bindItem('2', levelCostItem);
+
+
+        GuiItem xpCostItem = this.linearXpCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
+        this.pane.bindItem('b', xpCostItem);
 
         GuiItem leftGuiItem = this.leftItemFactory.getItem();
         this.pane.bindItem('3', leftGuiItem);
@@ -169,7 +204,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         GuiItem resultGuiItem = this.resultItemFactory.getItem();
         this.pane.bindItem('5', resultGuiItem);
-        
+
         update();
     }
 
