@@ -136,12 +136,13 @@ class PrepareAnvilListener : Listener {
         event.result = resultItem
         if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
-        // Maybe add an option on custom craft to ignore/not ignore penalty ??
-        var xpCost = recipe.levelCostPerCraft * amount
-        xpCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.CUSTOM_CRAFT)
+        val xpCost = recipe.determineCost(amount, first, resultItem)
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, xpCost, true)
+        val levelCost =
+            if (recipe.removeExactXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
+            else AnvilXpUtil.calculateLevelForXp(xpCost)
 
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, levelCost, true)
         return true
     }
 

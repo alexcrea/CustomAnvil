@@ -5,6 +5,8 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
+import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 
 class AnvilCustomRecipe(
     val name: String,
@@ -194,6 +196,19 @@ class AnvilCustomRecipe(
 
     override fun toString(): String {
         return name
+    }
+
+    fun determineCost(amount: Int, first: ItemStack, resultItem: ItemStack): Int {
+        // First we determine the non linear level cost
+        var levelCost = levelCostPerCraft * amount
+        // TODO Maybe add an option per custom craft to ignore/not ignore penalty ??
+        levelCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.CUSTOM_CRAFT)
+
+        var xpCost = AnvilXpUtil.calculateXpForLevel(levelCost)
+        // Then we add the linear cost
+        xpCost += XpCostPerCraft * amount
+
+        return xpCost
     }
 
 
