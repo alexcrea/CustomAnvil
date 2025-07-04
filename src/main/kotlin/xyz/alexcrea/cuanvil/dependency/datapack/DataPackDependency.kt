@@ -23,7 +23,8 @@ object DataPackDependency {
      * Map of the latest CustomAnvil update related to the pack
      */
     private val LASTEST_VERSION = mapOf(
-        Pair("bracken", Version(1, 11, 0))
+        Pair("bracken", Version(1, 11, 0)),
+        Pair("neoenchant", Version(1, 13, 0))
     )
 
     val enabledDatapacks: List<String>

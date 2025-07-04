@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.dependency.datapack
 
 import io.papermc.paper.datapack.Datapack
 import org.bukkit.Bukkit
+import org.bukkit.packs.DataPack
 import java.util.*
 
 object DataPackTester {
@@ -21,6 +22,13 @@ object DataPackTester {
                     .stream().map { obj: Datapack -> obj.name }
                     .toList()
             } catch (e: NoSuchMethodException) {
+                try {
+                    DataPack::class.java.getDeclaredMethod("getKey")
+                } catch (e: NoSuchMethodException) {
+                    System.err.println("Could not find compatible datapack manager")
+                    System.err.println("If you are using a datapack that should be compatible with CustomAnvil. It will not get detected...")
+                    return emptyList()
+                }
                 return legacyNames
             } catch (e: Exception){
                 // Assume cause UnimplementedOperationException on mock server
