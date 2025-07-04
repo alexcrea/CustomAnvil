@@ -81,10 +81,10 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
         this.xpCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Xp Cost", this,
-                this.anvilRecipe +"."+AnvilCustomRecipe.XP_COST_CONFIG,
+                this.anvilRecipe +"."+AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
-                costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG, 1, 5, 10);
+                costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG, 1, 5, 10);
 
 
         this.leftItemFactory = new ItemSettingGui.ItemSettingFactory("§eRecipe Left §8Item", this,

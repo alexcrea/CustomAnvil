@@ -137,7 +137,7 @@ class PrepareAnvilListener : Listener {
         if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
         // Maybe add an option on custom craft to ignore/not ignore penalty ??
-        var xpCost = recipe.xpCostPerCraft * amount
+        var xpCost = recipe.levelCostPerCraft * amount
         xpCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.CUSTOM_CRAFT)
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, xpCost, true)

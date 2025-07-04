@@ -63,7 +63,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         meta.setLore(Arrays.asList(
                 "§7Should work:    §" + (shouldWork ? "aYes" : "cNo"),
                 "§7Exact count:    §" + (recipe.getExactCount() ? "aYes" : "cNo"),
-                "§7Recipe Xp Cost: §e" + recipe.getXpCostPerCraft()
+                "§7Recipe Xp Cost: §e" + recipe.levelCostPerCraft()
 
         ));
 
@@ -87,7 +87,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         AnvilCustomRecipe recipe = new AnvilCustomRecipe(
                 name,
                 AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG,
-                AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG,
+                AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());

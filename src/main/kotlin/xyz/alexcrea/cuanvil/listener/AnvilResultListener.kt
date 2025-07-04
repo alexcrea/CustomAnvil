@@ -130,7 +130,7 @@ class AnvilResultListener : Listener {
         if (recipe.leftItem == null) return // in case it changed
 
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
-        val xpCost = amount * recipe.xpCostPerCraft
+        val xpCost = amount * recipe.levelCostPerCraft
 
         CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $xpCost, level: ${player.level}, result: ${player.level < xpCost}")
         if ((player.gameMode != GameMode.CREATIVE) && (player.level < xpCost)) return
