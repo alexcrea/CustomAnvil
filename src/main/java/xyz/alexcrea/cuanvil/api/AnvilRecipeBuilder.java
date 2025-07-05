@@ -26,7 +26,7 @@ public class AnvilRecipeBuilder {
     /**
      * Instantiates a new Anvil recipe builder.
      * exact count default to true.
-     * xp cost per craft default to 1.
+     * xp level and linear cost per craft default to 0.
      *
      * @param name The recipe name
      */
@@ -34,7 +34,9 @@ public class AnvilRecipeBuilder {
         this.name = name;
 
         this.exactCount = true;
-        this.levelCostPerCraft = 1;
+        this.levelCostPerCraft = 0;
+        this.linearXpCostPerCraft = 0;
+        this.removeExactLinearXp = false;
 
         this.leftItem = null;
         this.rightItem = null;
@@ -63,7 +65,7 @@ public class AnvilRecipeBuilder {
     }
 
     /**
-     * Get if the recipe is exact count.
+     * Get if the recipe is exact count. (default 0)
      * <p>
      * Exact count mean the recipe can only be crafted 1 by 1.
      * If set to false, then it will craft as much as possible in 1 go and will keep unused material onto the anvil inventory.
@@ -89,7 +91,7 @@ public class AnvilRecipeBuilder {
     }
 
     /**
-     * Get the xp level cost per craft.
+     * Get the xp level cost per craft. (default 0)
      *
      * @return The xp level cost per craft
      * @deprecated use {@link #getLevelCostPerCraft() getLevelCostPerCraft} instead
@@ -112,7 +114,7 @@ public class AnvilRecipeBuilder {
     }
 
     /**
-     * Get the xp level cost per craft.
+     * Get the xp level cost per craft. (default 0)
      *
      * @return The xp level cost per craft
      */
