@@ -134,6 +134,92 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
         AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
     }
 
+    @Test
+    public void testLinearXpCost() {
+        String recipeName = "stick_recipe";
+        ItemStack stick = new ItemStackMock(Material.STICK);
+        ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
+        ItemStack stick5 = new ItemStackMock(Material.STICK, 5);
+        ItemStack stick10 = new ItemStackMock(Material.STICK, 10);
+
+        AnvilFuseTestData nullResultData = new AnvilFuseTestData(
+                stick, stick,
+                null
+        );
+
+        AnvilFuseTestData legalResultData1 = new AnvilFuseTestData(
+                stick, stick,
+                null, stick2, null,
+                1,
+                null, null
+        );
+
+        AnvilFuseTestData legalResultData2 = new AnvilFuseTestData(
+                stick5, stick,
+                null, stick10, null,
+                4,
+                null, null
+        );
+
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+
+        AnvilRecipeBuilder builder = new AnvilRecipeBuilder(recipeName);
+        builder.setExactCount(false)
+                .setLeftItem(stick)
+                .setResultItem(stick2)
+                .setLevelCostPerCraft(0)
+                .setLinearXpCostPerCraft(10);
+
+        assertTrue(builder.registerIfAbsent());
+
+        // Now working test
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData1);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
+    }
+
+    @Test
+    public void testLinearXpCostRemoveExact() {
+        String recipeName = "stick_recipe";
+        ItemStack stick = new ItemStackMock(Material.STICK);
+        ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
+        ItemStack stick5 = new ItemStackMock(Material.STICK, 5);
+        ItemStack stick10 = new ItemStackMock(Material.STICK, 10);
+
+        AnvilFuseTestData nullResultData = new AnvilFuseTestData(
+                stick, stick,
+                null
+        );
+
+        AnvilFuseTestData legalResultData1 = new AnvilFuseTestData(
+                stick, stick,
+                null, stick2, null,
+                2,
+                null, null
+        );
+
+        AnvilFuseTestData legalResultData2 = new AnvilFuseTestData(
+                stick5, stick,
+                null, stick10, null,
+                5,
+                null, null
+        );
+
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+
+        AnvilRecipeBuilder builder = new AnvilRecipeBuilder(recipeName);
+        builder.setExactCount(false)
+                .setLeftItem(stick)
+                .setResultItem(stick2)
+                .setLinearXpCostPerCraft(10)
+                .setRemoveExactLinearXp(true);
+
+        assertTrue(builder.registerIfAbsent());
+
+        // Now working test
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData1);
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
+    }
+
     @Nullable
     public static AnvilCustomRecipe getByName(String name){
         for (AnvilCustomRecipe registeredRecipe : CustomAnvilRecipeApi.getRegisteredRecipes()) {
