@@ -136,10 +136,13 @@ class AnvilResultListener : Listener {
             else AnvilXpUtil.calculateLevelForXp(xpCost)
 
         CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $finalCost, level: ${player.level}, result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
-        if (player.gameMode != GameMode.CREATIVE){
-            if(recipe.removeExactLinearXp){
-                if(player.totalExperience < finalCost) return
-            }else if(player.level < finalCost) return
+        if (player.gameMode != GameMode.CREATIVE) {
+            if (recipe.removeExactLinearXp) {
+                val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
+                val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
+                val totalXp = levelXp + player.exp * delta
+                if (totalXp < finalCost) return
+            } else if (player.level < finalCost) return
         }
 
         // We give the item manually
@@ -149,7 +152,17 @@ class AnvilResultListener : Listener {
 
         // Handle not creative middle click...
         if (event.click != ClickType.MIDDLE &&
-            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, finalCost, recipe.removeExactLinearXp)
+            !handleCustomCraftClick(
+                event,
+                recipe,
+                inventory,
+                player,
+                leftItem,
+                rightItem,
+                amount,
+                finalCost,
+                recipe.removeExactLinearXp
+            )
         ) return
 
         // Finally, we add the item to the player
@@ -178,9 +191,21 @@ class AnvilResultListener : Listener {
         inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
 
         if (player.gameMode != GameMode.CREATIVE) {
-            if(linearCost){
-                player.totalExperience -= xpCost
-            } else{
+            if (linearCost) {
+                val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
+                val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
+                var totalXp = levelXp + player.exp * delta
+                totalXp -= xpCost
+
+                val newLevel = AnvilXpUtil.calculateLevelForXp(totalXp.toInt())
+
+                val newLevelXp = AnvilXpUtil.calculateXpForLevel(newLevel)
+                val newDelta = AnvilXpUtil.calculateXpForLevel(newLevel + 1) - newLevelXp
+                val xp = (totalXp - newLevelXp) / newDelta
+
+                player.level = newLevel
+                player.exp = xp / newDelta
+            } else {
                 player.level -= xpCost
             }
         }
