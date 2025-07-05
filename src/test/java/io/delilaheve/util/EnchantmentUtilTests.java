@@ -88,16 +88,16 @@ public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
         );
 
         // Test with no permission
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData2);
+        nullResultData.executeTest(anvil, player);
+        nullResultData2.executeTest(anvil, player);
 
         // Add permission
         PermissionAttachment attachment = player.addAttachment(plugin);
         attachment.setPermission(permission, true);
 
         // Test with new permission
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
+        legalResultData.executeTest(anvil, player);
+        legalResultData2.executeTest(anvil, player);
     }
 
     @Test
@@ -161,24 +161,24 @@ public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
         );
 
         // Test failing result first
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData2);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData3);
+        nullResultData2.executeTest(anvil, player);
+        nullResultData3.executeTest(anvil, player);
 
         // Test working sharpness 2
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        legalResultData.executeTest(anvil, player);
 
         // Set merge limit to 2 & test
         ConfigHolder.DEFAULT_CONFIG.getConfig().set("disable-merge-over.minecraft:sharpness", 1);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+         nullResultData.executeTest(anvil, player);
 
         // Add permission
         PermissionAttachment attachment = player.addAttachment(plugin);
         attachment.setPermission(permission, true);
 
         // Test working sharpness 2
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData2);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData3);
+        legalResultData.executeTest(anvil, player);
+        legalResultData2.executeTest(anvil, player);
+        legalResultData3.executeTest(anvil, player);
     }
 
 }

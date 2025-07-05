@@ -71,7 +71,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         Assertions.assertNotNull(sharpness);
 
         // Testing default conflict (illegal item should not be produced)
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+        nullResultData.executeTest(anvil, player);
 
         // Try to find & remove conflict
         EnchantConflictGroup conflict = findGroup("sword_enchant_conflict");
@@ -79,7 +79,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
 
         // Test what happen when we remove the conflict (illegal item should be allowed)
         ConflictAPI.removeConflict(conflict);
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        legalResultData.executeTest(anvil, player);
 
         // We create and add a new conflict
         ConflictBuilder builder = new ConflictBuilder("sword_enchant_conflict");
@@ -88,11 +88,11 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
 
         // Nothing should change as it is not new: it was previously deleted
         Assertions.assertFalse(builder.registerIfNew());
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        legalResultData.executeTest(anvil, player);
 
         // Now the conflict should be registered and conflict should exist
         Assertions.assertTrue(builder.registerIfAbsent());
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+        nullResultData.executeTest(anvil, player);
     }
 
     @Test

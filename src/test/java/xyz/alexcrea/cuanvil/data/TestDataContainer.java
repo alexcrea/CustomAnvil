@@ -16,17 +16,17 @@ public record TestDataContainer(
 ) {
 
     public void executeTest(AnvilInventory anvil, Player player) {
-        executeFuseTest(anvil, player);
-        if (clickData != null) executeClickTest(anvil, player);
+        fuseData.executeTest(anvil, player);
+        if (clickData != null) clickData.executeTest(anvil, player);
     }
 
     public void executeFuseTest(AnvilInventory anvil, HumanEntity player) {
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, fuseData);
+        fuseData.executeTest(anvil, player);
     }
 
     public void executeClickTest(AnvilInventory anvil, Player player) {
         Assertions.assertNotNull(clickData);
-        AnvilFuseTestUtil.executeAnvilClickTest(anvil, player, clickData);
+        clickData.executeTest(anvil, player);
     }
 
     public @NotNull TestDataContainer nullifyResult() {

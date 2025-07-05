@@ -1,7 +1,10 @@
 package xyz.alexcrea.cuanvil.data;
 
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 public record AnvilFuseTestData(
         @Nullable ItemStack leftItem,
@@ -49,6 +52,10 @@ public record AnvilFuseTestData(
                 expectedResult, expectedAfterLeftPlaced, expectedAfterRightPlaced,
                 null, null, null
         );
+    }
+
+    public void executeTest(AnvilInventory anvil, HumanEntity player){
+        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, this);
     }
 
 }
