@@ -8,6 +8,10 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypass
+import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypass
+import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypass
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
@@ -19,6 +23,7 @@ import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
+import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.logging.Level
 
 object DependencyManager {
@@ -139,10 +144,14 @@ object DependencyManager {
     }
 
     private fun earlyUnsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
-        var bypass = false
+        // Run the event
+        val bypassEvent = CAEarlyPreAnvilBypass(event)
+        Bukkit.getPluginManager().callEvent(bypassEvent)
+
+        var bypass = bypassEvent.isCancelled
 
         // Test if the inventory is a gui(version specific)
-        if (externGuiTester?.testIfGui(event.view) == true) bypass = true
+        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
         return bypass
     }
@@ -171,10 +180,14 @@ object DependencyManager {
     }
 
     private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
-        var bypass = false
+        // Run the event
+        val bypassEvent = CAPreAnvilBypass(event)
+        Bukkit.getPluginManager().callEvent(bypassEvent)
+
+        var bypass = bypassEvent.isCancelled
 
         // Test if disenchantment used prepare anvil
-        if (disenchantmentCompatibility?.testPrepareAnvil(event, player) == true) bypass = true
+        if (!bypass && (disenchantmentCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
 
         // Test heaven bags used prepare anvil
         if (!bypass && (havenBagsCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
@@ -189,11 +202,12 @@ object DependencyManager {
         return bypass
     }
 
-    // Return true only if error occurred (and so should bypass rest)
-    fun tryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack): Boolean {
+    // Return null if there was an issue
+    fun tryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack, useType: AnvilUseType, cost: Int): CATreatAnvilResult? {
+        val treatEvent = CATreatAnvilResult(event, useType, result, cost)
         try {
-            unsafeTryTreatAnvilResult(event, result)
-            return false
+            unsafeTryTreatAnvilResult(treatEvent)
+            return treatEvent;
         } catch (e: Exception) {
             CustomAnvil.instance.logger.log(
                 Level.SEVERE,
@@ -209,12 +223,14 @@ object DependencyManager {
                 "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
                         ChatColor.RED.toString() + "Error while handling the anvil."
             )
-            return true
+            return null
         }
     }
 
-    private fun unsafeTryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack) {
-        excellentEnchantsCompatibility?.treatAnvilResult(event, result)
+    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResult) {
+        Bukkit.getPluginManager().callEvent(event)
+
+        excellentEnchantsCompatibility?.treatAnvilResult(event)
     }
 
     // Return true if should bypass (either by a dependency or error)
@@ -241,10 +257,14 @@ object DependencyManager {
     }
 
     private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
-        var bypass = false
+        // Run the event
+        val bypassEvent = CAClickResultBypass(event)
+        Bukkit.getPluginManager().callEvent(bypassEvent)
+
+        var bypass = bypassEvent.isCancelled
 
         // Test if disenchantment used event click
-        if (disenchantmentCompatibility?.testAnvilResult(event, inventory) == true) bypass = true
+        if (!bypass && (disenchantmentCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true
 
         // Test if haven bag used event click
         if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true

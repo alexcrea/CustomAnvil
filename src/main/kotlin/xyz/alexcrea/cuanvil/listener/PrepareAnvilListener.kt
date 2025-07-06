@@ -133,16 +133,20 @@ class PrepareAnvilListener : Listener {
         val resultItem: ItemStack = recipe.resultItem!!.clone()
         resultItem.amount *= amount
 
-        event.result = resultItem
-        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
-
+        // Maybe add an option on custom craft to ignore/not ignore penalty ??
         val xpCost = recipe.determineCost(amount, first, resultItem)
 
         val levelCost =
             if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
             else AnvilXpUtil.calculateLevelForXp(xpCost)
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, levelCost, true)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.CUSTOM_CRAFT, levelCost)
+        if (finalResult == null) return false
+
+        event.result = finalResult.result
+        if (finalResult.result == null) return false
+
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost, true)
         return true
     }
 
@@ -160,12 +164,15 @@ class PrepareAnvilListener : Listener {
             return
         }
 
-        event.result = resultItem
-        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return
-
         anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.RENAME_ONLY, anvilCost)
+        if (finalResult == null) return
+
+        event.result = finalResult.result
+        if (finalResult.result == null) return
+
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
@@ -241,10 +248,13 @@ class PrepareAnvilListener : Listener {
         anvilCost += handleRename(resultItem, inventory, player)
 
         // Finally, we set result
-        event.result = resultItem
-        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.MERGE, anvilCost)
+        if (finalResult == null) return
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
+        event.result = finalResult.result
+        if (finalResult.result == null) return
+
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
     }
 
     // return true if there is a valid unit repair with these ingredients
@@ -270,10 +280,14 @@ class PrepareAnvilListener : Listener {
             event.result = null
             return true
         }
-        event.result = resultItem
-        if (DependencyManager.tryTreatAnvilResult(event, resultItem)) return true
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, anvilCost)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.UNIT_REPAIR, anvilCost)
+        if (finalResult == null) return false
+
+        event.result = finalResult.result
+        if (finalResult.result == null) return false
+
+        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
         return true
     }
 
