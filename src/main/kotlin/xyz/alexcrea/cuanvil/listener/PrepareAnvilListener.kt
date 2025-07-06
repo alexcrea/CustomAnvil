@@ -46,11 +46,15 @@ class PrepareAnvilListener : Listener {
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         // Should find player
         val player: HumanEntity = InventoryViewUtil.getInstance().getPlayer(event.view)
+        val inventory = event.inventory
 
         // Test if custom anvil is bypassed before immutability test
-        if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) return
+        if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
+            // even if we got bypassed we still want to set price
+            AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, event.inventory.repairCost)
+            return
+        }
 
-        val inventory = event.inventory
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
 
@@ -62,7 +66,11 @@ class PrepareAnvilListener : Listener {
         }
 
         // Test if the event should bypass custom anvil.
-        if (DependencyManager.tryEventPreAnvilBypass(event, player)) return
+        if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
+            // even if we got bypassed we still want to set price
+            AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, event.inventory.repairCost)
+            return
+        }
 
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
