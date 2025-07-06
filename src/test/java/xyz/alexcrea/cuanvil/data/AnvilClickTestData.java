@@ -1,8 +1,11 @@
 package xyz.alexcrea.cuanvil.data;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 public record AnvilClickTestData(
         @Nullable ItemStack leftItem,
@@ -46,5 +49,9 @@ public record AnvilClickTestData(
     public AnvilClickTestData(@Nullable ItemStack expectedCursor,
                               int levelCost) {
         this(expectedCursor, levelCost, null);
+    }
+
+    public void executeTest(AnvilInventory anvil, Player player){
+        AnvilFuseTestUtil.executeAnvilClickTest(anvil, player, this);
     }
 }

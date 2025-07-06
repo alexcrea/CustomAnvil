@@ -12,10 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AnvilRecipeBuilderTest extends SharedOnlyMockBukkit {
 
     private AnvilRecipeBuilder builder;
+    private AnvilRecipeBuilder builder2;
 
     @BeforeEach
     public void setup() {
         builder = new AnvilRecipeBuilder("test");
+        builder2 = new AnvilRecipeBuilder("test");
+
+        builder2.setLeftItem(new ItemStack(Material.STICK));
+        builder2.setResultItem(new ItemStack(Material.STICK));
     }
 
     @Test
@@ -38,6 +43,7 @@ public class AnvilRecipeBuilderTest extends SharedOnlyMockBukkit {
                 .setResultItem(new ItemStack(Material.STICK));
 
         assertNotNull(builder.build());
+        assertNotNull(builder2.build());
     }
 
     @Test
@@ -63,23 +69,39 @@ public class AnvilRecipeBuilderTest extends SharedOnlyMockBukkit {
 
     @Test
     void setXpCostPerCraft(){
-        assertEquals(1, builder.getXpCostPerCraft());
-        builder.setXpCostPerCraft(2);
-        assertEquals(2, builder.getXpCostPerCraft());
+        assertEquals(0, builder2.getLevelCostPerCraft());
+        assertEquals(0, builder2.build().getLevelCostPerCraft());
+        builder2.setLevelCostPerCraft(2);
+        assertEquals(2, builder2.getLevelCostPerCraft());
+        assertEquals(2, builder2.build().getLevelCostPerCraft());
     }
 
     @Test
+    void setLinearXpCostPerCraft(){
+        assertEquals(0, builder2.getLinearXpCostPerCraft());
+        assertEquals(0, builder2.build().getXpCostPerCraft());
+        builder2.setLinearXpCostPerCraft(2);
+        assertEquals(2, builder2.getLinearXpCostPerCraft());
+        assertEquals(2, builder2.build().getXpCostPerCraft());
+    }
+
+
+    @Test
     void setExactCount(){
-        assertTrue(builder.isExactCount());
-        builder.setExactCount(false);
-        assertFalse(builder.isExactCount());
+        assertTrue(builder2.isExactCount());
+        assertTrue(builder2.build().getExactCount());
+        builder2.setExactCount(false);
+        assertFalse(builder2.isExactCount());
+        assertFalse(builder2.build().getExactCount());
     }
 
     @Test
     void setName(){
-        assertEquals("test", builder.getName());
-        builder.setName("other");
-        assertEquals("other", builder.getName());
+        assertEquals("test", builder2.getName());
+        assertEquals("test", builder2.build().getName());
+        builder2.setName("other");
+        assertEquals("other", builder2.getName());
+        assertEquals("other", builder2.build().getName());
     }
 
 }

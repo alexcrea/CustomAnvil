@@ -110,22 +110,60 @@ public class AnvilFuseTestUtil {
         Assertions.assertEquals(player.getOpenInventory().getTopInventory(), anvil,
                 "Openned inventory is not anvil");
 
+        ItemStack afterLeft = data.expectedAfterLeftPlaced();
+        ItemStack afterRight = data.expectedAfterRightPlaced();
+        ItemStack afterBoth = data.expectedResult();
+        // Fist, test null result(s)
+
         // Test with only the left item
-        anvil.setItem(1, null); // We clear the right slot in case something was there
-        testPlacingItem(anvil, player,
-                0, data.expectedPriceAfterLeftPlaced(),
-                data.leftItem(), data.expectedAfterLeftPlaced());
+        if(afterLeft == null){
+            anvil.setItem(1, null); // We clear the right slot in case something was there
+            testPlacingItem(anvil, player,
+                    0, data.expectedPriceAfterLeftPlaced(),
+                    data.leftItem(), null);
+        }
 
         // Test with only the right item
-        anvil.setItem(0, null); // We only want the right item. so we remove the left one
-        testPlacingItem(anvil, player,
-                1, data.expectedPriceAfterRightPlaced(),
-                data.rightItem(), data.expectedAfterRightPlaced());
+        if(afterRight == null){
+            anvil.setItem(0, null); // We only want the right item. so we remove the left one
+            testPlacingItem(anvil, player,
+                    1, data.expectedPriceAfterRightPlaced(),
+                    data.rightItem(), null);
+        }
 
         // Test with both placed
-        testPlacingItem(anvil, player,
-                0, data.expectedPriceAfterBothPlaced(),
-                data.leftItem(), data.expectedResult());
+        if(afterBoth == null){
+            anvil.setItem(0, data.leftItem());
+            testPlacingItem(anvil, player,
+                    1, data.expectedPriceAfterBothPlaced(),
+                    data.rightItem(), data.expectedResult());
+        }
+
+        // Then, test non null result(s)
+
+        // Test with only the left item
+        if(afterLeft != null){
+            anvil.setItem(1, null); // We clear the right slot in case something was there
+            testPlacingItem(anvil, player,
+                    0, data.expectedPriceAfterLeftPlaced(),
+                    data.leftItem(), afterLeft);
+        }
+
+        // Test with only the right item
+        if(afterRight != null){
+            anvil.setItem(0, null); // We only want the right item. so we remove the left one
+            testPlacingItem(anvil, player,
+                    1, data.expectedPriceAfterRightPlaced(),
+                    data.rightItem(), afterRight);
+        }
+
+        // Test with both placed
+        if(afterBoth != null){
+            anvil.setItem(0, data.leftItem());
+            testPlacingItem(anvil, player,
+                    1, data.expectedPriceAfterBothPlaced(),
+                    data.rightItem(), afterBoth);
+        }
     }
 
     public static void executeAnvilClickTest(
@@ -139,6 +177,7 @@ public class AnvilFuseTestUtil {
             ItemStack result = anvil.getResult();
 
             player.setLevel(0);
+            player.setExp(0);
             player.setItemOnCursor(null);
 
             // Do a test with not enough level
@@ -151,6 +190,7 @@ public class AnvilFuseTestUtil {
             assertEqual(null, player.getItemOnCursor());
         }
         player.setLevel(data.levelCost());
+        player.setExp(0);
         player.setItemOnCursor(null);
 
         simulateClick(anvil, player, data.expectedResult());
@@ -208,7 +248,7 @@ public class AnvilFuseTestUtil {
     public static void assertEqual(@Nullable ItemStack expected, @Nullable ItemStack other) {
         boolean secondIsAir = isAir(other);
         if (isAir(expected))
-            Assertions.assertTrue(secondIsAir, "Item " + other + " was not air but was expected to be");
+            Assertions.assertTrue(secondIsAir, "Item " + other + " was not air but was expected to be.");
         else {
             Assertions.assertFalse(secondIsAir, "Item " + other + " is air but was expected to be " + expected);
 
@@ -225,7 +265,7 @@ public class AnvilFuseTestUtil {
 
     public static void assertPriceEqual(Integer expectedPrice, int price) {
         if (expectedPrice == null) return;
-        Assertions.assertEquals(expectedPrice, price);
+        Assertions.assertEquals(expectedPrice, price, "Price of anvil fuse was wrong");
     }
 
 }

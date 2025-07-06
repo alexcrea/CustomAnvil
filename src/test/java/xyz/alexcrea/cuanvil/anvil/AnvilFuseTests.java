@@ -67,7 +67,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 5
         );
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
+        data.executeTest(anvil, player);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 5
         );
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
+        data.executeTest(anvil, player);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
                 null
         );
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
+        data.executeTest(anvil, player);
     }
 
     // Note: currently anvil can only have null name. maybe handle differently later
@@ -117,10 +117,10 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
         AnvilFuseTestData data = new AnvilFuseTestData(
                 base, null,
                 expected, expected, null,
-                1, 1, null
+                1, null, 1
         );
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, data);
+        data.executeTest(anvil, player);
     }
 
 }

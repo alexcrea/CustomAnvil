@@ -130,10 +130,20 @@ class AnvilResultListener : Listener {
         if (recipe.leftItem == null) return // in case it changed
 
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
-        val xpCost = amount * recipe.xpCostPerCraft
+        val xpCost = recipe.determineCost(amount, leftItem, output)
+        val finalCost =
+            if (recipe.removeExactLinearXp) xpCost
+            else AnvilXpUtil.calculateLevelForXp(xpCost)
 
-        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $xpCost, level: ${player.level}, result: ${player.level < xpCost}")
-        if ((player.gameMode != GameMode.CREATIVE) && (player.level < xpCost)) return
+        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $finalCost, level: ${player.level}, result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
+        if (player.gameMode != GameMode.CREATIVE) {
+            if (recipe.removeExactLinearXp) {
+                val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
+                val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
+                val totalXp = levelXp + player.exp * delta
+                if (totalXp < finalCost) return
+            } else if (player.level < finalCost) return
+        }
 
         // We give the item manually
         // But first we check if we should give the item
@@ -142,7 +152,17 @@ class AnvilResultListener : Listener {
 
         // Handle not creative middle click...
         if (event.click != ClickType.MIDDLE &&
-            !handleCustomCraftClick(event, recipe, inventory, player, leftItem, rightItem, amount, xpCost)
+            !handleCustomCraftClick(
+                event,
+                recipe,
+                inventory,
+                player,
+                leftItem,
+                rightItem,
+                amount,
+                finalCost,
+                recipe.removeExactLinearXp
+            )
         ) return
 
         // Finally, we add the item to the player
@@ -157,7 +177,7 @@ class AnvilResultListener : Listener {
         event: InventoryClickEvent, recipe: AnvilCustomRecipe,
         inventory: AnvilInventory, player: Player,
         leftItem: ItemStack, rightItem: ItemStack?,
-        amount: Int, xpCost: Int
+        amount: Int, xpCost: Int, linearCost: Boolean = false
     ): Boolean {
         // We remove what should be removed
         if (rightItem != null) {
@@ -171,7 +191,23 @@ class AnvilResultListener : Listener {
         inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
 
         if (player.gameMode != GameMode.CREATIVE) {
-            player.level -= xpCost
+            if (linearCost) {
+                val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
+                val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
+                var totalXp = levelXp + player.exp * delta
+                totalXp -= xpCost
+
+                val newLevel = AnvilXpUtil.calculateLevelForXp(totalXp.toInt())
+
+                val newLevelXp = AnvilXpUtil.calculateXpForLevel(newLevel)
+                val newDelta = AnvilXpUtil.calculateXpForLevel(newLevel + 1) - newLevelXp
+                val xp = (totalXp - newLevelXp) / newDelta
+
+                player.level = newLevel
+                player.exp = xp / newDelta
+            } else {
+                player.level -= xpCost
+            }
         }
 
         // Then we try to find the new values for the anvil

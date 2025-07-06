@@ -58,7 +58,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
                 2
         );
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        legalResultData.executeTest(anvil, player);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         // Remove unit repair
         assertTrue(UnitRepairApi.removeUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE));
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+        nullResultData.executeTest(anvil, player);
 
         // see override
         assertFalse(UnitRepairApi.addUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE, 0.25));
@@ -107,12 +107,12 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
                 2
         );
 
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, nullResultData);
+        nullResultData.executeTest(anvil, player);
 
         // Add unit repair
         assertTrue(UnitRepairApi.addUnitRepair(Material.STICK, Material.DIAMOND_PICKAXE));
         assertFalse(UnitRepairApi.addUnitRepair(Material.STICK, Material.DIAMOND_PICKAXE));
-        AnvilFuseTestUtil.executeAnvilFuseTest(anvil, player, legalResultData);
+        legalResultData.executeTest(anvil, player);
     }
 
 }

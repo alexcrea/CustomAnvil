@@ -14,7 +14,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
@@ -58,17 +58,24 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");
         meta.addItemFlags(ItemFlag.values());
 
-        boolean shouldWork = recipe.validate();
-
-        meta.setLore(Arrays.asList(
-                "§7Should work:    §" + (shouldWork ? "aYes" : "cNo"),
-                "§7Exact count:    §" + (recipe.getExactCount() ? "aYes" : "cNo"),
-                "§7Recipe Xp Cost: §e" + recipe.getXpCostPerCraft()
-
-        ));
+        meta.setLore(getRecipeLore(recipe));
 
         displayedItem.setItemMeta(meta);
         return displayedItem;
+    }
+
+    private static @NotNull ArrayList<String> getRecipeLore(AnvilCustomRecipe recipe) {
+        boolean shouldWork = recipe.validate();
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add("§7Is valid:    §" + (shouldWork ? "aYes" : "cNo"));
+        lore.add("§7Exact count:    §" + (recipe.getExactCount() ? "aYes" : "cNo"));
+        lore.add("§7Recipe Level Cost: §e" + recipe.getLevelCostPerCraft());
+        lore.add("§7Recipe Linear Xp Cost: §e" + recipe.getXpCostPerCraft());
+        if (recipe.getXpCostPerCraft() != 0) {
+            lore.add("§7Exact Linear xp remove:    §" + (recipe.getRemoveExactLinearXp() ? "aYes" : "cNo"));
+        }
+        return lore;
     }
 
     @Override
@@ -87,7 +94,11 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         AnvilCustomRecipe recipe = new AnvilCustomRecipe(
                 name,
                 AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG,
-                AnvilCustomRecipe.DEFAULT_XP_COST_CONFIG,
+
+                AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG,
+                AnvilCustomRecipe.DEFAULT_LINEAR_XP_COST_CONFIG,
+                AnvilCustomRecipe.DEFAULT_REMOVE_EXACT_XP_CONFIG,
+
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
