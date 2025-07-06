@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
+import su.nightexpress.excellentenchants.api.item.ItemSet;
 import su.nightexpress.excellentenchants.api.wrapper.EnchantDefinition;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -39,7 +40,16 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
 
     @Override
     public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat, @NotNull ItemStack item) {
-        return false;
+        if (Material.ENCHANTED_BOOK.equals(itemMat)) return false;
+
+        String key = itemMat.getKey().getKey();
+        ItemSet primary = eeenchantment.getPrimaryItems();
+        if (primary.getMaterials().contains(key)) return false;
+
+        ItemSet supported = eeenchantment.getSupportedItems();
+        if (supported.getMaterials().contains(key)) return false;
+
+        return true;
     }
 
 }
