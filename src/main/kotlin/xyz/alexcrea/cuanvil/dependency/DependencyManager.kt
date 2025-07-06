@@ -8,10 +8,10 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
-import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypass
-import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypass
-import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypass
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult
+import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEventEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
@@ -145,7 +145,7 @@ object DependencyManager {
 
     private fun earlyUnsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         // Run the event
-        val bypassEvent = CAEarlyPreAnvilBypass(event)
+        val bypassEvent = CAEarlyPreAnvilBypassEventEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
 
         var bypass = bypassEvent.isCancelled
@@ -181,7 +181,7 @@ object DependencyManager {
 
     private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         // Run the event
-        val bypassEvent = CAPreAnvilBypass(event)
+        val bypassEvent = CAPreAnvilBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
 
         var bypass = bypassEvent.isCancelled
@@ -203,8 +203,8 @@ object DependencyManager {
     }
 
     // Return null if there was an issue
-    fun tryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack, useType: AnvilUseType, cost: Int): CATreatAnvilResult? {
-        val treatEvent = CATreatAnvilResult(event, useType, result, cost)
+    fun tryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack, useType: AnvilUseType, cost: Int): CATreatAnvilResultEvent? {
+        val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent;
@@ -227,7 +227,7 @@ object DependencyManager {
         }
     }
 
-    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResult) {
+    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResultEvent) {
         Bukkit.getPluginManager().callEvent(event)
 
         excellentEnchantsCompatibility?.treatAnvilResult(event)
@@ -258,7 +258,7 @@ object DependencyManager {
 
     private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
         // Run the event
-        val bypassEvent = CAClickResultBypass(event)
+        val bypassEvent = CAClickResultBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
 
         var bypass = bypassEvent.isCancelled

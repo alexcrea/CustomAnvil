@@ -3,10 +3,10 @@ package xyz.alexcrea.cuanvil.api.event.listener;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class CAPreAnvilBypass extends Event implements Cancellable {
+public class CAClickResultBypassEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
@@ -32,15 +32,14 @@ public class CAPreAnvilBypass extends Event implements Cancellable {
     }
 
     @NotNull
-    private final PrepareAnvilEvent event;
+    private final InventoryClickEvent event;
 
     @NotNull
-    public PrepareAnvilEvent getEvent() {
+    public InventoryClickEvent getEvent() {
         return event;
     }
 
-    public CAPreAnvilBypass(@NotNull PrepareAnvilEvent event) {
+    public CAClickResultBypassEvent(@NotNull InventoryClickEvent event) {
         this.event = event;
     }
-
 }

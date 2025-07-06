@@ -4,7 +4,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class CAEarlyPreAnvilBypass extends CAPreAnvilBypass {
+public class CAEarlyPreAnvilBypassEventEvent extends CAPreAnvilBypassEvent {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
@@ -17,7 +17,7 @@ public class CAEarlyPreAnvilBypass extends CAPreAnvilBypass {
         return HANDLERS;
     }
 
-    public CAEarlyPreAnvilBypass(@NotNull PrepareAnvilEvent event) {
+    public CAEarlyPreAnvilBypassEventEvent(@NotNull PrepareAnvilEvent event) {
         super(event);
     }
 

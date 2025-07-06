@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
@@ -192,7 +192,7 @@ class ExcellentEnchantsDependency {
         return handleRechargeMethod.invoke(this.usedAnvilListener, event, first, second) as Boolean
     }
 
-    fun treatAnvilResult(event: CATreatAnvilResult) {
+    fun treatAnvilResult(event: CATreatAnvilResultEvent) {
         val result = event.result
         if (result == null) return
 

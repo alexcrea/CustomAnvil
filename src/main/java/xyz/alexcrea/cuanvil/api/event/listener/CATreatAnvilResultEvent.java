@@ -1,16 +1,14 @@
 package xyz.alexcrea.cuanvil.api.event.listener;
 
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.util.AnvilUseType;
 
-public class CATreatAnvilResult extends Event {
+public class CATreatAnvilResultEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
@@ -33,7 +31,7 @@ public class CATreatAnvilResult extends Event {
 
     private int levelCost;
 
-    public CATreatAnvilResult(@NotNull PrepareAnvilEvent event, AnvilUseType useType, @Nullable ItemStack result, int levelCost) {
+    public CATreatAnvilResultEvent(@NotNull PrepareAnvilEvent event, AnvilUseType useType, @Nullable ItemStack result, int levelCost) {
         this.event = event;
         this.useType = useType;
         this.result = result;
