@@ -47,7 +47,7 @@ class ExcellentEnchantsDependency {
             }
         }
 
-        if(listenerVersion == null){
+        if (listenerVersion == null) {
             CustomAnvil.instance.logger.severe("Found issue with listener of Excellent Enchants. compatiblity is broken. please contact CustomAnvil devs")
         }
 
@@ -125,20 +125,23 @@ class ExcellentEnchantsDependency {
                         toUnregister.add(registeredListener)
                     }
                 }
+
                 ListenerVersion.PRE_V5 -> {
                     if (listener is PreV5AnvilListener) {
                         this.preV5AnvilListener = listener
                         toUnregister.add(registeredListener)
                     }
                 }
+
                 ListenerVersion.LEGACY -> {
                     if (listener is LegacyAnvilListener) {
                         this.legacyAnvilListener = listener
                         toUnregister.add(registeredListener)
                     }
                 }
+
                 null -> {
-                    }
+                }
             }
 
         }
@@ -191,12 +194,12 @@ class ExcellentEnchantsDependency {
 
     fun treatAnvilResult(event: CATreatAnvilResult) {
         val result = event.result
-        if(result == null) return
+        if (result == null) return
 
         val first: ItemStack = treatInput(event.event.inventory.getItem(0))
         val second: ItemStack = treatInput(event.event.inventory.getItem(1))
 
-        handleCombineMethod.invoke(this.usedAnvilListener, event, first, second, result)
+        handleCombineMethod.invoke(this.usedAnvilListener, event.event, first, second, result)
     }
 
     fun testAnvilResult(event: InventoryClickEvent): Any {
