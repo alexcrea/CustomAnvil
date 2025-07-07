@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
-import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEventEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
@@ -145,7 +145,7 @@ object DependencyManager {
 
     private fun earlyUnsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         // Run the event
-        val bypassEvent = CAEarlyPreAnvilBypassEventEvent(event)
+        val bypassEvent = CAEarlyPreAnvilBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
 
         var bypass = bypassEvent.isCancelled

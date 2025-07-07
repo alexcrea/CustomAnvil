@@ -9,19 +9,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Called before custom anvil process the prepare anvil event.
  * <p>
- * This event is called after {@link CAEarlyPreAnvilBypassEvent},
- * after checking that there is at least an item on the left slot
- * and after checking if any of the 2 item is marked as immutable
- * but before checking if the player has the custom anvil affected permission.
+ * This event will always get called when CustomAnvil need to handle
  * <p>
  * This event being cancelled will make CustomAnvil abort the anvil process.
  * <p>
  * You should also use {@link CAClickResultBypassEvent} if you want to use this event for something useful.
  * <p>
- * It is also recommended that you read about {@link CAEarlyPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
+ * It is also recommended that you read about {@link CAPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
  * as your use case may be more prone to use theses.
  */
-public class CAPreAnvilBypassEvent extends Event implements Cancellable {
+public class CAEarlyPreAnvilBypassEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
@@ -52,14 +49,14 @@ public class CAPreAnvilBypassEvent extends Event implements Cancellable {
     /**
      * Get the bukkit pre anvil event causing this event
      *
-     * @return The pre anvil event causing this event
+     * @return The pre anvil event causing to this event
      */
     @NotNull
     public PrepareAnvilEvent getEvent() {
         return event;
     }
 
-    public CAPreAnvilBypassEvent(@NotNull PrepareAnvilEvent event) {
+    public CAEarlyPreAnvilBypassEvent(@NotNull PrepareAnvilEvent event) {
         this.event = event;
     }
 
