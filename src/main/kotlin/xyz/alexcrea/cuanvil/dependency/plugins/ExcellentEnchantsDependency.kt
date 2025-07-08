@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
@@ -46,7 +47,7 @@ class ExcellentEnchantsDependency {
             }
         }
 
-        if(listenerVersion == null){
+        if (listenerVersion == null) {
             CustomAnvil.instance.logger.severe("Found issue with listener of Excellent Enchants. compatiblity is broken. please contact CustomAnvil devs")
         }
 
@@ -124,20 +125,23 @@ class ExcellentEnchantsDependency {
                         toUnregister.add(registeredListener)
                     }
                 }
+
                 ListenerVersion.PRE_V5 -> {
                     if (listener is PreV5AnvilListener) {
                         this.preV5AnvilListener = listener
                         toUnregister.add(registeredListener)
                     }
                 }
+
                 ListenerVersion.LEGACY -> {
                     if (listener is LegacyAnvilListener) {
                         this.legacyAnvilListener = listener
                         toUnregister.add(registeredListener)
                     }
                 }
+
                 null -> {
-                    }
+                }
             }
 
         }
@@ -188,11 +192,14 @@ class ExcellentEnchantsDependency {
         return handleRechargeMethod.invoke(this.usedAnvilListener, event, first, second) as Boolean
     }
 
-    fun treatAnvilResult(event: PrepareAnvilEvent, result: ItemStack) {
-        val first: ItemStack = treatInput(event.inventory.getItem(0))
-        val second: ItemStack = treatInput(event.inventory.getItem(1))
+    fun treatAnvilResult(event: CATreatAnvilResultEvent) {
+        val result = event.result
+        if (result == null) return
 
-        handleCombineMethod.invoke(this.usedAnvilListener, event, first, second, result)
+        val first: ItemStack = treatInput(event.event.inventory.getItem(0))
+        val second: ItemStack = treatInput(event.event.inventory.getItem(1))
+
+        handleCombineMethod.invoke(this.usedAnvilListener, event.event, first, second, result)
     }
 
     fun testAnvilResult(event: InventoryClickEvent): Any {

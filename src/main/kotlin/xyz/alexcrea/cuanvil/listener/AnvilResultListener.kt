@@ -46,7 +46,6 @@ class AnvilResultListener : Listener {
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
         val inventory = event.inventory as? AnvilInventory ?: return
 
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
@@ -55,6 +54,8 @@ class AnvilResultListener : Listener {
 
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryClickAnvilResultBypass(event, inventory)) return
+
+        if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
         val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
