@@ -24,7 +24,8 @@ object DataPackDependency {
      */
     private val LASTEST_VERSION = mapOf(
         Pair("bracken", Version(1, 11, 0)),
-        Pair("enchantplus", Version(1, 13, 0))
+        Pair("enchantplus", Version(1, 13, 0)),
+        Pair("dungeons_and_taverns", Version(1, 13, 0))
     )
 
     val enabledDatapacks: List<String>
@@ -50,6 +51,11 @@ object DataPackDependency {
 
             if (packName.contains("neoenchant", ignoreCase = true)) {
                 handlePack("enchantplus")
+                continue
+            }
+
+            if (packName.contains("Dungeons and Taverns", ignoreCase = true)) {
+                handlePack("dungeons_and_taverns")
                 continue
             }
 
