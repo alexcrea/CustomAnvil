@@ -49,3 +49,8 @@ combat_tools:
     - crossbow
     - trident
     - mace
+
+flint:
+  type: include
+  items:
+    - flint
