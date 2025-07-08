@@ -1,0 +1,56 @@
+metal:
+  type: include
+  items:
+    - shield
+    - trident
+    - flint_and_steel
+    - shears
+    - brush
+    - mace
+    - chainmail_chestplate
+    - golden_chestplate
+    - iron_chestplate
+    - netherite_chestplate
+    - chainmail_boots
+    - golden_boots
+    - iron_boots
+    - netherite_boots
+    - chainmail_leggings
+    - golden_leggings
+    - iron_leggings
+    - netherite_leggings
+    - chainmail_helmet
+    - golden_helmet
+    - iron_helmet
+    - netherite_helmet
+    - golden_pickaxe
+    - iron_pickaxe
+    - netherite_pickaxe
+    - golden_axe
+    - iron_axe
+    - netherite_axe
+    - golden_shovel
+    - iron_shovel
+    - netherite_shovel
+    - golden_sword
+    - iron_sword
+    - netherite_sword
+    - golden_hoe
+    - iron_hoe
+    - netherite_hoe
+    - trial_key
+    - ominous_trial_key
+
+combat_tools:
+  type: include
+  groups:
+    - melee_weapons
+    - bow
+    - crossbow
+    - trident
+    - mace
+
+flint:
+  type: include
+  items:
+    - flint
