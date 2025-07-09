@@ -70,9 +70,6 @@ dependencies {
     // AxPlayerWarps
     compileOnly(files("libs/AxPlayerWarps-1.10.3.jar"))
 
-    // Include nms
-    implementation(project(":nms:nms-common"))
-
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
 
