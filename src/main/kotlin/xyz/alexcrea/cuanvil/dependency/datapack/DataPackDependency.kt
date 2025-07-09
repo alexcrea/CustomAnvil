@@ -11,6 +11,7 @@ import xyz.alexcrea.cuanvil.api.ConflictBuilder
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAIncompatibleAllEnchant
 import xyz.alexcrea.cuanvil.group.IncludeGroup
@@ -37,6 +38,8 @@ object DataPackDependency {
         }
 
     fun handleDatapackConfigs() {
+        if (DependencyManager.isMockbukkit) return
+
         val enabledDatapack = enabledDatapacks
         for (packName in enabledDatapack) {
             // Handling of pack name is horrible: it is based on file name

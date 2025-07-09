@@ -20,7 +20,9 @@ import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
 import xyz.alexcrea.cuanvil.dependency.plugins.*
+import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
+import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.logging.Level
@@ -29,7 +31,8 @@ import java.util.logging.Level
 object DependencyManager {
 
     var isFolia: Boolean = false
-    lateinit var scheduler: FoliaScheduler
+    var isMockbukkit: Boolean = false
+    lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManagerBase
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
@@ -48,10 +51,15 @@ object DependencyManager {
 
         // Bukkit or Paper scheduler ?
         isFolia = testIsFolia()
+        isMockbukkit = testIsMockbukkit()
+
         if (isFolia) {
             CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
         }
-        scheduler = FoliaScheduler()
+
+        scheduler =
+            if (isMockbukkit) BukkitScheduler()
+            else FoliaScheduler()
 
         // Packet Manager
         val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
@@ -99,6 +107,15 @@ object DependencyManager {
         for (dependency in genericDependencies)
             dependency.redirectListeners()
 
+    }
+
+    private fun testIsMockbukkit(): Boolean {
+        try {
+            Class.forName("org.mockbukkit.mockbukkit.exception.UnimplementedOperationException")
+            return true
+        } catch (e: ClassNotFoundException) {
+            return false
+        }
     }
 
     fun handleCompatibilityConfig() {

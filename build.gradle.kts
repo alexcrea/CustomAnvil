@@ -125,6 +125,11 @@ allprojects {
 
 }
 
+// Stupid paperweight workaround
+paperweight {
+    addServerDependencyTo = configurations.named(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME).map { setOf(it) }
+}
+
 tasks {
 
     // Online jar (use of libraries)

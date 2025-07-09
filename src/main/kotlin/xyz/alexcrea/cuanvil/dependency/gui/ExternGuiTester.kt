@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.dependency.gui
 
 import org.bukkit.craftbukkit.inventory.CraftInventoryView
 import org.bukkit.inventory.InventoryView
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 
 object ExternGuiTester {
 
@@ -13,10 +14,7 @@ object ExternGuiTester {
     }
 
     fun testIfGui(view: InventoryView): Boolean {
-        // this mean we are on test
-        //TODO review why needed knowing previous mitigations should works
-        if(view.javaClass.name.endsWith("AnvilViewMock")) return false
-
+        if (DependencyManager.isMockbukkit) return false
         val clazz = getContainerClass(view) ?: return false
 
         val clazzName = clazz.name
@@ -30,7 +28,7 @@ object ExternGuiTester {
 
     fun expectWesjd(name: String): Boolean {
         val spigotVer = GuiTesterSelector.spigotVersionString
-        if(spigotVer == null) return false
+        if (spigotVer == null) return false
 
         val expectedWesjdGuiPath = "anvilgui.version.Wrapper${spigotVer}"
 
