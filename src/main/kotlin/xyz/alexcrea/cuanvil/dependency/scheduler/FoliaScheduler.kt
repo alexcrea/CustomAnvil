@@ -5,10 +5,11 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.Plugin
 
+//TODO first, add to mockbukkit theses then do next todo
 //TODO replace usage of this to in code correct version
-class FoliaScheduler {
+class FoliaScheduler: TaskScheduler {
 
-    fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any {
+    override fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any {
         if (time < 1) {
             return Bukkit.getGlobalRegionScheduler().run(
                 plugin
@@ -21,11 +22,7 @@ class FoliaScheduler {
         )
     }
 
-    fun scheduleGlobally(plugin: Plugin, task: Runnable): Any?{
-        return scheduleGlobally(plugin, task, 0L)
-    }
-
-    fun scheduleOnEntity(plugin: Plugin, entity: Entity, task: Runnable, time: Long): Any? {
+    override fun scheduleOnEntity(plugin: Plugin, entity: Entity, task: Runnable, time: Long): Any? {
         if (time < 1) {
             return entity.scheduler.run(
                 plugin,
@@ -41,7 +38,4 @@ class FoliaScheduler {
         )
     }
 
-    fun scheduleOnEntity(plugin: Plugin, entity: Entity, task: Runnable): Any?{
-        return scheduleOnEntity(plugin, entity, task, 0L)
-    }
 }

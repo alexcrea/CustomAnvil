@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
+import org.mockbukkit.mockbukkit.exception.UnimplementedOperationException;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 
@@ -26,9 +27,14 @@ public abstract class DefaultCustomAnvilTest {
     @BeforeEach
     public void setUp() {
         // Load your plugin
-        plugin = MockBukkit.load(CustomAnvil.class);
-        // Continue initialization of the plugin
-        server.getScheduler().performOneTick();
+        try {
+            plugin = MockBukkit.load(CustomAnvil.class);
+
+            // Continue initialization of the plugin
+            server.getScheduler().performOneTick();
+        } catch (UnimplementedOperationException exception) {
+            throw new IllegalStateException("unimplemented on plugin startup", exception);
+        }
     }
 
     @AfterEach
