@@ -72,11 +72,6 @@ dependencies {
 
     // Include nms
     implementation(project(":nms:nms-common"))
-    implementation(project(":nms:v1_21R1"))
-    implementation(project(":nms:v1_21R2"))
-    implementation(project(":nms:v1_21R3"))
-    implementation(project(":nms:v1_21R4"))
-    implementation(project(":nms:v1_21R5"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
