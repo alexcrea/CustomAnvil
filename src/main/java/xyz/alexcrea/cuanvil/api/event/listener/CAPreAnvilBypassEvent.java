@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * It is also recommended that you read about {@link CAEarlyPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
  * as your use case may be more prone to use theses.
+ * <p>
+ * This is part of
+ * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
  */
 public class CAPreAnvilBypassEvent extends Event implements Cancellable {
 

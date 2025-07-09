@@ -18,6 +18,9 @@ import java.util.*;
 
 /**
  * Custom Anvil api for material group registry.
+ * <p>
+ * This is part of
+ * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
  */
 @SuppressWarnings("unused")
 public class MaterialGroupApi {
@@ -32,6 +35,9 @@ public class MaterialGroupApi {
      * Write and add a group.
      * Will not write the group if it already exists.
      * Will not be successful if the group is empty.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @param group The group to add
      * @return true if successful.
@@ -44,6 +50,9 @@ public class MaterialGroupApi {
      * Write and add a group.
      * Will not write the group if it already exists.
      * Will not be successful if the group is empty.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @param group           The group to add
      * @param overrideDeleted If we should write even if the group was previously deleted.
@@ -77,6 +86,9 @@ public class MaterialGroupApi {
      * Write a material group to the config file and plan an update of groups.
      * <p>
      * You may want to use {@link #addMaterialGroup(AbstractMaterialGroup)} instead as it is more performance in most case as this function will reload every conflict.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @param group the group to write
      * @return true if was written successfully.
@@ -89,6 +101,9 @@ public class MaterialGroupApi {
      * Write a material group to the config file.
      * <p>
      * You should use {@link #addMaterialGroup(AbstractMaterialGroup)} or {@link #writeMaterialGroup(AbstractMaterialGroup)} instead
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @param group         the group to write
      * @param updatePlanned if we should plan a global update for material groups
@@ -175,6 +190,9 @@ public class MaterialGroupApi {
      * Remove a material group.
      * Caution ! It will not be removed from depending conflict or other material group at runtime.
      * For that reason, it is not recommended to use this function.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @param group The recipe to remove
      * @return True if the group was present.
@@ -199,6 +217,9 @@ public class MaterialGroupApi {
 
     /**
      * Prepare a task to reload every conflict.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      */
     private static void prepareSaveTask() {
         if (saveChangeTask != null) return;
@@ -211,6 +232,9 @@ public class MaterialGroupApi {
 
     /**
      * Prepare a task to save configuration.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      */
     private static void prepareUpdateTask() {
         if (reloadChangeTask != null) return;
@@ -228,6 +252,9 @@ public class MaterialGroupApi {
 
     /**
      * Get by name a group.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @param groupName the group name used to fetch
      * @return the abstract group of this name. null if not found.
@@ -239,6 +266,9 @@ public class MaterialGroupApi {
 
     /**
      * Get every registered material groups.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#MATERIAL_GROUP_V1 MATERIAL_GROUP_V1}
      *
      * @return An immutable map of group name as its key and group as mapped value.
      */

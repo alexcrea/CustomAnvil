@@ -7,6 +7,9 @@ import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 
 /**
  * A Builder for custom craft using anvil.
+ * <p>
+ * This is part of
+ * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
  */
 @SuppressWarnings("unused")
 public class AnvilRecipeBuilder {
@@ -27,6 +30,9 @@ public class AnvilRecipeBuilder {
      * Instantiates a new Anvil recipe builder.
      * exact count default to true.
      * xp level and linear cost per craft default to 0.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param name The recipe name
      */
@@ -45,6 +51,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Gets the recipe name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return This recipe builder instance.
      */
@@ -55,6 +64,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Sets the recipe name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param name The recipe name
      * @return This recipe builder instance.
@@ -69,6 +81,9 @@ public class AnvilRecipeBuilder {
      * <p>
      * Exact count mean the recipe can only be crafted 1 by 1.
      * If set to false, then it will craft as much as possible in 1 go and will keep unused material onto the anvil inventory.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return If the recipe is exact count.
      */
@@ -81,6 +96,9 @@ public class AnvilRecipeBuilder {
      * <p>
      * Exact count mean the recipe can only be crafted 1 by 1.
      * If set to false, then it will craft as much as possible in 1 go and will keep unused material onto the anvil inventory.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param exactCount If the recipe is exact count
      * @return This recipe builder instance.
@@ -92,6 +110,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Get the xp level cost per craft. (default 0)
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return The xp level cost per craft
      * @deprecated use {@link #getLevelCostPerCraft() getLevelCostPerCraft} instead
@@ -103,6 +124,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Sets the xp level cost per craft.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param xpCostPerCraft The xp level cost per craft
      * @return This recipe builder instance.
@@ -115,6 +139,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Get the xp level cost per craft. (default 0)
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return The xp level cost per craft
      */
@@ -124,6 +151,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Sets the xp level cost per craft.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param levelCostPerCraft The xp level cost per craft
      * @return This recipe builder instance.
@@ -135,6 +165,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Get the linear xp cost (not xp level cost) per craft.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return The xp level cost per craft
      */
@@ -144,6 +177,9 @@ public class AnvilRecipeBuilder {
 
     /**
      * Sets the linear xp cost (not xp level cost) per craft.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param linearXpCostPerCraft The linear xp cost per craft
      * @return This recipe builder instance.
@@ -160,6 +196,10 @@ public class AnvilRecipeBuilder {
      * If true will require the level that has at least the specified level of xp then on click remove only the necessary xp
      * <p>
      * linear xp cost are applied after level cost
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
+     *
      * @return if we should remove the exact amount of linear xp
      */
     public boolean isRemoveExactLinearXp() {
@@ -174,6 +214,10 @@ public class AnvilRecipeBuilder {
      * <p>
      * linear xp cost are applied after level cost
      * @param removeExactLinearXp if we should remove the exact amount of linear xp
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
+     *
      * @return This recipe builder instance.
      */
     public AnvilRecipeBuilder setRemoveExactLinearXp(boolean removeExactLinearXp) {
@@ -184,6 +228,9 @@ public class AnvilRecipeBuilder {
     /**
      * Get the left item of the recipe.
      * If null (default) then the recipe will not be able to be registered.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return The left item
      */
@@ -195,6 +242,9 @@ public class AnvilRecipeBuilder {
     /**
      * Set the left item.
      * If null (default) then the recipe will not be able to be registered.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param leftItem the left item
      * @return This recipe builder instance.
@@ -207,6 +257,9 @@ public class AnvilRecipeBuilder {
     /**
      * Get the recipe right item.
      * null on default new instance.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return The right item
      */
@@ -218,6 +271,9 @@ public class AnvilRecipeBuilder {
     /**
      * Set the recipe right item.
      * null on default new instance.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param rightItem the right item
      * @return This recipe builder instance.
@@ -230,6 +286,9 @@ public class AnvilRecipeBuilder {
     /**
      * Get the recipe result item.
      * If null (default) then the recipe will not be able to be registered.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return The result item
      */
@@ -241,6 +300,9 @@ public class AnvilRecipeBuilder {
     /**
      * Set the recipe result item.
      * If null (default) then the recipe will not be able to be registered.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param resultItem The result item
      * @return This recipe builder instance.
@@ -253,6 +315,9 @@ public class AnvilRecipeBuilder {
     /**
      * Build the anvil custom recipe.
      * Should probably use {@link #registerIfAbsent() registerIfAbsent} or {@link ConflictAPI#addConflict(ConflictBuilder) addConflict}.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return A new anvil custom recipe base on this builder.
      */
@@ -273,6 +338,9 @@ public class AnvilRecipeBuilder {
     /**
      * Register this recipe if absent.
      * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder)}
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @return True if successful.
      */

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * It is also recommended that you read about {@link CAPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
  * as your use case may be more prone to use theses.
+ * <p>
+ * This is part of {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
  */
 public class CAEarlyPreAnvilBypassEvent extends Event implements Cancellable {
 
@@ -48,6 +50,9 @@ public class CAEarlyPreAnvilBypassEvent extends Event implements Cancellable {
 
     /**
      * Get the bukkit pre anvil event causing this event
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @return The pre anvil event causing to this event
      */

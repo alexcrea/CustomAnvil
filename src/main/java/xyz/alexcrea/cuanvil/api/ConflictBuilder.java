@@ -15,6 +15,9 @@ import java.util.Set;
 
 /**
  * A Builder for material conflict.
+ * <p>
+ * This is part of
+ * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
  */
 @SuppressWarnings("unused")
 public class ConflictBuilder {
@@ -31,6 +34,9 @@ public class ConflictBuilder {
 
     /**
      * Instantiates a new Conflict builder.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param name              The conflict name
      * @param maxBeforeConflict Maximum number of conflicting enchantment before conflict is active
@@ -50,6 +56,9 @@ public class ConflictBuilder {
 
     /**
      * Instantiates a new Conflict builder.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param name   The conflict name
      * @param source The conflict source
@@ -60,6 +69,9 @@ public class ConflictBuilder {
 
     /**
      * Instantiates a new Conflict builder.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param name The conflict name
      */
@@ -69,6 +81,9 @@ public class ConflictBuilder {
 
     /**
      * Gets conflict source.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The conflict source.
      */
@@ -79,6 +94,9 @@ public class ConflictBuilder {
 
     /**
      * Gets conflict source name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The conflict source name.
      */
@@ -91,6 +109,9 @@ public class ConflictBuilder {
 
     /**
      * Gets conflict name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The conflict name.
      */
@@ -101,6 +122,9 @@ public class ConflictBuilder {
 
     /**
      * Gets stored conflicting enchantment names.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The stored enchantment names.
      */
@@ -111,6 +135,9 @@ public class ConflictBuilder {
 
     /**
      * Gets stored conflicting enchantment keys.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The stored enchantment keys.
      */
@@ -121,6 +148,9 @@ public class ConflictBuilder {
 
     /**
      * Gets stored excluded group names.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The stored group names.
      */
@@ -136,6 +166,9 @@ public class ConflictBuilder {
      * That mean new enchantment will not be able to be added to the item and present enchantment will not have its level upgraded.
      * <p>
      * In vanilla. material restriction have this value set to 0 and enchantment conflict set to 1.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return the max number of conflicting enchantment before conflict. 0 by default.
      */
@@ -145,6 +178,9 @@ public class ConflictBuilder {
 
     /**
      * Sets conflict name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param name The name
      * @return This conflict builder instance.
@@ -161,6 +197,9 @@ public class ConflictBuilder {
      * That mean new enchantment will not be able to be added to the item and present enchantment will not have its level upgraded.
      * <p>
      * In vanilla. material restriction have this value set to 0 and enchantment conflict set to 1.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param maxBeforeConflict The max before conflict
      * @return This conflict builder instance.
@@ -172,6 +211,9 @@ public class ConflictBuilder {
 
     /**
      * Add a conflicting enchantment by name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param enchantmentName The enchantment name
      * @return This conflict builder instance.
@@ -184,6 +226,9 @@ public class ConflictBuilder {
 
     /**
      * Add a conflicting enchantment by key.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param enchantmentKey The enchantment key
      * @return This conflict builder instance.
@@ -196,6 +241,9 @@ public class ConflictBuilder {
 
     /**
      * Add a conflicting enchantment by instance.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param enchantment The enchantment
      * @return This conflict builder instance.
@@ -208,6 +256,9 @@ public class ConflictBuilder {
 
     /**
      * Remove conflicting enchantment by name.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param enchantmentName The enchantment name
      * @return This conflict builder instance.
@@ -220,6 +271,9 @@ public class ConflictBuilder {
 
     /**
      * Remove conflicting enchantment by key.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param enchantmentKey The enchantment key
      * @return This conflict builder instance.
@@ -232,6 +286,9 @@ public class ConflictBuilder {
 
     /**
      * Remove enchantment by instance.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param enchantment The enchantment
      * @return This conflict builder instance.
@@ -251,6 +308,9 @@ public class ConflictBuilder {
      * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param groupName The group name
      * @return This conflict builder instance.
@@ -271,6 +331,9 @@ public class ConflictBuilder {
      * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param group The group
      * @return this conflict builder instance.
@@ -290,6 +353,9 @@ public class ConflictBuilder {
      * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param groupName The group name
      * @return This conflict builder instance.
@@ -310,6 +376,9 @@ public class ConflictBuilder {
      * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param group The group
      * @return This conflict builder instance.
@@ -321,6 +390,9 @@ public class ConflictBuilder {
 
     /**
      * Copy this conflict builder.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return A copy of this conflict builder.
      */
@@ -348,6 +420,9 @@ public class ConflictBuilder {
 
     /**
      * Build a new Enchant conflict group by this builder.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return An Enchant conflict group with this builder parameters.
      */
@@ -362,6 +437,9 @@ public class ConflictBuilder {
     /**
      * Register this conflict if not yet registered.
      * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder, boolean) ConflictAPI.addConflict(this, true)}}
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return True if successful.
      */
@@ -372,6 +450,9 @@ public class ConflictBuilder {
     /**
      * Register this conflict if not yet registered or deleted.
      * Equivalent to {@link ConflictAPI#addConflict(ConflictBuilder) ConflictAPI.addConflict(this)}
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return True if successful.
      */
@@ -381,6 +462,9 @@ public class ConflictBuilder {
 
     /**
      * Append builders stored enchantments into conflict.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param conflict The conflict target
      */
@@ -401,6 +485,9 @@ public class ConflictBuilder {
 
     /**
      * Append an enchantment.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param conflict    The conflict target
      * @param enchantment The enchantment
@@ -415,6 +502,9 @@ public class ConflictBuilder {
 
     /**
      * Append a list of enchantments.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param conflict     The conflict target
      * @param enchantments List of enchantment to add
@@ -433,6 +523,9 @@ public class ConflictBuilder {
 
     /**
      * Extract group abstract material group.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return The abstract material group from the builder.
      */

@@ -18,6 +18,9 @@ import org.jetbrains.annotations.NotNull;
  * for this event to be useful.
  * <p>
  * There is also {@link CATreatAnvilResultEvent} that may be better for some use case.
+ * <p>
+ * This is part of
+ * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
  */
 public class CAClickResultBypassEvent extends Event implements Cancellable {
 

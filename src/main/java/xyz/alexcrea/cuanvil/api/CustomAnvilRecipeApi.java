@@ -13,6 +13,9 @@ import java.util.List;
 
 /**
  * Custom Anvil api for custom anvil recipes.
+ * <p>
+ * This is part of
+ * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
  */
 @SuppressWarnings("unused")
 public class CustomAnvilRecipeApi {
@@ -24,6 +27,9 @@ public class CustomAnvilRecipeApi {
     /**
      * Write and add a custom anvil recipe.
      * Will not write the recipe if it already exists.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param builder The recipe builder to be based on
      * @return True if successful.
@@ -35,6 +41,9 @@ public class CustomAnvilRecipeApi {
     /**
      * Write and add a custom anvil recipe.
      * Will not write the recipe if it already exists.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param builder The recipe builder to be based on
      * @param overrideDeleted If we should write even if the recipe was previously deleted.
@@ -81,6 +90,9 @@ public class CustomAnvilRecipeApi {
     // TODO remove by name and/or by builder (as name is keept) (and maybe create a get by name)
     /**
      * Remove a custom anvil recipe.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      *
      * @param recipe The recipe to remove
      * @return True if successful.
@@ -103,6 +115,9 @@ public class CustomAnvilRecipeApi {
 
     /**
      * Prepare a task to save custom recipe configuration.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
      */
     private static void prepareSaveTask() {
         if(saveChangeTask != null) return;
@@ -115,6 +130,10 @@ public class CustomAnvilRecipeApi {
 
     /**
      * Get every registered recipes.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CUSTOM_RECIPE_V1 CUSTOM_RECIPE_V1}
+     *
      * @return An immutable collection of recipes.
      */
     @NotNull

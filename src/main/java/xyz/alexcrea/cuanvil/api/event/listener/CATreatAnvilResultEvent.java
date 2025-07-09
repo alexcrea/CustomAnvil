@@ -17,6 +17,8 @@ import xyz.alexcrea.cuanvil.util.AnvilUseType;
  * and {@link CAEarlyPreAnvilBypassEvent} for your use case
  * <p>
  * A null result will cancel this pre anvil event
+ * <p>
+ * This is part of {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
  */
 @SuppressWarnings("unused")
 public class CATreatAnvilResultEvent extends Event {
@@ -51,6 +53,9 @@ public class CATreatAnvilResultEvent extends Event {
 
     /**
      * Get the bukkit inventory click event causing to this event.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @return The click event causing to this event.
      */
@@ -60,6 +65,9 @@ public class CATreatAnvilResultEvent extends Event {
 
     /**
      * Get the type of use source of the result.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @return The craft use type.
      */
@@ -71,6 +79,9 @@ public class CATreatAnvilResultEvent extends Event {
      * Get the current result
      * <p>
      * note that it will not be null unless another listener previously set it to null.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @return The current result.
      */
@@ -82,6 +93,9 @@ public class CATreatAnvilResultEvent extends Event {
      * Set the current result
      * <p>
      * note that a null result will cancel this anvil use.
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @param result The new result
      */
@@ -102,6 +116,9 @@ public class CATreatAnvilResultEvent extends Event {
      * <li>Item merge</li>
      * <li>Item rename</li>
      * </ul>
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @return The current cost.
      */
@@ -122,6 +139,9 @@ public class CATreatAnvilResultEvent extends Event {
      * <li>Item merge</li>
      * <li>Item rename</li>
      * </ul>
+     * <p>
+     * This is part of
+     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#LISTENER_EVENTS_V1 LISTENER_EVENTS_V1}
      *
      * @param levelCost The new cost.
      */
