@@ -25,7 +25,7 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
                     addEnchantment(enchantmentMap, enchantment, level)
             );
         }
-        if(!isBook || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()){
+        if (!isBook || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
             item.getEnchantments().forEach((enchantment, level) ->
                     addEnchantment(enchantmentMap, enchantment, level)
             );
@@ -33,9 +33,9 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
     }
 
     public void addEnchantment(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull Enchantment enchantment, int level) {
-        CAEnchantment enchant = EnchantmentApi.getByKey(enchantment.getKeyOrThrow());
+        CAEnchantment enchant = EnchantmentApi.getByKey(enchantment.getKey());
         if (enchant == null) {
-            CustomAnvil.instance.getLogger().warning("Enchantment of key " + enchantment.getKeyOrThrow() +
+            CustomAnvil.instance.getLogger().warning("Enchantment of key " + enchantment.getKey() +
                     " somehow not found in CustomAnvil ?");
             return;
         }

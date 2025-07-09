@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.dependency.datapack
 
 import io.delilaheve.CustomAnvil
+import io.papermc.paper.datapack.Datapack
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.file.FileConfiguration
@@ -17,7 +19,6 @@ import xyz.alexcrea.cuanvil.update.Version
 import java.io.InputStreamReader
 
 object DataPackDependency {
-    private val START_DETECT_VERSION = Version(1, 19, 0)
 
     /**
      * Map of the latest CustomAnvil update related to the pack
@@ -30,10 +31,9 @@ object DataPackDependency {
 
     private val enabledDatapacks: List<String>
         get() {
-            val version: Version = UpdateUtils.currentMinecraftVersion()
-            if (version.lesserThan(START_DETECT_VERSION)) return emptyList()
-
-            return DataPackTester.enabledPacks
+            return Bukkit.getDatapackManager().enabledPacks
+                .stream().map { obj: Datapack -> obj.name }
+                .toList()
         }
 
     fun handleDatapackConfigs() {
@@ -41,10 +41,11 @@ object DataPackDependency {
         for (packName in enabledDatapack) {
             // Handling of pack name is horrible: it is based on file name
             // So if someone rename a datapack it will make me sad
-            if(!packName.startsWith("file/")) continue
+            if (!packName.startsWith("file/")) continue
 
             if (packName.contains("bp_post_scarcity", ignoreCase = true)
-                || packName.contains("bracken", ignoreCase = true)) {
+                || packName.contains("bracken", ignoreCase = true)
+            ) {
                 handlePack("bracken")
                 continue
             }
@@ -62,7 +63,7 @@ object DataPackDependency {
         }
     }
 
-    private fun handlePack(pack: String){
+    private fun handlePack(pack: String) {
         CustomAnvil.instance.logger.info("trying to handle datapack $pack")
         handlePackInitialConfig(pack)
         writeDefaultByNamespace(pack)
@@ -72,7 +73,7 @@ object DataPackDependency {
     private fun handlePackInitialConfig(pack: String) {
         val defConfig = ConfigHolder.DEFAULT_CONFIG
         val version = LATEST_VERSION[pack]
-        if(version == null) {
+        if (version == null) {
             throw RuntimeException("The pack $pack has no latest version hard coded in the plugin")
         }
 
@@ -257,7 +258,7 @@ object DataPackDependency {
             val conflict = manager.conflictList.find {
                 it.name.equals(group, ignoreCase = true)
             }
-            if(conflict == null) {
+            if (conflict == null) {
                 // This should not happen as configuration section
                 CustomAnvil.instance.logger.severe("Could not find  $group while its configuration section exist... this should NOT happen")
                 return false
@@ -265,7 +266,7 @@ object DataPackDependency {
 
             val key = NamespacedKey.fromString(ench)!!
             val enchant = EnchantmentApi.getByKey(key)
-            if (enchant == null){
+            if (enchant == null) {
                 CustomAnvil.instance.logger.severe("Could not find enchantment $ench while configuring pack a datapack")
                 return false
             }
@@ -294,7 +295,7 @@ object DataPackDependency {
 
     private fun writeDefaultByNamespace(namespace: String) {
         for (enchantment in EnchantmentApi.getRegisteredEnchantments().values) {
-            if(!enchantment.key.namespace.equals(namespace, ignoreCase = true)) continue
+            if (!enchantment.key.namespace.equals(namespace, ignoreCase = true)) continue
 
             CustomAnvil.log("Writing default for ${enchantment.key}")
             EnchantmentApi.writeDefaultConfig(enchantment, false)

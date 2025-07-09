@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
@@ -41,13 +41,14 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         return INSTANCE;
     }
 
-    private final PacketManager packetManager;
+    private final PacketManagerBase packetManager;
+
     /**
      * Constructor of this Global gui for basic settings.
      */
-    public BasicConfigGui(PacketManager packetManager) {
+    public BasicConfigGui(PacketManagerBase packetManager) {
         super(4, "§8Basic Config", CustomAnvil.instance);
-        if(INSTANCE == null) INSTANCE = this;
+        if (INSTANCE == null) INSTANCE = this;
 
         this.packetManager = packetManager;
         init();
@@ -282,7 +283,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         lore.add("§7Even if cost is displayed as §aGreen§7:");
         lore.add("§7If the player do not have the required xp level, the action will not be completable.");
 
-        if(!this.packetManager.getCanSetInstantBuild()){
+        if (!this.packetManager.getCanSetInstantBuild()) {
             lore.add("");
             lore.add("§4/!\\§cCaution§4/!\\ §cYou need ProtocoLib installed and working or a newer version of this plugin for this to work.");
             lore.add("§cCurrently ProtocoLib is not detected.");
@@ -346,7 +347,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('h', allowHexColorItem);
 
         // True if player could place color
-        if(ConfigOptions.INSTANCE.getRenameColorPossible()){
+        if (ConfigOptions.INSTANCE.getRenameColorPossible()) {
             // use permission for color
             GuiItem permissionNeededItem = this.permissionNeededForColor.getItem();
             pane.bindItem('p', permissionNeededItem);
@@ -354,7 +355,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
             // using color cost
             GuiItem useColorCostItem = this.useOfColorCost.getItem(Material.EXPERIENCE_BOTTLE, "Use color");
             pane.bindItem('P', useColorCostItem);
-        }else{
+        } else {
             pane.bindItem('p', this.noPermissionNeededItem);
             pane.bindItem('P', this.noColorCostItem);
         }

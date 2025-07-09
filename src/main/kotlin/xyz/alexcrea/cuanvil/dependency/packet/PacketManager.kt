@@ -1,13 +1,11 @@
-package xyz.alexcrea.cuanvil.dependency.packet.versions
+package xyz.alexcrea.cuanvil.dependency.packet
 
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
 import net.minecraft.world.entity.player.Abilities
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
-import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
-import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase
 
-class V1_21R3_PacketManager : PacketManagerBase(), PacketManager {
+class PacketManager : PacketManagerBase() {
     override val canSetInstantBuild: Boolean
         get() = true
 

@@ -7,9 +7,9 @@ import com.comphenix.protocol.events.PacketContainer
 import org.bukkit.entity.Player
 import java.lang.reflect.InvocationTargetException
 
-class ProtocoLibWrapper: PacketManager {
+class ProtocoLibWrapper : PacketManagerBase() {
 
-    private val protocolManager: ProtocolManager = ProtocolLibrary.getProtocolManager();
+    private val protocolManager: ProtocolManager = ProtocolLibrary.getProtocolManager()
 
     override val canSetInstantBuild: Boolean
         get() = true
