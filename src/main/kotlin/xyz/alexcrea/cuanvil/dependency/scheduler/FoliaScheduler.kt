@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity
 import org.bukkit.plugin.Plugin
 
 class FoliaScheduler : TaskScheduler {
+
     override fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any {
         if (time < 1) {
             return Bukkit.getGlobalRegionScheduler().run(
@@ -35,5 +36,4 @@ class FoliaScheduler : TaskScheduler {
             time
         )
     }
-
 }

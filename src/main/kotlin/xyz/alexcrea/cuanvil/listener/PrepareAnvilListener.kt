@@ -52,7 +52,7 @@ class PrepareAnvilListener : Listener {
         // Test if custom anvil is bypassed before immutability test
         if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvXp(event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.view, player, event.view.repairCost)
             return
         }
 
@@ -69,7 +69,7 @@ class PrepareAnvilListener : Listener {
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvXp(event.view, player, event.view.repairCost)
             return
         }
 
@@ -113,7 +113,7 @@ class PrepareAnvilListener : Listener {
         if (!meta.hasEnchants()) return false
 
         for (enchant in meta.enchants.keys) {
-            if (ConfigOptions.isImmutable(enchant.keyOrThrow)) return true
+            if (ConfigOptions.isImmutable(enchant.key)) return true
         }
         return false
     }
@@ -122,7 +122,7 @@ class PrepareAnvilListener : Listener {
         if (meta !is EnchantmentStorageMeta || !meta.hasStoredEnchants()) return false
 
         for (enchant in meta.storedEnchants.keys) {
-            if (ConfigOptions.isImmutable(enchant.keyOrThrow)) return true
+            if (ConfigOptions.isImmutable(enchant.key)) return true
         }
         return false
     }

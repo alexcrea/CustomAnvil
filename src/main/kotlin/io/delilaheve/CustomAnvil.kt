@@ -105,7 +105,7 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load default configuration
         if (!ConfigHolder.loadDefaultConfig()) {
-            logger.log(Level.SEVERE,"could not load default config.")
+            logger.log(Level.SEVERE, "could not load default config.")
             return
         }
 
@@ -122,10 +122,10 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load other thing later.
         // It is so other dependent plugins can implement there event listener before we fire them.
-        DependencyManager.scheduler.scheduleGlobally(this, {loadEnchantmentSystem()})
+        DependencyManager.scheduler.scheduleGlobally(this, { loadEnchantmentSystem() })
     }
 
-    private fun loadEnchantmentSystem(){
+    private fun loadEnchantmentSystem() {
         // Register enchantments
         CAEnchantmentRegistry.getInstance().registerBukkit()
         DependencyManager.registerEnchantments()
@@ -135,7 +135,7 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load config
         if (!ConfigHolder.loadNonDefaultConfig()) {
-            logger.log(Level.SEVERE,"could not load non default config.")
+            logger.log(Level.SEVERE, "could not load non default config.")
             return
         }
 
@@ -189,7 +189,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             val configReader = FileReader(resourceFile)
             yamlConfig.load(configReader)
-        } catch (test: Exception) {
+        } catch (_: Exception) {
             if (hardFailSafe) {
                 // This is important and may impact gameplay if it does not load.
                 // Failsafe is to stop the plugin

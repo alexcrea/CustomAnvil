@@ -8,7 +8,7 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
+import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -27,7 +27,7 @@ public class MainConfigGui extends ChestGui {
         super(3, "§8Anvil Config", CustomAnvil.instance);
     }
 
-    public void init(PacketManager packetManager) {
+    public void init(PacketManagerBase packetManager) {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "012345678",

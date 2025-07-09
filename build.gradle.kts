@@ -14,7 +14,7 @@ plugins {
     signing
     id("cn.lalaki.central").version("1.2.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17"
 }
 
 group = "xyz.alexcrea"
@@ -26,11 +26,14 @@ val effectiveVersion = "$version" +
 repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
+
+    // ProtocoLib
+    maven(url = "https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
-    // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.21.5-R0.1-SNAPSHOT")
+    // Paper
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 
     // Gui library
     val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"
@@ -57,16 +60,19 @@ dependencies {
     // ToolStats
     compileOnly(files("libs/toolstats-1.9.6-stripped.jar"))
 
+    // Protocolib
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+
     // AxPlayerWarps
     compileOnly(files("libs/AxPlayerWarps-1.10.3.jar"))
 
     // Include nms
     implementation(project(":nms:nms-common"))
-    implementation(project(":nms:v1_21R1", configuration = "reobf"))
-    implementation(project(":nms:v1_21R2", configuration = "reobf"))
-    implementation(project(":nms:v1_21R3", configuration = "reobf"))
-    implementation(project(":nms:v1_21R4", configuration = "reobf"))
-    implementation(project(":nms:v1_21R5", configuration = "reobf"))
+    implementation(project(":nms:v1_21R1"))
+    implementation(project(":nms:v1_21R2"))
+    implementation(project(":nms:v1_21R3"))
+    implementation(project(":nms:v1_21R4"))
+    implementation(project(":nms:v1_21R5"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
@@ -150,6 +156,11 @@ tasks {
             )
         }
 
+        // paper mapping
+        manifest {
+            attributes["paperweight-mappings-namespace"] = "mojang"
+        }
+
         // Process resource for plugin.yml
         dependsOn(processResources)
     }
@@ -181,6 +192,11 @@ tasks {
 
             // Add custom anvil compiled
             from(sourceSets.main.get().output)
+
+            // paper mapping
+            manifest {
+                attributes["paperweight-mappings-namespace"] = "mojang"
+            }
 
             dependsOn(processResources)
         })

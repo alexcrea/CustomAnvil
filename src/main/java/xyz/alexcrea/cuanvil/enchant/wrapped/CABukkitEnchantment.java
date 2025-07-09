@@ -30,7 +30,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     public final @NotNull Enchantment bukkit;
 
     public CABukkitEnchantment(@NotNull Enchantment bukkit, @Nullable EnchantmentRarity rarity) {
-        super(bukkit.getKeyOrThrow(),
+        super(bukkit.getKey(),
                 rarity,
                 bukkit.getMaxLevel());
         this.bukkit = bukkit;
@@ -103,7 +103,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     @NotNull
     public static EnchantmentRarity getRarity(Enchantment enchantment) {
         try {
-            return EnchantmentProperties.valueOf(enchantment.getKeyOrThrow().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
+            return EnchantmentProperties.valueOf(enchantment.getKey().getKey().toUpperCase(Locale.ENGLISH)).getRarity();
         } catch (Exception ignored) {
             return findRarity(enchantment);
         }
@@ -114,22 +114,8 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
         return this.bukkit;
     }
 
-    private static Method getAnvilCostMethod;
-
-    static {
-        Class<Enchantment> clazz = Enchantment.class;
-        try {
-            getAnvilCostMethod = clazz.getDeclaredMethod("getAnvilCost");
-            getAnvilCostMethod.setAccessible(true);
-
-            CustomAnvil.Companion.log("Detected getAnvilCost method");
-        } catch (NoSuchMethodException e) {
-            getAnvilCostMethod = null;
-        }
-
-    }
-
     private static final Map<EnchantmentTarget, String> targetToGroup = new HashMap<>();
+
     static {
         targetToGroup.put(EnchantmentTarget.ARMOR, "armors");
         targetToGroup.put(EnchantmentTarget.ARMOR_HEAD, "helmets");
@@ -148,18 +134,8 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     }
 
     private static EnchantmentRarity findRarity(Enchantment enchantment) {
-        if (getAnvilCostMethod == null) return EnchantmentRarity.COMMON;
-
-        try {
-            int itemCost = (int) getAnvilCostMethod.invoke(enchantment);
-
-            return EnchantmentRarity.getRarity(itemCost);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            CustomAnvil.instance.getLogger().log(Level.SEVERE, "could not find cost for enchantment " + enchantment.getKey(), e);
-
-            return EnchantmentRarity.COMMON;
-        }
-
+        //TODO use non deprecated value
+        return EnchantmentRarity.getRarity(enchantment.getRarity().getWeight());
     }
 
     @Override
