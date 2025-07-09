@@ -17,23 +17,20 @@ import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
-import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
 import xyz.alexcrea.cuanvil.dependency.plugins.*
-import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
+import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.logging.Level
-
 
 @Suppress("unstableApiUsage")
 object DependencyManager {
 
     var isFolia: Boolean = false
-    lateinit var scheduler: TaskScheduler
+    lateinit var scheduler: FoliaScheduler
     lateinit var packetManager: PacketManagerBase
-    private var externGuiTester: ExternGuiTester? = null
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     private var ecoEnchantCompatibility: EcoEnchantDependency? = null
@@ -54,11 +51,11 @@ object DependencyManager {
         if (isFolia) {
             CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
         }
+        scheduler = FoliaScheduler()
 
         // Packet Manager
         val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
         packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
-        externGuiTester = GuiTesterSelector.selectGuiTester
 
         // Enchantment Squared dependency
         if (pluginManager.isPluginEnabled("EnchantsSquared")) {
@@ -158,7 +155,7 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+        if (!bypass && ExternGuiTester.testIfGui(event.view)) bypass = true
 
         // Test if in an ax player warp rating gui
         if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(player) == true)) bypass = true
@@ -289,7 +286,7 @@ object DependencyManager {
         }
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+        if (!bypass && ExternGuiTester.testIfGui(event.view)) bypass = true
 
         // Test if in an ax player warp rating gui
         if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.player) == true)) bypass = true

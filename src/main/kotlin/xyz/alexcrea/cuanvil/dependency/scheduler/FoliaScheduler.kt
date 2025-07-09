@@ -5,9 +5,10 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.plugin.Plugin
 
-class FoliaScheduler : TaskScheduler {
+//TODO replace usage of this to in code correct version
+class FoliaScheduler {
 
-    override fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any {
+    fun scheduleGlobally(plugin: Plugin, task: Runnable, time: Long): Any {
         if (time < 1) {
             return Bukkit.getGlobalRegionScheduler().run(
                 plugin
@@ -20,8 +21,11 @@ class FoliaScheduler : TaskScheduler {
         )
     }
 
+    fun scheduleGlobally(plugin: Plugin, task: Runnable): Any?{
+        return scheduleGlobally(plugin, task, 0L)
+    }
 
-    override fun scheduleOnEntity(plugin: Plugin, entity: Entity, task: Runnable, time: Long): Any? {
+    fun scheduleOnEntity(plugin: Plugin, entity: Entity, task: Runnable, time: Long): Any? {
         if (time < 1) {
             return entity.scheduler.run(
                 plugin,
@@ -35,5 +39,9 @@ class FoliaScheduler : TaskScheduler {
             {},
             time
         )
+    }
+
+    fun scheduleOnEntity(plugin: Plugin, entity: Entity, task: Runnable): Any?{
+        return scheduleOnEntity(plugin, entity, task, 0L)
     }
 }

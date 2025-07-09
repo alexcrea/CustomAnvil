@@ -1,12 +1,16 @@
 package xyz.alexcrea.cuanvil.dependency.gui
 
+import org.bukkit.craftbukkit.inventory.CraftInventoryView
 import org.bukkit.inventory.InventoryView
 
-interface ExternGuiTester {
+object ExternGuiTester {
 
-    val wesjdAnvilGuiName: String?
+    fun getContainerClass(view: InventoryView): Class<Any>? {
+        if (view !is CraftInventoryView<*, *>) return null
+        val container = view.handle
 
-    fun getContainerClass(view: InventoryView): Class<Any>?
+        return container.javaClass
+    }
 
     fun testIfGui(view: InventoryView): Boolean {
         // this mean we are on test
@@ -25,7 +29,10 @@ interface ExternGuiTester {
     }
 
     fun expectWesjd(name: String): Boolean {
-        val expectedWesjdGuiPath = "anvilgui.version.$wesjdAnvilGuiName"
+        val spigotVer = GuiTesterSelector.spigotVersionString
+        if(spigotVer == null) return false
+
+        val expectedWesjdGuiPath = "anvilgui.version.Wrapper${spigotVer}"
 
         return name.contains(expectedWesjdGuiPath)
     }
