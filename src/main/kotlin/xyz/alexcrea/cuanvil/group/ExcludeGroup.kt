@@ -69,8 +69,8 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         }
     }
 
-    override fun getItemTypes(): ImmutableSet<ItemType> {
-        return Collections.unmodifiableSet(groupItems) as ImmutableSet<ItemType>
+    override fun getItemTypes(): Set<ItemType> {
+        return Collections.unmodifiableSet(groupItems)
     }
 
 

@@ -65,7 +65,7 @@ abstract class AbstractMaterialGroup(private val name: String) {
     /**
      * Get the group contained item as a set
      */
-    abstract fun getItemTypes(): ImmutableSet<ItemType>
+    abstract fun getItemTypes(): Set<ItemType>
 
     /**
      * Get the group non-inherited items as a set
