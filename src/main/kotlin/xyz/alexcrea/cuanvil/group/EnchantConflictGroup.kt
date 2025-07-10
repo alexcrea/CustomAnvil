@@ -1,9 +1,10 @@
 package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
+import org.bukkit.inventory.ItemType
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 
+@Suppress("UnstableApiUsage")
 class EnchantConflictGroup(
     val name: String,
     private val cantConflict: AbstractMaterialGroup,
@@ -15,17 +16,18 @@ class EnchantConflictGroup(
     fun addEnchantment(enchant: CAEnchantment) {
         enchantments.add(enchant)
     }
+
     fun addEnchantments(enchants: List<CAEnchantment>) {
         enchantments.addAll(enchants)
     }
 
-    fun allowed(enchants: Set<CAEnchantment>, mat: Material): Boolean {
+    fun allowed(enchants: Set<CAEnchantment>, type: ItemType): Boolean {
         if (enchantments.size < minBeforeBlock) {
             CustomAnvil.verboseLog("Conflicting bc of to many enchantments")
             return true
         }
 
-        if (cantConflict.contain(mat)) {
+        if (cantConflict.contain(type)) {
             return true
         }
 
@@ -56,15 +58,15 @@ class EnchantConflictGroup(
         enchantments.addAll(enchants)
     }
 
-    fun getRepresentativeMaterial(): Material {
+    fun getRepresentativeMaterial(): ItemType {
         val groups = getCantConflictGroup().getGroups()
         val groupIterator = groups.iterator()
         while (groupIterator.hasNext()) {
-            val mat = groupIterator.next().getRepresentativeMaterial()
-            if (mat != Material.ENCHANTED_BOOK) return mat
+            val itemType = groupIterator.next().getRepresentativeMaterial()
+            if (itemType != ItemType.ENCHANTED_BOOK) return itemType
 
         }
-        return Material.ENCHANTED_BOOK
+        return ItemType.ENCHANTED_BOOK
     }
 
     override fun toString(): String {

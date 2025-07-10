@@ -1,8 +1,8 @@
 package xyz.alexcrea.cuanvil.update.plugin;
 
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi;
@@ -16,6 +16,7 @@ import java.util.Set;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
+@SuppressWarnings("UnstableApiUsage")
 public class PUpdate_1_11_0 {
 
     private static final List<String> mace_expected = List.of(
@@ -30,22 +31,22 @@ public class PUpdate_1_11_0 {
             "bane_of_arthropods"
     );
 
-    private static final Material[] PICKAXES = new Material[]{
-            Material.WOODEN_PICKAXE, Material.STONE_PICKAXE,
-            Material.IRON_PICKAXE, Material.DIAMOND_PICKAXE,
-            Material.GOLDEN_PICKAXE, Material.NETHERITE_PICKAXE
+    private static final ItemType[] PICKAXES = new ItemType[]{
+            ItemType.WOODEN_PICKAXE, ItemType.STONE_PICKAXE,
+            ItemType.IRON_PICKAXE, ItemType.DIAMOND_PICKAXE,
+            ItemType.GOLDEN_PICKAXE, ItemType.NETHERITE_PICKAXE
     };
 
-    private static final Material[] SHOVELS = new Material[]{
-            Material.WOODEN_SHOVEL, Material.STONE_SHOVEL,
-            Material.IRON_SHOVEL, Material.DIAMOND_SHOVEL,
-            Material.GOLDEN_SHOVEL, Material.NETHERITE_SHOVEL
+    private static final ItemType[] SHOVELS = new ItemType[]{
+            ItemType.WOODEN_SHOVEL, ItemType.STONE_SHOVEL,
+            ItemType.IRON_SHOVEL, ItemType.DIAMOND_SHOVEL,
+            ItemType.GOLDEN_SHOVEL, ItemType.NETHERITE_SHOVEL
     };
 
-    private static final Material[] HOES = new Material[]{
-            Material.WOODEN_HOE, Material.STONE_HOE,
-            Material.IRON_HOE, Material.DIAMOND_HOE,
-            Material.GOLDEN_HOE, Material.NETHERITE_HOE
+    private static final ItemType[] HOES = new ItemType[]{
+            ItemType.WOODEN_HOE, ItemType.STONE_HOE,
+            ItemType.IRON_HOE, ItemType.DIAMOND_HOE,
+            ItemType.GOLDEN_HOE, ItemType.NETHERITE_HOE
     };
 
     public static void handleUpdate(@Nonnull Set<ConfigHolder> toSave) {
@@ -65,7 +66,7 @@ public class PUpdate_1_11_0 {
     private static void migrateTools(
             @Nullable AbstractMaterialGroup tools,
             @NotNull String toolset,
-            @NotNull Material[] toolMats) {
+            @NotNull ItemType[] toolMats) {
 
         // Create new group
         IncludeGroup group = new IncludeGroup(toolset);
@@ -77,11 +78,11 @@ public class PUpdate_1_11_0 {
         if (tools == null) return;
         if (!(tools instanceof IncludeGroup include)) return;
 
-        List<Material> mats = List.of(toolMats);
-        Set<Material> matSet = include.getNonGroupInheritedMaterials();
-        if (!matSet.containsAll(mats)) return;
+        List<ItemType> types = List.of(toolMats);
+        Set<ItemType> typeSet = include.getNonGroupInheritedMaterials();
+        if (!typeSet.containsAll(types)) return;
 
-        mats.forEach(matSet::remove);
+        types.forEach(typeSet::remove);
         tools.addToPolicy(group);
         MaterialGroupApi.writeMaterialGroup(tools);
     }
@@ -108,6 +109,8 @@ public class PUpdate_1_11_0 {
 
         // Test sword_enchant_conflict is default
         ConfigurationSection sword_conflict = config.getConfigurationSection("sword_enchant_conflict");
+        if (sword_conflict == null) return;
+
         if (sword_conflict.getInt("maxEnchantmentBeforeConflict", 0) != 1) return;
 
         if (sword_conflict.isList("notAffectedGroups") && !sword_conflict.getList("notAffectedGroups").isEmpty())
@@ -124,6 +127,7 @@ public class PUpdate_1_11_0 {
                 "minecraft:density", "minecraft:breach");
 
         config.set("mace_enchant_conflict", null);
+
         toSave.add(ConfigHolder.CONFLICT_HOLDER);
     }
 

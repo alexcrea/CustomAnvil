@@ -1,11 +1,13 @@
 package xyz.alexcrea.cuanvil.group
 
-import org.bukkit.Material
+import com.google.common.collect.ImmutableSet
+import org.bukkit.inventory.ItemType
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
-    override fun createDefaultSet(): EnumSet<Material> {
-        return EnumSet.noneOf(Material::class.java)
+    override fun createDefaultSet(): MutableSet<ItemType> {
+        return HashSet()
     }
 
     private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
@@ -20,35 +22,35 @@ class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
         return false
     }
 
-    override fun addToPolicy(mat: Material): IncludeGroup {
-        includedMaterial.add(mat)
-        groupItems.add(mat)
+    override fun addToPolicy(type: ItemType): IncludeGroup {
+        includedItems.add(type)
+        groupItems.add(type)
 
         return this
     }
 
     override fun addToPolicy(other: AbstractMaterialGroup): IncludeGroup {
         includedGroup.add(other)
-        groupItems.addAll(other.getMaterials())
+        groupItems.addAll(other.getItemTypes())
 
         return this
     }
 
     override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {
         groupItems.clear()
-        groupItems.addAll(includedMaterial)
+        groupItems.addAll(includedItems)
 
         includedGroup.clear()
         groups.forEach { group ->
             if (!group.isReferencing(this)) {
                 includedGroup.add(group)
-                groupItems.addAll(group.getMaterials())
+                groupItems.addAll(group.getItemTypes())
             }
         }
     }
 
-    override fun setNonGroupInheritedMaterials(materials: EnumSet<Material>) {
-        super.setNonGroupInheritedMaterials(materials)
+    override fun setNonGroupInheritedMaterials(types: Set<ItemType>) {
+        super.setNonGroupInheritedMaterials(types)
 
         updateMaterials()
     }
@@ -59,15 +61,15 @@ class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
 
     override fun updateMaterials() {
         groupItems.clear()
-        groupItems.addAll(includedMaterial)
+        groupItems.addAll(includedItems)
 
         includedGroup.forEach { group ->
-            groupItems.addAll(group.getMaterials())
+            groupItems.addAll(group.getItemTypes())
         }
     }
 
-    override fun getMaterials(): EnumSet<Material> {
-        return groupItems
+    override fun getItemTypes(): ImmutableSet<ItemType> {
+        return Collections.unmodifiableSet(groupItems) as ImmutableSet<ItemType>
     }
 
 

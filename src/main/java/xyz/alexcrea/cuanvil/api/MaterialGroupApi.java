@@ -2,8 +2,8 @@ package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Custom Anvil api for material group registry.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnstableApiUsage"})
 public class MaterialGroupApi {
 
     private MaterialGroupApi() {
@@ -105,6 +105,7 @@ public class MaterialGroupApi {
         if (group instanceof IncludeGroup includeGroup) {
             changed = writeKnownGroup("include", includeGroup);
         } else if (group instanceof ExcludeGroup excludeGroup) {
+            //TODO work on it when exclude group is reworked
             throw new UnsupportedOperationException("exclude group is temporarily disable for the time being. sorry");
             // This code do not do what is intended ? idk why do it exist
             //changed = writeKnownGroup("exclude", excludeGroup);
@@ -123,12 +124,12 @@ public class MaterialGroupApi {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
-        Set<Material> materialSet = group.getNonGroupInheritedMaterials();
+        Set<ItemType> itemSets = group.getNonGroupInheritedMaterials();
         Set<AbstractMaterialGroup> groupSet = group.getGroups();
 
         boolean empty = true;
-        if (!materialSet.isEmpty()) {
-            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materialSet));
+        if (!itemSets.isEmpty()) {
+            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, itemTypesSetToStringList(itemSets));
             empty = false;
         } else {
             config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, null);
@@ -153,18 +154,18 @@ public class MaterialGroupApi {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
-        EnumSet<Material> materials = group.getMaterials();
+        Set<ItemType> itemTypes = group.getItemTypes();
 
-        if (materials.isEmpty()) return false;
+        if (itemTypes.isEmpty()) return false;
 
         config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, "include");
-        config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, materialSetToStringList(materials));
+        config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, itemTypesSetToStringList(itemTypes));
 
         return true;
     }
 
-    public static List<String> materialSetToStringList(@NotNull Set<Material> materials) {
-        return materials.stream().map(material -> material.getKey().getKey().toLowerCase()).toList();
+    public static List<String> itemTypesSetToStringList(@NotNull Set<ItemType> types) {
+        return types.stream().map(item -> item.getKey().getKey().toLowerCase()).toList();
     }
 
     public static List<String> materialGroupSetToStringList(@NotNull Set<AbstractMaterialGroup> groups) {
