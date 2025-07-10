@@ -10,6 +10,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 class EnchantConflictManager {
 
     companion object {
@@ -176,7 +177,9 @@ class EnchantConflictManager {
         newEnchant: CAEnchantment
     ): ConflictType {
         val mat = item.type
-        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${mat.key}")
+        val itemType = mat.asItemType()!!
+
+        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${itemType.key}")
         val conflictList = newEnchant.conflicts
 
         var result = ConflictType.NO_CONFLICT
@@ -187,7 +190,7 @@ class EnchantConflictManager {
                 continue
             }
 
-            val allowed = conflict.allowed(appliedEnchants.keys, mat)
+            val allowed = conflict.allowed(appliedEnchants.keys, itemType)
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {

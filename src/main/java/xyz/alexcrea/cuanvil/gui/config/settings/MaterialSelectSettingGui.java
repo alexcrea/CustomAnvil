@@ -9,9 +9,10 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
+import xyz.alexcrea.cuanvil.gui.config.SelectItemTypeContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
@@ -22,19 +23,20 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class MaterialSelectSettingGui extends MappedElementListConfigGui<Material, GuiItem> {
+@SuppressWarnings("UnstableApiUsage")
+public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemType, GuiItem> {
 
-    private final SelectMaterialContainer selector;
+    private final SelectItemTypeContainer selector;
     private final Gui backGui;
     private boolean instantRemove;
 
-    private final List<Material> defaultMaterials;
-    private final EnumSet<Material> illegalMaterials;
+    private final List<ItemType> defaultMaterials;
+    private final Set<ItemType> illegalMaterials;
     private final int defaultMaterialHash;
     private int nowMaterialHash;
 
     public MaterialSelectSettingGui(
-            @NotNull SelectMaterialContainer selector,
+            @NotNull SelectItemTypeContainer selector,
             @NotNull String title,
             @NotNull Gui backGui) {
         super(title);
@@ -45,7 +47,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         this.defaultMaterials = new ArrayList<>(this.selector.getSelectedMaterials());
         this.illegalMaterials = this.selector.illegalMaterials();
 
-        this.defaultMaterialHash = hashFromMaterialList(this.defaultMaterials);
+        this.defaultMaterialHash = hashFromItemTypeList(this.defaultMaterials);
         this.nowMaterialHash = this.defaultMaterialHash;
 
         init();
@@ -55,7 +57,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected Pattern getBackgroundPattern(){
+    protected Pattern getBackgroundPattern() {
         return new Pattern(
                 GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
                 GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
@@ -157,21 +159,20 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
                 player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
                 return;
             }
-            if(testCantSave()) return;
+            if (testCantSave()) return;
 
 
             // Save setting
-            EnumSet<Material> result = EnumSet.noneOf(Material.class);
-            result.addAll(this.elementGuiMap.keySet());
+            Set<ItemType> result = new HashSet<>(this.elementGuiMap.keySet());
 
-            if(!this.selector.setSelectedMaterials(result)){
+            if (!this.selector.setSelectedItems(result)) {
                 player.sendMessage("§cSomething went wrong while saving the change of value.");
             }
 
             // Return to parent
             this.backGui.show(player);
 
-            }, CustomAnvil.instance);
+        }, CustomAnvil.instance);
     }
 
     /**
@@ -185,12 +186,12 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
             ItemStack cursor = player.getItemOnCursor();
 
             // Test if cursor material allowed
-            Material cursorMat = cursor.getType();
-            if(cursorMat.isAir()) return;
-            if(this.illegalMaterials.contains(cursorMat)) return;
+            ItemType cursorMat = cursor.getType().asItemType();
+            if (cursorMat == ItemType.AIR) return;
+            if (this.illegalMaterials.contains(cursorMat)) return;
 
             // Update gui only if item did not exist before.
-            if(!this.elementGuiMap.containsKey(cursorMat)){
+            if (!this.elementGuiMap.containsKey(cursorMat)) {
                 updateValueForGeneric(cursorMat, true);
                 this.nowMaterialHash ^= cursorMat.hashCode();
 
@@ -201,12 +202,12 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected ItemStack createItemForGeneric(Material material) {
-        ItemStack item = new ItemStack(material);
+    protected ItemStack createItemForGeneric(ItemType type) {
+        ItemStack item = type.createItemStack();
         ItemMeta meta = item.getItemMeta();
 
-        if(meta == null) return item;
-        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()));
+        if (meta == null) return item;
+        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(type.key().value().toLowerCase()));
         meta.setLore(Collections.singletonList("§7Click here to remove this material from the list"));
         meta.addItemFlags(ItemFlag.values());
 
@@ -216,22 +217,22 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<ItemType> getEveryDisplayableInstanceOfGeneric() {
         return this.defaultMaterials;
     }
 
     @Override
-    protected void updateElement(Material material, GuiItem element) {
+    protected void updateElement(ItemType type, GuiItem element) {
         // Nothing happen here I think
     }
 
     @Override
-    protected GuiItem newElementRequested(Material material, GuiItem newItem) {
+    protected GuiItem newElementRequested(ItemType type, GuiItem newItem) {
         newItem.setAction(event -> {
-            if(this.instantRemove){
-                removeMaterial(material);
-            }else {
-                String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
+            if (this.instantRemove) {
+                removeItemType(type);
+            } else {
+                String materialName = CasedStringUtil.snakeToUpperSpacedCase(type.key().value().toLowerCase());
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
@@ -239,7 +240,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
                         "§7Confirm Remove " + materialName.toLowerCase() + " from this list.",
                         this, this,
                         () -> {
-                            removeMaterial(material);
+                            removeItemType(type);
                             return true;
                         }, false
                 );
@@ -250,37 +251,36 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         return newItem;
     }
 
-    private void removeMaterial(Material material) {
-        if(this.elementGuiMap.containsKey(material)){
-            this.nowMaterialHash ^= material.hashCode();
+    private void removeItemType(ItemType type) {
+        if (this.elementGuiMap.containsKey(type)) {
+            this.nowMaterialHash ^= type.hashCode(); //TODO check would this be valid with item type
             setSaveItem();
-            removeGeneric(material);
+            removeGeneric(type);
         }
-
     }
 
     @Override
-    protected GuiItem findItemFromElement(Material generic, GuiItem element) {
+    protected GuiItem findItemFromElement(ItemType type, GuiItem element) {
         return element;
     }
 
     @Override
-    protected GuiItem findGuiItemForRemoval(Material generic, GuiItem element) {
+    protected GuiItem findGuiItemForRemoval(ItemType type, GuiItem element) {
         return element;
     }
 
-    private static int hashFromMaterialList(List<Material> materialList){
+    private static int hashFromItemTypeList(List<ItemType> itemTypeList) {
         int defaultMaterialHash = 0;
-        for (Material material : materialList) {
-            defaultMaterialHash ^= material.hashCode();
+        for (ItemType type : itemTypeList) {
+            defaultMaterialHash ^= type.hashCode(); //TODO check would this be valid with item type
         }
         return defaultMaterialHash;
     }
 
     private void setSaveItem() {
-        if(testCantSave()){
+        if (testCantSave()) {
             this.backgroundPane.bindItem('S', this.noChangeItem);
-        }else{
+        } else {
             this.backgroundPane.bindItem('S', this.saveItem);
         }
 
@@ -296,6 +296,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     protected GuiItem prepareCreateNewItem() {// Not used
         return null;
     }
+
     @Override
     protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {// Not used
         return null;

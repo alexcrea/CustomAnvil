@@ -18,32 +18,33 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.Arrays;
 import java.util.Collection;
 
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup,
         MappedGuiListConfigGui.LazyElement<EnchantConflictSubSettingGui>> {
 
     private static EnchantConflictGui INSTANCE;
 
     @Nullable
-    public static EnchantConflictGui getCurrentInstance(){
+    public static EnchantConflictGui getCurrentInstance() {
         return INSTANCE;
     }
 
     @NotNull
-    public static EnchantConflictGui getInstance(){
-        if(INSTANCE == null) INSTANCE = new EnchantConflictGui();
+    public static EnchantConflictGui getInstance() {
+        if (INSTANCE == null) INSTANCE = new EnchantConflictGui();
 
         return INSTANCE;
     }
 
 
     private EnchantConflictGui() {
-        super( "Conflict Config");
+        super("Conflict Config");
 
         init();
     }
 
     @Override
-    protected EnchantConflictGroup createAndSaveNewEmptyGeneric(String name){
+    protected EnchantConflictGroup createAndSaveNewEmptyGeneric(String name) {
         // Create new empty conflict and display it to the admin
         EnchantConflictGroup conflict = new EnchantConflictGroup(
                 name,
@@ -69,7 +70,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     @Override
     public ItemStack createItemForGeneric(EnchantConflictGroup conflict) {
-        ItemStack item = new ItemStack(conflict.getRepresentativeMaterial());
+        ItemStack item = conflict.getRepresentativeMaterial().createItemStack();
 
         ItemMeta meta = item.getItemMeta();
         assert meta != null;

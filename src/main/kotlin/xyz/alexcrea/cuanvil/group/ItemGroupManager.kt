@@ -39,7 +39,7 @@ class ItemGroupManager {
     fun createGroup(
         config: ConfigurationSection,
         name: String
-    ): AbstractMaterialGroup{
+    ): AbstractMaterialGroup {
         return createGroup(config, groupMap.keys, name)
     }
 
@@ -76,22 +76,48 @@ class ItemGroupManager {
         config: ConfigurationSection,
         keys: Set<String>
     ) {
+        //TODO see below todo
+        //val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
+
         // Read material to include in this group policy
         val materialList = groupSection.getStringList(MATERIAL_LIST_PATH)
-        for (materialTemp in materialList) {
-            val materialName = materialTemp.uppercase(Locale.getDefault())
+        for (typeName in materialList) {
+            //TODO get item key from
+            /*val key = NamespacedKey.fromString(typeName.lowercase())
+            if (key == null) {
+                CustomAnvil.instance.logger.warning(
+                    "Malformed item type $typeName on group ${group.getName()}"
+                )
+
+                continue
+            }
+
+            val type = itemRegistry.get(key)
+            if(type == null){
+                // Check if we should warn the user
+                if (typeName !in FUTURE_MATERIAL) {
+                    CustomAnvil.instance.logger.warning(
+                        "Unknown item type $typeName on group ${group.getName()}"
+                    )
+
+                }
+                continue
+            }*/
+
+
+            val materialName = typeName.uppercase(Locale.getDefault())
             val material = Material.getMaterial(materialName)
             if (material == null) {
                 // Check if we should warn the user
                 if (materialName !in FUTURE_MATERIAL) {
                     CustomAnvil.instance.logger.warning(
-                        "Unknown material $materialTemp on group ${group.getName()}"
+                        "Unknown material $materialName on group ${group.getName()}"
                     )
 
                 }
                 continue
             }
-            group.addToPolicy(material)
+            group.addToPolicy(material.asItemType()!!)
         }
 
         // Read group to include in this group policy.

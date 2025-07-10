@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
 
     private static GroupConfigGui INSTANCE;
@@ -44,7 +45,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
 
     @Override
     protected ItemStack createItemForGeneric(IncludeGroup group) {
-        ItemStack item = new ItemStack(group.getRepresentativeMaterial());
+        ItemStack item = group.getRepresentativeMaterial().createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -54,7 +55,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
                 "§7Number of selected groups : " + group.getGroups().size(),
                 "§7Number of included material : " + group.getNonGroupInheritedMaterials().size(),
                 "",
-                "§7Total number of included material " + group.getMaterials().size()));
+                "§7Total number of included material " + group.getItemTypes().size()));
 
         item.setItemMeta(meta);
         return item;

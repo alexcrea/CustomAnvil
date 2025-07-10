@@ -1,21 +1,22 @@
 package xyz.alexcrea.cuanvil.group
 
-import org.bukkit.Material
-import java.util.*
+import com.google.common.collect.ImmutableSet
+import org.bukkit.inventory.ItemType
 
+@Suppress("UnstableApiUsage")
 abstract class AbstractMaterialGroup(private val name: String) {
-    protected val includedMaterial by lazy { createDefaultSet() }
+    protected val includedItems by lazy { createDefaultSet() }
 
     /**
      * Get the group default set
      */
-    protected abstract fun createDefaultSet(): EnumSet<Material>
+    protected abstract fun createDefaultSet(): MutableSet<ItemType>
 
     /**
      * Get if a material is allowed following the group policy
      */
-    open fun contain(mat: Material): Boolean {
-        return mat in getMaterials()
+    open fun contain(mat: ItemType): Boolean {
+        return mat in getItemTypes()
     }
 
     /**
@@ -24,30 +25,34 @@ abstract class AbstractMaterialGroup(private val name: String) {
     abstract fun isReferencing(other: AbstractMaterialGroup): Boolean
 
     /**
-     * Push a material to this group to follow this group policy
+     * Push an item to this group to follow this group policy
+     *
      * @return this instance.
      */
-    abstract fun addToPolicy(mat: Material): AbstractMaterialGroup
+    abstract fun addToPolicy(type: ItemType): AbstractMaterialGroup
 
     /**
-     * Push a list of material to this group to follow this group policy
+     * Push a list of items to this group to follow this group policy
+     *
      * @return this instance.
      */
-    fun addAll(vararg materials: Material): AbstractMaterialGroup {
-        for (material in materials) {
-            addToPolicy(material)
+    fun addAll(vararg types: ItemType): AbstractMaterialGroup {
+        for (type in types) {
+            addToPolicy(type)
         }
         return this
     }
 
     /**
      * Push a group to this group to follow this group policy
+     *
      * @return this instance.
      */
     abstract fun addToPolicy(other: AbstractMaterialGroup): AbstractMaterialGroup
 
     /**
      * Push a list of group to this group to follow this group policy
+     *
      * @return this instance.
      */
     fun addAll(vararg otherList: AbstractMaterialGroup): AbstractMaterialGroup {
@@ -58,23 +63,23 @@ abstract class AbstractMaterialGroup(private val name: String) {
     }
 
     /**
-     * Get the group contained material as a set
+     * Get the group contained item as a set
      */
-    abstract fun getMaterials(): EnumSet<Material>
+    abstract fun getItemTypes(): ImmutableSet<ItemType>
 
     /**
-     * Get the group non-inherited material as a set
+     * Get the group non-inherited items as a set
      */
-    open fun getNonGroupInheritedMaterials(): EnumSet<Material> {
-        return includedMaterial
+    open fun getNonGroupInheritedMaterials(): MutableSet<ItemType> {
+        return includedItems
     }
 
     /**
-     * Get the group non-inherited material as a set
+     * Set the group non-inherited items
      */
-    open fun setNonGroupInheritedMaterials(materials: EnumSet<Material>) {
-        this.includedMaterial.clear()
-        this.includedMaterial.addAll(materials)
+    open fun setNonGroupInheritedMaterials(types: Set<ItemType>) {
+        this.includedItems.clear()
+        this.includedItems.addAll(types)
     }
 
     /**
@@ -98,22 +103,22 @@ abstract class AbstractMaterialGroup(private val name: String) {
      */
     abstract fun getGroups(): MutableSet<AbstractMaterialGroup>
 
-    open fun getRepresentativeMaterial(): Material {
+    open fun getRepresentativeMaterial(): ItemType {
         // Test inner material
-        val matIterator = includedMaterial.iterator()
-        while (matIterator.hasNext()) {
-            val material = matIterator.next()
-            if (material.isAir) continue
-            return material
+        val itemIterator = includedItems.iterator()
+        while (itemIterator.hasNext()) {
+            val type = itemIterator.next()
+            if (type == ItemType.AIR) continue
+            return type
         }
         // Test included group representative material
         val groupIterator = getGroups().iterator()
         while (groupIterator.hasNext()) {
-            val groupMat = groupIterator.next().getRepresentativeMaterial()
-            if (groupMat.isAir) continue
-            return groupMat
+            val groupType = groupIterator.next().getRepresentativeMaterial()
+            if (groupType == ItemType.AIR) continue
+            return groupType
         }
-        return Material.PAPER
+        return ItemType.PAPER
     }
 
     abstract fun updateMaterials()

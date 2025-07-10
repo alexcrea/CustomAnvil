@@ -135,6 +135,9 @@ object DataPackDependency {
     // Order matter for this file
     // Could rewrite to not matter but not really important, so I keep it like that
     private fun handleItemGroups(yml: YamlConfiguration) {
+        //TODO see below todo
+        //val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
+
         for (groupName in yml.getKeys(false)) {
             val section = yml.getConfigurationSection(groupName) ?: continue
 
@@ -144,12 +147,19 @@ object DataPackDependency {
             if (group == null) group = IncludeGroup(groupName)
 
             for (name in section.getStringList("items")) {
+                //TODO get item key from
+                /*val key = NamespacedKey.fromString(name.lowercase())
+                if (key == null) throw IllegalStateException("Invalid item type: " + name)
+                val type = itemRegistry.get(key)*/
+
                 val mat = Material.getMaterial(name.uppercase())
+
+
                 if (mat == null) {
                     CustomAnvil.instance.logger.warning("Could not find material $name for item group $groupName")
                     continue
                 }
-                group.addToPolicy(mat)
+                group.addToPolicy(mat.asItemType()!!)
             }
             for (name in section.getStringList("groups")) {
                 val otherGroup = MaterialGroupApi.getGroup(name)

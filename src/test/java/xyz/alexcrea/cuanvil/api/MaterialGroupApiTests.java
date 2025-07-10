@@ -1,6 +1,6 @@
 package xyz.alexcrea.cuanvil.api;
 
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemType;
 import org.junit.jupiter.api.Test;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
@@ -9,13 +9,14 @@ import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("UnstableApiUsage")
 public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
 
     @Test
     void groupAddAndRemove() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
-        group.addToPolicy(Material.DIAMOND_PICKAXE); // We do not want it to be empty
+        group.addToPolicy(ItemType.DIAMOND_PICKAXE); // We do not want it to be empty
 
         // Group not being set should not exist
         assertFalse(doGroupExist(groupName));
@@ -48,7 +49,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     void writeGroup_Reload() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
-        group.addToPolicy(Material.DIAMOND_PICKAXE); // We do not want it to be empty
+        group.addToPolicy(ItemType.DIAMOND_PICKAXE); // We do not want it to be empty
 
         // Group not being set should not exist
         assertFalse(doGroupExist(groupName));
