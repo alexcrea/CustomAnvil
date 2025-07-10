@@ -1,10 +1,13 @@
 package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
+import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import java.util.*
 
+@SuppressWarnings("UnstableApiUsage")
 class ItemGroupManager {
 
     companion object {
@@ -76,14 +79,12 @@ class ItemGroupManager {
         config: ConfigurationSection,
         keys: Set<String>
     ) {
-        //TODO see below todo
-        //val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
+        val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
 
         // Read material to include in this group policy
         val materialList = groupSection.getStringList(MATERIAL_LIST_PATH)
         for (typeName in materialList) {
-            //TODO get item key from
-            /*val key = NamespacedKey.fromString(typeName.lowercase())
+            val key = NamespacedKey.fromString(typeName.lowercase())
             if (key == null) {
                 CustomAnvil.instance.logger.warning(
                     "Malformed item type $typeName on group ${group.getName()}"
@@ -93,7 +94,7 @@ class ItemGroupManager {
             }
 
             val type = itemRegistry.get(key)
-            if(type == null){
+            if (type == null) {
                 // Check if we should warn the user
                 if (typeName !in FUTURE_MATERIAL) {
                     CustomAnvil.instance.logger.warning(
@@ -102,22 +103,9 @@ class ItemGroupManager {
 
                 }
                 continue
-            }*/
-
-
-            val materialName = typeName.uppercase(Locale.getDefault())
-            val material = Material.getMaterial(materialName)
-            if (material == null) {
-                // Check if we should warn the user
-                if (materialName !in FUTURE_MATERIAL) {
-                    CustomAnvil.instance.logger.warning(
-                        "Unknown material $materialName on group ${group.getName()}"
-                    )
-
-                }
-                continue
             }
-            group.addToPolicy(material.asItemType()!!)
+
+            group.addToPolicy(type)
         }
 
         // Read group to include in this group policy.

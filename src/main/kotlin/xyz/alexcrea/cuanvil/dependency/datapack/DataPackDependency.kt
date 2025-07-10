@@ -2,8 +2,9 @@ package xyz.alexcrea.cuanvil.dependency.datapack
 
 import io.delilaheve.CustomAnvil
 import io.papermc.paper.datapack.Datapack
+import io.papermc.paper.registry.RegistryAccess
+import io.papermc.paper.registry.RegistryKey
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
@@ -135,8 +136,7 @@ object DataPackDependency {
     // Order matter for this file
     // Could rewrite to not matter but not really important, so I keep it like that
     private fun handleItemGroups(yml: YamlConfiguration) {
-        //TODO see below todo
-        //val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
+        val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
 
         for (groupName in yml.getKeys(false)) {
             val section = yml.getConfigurationSection(groupName) ?: continue
@@ -147,19 +147,15 @@ object DataPackDependency {
             if (group == null) group = IncludeGroup(groupName)
 
             for (name in section.getStringList("items")) {
-                //TODO get item key from
-                /*val key = NamespacedKey.fromString(name.lowercase())
-                if (key == null) throw IllegalStateException("Invalid item type: " + name)
-                val type = itemRegistry.get(key)*/
+                val key = NamespacedKey.fromString(name.lowercase())
+                if (key == null) throw IllegalStateException("Invalid item type: $name")
 
-                val mat = Material.getMaterial(name.uppercase())
-
-
-                if (mat == null) {
-                    CustomAnvil.instance.logger.warning("Could not find material $name for item group $groupName")
-                    continue
+                val type = itemRegistry.get(key)
+                if (type == null) {
+                    throw IllegalStateException("Could not find item type $name for item group $groupName")
                 }
-                group.addToPolicy(mat.asItemType()!!)
+
+                group.addToPolicy(type)
             }
             for (name in section.getStringList("groups")) {
                 val otherGroup = MaterialGroupApi.getGroup(name)
