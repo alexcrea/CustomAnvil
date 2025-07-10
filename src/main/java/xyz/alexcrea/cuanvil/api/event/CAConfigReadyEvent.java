@@ -19,9 +19,6 @@ import org.bukkit.event.HandlerList;
  * {@link xyz.alexcrea.cuanvil.api.MaterialGroupApi MaterialGroupApi}
  * and {@link xyz.alexcrea.cuanvil.api.UnitRepairApi UnitRepairApi}
  * to add/remove/edit configurations
- * <p>
- * This is part of
- * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CONFIG_EVENTS_V1 CONFIG_EVENTS_V1}
  */
 public class CAConfigReadyEvent extends Event {
 

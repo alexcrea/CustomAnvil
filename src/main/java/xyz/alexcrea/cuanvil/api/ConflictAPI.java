@@ -15,9 +15,6 @@ import java.util.List;
 
 /**
  * Custom Anvil api for conflict registry.
- * <p>
- * This is part of
- * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
  */
 @SuppressWarnings("unused")
 public class ConflictAPI {
@@ -32,9 +29,6 @@ public class ConflictAPI {
      * Write and add a conflict.
      * Will not write the conflict if it already exists.
      * Will not be successful if the conflict is empty.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param builder The conflict builder to be based on
      * @return True if successful.
@@ -47,9 +41,6 @@ public class ConflictAPI {
      * Write and add a conflict.
      * Will not write the conflict if it already exists.
      * Will not be successful if the conflict is empty.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param builder         The conflict builder to be based on
      * @param overrideDeleted If we should write even if the conflict was previously deleted.
@@ -79,9 +70,6 @@ public class ConflictAPI {
      * Write a conflict to the config file and plan an update of conflicts.
      * <p>
      * You may want to use {@link #addConflict(ConflictBuilder)} instead as it is more performance in most case as this function will reload every conflict.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param builder the builder
      * @return true if was written successfully.
@@ -94,9 +82,6 @@ public class ConflictAPI {
      * Write a conflict to the config file.
      * <p>
      * You should use {@link #addConflict(ConflictBuilder)} or {@link #writeConflict(ConflictBuilder)} instead
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param builder       The builder
      * @param updatePlanned If we should plan a global update for conflicts
@@ -131,9 +116,6 @@ public class ConflictAPI {
 
     /**
      * Extract every enchantment names from a builder.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param builder The builder storing the enchantments
      * @return Builder's stored enchantment.
@@ -150,9 +132,6 @@ public class ConflictAPI {
 
     /**
      * Remove a conflict.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @param conflict The conflict to remove
      * @return True if successful.
@@ -174,9 +153,6 @@ public class ConflictAPI {
 
     /**
      * Prepare a task to save conflict configuration.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      */
     private static void prepareSaveTask() {
         if (saveChangeTask != null) return;
@@ -189,9 +165,6 @@ public class ConflictAPI {
 
     /**
      * Prepare a task to reload every conflict.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      */
     private static void prepareUpdateTask() {
         if (reloadChangeTask != null) return;
@@ -211,9 +184,6 @@ public class ConflictAPI {
 
     /**
      * Get every registered conflict.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_CONFLICT_V1 ENCHANTMENT_CONFLICT_V1}
      *
      * @return An immutable collection of conflict.
      */

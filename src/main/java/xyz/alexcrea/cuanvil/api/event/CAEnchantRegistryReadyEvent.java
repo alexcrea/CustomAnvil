@@ -13,9 +13,6 @@ import org.bukkit.event.HandlerList;
  * (after configuration loading phase. see {@link CAConfigReadyEvent})
  * <p>
  * use {@link xyz.alexcrea.cuanvil.api.EnchantmentApi EnchantmentApi} to register and unregister your custom enchantments
- * <p>
- * This is part of
- * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#CONFIG_EVENTS_V1 CONFIG_EVENTS_V1}
  */
 public class CAEnchantRegistryReadyEvent extends Event {
 

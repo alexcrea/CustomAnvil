@@ -23,9 +23,6 @@ import java.util.Map;
 
 /**
  * Custom Anvil api for enchantment registry.
- * <p>
- * This is part of
- * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
  */
 @SuppressWarnings("unused")
 public class EnchantmentApi {
@@ -36,9 +33,6 @@ public class EnchantmentApi {
 
     /**
      * Register an enchantment.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param enchantment The enchantment to register
      * @return True if successful.
@@ -62,9 +56,6 @@ public class EnchantmentApi {
 
     /**
      * Register an enchantment by minecraft registered enchantment instance.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param enchantment   The enchantment to register
      * @param defaultRarity The default rarity of the provided enchantment
@@ -81,9 +72,6 @@ public class EnchantmentApi {
      * Register an enchantment by minecraft registered enchantment instance.
      * <p>
      * Please note that this function assume the provided enchantment is registered into minecraft registry.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param enchantment The enchantment to register
      * @return True if successful.
@@ -94,9 +82,6 @@ public class EnchantmentApi {
 
     /**
      * Unregister an enchantment.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param enchantment The enchantment to unregister
      * @return True if successful.
@@ -115,9 +100,6 @@ public class EnchantmentApi {
 
     /**
      * Unregister an enchantment by its key.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param key The enchantment key to unregister
      * @return True if successful.
@@ -129,9 +111,6 @@ public class EnchantmentApi {
 
     /**
      * Unregister an enchantment by his bukkit enchantment.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param enchantment The enchantment to unregister
      * @return True if successful.
@@ -142,9 +121,6 @@ public class EnchantmentApi {
 
     /**
      * Get by key an enchantment.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param key The key used to fetch
      * @return The custom anvil enchantment of this key. null if not found.
@@ -156,9 +132,6 @@ public class EnchantmentApi {
 
     /**
      * Get by name an enchantment.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param name The name used to fetch
      * @return The custom anvil enchantment of this name. null if not found.
@@ -172,9 +145,6 @@ public class EnchantmentApi {
 
     /**
      * Get list of enchantment using the provided name.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      *
      * @param name The name used to fetch
      * @return List of custom anvil enchantments of this name. May be empty if not found.
@@ -185,10 +155,6 @@ public class EnchantmentApi {
 
     /**
      * Get every registered custom anvil enchantments.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
-
      * @return An immutable map of enchantment key as map key and custom anvil enchantment as value.
      */
     @NotNull
@@ -198,10 +164,6 @@ public class EnchantmentApi {
 
     /**
      * Write the default level and rarity configuration of the enchantment.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
-     *
      * @param enchantment The enchantment to write default configuration
      * @param override If it should override old configuration
      * @return Return false if override is false and a configuration exist. true otherwise.
@@ -243,9 +205,6 @@ public class EnchantmentApi {
 
     /**
      * Prepare a task to save custom recipe configuration.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
      */
     private static void prepareSaveTask() {
         if(saveChangeTask != null) return;
@@ -258,10 +217,6 @@ public class EnchantmentApi {
 
     /**
      * Add a bulk get operator.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
-     *
      * @param operation An optimised get enchantments operation
      */
     public static void addBulkGet(@NotNull BulkGetEnchantOperation operation){
@@ -270,10 +225,6 @@ public class EnchantmentApi {
 
     /**
      * Add a bulk clean operator.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#ENCHANTMENT_REGISTER_V1 ENCHANTMENT_REGISTER_V1}
-     *
      * @param operation An optimised clean enchantments operation
      */
     public static void addBulkClean(@NotNull BulkCleanEnchantOperation operation){

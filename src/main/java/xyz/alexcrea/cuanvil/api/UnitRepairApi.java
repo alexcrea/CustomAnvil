@@ -18,15 +18,11 @@ import java.util.List;
 
 /**
  * Custom Anvil api for unit repair.
- * <p>
- * This is part of
- * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
  */
 @SuppressWarnings("unused")
 public class UnitRepairApi {
 
-    private UnitRepairApi() {
-    }
+    private UnitRepairApi(){}
 
     private static Object saveChangeTask = null;
 
@@ -34,40 +30,31 @@ public class UnitRepairApi {
      * Write and add a custom anvil unit repair recipe.
      * Will not write the recipe if it already exists or was deleted.
      * Set the value to minecraft default value (0.25 = 25%)
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
      *
      * @param unit       The unit material used to repair the bellow item.
      * @param repairable The item to be repaired.
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable) {
+    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable){
         return addUnitRepair(unit, repairable, 0.25, false);
     }
 
     /**
      * Write and add a custom anvil unit repair recipe.
      * Will not write the recipe if it already exists or was deleted.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
      *
      * @param unit       The unit material used to repair the bellow item.
      * @param repairable The item to be repaired.
      * @param value      The amount to be repaired by every unit. (1% = 0.01)
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value) {
+    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value){
         return addUnitRepair(unit, repairable, value, false);
     }
 
     /**
      * Write and add a custom anvil unit repair recipe.
      * Will not write the recipe if it already exists.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
      *
      * @param unit            The unit material used to repair the bellow item.
      * @param repairable      The item to be repaired.
@@ -75,12 +62,12 @@ public class UnitRepairApi {
      * @param overrideDeleted If we should write even if the recipe was previously deleted.
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value, boolean overrideDeleted) {
+    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value, boolean overrideDeleted){
         FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
         String path = unit.name().toLowerCase() + "." + repairable.name().toLowerCase();
 
-        if (!overrideDeleted && ConfigHolder.UNIT_REPAIR_HOLDER.isDeleted(path)) return false;
-        if (config.contains(path)) return false;
+        if(!overrideDeleted && ConfigHolder.UNIT_REPAIR_HOLDER.isDeleted(path)) return false;
+        if(config.contains(path)) return false;
 
         // Set unit repair
         return setUnitRepair(unit, repairable, value);
@@ -89,16 +76,13 @@ public class UnitRepairApi {
     /**
      * Write and add a custom anvil unit repair recipe.
      * Do not check if it previously existed or exist.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
      *
      * @param unit       The unit material used to repair the bellow item.
      * @param repairable The item to be repaired.
      * @param value      The amount to be repaired by every unit. (1% = 0.01)
      * @return true if successful.
      */
-    public static boolean setUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value) {
+    public static boolean setUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value){
         FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
 
         String repairableName = repairable.name().toLowerCase();
@@ -110,10 +94,10 @@ public class UnitRepairApi {
 
         // Add to gui
         UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
-        if (repairConfigGui != null) {
+        if(repairConfigGui != null) {
             UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
-            if (elementGui != null) elementGui.updateValueForGeneric(repairableName, true);
+            if(elementGui != null) elementGui.updateValueForGeneric(repairableName, true);
             repairConfigGui.updateValueForGeneric(unit, true);
         }
 
@@ -122,15 +106,12 @@ public class UnitRepairApi {
 
     /**
      * Remove a custom anvil unit repair recipe.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
      *
      * @param unit       The unit material used to repair the bellow item.
      * @param repairable The item used to be repaired.
      * @return true if successful.
      */
-    public static boolean removeUnitRepair(@NotNull Material unit, @NotNull Material repairable) {
+    public static boolean removeUnitRepair(@NotNull Material unit, @NotNull Material repairable){
         // Delete every possible variation and save to file
         String unitName = unit.name();
         String repairableName = repairable.name();
@@ -143,17 +124,17 @@ public class UnitRepairApi {
 
         // Test if it was the last value of this section
         boolean lastValue = false;
-        if (config.isConfigurationSection(unitName.toLowerCase())) {
+        if(config.isConfigurationSection(unitName.toLowerCase())) {
             ConfigurationSection section = config.getConfigurationSection(unitName.toLowerCase());
 
-            if (section != null && section.getKeys(false).isEmpty()) {
+            if(section != null && section.getKeys(false).isEmpty()) {
                 lastValue = true;
                 config.set(unitName.toLowerCase(), null);
             }
 
         } else if (config.isConfigurationSection(unitName.toUpperCase())) {
             ConfigurationSection section = config.getConfigurationSection(unitName.toUpperCase());
-            if (section != null && section.getKeys(false).isEmpty()) {
+            if(section != null && section.getKeys(false).isEmpty()) {
                 lastValue = true;
                 config.set(unitName.toUpperCase(), null);
             }
@@ -167,11 +148,11 @@ public class UnitRepairApi {
 
         // Remove from gui
         UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
-        if (repairConfigGui != null) {
+        if(repairConfigGui != null) {
             UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
-            if (elementGui != null) elementGui.removeGeneric(repairableName);
-            if (lastValue) {
+            if(elementGui != null) elementGui.removeGeneric(repairableName);
+            if(lastValue){
                 repairConfigGui.removeGeneric(unit);
             }
         }
@@ -181,14 +162,11 @@ public class UnitRepairApi {
 
     /**
      * Prepare a task to save custom unit repair recipe configuration.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
      */
     private static void prepareSaveTask() {
-        if (saveChangeTask != null) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
             ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
             saveChangeTask = null;
         });
@@ -196,10 +174,6 @@ public class UnitRepairApi {
 
     /**
      * Get every unit repair recipes.
-     * <p>
-     * This is part of
-     * {@link xyz.alexcrea.cuanvil.api.data.CAApiFlags#UNIT_REPAIR_V1 UNIT_REPAIR_V1}
-     *
      * @return An immutable collection of unit repair recipes.
      * <p>
      * Each element of the provided triple represent a part of the recipe
@@ -210,27 +184,27 @@ public class UnitRepairApi {
      * </ul>
      */
     @NotNull
-    public static List<Triple<Material, Material, Double>> getUnitRepairs() {
+    public static List<Triple<Material, Material, Double>> getUnitRepairs(){
         List<Triple<Material, Material, Double>> mutableList = new ArrayList<>();
 
         FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
         for (String unitKey : config.getKeys(false)) {
             // Test if config section exist
-            if (!config.isConfigurationSection(unitKey)) continue;
+            if(!config.isConfigurationSection(unitKey)) continue;
 
             // Test if unit is a material
             Material unit = Material.getMaterial(unitKey.toUpperCase());
-            if (unit == null) continue;
+            if(unit == null) continue;
 
             // Iterate over reparable items
             ConfigurationSection section = config.getConfigurationSection(unitKey);
             for (String repairableKey : section.getKeys(false)) {
                 // Test if value section exist
-                if (!section.isDouble(repairableKey)) continue;
+                if(!section.isDouble(repairableKey)) continue;
 
                 // Test if repairable is valid a material
                 Material repairable = Material.getMaterial(repairableKey.toUpperCase());
-                if (repairable == null) continue;
+                if(repairable == null) continue;
 
                 // Add the values
                 mutableList.add(new Triple<>(unit, repairable, section.getDouble(repairableKey)));
