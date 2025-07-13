@@ -39,7 +39,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             @NotNull GroupConfigGui parent,
             @NotNull IncludeGroup group) {
         super(3,
-                CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " Config");
+                "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rConfig");
         this.parent = parent;
         this.group = group;
 
@@ -71,20 +71,31 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.pane.bindItem('D', new GuiItem(deleteItem, openGuiAndCheckAction(), CustomAnvil.instance));
 
         // Displayed item will be updated later
-        this.materialSelection = new GuiItem(new ItemStack(Material.DIAMOND_SWORD), (event) -> {
-            event.setCancelled(true);
+        String materialSelectionName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rMaterials";
+        ItemStack selectItem = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta selectItemMeta = selectItem.getItemMeta();
+        selectItemMeta.setDisplayName(materialSelectionName);
 
+        selectItem.setItemMeta(selectItemMeta);
+        this.materialSelection = new GuiItem(selectItem, (event) -> {
+            event.setCancelled(true);
             MaterialSelectSettingGui selectGui = new MaterialSelectSettingGui(this,
-                    CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " Materials"
+                    materialSelectionName
                     , this);
             selectGui.show(event.getWhoClicked());
 
         }, CustomAnvil.instance);
 
-        this.groupSelection = new GuiItem(new ItemStack(Material.CHEST), (event) -> {
+        String selectGroupName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.getName()) + " §rGroups";
+        ItemStack selectGroup = new ItemStack(Material.CHEST);
+        ItemMeta selectGroupMeta = selectGroup.getItemMeta();
+        selectGroupMeta.setDisplayName(selectGroupName);
+
+        selectGroup.setItemMeta(selectGroupMeta);
+        this.groupSelection = new GuiItem(selectGroup, (event) -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
-                    CasedStringUtil.snakeToUpperSpacedCase(this.group.getName()) + " Groups",
+                    selectGroupName,
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
@@ -310,7 +321,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // ----------------------------
     // End of SelectGroupContainer related methods
     // ----------------------------
-    // SelectGroupContainer related methods
+    // SelectMaterialContainer related methods
     // ----------------------------
 
     @Override
@@ -347,7 +358,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     // ----------------------------
-    // End of SelectGroupContainer related methods
+    // End of SelectMaterialContainer related methods
     // ----------------------------
 
     private void updateDirectReferencingGroups(AbstractMaterialGroup referenceTo){
@@ -370,7 +381,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
                 for (AbstractMaterialGroup otherGroup : everyStoredGroups) {
                     if(otherGroup.getGroups().contains(testGroup)){
                         otherGroup.updateMaterials();
-                        toUpdate.add(otherGroup);
+                        updateFuture.add(otherGroup);
                     }
                 }
 
