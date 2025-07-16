@@ -51,7 +51,7 @@ object EnchantmentUtil {
             // Enchantment not yet in result list
             if (!containsKey(enchantment)) {
                 // Do not allow new enchantment if above maximum
-                if(this.size <= maxEnchantCount) return@forEach
+                if(this.size >= maxEnchantCount) return@forEach
 
                 // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
                 this[enchantment] = cappedLevel
