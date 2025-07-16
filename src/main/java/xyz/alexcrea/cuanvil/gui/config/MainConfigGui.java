@@ -103,8 +103,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta groupMeta = groupItemstack.getItemMeta();
         assert groupMeta != null;
 
-        groupMeta.setDisplayName("§aGroups");
-        groupMeta.setLore(Collections.singletonList("§7Click here to open material group menu"));
+        groupMeta.setDisplayName("§aItem Groups");
+        groupMeta.setLore(Collections.singletonList("§7Click here to open item group menu"));
         groupItemstack.setItemMeta(groupMeta);
 
         GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.getInstance());
