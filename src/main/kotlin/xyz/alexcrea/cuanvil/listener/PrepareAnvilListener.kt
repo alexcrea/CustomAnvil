@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import java.util.concurrent.atomic.AtomicInteger
@@ -232,20 +233,26 @@ class PrepareAnvilListener : Listener {
     ) {
         val newEnchants = first.findEnchantments()
             .combineWith(second.findEnchantments(), first, player)
-        val resultItem = first.clone()
-        resultItem.setEnchantmentsUnsafe(newEnchants)
+        var hasChanged = !isIdentical(first.findEnchantments(), newEnchants);
 
-        // Calculate enchantment cost
-        var anvilCost = AnvilXpUtil.getRightValues(second, resultItem)
+        val resultItem = first.clone()
+        var anvilCost = 0;
+        if(hasChanged){
+            resultItem.setEnchantmentsUnsafe(newEnchants)
+            // Calculate enchantment cost
+            anvilCost+= AnvilXpUtil.getRightValues(second, resultItem)
+        }
+
         // Calculate repair cost
         if (!first.isEnchantedBook() && !second.isEnchantedBook()) {
             // we only need to be concerned with repair when neither item is a book
             val repaired = resultItem.repairFrom(first, second)
             anvilCost += if (repaired) ConfigOptions.itemRepairCost else 0
+            hasChanged = hasChanged || repaired;
         }
 
         // Test/stop if nothing changed.
-        if (first == resultItem) {
+        if (!hasChanged) {
             CustomAnvil.log("Mergable with second, But input is same as output")
             event.result = null
             return
@@ -263,6 +270,18 @@ class PrepareAnvilListener : Listener {
         if (finalResult.result == null) return
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
+    }
+
+    private fun isIdentical(
+        firstEnchants: MutableMap<CAEnchantment, Int>,
+        resultEnchants: MutableMap<CAEnchantment, Int>
+    ): Boolean {
+        if(firstEnchants.size != resultEnchants.size) return false
+        for (entry in resultEnchants) {
+            if(firstEnchants.getOrDefault(entry.key, entry.value-1) != entry.value) return false
+        }
+
+        return true
     }
 
     // return true if there is a valid unit repair with these ingredients
