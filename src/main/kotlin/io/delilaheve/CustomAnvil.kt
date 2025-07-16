@@ -52,8 +52,8 @@ open class CustomAnvil : JavaPlugin() {
         // Command Name to reload the config
         const val commandReloadName = "anvilconfigreload"
 
-        // Test command name
-        const val commandTestName = "customanvilconfig"
+        // Config command name
+        const val commandConfigName = "customanvilconfig"
 
         // Current plugin instance
         lateinit var instance: CustomAnvil
@@ -208,7 +208,7 @@ open class CustomAnvil : JavaPlugin() {
         var command = getCommand(commandReloadName)
         command?.setExecutor(ReloadExecutor())
 
-        command = getCommand(commandTestName)
+        command = getCommand(commandConfigName)
         command?.setExecutor(EditConfigExecutor())
     }
 

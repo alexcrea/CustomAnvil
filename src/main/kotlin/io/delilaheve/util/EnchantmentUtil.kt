@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max
@@ -33,6 +34,10 @@ object EnchantmentUtil {
         val bypassFuse = player.hasPermission(CustomAnvil.bypassFusePermission)
         val bypassLevel = player.hasPermission(CustomAnvil.bypassLevelPermission)
 
+        // TODO add custom anvil maximum enchant count per item and globally too
+        var maxEnchantCount = DependencyManager.ecoEnchantCompatibility?.getEcoLevelLimit()
+        if(maxEnchantCount == null || maxEnchantCount < 0) maxEnchantCount = Int.MAX_VALUE;
+
         other.forEach { (enchantment, level) ->
             if(!enchantment.isAllowed(player)) return@forEach
 
@@ -45,6 +50,9 @@ object EnchantmentUtil {
 
             // Enchantment not yet in result list
             if (!containsKey(enchantment)) {
+                // Do not allow new enchantment if above maximum
+                if(this.size <= maxEnchantCount) return@forEach
+
                 // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
                 this[enchantment] = cappedLevel
                 if(bypassFuse){
