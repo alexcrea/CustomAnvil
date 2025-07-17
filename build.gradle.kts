@@ -1,5 +1,7 @@
 import cn.lalaki.pub.BaseCentralPortalPlusExtension
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import groovy.util.Node
+import groovy.util.NodeList
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -245,6 +247,14 @@ object Meta {
     const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 }
 
+val disalowedDependency = setOf(
+    "nms-common", "kotlin-stdlib",
+    "v1_17R1",
+    "v1_18R1", "v1_18R2", "v1_19R1", "v1_19R2", "v1_19R3",
+    "v1_20R1", "v1_20R2", "v1_20R3", "v1_20R4",
+    "v1_21R1", "v1_21R2", "v1_21R3", "v1_21R4", "v1_21R5"
+)
+
 publishing {
     repositories {
         maven {
@@ -260,6 +270,16 @@ publishing {
             from(components["kotlin"])
             artifact(tasks["sourcesJar"])
             artifact(tasks["javadocJar"])
+
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
+            }
+
             pom {
                 name.set(project.name)
                 description.set(Meta.desc)
@@ -291,6 +311,24 @@ publishing {
                 }
                 issueManagement {
                     url.set("https://github.com/${Meta.githubRepo}/issues")
+                }
+
+                withXml {
+                    val dependenciesNode = (asNode().get("dependencies") as NodeList)[0] as Node
+
+                    val toRemove = ArrayList<Node>()
+                    for (child in dependenciesNode.children()) {
+                        val artifactNode = ((child as Node).get("artifactId") as NodeList)[0] as Node
+                        val artifactID = artifactNode.value() as String
+
+                        if(disalowedDependency.contains(artifactID)) {
+                            toRemove.add(child)
+                        }
+                    }
+
+                    for (node in toRemove) {
+                        dependenciesNode.remove(node)
+                    }
                 }
             }
         }
