@@ -272,7 +272,7 @@ disable-merge-over:
 
 # The maximum number of enchantment an item can get. -1 for infinity
 # Use eco enchant enchant_limit if present by default unless "default" is not equal to -1
-enchantment_limit:
+enchantment_count_limit:
   default: -1
   # Limit for specific items. example bellow is an example with stick
   # Per item enchantment limit override eco enchant enchant_limit and default limit

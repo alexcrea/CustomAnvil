@@ -34,9 +34,8 @@ object EnchantmentUtil {
         val bypassFuse = player.hasPermission(CustomAnvil.bypassFusePermission)
         val bypassLevel = player.hasPermission(CustomAnvil.bypassLevelPermission)
 
-        // TODO add custom anvil maximum enchant count per item and globally too
-        var maxEnchantCount = DependencyManager.ecoEnchantCompatibility?.getEcoLevelLimit()
-        if(maxEnchantCount == null || maxEnchantCount < 0) maxEnchantCount = Int.MAX_VALUE;
+        var maxEnchantCount = ConfigOptions.getEnchantCountLimit(item.type)
+        if(maxEnchantCount == null || maxEnchantCount < 0) maxEnchantCount = Int.MAX_VALUE
 
         other.forEach { (enchantment, level) ->
             if(!enchantment.isAllowed(player)) return@forEach
