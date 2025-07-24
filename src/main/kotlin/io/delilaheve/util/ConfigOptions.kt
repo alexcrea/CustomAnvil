@@ -2,10 +2,12 @@ package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.*
@@ -46,6 +48,11 @@ object ConfigOptions {
     const val EXCLUSIVE_WORK_PENALTY_INCREASE = "exclusive_increase"
     const val EXCLUSIVE_WORK_PENALTY_ADDITIVE = "exclusive_additive"
 
+    // Enchant limit config
+    const val ENCHANT_COUNT_LIMIT_ROOT = "enchantment_count_limit"
+    const val ENCHANT_COUNT_LIMIT_DEFAULT = "$ENCHANT_COUNT_LIMIT_ROOT.default"
+    const val ENCHANT_COUNT_LIMIT_ITEMS = "$ENCHANT_COUNT_LIMIT_ROOT.items"
+
     const val DEFAULT_LIMIT_PATH = "default_limit"
 
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
@@ -54,6 +61,7 @@ object ConfigOptions {
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
 
     const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
+
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
@@ -80,6 +88,8 @@ object ConfigOptions {
 
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
     const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false;
+
+    const val DEFAULT_ENCHANT_COUNT_LIMIT = -1
 
     // Color related config
     const val DEFAULT_ALLOW_COLOR_CODE = false
@@ -120,6 +130,10 @@ object ConfigOptions {
     // Valid range for an enchantment limit
     @JvmField
     val ENCHANT_LIMIT_RANGE = 1..255
+
+    // Valid range for an enchantment count limit
+    @JvmField
+    val ENCHANT_COUNT_LIMIT_RANGE = -1..255
 
     // --------------
     // Other defaults
@@ -327,6 +341,42 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
+        }
+
+    /**
+     * Get material enchantment count limit
+     *
+     * @return the current enchantment limit. -1 if none
+     */
+    fun getEnchantCountLimit(type: Material): Int? {
+        val limit = materialEnchantCountLimit(type)
+
+        if(limit != null) return limit
+        if(defaultEnchantCountLimit >= 0) return defaultEnchantCountLimit
+
+        return DependencyManager.ecoEnchantCompatibility?.getEcoLevelLimit()
+    }
+
+    /**
+     * Get the material enchantment count limit.
+     *
+     * @return The current enchantment limit. -1 if none
+     */
+    private fun materialEnchantCountLimit(type: Material): Int? {
+        return ConfigHolder.DEFAULT_CONFIG.config
+            .getInt("$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.key.lowercase()}", DEFAULT_ENCHANT_COUNT_LIMIT)
+            .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
+    }
+    /**
+     * User configured default enchantment count limit
+     */
+    val defaultEnchantCountLimit: Int
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getInt(ENCHANT_COUNT_LIMIT_DEFAULT, DEFAULT_ENCHANT_COUNT_LIMIT)
+                .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
+                ?: DEFAULT_ENCHANT_COUNT_LIMIT
         }
 
     /**

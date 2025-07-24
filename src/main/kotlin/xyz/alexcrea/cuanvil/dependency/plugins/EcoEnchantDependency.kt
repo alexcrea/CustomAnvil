@@ -1,7 +1,9 @@
 package xyz.alexcrea.cuanvil.dependency.plugins
 
+import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecoenchants.enchant.EcoEnchant
 import com.willfp.ecoenchants.enchant.EcoEnchants
+import com.willfp.ecoenchants.mechanics.infiniteIfNegative
 import io.delilaheve.CustomAnvil
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
@@ -30,6 +32,10 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
             this.legacyDependency = null
         }
 
+    }
+
+    public fun getEcoLevelLimit(): Int {
+        return (ecoEnchantPlugin as EcoPlugin).configYml.getInt("anvil.enchant-limit").infiniteIfNegative()
     }
 
     fun disableAnvilListener() {
