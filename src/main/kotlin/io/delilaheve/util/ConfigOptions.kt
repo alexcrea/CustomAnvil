@@ -351,7 +351,7 @@ object ConfigOptions {
     fun getEnchantCountLimit(type: Material): Int? {
         val limit = materialEnchantCountLimit(type)
 
-        if(limit >= 0) return limit
+        if(limit != null) return limit
         if(defaultEnchantCountLimit >= 0) return defaultEnchantCountLimit
 
         return DependencyManager.ecoEnchantCompatibility?.getEcoLevelLimit()
@@ -362,11 +362,10 @@ object ConfigOptions {
      *
      * @return The current enchantment limit. -1 if none
      */
-    private fun materialEnchantCountLimit(type: Material): Int {
+    private fun materialEnchantCountLimit(type: Material): Int? {
         return ConfigHolder.DEFAULT_CONFIG.config
-            .getInt(ENCHANT_COUNT_LIMIT_ITEMS, DEFAULT_ENCHANT_COUNT_LIMIT)
+            .getInt("$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.key.lowercase()}", DEFAULT_ENCHANT_COUNT_LIMIT)
             .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
-            ?: DEFAULT_ENCHANT_COUNT_LIMIT
     }
     /**
      * User configured default enchantment count limit
