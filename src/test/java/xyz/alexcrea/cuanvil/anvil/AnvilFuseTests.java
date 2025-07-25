@@ -51,57 +51,38 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
         anvil = null;
     }
 
+    public static AnvilFuseTestData mergeFuseData(Integer levelLeft, Integer levelRight, Integer levelResult) {
+        ItemStack result = CommonItemUtil.sharpness(levelResult);
+        if(result != null){
+            Repairable meta = (Repairable) result.getItemMeta();
+            meta.setRepairCost(1);
+            result.setItemMeta(meta);
+        }
+
+        return new AnvilFuseTestData(
+                CommonItemUtil.sharpness(levelLeft),
+                CommonItemUtil.sharpness(levelRight),
+                result,
+                levelResult
+        );
+    }
+
     @Test
     public void mergeFuseTest(){
-        // Literally just test a sharpness 4 + sharpness 4
-        ItemStack sharpness4 = CommonItemUtil.sharpness(4);
-
-        ItemStack sharpness5Result = CommonItemUtil.sharpness(5);
-        Repairable meta = (Repairable) sharpness5Result.getItemMeta();
-        meta.setRepairCost(1);
-        sharpness5Result.setItemMeta(meta);
-
-        AnvilFuseTestData data = new AnvilFuseTestData(
-                sharpness4, sharpness4,
-                sharpness5Result,
-                5
-        );
-
-        data.executeTest(anvil, player);
+        mergeFuseData(4, 4, 5)
+                .executeTest(anvil, player);
     }
 
     @Test
     public void overFuseTest(){
-        // Test sharpness 4 + sharpness 5
-        ItemStack sharpness4 = CommonItemUtil.sharpness(4);
-        ItemStack sharpness5 = CommonItemUtil.sharpness(5);
-
-        ItemStack sharpness5Result = CommonItemUtil.sharpness(5);
-        Repairable meta = (Repairable) sharpness5Result.getItemMeta();
-        meta.setRepairCost(1);
-        sharpness5Result.setItemMeta(meta);
-
-        AnvilFuseTestData data = new AnvilFuseTestData(
-                sharpness4, sharpness5,
-                sharpness5Result,
-                5
-        );
-
-        data.executeTest(anvil, player);
+        mergeFuseData(4, 5, 5)
+                .executeTest(anvil, player);
     }
 
     @Test
     public void underFuseTest(){
-        // test sharpness 5 + 4. Custom Anvil should not allow it to be as it result as the same item as left item
-        ItemStack sharpness4 = CommonItemUtil.sharpness(4);
-        ItemStack sharpness5 = CommonItemUtil.sharpness(5);
-
-        AnvilFuseTestData data = new AnvilFuseTestData(
-                sharpness5, sharpness4,
-                null
-        );
-
-        data.executeTest(anvil, player);
+        mergeFuseData(5, 4, null)
+                .executeTest(anvil, player);
     }
 
     // Note: currently anvil can only have null name. maybe handle differently later
