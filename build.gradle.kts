@@ -26,7 +26,6 @@ val effectiveVersion = "$version" +
 repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
-
 }
 
 dependencies {
@@ -60,6 +59,9 @@ dependencies {
 
     // ToolStats
     compileOnly(files("libs/toolstats-1.9.6-stripped.jar"))
+
+    // AxPlayerWarps
+    compileOnly(files("libs/AxPlayerWarps-1.10.3.jar"))
 
     // Include nms
     implementation(project(":nms:nms-common"))
