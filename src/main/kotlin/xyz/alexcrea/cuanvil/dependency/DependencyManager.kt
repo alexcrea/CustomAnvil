@@ -1,9 +1,11 @@
 package xyz.alexcrea.cuanvil.dependency
 
+import com.willfp.eco.core.gui.player
 import io.delilaheve.CustomAnvil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -39,6 +41,8 @@ object DependencyManager {
 
     var disenchantmentCompatibility: DisenchantmentDependency? = null
     var havenBagsCompatibility: HavenBagsDependency? = null
+
+    var axPlayerWarpsCompatibility: AxPlayerWarpsDependency? = null
 
     val genericDependencies = ArrayList<GenericPluginDependency>()
 
@@ -86,6 +90,11 @@ object DependencyManager {
         if (pluginManager.isPluginEnabled("HavenBags")) {
             havenBagsCompatibility = HavenBagsDependency()
             havenBagsCompatibility!!.redirectListeners()
+        }
+
+        // AxPlayerWarps dependency
+        if (pluginManager.isPluginEnabled("AxPlayerWarps")) {
+            axPlayerWarpsCompatibility = AxPlayerWarpsDependency()
         }
 
         // "Generic" dependencies
@@ -153,6 +162,9 @@ object DependencyManager {
         // Test if the inventory is a gui(version specific)
         if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
+        // Test if in an ax player warp rating gui
+        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(player) == true)) bypass = true
+
         return bypass
     }
 
@@ -203,7 +215,12 @@ object DependencyManager {
     }
 
     // Return null if there was an issue
-    fun tryTreatAnvilResult(event: PrepareAnvilEvent, result: ItemStack, useType: AnvilUseType, cost: Int): CATreatAnvilResultEvent? {
+    fun tryTreatAnvilResult(
+        event: PrepareAnvilEvent,
+        result: ItemStack,
+        useType: AnvilUseType,
+        cost: Int
+    ): CATreatAnvilResultEvent? {
         val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
@@ -278,6 +295,9 @@ object DependencyManager {
 
         // Test if the inventory is a gui(version specific)
         if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+
+        // Test if in an ax player warp rating gui
+        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.player) == true)) bypass = true
 
         return bypass
     }
