@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -15,6 +15,7 @@ import java.util.Locale;
 /**
  * Global Config gui for enchantment level limit settings.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
     private static final String SECTION_NAME = "enchant_limits";
@@ -60,7 +61,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     @Override
     public GuiItem itemFromFactory(CAEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
         return inventoryFactory.getItem(
-                Material.ENCHANTED_BOOK,
+                ItemType.ENCHANTED_BOOK,
                 inventoryFactory.getTitle());
     }
 

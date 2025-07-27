@@ -1,19 +1,20 @@
 package xyz.alexcrea.cuanvil.recipe
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 
 class CustomAnvilRecipeManager {
 
     lateinit var recipeList: ArrayList<AnvilCustomRecipe>
 
-    lateinit var recipeByMat: HashMap<Material, ArrayList<AnvilCustomRecipe>>
+    lateinit var recipeByType: HashMap<ItemType, ArrayList<AnvilCustomRecipe>>
 
     fun prepareRecipes(config: FileConfiguration) {
         recipeList = ArrayList()
-        recipeByMat = HashMap()
+        recipeByType = HashMap()
 
         // read all configs
         val keys = config.getKeys(false)
@@ -43,9 +44,9 @@ class CustomAnvilRecipeManager {
         // Remove left item mat if exist
         val oldLeftItem = recipe.leftItem
         if (oldLeftItem != null) {
-            val oldMat = oldLeftItem.type
+            val oldMat = oldLeftItem.itemType
 
-            val test = recipeByMat[oldMat]
+            val test = recipeByType[oldMat]
             test!!.remove(recipe)
         }
         if (leftItem != null) {
@@ -56,10 +57,10 @@ class CustomAnvilRecipeManager {
     }
 
     private fun addToMatMap(recipe: AnvilCustomRecipe, leftItem: ItemStack) {
-        var recipeList = recipeByMat[leftItem.type]
+        var recipeList = recipeByType[leftItem.itemType]
         if (recipeList == null) {
             recipeList = ArrayList()
-            recipeByMat[leftItem.type] = recipeList
+            recipeByType[leftItem.itemType] = recipeList
         }
         recipeList.add(recipe)
 

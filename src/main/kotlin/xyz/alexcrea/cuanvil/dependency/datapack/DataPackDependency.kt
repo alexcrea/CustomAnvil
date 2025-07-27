@@ -2,8 +2,6 @@ package xyz.alexcrea.cuanvil.dependency.datapack
 
 import io.delilaheve.CustomAnvil
 import io.papermc.paper.datapack.Datapack
-import io.papermc.paper.registry.RegistryAccess
-import io.papermc.paper.registry.RegistryKey
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.file.FileConfiguration
@@ -18,6 +16,7 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.CAIncompatibleAllEnchant
 import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.update.Version
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.getItemType
 import java.io.InputStreamReader
 
 object DataPackDependency {
@@ -136,8 +135,6 @@ object DataPackDependency {
     // Order matter for this file
     // Could rewrite to not matter but not really important, so I keep it like that
     private fun handleItemGroups(yml: YamlConfiguration) {
-        val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
-
         for (groupName in yml.getKeys(false)) {
             val section = yml.getConfigurationSection(groupName) ?: continue
 
@@ -147,10 +144,9 @@ object DataPackDependency {
             if (group == null) group = IncludeItemTypeGroup(groupName)
 
             for (name in section.getStringList("items")) {
-                val key = NamespacedKey.fromString(name.lowercase())
-                if (key == null) throw IllegalStateException("Invalid item type: $name")
 
-                val type = itemRegistry.get(key)
+                // Test if repairable is a valid item type
+                val type = getItemType(name)
                 if (type == null) {
                     throw IllegalStateException("Could not find item type $name for item group $groupName")
                 }

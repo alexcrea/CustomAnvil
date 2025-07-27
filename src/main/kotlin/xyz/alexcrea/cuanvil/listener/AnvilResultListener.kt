@@ -5,7 +5,6 @@ import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -13,6 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -24,6 +24,7 @@ import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
@@ -365,7 +366,7 @@ class AnvilResultListener : Listener {
         rightItem: ItemStack,
         output: ItemStack,
     ): Boolean {
-        if (Material.WRITABLE_BOOK != rightItem.type) return false
+        if (ItemType.WRITABLE_BOOK != rightItem.itemType) return false
         val bookMeta = rightItem.itemMeta as BookMeta? ?: return false
 
         val editType = AnvilLoreEditUtil.bookLoreEditIsAppend(leftItem, rightItem) ?: return false
@@ -437,7 +438,7 @@ class AnvilResultListener : Listener {
         rightItem: ItemStack,
         output: ItemStack,
     ): Boolean {
-        if (Material.PAPER != rightItem.type) return false
+        if (ItemType.PAPER != rightItem.itemType) return false
         val paperMeta = rightItem.itemMeta ?: return false
 
         val editType = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
@@ -534,21 +535,21 @@ class AnvilResultListener : Listener {
             }
             //check hotbare full
             var slotIndex = 8
-            while (slotIndex >= 0 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)) {
+            while (slotIndex >= 0 && ((inventory.getItem(slotIndex)?.type ?: ItemType.AIR) != ItemType.AIR)) {
                 slotIndex--
             }
             if (slotIndex >= 0) {
                 return SlotContainer(SlotType.INVENTORY, slotIndex)
             }
             slotIndex = 35 //4*9 - 1 (max of player inventory)
-            while (slotIndex >= 9 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)) {
+            while (slotIndex >= 9 && ((inventory.getItem(slotIndex)?.type ?: ItemType.AIR) != ItemType.AIR)) {
                 slotIndex--
             }
             if (slotIndex < 9) {
                 return NO_SLOT
             }
             return SlotContainer(SlotType.INVENTORY, slotIndex)
-        } else if (player.itemOnCursor.type != Material.AIR) return NO_SLOT
+        } else if (player.itemOnCursor.itemType != ItemType.AIR) return NO_SLOT
         return CURSOR_SLOT
     }
 

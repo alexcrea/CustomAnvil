@@ -1,9 +1,10 @@
 package io.delilaheve.util
 
-import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType.ENCHANTED_BOOK
 import org.bukkit.inventory.meta.Damageable
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -11,12 +12,13 @@ import kotlin.math.min
 /**
  * Item manipulation utilities
  */
+@Suppress("UnstableApiUsage")
 object ItemUtil {
 
     /**
      * Check if this [ItemStack] is an [ENCHANTED_BOOK]
      */
-    fun ItemStack.isEnchantedBook() = type == ENCHANTED_BOOK
+    fun ItemStack.isEnchantedBook() = itemType == ENCHANTED_BOOK
 
     /**
      * Find the enchantment map for this [ItemStack] and return it as a [MutableMap]

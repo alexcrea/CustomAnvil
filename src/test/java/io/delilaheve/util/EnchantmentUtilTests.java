@@ -1,24 +1,24 @@
 package io.delilaheve.util;
 
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.permissions.PermissionAttachment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
-import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
+import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
 
     private AnvilInventory anvil;
@@ -48,21 +48,21 @@ public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
                 "Caution with that as it will break some server CustomAnvil setup.");
 
         // Create ingredient item
-        ItemStack normalStick = new ItemStackMock(Material.STICK);
+        ItemStack normalStick = ItemType.STICK.createItemStack();
         ItemStack sharpnessBook = AnvilFuseTestUtil.prepareItem(
-            Material.ENCHANTED_BOOK,
+            ItemType.ENCHANTED_BOOK,
             List.of("sharpness"), 1);
 
         ItemStack sharpnessStick = AnvilFuseTestUtil.prepareItem(
-                Material.STICK,
+                ItemType.STICK,
                 List.of("sharpness"), 1);
 
         // Create result item
         ItemStack sharpnessResultStick = AnvilFuseTestUtil.prepareItem(
-                Material.STICK, 1,
+                ItemType.STICK, 1,
                 List.of("sharpness"), 1);
         ItemStack sharpness2ResultStick = AnvilFuseTestUtil.prepareItem(
-                Material.STICK, 1,
+                ItemType.STICK, 1,
                 List.of("sharpness"), 2);
 
         // Create failing anvil fuse data
@@ -108,25 +108,25 @@ public class EnchantmentUtilTests extends ConfigResetCustomAnvilTest {
 
         // Create ingredient item
         ItemStack sharpness5Sword = AnvilFuseTestUtil.prepareItem(
-                Material.DIAMOND_SWORD,
+                ItemType.DIAMOND_SWORD,
                 List.of("sharpness"), 5);
 
         ItemStack sharpnessBook = AnvilFuseTestUtil.prepareItem(
-                Material.ENCHANTED_BOOK,
+                ItemType.ENCHANTED_BOOK,
                 List.of("sharpness"), 1);
         ItemStack sharpness5Book = AnvilFuseTestUtil.prepareItem(
-                Material.ENCHANTED_BOOK,
+                ItemType.ENCHANTED_BOOK,
                 List.of("sharpness"), 5);
         ItemStack sharpness6Book = AnvilFuseTestUtil.prepareItem(
-                Material.ENCHANTED_BOOK,
+                ItemType.ENCHANTED_BOOK,
                 List.of("sharpness"), 6);
 
         // Create result item
         ItemStack sharpness2BookResult = AnvilFuseTestUtil.prepareItem(
-                Material.ENCHANTED_BOOK, 1,
+                ItemType.ENCHANTED_BOOK, 1,
                 List.of("sharpness"), 2);
         ItemStack sharpness6SwordResult = AnvilFuseTestUtil.prepareItem(
-                Material.DIAMOND_SWORD, 1,
+                ItemType.DIAMOND_SWORD, 1,
                 List.of("sharpness"), 6);
 
         // Create failing anvil fuse data

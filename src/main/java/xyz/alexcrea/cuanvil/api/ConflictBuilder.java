@@ -352,8 +352,8 @@ public class ConflictBuilder {
      * @return An Enchant conflict group with this builder parameters.
      */
     public EnchantConflictGroup build() {
-        AbstractItemTypeGroup materials = extractGroups();
-        EnchantConflictGroup conflict = new EnchantConflictGroup(getName(), materials, getMaxBeforeConflict());
+        AbstractItemTypeGroup groups = extractGroups();
+        EnchantConflictGroup conflict = new EnchantConflictGroup(getName(), groups, getMaxBeforeConflict());
         appendEnchantments(conflict);
 
         return conflict;
@@ -441,15 +441,15 @@ public class ConflictBuilder {
         IncludeItemTypeGroup group = new IncludeItemTypeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
 
         for (String groupName : getExcludedGroupNames()) {
-            AbstractItemTypeGroup materialGroup = itemGroupManager.get(groupName);
+            AbstractItemTypeGroup typeGroup = itemGroupManager.get(groupName);
 
-            if (materialGroup == null) {
+            if (typeGroup == null) {
                 CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
                 continue;
             }
 
-            group.addToPolicy(materialGroup);
+            group.addToPolicy(typeGroup);
         }
 
         return group;

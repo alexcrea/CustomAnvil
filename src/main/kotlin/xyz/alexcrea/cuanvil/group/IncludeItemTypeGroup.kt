@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.group
 import org.bukkit.inventory.ItemType
 import java.util.*
 
-@Suppress("UnstableApiUsage")
 class IncludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
     override fun createDefaultSet(): MutableSet<ItemType> {
         return HashSet()

@@ -1,13 +1,13 @@
 package xyz.alexcrea.cuanvil.util;
 
 import io.delilaheve.util.ItemUtil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
@@ -24,18 +24,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class AnvilFuseTestUtil {
 
     private static PrepareAnvilListener PREPARE_LISTENER = new PrepareAnvilListener();
     private static AnvilResultListener RESULT_LISTENER = new AnvilResultListener();
 
-    public static ItemStack prepareItem(@NotNull Material material,
+    public static ItemStack prepareItem(@NotNull ItemType type,
                                         @NotNull List<CAEnchantment> enchantments,
                                         @NotNull List<Integer> level) {
-        return prepareItem(material, 0, enchantments, level);
+        return prepareItem(type, 0, enchantments, level);
     }
 
-    public static ItemStack prepareItem(@NotNull Material material,
+    public static ItemStack prepareItem(@NotNull ItemType type,
                                         int repairCost,
                                         @NotNull List<CAEnchantment> enchantments,
                                         @NotNull List<Integer> level) {
@@ -46,7 +47,7 @@ public class AnvilFuseTestUtil {
             enchantmentMap.put(enchantments.get(i), level.get(i));
         }
 
-        ItemStack item = new ItemStack(material);
+        ItemStack item = type.createItemStack();
         ItemUtil.INSTANCE.setEnchantmentsUnsafe(item, enchantmentMap);
 
         ItemMeta meta = item.getItemMeta();
@@ -57,13 +58,13 @@ public class AnvilFuseTestUtil {
     }
 
 
-    public static ItemStack prepareItem(@NotNull Material material,
+    public static ItemStack prepareItem(@NotNull ItemType type,
                                         @NotNull List<String> enchantmentNames,
                                         Integer... levels) {
-        return prepareItem(material, 0, enchantmentNames, levels);
+        return prepareItem(type, 0, enchantmentNames, levels);
     }
 
-    public static ItemStack prepareItem(@NotNull Material material,
+    public static ItemStack prepareItem(@NotNull ItemType type,
                                         int repairCost,
                                         @NotNull List<String> enchantmentNames,
                                         Integer... levels) {
@@ -77,7 +78,7 @@ public class AnvilFuseTestUtil {
             enchantments.addAll(enchantmentList);
         }
 
-        return prepareItem(material, repairCost, enchantments, List.of(levels));
+        return prepareItem(type, repairCost, enchantments, List.of(levels));
     }
 
 

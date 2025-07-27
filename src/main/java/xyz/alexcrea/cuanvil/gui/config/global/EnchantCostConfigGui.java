@@ -1,8 +1,8 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -19,6 +19,7 @@ import java.util.Locale;
 /**
  * Global Config gui for enchantment cost settings.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSettingsGui.EnchantCostSettingFactory> {
 
     private static final String SECTION_NAME = "enchant_values";
@@ -62,7 +63,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         int bookCost = factory.getConfiguredBookValue();
         String itemName = "§a" + factory.getTitle();
         // Create item
-        ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemStack item = ItemType.ENCHANTED_BOOK.createItemStack();
         ItemMeta itemMeta = item.getItemMeta();
         assert itemMeta != null;
 

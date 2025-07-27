@@ -9,10 +9,10 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+@SuppressWarnings("UnstableApiUsage")
 public abstract class ElementListConfigGui< T > extends ChestGui implements ValueUpdatableGui {
 
     private final String namePrefix;
@@ -83,14 +84,14 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected void prepareStaticValues(){
         // Left item creation for consumer & bind
-        this.goLeftItem = new GuiItem(new ItemStack(Material.RED_STAINED_GLASS_PANE), event -> {
+        this.goLeftItem = new GuiItem(ItemType.RED_STAINED_GLASS_PANE.createItemStack(), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
             int page = this.pageMap.getOrDefault(playerUUID, 0);
             this.pageMap.put(playerUUID, page - 1);
 
             ItemStack cursor = viewer.getItemOnCursor();
-            viewer.setItemOnCursor(new ItemStack(Material.AIR));
+            viewer.setItemOnCursor(ItemType.AIR.createItemStack());
 
             show(viewer);
 
@@ -98,14 +99,14 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
         }, CustomAnvil.instance);
 
         // Right item creation for consumer & bind
-        this.goRightItem = new GuiItem(new ItemStack(Material.LIME_STAINED_GLASS_PANE), event -> {
+        this.goRightItem = new GuiItem(ItemType.LIME_STAINED_GLASS_PANE.createItemStack(), event -> {
             HumanEntity viewer = event.getWhoClicked();
             UUID playerUUID = viewer.getUniqueId();
             int page = pageMap.getOrDefault(playerUUID, 0);
             this.pageMap.put(playerUUID, page + 1);
 
             ItemStack cursor = viewer.getItemOnCursor();
-            viewer.setItemOnCursor(new ItemStack(Material.AIR));
+            viewer.setItemOnCursor(ItemType.AIR.createItemStack());
 
             show(viewer);
 

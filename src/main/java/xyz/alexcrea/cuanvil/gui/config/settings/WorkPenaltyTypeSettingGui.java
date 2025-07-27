@@ -5,10 +5,10 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -45,7 +45,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
     }
 
     public static GuiItem getDisplayItem(@NotNull BasicConfigGui parent,
-                                         @NotNull Material itemMat,
+                                         @NotNull ItemType type,
                                          @NotNull String name) {
         List<String> displayLore = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         displayLore.add(SHARED_EXPLANATION);
         displayLore.add(EXCLUSIVE_EXPLANATION);
 
-        ItemStack item = new ItemStack(itemMat);
+        ItemStack item = type.createItemStack();
 
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
@@ -116,7 +116,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         String exclusiveAdditiveStr = (part.exclusivePenaltyAdditive() ? "§a" : "§c") + "Additive";
 
         // Display item
-        ItemStack displayItem = new ItemStack(type.getDisplayMat());
+        ItemStack displayItem = type.getDisplayMat().createItemStack();
 
         ArrayList<String> displayLore = new ArrayList<>();
         displayLore.add("§eShared§7: " + additiveStr + " §7| " + increasingStr);
@@ -133,7 +133,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
         // Can probably put this in a function but this works so
         // "Increment" item
-        ItemStack incrementItem = new ItemStack(part.penaltyIncrease() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
+        ItemStack incrementItem = (part.penaltyIncrease() ? ItemType.GREEN_TERRACOTTA : ItemType.RED_TERRACOTTA).createItemStack();
 
         meta = incrementItem.getItemMeta();
         meta.setDisplayName(increasingStr);
@@ -153,7 +153,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         }));
 
         // "Additive" item
-        ItemStack additiveItem = new ItemStack(part.penaltyAdditive() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
+        ItemStack additiveItem = (part.penaltyAdditive() ? ItemType.GREEN_TERRACOTTA : ItemType.RED_TERRACOTTA).createItemStack();
 
         meta = additiveItem.getItemMeta();
         meta.setDisplayName(additiveStr);
@@ -173,7 +173,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         }));
 
         // exclusive "Increment" item
-        ItemStack exclusiveIncrementItem = new ItemStack(part.exclusivePenaltyIncrease() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
+        ItemStack exclusiveIncrementItem = (part.exclusivePenaltyIncrease() ? ItemType.GREEN_TERRACOTTA : ItemType.RED_TERRACOTTA).createItemStack();
 
         meta = exclusiveIncrementItem.getItemMeta();
         meta.setDisplayName(exclusiveIncreasingStr);
@@ -193,7 +193,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         }));
 
         // exclusive "Additive" item
-        ItemStack exclusiveAdditiveItem = new ItemStack(part.exclusivePenaltyAdditive() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
+        ItemStack exclusiveAdditiveItem = (part.exclusivePenaltyAdditive() ? ItemType.GREEN_TERRACOTTA : ItemType.RED_TERRACOTTA).createItemStack();
 
         meta = exclusiveAdditiveItem.getItemMeta();
         meta.setDisplayName(exclusiveAdditiveStr);

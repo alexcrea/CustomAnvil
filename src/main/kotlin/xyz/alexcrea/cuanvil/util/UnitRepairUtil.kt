@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.util
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 
 object UnitRepairUtil {
 
@@ -21,14 +22,16 @@ object UnitRepairUtil {
     ): Double? {
         if (other == null) return null
         val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
-        // Get configuration section if exist
-        val otherName = other.type.name.lowercase()
-        var section = config.getConfigurationSection(otherName)
-        if (section == null) {
-            section = config.getConfigurationSection(otherName.uppercase())
-            if (section == null) return null
 
+        val otherKey = other.itemType.key
+
+        // Get configuration section if exist
+        var section = config.getConfigurationSection(otherKey.toString())
+        if (section == null) {
+            section = config.getConfigurationSection(otherKey.key)
+            if (section == null) return null
         }
+
         // Get repair amount
         var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)
         if (userDefault <= 0) {
@@ -44,14 +47,16 @@ object UnitRepairUtil {
      * If value is set to less than or equal to 0 then it will be set to default
      */
     private fun getRepairAmount(item: ItemStack, section: ConfigurationSection, default: Double): Double? {
-        val itemName = item.type.name.lowercase()
-        val repairValue = if (section.isDouble(itemName)) {
-            section.getDouble(itemName)
-        } else if (section.isDouble(itemName.uppercase())) {
-            section.getDouble(itemName.uppercase())
+        val itemKey = item.itemType.key
+
+        val repairValue = if (section.isDouble(itemKey.toString())) {
+            section.getDouble(itemKey.toString())
+        } else if (section.isDouble(itemKey.key)) {
+            section.getDouble(itemKey.key)
         } else {
             return null
         }
+
         if (repairValue <= 0)
             return default
         return repairValue

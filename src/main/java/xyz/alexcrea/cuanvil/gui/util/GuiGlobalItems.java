@@ -4,10 +4,10 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
@@ -20,13 +20,14 @@ import java.util.List;
 /**
  * A utility class to store function that create generic GUI item.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class GuiGlobalItems {
 
     // statically create default back itemstack
     private static final ItemStack BACK_ITEM;
 
     static {
-        BACK_ITEM = new ItemStack(Material.BARRIER);
+        BACK_ITEM = ItemType.BARRIER.createItemStack();
         ItemMeta meta = BACK_ITEM.getItemMeta();
         assert meta != null;
 
@@ -68,17 +69,17 @@ public class GuiGlobalItems {
         target.bindItem('B', backItem(goal));
     }
 
-    private static final Material DEFAULT_BACKGROUND_MAT = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+    private static final ItemType DEFAULT_BACKGROUND_TYPE = ItemType.LIGHT_GRAY_STAINED_GLASS_PANE;
 
     /**
      * Get a background item with backgroundMat as the displayed material.
      * A background item is a GuiItem that do nothing when interacted with and have an empty name.
      *
-     * @param backgroundMat The material to which the background item should be made of.
+     * @param backgroundType The item type of the background.
      * @return A background item with backgroundMat as material.
      */
-    public static GuiItem backgroundItem(Material backgroundMat) {
-        ItemStack item = new ItemStack(backgroundMat);
+    public static GuiItem backgroundItem(ItemType backgroundType) {
+        ItemStack item = backgroundType.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -94,19 +95,19 @@ public class GuiGlobalItems {
      * @return A new instance of the default background item.
      */
     public static GuiItem backgroundItem() {
-        return backgroundItem(DEFAULT_BACKGROUND_MAT);
+        return backgroundItem(DEFAULT_BACKGROUND_TYPE);
     }
 
     /**
      * Add default background item to a GUI pattern with the reserved character key <strong>0</strong>.
      * A background item is a GuiItem that do nothing when interacted with and have an empty name.
      *
-     * @param target        The pattern to add the background item.
-     * @param backgroundMat The material of the background item.
+     * @param target         The pattern to add the background item.
+     * @param backgroundType The item type of the background.
      */
     public static void addBackgroundItem(@NotNull PatternPane target,
-                                         @NotNull Material backgroundMat) {
-        target.bindItem('0', backgroundItem(backgroundMat));
+                                         @NotNull ItemType backgroundType) {
+        target.bindItem('0', backgroundItem(backgroundType));
     }
 
     /**
@@ -116,11 +117,11 @@ public class GuiGlobalItems {
      * @param target The pattern to add the background item.
      */
     public static void addBackgroundItem(@NotNull PatternPane target) {
-        addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
+        addBackgroundItem(target, DEFAULT_BACKGROUND_TYPE);
     }
 
-    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
-    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
+    public static final ItemType DEFAULT_SAVE_ITEM = ItemType.LIME_DYE;
+    public static final ItemType DEFAULT_NO_CHANGE_ITEM = ItemType.GRAY_DYE;
 
     /**
      * Create a new save setting GuiItem.
@@ -135,7 +136,7 @@ public class GuiGlobalItems {
             @NotNull SettingGui setting,
             @NotNull ValueUpdatableGui goal) {
 
-        ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
+        ItemStack item = DEFAULT_SAVE_ITEM.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -150,7 +151,7 @@ public class GuiGlobalItems {
     private static final GuiItem NO_CHANGE_ITEM;
 
     static {
-        ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
+        ItemStack item = DEFAULT_NO_CHANGE_ITEM.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -191,7 +192,7 @@ public class GuiGlobalItems {
      * Create an arbitrary GuiItem from a unique setting and item's property.
      *
      * @param factory     The setting's GUI factory.
-     * @param itemMat     Displayed material of the item.
+     * @param type        Displayed item type
      * @param itemName    Name of the item.
      * @param value       Value of the setting when the item is created.
      *                    Will not update automatically, if the setting's value change, the item need to be created again.
@@ -200,7 +201,7 @@ public class GuiGlobalItems {
      */
     public static GuiItem createGuiItemFromProperties(
             @NotNull SettingGui.SettingGuiFactory factory,
-            @NotNull Material itemMat,
+            @NotNull ItemType type,
             @NotNull StringBuilder itemName,
             @NotNull Object value,
             @NotNull List<String> displayLore,
@@ -208,14 +209,14 @@ public class GuiGlobalItems {
     ) {
         // Prepare lore
         ArrayList<String> lore = new ArrayList<>();
-        lore.add((displayValuePrefix ? SETTING_ITEM_LORE_PREFIX  : "") + value);
-        if(!displayLore.isEmpty()){
+        lore.add((displayValuePrefix ? SETTING_ITEM_LORE_PREFIX : "") + value);
+        if (!displayLore.isEmpty()) {
             lore.add("");
             lore.addAll(displayLore);
         }
 
         // Create & initialise item
-        ItemStack item = new ItemStack(itemMat);
+        ItemStack item = type.createItemStack();
         ItemMeta itemMeta = item.getItemMeta();
         assert itemMeta != null;
 
@@ -242,8 +243,8 @@ public class GuiGlobalItems {
         return path.substring(indexOfDot + 1);
     }
 
-    public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack){
-        ItemStack item = new ItemStack(itemMaterial);
+    public static GuiItem temporaryCloseGuiToSelectItem(ItemType type, Gui openBack) {
+        ItemStack item = type.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -256,9 +257,9 @@ public class GuiGlobalItems {
 
             HumanEntity player = event.getWhoClicked();
 
-            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
+            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) -> {
 
-                if(message == null) return;
+                if (message == null) return;
                 openBack.show(player);
 
             });

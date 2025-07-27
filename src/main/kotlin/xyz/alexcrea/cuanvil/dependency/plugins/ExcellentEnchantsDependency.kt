@@ -1,10 +1,10 @@
 package xyz.alexcrea.cuanvil.dependency.plugins
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
@@ -13,6 +13,7 @@ import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.manager.listener.AnvilListener as V5AnvilListener
 
+@SuppressWarnings("UnstableApiUsage")
 class ExcellentEnchantsDependency {
 
     init {
@@ -93,7 +94,7 @@ class ExcellentEnchantsDependency {
     }
 
     private fun treatInput(item: ItemStack?): ItemStack {
-        if (item == null) return ItemStack(Material.AIR)
+        if (item == null) return ItemType.AIR.createItemStack()
         return item
     }
 

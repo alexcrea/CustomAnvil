@@ -4,9 +4,9 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SelectItemTypeGui extends AbstractAskGui {
 
     private ItemStack selectedItem;
@@ -45,7 +46,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
         this.pane.bindItem('S', GuiGlobalItems.backgroundItem());
 
         // Select item
-        ItemStack selectItem = setDisplayMeta(new ItemStack(Material.BARRIER), actionDescription);
+        ItemStack selectItem = setDisplayMeta(ItemType.BARRIER.createItemStack(), actionDescription);
 
         AtomicReference<GuiItem> selectGuiItem = new AtomicReference<>();
         selectGuiItem.set(new GuiItem(selectItem, event -> {
@@ -56,7 +57,9 @@ public class SelectItemTypeGui extends AbstractAskGui {
 
             ItemStack finalItem;
             if(materialOnly){
-                finalItem = setDisplayMeta(new ItemStack(cursor.getType()), actionDescription);
+                finalItem = setDisplayMeta(
+                        cursor.getType().asItemType().createItemStack(),
+                        actionDescription);
             }else{
                 finalItem = cursor.clone();
             }
@@ -71,7 +74,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
         this.pane.bindItem('V', selectGuiItem.get());
 
         // Temporary leave item
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(ItemType.YELLOW_STAINED_GLASS_PANE, this);
 
         this.pane.bindItem('s', temporaryLeave);
 

@@ -2,11 +2,11 @@ package xyz.alexcrea.cuanvil.anvil;
 
 import io.delilaheve.util.ConfigOptions;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.junit.jupiter.api.AfterAll;
@@ -15,11 +15,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
 import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
+import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
+@SuppressWarnings("UnstableApiUsage")
 public class AnvilFuseTests extends SharedCustomAnvilTest {
 
     private static AnvilInventory anvil;
@@ -107,7 +107,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
     // Note: currently anvil can only have null name. maybe handle differently later
     @Test
     public void nullNameResetTest(){
-        ItemStack base = new ItemStack(Material.NETHERITE_SWORD);
+        ItemStack base = ItemType.NETHERITE_SWORD.createItemStack();
         ItemStack expected = base.clone();
 
         ItemMeta meta = expected.getItemMeta();

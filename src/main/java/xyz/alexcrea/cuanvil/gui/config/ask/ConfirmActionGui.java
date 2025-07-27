@@ -4,9 +4,9 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ConfirmActionGui extends AbstractAskGui {
 
     public ConfirmActionGui(@NotNull String title, String actionDescription,
@@ -52,7 +53,7 @@ public class ConfirmActionGui extends AbstractAskGui {
         }, CustomAnvil.instance));
 
         // Info item
-        ItemStack infoItem = new ItemStack(Material.PAPER);
+        ItemStack infoItem = ItemType.PAPER.createItemStack();
         ItemMeta infoMeta = infoItem.getItemMeta();
 
         infoMeta.setDisplayName("§eAre you sure ?");

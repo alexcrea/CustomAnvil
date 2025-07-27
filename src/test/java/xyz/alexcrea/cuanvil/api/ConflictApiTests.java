@@ -1,11 +1,11 @@
 package xyz.alexcrea.cuanvil.api;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
@@ -13,10 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
-import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
@@ -25,6 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ConflictApiTests extends ConfigResetCustomAnvilTest {
 
     private AnvilInventory anvil;
@@ -51,7 +52,7 @@ public class ConflictApiTests extends ConfigResetCustomAnvilTest {
         ItemStack sharpness1 = CommonItemUtil.sharpness(1);
         ItemStack arthropods1 = CommonItemUtil.bane_of_arthropods(1);
         ItemStack illegalResult = AnvilFuseTestUtil.prepareItem(
-                Material.DIAMOND_SWORD, 1,
+                ItemType.DIAMOND_SWORD, 1,
                 List.of("bane_of_arthropods", "sharpness"),
                 1, 1
         );

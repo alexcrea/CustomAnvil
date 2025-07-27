@@ -4,7 +4,6 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -79,11 +78,12 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemTyp
         super.prepareStaticValues();
 
         // Temporary leave item
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(
+                ItemType.YELLOW_STAINED_GLASS_PANE, this);
         this.backgroundPane.bindItem('T', temporaryLeave);
 
         // Select new mat item
-        ItemStack selectItem = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
+        ItemStack selectItem = ItemType.BLUE_STAINED_GLASS_PANE.createItemStack();
         ItemMeta selectMeta = selectItem.getItemMeta();
         assert selectMeta != null;
 
@@ -103,7 +103,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemTyp
         this.backgroundPane.bindItem('S', this.noChangeItem);
 
         // Instant Remove On item
-        ItemStack instantRemoveOnItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+        ItemStack instantRemoveOnItem = ItemType.LIME_STAINED_GLASS_PANE.createItemStack();
         ItemMeta instantRemoveOnMeta = instantRemoveOnItem.getItemMeta();
         assert instantRemoveOnMeta != null;
 
@@ -114,7 +114,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemTyp
         instantRemoveOnItem.setItemMeta(instantRemoveOnMeta);
 
         // Instant Remove Off item
-        ItemStack instantRemoveOffItem = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemStack instantRemoveOffItem = ItemType.RED_STAINED_GLASS_PANE.createItemStack();
         ItemMeta instantRemoveOffMeta = instantRemoveOffItem.getItemMeta();
         assert instantRemoveOffMeta != null;
 
@@ -141,7 +141,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemTyp
     }
 
     private GuiItem prepareSaveItem() {
-        ItemStack saveItemStack = new ItemStack(GuiGlobalItems.DEFAULT_SAVE_ITEM);
+        ItemStack saveItemStack = GuiGlobalItems.DEFAULT_SAVE_ITEM.createItemStack();
         ItemMeta saveMeta = saveItemStack.getItemMeta();
         assert saveMeta != null;
 

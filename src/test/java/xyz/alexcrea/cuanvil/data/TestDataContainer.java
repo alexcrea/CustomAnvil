@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 @SuppressWarnings("unused")
 public record TestDataContainer(

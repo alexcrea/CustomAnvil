@@ -3,9 +3,9 @@ package xyz.alexcrea.cuanvil.enchant.bulk;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
 import io.delilaheve.util.ItemUtil;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 
 import java.util.Map;
 
+@SuppressWarnings("UnstableApiUsage")
 public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, BulkCleanEnchantOperation {
 
     @Override
@@ -45,7 +46,8 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
 
     @Override
     public void bulkClear(@NotNull ItemStack item) {
-        if (item.getType() != Material.ENCHANTED_BOOK || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
+        if (item.getType().asItemType() != ItemType.ENCHANTED_BOOK ||
+                ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
 
             item.getEnchantments().forEach((enchantment, level) ->
                     item.removeEnchantment(enchantment)
@@ -55,7 +57,7 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
 
     @Override
     public void bulkClear(@NotNull ItemStack item, @NotNull ItemMeta meta) {
-        if (item.getType() == Material.ENCHANTED_BOOK) {
+        if (item.getType().asItemType() == ItemType.ENCHANTED_BOOK) {
             EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
             bookMeta.getStoredEnchants().forEach((enchantment, leve) ->
                     bookMeta.removeStoredEnchant(enchantment)

@@ -1,10 +1,8 @@
 package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
-import io.papermc.paper.registry.RegistryAccess
-import io.papermc.paper.registry.RegistryKey
-import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil
 import java.util.*
 
 @SuppressWarnings("UnstableApiUsage")
@@ -79,21 +77,10 @@ class ItemGroupManager {
         config: ConfigurationSection,
         keys: Set<String>
     ) {
-        val itemRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM)
-
         // Read material to include in this group policy
         val materialList = groupSection.getStringList(MATERIAL_LIST_PATH)
         for (typeName in materialList) {
-            val key = NamespacedKey.fromString(typeName.lowercase())
-            if (key == null) {
-                CustomAnvil.instance.logger.warning(
-                    "Malformed item type $typeName on group ${group.getName()}"
-                )
-
-                continue
-            }
-
-            val type = itemRegistry.get(key)
+            val type = ItemTypeUtil.getItemType(typeName)
             if (type == null) {
                 // Check if we should warn the user
                 if (typeName !in FUTURE_MATERIAL) {

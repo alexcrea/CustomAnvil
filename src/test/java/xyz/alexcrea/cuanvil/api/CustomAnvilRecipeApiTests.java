@@ -1,25 +1,25 @@
 package xyz.alexcrea.cuanvil.api;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
-import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.data.AnvilClickTestData;
+import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.data.TestDataContainer;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
-import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
 
     private AnvilInventory anvil;
@@ -44,7 +44,7 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
     @Test
     public void testBasicRecipe() {
         String recipeName = "stick_recipe";
-        ItemStack stick = new ItemStackMock(Material.STICK);
+        ItemStack stick = ItemType.STICK.createItemStack();
 
         AnvilFuseTestData nullResultData = new AnvilFuseTestData(
                 stick, stick,
@@ -97,10 +97,10 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
     @Test
     public void testUnitRecipe() {
         String recipeName = "stick_recipe";
-        ItemStack stick = new ItemStackMock(Material.STICK);
-        ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
-        ItemStack stick5 = new ItemStackMock(Material.STICK, 5);
-        ItemStack stick10 = new ItemStackMock(Material.STICK, 10);
+        ItemStack stick = ItemType.STICK.createItemStack();
+        ItemStack stick2 = ItemType.STICK.createItemStack(2);
+        ItemStack stick5 = ItemType.STICK.createItemStack(5);
+        ItemStack stick10 = ItemType.STICK.createItemStack(10);
 
         AnvilFuseTestData nullResultData = new AnvilFuseTestData(
                 stick, stick,
@@ -139,10 +139,10 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
     @Test
     public void testLinearXpCost() {
         String recipeName = "stick_recipe";
-        ItemStack stick = new ItemStackMock(Material.STICK);
-        ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
-        ItemStack stick5 = new ItemStackMock(Material.STICK, 5);
-        ItemStack stick10 = new ItemStackMock(Material.STICK, 10);
+        ItemStack stick = ItemType.STICK.createItemStack();
+        ItemStack stick2 = ItemType.STICK.createItemStack(2);
+        ItemStack stick5 = ItemType.STICK.createItemStack(5);
+        ItemStack stick10 = ItemType.STICK.createItemStack(10);
 
 
         AnvilFuseTestData nullResultData = new AnvilFuseTestData(
@@ -193,10 +193,10 @@ public class CustomAnvilRecipeApiTests extends ConfigResetCustomAnvilTest {
     @Test
     public void testLinearXpCostRemoveExact() {
         String recipeName = "stick_recipe";
-        ItemStack stick = new ItemStackMock(Material.STICK);
-        ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
-        ItemStack stick5 = new ItemStackMock(Material.STICK, 5);
-        ItemStack stick10 = new ItemStackMock(Material.STICK, 10);
+        ItemStack stick = ItemType.STICK.createItemStack();
+        ItemStack stick2 = ItemType.STICK.createItemStack(2);
+        ItemStack stick5 = ItemType.STICK.createItemStack(5);
+        ItemStack stick10 = ItemType.STICK.createItemStack(10);
 
         AnvilFuseTestData nullResultData = new AnvilFuseTestData(
                 stick, stick,

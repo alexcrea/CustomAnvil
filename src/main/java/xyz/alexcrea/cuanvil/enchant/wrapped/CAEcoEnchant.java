@@ -3,8 +3,8 @@ package xyz.alexcrea.cuanvil.enchant.wrapped;
 import com.willfp.ecoenchants.enchant.EcoEnchant;
 import com.willfp.ecoenchants.target.EnchantmentTarget;
 import com.willfp.ecoenchants.type.EnchantmentType;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
     private final @NotNull EcoEnchant ecoEnchant;
@@ -23,7 +24,7 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull ItemType itemType) {
         if (enchantments.isEmpty()) return false;
 
         if (this.ecoEnchant.getConflictsWithEverything()) {
@@ -57,9 +58,9 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
 
     @Override
     public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments,
-                                  @NotNull Material itemMat,
+                                  @NotNull ItemType type,
                                   @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.equals(itemMat)) {
+        if (ItemType.ENCHANTED_BOOK.equals(type)) {
             return false;
         }
 

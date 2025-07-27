@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.Arrays;
 import java.util.Locale;
 
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
     private static final String SECTION_NAME = "disable-merge-over";
@@ -61,7 +62,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
     @Override
     public GuiItem itemFromFactory(CAEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
         return inventoryFactory.getItem(
-                Material.ENCHANTED_BOOK,
+                ItemType.ENCHANTED_BOOK,
                 inventoryFactory.getTitle());
     }
 }

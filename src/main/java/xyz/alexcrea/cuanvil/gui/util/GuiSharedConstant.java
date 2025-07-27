@@ -4,19 +4,20 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 
 import java.util.Arrays;
 import java.util.Collections;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GuiSharedConstant {
 
     private GuiSharedConstant(){}
 
-    public static final Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
+    public static final ItemType SECONDARY_BACKGROUND_MATERIAL = ItemType.BLACK_STAINED_GLASS_PANE;
     public static final GuiItem SECONDARY_BACKGROUND_ITEM = GuiGlobalItems.backgroundItem(GuiSharedConstant.SECONDARY_BACKGROUND_MATERIAL);
 
     public static final String UPPER_FILLER_FULL_PLANE = "111111111";
@@ -52,7 +53,7 @@ public class GuiSharedConstant {
     public static final ItemStack CONFIRM_PERMANENT_ITEM;
 
     static {
-        CANCEL_ITEM = new ItemStack(Material.RED_TERRACOTTA);
+        CANCEL_ITEM = ItemType.RED_TERRACOTTA.createItemStack();
         ItemMeta meta = CANCEL_ITEM.getItemMeta();
         assert meta != null;
 
@@ -60,7 +61,7 @@ public class GuiSharedConstant {
         meta.setLore(Collections.singletonList("§7Cancel current action and return to previous menu."));
         CANCEL_ITEM.setItemMeta(meta);
 
-        CONFIRM_ITEM = new ItemStack(Material.GREEN_TERRACOTTA);
+        CONFIRM_ITEM = ItemType.GREEN_TERRACOTTA.createItemStack();
         meta = CONFIRM_ITEM.getItemMeta();
         assert meta != null;
 
@@ -68,7 +69,7 @@ public class GuiSharedConstant {
         meta.setLore(Collections.singletonList("§7Confirm current action."));
         CONFIRM_ITEM.setItemMeta(meta);
 
-        CONFIRM_PERMANENT_ITEM = new ItemStack(Material.GREEN_TERRACOTTA);
+        CONFIRM_PERMANENT_ITEM = ItemType.GREEN_TERRACOTTA.createItemStack();
         meta = CONFIRM_PERMANENT_ITEM.getItemMeta();
         assert meta != null;
 

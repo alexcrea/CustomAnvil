@@ -4,7 +4,6 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -64,7 +63,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         GuiGlobalItems.addBackgroundItem(this.pane);
 
         // Delete item
-        ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
+        ItemStack deleteItem = ItemType.RED_TERRACOTTA.createItemStack();
         ItemMeta deleteMeta = deleteItem.getItemMeta();
 
         deleteMeta.setDisplayName("§4DELETE GROUP");
@@ -75,7 +74,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         // Displayed item will be updated later
         String materialSelectionName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rMaterials";
-        ItemStack selectItem = new ItemStack(Material.DIAMOND_SWORD);
+        ItemStack selectItem = ItemType.DIAMOND_SWORD.createItemStack();
         ItemMeta selectItemMeta = selectItem.getItemMeta();
         selectItemMeta.setDisplayName(materialSelectionName);
 
@@ -90,7 +89,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         }, CustomAnvil.instance);
 
         String selectGroupName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.getName()) + " §rGroups";
-        ItemStack selectGroup = new ItemStack(Material.CHEST);
+        ItemStack selectGroup = ItemType.CHEST.createItemStack();
         ItemMeta selectGroupMeta = selectGroup.getItemMeta();
         selectGroupMeta.setDisplayName(selectGroupName);
 

@@ -5,9 +5,9 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import kotlin.ranges.IntRange;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -26,6 +26,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.Collections;
 import java.util.function.Supplier;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
     private final CustomRecipeConfigGui parent;
@@ -69,7 +70,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         GuiGlobalItems.addBackgroundItem(this.pane);
 
         // Delete item
-        ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
+        ItemStack deleteItem = ItemType.RED_TERRACOTTA.createItemStack();
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
@@ -89,7 +90,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 this.anvilRecipe + "." + AnvilCustomRecipe.REMOVE_EXACT_XP_CONFIG, AnvilCustomRecipe.DEFAULT_REMOVE_EXACT_XP_CONFIG);
 
-        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemStack item = ItemType.BARRIER.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -189,11 +190,11 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             this.pane.bindItem('a', removeExactLinearXpFactory.getItem());
         }
 
-        GuiItem levelCostItem = this.levelCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
+        GuiItem levelCostItem = this.levelCostFactory.getItem(ItemType.EXPERIENCE_BOTTLE);
         this.pane.bindItem('2', levelCostItem);
 
 
-        GuiItem xpCostItem = this.linearXpCostFactory.getItem(Material.EXPERIENCE_BOTTLE);
+        GuiItem xpCostItem = this.linearXpCostFactory.getItem(ItemType.EXPERIENCE_BOTTLE);
         this.pane.bindItem('b', xpCostItem);
 
         GuiItem leftGuiItem = this.leftItemFactory.getItem();

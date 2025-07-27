@@ -5,11 +5,11 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 /**
  * An instance of a gui used to edit an item setting.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class ItemSettingGui extends AbstractSettingGui {
 
     private final ItemSettingFactory holder;
@@ -62,7 +63,8 @@ public class ItemSettingGui extends AbstractSettingGui {
     public void prepareStaticItems(){
         prepareReturnToDefault();
 
-        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
+        GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(
+                ItemType.YELLOW_STAINED_GLASS_PANE, this);
         getPane().bindItem('s', temporaryLeave);
     }
 
@@ -73,7 +75,7 @@ public class ItemSettingGui extends AbstractSettingGui {
      * Prepare "return to default value" gui item.
      */
     protected void prepareReturnToDefault() {
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack item = ItemType.COMMAND_BLOCK.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -101,7 +103,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         if(this.now != null){
             displayedItem = this.now.clone();
         }else{
-            displayedItem = new ItemStack(Material.BARRIER);
+            displayedItem = ItemType.BARRIER.createItemStack();
             ItemMeta valueMeta = displayedItem.getItemMeta();
             assert valueMeta != null;
 
@@ -238,7 +240,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         public GuiItem getItem(@NotNull String name) {
             ItemStack item = getConfiguredValue();
             if(item == null || item.getType().isAir()){
-                item = new ItemStack(Material.BARRIER);
+                item = ItemType.BARRIER.createItemStack();
             }else{
                 item = item.clone();
             }

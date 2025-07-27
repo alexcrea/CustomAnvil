@@ -4,9 +4,9 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui implements SelectEnchantmentContainer, SelectGroupContainer {
 
     private final EnchantConflictGui parent;
@@ -66,7 +67,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         GuiGlobalItems.addBackgroundItem(this.pane);
 
         // Delete item
-        ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
+        ItemStack deleteItem = ItemType.RED_TERRACOTTA.createItemStack();
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
@@ -77,7 +78,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
 
         // Displayed item will be updated later
-        this.enchantSettingItem = new GuiItem(new ItemStack(Material.ENCHANTED_BOOK), event -> {
+        this.enchantSettingItem = new GuiItem(ItemType.ENCHANTED_BOOK.createItemStack(), event -> {
             event.setCancelled(true);
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
                     "§e" + CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString()) + "§5",
@@ -85,7 +86,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
-        this.groupSettingItem = new GuiItem(new ItemStack(Material.PAPER), event -> {
+        this.groupSettingItem = new GuiItem(ItemType.PAPER.createItemStack(), event -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
                     "§e" + CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString()) + " §3Groups",
@@ -145,7 +146,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     @Override
     public void updateGuiValues() {
         // update value from config to conflict
-        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.toString()+'.'+EnchantConflictManager.ENCH_MAX_PATH, 0);
+        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.toString() + '.' + EnchantConflictManager.ENCH_MAX_PATH, 0);
         this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
 
         // Parent should call updateLocal with this call
@@ -206,7 +207,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
         this.groupSettingItem.setItem(groupItem); // Just in case
 
-        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(Material.COMMAND_BLOCK,
+        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(ItemType.COMMAND_BLOCK,
                 "Minimum Enchantment Count"));
         update();
     }

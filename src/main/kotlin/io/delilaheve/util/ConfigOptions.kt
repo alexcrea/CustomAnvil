@@ -2,8 +2,8 @@ package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
@@ -348,8 +348,8 @@ object ConfigOptions {
      *
      * @return the current enchantment limit. -1 if none
      */
-    fun getEnchantCountLimit(type: Material): Int? {
-        val limit = materialEnchantCountLimit(type)
+    fun getEnchantCountLimit(type: ItemType): Int? {
+        val limit = itemEnchantCountLimit(type)
 
         if(limit != null) return limit
         if(defaultEnchantCountLimit >= 0) return defaultEnchantCountLimit
@@ -362,7 +362,7 @@ object ConfigOptions {
      *
      * @return The current enchantment limit. -1 if none
      */
-    private fun materialEnchantCountLimit(type: Material): Int? {
+    private fun itemEnchantCountLimit(type: ItemType): Int? {
         val path = "$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.key.lowercase()}"
         if(!ConfigHolder.DEFAULT_CONFIG.config.isInt(path))
             return null

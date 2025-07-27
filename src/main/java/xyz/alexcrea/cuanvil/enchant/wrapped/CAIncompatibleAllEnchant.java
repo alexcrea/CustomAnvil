@@ -1,11 +1,13 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.enchant.*;
+import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
 import java.util.Map;
 
@@ -24,12 +26,12 @@ public class CAIncompatibleAllEnchant extends CABukkitEnchantment implements Add
 
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull ItemType type) {
         return !enchantments.isEmpty() && !(enchantments.size() == 1 && enchantments.containsKey(this));
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat, @NotNull ItemStack item) {
+    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull ItemType type, @NotNull ItemStack item) {
         return false;
     }
 }

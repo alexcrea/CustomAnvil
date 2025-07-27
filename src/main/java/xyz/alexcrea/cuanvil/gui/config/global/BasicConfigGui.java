@@ -8,8 +8,8 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
 import kotlin.ranges.IntRange;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +32,7 @@ import java.util.List;
 /**
  * Global config to edit basic basic settings.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private static BasicConfigGui INSTANCE = null;
@@ -109,7 +110,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 "§7In other words:",
                 "§7For any anvil cost greater than §aMax Anvil Cost§7, Cost will be set to §aMax Anvil Cost§7.");
         // cap anvil cost not needed
-        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemStack item = ItemType.BARRIER.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -134,7 +135,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 ConfigOptions.DEFAULT_MAX_ANVIL_COST,
                 1, 5, 10);
         // max anvil cost not needed
-        item = new ItemStack(Material.BARRIER);
+        item = ItemType.BARRIER.createItemStack();
         meta = item.getItemMeta();
         assert meta != null;
 
@@ -238,7 +239,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 "§7Give player §eca.color.hex§7  Permission to allow use of hexadecimal color.");
 
         // Permission needed for color not necessary
-        item = new ItemStack(Material.BARRIER);
+        item = ItemType.BARRIER.createItemStack();
         meta = item.getItemMeta();
         assert meta != null;
 
@@ -262,7 +263,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 1, 5, 10, 50, 100);
 
         // Permission needed for color not necessary
-        item = new ItemStack(Material.BARRIER);
+        item = ItemType.BARRIER.createItemStack();
         meta = item.getItemMeta();
         assert meta != null;
 
@@ -300,7 +301,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         GuiItem maxAnvilCostItem;
         if (!this.removeAnvilCostLimit.getConfiguredValue()) {
             capAnvilCostItem = this.capAnvilCost.getItem("Cap Anvil Cost");
-            maxAnvilCostItem = this.maxAnvilCost.getItem(Material.EXPERIENCE_BOTTLE, "Max Anvil Cost");
+            maxAnvilCostItem = this.maxAnvilCost.getItem(ItemType.EXPERIENCE_BOTTLE, "Max Anvil Cost");
         } else {
             capAnvilCostItem = this.noCapRepairItem;
             maxAnvilCostItem = this.noMaxCostItem;
@@ -319,23 +320,23 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
 
         // item repair cost
-        GuiItem itemRepairCostItem = this.itemRepairCost.getItem(Material.ANVIL);
+        GuiItem itemRepairCostItem = this.itemRepairCost.getItem(ItemType.ANVIL);
         pane.bindItem('I', itemRepairCostItem);
 
         // unit repair cost
-        GuiItem unitRepairCostItem = this.unitRepairCost.getItem(Material.DIAMOND);
+        GuiItem unitRepairCostItem = this.unitRepairCost.getItem(ItemType.DIAMOND);
         pane.bindItem('U', unitRepairCostItem);
 
         // item rename cost
-        GuiItem itemRenameCostItem = this.itemRenameCost.getItem(Material.NAME_TAG);
+        GuiItem itemRenameCostItem = this.itemRenameCost.getItem(ItemType.NAME_TAG);
         pane.bindItem('r', itemRenameCostItem);
 
         // sacrifice illegal enchant cost
-        GuiItem illegalCostItem = this.sacrificeIllegalEnchantCost.getItem(Material.ENCHANTED_BOOK);
+        GuiItem illegalCostItem = this.sacrificeIllegalEnchantCost.getItem(ItemType.ENCHANTED_BOOK);
         pane.bindItem('S', illegalCostItem);
 
         // work penalty type
-        GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(this, Material.DAMAGED_ANVIL, "§aWork Penalty Type");
+        GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(this, ItemType.DAMAGED_ANVIL, "§aWork Penalty Type");
         pane.bindItem('W', workPenaltyType);
 
         // allow color code
@@ -353,7 +354,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
             pane.bindItem('p', permissionNeededItem);
 
             // using color cost
-            GuiItem useColorCostItem = this.useOfColorCost.getItem(Material.EXPERIENCE_BOTTLE, "Use color");
+            GuiItem useColorCostItem = this.useOfColorCost.getItem(ItemType.EXPERIENCE_BOTTLE, "Use color");
             pane.bindItem('P', useColorCostItem);
         } else {
             pane.bindItem('p', this.noPermissionNeededItem);

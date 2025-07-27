@@ -5,9 +5,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 /**
  * An instance of a gui used to edit an int setting.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class IntSettingsGui extends AbstractSettingGui {
 
     protected final IntSettingFactory holder;
@@ -68,7 +69,7 @@ public class IntSettingsGui extends AbstractSettingGui {
      * Prepare "return to default value" gui item.
      */
     protected void prepareReturnToDefault() {
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack item = ItemType.COMMAND_BLOCK.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -94,7 +95,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         GuiItem minusItem;
         if (now > holder.min) {
             int planned = Math.max(holder.min, now - step);
-            ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
+            ItemStack item = ItemType.RED_TERRACOTTA.createItemStack();
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
@@ -104,7 +105,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
             minusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
         } else {
-            minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
+            minusItem = GuiGlobalItems.backgroundItem(ItemType.BARRIER);
         }
         pane.bindItem('-', minusItem);
 
@@ -113,7 +114,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         GuiItem plusItem;
         if (now < holder.max) {
             int planned = Math.min(holder.max, now + step);
-            ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
+            ItemStack item = ItemType.GREEN_TERRACOTTA.createItemStack();
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
@@ -123,12 +124,12 @@ public class IntSettingsGui extends AbstractSettingGui {
 
             plusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
         } else {
-            plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
+            plusItem = GuiGlobalItems.backgroundItem(ItemType.BARRIER);
         }
         pane.bindItem('+', plusItem);
 
         // "result" display
-        ItemStack resultPaper = new ItemStack(Material.PAPER);
+        ItemStack resultPaper = ItemType.PAPER.createItemStack();
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
@@ -218,17 +219,17 @@ public class IntSettingsGui extends AbstractSettingGui {
         int stepValue = holder.steps[stepIndex];
 
         // Get material properties
-        Material stepMat;
+        ItemType stepMat;
         StringBuilder stepName = new StringBuilder("§");
         List<String> stepLore;
         Consumer<InventoryClickEvent> clickEvent;
         if (stepValue == step) {
-            stepMat = Material.GREEN_STAINED_GLASS_PANE;
+            stepMat = ItemType.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
             stepLore = Collections.singletonList("§7Value is changing by " + stepValue);
             clickEvent = GuiGlobalActions.stayInPlace;
         } else {
-            stepMat = Material.RED_STAINED_GLASS_PANE;
+            stepMat = ItemType.RED_STAINED_GLASS_PANE;
             stepName.append('c');
             stepLore = Collections.singletonList("§7Click here to change the value by " + stepValue);
             clickEvent = updateStepValue(stepValue);
@@ -236,7 +237,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         stepName.append("Step of: §e").append(stepValue);
 
         // Create item stack then gui item
-        ItemStack item = new ItemStack(stepMat);
+        ItemStack item = stepMat.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -353,19 +354,19 @@ public class IntSettingsGui extends AbstractSettingGui {
          * This item will create and open an int setting GUI from the factory.
          * The item will have its value written in the lore part of the item.
          *
-         * @param itemMat Displayed material of the item.
-         * @param name    Name of the item.
+         * @param type Displayed item type
+         * @param name Name of the item.
          * @return A formatted GuiItem that will create and open a GUI for the int setting.
          */
         public GuiItem getItem(
-                @NotNull Material itemMat,
+                @NotNull ItemType type,
                 @NotNull String name
         ) {
             // Get item properties
             int value = getConfiguredValue();
             StringBuilder itemName = new StringBuilder("§a").append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
+            return GuiGlobalItems.createGuiItemFromProperties(this, type, itemName,
                     "§e" + value,
                     this.displayLore, true);
         }
@@ -376,14 +377,14 @@ public class IntSettingsGui extends AbstractSettingGui {
          * The item will have its value written in the lore part of the item.
          * Item's name will be the factory set title.
          *
-         * @param itemMat Displayed material of the item.
+         * @param type Displayed item type.
          * @return A formatted GuiItem that will create and open a GUI for the int setting.
          */
         public GuiItem getItem(
-                @NotNull Material itemMat
+                @NotNull ItemType type
         ) {
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
-            return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(type, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

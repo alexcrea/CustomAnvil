@@ -4,9 +4,9 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,7 +34,7 @@ object EnchantmentUtil {
         val bypassFuse = player.hasPermission(CustomAnvil.bypassFusePermission)
         val bypassLevel = player.hasPermission(CustomAnvil.bypassLevelPermission)
 
-        var maxEnchantCount = ConfigOptions.getEnchantCountLimit(item.type)
+        var maxEnchantCount = ConfigOptions.getEnchantCountLimit(item.itemType)
         if(maxEnchantCount == null || maxEnchantCount < 0) maxEnchantCount = Int.MAX_VALUE
 
         other.forEach { (enchantment, level) ->

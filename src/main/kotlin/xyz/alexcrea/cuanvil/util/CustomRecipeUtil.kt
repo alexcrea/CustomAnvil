@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 import kotlin.math.min
 
 object CustomRecipeUtil {
@@ -12,7 +13,7 @@ object CustomRecipeUtil {
         leftItem: ItemStack,
         rightItem: ItemStack?) : AnvilCustomRecipe? {
 
-        val recipeList = ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.recipeByMat[leftItem.type] ?: return null
+        val recipeList = ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.recipeByType[leftItem.itemType] ?: return null
 
         CustomAnvil.verboseLog("Testing " + recipeList.size + " recipe...")
         for (recipe in recipeList) {

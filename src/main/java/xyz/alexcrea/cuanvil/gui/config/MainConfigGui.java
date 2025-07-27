@@ -5,8 +5,8 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerBase;
 import xyz.alexcrea.cuanvil.gui.config.global.*;
@@ -15,6 +15,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Collections;
 
+@SuppressWarnings("UnstableApiUsage")
 public class MainConfigGui extends ChestGui {
 
     private static final MainConfigGui INSTANCE = new MainConfigGui();
@@ -39,7 +40,7 @@ public class MainConfigGui extends ChestGui {
         GuiGlobalItems.addBackgroundItem(pane);
 
         // Basic config item
-        ItemStack basicConfigItemstack = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack basicConfigItemstack = ItemType.COMMAND_BLOCK.createItemStack();
         ItemMeta basicConfigMeta = basicConfigItemstack.getItemMeta();
         assert basicConfigMeta != null;
 
@@ -51,7 +52,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('1', basicConfigItem);
 
         // enchant level limit item
-        ItemStack enchantLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemStack enchantLimitItemstack = ItemType.ENCHANTED_BOOK.createItemStack();
         ItemMeta enchantLimitMeta = enchantLimitItemstack.getItemMeta();
         assert enchantLimitMeta != null;
 
@@ -63,7 +64,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('2', enchantLimitItem);
 
         // enchant level limit item
-        ItemStack enchantMergeLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemStack enchantMergeLimitItemstack = ItemType.ENCHANTED_BOOK.createItemStack();
         ItemMeta enchantMergeLimitMeta = enchantMergeLimitItemstack.getItemMeta();
         assert enchantMergeLimitMeta != null;
 
@@ -75,7 +76,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('3', enchantMergeLimitItem);
 
         // enchant cost item
-        ItemStack enchantCostItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemStack enchantCostItemstack = ItemType.EXPERIENCE_BOTTLE.createItemStack();
         ItemMeta enchantCostMeta = enchantCostItemstack.getItemMeta();
         assert enchantCostMeta != null;
 
@@ -87,7 +88,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('4', enchantCostItem);
 
         // Enchantment Conflicts item
-        ItemStack enchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
+        ItemStack enchantConflictItemstack = ItemType.OAK_FENCE.createItemStack();
         ItemMeta enchantConflictMeta = enchantConflictItemstack.getItemMeta();
         assert enchantConflictMeta != null;
 
@@ -99,7 +100,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('5', enchantConflictItem);
 
         // Group config items
-        ItemStack groupItemstack = new ItemStack(Material.CHEST);
+        ItemStack groupItemstack = ItemType.CHEST.createItemStack();
         ItemMeta groupMeta = groupItemstack.getItemMeta();
         assert groupMeta != null;
 
@@ -112,7 +113,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('6', groupConfigItem);
 
         // Unit repair item
-        ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);
+        ItemStack unirRepairItemstack = ItemType.DIAMOND.createItemStack();
         ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
         assert unitRepairMeta != null;
 
@@ -124,7 +125,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('7', unitRepairItem);
 
         // Custom recipe item
-        ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);
+        ItemStack customRecipeItemstack = ItemType.CRAFTING_TABLE.createItemStack();
         ItemMeta customRecipeMeta = customRecipeItemstack.getItemMeta();
         assert customRecipeMeta != null;
 
@@ -136,7 +137,7 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('8', customRecipeItem);
 
         // quit item
-        ItemStack quitItemstack = new ItemStack(Material.BARRIER);
+        ItemStack quitItemstack = ItemType.BARRIER.createItemStack();
         ItemMeta quitMeta = quitItemstack.getItemMeta();
         assert quitMeta != null;
 

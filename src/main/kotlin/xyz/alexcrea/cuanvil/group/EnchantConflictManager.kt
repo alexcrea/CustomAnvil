@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -176,10 +177,9 @@ class EnchantConflictManager {
         item: ItemStack,
         newEnchant: CAEnchantment
     ): ConflictType {
-        val mat = item.type
-        val itemType = mat.asItemType()!!
+        val type = item.itemType
 
-        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${itemType.key}")
+        CustomAnvil.verboseLog("Testing conflict for ${newEnchant.key} on ${type.key}")
         val conflictList = newEnchant.conflicts
 
         var result = ConflictType.NO_CONFLICT
@@ -190,7 +190,7 @@ class EnchantConflictManager {
                 continue
             }
 
-            val allowed = conflict.allowed(appliedEnchants.keys, itemType)
+            val allowed = conflict.allowed(appliedEnchants.keys, type)
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {
@@ -206,7 +206,7 @@ class EnchantConflictManager {
         val immutableEnchants = Collections.unmodifiableMap(appliedEnchants)
         for (appliedEnchant in appliedEnchants.keys) {
             if (appliedEnchant is AdditionalTestEnchantment) {
-                val doConflict = appliedEnchant.isEnchantConflict(immutableEnchants, mat)
+                val doConflict = appliedEnchant.isEnchantConflict(immutableEnchants, type)
                 if (doConflict) {
                     CustomAnvil.verboseLog("Big conflict by additional test, stopping")
                     return ConflictType.ENCHANTMENT_CONFLICT
@@ -218,7 +218,7 @@ class EnchantConflictManager {
         if ((result != ConflictType.ITEM_CONFLICT) && (newEnchant is AdditionalTestEnchantment)) {
             val partialItem = createPartialResult(item, immutableEnchants)
 
-            if (newEnchant.isItemConflict(immutableEnchants, mat, partialItem)) {
+            if (newEnchant.isItemConflict(immutableEnchants, type, partialItem)) {
                 return ConflictType.ITEM_CONFLICT
             }
 

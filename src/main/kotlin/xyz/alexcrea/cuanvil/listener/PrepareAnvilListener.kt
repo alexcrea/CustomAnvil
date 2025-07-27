@@ -10,19 +10,20 @@ import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.ItemType
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.*
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil.itemType
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -322,13 +323,13 @@ class PrepareAnvilListener : Listener {
         event: PrepareAnvilEvent, view: AnvilView, player: HumanEntity,
         first: ItemStack, second: ItemStack
     ): Boolean {
-        val type = second.type
+        val type = second.itemType
         var result: ItemStack? = null
 
         val xpCost = AtomicInteger()
-        if (Material.WRITABLE_BOOK == type) {
+        if (ItemType.WRITABLE_BOOK == type) {
             result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, xpCost)
-        } else if (Material.PAPER == type) {
+        } else if (ItemType.PAPER == type) {
             result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
         }
 

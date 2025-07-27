@@ -6,10 +6,10 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +29,7 @@ import java.util.function.Consumer;
  * An instance of a gui used to edit an enchantment cost setting.
  * May be considered as a 2 int setting.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantCostSettingsGui extends IntSettingsGui {
 
     protected final static String ITEM_PATH = ".item";
@@ -81,7 +82,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         PatternPane pane = getPane();
 
         // book display
-        ItemStack bookItemstack = new ItemStack(Material.BOOK);
+        ItemStack bookItemstack = ItemType.BOOK.createItemStack();
         ItemMeta bookMeta = bookItemstack.getItemMeta();
         assert bookMeta != null;
 
@@ -92,7 +93,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         bookItemstack.setItemMeta(bookMeta);
 
         // sword display
-        ItemStack swordItemstack = new ItemStack(Material.WOODEN_SWORD);
+        ItemStack swordItemstack = ItemType.WOODEN_SWORD.createItemStack();
         ItemMeta swordMeta = swordItemstack.getItemMeta();
         assert swordMeta != null;
 
@@ -103,14 +104,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
                 "§7Only apply if sacrificed item §cis not §7a book"));
         swordItemstack.setItemMeta(swordMeta);
 
-        pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
+        pane.bindItem('1', GuiGlobalItems.backgroundItem(ItemType.BLACK_STAINED_GLASS_PANE));
         pane.bindItem('2', new GuiItem(bookItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
         pane.bindItem('3', new GuiItem(swordItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
 
     @Override
     protected void prepareReturnToDefault() {
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack item = ItemType.COMMAND_BLOCK.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -145,7 +146,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         GuiItem minusItem;
         if (nowBook > holder.min) {
             int planned = Math.max(holder.min, nowBook - step);
-            ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
+            ItemStack item = ItemType.RED_TERRACOTTA.createItemStack();
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
@@ -155,7 +156,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
             minusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
         } else {
-            minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
+            minusItem = GuiGlobalItems.backgroundItem(ItemType.BARRIER);
         }
         pane.bindItem('M', minusItem);
 
@@ -163,7 +164,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         GuiItem plusItem;
         if (nowBook < holder.max) {
             int planned = Math.min(holder.max, nowBook + step);
-            ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
+            ItemStack item = ItemType.GREEN_TERRACOTTA.createItemStack();
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
@@ -173,12 +174,12 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
             plusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
         } else {
-            plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
+            plusItem = GuiGlobalItems.backgroundItem(ItemType.BARRIER);
         }
         pane.bindItem('P', plusItem);
 
         // now value display
-        ItemStack nowPaper = new ItemStack(Material.PAPER);
+        ItemStack nowPaper = ItemType.PAPER.createItemStack();
         ItemMeta nowMeta = nowPaper.getItemMeta();
         assert nowMeta != null;
 

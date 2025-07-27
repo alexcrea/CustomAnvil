@@ -1,23 +1,23 @@
 package xyz.alexcrea.cuanvil.api;
 
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
-import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
+import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("UnstableApiUsage")
 public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
 
     private AnvilInventory anvil;
@@ -40,17 +40,17 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
     }
 
     @Test
-    void vanillaUnitRepair(){
-        ItemStack damagedPickaxe = new ItemStackMock(Material.DIAMOND_PICKAXE);
-        damagedPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability() -1));
+    void vanillaUnitRepair() {
+        ItemStack damagedPickaxe = ItemType.DIAMOND_PICKAXE.createItemStack();
+        damagedPickaxe.setDurability((short) (ItemType.DIAMOND_PICKAXE.getMaxDurability() - 1));
 
-        ItemStack resultPickaxe = new ItemStackMock(Material.DIAMOND_PICKAXE);
-        resultPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability()/2));
+        ItemStack resultPickaxe = ItemType.DIAMOND_PICKAXE.createItemStack();
+        resultPickaxe.setDurability((short) (ItemType.DIAMOND_PICKAXE.getMaxDurability() / 2));
         ItemMeta meta = resultPickaxe.getItemMeta();
         ((Repairable) meta).setRepairCost(1);
         resultPickaxe.setItemMeta(meta);
 
-        ItemStack diamond2 = new ItemStackMock(Material.DIAMOND, 2);
+        ItemStack diamond2 = ItemType.DIAMOND.createItemStack(2);
 
         AnvilFuseTestData legalResultData = new AnvilFuseTestData(
                 damagedPickaxe, diamond2,
@@ -62,11 +62,11 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
     }
 
     @Test
-    void removeUnitRepair(){
-        ItemStack damagedPickaxe = new ItemStackMock(Material.DIAMOND_PICKAXE);
-        damagedPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability() -1));
+    void removeUnitRepair() {
+        ItemStack damagedPickaxe = ItemType.DIAMOND_PICKAXE.createItemStack();
+        damagedPickaxe.setDurability((short) (ItemType.DIAMOND_PICKAXE.getMaxDurability() - 1));
 
-        ItemStack diamond2 = new ItemStackMock(Material.DIAMOND, 2);
+        ItemStack diamond2 = ItemType.DIAMOND.createItemStack(2);
 
         AnvilFuseTestData nullResultData = new AnvilFuseTestData(
                 damagedPickaxe, diamond2,
@@ -74,28 +74,28 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         );
 
         // Remove unit repair
-        assertTrue(UnitRepairApi.removeUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE));
+        assertTrue(UnitRepairApi.removeUnitRepair(ItemType.DIAMOND, ItemType.DIAMOND_PICKAXE));
 
         nullResultData.executeTest(anvil, player);
 
         // see override
-        assertFalse(UnitRepairApi.addUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE, 0.25));
-        assertTrue(UnitRepairApi.addUnitRepair(Material.DIAMOND, Material.DIAMOND_PICKAXE, 0.25, true));
+        assertFalse(UnitRepairApi.addUnitRepair(ItemType.DIAMOND, ItemType.DIAMOND_PICKAXE, 0.25));
+        assertTrue(UnitRepairApi.addUnitRepair(ItemType.DIAMOND, ItemType.DIAMOND_PICKAXE, 0.25, true));
     }
 
 
     @Test
-    void addUnitRepair(){
-        ItemStack damagedPickaxe = new ItemStackMock(Material.DIAMOND_PICKAXE);
-        damagedPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability() -1));
+    void addUnitRepair() {
+        ItemStack damagedPickaxe = ItemType.DIAMOND_PICKAXE.createItemStack();
+        damagedPickaxe.setDurability((short) (ItemType.DIAMOND_PICKAXE.getMaxDurability() - 1));
 
-        ItemStack resultPickaxe = new ItemStackMock(Material.DIAMOND_PICKAXE);
-        resultPickaxe.setDurability((short) (Material.DIAMOND_PICKAXE.getMaxDurability()/2));
+        ItemStack resultPickaxe = ItemType.DIAMOND_PICKAXE.createItemStack();
+        resultPickaxe.setDurability((short) (ItemType.DIAMOND_PICKAXE.getMaxDurability() / 2));
         ItemMeta meta = resultPickaxe.getItemMeta();
         ((Repairable) meta).setRepairCost(1);
         resultPickaxe.setItemMeta(meta);
 
-        ItemStack stick2 = new ItemStackMock(Material.STICK, 2);
+        ItemStack stick2 = ItemType.STICK.createItemStack(2);
 
         AnvilFuseTestData nullResultData = new AnvilFuseTestData(
                 damagedPickaxe, stick2,
@@ -110,8 +110,8 @@ public class UnitRepairApiTests extends ConfigResetCustomAnvilTest {
         nullResultData.executeTest(anvil, player);
 
         // Add unit repair
-        assertTrue(UnitRepairApi.addUnitRepair(Material.STICK, Material.DIAMOND_PICKAXE));
-        assertFalse(UnitRepairApi.addUnitRepair(Material.STICK, Material.DIAMOND_PICKAXE));
+        assertTrue(UnitRepairApi.addUnitRepair(ItemType.STICK, ItemType.DIAMOND_PICKAXE));
+        assertFalse(UnitRepairApi.addUnitRepair(ItemType.STICK, ItemType.DIAMOND_PICKAXE));
         legalResultData.executeTest(anvil, player);
     }
 

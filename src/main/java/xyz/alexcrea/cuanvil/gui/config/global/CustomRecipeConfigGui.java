@@ -1,9 +1,9 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +17,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
         MappedGuiListConfigGui.LazyElement<CustomRecipeSubSettingGui>> {
 
@@ -46,7 +47,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         ItemStack craftResultItem = recipe.getResultItem();
         ItemStack displayedItem;
         if (craftResultItem == null) {
-            displayedItem = new ItemStack(Material.BARRIER);
+            displayedItem = ItemType.BARRIER.createItemStack();
         } else {
             displayedItem = craftResultItem.clone();
         }

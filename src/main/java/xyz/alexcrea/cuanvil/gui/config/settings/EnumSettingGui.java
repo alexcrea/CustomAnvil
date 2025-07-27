@@ -5,10 +5,10 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+@SuppressWarnings("UnstableApiUsage")
 public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum> extends AbstractSettingGui {
 
     private final EnumSettingFactory<T> holder;
@@ -52,7 +53,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
     }
 
 
-    public void prepareStaticItems(){
+    public void prepareStaticItems() {
         prepareReturnToDefault();
     }
 
@@ -63,7 +64,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
      * Prepare "return to default value" gui item.
      */
     protected void prepareReturnToDefault() {
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack item = ItemType.COMMAND_BLOCK.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -157,6 +158,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
             this.parent = parent;
 
         }
+
         /**
          * @return Get setting's gui title.
          */
@@ -178,12 +180,12 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @return Next value for a given enum
          */
         @NotNull
-        public T next(@NotNull T now){
+        public T next(@NotNull T now) {
             Class<T> clazz = now.getDeclaringClass();
             T[] values = clazz.getEnumConstants();
 
             int index = now.ordinal();
-            if(index == values.length - 1)
+            if (index == values.length - 1)
                 return values[0];
 
             return values[index + 1];
@@ -191,6 +193,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
 
         /**
          * Get default value value
+         *
          * @return default value
          */
         @NotNull
@@ -212,10 +215,10 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @param name Name of the display.
          * @return A formatted GuiItem that will create and open a GUI for the enum setting.
          */
-        public GuiItem getItem(@NotNull Material material, @NotNull String name) {
+        public GuiItem getItem(@NotNull ItemType type, @NotNull String name) {
             T value = getConfiguredValue();
 
-            ItemStack item = new ItemStack(material);
+            ItemStack item = type.createItemStack();
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
@@ -234,6 +237,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
         String configName();
 
         ItemStack configurationGuiItem();
+
         String configurationGuiName();
 
 

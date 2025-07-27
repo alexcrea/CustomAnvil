@@ -1,18 +1,16 @@
 package xyz.alexcrea.cuanvil.group
 
-import io.papermc.paper.registry.RegistryAccess
-import io.papermc.paper.registry.RegistryKey
+import org.bukkit.Registry
 import org.bukkit.inventory.ItemType
 import java.util.*
 
 @Deprecated("Need rework to reduce memory cost as not enum set")
-@Suppress("UnstableApiUsage")
 class ExcludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
 
     override fun createDefaultSet(): MutableSet<ItemType> {
         val types: MutableSet<ItemType> = HashSet()
 
-        types.addAll(RegistryAccess.registryAccess().getRegistry(RegistryKey.ITEM))
+        types.addAll(Registry.ITEM)
         return types
     }
 

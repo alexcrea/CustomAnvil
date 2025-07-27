@@ -3,9 +3,9 @@ package xyz.alexcrea.cuanvil.gui.config.list;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -31,7 +31,7 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
 
     @Override
     protected GuiItem prepareCreateNewItem() {
-        ItemStack createItem = new ItemStack(Material.PAPER);
+        ItemStack createItem = ItemType.PAPER.createItemStack();
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 

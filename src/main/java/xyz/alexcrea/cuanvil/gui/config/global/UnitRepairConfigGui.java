@@ -2,9 +2,9 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,13 +13,15 @@ import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ItemTypeUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
+@SuppressWarnings("UnstableApiUsage")
 public class UnitRepairConfigGui extends
-        MappedGuiListConfigGui<Material, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
+        MappedGuiListConfigGui<ItemType, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
 
     private static UnitRepairConfigGui INSTANCE;
 
@@ -42,33 +44,51 @@ public class UnitRepairConfigGui extends
     }
 
     @Override
-    protected LazyElement<UnitRepairElementListGui> newInstanceOfGui(Material material, GuiItem item) {
+    protected LazyElement<UnitRepairElementListGui> newInstanceOfGui(ItemType type, GuiItem item) {
         return new LazyElement<>(item, () -> {
-            UnitRepairElementListGui element = new UnitRepairElementListGui(material, this);
+            UnitRepairElementListGui element = new UnitRepairElementListGui(type, this);
             element.init();
             return element;
         });
     }
 
-    @Override
-    protected ItemStack createItemForGeneric(Material material) {
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(material.name().toLowerCase());
-        String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
+    private void aggregateFromSection(HashSet<ItemType> set, String sectionName){
+        ConfigurationSection section = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(sectionName);
+        if(section == null) return;
 
-        if(material.isAir()){
-            material = Material.BARRIER;
+        for (String key : section.getKeys(false)) {
+            ItemType type = ItemTypeUtil.INSTANCE.getItemTypeExact(key);
+            if(type != null) set.add(type);
+        }
+    }
+
+    private int numberOfChildren(ItemType type){
+        HashSet<ItemType> set = new HashSet<>();
+
+        aggregateFromSection(set, type.getKey().toString());
+        aggregateFromSection(set, type.getKey().getKey());
+
+        return set.size();
+    }
+
+    @Override
+    protected ItemStack createItemForGeneric(ItemType type) {
+        String typeName = CasedStringUtil.snakeToUpperSpacedCase(ItemTypeUtil.INSTANCE.name(type));
+
+        if(type == ItemType.AIR){
+            type = ItemType.BARRIER;
         }
 
-        int reparableItemCount = materialSection == null ? 0 : materialSection.getKeys(false).size(); // Probably an expensive call but... why not
+        int reparableItemCount = numberOfChildren(type);
 
-        ItemStack item = new ItemStack(material);
+        ItemStack item = type.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eRepaired by " +materialName);
+        meta.setDisplayName("§eRepaired by " +typeName);
         meta.setLore(Arrays.asList(
-                "§7There is currently §e" +reparableItemCount+ " §7reparable item with "+materialName,
-                "§7Click here to open the menu to edit reparable item by " + materialName
+                "§7There is currently §e" +reparableItemCount+ " §7reparable item with "+typeName,
+                "§7Click here to open the menu to edit reparable item by " + typeName
         ));
 
         item.setItemMeta(meta);
@@ -77,29 +97,29 @@ public class UnitRepairConfigGui extends
     }
 
     @Override
-    protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
-        ArrayList<Material> materials = new ArrayList<>();
+    protected Collection<ItemType> getEveryDisplayableInstanceOfGeneric() {
+        HashSet<ItemType> types = new HashSet<>(); // we need set to avoid duplicate
 
-        for (String matName : ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getKeys(false)) {
-            Material mat = Material.getMaterial(matName.toUpperCase());
-            if(mat != null){
-                materials.add(mat);
+        for (String typeName : ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getKeys(false)) {
+            ItemType type = ItemTypeUtil.INSTANCE.getItemTypeExact(typeName);
+            if(type != null){
+                types.add(type);
             }
         }
-        return materials;
+        return types;
     }
 
     @Override
     protected GuiItem prepareCreateNewItem() {
         // Create new conflict item
-        ItemStack createItem = new ItemStack(Material.PAPER);
+        ItemStack createItem = ItemType.PAPER.createItemStack();
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("§aSelect a new unit material");
+        createMeta.setDisplayName("§aSelect a new unit type");
         createMeta.setLore(Arrays.asList(
-                "§7Select a new unit material to be used.",
-                "§7You will be asked the material to use."
+                "§7Select a new unit to be used.",
+                "§7You will be asked the item/item type to use."
         ));
 
         createItem.setItemMeta(createMeta);
@@ -113,11 +133,11 @@ public class UnitRepairConfigGui extends
                             "§7You like to be an unit repair item",
                     this,
                     (itemStack, player) -> {
-                        Material type = itemStack.getType();
-                        // Add new material
+                        ItemType type = itemStack.getType().asItemType();
+                        // Add new item type
                         updateValueForGeneric(type, true);
 
-                        // Display material edit setting
+                        // Display item type edit setting
                         this.elementGuiMap.get(type).get().getMappedGui().show(player);
                     },
                     true
@@ -126,7 +146,7 @@ public class UnitRepairConfigGui extends
     }
 
     @NotNull
-    public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(Material mat){
+    public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(ItemType mat){
         LazyElement<UnitRepairElementListGui> element = this.elementGuiMap.get(mat);
         if(element == null){
             updateValueForGeneric(mat, false);
@@ -142,7 +162,7 @@ public class UnitRepairConfigGui extends
         return "this function Should not be used.";
     }
     @Override // Not used in this implementation.
-    protected Material createAndSaveNewEmptyGeneric(String name) {
+    protected ItemType createAndSaveNewEmptyGeneric(String name) {
         return null;
     }
 }

@@ -98,13 +98,13 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
     private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
 
-    public void setGroupItemMeta(ItemStack item, String name, boolean isIn) {
+    public ItemStack setGroupItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
 
         if (meta == null) {
             CustomAnvil.instance.getLogger().warning("Could not create item for group: " + name + ":\n" +
                     "Item do not gave item meta: " + item + ". Using placeholder instead");
-            item.setType(Material.PAPER);
+            item = item.withType(Material.PAPER);
             meta = item.getItemMeta();
             assert meta != null;
         }
@@ -120,6 +120,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);
+        return item;
     }
 
     private Consumer<InventoryClickEvent> getGroupItemConsumer(AbstractItemTypeGroup group, GuiItem guiItem) {
@@ -134,7 +135,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             }
 
             ItemStack item = guiItem.getItem();
-            setGroupItemMeta(item, group.getName(), !isIn);
+            item = setGroupItemMeta(item, group.getName(), !isIn);
             guiItem.setItem(item);// Just in case
 
             update();

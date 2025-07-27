@@ -5,9 +5,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 /**
  * An instance of a gui used to edit a boolean setting.
  */
+@SuppressWarnings("UnstableApiUsage")
 public class BoolSettingsGui extends AbstractSettingGui {
 
     private final BoolSettingFactory holder;
@@ -65,14 +66,14 @@ public class BoolSettingsGui extends AbstractSettingGui {
     protected void prepareReturnToDefault() {
         // Prepare default Value text
         String defaultValueLore;
-        if(holder.defaultVal){
+        if (holder.defaultVal) {
             defaultValueLore = "§aYes §7Is the default value";
-        }else{
+        } else {
             defaultValueLore = "§cNo §7Is the default value";
         }
 
         // Create reset to default item
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack item = ItemType.COMMAND_BLOCK.createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -95,24 +96,24 @@ public class BoolSettingsGui extends AbstractSettingGui {
 
         // Get displayed value for this config.
         String displayedName;
-        Material displayedMat;
+        ItemType displayedType;
         if (now) {
             displayedName = "§aYes";
-            displayedMat = Material.GREEN_TERRACOTTA;
+            displayedType = ItemType.GREEN_TERRACOTTA;
         } else {
             displayedName = "§cNo";
-            displayedMat = Material.RED_TERRACOTTA;
+            displayedType = ItemType.RED_TERRACOTTA;
         }
 
         // create & set Value item
         ArrayList<String> valueLore = new ArrayList<>();
-        if(!holder.displayLore.isEmpty()){
+        if (!holder.displayLore.isEmpty()) {
             valueLore.addAll(holder.displayLore);
             valueLore.add("");
         }
         valueLore.add(AbstractSettingGui.CLICK_LORE);
 
-        ItemStack valueItemStack = new ItemStack(displayedMat);
+        ItemStack valueItemStack = displayedType.createItemStack();
         ItemMeta valueMeta = valueItemStack.getItemMeta();
         assert valueMeta != null;
 
@@ -177,12 +178,12 @@ public class BoolSettingsGui extends AbstractSettingGui {
         /**
          * Constructor for a boolean setting gui factory.
          *
-         * @param title        The title of the gui.
-         * @param parent       Parent gui to go back when completed.
-         * @param config       Configuration holder of this setting.
-         * @param configPath   Configuration path of this setting.
-         * @param defaultVal   Default value if not found on the config.
-         * @param displayLore  Gui display item lore.
+         * @param title       The title of the gui.
+         * @param parent      Parent gui to go back when completed.
+         * @param config      Configuration holder of this setting.
+         * @param configPath  Configuration path of this setting.
+         * @param defaultVal  Default value if not found on the config.
+         * @param displayLore Gui display item lore.
          */
         public BoolSettingFactory(
                 @NotNull String title, @NotNull ValueUpdatableGui parent,
@@ -227,23 +228,23 @@ public class BoolSettingsGui extends AbstractSettingGui {
          * @param name Name of the item.
          * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
          */
-        public GuiItem getItem(String name){
+        public GuiItem getItem(String name) {
             // Get item properties
             boolean value = getConfiguredValue();
 
-            Material itemMat;
+            ItemType itemType;
             StringBuilder itemName = new StringBuilder("§e");
             String finalValue;
             if (value) {
-                itemMat = Material.GREEN_TERRACOTTA;
+                itemType = ItemType.GREEN_TERRACOTTA;
                 finalValue = "§aYes";
             } else {
-                itemMat = Material.RED_TERRACOTTA;
+                itemType = ItemType.RED_TERRACOTTA;
                 finalValue = "§cNo";
             }
             itemName.append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, finalValue, this.displayLore, false);
+            return GuiGlobalItems.createGuiItemFromProperties(this, itemType, itemName, finalValue, this.displayLore, false);
         }
 
         /**
@@ -254,7 +255,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
          *
          * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
          */
-        public GuiItem getItem(){
+        public GuiItem getItem() {
             // Get item properties
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
 

@@ -1,7 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
 import su.nightexpress.excellentenchants.api.item.ItemSet;
@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CAEEV5Enchantment extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
     @NotNull CustomEnchantment eeenchantment;
@@ -26,7 +27,7 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull ItemType type) {
         if (!definition.hasConflicts()) return false;
 
         Set<String> conflicts = definition.getExclusiveSet();
@@ -39,10 +40,10 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat, @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.equals(itemMat)) return false;
+    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull ItemType type, @NotNull ItemStack item) {
+        if (ItemType.ENCHANTED_BOOK.equals(type)) return false;
 
-        String key = itemMat.getKey().getKey();
+        String key = type.getKey().getKey();
         ItemSet primary = eeenchantment.getPrimaryItems();
         if (primary.getMaterials().contains(key)) return false;
 

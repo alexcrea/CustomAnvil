@@ -1,12 +1,12 @@
 package xyz.alexcrea.cuanvil.anvil;
 
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("UnstableApiUsage")
 public class LoreEditTests extends SharedCustomAnvilTest {
 
     private static AnvilInventory anvil;
@@ -93,7 +94,7 @@ public class LoreEditTests extends SharedCustomAnvilTest {
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.VERBOSE_DEBUG_LOGGING, true);
 
         // Applied item
-        ItemStack item = new ItemStack(Material.STICK, 33);
+        ItemStack item = ItemType.STICK.createItemStack(33);
         ItemMeta meta = item.getItemMeta();
         ArrayList<String> lore = new ArrayList<>();
 
@@ -122,7 +123,7 @@ public class LoreEditTests extends SharedCustomAnvilTest {
         lore.clear();
 
         // Paper items
-        item = new ItemStack(Material.PAPER, 64);
+        item = ItemType.PAPER.createItemStack(64);
         meta = item.getItemMeta();
         emptyPaperStack = item.clone();
         item.setAmount(63);
@@ -149,7 +150,7 @@ public class LoreEditTests extends SharedCustomAnvilTest {
         uncoloredPaperOne = item.clone();
 
         // Book items
-        item = new ItemStack(Material.WRITABLE_BOOK);
+        item = ItemType.WRITABLE_BOOK.createItemStack();
         BookMeta bookmeta = (BookMeta) item.getItemMeta();
         emptyBook = item.clone();
 

@@ -14,12 +14,15 @@ import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Custom Anvil api for material group registry.
  */
-@SuppressWarnings({"unused", "UnstableApiUsage"})
+@SuppressWarnings({"unused"})
 public class MaterialGroupApi {
 
     private MaterialGroupApi() {

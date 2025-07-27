@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
@@ -26,6 +27,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+@SuppressWarnings("UnstableApiUsage")
 public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantment, EnchantSelectSettingGui.DummyFactory> implements SettingGui {
 
     private final SelectEnchantmentContainer enchantContainer;
@@ -88,13 +90,13 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     protected GuiItem itemFromFactory(CAEnchantment enchantment, DummyFactory factory) {
         boolean isIn = this.selectedEnchant.contains(enchantment);
 
-        Material usedMaterial;
+        ItemType usedType;
         if (isIn) {
-            usedMaterial = Material.ENCHANTED_BOOK;
+            usedType = ItemType.ENCHANTED_BOOK;
         } else {
-            usedMaterial = Material.BOOK;
+            usedType = ItemType.BOOK;
         }
-        ItemStack item = new ItemStack(usedMaterial);
+        ItemStack item = usedType.createItemStack();
 
         setEnchantItemMeta(item, enchantment.getKey().getKey(), isIn);
 
@@ -104,7 +106,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     }
 
     private GuiItem createDisplayUnusedItem() {
-        ItemStack item = new ItemStack(this.displayUnselected ? Material.BOOK : Material.ENCHANTED_BOOK);
+        ItemStack item = (this.displayUnselected ? ItemType.BOOK : ItemType.ENCHANTED_BOOK).createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -134,7 +136,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         if (meta == null) {
             CustomAnvil.instance.getLogger().warning("Could not create item for enchantment: " + name + ":\n" +
                     "Item do not gave item meta: " + item + ". Using a placeholder item instead");
-            item.setType(Material.PAPER);
+            item = item.withType(Material.PAPER);
             meta = item.getItemMeta();
             assert meta != null;
         }
@@ -161,14 +163,14 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
             boolean isIn = this.selectedEnchant.contains(enchant);
             if (isIn) {
                 this.selectedEnchant.remove(enchant);
-                item.setType(Material.BOOK);
+                item = item.withType(Material.BOOK);
             } else {
                 this.selectedEnchant.add(enchant);
-                item.setType(Material.ENCHANTED_BOOK);
+                item = item.withType(Material.ENCHANTED_BOOK);
             }
 
             setEnchantItemMeta(item, enchant.getKey().getKey(), !isIn);
-            guiItem.setItem(item);// Just in case
+            guiItem.setItem(item);
 
             update();
         };
