@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.14.1"
+version = "2.0.0-beta"
 
 val effectiveVersion = "$version" +
         (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
