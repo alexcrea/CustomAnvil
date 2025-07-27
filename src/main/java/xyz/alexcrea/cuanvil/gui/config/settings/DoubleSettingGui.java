@@ -485,7 +485,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
                 section = this.config.getConfig();
 
                 if (section.isDouble(alternativePath)) {
-                    return BigDecimal.valueOf(section.getDouble(this.configPath)).setScale(2, RoundingMode.HALF_UP);
+                    return BigDecimal.valueOf(section.getDouble(alternativePath)).setScale(2, RoundingMode.HALF_UP);
                 }
             }
             return this.defaultVal;

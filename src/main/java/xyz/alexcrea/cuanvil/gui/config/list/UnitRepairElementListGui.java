@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 
+@SuppressWarnings("UnstableApiUsage")
 public class UnitRepairElementListGui extends
         SettingGuiListConfigGui<ItemType, DoubleSettingGui.DoubleSettingFactory> implements ElementMappedToListGui {
 
@@ -80,8 +81,6 @@ public class UnitRepairElementListGui extends
                             return;
                         }
 
-                        String materialName = type.getKey().getKey().toLowerCase();
-
                         // Add new material
                         ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentType.getKey() + "." + type.getKey(), 0.25);
 
@@ -93,9 +92,8 @@ public class UnitRepairElementListGui extends
                         updateValueForGeneric(type, true);
                         this.parentGui.updateValueForGeneric(this.parentType, true);
 
-
                         // Display material edit setting
-                        this.factoryMap.get(materialName).create().show(player);
+                        this.factoryMap.get(type).create().show(player);
                     },
                     true
             ).show(event.getWhoClicked());
