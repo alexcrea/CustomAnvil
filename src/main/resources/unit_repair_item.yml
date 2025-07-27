@@ -19,172 +19,172 @@ default_repair_amount: 0.25
 # You can add custom unit repair
 # The example bellow make a shield repaired by 10% by sticks
 
-#stick:
-#  shield: 0.10
+#minecraft:stick:
+#  minecraft:shield: 0.10
 
 
 # Vanilla unit repair group is bellow
-diamond:
-  diamond_helmet: 0.25
-  diamond_chestplate: 0.25
-  diamond_leggings: 0.25
-  diamond_boots: 0.25
-  diamond_sword: 0.25
-  diamond_pickaxe: 0.25
-  diamond_axe: 0.25
-  diamond_shovel: 0.25
-  diamond_hoe: 0.25
+minecraft:diamond:
+  minecraft:diamond_helmet: 0.25
+  minecraft:diamond_chestplate: 0.25
+  minecraft:diamond_leggings: 0.25
+  minecraft:diamond_boots: 0.25
+  minecraft:diamond_sword: 0.25
+  minecraft:diamond_pickaxe: 0.25
+  minecraft:diamond_axe: 0.25
+  minecraft:diamond_shovel: 0.25
+  minecraft:diamond_hoe: 0.25
 
-netherite_ingot:
-  netherite_helmet: 0.25
-  netherite_chestplate: 0.25
-  netherite_leggings: 0.25
-  netherite_boots: 0.25
-  netherite_sword: 0.25
-  netherite_pickaxe: 0.25
-  netherite_axe: 0.25
-  netherite_shovel: 0.25
-  netherite_hoe: 0.25
+minecraft:netherite_ingot:
+  minecraft:netherite_helmet: 0.25
+  minecraft:netherite_chestplate: 0.25
+  minecraft:netherite_leggings: 0.25
+  minecraft:netherite_boots: 0.25
+  minecraft:netherite_sword: 0.25
+  minecraft:netherite_pickaxe: 0.25
+  minecraft:netherite_axe: 0.25
+  minecraft:netherite_shovel: 0.25
+  minecraft:netherite_hoe: 0.25
 
-gold_ingot:
-  golden_helmet: 0.25
-  golden_chestplate: 0.25
-  golden_leggings: 0.25
-  golden_boots: 0.25
-  golden_sword: 0.25
-  golden_pickaxe: 0.25
-  golden_axe: 0.25
-  golden_shovel: 0.25
-  golden_hoe: 0.25
+minecraft:gold_ingot:
+  minecraft:golden_helmet: 0.25
+  minecraft:golden_chestplate: 0.25
+  minecraft:golden_leggings: 0.25
+  minecraft:golden_boots: 0.25
+  minecraft:golden_sword: 0.25
+  minecraft:golden_pickaxe: 0.25
+  minecraft:golden_axe: 0.25
+  minecraft:golden_shovel: 0.25
+  minecraft:golden_hoe: 0.25
 
-iron_ingot:
-  iron_helmet: 0.25
-  iron_chestplate: 0.25
-  iron_leggings: 0.25
-  iron_boots: 0.25
-  iron_sword: 0.25
-  iron_pickaxe: 0.25
-  iron_axe: 0.25
-  iron_shovel: 0.25
-  iron_hoe: 0.25
+minecraft:iron_ingot:
+  minecraft:iron_helmet: 0.25
+  minecraft:iron_chestplate: 0.25
+  minecraft:iron_leggings: 0.25
+  minecraft:iron_boots: 0.25
+  minecraft:iron_sword: 0.25
+  minecraft:iron_pickaxe: 0.25
+  minecraft:iron_axe: 0.25
+  minecraft:iron_shovel: 0.25
+  minecraft:iron_hoe: 0.25
 
-cobblestone:
-  stone_sword: 0.25
-  stone_pickaxe: 0.25
-  stone_axe: 0.25
-  stone_shovel: 0.25
-  stone_hoe: 0.25
+minecraft:cobblestone:
+  minecraft:stone_sword: 0.25
+  minecraft:stone_pickaxe: 0.25
+  minecraft:stone_axe: 0.25
+  minecraft:stone_shovel: 0.25
+  minecraft:stone_hoe: 0.25
 
-cobbled_deepslate:
-  stone_sword: 0.25
-  stone_pickaxe: 0.25
-  stone_axe: 0.25
-  stone_shovel: 0.25
-  stone_hoe: 0.25
+minecraft:cobbled_deepslate:
+  minecraft:stone_sword: 0.25
+  minecraft:stone_pickaxe: 0.25
+  minecraft:stone_axe: 0.25
+  minecraft:stone_shovel: 0.25
+  minecraft:stone_hoe: 0.25
 
-blackstone:
-  stone_sword: 0.25
-  stone_pickaxe: 0.25
-  stone_axe: 0.25
-  stone_shovel: 0.25
-  stone_hoe: 0.25
+minecraft:blackstone:
+  minecraft:stone_sword: 0.25
+  minecraft:stone_pickaxe: 0.25
+  minecraft:stone_axe: 0.25
+  minecraft:stone_shovel: 0.25
+  minecraft:stone_hoe: 0.25
 
-leather:
-  leather_helmet: 0.25
-  leather_chestplate: 0.25
-  leather_leggings: 0.25
-  leather_boots: 0.25
+minecraft:leather:
+  minecraft:leather_helmet: 0.25
+  minecraft:leather_chestplate: 0.25
+  minecraft:leather_leggings: 0.25
+  minecraft:leather_boots: 0.25
 
-phantom_membrane:
-  elytra: 0.25
+minecraft:phantom_membrane:
+  minecraft:elytra: 0.25
 
-scute:
-  turtle_helmet: 0.25
+minecraft:scute:
+  minecraft:turtle_helmet: 0.25
 
-oak_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:oak_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-spruce_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:spruce_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-birch_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:birch_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-jungle_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:jungle_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-acacia_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:acacia_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-dark_oak_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:dark_oak_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-mangrove_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:mangrove_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
 cherry_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-bamboo_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:bamboo_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-crimson_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:crimson_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
 
-warped_planks:
-  wooden_sword: 0.25
-  wooden_pickaxe: 0.25
-  wooden_axe: 0.25
-  wooden_shovel: 0.25
-  wooden_hoe: 0.25
-  shield: 0.25
+minecraft:warped_planks:
+  minecraft:wooden_sword: 0.25
+  minecraft:wooden_pickaxe: 0.25
+  minecraft:wooden_axe: 0.25
+  minecraft:wooden_shovel: 0.25
+  minecraft:wooden_hoe: 0.25
+  minecraft:shield: 0.25
