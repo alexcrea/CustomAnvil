@@ -36,7 +36,7 @@ object DependencyManager {
     lateinit var packetManager: PacketManagerBase
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
-    private var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    var ecoEnchantCompatibility: EcoEnchantDependency? = null
     private var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
 
     private var disenchantmentCompatibility: DisenchantmentDependency? = null
