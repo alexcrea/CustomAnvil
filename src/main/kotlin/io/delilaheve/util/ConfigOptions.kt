@@ -363,8 +363,12 @@ object ConfigOptions {
      * @return The current enchantment limit. -1 if none
      */
     private fun materialEnchantCountLimit(type: Material): Int? {
+        val path = "$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.key.lowercase()}"
+        if(!ConfigHolder.DEFAULT_CONFIG.config.isInt(path))
+            return null
+
         return ConfigHolder.DEFAULT_CONFIG.config
-            .getInt("$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.key.lowercase()}", DEFAULT_ENCHANT_COUNT_LIMIT)
+            .getInt(path)
             .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
     }
     /**
