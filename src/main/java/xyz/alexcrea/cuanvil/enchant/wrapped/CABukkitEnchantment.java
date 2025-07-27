@@ -134,8 +134,7 @@ public class CABukkitEnchantment extends CAEnchantmentBase {
     }
 
     private static EnchantmentRarity findRarity(Enchantment enchantment) {
-        //TODO use non deprecated value
-        return EnchantmentRarity.getRarity(enchantment.getRarity().getWeight());
+        return EnchantmentRarity.getRarity(enchantment.getAnvilCost());
     }
 
     @Override
