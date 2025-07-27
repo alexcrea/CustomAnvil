@@ -7,7 +7,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 @Suppress("UnstableApiUsage")
 class EnchantConflictGroup(
     val name: String,
-    private val cantConflict: AbstractMaterialGroup,
+    private val cantConflict: AbstractItemTypeGroup,
     var minBeforeBlock: Int
 ) {
 
@@ -45,7 +45,7 @@ class EnchantConflictGroup(
         return true
     }
 
-    fun getCantConflictGroup(): AbstractMaterialGroup {
+    fun getCantConflictGroup(): AbstractItemTypeGroup {
         return this.cantConflict
     }
 

@@ -8,9 +8,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.AbstractItemTypeGroup;
 import xyz.alexcrea.cuanvil.group.GroupType;
-import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SuppressWarnings("UnstableApiUsage")
-public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
+public class GroupConfigGui extends MappedGuiListConfigGui<IncludeItemTypeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
 
     private static GroupConfigGui INSTANCE;
 
@@ -44,7 +44,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected ItemStack createItemForGeneric(IncludeGroup group) {
+    protected ItemStack createItemForGeneric(IncludeItemTypeGroup group) {
         ItemStack item = group.getRepresentativeMaterial().createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
@@ -62,19 +62,19 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected Collection<IncludeGroup> getEveryDisplayableInstanceOfGeneric() {
-        ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
+    protected Collection<IncludeItemTypeGroup> getEveryDisplayableInstanceOfGeneric() {
+        ArrayList<IncludeItemTypeGroup> includeGroups = new ArrayList<>();
 
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if (group instanceof IncludeGroup) {
-                includeGroups.add((IncludeGroup) group);
+        for (AbstractItemTypeGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
+            if (group instanceof IncludeItemTypeGroup) {
+                includeGroups.add((IncludeItemTypeGroup) group);
             }
         }
         return includeGroups;
     }
 
     @Override
-    protected LazyElement<GroupConfigSubSettingGui> newInstanceOfGui(IncludeGroup group, GuiItem item) {
+    protected LazyElement<GroupConfigSubSettingGui> newInstanceOfGui(IncludeItemTypeGroup group, GuiItem item) {
         return new LazyElement<>(item, () -> new GroupConfigSubSettingGui(this, group));
     }
 
@@ -84,14 +84,14 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected IncludeGroup createAndSaveNewEmptyGeneric(String name) {
+    protected IncludeItemTypeGroup createAndSaveNewEmptyGeneric(String name) {
         ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         if (manager.getGroupMap().containsKey(name)) return null;
 
         ConfigurationSection config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
         config.set(name + "." + ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
 
-        return (IncludeGroup) manager.createGroup(config, name);
+        return (IncludeItemTypeGroup) manager.createGroup(config, name);
     }
 
 }

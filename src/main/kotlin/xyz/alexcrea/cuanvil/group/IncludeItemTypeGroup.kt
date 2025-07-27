@@ -1,19 +1,18 @@
 package xyz.alexcrea.cuanvil.group
 
-import com.google.common.collect.ImmutableSet
 import org.bukkit.inventory.ItemType
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
+class IncludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
     override fun createDefaultSet(): MutableSet<ItemType> {
         return HashSet()
     }
 
-    private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
+    private var includedGroup: MutableSet<AbstractItemTypeGroup> = HashSet()
     private val groupItems by lazy { createDefaultSet() }
 
-    override fun isReferencing(other: AbstractMaterialGroup): Boolean {
+    override fun isReferencing(other: AbstractItemTypeGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
             if ((materialGroup == other) || (materialGroup.isReferencing(other))) {
                 return true
@@ -22,21 +21,21 @@ class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
         return false
     }
 
-    override fun addToPolicy(type: ItemType): IncludeGroup {
+    override fun addToPolicy(type: ItemType): IncludeItemTypeGroup {
         includedItems.add(type)
         groupItems.add(type)
 
         return this
     }
 
-    override fun addToPolicy(other: AbstractMaterialGroup): IncludeGroup {
+    override fun addToPolicy(other: AbstractItemTypeGroup): IncludeItemTypeGroup {
         includedGroup.add(other)
         groupItems.addAll(other.getItemTypes())
 
         return this
     }
 
-    override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {
+    override fun setGroups(groups: MutableSet<AbstractItemTypeGroup>) {
         groupItems.clear()
         groupItems.addAll(includedItems)
 
@@ -55,7 +54,7 @@ class IncludeGroup(name: String) : AbstractMaterialGroup(name) {
         updateMaterials()
     }
 
-    override fun getGroups(): MutableSet<AbstractMaterialGroup> {
+    override fun getGroups(): MutableSet<AbstractItemTypeGroup> {
         return includedGroup
     }
 

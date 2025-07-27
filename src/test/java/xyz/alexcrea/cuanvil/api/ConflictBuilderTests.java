@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.api;
 import org.bukkit.NamespacedKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
 import xyz.alexcrea.cuanvil.tests.SharedOnlyMockBukkit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,7 +79,7 @@ public class ConflictBuilderTests extends SharedOnlyMockBukkit {
 
     @Test
     void excludedGroup_Group() {
-        IncludeGroup group = new IncludeGroup("group");
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup("group");
 
         assertTrue(builder.getExcludedGroupNames().isEmpty());
         assertEquals(builder, builder.addExcludedGroup(group));
@@ -97,7 +97,7 @@ public class ConflictBuilderTests extends SharedOnlyMockBukkit {
         builder.addEnchantment("bane_of_arthropods");
         builder.addEnchantment(NamespacedKey.fromString("bane_of_arthropods"));
         builder.addExcludedGroup("group");
-        builder.addExcludedGroup(new IncludeGroup("group2"));
+        builder.addExcludedGroup(new IncludeItemTypeGroup("group2"));
 
         ConflictBuilder copy = builder.copy();
         assertEquals("other", copy.getName());

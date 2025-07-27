@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.AbstractItemTypeGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.ElementListConfigGui;
@@ -32,7 +32,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     SelectGroupContainer groupContainer;
     int page;
 
-    Set<AbstractMaterialGroup> selectedGroups;
+    Set<AbstractItemTypeGroup> selectedGroups;
 
     public GroupSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
         super(6, title, parent);
@@ -71,8 +71,8 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         filledEnchant.align(OutlinePane.Alignment.BEGIN);
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
-        Set<AbstractMaterialGroup> illegalGroup = this.groupContainer.illegalGroups();
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
+        Set<AbstractItemTypeGroup> illegalGroup = this.groupContainer.illegalGroups();
+        for (AbstractItemTypeGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
             if (illegalGroup.contains(group)) {
                 continue;
             }
@@ -83,7 +83,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
 
     }
 
-    private GuiItem getGuiItemFromGroup(AbstractMaterialGroup group) {
+    private GuiItem getGuiItemFromGroup(AbstractItemTypeGroup group) {
         boolean isIn = this.selectedGroups.contains(group);
 
         ItemStack item = group.getRepresentativeMaterial().createItemStack();
@@ -122,7 +122,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         item.setItemMeta(meta);
     }
 
-    private Consumer<InventoryClickEvent> getGroupItemConsumer(AbstractMaterialGroup group, GuiItem guiItem) {
+    private Consumer<InventoryClickEvent> getGroupItemConsumer(AbstractItemTypeGroup group, GuiItem guiItem) {
         return event -> {
             event.setCancelled(true);
 
@@ -148,7 +148,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean hadChange() {
-        Set<AbstractMaterialGroup> baseGroup = this.groupContainer.getSelectedGroups();
+        Set<AbstractItemTypeGroup> baseGroup = this.groupContainer.getSelectedGroups();
         return baseGroup.size() != this.selectedGroups.size() ||
                 !baseGroup.containsAll(this.selectedGroups);
     }

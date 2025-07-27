@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.api;
 import org.bukkit.inventory.ItemType;
 import org.junit.jupiter.api.Test;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
-import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,7 +15,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     @Test
     void groupAddAndRemove() {
         String groupName = "group";
-        IncludeGroup group = new IncludeGroup(groupName);
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup(groupName);
         group.addToPolicy(ItemType.DIAMOND_PICKAXE); // We do not want it to be empty
 
         // Group not being set should not exist
@@ -48,7 +48,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     @Test
     void writeGroup_Reload() {
         String groupName = "group";
-        IncludeGroup group = new IncludeGroup(groupName);
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup(groupName);
         group.addToPolicy(ItemType.DIAMOND_PICKAXE); // We do not want it to be empty
 
         // Group not being set should not exist
@@ -70,7 +70,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     @Test
     void writeGroup_Empty() {
         String groupName = "group";
-        IncludeGroup group = new IncludeGroup(groupName);
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup(groupName);
 
         // Add group and reload
         assertFalse(MaterialGroupApi.writeMaterialGroup(group));
@@ -87,7 +87,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     @Test
     void writeGroup_InvalidDot() {
         String groupName = "group.group";
-        IncludeGroup group = new IncludeGroup(groupName);
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup(groupName);
 
         // Try write group
         assertFalse(MaterialGroupApi.writeMaterialGroup(group));
@@ -102,7 +102,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
         builder.addExcludedGroup(groupName);
 
         EnchantConflictGroup group = builder.build();
-        IncludeGroup materialGroup = (IncludeGroup) group.getCantConflictGroup();
+        IncludeItemTypeGroup materialGroup = (IncludeItemTypeGroup) group.getCantConflictGroup();
         return materialGroup.getGroups().size() == 1;
     }
 

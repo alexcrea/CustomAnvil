@@ -148,7 +148,7 @@ class EnchantConflictManager {
         }
         // Find or create the selected group for the conflict
         val groupList = section.getStringList(CONFLICT_GROUP_PATH)
-        val finalGroup = IncludeGroup(DEFAULT_GROUP_NAME)
+        val finalGroup = IncludeItemTypeGroup(DEFAULT_GROUP_NAME)
         for (groupName in groupList) {
             finalGroup.addToPolicy(findGroup(groupName, itemManager, conflictName))
         }
@@ -161,11 +161,11 @@ class EnchantConflictManager {
         groupName: String,
         itemManager: ItemGroupManager,
         conflictName: String
-    ): AbstractMaterialGroup {
+    ): AbstractItemTypeGroup {
         val group = itemManager.get(groupName)
         if (group == null) {
             CustomAnvil.instance.logger.warning("Material group $groupName do not exist but is ask by conflict $conflictName")
-            return IncludeGroup("error_placeholder")
+            return IncludeItemTypeGroup("error_placeholder")
         }
 
         return group

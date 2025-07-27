@@ -15,7 +15,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAIncompatibleAllEnchant
-import xyz.alexcrea.cuanvil.group.IncludeGroup
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.update.Version
 import java.io.InputStreamReader
@@ -144,7 +144,7 @@ object DataPackDependency {
             var group = MaterialGroupApi.getGroup(groupName)
             val exist = group != null
 
-            if (group == null) group = IncludeGroup(groupName)
+            if (group == null) group = IncludeItemTypeGroup(groupName)
 
             for (name in section.getStringList("items")) {
                 val key = NamespacedKey.fromString(name.lowercase())

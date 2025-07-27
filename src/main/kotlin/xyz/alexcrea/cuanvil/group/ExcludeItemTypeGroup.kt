@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.group
 
-import com.google.common.collect.ImmutableSet
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import org.bukkit.inventory.ItemType
@@ -8,7 +7,7 @@ import java.util.*
 
 @Deprecated("Need rework to reduce memory cost as not enum set")
 @Suppress("UnstableApiUsage")
-class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
+class ExcludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
 
     override fun createDefaultSet(): MutableSet<ItemType> {
         val types: MutableSet<ItemType> = HashSet()
@@ -17,10 +16,10 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         return types
     }
 
-    private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
+    private var includedGroup: MutableSet<AbstractItemTypeGroup> = HashSet()
     private val groupItems by lazy { createDefaultSet() }
 
-    override fun isReferencing(other: AbstractMaterialGroup): Boolean {
+    override fun isReferencing(other: AbstractItemTypeGroup): Boolean {
         for (materialGroup in includedGroup.iterator()) {
             if ((materialGroup == other) || (materialGroup.isReferencing(other))) {
                 return true
@@ -29,21 +28,21 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         return false
     }
 
-    override fun addToPolicy(type: ItemType): ExcludeGroup {
+    override fun addToPolicy(type: ItemType): ExcludeItemTypeGroup {
         includedItems.remove(type)
         groupItems.remove(type)
 
         return this
     }
 
-    override fun addToPolicy(other: AbstractMaterialGroup): ExcludeGroup {
+    override fun addToPolicy(other: AbstractItemTypeGroup): ExcludeItemTypeGroup {
         includedGroup.add(other)
         groupItems.removeAll(other.getItemTypes())
 
         return this
     }
 
-    override fun setGroups(groups: MutableSet<AbstractMaterialGroup>) {
+    override fun setGroups(groups: MutableSet<AbstractItemTypeGroup>) {
         groupItems.clear()
         groupItems.addAll(includedItems)
 
@@ -56,7 +55,7 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         }
     }
 
-    override fun getGroups(): MutableSet<AbstractMaterialGroup> {
+    override fun getGroups(): MutableSet<AbstractItemTypeGroup> {
         return includedGroup
     }
 

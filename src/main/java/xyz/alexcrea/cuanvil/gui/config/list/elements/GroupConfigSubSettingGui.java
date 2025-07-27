@@ -33,13 +33,13 @@ import java.util.function.Supplier;
 public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implements SelectGroupContainer, SelectItemTypeContainer {
 
     private final GroupConfigGui parent;
-    private final IncludeGroup group;
+    private final IncludeItemTypeGroup group;
     private final PatternPane pane;
     private boolean usable = true;
 
     public GroupConfigSubSettingGui(
             @NotNull GroupConfigGui parent,
-            @NotNull IncludeGroup group) {
+            @NotNull IncludeItemTypeGroup group) {
         super(3,
                 "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rConfig");
         this.parent = parent;
@@ -184,12 +184,12 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     // return a string containing every instance of where this group is used
-    public static List<String> getUsedLocations(AbstractMaterialGroup group) {
+    public static List<String> getUsedLocations(AbstractItemTypeGroup group) {
         ArrayList<String> usageList = new ArrayList<>();
 
         // Test used by another group
         ItemGroupManager groupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        for (AbstractMaterialGroup otherGroup : groupManager.getGroupMap().values()) {
+        for (AbstractItemTypeGroup otherGroup : groupManager.getGroupMap().values()) {
             if (otherGroup.getGroups().contains(group)) {
                 usageList.add("group " + otherGroup.getName());
             }
@@ -270,12 +270,12 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // ----------------------------
 
     @Override
-    public Set<AbstractMaterialGroup> getSelectedGroups() {
+    public Set<AbstractItemTypeGroup> getSelectedGroups() {
         return this.group.getGroups();
     }
 
     @Override
-    public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
+    public boolean setSelectedGroups(Set<AbstractItemTypeGroup> groups) {
         // update group and referencing groups
         updateGroup(this.group, groups);
 
@@ -287,7 +287,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         return true;
     }
 
-    private void updateGroup(@NotNull AbstractMaterialGroup group, Set<AbstractMaterialGroup> groups) {
+    private void updateGroup(@NotNull AbstractItemTypeGroup group, Set<AbstractItemTypeGroup> groups) {
         // Set live configuration
         group.setGroups(groups);
 
@@ -295,7 +295,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         groups = group.getGroups(); // Maybe some group may have been rejected
         String[] groupNames = new String[groups.size()];
         int index = 0;
-        for (AbstractMaterialGroup otherGroup : groups) {
+        for (AbstractItemTypeGroup otherGroup : groups) {
             groupNames[index++] = otherGroup.getName();
         }
 
@@ -308,10 +308,10 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     @Override
-    public Set<AbstractMaterialGroup> illegalGroups() {
-        Set<AbstractMaterialGroup> illegal = new HashSet<>();
+    public Set<AbstractItemTypeGroup> illegalGroups() {
+        Set<AbstractItemTypeGroup> illegal = new HashSet<>();
 
-        for (AbstractMaterialGroup otherGroup : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
+        for (AbstractItemTypeGroup otherGroup : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
             if (otherGroup.isReferencing(this.group)) {
                 illegal.add(otherGroup);
             }
@@ -372,24 +372,24 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // End of SelectMaterialContainer related methods
     // ----------------------------
 
-    private void updateDirectReferencingGroups(AbstractMaterialGroup referenceTo) {
-        Collection<AbstractMaterialGroup> everyStoredGroups = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values();
+    private void updateDirectReferencingGroups(AbstractItemTypeGroup referenceTo) {
+        Collection<AbstractItemTypeGroup> everyStoredGroups = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values();
         List<EnchantConflictGroup> everyConflicts = ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
 
-        HashSet<AbstractMaterialGroup> toUpdate = new HashSet<>();
-        HashSet<AbstractMaterialGroup> updateFuture = new HashSet<>();
-        HashSet<AbstractMaterialGroup> conflictGroupPlanned = new HashSet<>();
+        HashSet<AbstractItemTypeGroup> toUpdate = new HashSet<>();
+        HashSet<AbstractItemTypeGroup> updateFuture = new HashSet<>();
+        HashSet<AbstractItemTypeGroup> conflictGroupPlanned = new HashSet<>();
 
         updateFuture.add(referenceTo);
         while (!updateFuture.isEmpty()) {
-            HashSet<AbstractMaterialGroup> temp = updateFuture;
+            HashSet<AbstractItemTypeGroup> temp = updateFuture;
             updateFuture = toUpdate;
             updateFuture.clear();
             toUpdate = temp;
 
-            for (AbstractMaterialGroup testGroup : toUpdate) {
+            for (AbstractItemTypeGroup testGroup : toUpdate) {
                 // Update other stored group
-                for (AbstractMaterialGroup otherGroup : everyStoredGroups) {
+                for (AbstractItemTypeGroup otherGroup : everyStoredGroups) {
                     if (otherGroup.getGroups().contains(testGroup)) {
                         otherGroup.updateMaterials();
                         updateFuture.add(otherGroup);
@@ -398,22 +398,22 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
                 // plan update for conflict groups
                 for (EnchantConflictGroup everyConflict : everyConflicts) {
-                    AbstractMaterialGroup conflictGroup = everyConflict.getCantConflictGroup();
+                    AbstractItemTypeGroup conflictGroup = everyConflict.getCantConflictGroup();
                     if (conflictGroup.getGroups().contains(testGroup)) {
                         conflictGroupPlanned.add(conflictGroup);
                     }
                 }
 
                 // Update parent & local by extension
-                if (testGroup instanceof IncludeGroup) {
-                    this.parent.updateValueForGeneric((IncludeGroup) testGroup, false);
+                if (testGroup instanceof IncludeItemTypeGroup) {
+                    this.parent.updateValueForGeneric((IncludeItemTypeGroup) testGroup, false);
                 }
             }
         }
         this.parent.update();
 
         // Update conflict group
-        for (AbstractMaterialGroup conflictGroup : conflictGroupPlanned) {
+        for (AbstractItemTypeGroup conflictGroup : conflictGroupPlanned) {
             conflictGroup.updateMaterials();
         }
 

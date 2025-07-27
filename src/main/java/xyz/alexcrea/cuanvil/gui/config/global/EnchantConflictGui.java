@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
-import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -48,7 +48,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         // Create new empty conflict and display it to the admin
         EnchantConflictGroup conflict = new EnchantConflictGroup(
                 name,
-                new IncludeGroup("new_group"),
+                new IncludeItemTypeGroup("new_group"),
                 0);
 
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);

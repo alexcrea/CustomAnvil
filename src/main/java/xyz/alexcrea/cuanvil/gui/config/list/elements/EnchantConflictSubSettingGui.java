@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.AbstractItemTypeGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
@@ -282,12 +282,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     // Select group container methods
 
     @Override
-    public Set<AbstractMaterialGroup> getSelectedGroups() {
+    public Set<AbstractItemTypeGroup> getSelectedGroups() {
         return this.enchantConflict.getCantConflictGroup().getGroups();
     }
 
     @Override
-    public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
+    public boolean setSelectedGroups(Set<AbstractItemTypeGroup> groups) {
         if (!this.shouldWork) {
             CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict.toString() + " groups but sub config is destroyed");
             return false;
@@ -299,7 +299,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         // Save on file configuration
         String[] groupsNames = new String[groups.size()];
         int index = 0;
-        for (AbstractMaterialGroup group : groups) {
+        for (AbstractItemTypeGroup group : groups) {
             groupsNames[index++] = group.getName();
         }
         ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict + ".notAffectedGroups", groupsNames);
@@ -319,7 +319,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     }
 
     @Override
-    public Set<AbstractMaterialGroup> illegalGroups() {
+    public Set<AbstractItemTypeGroup> illegalGroups() {
 
         return Collections.emptySet();
     }

@@ -17,7 +17,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.enchant.bulk.EnchantSquaredBulkOperation
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEnchantSquaredEnchantment
-import xyz.alexcrea.cuanvil.group.IncludeGroup
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -104,15 +104,15 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
     private fun writeMissingGroups() {
         // Write group that do not exist on custom anvil.
-        val shield = IncludeGroup("shield")
+        val shield = IncludeItemTypeGroup("shield")
         shield.addToPolicy(ItemType.SHIELD)
         MaterialGroupApi.addMaterialGroup(shield)
 
-        val elytra = IncludeGroup("elytra")
+        val elytra = IncludeItemTypeGroup("elytra")
         elytra.addToPolicy(ItemType.ELYTRA)
         MaterialGroupApi.addMaterialGroup(elytra)
 
-        val trinkets = IncludeGroup("trinkets")
+        val trinkets = IncludeItemTypeGroup("trinkets")
         trinkets.addToPolicy(ItemType.ROTTEN_FLESH)
         MaterialGroupApi.addMaterialGroup(trinkets)
     }

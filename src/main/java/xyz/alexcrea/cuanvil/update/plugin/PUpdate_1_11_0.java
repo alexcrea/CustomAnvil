@@ -7,8 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
-import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.AbstractItemTypeGroup;
+import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -56,7 +56,7 @@ public class PUpdate_1_11_0 {
 
     private static void handleToolsMigration() {
         // We migrate the mace conflict if exist and unmodified
-        AbstractMaterialGroup tools = MaterialGroupApi.getGroup("tools");
+        AbstractItemTypeGroup tools = MaterialGroupApi.getGroup("tools");
 
         migrateTools(tools, "pickaxes", PICKAXES);
         migrateTools(tools, "shovels", SHOVELS);
@@ -64,19 +64,19 @@ public class PUpdate_1_11_0 {
     }
 
     private static void migrateTools(
-            @Nullable AbstractMaterialGroup tools,
+            @Nullable AbstractItemTypeGroup tools,
             @NotNull String toolset,
             @NotNull ItemType[] toolMats) {
 
         // Create new group
-        IncludeGroup group = new IncludeGroup(toolset);
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup(toolset);
         group.addAll(toolMats);
 
         MaterialGroupApi.addMaterialGroup(group, true);
 
         // Try to see if all the materials was in the tools group. and if so, replace it with the new group
         if (tools == null) return;
-        if (!(tools instanceof IncludeGroup include)) return;
+        if (!(tools instanceof IncludeItemTypeGroup include)) return;
 
         List<ItemType> types = List.of(toolMats);
         Set<ItemType> typeSet = include.getNonGroupInheritedMaterials();

@@ -1,6 +1,6 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
-import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.AbstractItemTypeGroup;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
@@ -10,22 +10,22 @@ import java.util.Set;
 
 public interface SelectGroupContainer {
 
-    Set<AbstractMaterialGroup> getSelectedGroups();
+    Set<AbstractItemTypeGroup> getSelectedGroups();
 
-    boolean setSelectedGroups(Set<AbstractMaterialGroup> groups);
+    boolean setSelectedGroups(Set<AbstractItemTypeGroup> groups);
 
-    Set<AbstractMaterialGroup> illegalGroups();
+    Set<AbstractItemTypeGroup> illegalGroups();
 
     static List<String> getGroupLore(SelectGroupContainer container, String containerType, String groupAction){
         // Prepare group lore
         ArrayList<String> groupLore = new ArrayList<>();
         groupLore.add("§7Allow you to select a list of §3Groups §7that this " + containerType + " should " + groupAction);
-        Set<AbstractMaterialGroup> grouos = container.getSelectedGroups();
+        Set<AbstractItemTypeGroup> grouos = container.getSelectedGroups();
         if (grouos.isEmpty()) {
             groupLore.add("§7There is no "+groupAction+"d group for this "+containerType+".");
         } else {
             groupLore.add("§7List of "+groupAction+"d groups for this "+containerType+":");
-            Iterator<AbstractMaterialGroup> groupIterator = grouos.iterator();
+            Iterator<AbstractItemTypeGroup> groupIterator = grouos.iterator();
 
             boolean greaterThanMax = grouos.size() > 5;
             int maxindex = (greaterThanMax ? 4 : grouos.size());

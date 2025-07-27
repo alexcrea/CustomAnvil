@@ -1,10 +1,9 @@
 package xyz.alexcrea.cuanvil.group
 
-import com.google.common.collect.ImmutableSet
 import org.bukkit.inventory.ItemType
 
 @Suppress("UnstableApiUsage")
-abstract class AbstractMaterialGroup(private val name: String) {
+abstract class AbstractItemTypeGroup(private val name: String) {
     protected val includedItems by lazy { createDefaultSet() }
 
     /**
@@ -22,21 +21,21 @@ abstract class AbstractMaterialGroup(private val name: String) {
     /**
      * Get if a group is referenced by this:
      */
-    abstract fun isReferencing(other: AbstractMaterialGroup): Boolean
+    abstract fun isReferencing(other: AbstractItemTypeGroup): Boolean
 
     /**
      * Push an item to this group to follow this group policy
      *
      * @return this instance.
      */
-    abstract fun addToPolicy(type: ItemType): AbstractMaterialGroup
+    abstract fun addToPolicy(type: ItemType): AbstractItemTypeGroup
 
     /**
      * Push a list of items to this group to follow this group policy
      *
      * @return this instance.
      */
-    fun addAll(vararg types: ItemType): AbstractMaterialGroup {
+    fun addAll(vararg types: ItemType): AbstractItemTypeGroup {
         for (type in types) {
             addToPolicy(type)
         }
@@ -48,14 +47,14 @@ abstract class AbstractMaterialGroup(private val name: String) {
      *
      * @return this instance.
      */
-    abstract fun addToPolicy(other: AbstractMaterialGroup): AbstractMaterialGroup
+    abstract fun addToPolicy(other: AbstractItemTypeGroup): AbstractItemTypeGroup
 
     /**
      * Push a list of group to this group to follow this group policy
      *
      * @return this instance.
      */
-    fun addAll(vararg otherList: AbstractMaterialGroup): AbstractMaterialGroup {
+    fun addAll(vararg otherList: AbstractItemTypeGroup): AbstractItemTypeGroup {
         for (group in otherList) {
             addToPolicy(group)
         }
@@ -96,12 +95,12 @@ abstract class AbstractMaterialGroup(private val name: String) {
     /**
      * Update the contained groups of this group
      */
-    abstract fun setGroups(groups: MutableSet<AbstractMaterialGroup>)
+    abstract fun setGroups(groups: MutableSet<AbstractItemTypeGroup>)
 
     /**
      * Get the contained group of this material group
      */
-    abstract fun getGroups(): MutableSet<AbstractMaterialGroup>
+    abstract fun getGroups(): MutableSet<AbstractItemTypeGroup>
 
     open fun getRepresentativeMaterial(): ItemType {
         // Test inner material

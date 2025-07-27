@@ -276,7 +276,7 @@ public class ConflictBuilder {
      * @return this conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder addExcludedGroup(@NotNull AbstractMaterialGroup group) {
+    public ConflictBuilder addExcludedGroup(@NotNull AbstractItemTypeGroup group) {
         return addExcludedGroup(group.getName());
     }
 
@@ -315,7 +315,7 @@ public class ConflictBuilder {
      * @return This conflict builder instance.
      */
     @NotNull
-    public ConflictBuilder removeExcludedGroup(@NotNull AbstractMaterialGroup group) {
+    public ConflictBuilder removeExcludedGroup(@NotNull AbstractItemTypeGroup group) {
         return removeExcludedGroup(group.getName());
     }
 
@@ -352,7 +352,7 @@ public class ConflictBuilder {
      * @return An Enchant conflict group with this builder parameters.
      */
     public EnchantConflictGroup build() {
-        AbstractMaterialGroup materials = extractGroups();
+        AbstractItemTypeGroup materials = extractGroups();
         EnchantConflictGroup conflict = new EnchantConflictGroup(getName(), materials, getMaxBeforeConflict());
         appendEnchantments(conflict);
 
@@ -436,12 +436,12 @@ public class ConflictBuilder {
      *
      * @return The abstract material group from the builder.
      */
-    protected AbstractMaterialGroup extractGroups() {
+    protected AbstractItemTypeGroup extractGroups() {
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        IncludeGroup group = new IncludeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
+        IncludeItemTypeGroup group = new IncludeItemTypeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
 
         for (String groupName : getExcludedGroupNames()) {
-            AbstractMaterialGroup materialGroup = itemGroupManager.get(groupName);
+            AbstractItemTypeGroup materialGroup = itemGroupManager.get(groupName);
 
             if (materialGroup == null) {
                 CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + getName());

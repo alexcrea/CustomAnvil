@@ -24,7 +24,7 @@ class ItemGroupManager {
         private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD", "BRUSH")
     }
 
-    lateinit var groupMap: LinkedHashMap<String, AbstractMaterialGroup>
+    lateinit var groupMap: LinkedHashMap<String, AbstractItemTypeGroup>
 
     // Read and create material groups
     fun prepareGroups(config: ConfigurationSection) {
@@ -42,7 +42,7 @@ class ItemGroupManager {
     fun createGroup(
         config: ConfigurationSection,
         name: String
-    ): AbstractMaterialGroup {
+    ): AbstractItemTypeGroup {
         return createGroup(config, groupMap.keys, name)
     }
 
@@ -52,16 +52,16 @@ class ItemGroupManager {
         config: ConfigurationSection,
         keys: Set<String>,
         key: String
-    ): AbstractMaterialGroup {
+    ): AbstractItemTypeGroup {
         val groupSection = config.getConfigurationSection(key)!!
         val groupType = groupSection.getString(GROUP_TYPE_PATH, null)
 
         // Create Material group according to the group type
-        val group: AbstractMaterialGroup
+        val group: AbstractItemTypeGroup
         if (groupType != null && GroupType.EXCLUDE.equal(groupType)) {
-            group = ExcludeGroup(key)
+            group = ExcludeItemTypeGroup(key)
         } else {
-            group = IncludeGroup(key)
+            group = IncludeItemTypeGroup(key)
             if (!GroupType.INCLUDE.equal(groupType)) {
                 CustomAnvil.instance.logger.warning("Group $key have an invalid group type. default to Include.")
             }
@@ -74,7 +74,7 @@ class ItemGroupManager {
 
     // Read Group elements
     private fun readGroup(
-        group: AbstractMaterialGroup,
+        group: AbstractItemTypeGroup,
         groupSection: ConfigurationSection,
         config: ConfigurationSection,
         keys: Set<String>
@@ -141,7 +141,7 @@ class ItemGroupManager {
     }
 
     // Get the selected group or return null if it doesn't exist
-    fun get(groupName: String): AbstractMaterialGroup? {
+    fun get(groupName: String): AbstractItemTypeGroup? {
         return groupMap[groupName]
     }
 
