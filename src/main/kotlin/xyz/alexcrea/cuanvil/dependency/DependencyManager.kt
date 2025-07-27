@@ -5,7 +5,6 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
