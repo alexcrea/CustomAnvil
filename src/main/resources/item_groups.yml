@@ -20,14 +20,14 @@ nothing:
 example_include:
   type: include
   items:
-    - stone
-    - polished_granite
+    - minecraft:stone
+    - minecraft:polished_granite
 
 # This group contain everything except polished granite and elements of example_include
 example_exclude:
   type: exclude
   items:
-    - polished_granite
+    - minecraft:polished_granite
   groups:
     - example_include
 
@@ -38,22 +38,22 @@ example_exclude:
 swords:
   type: include
   items:
-    - wooden_sword
-    - stone_sword
-    - iron_sword
-    - diamond_sword
-    - golden_sword
-    - netherite_sword
+    - minecraft:wooden_sword
+    - minecraft:stone_sword
+    - minecraft:iron_sword
+    - minecraft:diamond_sword
+    - minecraft:golden_sword
+    - minecraft:netherite_sword
 
 axes:
   type: include
   items:
-    - wooden_axe
-    - stone_axe
-    - iron_axe
-    - diamond_axe
-    - golden_axe
-    - netherite_axe
+    - minecraft:wooden_axe
+    - minecraft:stone_axe
+    - minecraft:iron_axe
+    - minecraft:diamond_axe
+    - minecraft:golden_axe
+    - minecraft:netherite_axe
 
 melee_weapons:
   type: include
@@ -64,43 +64,43 @@ melee_weapons:
 helmets:
   type: include
   items:
-    - leather_helmet
-    - chainmail_helmet
-    - iron_helmet
-    - diamond_helmet
-    - golden_helmet
-    - netherite_helmet
-    - turtle_helmet
+    - minecraft:leather_helmet
+    - minecraft:chainmail_helmet
+    - minecraft:iron_helmet
+    - minecraft:diamond_helmet
+    - minecraft:golden_helmet
+    - minecraft:netherite_helmet
+    - minecraft:turtle_helmet
 
 chestplate:
   type: include
   items:
-    - leather_chestplate
-    - chainmail_chestplate
-    - iron_chestplate
-    - diamond_chestplate
-    - golden_chestplate
-    - netherite_chestplate
+    - minecraft:leather_chestplate
+    - minecraft:chainmail_chestplate
+    - minecraft:iron_chestplate
+    - minecraft:diamond_chestplate
+    - minecraft:golden_chestplate
+    - minecraft:netherite_chestplate
 
 leggings:
   type: include
   items:
-    - leather_leggings
-    - chainmail_leggings
-    - iron_leggings
-    - diamond_leggings
-    - golden_leggings
-    - netherite_leggings
+    - minecraft:leather_leggings
+    - minecraft:chainmail_leggings
+    - minecraft:iron_leggings
+    - minecraft:diamond_leggings
+    - minecraft:golden_leggings
+    - minecraft:netherite_leggings
 
 boots:
   type: include
   items:
-    - leather_boots
-    - chainmail_boots
-    - iron_boots
-    - diamond_boots
-    - golden_boots
-    - netherite_boots
+    - minecraft:leather_boots
+    - minecraft:chainmail_boots
+    - minecraft:iron_boots
+    - minecraft:diamond_boots
+    - minecraft:golden_boots
+    - minecraft:netherite_boots
 
 armors:
   type: include
@@ -113,97 +113,95 @@ armors:
 wearable:
   type: include
   items:
-    - elytra
-    - carved_pumpkin
-    - skeleton_skull
-    - wither_skeleton_skull
-    - zombie_head
-    - player_head
-    - creeper_head
-    - dragon_head
-    # do not exist in 1.18 but exist in future update
-    - piglin_head
+    - minecraft:elytra
+    - minecraft:carved_pumpkin
+    - minecraft:skeleton_skull
+    - minecraft:wither_skeleton_skull
+    - minecraft:zombie_head
+    - minecraft:player_head
+    - minecraft:creeper_head
+    - minecraft:dragon_head
+    - minecraft:piglin_head
   groups:
     - armors
 
 pickaxes:
   type: include
   items:
-    - wooden_pickaxe
-    - stone_pickaxe
-    - iron_pickaxe
-    - diamond_pickaxe
-    - golden_pickaxe
-    - netherite_pickaxe
+    - minecraft:wooden_pickaxe
+    - minecraft:stone_pickaxe
+    - minecraft:iron_pickaxe
+    - minecraft:diamond_pickaxe
+    - minecraft:golden_pickaxe
+    - minecraft:netherite_pickaxe
 
 shovels:
   type: include
   items:
-    - wooden_shovel
-    - stone_shovel
-    - iron_shovel
-    - diamond_shovel
-    - golden_shovel
-    - netherite_shovel
+    - minecraft:wooden_shovel
+    - minecraft:stone_shovel
+    - minecraft:iron_shovel
+    - minecraft:diamond_shovel
+    - minecraft:golden_shovel
+    - minecraft:netherite_shovel
 
 hoes:
   type: include
   items:
-    - wooden_hoe
-    - stone_hoe
-    - iron_hoe
-    - diamond_hoe
-    - golden_hoe
-    - netherite_hoe
+    - minecraft:wooden_hoe
+    - minecraft:stone_hoe
+    - minecraft:iron_hoe
+    - minecraft:diamond_hoe
+    - minecraft:golden_hoe
+    - minecraft:netherite_hoe
 
 tools:
   type: include
   groups:
-    - pickaxes
-    - shovels
-    - hoes
-    - axes
+    - minecraft:pickaxes
+    - minecraft:shovels
+    - minecraft:hoes
+    - minecraft:axes
 
 enchanted_book:
   type: include
   items:
-    - enchanted_book
+    - minecraft:enchanted_book
 
 trident:
   type: include
   items:
-    - trident
+    - minecraft:trident
 
 bow:
   type: include
   items:
-    - bow
+    - minecraft:bow
 
 crossbow:
   type: include
   items:
-    - crossbow
+    - minecraft:crossbow
 
 fishing_rod:
   type: include
   items:
-    - fishing_rod
+    - minecraft:fishing_rod
 
 shears:
   type: include
   items:
-    - shears
+    - minecraft:shears
 
 can_unbreak:
   type: include
   items:
-    - elytra
-    - flint_and_steel
-    - shield
-    - carrot_on_a_stick
-    - warped_fungus_on_a_stick
-    # do not exist in 1.18 but exist in future update
-    - brush
+    - minecraft:elytra
+    - minecraft:flint_and_steel
+    - minecraft:shield
+    - minecraft:carrot_on_a_stick
+    - minecraft:warped_fungus_on_a_stick
+    - minecraft:brush
   groups:
     - melee_weapons
     - tools
@@ -217,7 +215,7 @@ can_unbreak:
 can_vanish:
   type: include
   items:
-    - compass
+    - minecraft:compass
   groups:
     - wearable
     - can_unbreak
