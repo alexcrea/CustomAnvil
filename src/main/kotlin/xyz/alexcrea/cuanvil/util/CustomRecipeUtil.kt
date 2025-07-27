@@ -41,7 +41,7 @@ object CustomRecipeUtil {
         else {
             // test amount
             val resultItem = recipe.resultItem!! // we know exist as the recipe was returned to us
-            val maxResultAmount = resultItem.type.maxStackSize/resultItem.amount
+            val maxResultAmount = resultItem.maxStackSize/resultItem.amount
             val maxLeftAmount = leftItem.amount/recipe.leftItem!!.amount
             val maxRightAmount = if(rightItem == null){ maxLeftAmount } else{ rightItem.amount/recipe.rightItem!!.amount }
 
