@@ -168,7 +168,7 @@ public class MaterialGroupApi {
     }
 
     public static List<String> itemTypesSetToStringList(@NotNull Set<ItemType> types) {
-        return types.stream().map(item -> item.getKey().getKey().toLowerCase()).toList();
+        return types.stream().map(item -> item.getKey().toString()).toList();
     }
 
     public static List<String> materialGroupSetToStringList(@NotNull Set<AbstractItemTypeGroup> groups) {

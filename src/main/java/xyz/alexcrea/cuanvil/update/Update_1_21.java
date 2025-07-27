@@ -2,12 +2,14 @@ package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemType;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
 // This is a temporary class that aim to handle 1.21 update.
 // It will be replaced by a better system later.
+@SuppressWarnings("UnstableApiUsage")
 public class Update_1_21 {
 
     private static final Version V1_21 = new Version(1, 21);
@@ -40,7 +42,7 @@ public class Update_1_21 {
 
         // Add mace to groups
         groupConfig.set("mace.type", "include");
-        addAbsentToList(groupConfig, "mace.items", "mace");
+        addAbsentToList(groupConfig, "mace.items", ItemType.MACE.getKey().toString());
 
         addAbsentToList(groupConfig, "can_unbreak.groups", "mace");
 
