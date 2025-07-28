@@ -18,7 +18,7 @@ public class CAEEPreV5Enchantment extends CABukkitEnchantment implements Additio
     @NotNull Definition definition;
 
     public CAEEPreV5Enchantment(@NotNull CustomEnchantment enchantment) {
-        super(enchantment.getBukkitEnchantment(), EnchantmentRarity.getRarity(enchantment.getDefinition().getAnvilCost()));
+        super(enchantment.getBukkitEnchantment(), getRarity(enchantment.getBukkitEnchantment()));
         this.eeenchantment = enchantment;
         this.definition = (Definition) enchantment.getDefinition();
 
