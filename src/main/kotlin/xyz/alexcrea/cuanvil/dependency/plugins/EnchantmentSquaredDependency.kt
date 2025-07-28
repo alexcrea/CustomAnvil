@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemType
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.api.ConflictBuilder
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
-import xyz.alexcrea.cuanvil.api.MaterialGroupApi
+import xyz.alexcrea.cuanvil.api.ItemGroupApi
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.enchant.bulk.EnchantSquaredBulkOperation
@@ -106,15 +106,15 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         // Write group that do not exist on custom anvil.
         val shield = IncludeItemTypeGroup("shield")
         shield.addToPolicy(ItemType.SHIELD)
-        MaterialGroupApi.addMaterialGroup(shield)
+        ItemGroupApi.addItemGroup(shield)
 
         val elytra = IncludeItemTypeGroup("elytra")
         elytra.addToPolicy(ItemType.ELYTRA)
-        MaterialGroupApi.addMaterialGroup(elytra)
+        ItemGroupApi.addItemGroup(elytra)
 
         val trinkets = IncludeItemTypeGroup("trinkets")
         trinkets.addToPolicy(ItemType.ROTTEN_FLESH)
-        MaterialGroupApi.addMaterialGroup(trinkets)
+        ItemGroupApi.addItemGroup(trinkets)
     }
 
     private fun writeMaterialRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>) {

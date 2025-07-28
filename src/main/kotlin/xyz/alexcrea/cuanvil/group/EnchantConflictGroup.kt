@@ -58,11 +58,11 @@ class EnchantConflictGroup(
         enchantments.addAll(enchants)
     }
 
-    fun getRepresentativeMaterial(): ItemType {
+    fun getRepresentativeItemType(): ItemType {
         val groups = getCantConflictGroup().getGroups()
         val groupIterator = groups.iterator()
         while (groupIterator.hasNext()) {
-            val itemType = groupIterator.next().getRepresentativeMaterial()
+            val itemType = groupIterator.next().getRepresentativeItem()
             if (itemType != ItemType.ENCHANTED_BOOK) return itemType
 
         }

@@ -25,7 +25,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
                              @NotNull String actionDescription,
                              @NotNull Gui backOnCancel,
                              @NotNull BiConsumer<ItemStack, HumanEntity> onSave,
-                             boolean materialOnly) {
+                             boolean typeOnly) {
         super(3, title, backOnCancel);
         this.selectedItem = null;
 
@@ -56,7 +56,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
             if(cursor.getType().isAir()) return;
 
             ItemStack finalItem;
-            if(materialOnly){
+            if(typeOnly){
                 finalItem = setDisplayMeta(
                         cursor.getType().asItemType().createItemStack(),
                         actionDescription);

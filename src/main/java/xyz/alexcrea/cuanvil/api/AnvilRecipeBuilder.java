@@ -68,7 +68,7 @@ public class AnvilRecipeBuilder {
      * Get if the recipe is exact count. (default 0)
      * <p>
      * Exact count mean the recipe can only be crafted 1 by 1.
-     * If set to false, then it will craft as much as possible in 1 go and will keep unused material onto the anvil inventory.
+     * If set to false, then it will craft as much as possible in 1 go and will keep unused items onto the anvil inventory.
      *
      * @return If the recipe is exact count.
      */
@@ -80,7 +80,7 @@ public class AnvilRecipeBuilder {
      * Sets if the recipe is exact count.
      * <p>
      * Exact count mean the recipe can only be crafted 1 by 1.
-     * If set to false, then it will craft as much as possible in 1 go and will keep unused material onto the anvil inventory.
+     * If set to false, then it will craft as much as possible in 1 go and will keep unused items onto the anvil inventory.
      *
      * @param exactCount If the recipe is exact count
      * @return This recipe builder instance.

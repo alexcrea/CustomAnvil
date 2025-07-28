@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @SuppressWarnings("UnstableApiUsage")
-public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemType, GuiItem> {
+public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemType, GuiItem> {
 
     private final SelectItemTypeContainer selector;
     private final Gui backGui;
@@ -34,7 +34,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemTyp
     private final int defaultMaterialHash;
     private int nowMaterialHash;
 
-    public MaterialSelectSettingGui(
+    public ItemTypeSelectSettingGui(
             @NotNull SelectItemTypeContainer selector,
             @NotNull String title,
             @NotNull Gui backGui) {
@@ -43,8 +43,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<ItemTyp
         this.backGui = backGui;
         this.instantRemove = false;
 
-        this.defaultMaterials = new ArrayList<>(this.selector.getSelectedMaterials());
-        this.illegalMaterials = this.selector.illegalMaterials();
+        this.defaultMaterials = new ArrayList<>(this.selector.getSelectedItems());
+        this.illegalMaterials = this.selector.illegalItems();
 
         this.defaultMaterialHash = hashFromItemTypeList(this.defaultMaterials);
         this.nowMaterialHash = this.defaultMaterialHash;

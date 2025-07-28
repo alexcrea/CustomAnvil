@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.api.MaterialGroupApi;
+import xyz.alexcrea.cuanvil.api.ItemGroupApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractItemTypeGroup;
 import xyz.alexcrea.cuanvil.group.IncludeItemTypeGroup;
@@ -56,7 +56,7 @@ public class PUpdate_1_11_0 {
 
     private static void handleToolsMigration() {
         // We migrate the mace conflict if exist and unmodified
-        AbstractItemTypeGroup tools = MaterialGroupApi.getGroup("tools");
+        AbstractItemTypeGroup tools = ItemGroupApi.getGroup("tools");
 
         migrateTools(tools, "pickaxes", PICKAXES);
         migrateTools(tools, "shovels", SHOVELS);
@@ -72,19 +72,19 @@ public class PUpdate_1_11_0 {
         IncludeItemTypeGroup group = new IncludeItemTypeGroup(toolset);
         group.addAll(toolMats);
 
-        MaterialGroupApi.addMaterialGroup(group, true);
+        ItemGroupApi.addItemGroup(group, true);
 
         // Try to see if all the materials was in the tools group. and if so, replace it with the new group
         if (tools == null) return;
         if (!(tools instanceof IncludeItemTypeGroup include)) return;
 
         List<ItemType> types = List.of(toolMats);
-        Set<ItemType> typeSet = include.getNonGroupInheritedMaterials();
+        Set<ItemType> typeSet = include.getNonGroupInheritedItemTypes();
         if (!typeSet.containsAll(types)) return;
 
         types.forEach(typeSet::remove);
         tools.addToPolicy(group);
-        MaterialGroupApi.writeMaterialGroup(tools);
+        ItemGroupApi.writeItemGroup(tools);
     }
 
     private static void handleMaceMigration(@Nonnull Set<ConfigHolder> toSave) {

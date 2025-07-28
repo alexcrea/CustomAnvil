@@ -11,17 +11,17 @@ import java.util.Set;
 @SuppressWarnings("UnstableApiUsage")
 public interface SelectItemTypeContainer {
 
-    Set<ItemType> getSelectedMaterials();
+    Set<ItemType> getSelectedItems();
 
     boolean setSelectedItems(Set<ItemType> types);
 
-    Set<ItemType> illegalMaterials();
+    Set<ItemType> illegalItems();
 
-    static List<String> getMaterialLore(SelectItemTypeContainer container, String containerType, String action) {
+    static List<String> getItemLore(SelectItemTypeContainer container, String containerType, String action) {
         // Prepare material lore
         ArrayList<String> groupLore = new ArrayList<>();
         groupLore.add("§7Allow you to select a list of §ematerials §7that this " + containerType + " should " + action);
-        Set<ItemType> typeSet = container.getSelectedMaterials();
+        Set<ItemType> typeSet = container.getSelectedItems();
         if (typeSet.isEmpty()) {
             groupLore.add("§7There is no " + action + "d material for this " + containerType + ".");
         } else {

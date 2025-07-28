@@ -18,7 +18,7 @@ import xyz.alexcrea.cuanvil.gui.config.SelectItemTypeContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
-import xyz.alexcrea.cuanvil.gui.config.settings.MaterialSelectSettingGui;
+import xyz.alexcrea.cuanvil.gui.config.settings.ItemTypeSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -55,7 +55,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         prepareStaticValues();
     }
 
-    private GuiItem materialSelection;
+    private GuiItem itemSelection;
     private GuiItem groupSelection;
 
     private void prepareStaticValues() {
@@ -73,16 +73,16 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.pane.bindItem('D', new GuiItem(deleteItem, openGuiAndCheckAction(), CustomAnvil.instance));
 
         // Displayed item will be updated later
-        String materialSelectionName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rMaterials";
+        String selectionName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rItems";
         ItemStack selectItem = ItemType.DIAMOND_SWORD.createItemStack();
         ItemMeta selectItemMeta = selectItem.getItemMeta();
-        selectItemMeta.setDisplayName(materialSelectionName);
+        selectItemMeta.setDisplayName(selectionName);
 
         selectItem.setItemMeta(selectItemMeta);
-        this.materialSelection = new GuiItem(selectItem, (event) -> {
+        this.itemSelection = new GuiItem(selectItem, (event) -> {
             event.setCancelled(true);
-            MaterialSelectSettingGui selectGui = new MaterialSelectSettingGui(this,
-                    materialSelectionName
+            ItemTypeSelectSettingGui selectGui = new ItemTypeSelectSettingGui(this,
+                    selectionName
                     , this);
             selectGui.show(event.getWhoClicked());
 
@@ -102,7 +102,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
-        this.pane.bindItem('1', this.materialSelection);
+        this.pane.bindItem('1', this.itemSelection);
         this.pane.bindItem('2', this.groupSelection);
     }
 
@@ -217,13 +217,13 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     public void updateLocal() {
         if (!this.usable) return;
         // Prepare material lore
-        List<String> matLore = SelectItemTypeContainer.getMaterialLore(this, "group", "include");
+        List<String> matLore = SelectItemTypeContainer.getItemLore(this, "group", "include");
 
         // Prepare group lore
         List<String> groupLore = SelectGroupContainer.getGroupLore(this, "group", "include");
 
         // Configure included material setting item
-        ItemStack matSelectItem = this.materialSelection.getItem();
+        ItemStack matSelectItem = this.itemSelection.getItem();
         ItemMeta matSelectMeta = matSelectItem.getItemMeta();
 
         matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");
@@ -232,7 +232,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         matSelectItem.setItemMeta(matSelectMeta);
 
-        this.materialSelection.setItem(matSelectItem); // Just in case
+        this.itemSelection.setItem(matSelectItem); // Just in case
 
         // Configure enchant setting item
         ItemStack groupSelectItem = this.groupSelection.getItem();
@@ -327,13 +327,13 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // ----------------------------
 
     @Override
-    public Set<ItemType> getSelectedMaterials() {
-        return this.group.getNonGroupInheritedMaterials();
+    public Set<ItemType> getSelectedItems() {
+        return this.group.getNonGroupInheritedItemTypes();
     }
 
     @Override
     public boolean setSelectedItems(Set<ItemType> types) {
-        this.group.setNonGroupInheritedMaterials(types);
+        this.group.setNonGroupInheritedItemTypes(types);
 
         // Write to file configuration
         String[] groupNames = new String[types.size()];
@@ -342,7 +342,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             groupNames[index++] = otherGroup.key().value().toLowerCase();
         }
 
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName() + "." + ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
+        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName() + "." + ItemGroupManager.ITEMS_LIST_PATH, groupNames);
 
         // update referencing groups
         updateDirectReferencingGroups(this.group);
@@ -363,7 +363,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     @Override
-    public Set<ItemType> illegalMaterials() {
+    public Set<ItemType> illegalItems() {
         return ONLY_AIR_ITEM_SET;
     }
 
@@ -390,7 +390,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
                 // Update other stored group
                 for (AbstractItemTypeGroup otherGroup : everyStoredGroups) {
                     if (otherGroup.getGroups().contains(testGroup)) {
-                        otherGroup.updateMaterials();
+                        otherGroup.update();
                         updateFuture.add(otherGroup);
                     }
                 }
@@ -413,7 +413,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         // Update conflict group
         for (AbstractItemTypeGroup conflictGroup : conflictGroupPlanned) {
-            conflictGroup.updateMaterials();
+            conflictGroup.update();
         }
 
     }

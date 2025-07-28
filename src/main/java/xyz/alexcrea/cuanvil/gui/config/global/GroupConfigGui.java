@@ -45,7 +45,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeItemTypeGroup,
 
     @Override
     protected ItemStack createItemForGeneric(IncludeItemTypeGroup group) {
-        ItemStack item = group.getRepresentativeMaterial().createItemStack();
+        ItemStack item = group.getRepresentativeItem().createItemStack();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
@@ -53,7 +53,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeItemTypeGroup,
         meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §fGroup");
         meta.setLore(Arrays.asList(
                 "§7Number of selected groups : " + group.getGroups().size(),
-                "§7Number of included material : " + group.getNonGroupInheritedMaterials().size(),
+                "§7Number of included material : " + group.getNonGroupInheritedItemTypes().size(),
                 "",
                 "§7Total number of included material " + group.getItemTypes().size()));
 

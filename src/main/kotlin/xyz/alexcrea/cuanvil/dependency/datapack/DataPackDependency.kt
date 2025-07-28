@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import xyz.alexcrea.cuanvil.api.ConflictBuilder
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
-import xyz.alexcrea.cuanvil.api.MaterialGroupApi
+import xyz.alexcrea.cuanvil.api.ItemGroupApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment
@@ -138,7 +138,7 @@ object DataPackDependency {
         for (groupName in yml.getKeys(false)) {
             val section = yml.getConfigurationSection(groupName) ?: continue
 
-            var group = MaterialGroupApi.getGroup(groupName)
+            var group = ItemGroupApi.getGroup(groupName)
             val exist = group != null
 
             if (group == null) group = IncludeItemTypeGroup(groupName)
@@ -154,7 +154,7 @@ object DataPackDependency {
                 group.addToPolicy(type)
             }
             for (name in section.getStringList("groups")) {
-                val otherGroup = MaterialGroupApi.getGroup(name)
+                val otherGroup = ItemGroupApi.getGroup(name)
                 if (otherGroup == null) {
                     CustomAnvil.instance.logger.warning("Could not find sub group $name for group $groupName")
                     continue
@@ -163,12 +163,12 @@ object DataPackDependency {
                 group.addToPolicy(otherGroup)
             }
 
-            group.updateMaterials()
+            group.update()
 
             if (exist) {
-                MaterialGroupApi.writeMaterialGroup(group)
+                ItemGroupApi.writeItemGroup(group)
             } else {
-                MaterialGroupApi.addMaterialGroup(group, true)
+                ItemGroupApi.addItemGroup(group, true)
             }
         }
     }

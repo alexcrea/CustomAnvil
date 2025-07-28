@@ -86,7 +86,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     private GuiItem getGuiItemFromGroup(AbstractItemTypeGroup group) {
         boolean isIn = this.selectedGroups.contains(group);
 
-        ItemStack item = group.getRepresentativeMaterial().createItemStack();
+        ItemStack item = group.getRepresentativeItem().createItemStack();
 
         setGroupItemMeta(item, group.getName(), isIn);
 

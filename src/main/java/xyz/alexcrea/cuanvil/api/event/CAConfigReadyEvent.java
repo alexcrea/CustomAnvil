@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.api.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.api.ItemGroupApi;
 
 /**
  * Called when the configuration of CustomAnvil is ready.
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * use {@link xyz.alexcrea.cuanvil.api.ConflictAPI ConflictApi},
  * {@link xyz.alexcrea.cuanvil.gui.config.global.CustomRecipeConfigGui CustomRecipeConfigGui},
- * {@link xyz.alexcrea.cuanvil.api.MaterialGroupApi MaterialGroupApi}
+ * {@link ItemGroupApi MaterialGroupApi}
  * and {@link xyz.alexcrea.cuanvil.api.UnitRepairApi UnitRepairApi}
  * to add/remove/edit configurations
  */

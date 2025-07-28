@@ -18,8 +18,8 @@ class ExcludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
     private val groupItems by lazy { createDefaultSet() }
 
     override fun isReferencing(other: AbstractItemTypeGroup): Boolean {
-        for (materialGroup in includedGroup.iterator()) {
-            if ((materialGroup == other) || (materialGroup.isReferencing(other))) {
+        for (itemGroup in includedGroup.iterator()) {
+            if ((itemGroup == other) || (itemGroup.isReferencing(other))) {
                 return true
             }
         }
@@ -57,7 +57,7 @@ class ExcludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
         return includedGroup
     }
 
-    override fun updateMaterials() {
+    override fun update() {
         groupItems.clear()
         groupItems.addAll(includedItems)
 

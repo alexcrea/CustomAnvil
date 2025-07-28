@@ -12,8 +12,8 @@ class IncludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
     private val groupItems by lazy { createDefaultSet() }
 
     override fun isReferencing(other: AbstractItemTypeGroup): Boolean {
-        for (materialGroup in includedGroup.iterator()) {
-            if ((materialGroup == other) || (materialGroup.isReferencing(other))) {
+        for (subGroup in includedGroup.iterator()) {
+            if ((subGroup == other) || (subGroup.isReferencing(other))) {
                 return true
             }
         }
@@ -47,17 +47,17 @@ class IncludeItemTypeGroup(name: String) : AbstractItemTypeGroup(name) {
         }
     }
 
-    override fun setNonGroupInheritedMaterials(types: Set<ItemType>) {
-        super.setNonGroupInheritedMaterials(types)
+    override fun setNonGroupInheritedItemTypes(types: Set<ItemType>) {
+        super.setNonGroupInheritedItemTypes(types)
 
-        updateMaterials()
+        update()
     }
 
     override fun getGroups(): MutableSet<AbstractItemTypeGroup> {
         return includedGroup
     }
 
-    override fun updateMaterials() {
+    override fun update() {
         groupItems.clear()
         groupItems.addAll(includedItems)
 

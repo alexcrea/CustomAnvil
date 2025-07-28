@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A Builder for material conflict.
+ * A Builder for enchantment conflicts.
  */
 @SuppressWarnings("unused")
 public class ConflictBuilder {
@@ -135,7 +135,7 @@ public class ConflictBuilder {
      * This value represent how many enchantment contained on this conflict can be applied to before conflict is considered active.
      * That mean new enchantment will not be able to be added to the item and present enchantment will not have its level upgraded.
      * <p>
-     * In vanilla. material restriction have this value set to 0 and enchantment conflict set to 1.
+     * In vanilla. item type restriction have this value set to 0 and exclusive set conflict set to 1.
      *
      * @return the max number of conflicting enchantment before conflict. 0 by default.
      */
@@ -160,7 +160,7 @@ public class ConflictBuilder {
      * This value represent how many enchantment contained on this conflict can be applied to before conflict is considered active.
      * That mean new enchantment will not be able to be added to the item and present enchantment will not have its level upgraded.
      * <p>
-     * In vanilla. material restriction have this value set to 0 and enchantment conflict set to 1.
+     * In vanilla. item type restriction have this value set to 0 and exclusive set conflict set to 1.
      *
      * @param maxBeforeConflict The max before conflict
      * @return This conflict builder instance.
@@ -246,9 +246,9 @@ public class ConflictBuilder {
      * <p>
      * If left item of an anvil craft is included on one of the excluded group it will ignore this conflict.
      * <p>
-     * This allows to create conflict only for some item. Material restriction can be written like that.
+     * This allows to create conflict only for some item. Item type restriction can be written like that.
      * <p>
-     * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
+     * For example: If we exclude an item group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
@@ -266,9 +266,9 @@ public class ConflictBuilder {
      * <p>
      * If left item of an anvil craft is included on one of the excluded group it will ignore this conflict.
      * <p>
-     * This allows to create conflict only for some item. Material restriction can be written like that.
-     * <p>
-     * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
+     * This allows to create conflict only for some item. Item type restriction can be written like that.
+n     * <p>
+     * For example: If we exclude an item group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
@@ -285,9 +285,9 @@ public class ConflictBuilder {
      * <p>
      * If left item of an anvil craft is included on one of the excluded group it will ignore this conflict.
      * <p>
-     * This allows to create conflict only for some item. Material restriction can be written like that.
+     * This allows to create conflict only for some item. Item type restriction can be written like that.
      * <p>
-     * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
+     * For example: If we exclude an item group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
@@ -305,9 +305,9 @@ public class ConflictBuilder {
      * <p>
      * If left item of an anvil craft is included on one of the excluded group it will ignore this conflict.
      * <p>
-     * This allows to create conflict only for some item. Material restriction can be written like that.
+     * This allows to create conflict only for some item. Item type restriction can be written like that.
      * <p>
-     * For example: If we exclude a material group containing every pickaxe and add efficiency enchantment
+     * For example: If we exclude an item group containing every pickaxe and add efficiency enchantment
      * with {@link #setMaxBeforeConflict(int) maxBeforeConflict} set to 0.
      * Then only pickaxe will be able to have efficiency.
      *
@@ -432,9 +432,9 @@ public class ConflictBuilder {
     }
 
     /**
-     * Extract group abstract material group.
+     * Extract group abstract item group.
      *
-     * @return The abstract material group from the builder.
+     * @return The abstract item group from the builder.
      */
     protected AbstractItemTypeGroup extractGroups() {
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();

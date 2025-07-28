@@ -44,7 +44,7 @@ public class UnitRepairApi {
      * Write and add a custom anvil unit repair recipe.
      * Will not write the recipe if it already exists or was deleted.
      *
-     * @param unit       The unit material used to repair the bellow item.
+     * @param unit       The unit type used to repair the bellow item.
      * @param repairable The item to be repaired.
      * @param value      The amount to be repaired by every unit. (1% = 0.01)
      * @return true if successful.
@@ -201,7 +201,7 @@ public class UnitRepairApi {
                 // Test if value section exist
                 if (!section.isDouble(repairableKey)) continue;
 
-                // Test if repairable is valid a material
+                // Test if repairable is valid a item type
                 ItemType repairable = ItemTypeUtil.INSTANCE.getItemType(repairableKey);
                 if (repairable == null) continue;
 

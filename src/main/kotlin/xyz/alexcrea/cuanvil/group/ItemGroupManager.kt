@@ -13,13 +13,10 @@ class ItemGroupManager {
         const val GROUP_TYPE_PATH = "type"
 
         // Path for included items list
-        const val MATERIAL_LIST_PATH = "items"
+        const val ITEMS_LIST_PATH = "items"
 
         // Path for included groups list
         const val GROUP_LIST_PATH = "groups"
-
-        // Temporary list of elements in default config that are use in future
-        private val FUTURE_MATERIAL = setOf("PIGLIN_HEAD", "BRUSH")
     }
 
     lateinit var groupMap: LinkedHashMap<String, AbstractItemTypeGroup>
@@ -78,17 +75,13 @@ class ItemGroupManager {
         keys: Set<String>
     ) {
         // Read material to include in this group policy
-        val materialList = groupSection.getStringList(MATERIAL_LIST_PATH)
-        for (typeName in materialList) {
+        val itemTypeNames = groupSection.getStringList(ITEMS_LIST_PATH)
+        for (typeName in itemTypeNames) {
             val type = ItemTypeUtil.getItemType(typeName)
             if (type == null) {
-                // Check if we should warn the user
-                if (typeName !in FUTURE_MATERIAL) {
-                    CustomAnvil.instance.logger.warning(
-                        "Unknown item type $typeName on group ${group.getName()}"
-                    )
-
-                }
+                CustomAnvil.instance.logger.warning(
+                    "Unknown item type $typeName on group ${group.getName()}"
+                )
                 continue
             }
 

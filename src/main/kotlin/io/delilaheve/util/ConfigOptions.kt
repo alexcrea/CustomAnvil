@@ -344,7 +344,7 @@ object ConfigOptions {
         }
 
     /**
-     * Get material enchantment count limit
+     * Get item enchantment count limit
      *
      * @return the current enchantment limit. -1 if none
      */
@@ -358,7 +358,7 @@ object ConfigOptions {
     }
 
     /**
-     * Get the material enchantment count limit.
+     * Get the item enchantment count limit.
      *
      * @return The current enchantment limit. -1 if none
      */

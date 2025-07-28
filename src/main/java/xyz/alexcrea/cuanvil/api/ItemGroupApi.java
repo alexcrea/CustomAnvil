@@ -20,12 +20,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Custom Anvil api for material group registry.
+ * Custom Anvil api for item group registry.
  */
 @SuppressWarnings({"unused"})
-public class MaterialGroupApi {
+public class ItemGroupApi {
 
-    private MaterialGroupApi() {
+    private ItemGroupApi() {
     }
 
     private static Object saveChangeTask = null;
@@ -39,8 +39,8 @@ public class MaterialGroupApi {
      * @param group The group to add
      * @return true if successful.
      */
-    public static boolean addMaterialGroup(@NotNull AbstractItemTypeGroup group) {
-        return addMaterialGroup(group, false);
+    public static boolean addItemGroup(@NotNull AbstractItemTypeGroup group) {
+        return addItemGroup(group, false);
     }
 
     /**
@@ -52,7 +52,7 @@ public class MaterialGroupApi {
      * @param overrideDeleted If we should write even if the group was previously deleted.
      * @return true if successful.
      */
-    public static boolean addMaterialGroup(@NotNull AbstractItemTypeGroup group, boolean overrideDeleted) {
+    public static boolean addItemGroup(@NotNull AbstractItemTypeGroup group, boolean overrideDeleted) {
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
 
         // Test if it exists/existed
@@ -62,7 +62,7 @@ public class MaterialGroupApi {
         // Add group
         itemGroupManager.getGroupMap().put(group.getName(), group);
 
-        if (!writeMaterialGroup(group, false)) return false;
+        if (!writeItemGroup(group, false)) return false;
 
         if (group instanceof IncludeItemTypeGroup includeGroup) {
             GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
@@ -77,27 +77,27 @@ public class MaterialGroupApi {
     }
 
     /**
-     * Write a material group to the config file and plan an update of groups.
+     * Write an item group to the config file and plan an update of groups.
      * <p>
-     * You may want to use {@link #addMaterialGroup(AbstractItemTypeGroup)} instead as it is more performance in most case as this function will reload every conflict.
+     * You may want to use {@link #addItemGroup(AbstractItemTypeGroup)} instead as it is more performance in most case as this function will reload every conflict.
      *
      * @param group the group to write
      * @return true if was written successfully.
      */
-    public static boolean writeMaterialGroup(@NotNull AbstractItemTypeGroup group) {
-        return writeMaterialGroup(group, true);
+    public static boolean writeItemGroup(@NotNull AbstractItemTypeGroup group) {
+        return writeItemGroup(group, true);
     }
 
     /**
-     * Write a material group to the config file.
+     * Write an item group to the config file.
      * <p>
-     * You should use {@link #addMaterialGroup(AbstractItemTypeGroup)} or {@link #writeMaterialGroup(AbstractItemTypeGroup)} instead
+     * You should use {@link #addItemGroup(AbstractItemTypeGroup)} or {@link #writeItemGroup(AbstractItemTypeGroup)} instead
      *
      * @param group         the group to write
-     * @param updatePlanned if we should plan a global update for material groups
+     * @param updatePlanned if we should plan a global update for item groups
      * @return true if was written successfully.
      */
-    public static boolean writeMaterialGroup(@NotNull AbstractItemTypeGroup group, boolean updatePlanned) {
+    public static boolean writeItemGroup(@NotNull AbstractItemTypeGroup group, boolean updatePlanned) {
         String name = group.getName();
         if (name.contains(".")) {
             CustomAnvil.instance.getLogger().warning("Group " + name + " contain . in its name but should not. this material group is ignored.");
@@ -127,18 +127,18 @@ public class MaterialGroupApi {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
-        Set<ItemType> itemSets = group.getNonGroupInheritedMaterials();
+        Set<ItemType> itemSets = group.getNonGroupInheritedItemTypes();
         Set<AbstractItemTypeGroup> groupSet = group.getGroups();
 
         boolean empty = true;
         if (!itemSets.isEmpty()) {
-            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, itemTypesSetToStringList(itemSets));
+            config.set(basePath + ItemGroupManager.ITEMS_LIST_PATH, itemTypesSetToStringList(itemSets));
             empty = false;
         } else {
-            config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, null);
+            config.set(basePath + ItemGroupManager.ITEMS_LIST_PATH, null);
         }
         if (!groupSet.isEmpty()) {
-            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, materialGroupSetToStringList(groupSet));
+            config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, itemGroupSetToStringList(groupSet));
             empty = false;
         } else {
             config.set(basePath + ItemGroupManager.GROUP_LIST_PATH, null);
@@ -162,7 +162,7 @@ public class MaterialGroupApi {
         if (itemTypes.isEmpty()) return false;
 
         config.set(basePath + ItemGroupManager.GROUP_TYPE_PATH, "include");
-        config.set(basePath + ItemGroupManager.MATERIAL_LIST_PATH, itemTypesSetToStringList(itemTypes));
+        config.set(basePath + ItemGroupManager.ITEMS_LIST_PATH, itemTypesSetToStringList(itemTypes));
 
         return true;
     }
@@ -171,13 +171,13 @@ public class MaterialGroupApi {
         return types.stream().map(item -> item.getKey().toString()).toList();
     }
 
-    public static List<String> materialGroupSetToStringList(@NotNull Set<AbstractItemTypeGroup> groups) {
+    public static List<String> itemGroupSetToStringList(@NotNull Set<AbstractItemTypeGroup> groups) {
         return groups.stream().map(AbstractItemTypeGroup::getName).toList();
     }
 
     /**
-     * Remove a material group.
-     * Caution ! It will not be removed from depending conflict or other material group at runtime.
+     * Remove an item group.
+     * Caution ! It will not be removed from depending conflict or other item groups at runtime.
      * For that reason, it is not recommended to use this function.
      *
      * @param group The recipe to remove
@@ -242,7 +242,7 @@ public class MaterialGroupApi {
     }
 
     /**
-     * Get every registered material groups.
+     * Get every registered item groups.
      *
      * @return An immutable map of group name as its key and group as mapped value.
      */

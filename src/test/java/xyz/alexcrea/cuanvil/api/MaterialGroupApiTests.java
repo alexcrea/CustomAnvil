@@ -23,22 +23,22 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
         assertFalse(doGroupCanBeFound(groupName));
 
         // Add group
-        assertTrue(MaterialGroupApi.addMaterialGroup(group));
-        assertFalse(MaterialGroupApi.addMaterialGroup(group, true));
+        assertTrue(ItemGroupApi.addItemGroup(group));
+        assertFalse(ItemGroupApi.addItemGroup(group, true));
 
         assertTrue(doGroupExist(groupName));
         assertTrue(doGroupCanBeFound(groupName));
 
         // Remove group
-        assertTrue(MaterialGroupApi.removeGroup(group));
-        assertFalse(MaterialGroupApi.removeGroup(group));
+        assertTrue(ItemGroupApi.removeGroup(group));
+        assertFalse(ItemGroupApi.removeGroup(group));
 
         assertFalse(doGroupExist(groupName));
         assertFalse(doGroupCanBeFound(groupName));
 
         // Re add
-        assertFalse(MaterialGroupApi.addMaterialGroup(group, false));
-        assertTrue(MaterialGroupApi.addMaterialGroup(group, true));
+        assertFalse(ItemGroupApi.addItemGroup(group, false));
+        assertTrue(ItemGroupApi.addItemGroup(group, true));
 
         assertTrue(doGroupExist(groupName));
         assertTrue(doGroupCanBeFound(groupName));
@@ -56,7 +56,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
         assertFalse(doGroupCanBeFound(groupName));
 
         // Add group and reload
-        assertTrue(MaterialGroupApi.writeMaterialGroup(group));
+        assertTrue(ItemGroupApi.writeItemGroup(group));
         assertFalse(doGroupExist(groupName));
         assertFalse(doGroupCanBeFound(groupName));
 
@@ -73,7 +73,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
         IncludeItemTypeGroup group = new IncludeItemTypeGroup(groupName);
 
         // Add group and reload
-        assertFalse(MaterialGroupApi.writeMaterialGroup(group));
+        assertFalse(ItemGroupApi.writeItemGroup(group));
         assertFalse(doGroupExist(groupName));
         assertFalse(doGroupCanBeFound(groupName));
 
@@ -90,11 +90,11 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
         IncludeItemTypeGroup group = new IncludeItemTypeGroup(groupName);
 
         // Try write group
-        assertFalse(MaterialGroupApi.writeMaterialGroup(group));
+        assertFalse(ItemGroupApi.writeItemGroup(group));
     }
 
     boolean doGroupExist(String groupName) {
-        return MaterialGroupApi.getGroup(groupName) != null;
+        return ItemGroupApi.getGroup(groupName) != null;
     }
 
     boolean doGroupCanBeFound(String groupName) {

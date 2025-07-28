@@ -31,7 +31,7 @@ public class UnitRepairElementListGui extends
 
     private final ItemType parentType;
     private final UnitRepairConfigGui parentGui;
-    private final String materialName;
+    private final String typeName;
 
     private boolean shouldWork = true;
 
@@ -40,7 +40,7 @@ public class UnitRepairElementListGui extends
         super("§e" + CasedStringUtil.snakeToUpperSpacedCase(parentType.getKey().getKey()) + " §rUnit repair");
         this.parentType = parentType;
         this.parentGui = parentGui;
-        this.materialName = CasedStringUtil.snakeToUpperSpacedCase(parentType.getKey().getKey());
+        this.typeName = CasedStringUtil.snakeToUpperSpacedCase(parentType.getKey().getKey());
 
         GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
     }
@@ -66,7 +66,7 @@ public class UnitRepairElementListGui extends
             new SelectItemTypeGui(
                     "Select item to be repaired.",
                     "§7Click here with an item to set the item\n" +
-                            "§7You like to be repaired by " + this.materialName,
+                            "§7You like to be repaired by " + this.typeName,
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
@@ -103,7 +103,7 @@ public class UnitRepairElementListGui extends
 
     @Override
     protected String createItemName() {
-        return "§aAdd a new item reparable by " + this.materialName;
+        return "§aAdd a new item reparable by " + this.typeName;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UnitRepairElementListGui extends
                 this.parentType.getKey() + "." + type.getKey(),
                 Arrays.asList(
                         "§7Click here to change how many §e% §7of §a" + materialDisplayName,
-                        "§7Should get repaired by §e" + this.materialName
+                        "§7Should get repaired by §e" + this.typeName
                 ),
                 2,
                 true, true,
@@ -134,15 +134,15 @@ public class UnitRepairElementListGui extends
     @Override
     protected GuiItem itemFromFactory(ItemType type, DoubleSettingGui.DoubleSettingFactory factory) {
         return factory.getItem(type,
-                "§7%§a" + CasedStringUtil.snakeToUpperSpacedCase(type.getKey().getKey()) + " §erepaired by §a" + this.materialName);
+                "§7%§a" + CasedStringUtil.snakeToUpperSpacedCase(type.getKey().getKey()) + " §erepaired by §a" + this.typeName);
     }
 
     private void fillSet(HashSet<ItemType> set, String path){
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER
+        ConfigurationSection itemSection = ConfigHolder.UNIT_REPAIR_HOLDER
                 .getConfig()
                 .getConfigurationSection(path);
-        if (materialSection != null) {
-            for (String key : materialSection.getKeys(false)) {
+        if (itemSection != null) {
+            for (String key : itemSection.getKeys(false)) {
                 ItemType type = ItemTypeUtil.INSTANCE.getItemTypeExact(key);
                 if(type == null) continue; // maybe warn the user ?
 

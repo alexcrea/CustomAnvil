@@ -69,14 +69,14 @@ abstract class AbstractItemTypeGroup(private val name: String) {
     /**
      * Get the group non-inherited items as a set
      */
-    open fun getNonGroupInheritedMaterials(): MutableSet<ItemType> {
+    open fun getNonGroupInheritedItemTypes(): MutableSet<ItemType> {
         return includedItems
     }
 
     /**
      * Set the group non-inherited items
      */
-    open fun setNonGroupInheritedMaterials(types: Set<ItemType>) {
+    open fun setNonGroupInheritedItemTypes(types: Set<ItemType>) {
         this.includedItems.clear()
         this.includedItems.addAll(types)
     }
@@ -102,7 +102,7 @@ abstract class AbstractItemTypeGroup(private val name: String) {
      */
     abstract fun getGroups(): MutableSet<AbstractItemTypeGroup>
 
-    open fun getRepresentativeMaterial(): ItemType {
+    open fun getRepresentativeItem(): ItemType {
         // Test inner material
         val itemIterator = includedItems.iterator()
         while (itemIterator.hasNext()) {
@@ -113,13 +113,13 @@ abstract class AbstractItemTypeGroup(private val name: String) {
         // Test included group representative material
         val groupIterator = getGroups().iterator()
         while (groupIterator.hasNext()) {
-            val groupType = groupIterator.next().getRepresentativeMaterial()
+            val groupType = groupIterator.next().getRepresentativeItem()
             if (groupType == ItemType.AIR) continue
             return groupType
         }
         return ItemType.PAPER
     }
 
-    abstract fun updateMaterials()
+    abstract fun update()
 
 }

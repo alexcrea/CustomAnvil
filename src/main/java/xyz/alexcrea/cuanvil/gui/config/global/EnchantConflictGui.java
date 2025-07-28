@@ -70,7 +70,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     @Override
     public ItemStack createItemForGeneric(EnchantConflictGroup conflict) {
-        ItemStack item = conflict.getRepresentativeMaterial().createItemStack();
+        ItemStack item = conflict.getRepresentativeItemType().createItemStack();
 
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
