@@ -2,11 +2,7 @@
 # It is recommended that you use /configanvil to edit theses config.
 # You can still manually edit here if you like to. but if you do, don't forget to /anvilconfigreload after you changes !
 #
-
-# Please note this config use spigot material names.
-# It should match minecraft name in most case, maybe every case, but I can't be sure
-# In case there an issue with material name, you can found them here:
-# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# This config use the item namespace. or assume minecraft: namespace if absent.
 
 # An empty Exclude group exclude nothing, so it contain everything
 everything:

@@ -50,7 +50,7 @@ public class UnitRepairElementListGui extends
     protected List<String> getCreateItemLore() {
         return Arrays.asList(
                 "§7Select a new item to be repairable.",
-                "§7You will be asked the material to use."
+                "§7You will be asked the item to use."
         );
     }
 

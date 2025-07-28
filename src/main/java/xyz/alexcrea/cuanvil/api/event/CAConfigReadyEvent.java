@@ -18,7 +18,7 @@ import xyz.alexcrea.cuanvil.api.ItemGroupApi;
  * <p>
  * use {@link xyz.alexcrea.cuanvil.api.ConflictAPI ConflictApi},
  * {@link xyz.alexcrea.cuanvil.gui.config.global.CustomRecipeConfigGui CustomRecipeConfigGui},
- * {@link ItemGroupApi MaterialGroupApi}
+ * {@link ItemGroupApi ItemGroupApi}
  * and {@link xyz.alexcrea.cuanvil.api.UnitRepairApi UnitRepairApi}
  * to add/remove/edit configurations
  */

@@ -69,7 +69,7 @@ enum class LoreEditType(
         }
 
     /**
-     * If the edit should consume the provided material
+     * If the edit should consume the provided item
      */
     val doConsume: Boolean
         get() {

@@ -20,12 +20,12 @@ public interface SelectItemTypeContainer {
     static List<String> getItemLore(SelectItemTypeContainer container, String containerType, String action) {
         // Prepare material lore
         ArrayList<String> groupLore = new ArrayList<>();
-        groupLore.add("§7Allow you to select a list of §ematerials §7that this " + containerType + " should " + action);
+        groupLore.add("§7Allow you to select a list of §eitems §7that this " + containerType + " should " + action);
         Set<ItemType> typeSet = container.getSelectedItems();
         if (typeSet.isEmpty()) {
-            groupLore.add("§7There is no " + action + "d material for this " + containerType + ".");
+            groupLore.add("§7There is no " + action + "d item for this " + containerType + ".");
         } else {
-            groupLore.add("§7List of " + action + "d materials for this " + containerType + ":");
+            groupLore.add("§7List of " + action + "d items for this " + containerType + ":");
             Iterator<ItemType> typeIterator = typeSet.iterator();
 
             boolean greaterThanMax = typeSet.size() > 5;

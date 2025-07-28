@@ -21,7 +21,7 @@ class ItemGroupManager {
 
     lateinit var groupMap: LinkedHashMap<String, AbstractItemTypeGroup>
 
-    // Read and create material groups
+    // Read and create item groups
     fun prepareGroups(config: ConfigurationSection) {
         groupMap = LinkedHashMap()
 
@@ -51,7 +51,7 @@ class ItemGroupManager {
         val groupSection = config.getConfigurationSection(key)!!
         val groupType = groupSection.getString(GROUP_TYPE_PATH, null)
 
-        // Create Material group according to the group type
+        // Create item group according to the group type
         val group: AbstractItemTypeGroup
         if (groupType != null && GroupType.EXCLUDE.equal(groupType)) {
             group = ExcludeItemTypeGroup(key)
@@ -74,7 +74,7 @@ class ItemGroupManager {
         config: ConfigurationSection,
         keys: Set<String>
     ) {
-        // Read material to include in this group policy
+        // Read item to include in this group policy
         val itemTypeNames = groupSection.getStringList(ITEMS_LIST_PATH)
         for (typeName in itemTypeNames) {
             val type = ItemTypeUtil.getItemType(typeName)

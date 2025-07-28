@@ -52,10 +52,10 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeItemTypeGroup,
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §fGroup");
         meta.setLore(Arrays.asList(
-                "§7Number of selected groups : " + group.getGroups().size(),
-                "§7Number of included material : " + group.getNonGroupInheritedItemTypes().size(),
+                "§7Number of selected groups: " + group.getGroups().size(),
+                "§7Number of included item: " + group.getNonGroupInheritedItemTypes().size(),
                 "",
-                "§7Total number of included material " + group.getItemTypes().size()));
+                "§7Total number of included item: " + group.getItemTypes().size()));
 
         item.setItemMeta(meta);
         return item;
@@ -80,7 +80,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeItemTypeGroup,
 
     @Override
     protected String genericDisplayedName() {
-        return "material group";
+        return "item group";
     }
 
     @Override

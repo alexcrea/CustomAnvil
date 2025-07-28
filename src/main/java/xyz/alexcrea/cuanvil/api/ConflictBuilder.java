@@ -444,7 +444,7 @@ n     * <p>
             AbstractItemTypeGroup typeGroup = itemGroupManager.get(groupName);
 
             if (typeGroup == null) {
-                CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + getName());
+                CustomAnvil.instance.getLogger().warning("Item group " + groupName + " do not exist but is ask by conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
                 continue;
             }

@@ -12,7 +12,7 @@ abstract class AbstractItemTypeGroup(private val name: String) {
     protected abstract fun createDefaultSet(): MutableSet<ItemType>
 
     /**
-     * Get if a material is allowed following the group policy
+     * Get if an item is allowed following the group policy
      */
     open fun contain(mat: ItemType): Boolean {
         return mat in getItemTypes()
@@ -98,19 +98,19 @@ abstract class AbstractItemTypeGroup(private val name: String) {
     abstract fun setGroups(groups: MutableSet<AbstractItemTypeGroup>)
 
     /**
-     * Get the contained group of this material group
+     * Get the contained group of this item group
      */
     abstract fun getGroups(): MutableSet<AbstractItemTypeGroup>
 
     open fun getRepresentativeItem(): ItemType {
-        // Test inner material
+        // Test inner item
         val itemIterator = includedItems.iterator()
         while (itemIterator.hasNext()) {
             val type = itemIterator.next()
             if (type == ItemType.AIR) continue
             return type
         }
-        // Test included group representative material
+        // Test included group representative item
         val groupIterator = getGroups().iterator()
         while (groupIterator.hasNext()) {
             val groupType = groupIterator.next().getRepresentativeItem()

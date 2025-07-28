@@ -90,7 +90,7 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
         selectMeta.setDisplayName("§aAdd Item");
         selectMeta.setLore(Arrays.asList(
                 "§7Click here with an item to add",
-                "§7it's Material to the list."));
+                "§7it to the list."));
 
         selectItem.setItemMeta(selectMeta);
 
@@ -208,7 +208,7 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
 
         if (meta == null) return item;
         meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(type.key().value().toLowerCase()));
-        meta.setLore(Collections.singletonList("§7Click here to remove this material from the list"));
+        meta.setLore(Collections.singletonList("§7Click here to remove this item from the list"));
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);

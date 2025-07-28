@@ -223,22 +223,22 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         List<String> groupLore = SelectGroupContainer.getGroupLore(this, "group", "include");
 
         // Configure included material setting item
-        ItemStack matSelectItem = this.itemSelection.getItem();
-        ItemMeta matSelectMeta = matSelectItem.getItemMeta();
+        ItemStack itemSelectItem = this.itemSelection.getItem();
+        ItemMeta itemSelectMeta = itemSelectItem.getItemMeta();
 
-        matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");
-        matSelectMeta.setLore(matLore);
-        matSelectMeta.addItemFlags(ItemFlag.values());
+        itemSelectMeta.setDisplayName("§aSelect included §eItems");
+        itemSelectMeta.setLore(matLore);
+        itemSelectMeta.addItemFlags(ItemFlag.values());
 
-        matSelectItem.setItemMeta(matSelectMeta);
+        itemSelectItem.setItemMeta(itemSelectMeta);
 
-        this.itemSelection.setItem(matSelectItem); // Just in case
+        this.itemSelection.setItem(itemSelectItem); // Just in case
 
         // Configure enchant setting item
         ItemStack groupSelectItem = this.groupSelection.getItem();
         ItemMeta groupSelectMeta = groupSelectItem.getItemMeta();
 
-        groupSelectMeta.setDisplayName("§aSelect included §3Groups §aSettings");
+        groupSelectMeta.setDisplayName("§aSelect included §3Groups");
         groupSelectMeta.setLore(groupLore);
 
         groupSelectItem.setItemMeta(groupSelectMeta);

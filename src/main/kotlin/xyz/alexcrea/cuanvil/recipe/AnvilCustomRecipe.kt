@@ -153,7 +153,7 @@ class AnvilCustomRecipe(
             DEFAULT_RESULT_ITEM_CONFIG
         )
 
-        // Update material map
+        // Update item map
         ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.cleanSetLeftItem(this, leftItem)
 
     }

@@ -100,7 +100,7 @@ public class ItemGroupApi {
     public static boolean writeItemGroup(@NotNull AbstractItemTypeGroup group, boolean updatePlanned) {
         String name = group.getName();
         if (name.contains(".")) {
-            CustomAnvil.instance.getLogger().warning("Group " + name + " contain . in its name but should not. this material group is ignored.");
+            CustomAnvil.instance.getLogger().warning("Group " + name + " contain . in its name but should not. this item group is ignored.");
             return false;
         }
 

@@ -74,7 +74,7 @@ public class PUpdate_1_11_0 {
 
         ItemGroupApi.addItemGroup(group, true);
 
-        // Try to see if all the materials was in the tools group. and if so, replace it with the new group
+        // Try to see if all the items was in the tools group. and if so, replace it with the new group
         if (tools == null) return;
         if (!(tools instanceof IncludeItemTypeGroup include)) return;
 

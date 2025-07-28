@@ -165,7 +165,7 @@ class EnchantConflictManager {
     ): AbstractItemTypeGroup {
         val group = itemManager.get(groupName)
         if (group == null) {
-            CustomAnvil.instance.logger.warning("Material group $groupName do not exist but is ask by conflict $conflictName")
+            CustomAnvil.instance.logger.warning("Item group $groupName do not exist but is ask by conflict $conflictName")
             return IncludeItemTypeGroup("error_placeholder")
         }
 

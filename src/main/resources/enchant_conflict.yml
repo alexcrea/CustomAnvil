@@ -3,7 +3,7 @@
 # You can still manually edit here if you like to. but if you do, don't forget to /anvilconfigreload after you changes !
 #
 
-# material conflicts
+# item conflicts
 #
 # If you want to edit this file:
 # - A conflict will apply to every item except if in one of the notAffectedGroups group
