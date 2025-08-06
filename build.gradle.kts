@@ -26,6 +26,9 @@ val effectiveVersion = "$version" +
 repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
+
+    // ExcellentEnchants
+    maven(url = "https://repo.nightexpressdev.com/releases")
 }
 
 dependencies {
@@ -46,10 +49,11 @@ dependencies {
     compileOnly(project(":impl:LegacyEcoEnchant"))
 
     // ExcellentEnchants
-    compileOnly(files("libs/nightcore-2.7.3.jar"))
-    compileOnly(files("libs/ExcellentEnchants-5.0.0.jar"))
-    compileOnly(files("libs/ExcellentEnchants-4.3.1.jar")) // For legacy excellent enchants (can/should be stripped)
-    compileOnly(files("libs/ExcellentEnchants 4.1.0-striped.jar")) // For legacy excellent enchants
+    compileOnly("su.nightexpress.excellentenchants:Core:5.1.0") {
+        exclude("org.spigotmc")
+    }
+    compileOnly(files("libs/ExcellentEnchants-4.3.3-striped.jar")) // For pre v5 excellent enchants
+    compileOnly(files("libs/ExcellentEnchants-4.1.0-striped.jar")) // For legacy excellent enchants
 
     // Disenchantment
     compileOnly(files("libs/Disenchantment-6.1.5.jar"))
