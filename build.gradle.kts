@@ -29,9 +29,6 @@ repositories {
 
     // ExcellentEnchants
     maven(url = "https://repo.nightexpressdev.com/releases")
-
-    // ProtocoLib
-    maven(url = "https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -65,7 +62,7 @@ dependencies {
     compileOnly(files("libs/toolstats-1.9.6-stripped.jar"))
 
     // Protocolib
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
 
     // AxPlayerWarps
     compileOnly(files("libs/AxPlayerWarps-1.10.3.jar"))
