@@ -11,11 +11,7 @@ object GuiTesterSelector {
 
             return when (versionParts[1]) {
                 21 -> when (versionParts[2]) {
-                    0, 1 -> "1_21_R1"
-                    2, 3 -> "1_21_R2"
-                    4 -> "1_21_R3"
-                    5 -> "1_21_R4"
-                    6, 7, 8 -> "1_21_R5"
+                    8 -> "1_21_R5"
                     else -> null
                 }
 
