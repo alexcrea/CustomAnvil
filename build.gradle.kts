@@ -27,6 +27,9 @@ repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
 
+    // ExcellentEnchants
+    maven(url = "https://repo.nightexpressdev.com/releases")
+
     // ProtocoLib
     maven(url = "https://repo.dmulloy2.net/repository/public/")
 }
@@ -48,8 +51,9 @@ dependencies {
     compileOnly("com.willfp:eco:6.74.5")
 
     // ExcellentEnchants
-    compileOnly(files("libs/nightcore-2.7.3.jar"))
-    compileOnly(files("libs/ExcellentEnchants-5.0.0.jar"))
+    compileOnly("su.nightexpress.excellentenchants:Core:5.1.0") {
+        exclude("org.spigotmc")
+    }
 
     // Disenchantment
     compileOnly(files("libs/Disenchantment-6.1.5.jar"))
