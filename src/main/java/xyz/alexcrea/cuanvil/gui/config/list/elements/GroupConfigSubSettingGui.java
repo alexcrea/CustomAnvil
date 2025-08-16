@@ -323,7 +323,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // ----------------------------
     // End of SelectGroupContainer related methods
     // ----------------------------
-    // SelectMaterialContainer related methods
+    // SelectItemTypeContainer related methods
     // ----------------------------
 
     @Override
@@ -368,7 +368,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     // ----------------------------
-    // End of SelectMaterialContainer related methods
+    // End of SelectItemTypeContainer related methods
     // ----------------------------
 
     private void updateDirectReferencingGroups(AbstractItemTypeGroup referenceTo) {

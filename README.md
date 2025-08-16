@@ -22,7 +22,7 @@ the plugin can be downloaded on
 - Custom enchantment level limit.
 - Custom anvil recipes.
 - Custom enchant restrictions (allow unsafe enchantment only for a group of item or create new restriction).
-- Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds).
+- Custom items of unit repairs (repair damaged with unit of items types, for example the repair of diamond sword by diamonds).
 - Custom XP cost for every aspect of the anvil.
 - Permissions to bypass level limit or enchantment restriction.
 - Display XP cost instead of "too expensive" when above level 40. (see below for more information)

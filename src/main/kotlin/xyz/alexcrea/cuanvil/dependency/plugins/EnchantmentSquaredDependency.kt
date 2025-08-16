@@ -96,7 +96,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
         // Write groups and conflicts
         writeMissingGroups()
-        writeMaterialRestriction(esEnchantments)
+        writeItemRestriction(esEnchantments)
         writeEnchantmentConflicts(esEnchantments)
 
         CustomAnvil.instance.logger.info("Enchantment Squared should now work as expected !")
@@ -117,7 +117,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
         ItemGroupApi.addItemGroup(trinkets)
     }
 
-    private fun writeMaterialRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>) {
+    private fun writeItemRestriction(esEnchantments: List<CAEnchantSquaredEnchantment>) {
         for (enchantment in esEnchantments) {
             val conflict = ConflictBuilder("restriction_${enchantment.key.key}", CustomAnvil.instance)
             conflict.addEnchantment(enchantment)

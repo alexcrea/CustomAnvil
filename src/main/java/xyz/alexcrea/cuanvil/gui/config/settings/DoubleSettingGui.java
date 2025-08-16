@@ -268,7 +268,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
     protected GuiItem stepGuiItem(int stepIndex) {
         BigDecimal stepValue = holder.steps[stepIndex];
 
-        // Get material properties
+        // Get item properties
         ItemType stepType;
         StringBuilder stepName = new StringBuilder("§");
         List<String> stepLore;

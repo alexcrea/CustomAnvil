@@ -81,7 +81,7 @@ public class UnitRepairElementListGui extends
                             return;
                         }
 
-                        // Add new material
+                        // Add new item
                         ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentType.getKey() + "." + type.getKey(), 0.25);
 
                         if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
@@ -92,7 +92,7 @@ public class UnitRepairElementListGui extends
                         updateValueForGeneric(type, true);
                         this.parentGui.updateValueForGeneric(this.parentType, true);
 
-                        // Display material edit setting
+                        // Display item edit setting
                         this.factoryMap.get(type).create().show(player);
                     },
                     true
@@ -108,15 +108,15 @@ public class UnitRepairElementListGui extends
 
     @Override
     protected DoubleSettingGui.DoubleSettingFactory createFactory(ItemType type) {
-        String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(type.getKey().getKey());
+        String displayName = CasedStringUtil.snakeToUpperSpacedCase(type.getKey().getKey());
 
         return new DoubleSettingGui.DoubleSettingFactory(
-                "§0%§8" + materialDisplayName + " Repair",
+                "§0%§8" + displayName + " Repair",
                 this,
                 ConfigHolder.UNIT_REPAIR_HOLDER,
                 this.parentType.getKey() + "." + type.getKey(),
                 Arrays.asList(
-                        "§7Click here to change how many §e% §7of §a" + materialDisplayName,
+                        "§7Click here to change how many §e% §7of §a" + displayName,
                         "§7Should get repaired by §e" + this.typeName
                 ),
                 2,

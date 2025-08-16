@@ -18,7 +18,7 @@ public interface SelectItemTypeContainer {
     Set<ItemType> illegalItems();
 
     static List<String> getItemLore(SelectItemTypeContainer container, String containerType, String action) {
-        // Prepare material lore
+        // Prepare item lore
         ArrayList<String> groupLore = new ArrayList<>();
         groupLore.add("§7Allow you to select a list of §eitems §7that this " + containerType + " should " + action);
         Set<ItemType> typeSet = container.getSelectedItems();

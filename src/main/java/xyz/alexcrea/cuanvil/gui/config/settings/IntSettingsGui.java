@@ -218,7 +218,7 @@ public class IntSettingsGui extends AbstractSettingGui {
     protected GuiItem stepGuiItem(int stepIndex) {
         int stepValue = holder.steps[stepIndex];
 
-        // Get material properties
+        // Get item properties
         ItemType stepMat;
         StringBuilder stepName = new StringBuilder("§");
         List<String> stepLore;

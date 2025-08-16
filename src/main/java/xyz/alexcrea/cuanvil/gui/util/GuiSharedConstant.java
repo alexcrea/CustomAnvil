@@ -17,8 +17,8 @@ public class GuiSharedConstant {
 
     private GuiSharedConstant(){}
 
-    public static final ItemType SECONDARY_BACKGROUND_MATERIAL = ItemType.BLACK_STAINED_GLASS_PANE;
-    public static final GuiItem SECONDARY_BACKGROUND_ITEM = GuiGlobalItems.backgroundItem(GuiSharedConstant.SECONDARY_BACKGROUND_MATERIAL);
+    public static final ItemType SECONDARY_BACKGROUND_ITEM_TYPE = ItemType.BLACK_STAINED_GLASS_PANE;
+    public static final GuiItem SECONDARY_BACKGROUND_ITEM = GuiGlobalItems.backgroundItem(GuiSharedConstant.SECONDARY_BACKGROUND_ITEM_TYPE);
 
     public static final String UPPER_FILLER_FULL_PLANE = "111111111";
     public static final String EMPTY_GUI_FULL_LINE = "000000000";

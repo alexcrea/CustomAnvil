@@ -29,10 +29,10 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
     private final Gui backGui;
     private boolean instantRemove;
 
-    private final List<ItemType> defaultMaterials;
-    private final Set<ItemType> illegalMaterials;
-    private final int defaultMaterialHash;
-    private int nowMaterialHash;
+    private final List<ItemType> defaultItems;
+    private final Set<ItemType> illegalItems;
+    private final int defaultItemHash;
+    private int nowItemHash;
 
     public ItemTypeSelectSettingGui(
             @NotNull SelectItemTypeContainer selector,
@@ -43,11 +43,11 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
         this.backGui = backGui;
         this.instantRemove = false;
 
-        this.defaultMaterials = new ArrayList<>(this.selector.getSelectedItems());
-        this.illegalMaterials = this.selector.illegalItems();
+        this.defaultItems = new ArrayList<>(this.selector.getSelectedItems());
+        this.illegalItems = this.selector.illegalItems();
 
-        this.defaultMaterialHash = hashFromItemTypeList(this.defaultMaterials);
-        this.nowMaterialHash = this.defaultMaterialHash;
+        this.defaultItemHash = hashFromItemTypeList(this.defaultItems);
+        this.nowItemHash = this.defaultItemHash;
 
         init();
 
@@ -185,15 +185,15 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
             HumanEntity player = event.getWhoClicked();
             ItemStack cursor = player.getItemOnCursor();
 
-            // Test if cursor material allowed
+            // Test if cursor item allowed
             ItemType cursorMat = cursor.getType().asItemType();
             if (cursorMat == ItemType.AIR) return;
-            if (this.illegalMaterials.contains(cursorMat)) return;
+            if (this.illegalItems.contains(cursorMat)) return;
 
             // Update gui only if item did not exist before.
             if (!this.elementGuiMap.containsKey(cursorMat)) {
                 updateValueForGeneric(cursorMat, true);
-                this.nowMaterialHash ^= cursorMat.hashCode();
+                this.nowItemHash ^= cursorMat.hashCode();
 
                 setSaveItem();
                 update();
@@ -218,7 +218,7 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
 
     @Override
     protected Collection<ItemType> getEveryDisplayableInstanceOfGeneric() {
-        return this.defaultMaterials;
+        return this.defaultItems;
     }
 
     @Override
@@ -232,12 +232,12 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
             if (this.instantRemove) {
                 removeItemType(type);
             } else {
-                String materialName = CasedStringUtil.snakeToUpperSpacedCase(type.key().value().toLowerCase());
+                String name = CasedStringUtil.snakeToUpperSpacedCase(type.key().value().toLowerCase());
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
-                        "Remove " + materialName,
-                        "§7Confirm Remove " + materialName.toLowerCase() + " from this list.",
+                        "Remove " + name,
+                        "§7Confirm Remove " + name.toLowerCase() + " from this list.",
                         this, this,
                         () -> {
                             removeItemType(type);
@@ -253,7 +253,7 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
 
     private void removeItemType(ItemType type) {
         if (this.elementGuiMap.containsKey(type)) {
-            this.nowMaterialHash ^= type.hashCode(); //TODO check would this be valid with item type
+            this.nowItemHash ^= type.hashCode(); //TODO check would this be valid with item type
             setSaveItem();
             removeGeneric(type);
         }
@@ -270,11 +270,11 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
     }
 
     private static int hashFromItemTypeList(List<ItemType> itemTypeList) {
-        int defaultMaterialHash = 0;
+        int hash = 0;
         for (ItemType type : itemTypeList) {
-            defaultMaterialHash ^= type.hashCode(); //TODO check would this be valid with item type
+            hash ^= type.hashCode(); //TODO check would this be valid with item type
         }
-        return defaultMaterialHash;
+        return hash;
     }
 
     private void setSaveItem() {
@@ -287,7 +287,7 @@ public class ItemTypeSelectSettingGui extends MappedElementListConfigGui<ItemTyp
     }
 
     private boolean testCantSave() {
-        return this.defaultMaterialHash == this.nowMaterialHash;
+        return this.defaultItemHash == this.nowItemHash;
     }
 
 

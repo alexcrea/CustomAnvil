@@ -72,11 +72,11 @@ public class GuiGlobalItems {
     private static final ItemType DEFAULT_BACKGROUND_TYPE = ItemType.LIGHT_GRAY_STAINED_GLASS_PANE;
 
     /**
-     * Get a background item with backgroundMat as the displayed material.
+     * Get a background item with backgroundMat as the displayed item type.
      * A background item is a GuiItem that do nothing when interacted with and have an empty name.
      *
      * @param backgroundType The item type of the background.
-     * @return A background item with backgroundMat as material.
+     * @return A background item with backgroundMat as item type.
      */
     public static GuiItem backgroundItem(ItemType backgroundType) {
         ItemStack item = backgroundType.createItemStack();
