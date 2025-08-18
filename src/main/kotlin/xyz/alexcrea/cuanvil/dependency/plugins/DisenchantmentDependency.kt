@@ -5,6 +5,7 @@ import com.jankominek.disenchantment.events.DisenchantClickEvent
 import com.jankominek.disenchantment.events.DisenchantEvent
 import com.jankominek.disenchantment.events.ShatterClickEvent
 import com.jankominek.disenchantment.events.ShatterEvent
+import com.jankominek.disenchantment.listeners.DisenchantClickListener
 import com.jankominek.disenchantment.listeners.ShatterClickListener
 import io.delilaheve.CustomAnvil
 import org.bukkit.entity.HumanEntity
@@ -31,7 +32,7 @@ class DisenchantmentDependency {
         // This is to avoid the disenchantment gui breaking
         try {
             unregisterStaticDisenchantmentListener(ShatterClickListener::class)
-            unregisterStaticDisenchantmentListener(InventoryClickEvent::class)
+            unregisterStaticDisenchantmentListener(DisenchantClickListener::class)
         } catch (e: Exception) {
             CustomAnvil.instance.logger.log(
                 Level.SEVERE, "Could not initialize disenchantment support" +
