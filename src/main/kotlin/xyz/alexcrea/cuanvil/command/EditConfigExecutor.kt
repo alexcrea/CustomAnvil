@@ -2,17 +2,21 @@ package xyz.alexcrea.cuanvil.command
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 
-class EditConfigExecutor : CommandExecutor {
+class EditConfigExecutor: CASubCommand() {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (!sender.hasPermission(CustomAnvil.editConfigPermission)) {
+    override fun executeCommand(sender: CommandSender,
+                                cmd: Command,
+                                cmdstr: String,
+                                args: Array<out String>): Boolean {
+        if (sender !is HumanEntity) return false
+
+        if (!allowed(sender)) {
             sender.sendMessage(GuiGlobalActions.NO_EDIT_PERM)
             return false
         }
@@ -25,10 +29,13 @@ class EditConfigExecutor : CommandExecutor {
             return false
         }
 
-        if (sender !is HumanEntity) return false
         MainConfigGui.getInstance().show(sender)
 
         return true
+    }
+
+    override fun allowed(sender: CommandSender): Boolean {
+        return sender.hasPermission(CustomAnvil.editConfigPermission)
     }
 
 }

@@ -10,6 +10,8 @@ authors: [ DelilahEve, alexcrea ]
 libraries: [${libraries}]
 
 commands:
+  customanvil:
+    description: Generic command for custom anvil
   anvilconfigreload:
     description: Reload every config of this plugin
     permission: ca.command.reload
@@ -36,6 +38,9 @@ permissions:
   ca.command.reload:
     default: op
     description: Allow administrator to reload the plugin's configs
+  ca.command.debug:
+    default: op
+    description: Get debug information about the plugin and server
   ca.config.edit:
     default: op
     description: Allow administrator to edit the plugin's config in game
