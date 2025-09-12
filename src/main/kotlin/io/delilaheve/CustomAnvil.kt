@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.api.event.CAEnchantRegistryReadyEvent
+import xyz.alexcrea.cuanvil.command.CustomAnvilCmd
 import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
@@ -290,6 +291,8 @@ open class CustomAnvil : JavaPlugin() {
 
         command = getCommand(commandConfigName)
         command?.setExecutor(EditConfigExecutor())
+
+        CustomAnvilCmd(this)
     }
 
 }

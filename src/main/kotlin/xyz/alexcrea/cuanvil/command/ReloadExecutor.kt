@@ -11,9 +11,13 @@ import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 
-class ReloadExecutor : CommandExecutor {
-    override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
-        if (!sender.hasPermission(CustomAnvil.commandReloadPermission)) {
+class ReloadExecutor : CASubCommand() {
+
+    override fun executeCommand(sender: CommandSender,
+                           cmd: Command,
+                           cmdstr: String,
+                           args: Array<out String>): Boolean {
+        if (!allowed(sender)) {
             sender.sendMessage("§cYou do not have permission to reload the config")
             return false
         }
@@ -29,6 +33,10 @@ class ReloadExecutor : CommandExecutor {
             }
         }
         return commandSuccess
+    }
+
+    override fun allowed(sender: CommandSender): Boolean {
+        return sender.hasPermission(CustomAnvil.commandReloadPermission)
     }
 
     /**
