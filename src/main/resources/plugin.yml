@@ -38,7 +38,7 @@ permissions:
   ca.command.reload:
     default: op
     description: Allow administrator to reload the plugin's configs
-  ca.command.debug:
+  ca.command.diagnostic:
     default: op
     description: Get debug information about the plugin and server
   ca.config.edit:

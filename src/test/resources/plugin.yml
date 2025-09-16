@@ -11,6 +11,8 @@ libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:2.0.21
 
 commands:
+  customanvil:
+    description: Generic command for custom anvil
   anvilconfigreload:
     description: Reload every config of this plugin
     permission: ca.command.reload
@@ -37,6 +39,9 @@ permissions:
   ca.command.reload:
     default: op
     description: Allow administrator to reload the plugin's configs
+  ca.command.diagnostic:
+    default: op
+    description: Get debug information about the plugin and server
   ca.config.edit:
     default: op
     description: Allow administrator to edit the plugin's config in game
@@ -55,8 +60,7 @@ permissions:
     default: op
     description: Allow player to edit lore via paper if enabled (toggleable)
 
-
-# soft depend on old name (UnsafeEnchantsPlus), so I can disable it if it is on the same server (old name for this plugin)
+# soft depend on old name of this plugin (UnsafeEnchantsPlus), so I can disable it if it is on the same server
 # Also depend to other plugin for compatibility
 softdepend:
   - UnsafeEnchantsPlus
@@ -66,3 +70,4 @@ softdepend:
   - EcoEnchants
   - eco
   - ExcellentEnchants
+  - HavenBags

@@ -49,8 +49,12 @@ open class CustomAnvil : JavaPlugin() {
         // Permission string required to reload the config
         const val commandReloadPermission = "ca.command.reload"
 
+        // Permission string required to get diagnostic data
+        const val diagnosticPermission = "ca.command.diagnostic"
+
         // Permission string required to edit the plugin's config
         const val editConfigPermission = "ca.config.edit"
+
 
         // Command Name to reload the config
         const val commandReloadName = "anvilconfigreload"
@@ -292,6 +296,8 @@ open class CustomAnvil : JavaPlugin() {
         command = getCommand(commandConfigName)
         command?.setExecutor(EditConfigExecutor())
 
+        println(getCommand("customanvil"))
+        println(getCommand("customanvila"))
         CustomAnvilCmd(this)
     }
 
