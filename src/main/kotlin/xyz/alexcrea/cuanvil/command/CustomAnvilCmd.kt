@@ -22,9 +22,11 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     init {
         commands = ImmutableMap.of<String, CASubCommand>(
             "gui", editConfigCommand,
-            "reload", ReloadExecutor()
+            "reload", ReloadExecutor(),
+            "diagnostic", Diagnostic(),
         )
 
+        println(plugin.getCommand(genericCommandName))
         val self = plugin.getCommand(genericCommandName)!!
         self.setExecutor(this)
         self.tabCompleter = this
