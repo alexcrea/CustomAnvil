@@ -5,22 +5,20 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
-// This is a temporary class that aim to handle 1.21 update.
-// It will be replaced by a better system later.
 public class Update_1_21 {
 
     private static final Version V1_21 = new Version(1, 21);
 
     public static void handleUpdate(Version current){
-        // Test if we are running in 1.21.1
-        if(V1_21.greaterEqual(current))
+        // Test if we are running in 1.21 or better
+        if(V1_21.greaterThan(current))
             return;
 
         // if version path is not null then check if its it's before 1.21
         String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
         if(oldVersion != null){
             var version = Version.fromString(oldVersion);
-            if(V1_21.greaterEqual(version)) return;
+            if(V1_21.lesserEqual(version)) return;
         }
 
         doUpdate();
