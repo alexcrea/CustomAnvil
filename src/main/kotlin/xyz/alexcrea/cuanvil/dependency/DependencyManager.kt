@@ -101,6 +101,9 @@ object DependencyManager {
         if (pluginManager.isPluginEnabled("ToolStats"))
             genericDependencies.add(ToolStatsDependency(pluginManager.getPlugin("ToolStats")!!))
 
+        if (pluginManager.isPluginEnabled("ItemsAdder"))
+            genericDependencies.add(GenericPluginDependency(pluginManager.getPlugin("ItemsAdder")!!))
+
         for (dependency in genericDependencies)
             dependency.redirectListeners()
 
