@@ -57,8 +57,13 @@ public class PluginUpdates {
     public static void handleMCVersionUpdate(){
         Version current = UpdateUtils.currentMinecraftVersion();
 
-        Update_1_21.handleUpdate(current);
-        Update_1_21_9.handleUpdate(current);
+        boolean hadUpdate = false;
+        hadUpdate |= Update_1_21.handleUpdate(current);
+        hadUpdate |= Update_1_21_9.handleUpdate(current);
+
+        if(hadUpdate){
+            CustomAnvil.instance.getLogger().info("Updating Done !");
+        }
     }
 
     private static void finishConfiguration(@Nonnull String newVersion, @Nonnull Set<ConfigHolder> toSave) {

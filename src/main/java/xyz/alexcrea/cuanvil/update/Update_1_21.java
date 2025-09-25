@@ -9,19 +9,20 @@ public class Update_1_21 {
 
     private static final Version V1_21 = new Version(1, 21);
 
-    public static void handleUpdate(Version current){
+    public static boolean handleUpdate(Version current){
         // Test if we are running in 1.21 or better
         if(V1_21.greaterThan(current))
-            return;
+            return false;
 
         // if version path is not null then check if its it's before 1.21
         String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
         if(oldVersion != null){
             var version = Version.fromString(oldVersion);
-            if(V1_21.lesserEqual(version)) return;
+            if(V1_21.lesserEqual(version)) return false;
         }
 
         doUpdate();
+        return true;
     }
 
     private static void doUpdate() {
@@ -86,8 +87,6 @@ public class Update_1_21 {
         // imply reload of CONFLICT_HOLDER
         // We also do not need to reload base config as there is no object related to it.
         ConfigHolder.ITEM_GROUP_HOLDER.reload();
-
-        CustomAnvil.instance.getLogger().info("Updating Done !");
     }
 
 }
