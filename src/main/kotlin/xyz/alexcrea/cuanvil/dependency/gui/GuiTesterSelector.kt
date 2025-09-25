@@ -11,18 +11,7 @@ object GuiTesterSelector {
             if (versionParts[0] != 1) return null
 
             return when (versionParts[1]) {
-                // Can't support 1.16.5 bc 1.16.5 paper userdev do not exist
-
-                17 -> when (versionParts[2]) {
-                    0, 1 -> v1_17R1_ExternGuiTester()
-                    else -> null
-                }
-
-                18 -> when (versionParts[2]) {
-                    0, 1 -> v1_18R1_ExternGuiTester()
-                    2 -> v1_18R2_ExternGuiTester()
-                    else -> null
-                }
+                // Can't support 1.16.5-1.18.x paper userdev do not exist or broken
 
                 19 -> when (versionParts[2]) {
                     0, 1, 2 -> v1_19R1_ExternGuiTester()

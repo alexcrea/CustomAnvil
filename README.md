@@ -2,7 +2,6 @@
 
 **Custom Anvil** is a plugin that allows server administrators to customize every aspect of the anvil's mechanics. 
 It is expected to work on 1.18 to 1.21.7 minecraft servers running spigot or paper.
-(the plugin support of 1.16.5 to 1.17.1 is experimental and may encounter issues)
 
 **Custom Anvil** was previously named **Unsafe Enchants+**.
 It was renamed because it now affects every anvil aspect and not only unsafe enchants\
@@ -87,7 +86,7 @@ as low priority as I work for the plugin on my free time for free.
 
 One of the configurations allow displaying price about 40 and removing Too Expensive. \
 By how the minecraft client work: price above 40 can only be displayed green, even if the player does not own enough experience level. 
-Minecraft version 1.17 to 1.21.7 do not need any dependency. Other version need ProtocoLib enabled on your server for this feature. \
+Minecraft version 1.19 to 1.21.7 do not need any dependency. Other version need ProtocoLib enabled on your server for this feature. \
 You can also wait for an update of the plugin to support a newer version.
 
 Please note that 1.16.5 to 1.17.1 are not officially supported. Run at your own risk.
