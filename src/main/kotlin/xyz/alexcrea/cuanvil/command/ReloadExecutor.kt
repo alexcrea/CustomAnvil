@@ -9,7 +9,7 @@ import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
-import xyz.alexcrea.cuanvil.update.Update_1_21
+import xyz.alexcrea.cuanvil.update.plugin.PluginUpdates
 
 class ReloadExecutor : CommandExecutor {
     override fun onCommand(sender: CommandSender, cmd: Command, cmdstr: String, args: Array<out String>): Boolean {
@@ -48,8 +48,8 @@ class ReloadExecutor : CommandExecutor {
             UnitRepairConfigGui.getCurrentInstance()?.reloadValues()
             CustomRecipeConfigGui.getCurrentInstance()?.reloadValues()
 
-            // temporary: handle 1.21 update
-            Update_1_21.handleUpdate()
+            // handle minecraft version update
+            PluginUpdates.handleMCVersionUpdate()
 
             // Handle dependency reload
             DependencyManager.handleConfigReload()

@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
-import org.bukkit.configuration.file.FileConfiguration;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
@@ -12,31 +11,28 @@ public class Update_1_21 {
 
     private static final Version V1_21 = new Version(1, 21);
 
-    public static void handleUpdate(){
-        // Assume if version path is not null then it's 1.21
+    public static void handleUpdate(Version current){
+        // Test if we are running in 1.21.1
+        if(V1_21.greaterEqual(current))
+            return;
+
+        // if version path is not null then check if its it's before 1.21
         String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
         if(oldVersion != null){
-            Version version = Version.fromString(oldVersion);
-
-            // Test 1.21
+            var version = Version.fromString(oldVersion);
             if(V1_21.greaterEqual(version)) return;
         }
-        Version current = UpdateUtils.currentMinecraftVersion();
 
-        // Test 1.21
-        if(current.greaterEqual(V1_21)){
-            doUpdate();
-        }
-
+        doUpdate();
     }
 
     private static void doUpdate() {
         CustomAnvil.instance.getLogger().info("Updating config to support 1.21 ...");
 
-        FileConfiguration baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
-        FileConfiguration groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
-        FileConfiguration conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
-        FileConfiguration unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        var baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
+        var groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
+        var conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
 
         // Add mace to groups
         groupConfig.set("mace.type", "include");
@@ -81,7 +77,7 @@ public class Update_1_21 {
         unitConfig.set("breeze_rod.mace", 0.25);
 
         // Set version string as 1.21
-        baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, "1.21");
+        baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, V1_21.toString());
 
         // Save
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
@@ -94,7 +90,6 @@ public class Update_1_21 {
         ConfigHolder.ITEM_GROUP_HOLDER.reload();
 
         CustomAnvil.instance.getLogger().info("Updating Done !");
-
     }
 
 }
