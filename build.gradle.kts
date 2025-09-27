@@ -84,7 +84,7 @@ dependencies {
     implementation(project(":nms:v1_21R3", configuration = "reobf"))
     implementation(project(":nms:v1_21R4", configuration = "reobf"))
     implementation(project(":nms:v1_21R5", configuration = "reobf"))
-    implementation(project(":nms:v1_21R6"))//, configuration = "reobf")) //TODO add back when 1.21.9 release
+    implementation(project(":nms:v1_21R6", configuration = "reobf"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
