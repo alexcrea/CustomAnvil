@@ -19,14 +19,24 @@ object PacketManagerSelector {
                 ProtocoLibWrapper()
             else
                 NoPacketManager()
-
     private val versionSpecificManager: PacketManagerBase?
         get() {
             val versionParts = UpdateUtils.currentMinecraftVersionArray()
             if (versionParts[0] != 1) return null
 
             return when (versionParts[1]) {
-                // Can't support 1.16.5 to 1.18.x bc paper userdev do not exist or broken
+                // Can't support 1.16.5 bc 1.16.5 paper userdev do not exist
+
+                17 -> when (versionParts[2]) {
+                    0, 1 -> V1_17R1_PacketManager()
+                    else -> null
+                }
+
+                18 -> when (versionParts[2]) {
+                    0, 1 -> V1_18R1_PacketManager()
+                    2 -> V1_18R2_PacketManager()
+                    else -> null
+                }
 
                 19 -> when (versionParts[2]) {
                     0, 1, 2 -> V1_19R1_PacketManager()

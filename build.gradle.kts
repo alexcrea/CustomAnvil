@@ -69,6 +69,9 @@ dependencies {
 
     // Include nms
     implementation(project(":nms:nms-common"))
+    implementation(project(":nms:v1_17R1", configuration = "reobf"))
+    implementation(project(":nms:v1_18R1", configuration = "reobf"))
+    implementation(project(":nms:v1_18R2", configuration = "reobf"))
     implementation(project(":nms:v1_19R1", configuration = "reobf"))
     implementation(project(":nms:v1_19R2", configuration = "reobf"))
     implementation(project(":nms:v1_19R3", configuration = "reobf"))
