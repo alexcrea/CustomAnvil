@@ -33,6 +33,8 @@ include("nms:v1_21R4")
 findProject(":nms:v1_21R4")?.name = "v1_21R4"
 include("nms:v1_21R5")
 findProject(":nms:v1_21R5")?.name = "v1_21R5"
+include("nms:v1_21R6")
+findProject(":nms:v1_21R6")?.name = "v1_21R6"
 
 include(":impl:LegacyEcoEnchant")
 findProject(":impl:LegacyEcoEnchant")?.name = "LegacyEcoEnchant"

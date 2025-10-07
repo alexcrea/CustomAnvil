@@ -100,7 +100,8 @@ For information about the API, please refer to [the Wiki](https://github.com/ale
 
 ### Default Plugin's Configurations
 For 1.18 to 1.20.6 use the [1.18 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.18)\
-For 1.21 to 1.21.7 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
+For 1.21 to 1.21.8 use the [1.21 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)\
+From 1.21.9 use the [1.21.9 configurations](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs/1.21)
 
 ---
 Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) for metric. You can [disable it](https://bstats.org/getting-started) if you like.

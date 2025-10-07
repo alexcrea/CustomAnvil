@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.14.3"
+version = "1.15.0"
 
 val effectiveVersion = "$version" +
         (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
@@ -84,6 +84,7 @@ dependencies {
     implementation(project(":nms:v1_21R3", configuration = "reobf"))
     implementation(project(":nms:v1_21R4", configuration = "reobf"))
     implementation(project(":nms:v1_21R5", configuration = "reobf"))
+    implementation(project(":nms:v1_21R6", configuration = "reobf"))
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))

@@ -1,5 +1,7 @@
 package xyz.alexcrea.cuanvil.update;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,6 +50,7 @@ public record Version(int major, int minor, int patch) {
                         this.patch <= other.patch)));
     }
 
+    @NotNull
     @Override
     public String toString() {
         return major + "." + minor + "." + patch;
