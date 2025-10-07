@@ -45,7 +45,7 @@ object GuiTesterSelector {
                     4 -> v1_21R3_ExternGuiTester()
                     5 -> v1_21R4_ExternGuiTester()
                     6, 7, 8 -> v1_21R5_ExternGuiTester()
-                    9 -> v1_21R6_ExternGuiTester()
+                    9, 10 -> v1_21R6_ExternGuiTester()
                     else -> null
                 }
 
