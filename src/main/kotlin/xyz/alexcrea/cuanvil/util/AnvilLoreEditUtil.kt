@@ -243,9 +243,10 @@ object AnvilLoreEditUtil {
     private fun colorLines(player: Permissible, lines: ArrayList<String>, editType: LoreEditType): Int {
         val canUseHex = editType.allowHexColor
         val canUseColorCode = editType.allowColorCode
+        val minimessage = editType.allowMinimessage
         val colorCost = editType.useColorCost
 
-        // Now handle color of each lines
+        // Handle color and minimessage of each lines
         var hasUsedColor = false
         for ((index, line) in lines.withIndex()) {
             val coloredLine = StringBuilder(line)
@@ -253,7 +254,8 @@ object AnvilLoreEditUtil {
             val lineUsedColor = AnvilColorUtil.handleColor(
                 coloredLine,
                 player,
-                false, canUseColorCode, canUseHex,
+                false,
+                canUseColorCode, canUseHex, minimessage,
                 AnvilColorUtil.ColorUseType.LORE_EDIT
             )
 

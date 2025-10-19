@@ -196,7 +196,7 @@ class PrepareAnvilListener : Listener {
             useColor = AnvilColorUtil.handleColor(
                 resultString, player,
                 ConfigOptions.permissionNeededForColor,
-                ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor,
+                ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
                 AnvilColorUtil.ColorUseType.RENAME
             )
 

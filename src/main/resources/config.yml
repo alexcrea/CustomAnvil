@@ -59,8 +59,10 @@ sacrifice_illegal_enchant_cost: 1
 #
 # Color code are prefixed by "&" and hexadecimal color by "#".
 # Color code will not be applied if it colors nothing. "&&" can be used to write "&".
+# For minimessage search for minimessage formating https://docs.papermc.io/adventure/minimessage/format/
 allow_color_code: false
 allow_hexadecimal_color: false
+allow_minimessage: false
 
 # Toggle if color should only be applicable if the player a certain permission.
 #

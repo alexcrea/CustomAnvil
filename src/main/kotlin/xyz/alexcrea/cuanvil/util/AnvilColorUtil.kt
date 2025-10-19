@@ -1,5 +1,9 @@
 package xyz.alexcrea.cuanvil.util
 
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.permissions.Permissible
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -8,9 +12,19 @@ object AnvilColorUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
     private val TRANSFORMED_HEX_PATTERN = Pattern.compile("§x(§[0-9a-fA-F]){6}") // pattern to find minecraft hex string
 
+    //TODO use only things compatible with legacy formating
+    private val mm = MiniMessage.builder()
+        .tags(TagResolver.resolver(
+            StandardTags.color(),
+            StandardTags.decorations()))
+            .build()
+    private val legacymm = LegacyComponentSerializer.legacySection()
+
     /**
+     * //TODO rework on 2.x.x  use (return) component and not legacy string
+     *
      * Color a stringbuilder object depending on allowed color type and player permissions on color use type
-     * @return if the stringbuilder was changed and color applied
+     * @return if the stringbuilder was changed and color applied or if minimessage formating was applied
      */
     fun handleColor(
         textToColor: StringBuilder,
@@ -18,9 +32,10 @@ object AnvilColorUtil {
         usePermission: Boolean,
         allowColorCode: Boolean,
         allowHexadecimalColor: Boolean,
+        allowMinimessage: Boolean,
         useType: ColorUseType
     ): Boolean {
-        if (!allowColorCode && !allowHexadecimalColor) return false
+        if (!allowColorCode && !allowHexadecimalColor && !allowMinimessage) return false
 
         val canUseColorCode =
             allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
@@ -30,12 +45,16 @@ object AnvilColorUtil {
             allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
                 useType.hexColorPerm
             ))
+        val canUseMinimessage =
+            allowMinimessage && (!usePermission || useType.minimessagePerm == null || player.hasPermission(
+                useType.minimessagePerm
+            ))
 
         if ((!canUseColorCode) && (!canUseHexColor)) return false
 
         var useColor = false
         // Handle color code
-        if (canUseColorCode) {
+        if (canUseColorCode) { // maybe should use LegacyComponentSerializer ?
             var nbReplacement = replaceAll(textToColor, "&", "§", 2)
             nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
 
@@ -46,6 +65,22 @@ object AnvilColorUtil {
             val nbReplacement = replaceHexToColor(textToColor, 7)
 
             if (nbReplacement > 0) useColor = true
+        }
+
+        if(canUseMinimessage) {
+            val previousStr = textToColor.toString()
+
+            // we dance with formats here
+            val fromLegacy = legacymm.deserialize(previousStr)
+            val toMinimessage = mm.serialize(fromLegacy)
+            val hackySolution = toMinimessage.replace("\\<", "<")
+            val fromMinimessage = mm.deserialize(hackySolution)
+            val toLegacy = legacymm.serialize(fromMinimessage)
+
+            if(previousStr != toLegacy){
+                useColor = true
+                textToColor.replace(0, textToColor.length, toLegacy)
+            }
         }
 
         return useColor
@@ -177,10 +212,11 @@ object AnvilColorUtil {
 
     enum class ColorUseType(
         val colorCodePerm: String?,
-        val hexColorPerm: String?
+        val hexColorPerm: String?,
+        val minimessagePerm: String?
     ) {
-        RENAME("ca.color.code", "ca.color.hex"),
-        LORE_EDIT(null, null)
+        RENAME("ca.color.code", "ca.color.hex", "ca.color.minimessage"),
+        LORE_EDIT(null, null, null)
     }
 
 }

@@ -41,9 +41,10 @@ ca.config.edit: Allow administrator to edit the plugin's config in game
 # Bellow permissions also require some config change to allow usage of features
 # usage of these permission is toggleable in basic config gui or config.yml
 
-# Permissions related to use of color
-ca.color.code: Allow player to use color code if enabled (toggleable)
-ca.color.hex: Allow player to use hexadecimal color if enabled (toggleable)
+# Permissions related to use of color and minimessage
+ca.color.code: Allow player to use color code on rename if enabled (toggleable)
+ca.color.hex: Allow player to use hexadecimal color on rename if enabled (toggleable)
+ca.color.minimessage: Allow player to use minimessage formating on rename if enabled (toggleable)
 
 # Permissions related to edition of the lore
 ca.lore_edit.book: Allow player to edit lore via book and quil if enabled (toggleable)

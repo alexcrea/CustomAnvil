@@ -3,8 +3,10 @@ package xyz.alexcrea.cuanvil.util.config
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_COLOR_CODE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_MINIMESSAGE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_COLOR_CODE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_MINIMESSAGE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_COST
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_USE_COLOR_COST
@@ -98,6 +100,17 @@ enum class LoreEditType(
             return CONFIG
                 .config
                 .getBoolean("${rootPath}.$ALLOW_HEX_COLOR", DEFAULT_ALLOW_HEX_COLOR)
+        }
+
+    /**
+     * Allow usage of minimessage on lore add
+     */
+    val allowMinimessage: Boolean
+        get() {
+            if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
+            return CONFIG
+                .config
+                .getBoolean("${rootPath}.$ALLOW_MINIMESSAGE", DEFAULT_ALLOW_MINIMESSAGE)
         }
 
     /**

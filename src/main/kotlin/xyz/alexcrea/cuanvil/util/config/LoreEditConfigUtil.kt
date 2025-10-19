@@ -17,6 +17,7 @@ object LoreEditConfigUtil {
     // Color configs path
     const val ALLOW_COLOR_CODE = "allow_color_code"
     const val ALLOW_HEX_COLOR = "allow_hexadecimal_color"
+    const val ALLOW_MINIMESSAGE = "allow_minimessage"
     const val USE_COLOR_COST = "use_cost"
 
     const val REMOVE_COLOR_ON_LORE_REMOVE = "remove_color_on_remove"
@@ -42,6 +43,7 @@ object LoreEditConfigUtil {
     // Color configs defaults
     const val DEFAULT_ALLOW_COLOR_CODE = true
     const val DEFAULT_ALLOW_HEX_COLOR = true
+    const val DEFAULT_ALLOW_MINIMESSAGE = true
     const val DEFAULT_USE_COLOR_COST = 0
 
     const val DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE = false

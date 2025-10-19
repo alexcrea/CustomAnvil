@@ -38,6 +38,7 @@ object ConfigOptions {
     // Color related config
     const val ALLOW_COLOR_CODE = "allow_color_code"
     const val ALLOW_HEXADECIMAL_COLOR = "allow_hexadecimal_color"
+    const val ALLOW_MINIMESSAGE = "allow_minimessage"
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
@@ -87,13 +88,14 @@ object ConfigOptions {
     const val DEFAULT_ITEM_RENAME_COST = 1
 
     const val DEFAULT_SACRIFICE_ILLEGAL_COST = 1
-    const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false;
+    const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false
 
     const val DEFAULT_ENCHANT_COUNT_LIMIT = -1
 
     // Color related config
     const val DEFAULT_ALLOW_COLOR_CODE = false
     const val DEFAULT_ALLOW_HEXADECIMAL_COLOR = false
+    const val DEFAULT_ALLOW_MINIMESSAGE = false
     const val DEFAULT_PERMISSION_NEEDED_FOR_COLOR = true
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
@@ -270,11 +272,21 @@ object ConfigOptions {
         }
 
     /**
+     * Allow usage of minimessage formating
+     */
+    val allowMinimessage: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(ALLOW_MINIMESSAGE, DEFAULT_ALLOW_MINIMESSAGE)
+        }
+
+    /**
      * If one of the color component is enabled
      */
     val renameColorPossible: Boolean
         get() {
-            return allowColorCode || allowHexadecimalColor
+            return allowColorCode || allowHexadecimalColor || allowHexadecimalColor
         }
 
     /**
