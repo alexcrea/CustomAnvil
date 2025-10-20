@@ -249,27 +249,22 @@ object AnvilLoreEditUtil {
         // Handle color and minimessage of each lines
         var hasUsedColor = false
         for ((index, line) in lines.withIndex()) {
-            val coloredLine = StringBuilder(line)
-
-            val lineUsedColor = AnvilColorUtil.handleColor(
-                coloredLine,
+            val component = AnvilColorUtil.handleColor(
+                line,
                 player,
                 false,
                 canUseColorCode, canUseHex, minimessage,
                 AnvilColorUtil.ColorUseType.LORE_EDIT
             )
 
-            if (lineUsedColor) {
+            if (component != null) {
                 hasUsedColor = true
-                lines[index] = coloredLine.toString()
+                lines[index] = MiniMessageUtil.legacy_mm.serialize(component)
             }
         }
 
-        return if (hasUsedColor) {
-            colorCost
-        } else {
-            0
-        }
+        return if (hasUsedColor) colorCost
+        else 0
     }
 
     fun uncolorLines(player: Permissible, lines: ArrayList<String>, editType: LoreEditType): Int {

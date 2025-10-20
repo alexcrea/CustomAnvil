@@ -186,24 +186,23 @@ class PrepareAnvilListener : Listener {
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
         // Can be null
-        var inventoryName = ChatColor.stripColor(inventory.renameText)
+        var renameText = ChatColor.stripColor(inventory.renameText)
 
         var sumCost = 0
         var useColor = false
-        if (ConfigOptions.renameColorPossible && inventoryName != null) {
-            val resultString = StringBuilder(inventoryName)
-
-            useColor = AnvilColorUtil.handleColor(
-                resultString, player,
+        if (ConfigOptions.renameColorPossible && renameText != null) {
+            val component = AnvilColorUtil.handleColor(
+                renameText, player,
                 ConfigOptions.permissionNeededForColor,
                 ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
                 AnvilColorUtil.ColorUseType.RENAME
             )
 
-            if (useColor) {
-                inventoryName = resultString.toString()
+            if (component != null) {
+                renameText = MiniMessageUtil.legacy_mm.serialize(component)
 
                 sumCost += ConfigOptions.useOfColorCost
+                useColor = true
             }
         }
 
@@ -214,8 +213,8 @@ class PrepareAnvilListener : Listener {
             else if (useColor) it.displayName
             else ChatColor.stripColor(it.displayName)
 
-            if (!displayName.contentEquals(inventoryName)) {
-                it.setDisplayName(inventoryName)
+            if (!displayName.contentEquals(renameText)) {
+                it.setDisplayName(renameText)
                 resultItem.itemMeta = it
 
                 sumCost += ConfigOptions.itemRenameCost
@@ -233,10 +232,10 @@ class PrepareAnvilListener : Listener {
     ) {
         val newEnchants = first.findEnchantments()
             .combineWith(second.findEnchantments(), first, player)
-        var hasChanged = !isIdentical(first.findEnchantments(), newEnchants);
+        var hasChanged = !isIdentical(first.findEnchantments(), newEnchants)
 
         val resultItem = first.clone()
-        var anvilCost = 0;
+        var anvilCost = 0
         if(hasChanged){
             resultItem.setEnchantmentsUnsafe(newEnchants)
             // Calculate enchantment cost
@@ -248,7 +247,7 @@ class PrepareAnvilListener : Listener {
             // we only need to be concerned with repair when neither item is a book
             val repaired = resultItem.repairFrom(first, second)
             anvilCost += if (repaired) ConfigOptions.itemRepairCost else 0
-            hasChanged = hasChanged || repaired;
+            hasChanged = hasChanged || repaired
         }
 
         // Test/stop if nothing changed.
