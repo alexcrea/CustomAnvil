@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     // Paper
-    paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.10-R0.1-SNAPSHOT")
 
     // Gui library
     val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"
