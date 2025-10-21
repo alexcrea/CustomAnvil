@@ -11,16 +11,12 @@ import java.lang.reflect.Method
 
 class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
 
-    // Sadly, getTokens function is private, so I need to do that
+    // Sadly, getTokens function is private, so I need to do some reflectino
     private val getTokenMethod: Method =
         ItemChecker::class.java.getDeclaredMethod("getTokens", ItemStack::class.java)
 
     init {
         getTokenMethod.trySetAccessible()
-    }
-
-    override fun postAnvilEvents(): Collection<RegisteredListener> {
-        return listOf()
     }
 
     private fun ItemChecker.getTokenSafe(item: ItemStack?): Array<String> {

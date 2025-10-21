@@ -5,20 +5,14 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 
-abstract class GenericPluginDependency(protected val plugin: Plugin) {
+open class GenericPluginDependency(protected val plugin: Plugin) {
 
-    protected val preAnvil = ArrayList<RegisteredListener>()
-    protected val postAnvil = ArrayList<RegisteredListener>()
+    private val preAnvil = ArrayList<RegisteredListener>()
+    private val postAnvil = ArrayList<RegisteredListener>()
 
     open fun redirectListeners() {
-        // get PreAnvil and PostAnvil listeners
-        for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
-
-            if (registeredListener.plugin != plugin) continue
-            preAnvil.add(registeredListener)
-        }
-
-        postAnvil.addAll(postAnvilEvents())
+        fillPreAnvil(preAnvil)
+        fillPostAnvil(postAnvil, preAnvil)
 
         // get required PrepareAnvilEvent listener
         for (listener in preAnvil) {
@@ -28,10 +22,22 @@ abstract class GenericPluginDependency(protected val plugin: Plugin) {
         for (listener in postAnvil) {
             InventoryClickEvent.getHandlerList().unregister(listener)
         }
-
     }
 
-    protected abstract fun postAnvilEvents(): Collection<RegisteredListener>
+    open fun fillPreAnvil(preAnvil: ArrayList<RegisteredListener>){
+        // get PreAnvil and PostAnvil listeners
+        for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
+
+            if (registeredListener.plugin != plugin) continue
+            preAnvil.add(registeredListener)
+        }
+    }
+
+    protected open fun fillPostAnvil(
+        postAnvil: ArrayList<RegisteredListener>,
+        preAnvil: ArrayList<RegisteredListener>) {
+
+    }
 
     open fun testPrepareAnvil(event: PrepareAnvilEvent): Boolean {
         val previousResult = event.result

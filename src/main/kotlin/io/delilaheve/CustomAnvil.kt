@@ -139,11 +139,8 @@ open class CustomAnvil : JavaPlugin() {
             return
         }
 
-        // temporary: handle 1.21 update
-        Update_1_21.handleUpdate()
-
-        // plugin configuration updates
-        PluginUpdates.handlePluginUpdate()
+        // Handle minecraft and plugin updates
+        PluginUpdates.handleUpdates()
 
         // Register enchantment of compatible plugin and load configuration change.
         DependencyManager.handleCompatibilityConfig()
