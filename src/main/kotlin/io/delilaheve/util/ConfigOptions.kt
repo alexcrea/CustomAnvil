@@ -286,7 +286,7 @@ object ConfigOptions {
      */
     val renameColorPossible: Boolean
         get() {
-            return allowColorCode || allowHexadecimalColor || allowHexadecimalColor
+            return allowColorCode || allowHexadecimalColor || allowMinimessage
         }
 
     /**
