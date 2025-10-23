@@ -304,8 +304,6 @@ lore_edit:
       # Color code are prefixed by "&" and hexadecimal color by "#"
       # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
-      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
-      # but any global tag will be allowed later when v2 release
       #
       # Note that currently minimessage would disable hex code when adding color
       allow_color_code: true
@@ -335,8 +333,6 @@ lore_edit:
       # Color code will be prefixed by "&" and hexadecimal color by "#".
       # If color code is allowed, "&" in the text will get converted to "&&"
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
-      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
-      # but any global tag will be allowed later when v2 release
       allow_color_code: true
       allow_hexadecimal_color: false
       allow_minimessage: true
@@ -363,8 +359,6 @@ lore_edit:
       # Color code are prefixed by "&" and hexadecimal color by "#"
       # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
-      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
-      # but any global tag will be allowed later when v2 release
       #
       # Note that currently minimessage would disable hex code when adding color
       allow_color_code: true
@@ -393,8 +387,6 @@ lore_edit:
       # Color code will be prefixed by "&" and hexadecimal color by "#".
       # If color code is allowed, "&" in the text will get converted to "&&"
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
-      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
-      # but any global tag will be allowed later when v2 release
       allow_color_code: true
       allow_hexadecimal_color: false
       allow_minimessage: true
