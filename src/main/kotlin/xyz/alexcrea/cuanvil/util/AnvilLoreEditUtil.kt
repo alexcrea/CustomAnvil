@@ -117,10 +117,10 @@ object AnvilLoreEditUtil {
     }
 
     fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack, xpCost: AtomicInteger): ItemStack? {
-        val bookType = bookLoreEditIsAppend(first, second) ?: return null
+        val isAppend = bookLoreEditIsAppend(first, second) ?: return null
 
         val meta = second.itemMeta as BookMeta
-        return if (bookType) handleLoreAppendByBook(player, first, meta, xpCost)
+        return if (isAppend) handleLoreAppendByBook(player, first, meta, xpCost)
         else handleLoreRemoveByBook(player, first, xpCost)
     }
 
@@ -225,9 +225,9 @@ object AnvilLoreEditUtil {
         second: ItemStack,
         xpCost: AtomicInteger
     ): ItemStack? {
-        val bookType = paperLoreEditIsAppend(first, second) ?: return null
+        val isAppend = paperLoreEditIsAppend(first, second) ?: return null
 
-        return if (bookType) handleLoreAppendByPaper(player, first, second, xpCost)
+        return if (isAppend) handleLoreAppendByPaper(player, first, second, xpCost)
         else handleLoreRemoveByPaper(player, first, xpCost)
     }
 
@@ -248,7 +248,8 @@ object AnvilLoreEditUtil {
             editType.allowColorCode,
             editType.allowHexColor,
             editType.allowMinimessage,
-            AnvilColorUtil.ColorUseType.LORE_EDIT)
+            AnvilColorUtil.ColorUseType.LORE_EDIT,
+            editType.isAppend)
     }
 
     private fun colorLine(line: String, permission: AnvilColorUtil.ColorPermissions): Component? {

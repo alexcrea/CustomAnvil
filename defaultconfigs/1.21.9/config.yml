@@ -318,8 +318,10 @@ lore_edit:
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
       # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
       # but any global tag will be allowed later when v2 release
+      #
+      # Note that currently minimessage would disable hex code when adding color
       allow_color_code: true
-      allow_hexadecimal_color: true
+      allow_hexadecimal_color: false
       allow_minimessage: true
 
     remove:
@@ -348,7 +350,7 @@ lore_edit:
       # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
       # but any global tag will be allowed later when v2 release
       allow_color_code: true
-      allow_hexadecimal_color: true
+      allow_hexadecimal_color: false
       allow_minimessage: true
 
   paper:
@@ -375,8 +377,10 @@ lore_edit:
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
       # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
       # but any global tag will be allowed later when v2 release
+      #
+      # Note that currently minimessage would disable hex code when adding color
       allow_color_code: true
-      allow_hexadecimal_color: true
+      allow_hexadecimal_color: false
       allow_minimessage: true
       color_use_cost: 0
 
@@ -404,7 +408,7 @@ lore_edit:
       # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
       # but any global tag will be allowed later when v2 release
       allow_color_code: true
-      allow_hexadecimal_color: true
+      allow_hexadecimal_color: false
       allow_minimessage: true
 
 # Whether to show debug logging

@@ -29,7 +29,9 @@ object AnvilColorUtil {
         allowColorCode: Boolean,
         allowHexadecimalColor: Boolean,
         allowMinimessage: Boolean,
-        useType: ColorUseType): ColorPermissions {
+        useType: ColorUseType,
+        isAppend: Boolean = true
+    ): ColorPermissions {
         if (!allowColorCode && !allowHexadecimalColor && !allowMinimessage)
             return ColorPermissions(
                 canUseColorCode = false,
@@ -41,13 +43,18 @@ object AnvilColorUtil {
             allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
                 useType.colorCodePerm
             ))
-        val canUseHexColor =
-            allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
-                useType.hexColorPerm
-            ))
+
         val canUseMinimessage =
             allowMinimessage && (!usePermission || useType.minimessagePerm == null || player.hasPermission(
                 useType.minimessagePerm
+            ))
+
+        // Do not allow minimessage and hex color at the same time when coming from string to component (usually/assumed append)
+        val minimessageConflict = canUseMinimessage && isAppend
+
+        val canUseHexColor = !minimessageConflict &&
+            allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
+                useType.hexColorPerm
             ))
 
         return ColorPermissions(canUseColorCode, canUseHexColor, canUseMinimessage)
@@ -64,11 +71,12 @@ object AnvilColorUtil {
         allowColorCode: Boolean,
         allowHexadecimalColor: Boolean,
         allowMinimessage: Boolean,
-        useType: ColorUseType
+        useType: ColorUseType,
+        isAppend: Boolean
     ): Component? {
         val permission = calculatePermissions(player, usePermission,
             allowColorCode, allowHexadecimalColor, allowMinimessage,
-            useType)
+            useType, isAppend)
         return handleColor(textToColorText, permission)
     }
 
@@ -115,27 +123,6 @@ object AnvilColorUtil {
 
         return if(useColor) result
         else null
-    }
-
-    /**
-     * Best effort to revert a component to the smallest allowed string
-     * that would result in it getting closest as possible to handleColor
-     * with current set of color type, color use type and player permissions
-     * @return the new component if had any change. null otherwise
-     */
-    fun revertColorSmallest(
-        component: Component,
-        player: Permissible,
-        usePermission: Boolean,
-        allowColorCode: Boolean,
-        allowMinimessage: Boolean,
-        allowHexadecimalColor: Boolean,
-        useType: ColorUseType
-    ): String? {
-        val permission = calculatePermissions(player, usePermission,
-            allowColorCode, allowHexadecimalColor, allowMinimessage,
-            useType)
-        return revertColorSmallest(component, permission)
     }
 
     /**

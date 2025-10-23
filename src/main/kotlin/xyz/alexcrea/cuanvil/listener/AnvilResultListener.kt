@@ -26,6 +26,7 @@ import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
+import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
@@ -412,7 +413,9 @@ class AnvilResultListener : Listener {
                 val bookPage = StringBuilder()
                 lore.forEach {
                     if (bookPage.isNotEmpty()) bookPage.append('\n')
-                    bookPage.append(it)
+                    if(it == null) return@forEach
+
+                    bookPage.append(MiniMessageUtil.plain_text_mm.serialize(it))
                 }
 
                 val resultPage = bookPage.toString()
