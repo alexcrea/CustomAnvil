@@ -48,7 +48,6 @@ public class PluginSetDefault {
                 nbSet += trySetDefault(config, path + ALLOW_HEX_COLOR, DEFAULT_ALLOW_HEX_COLOR);
                 nbSet += trySetDefault(config, path + USE_COLOR_COST, DEFAULT_USE_COLOR_COST);
             } else {
-                nbSet += trySetDefault(config, path + REMOVE_COLOR_ON_LORE_REMOVE, DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE);
                 nbSet += trySetDefault(config, path + REMOVE_COLOR_COST, DEFAULT_REMOVE_COLOR_COST);
             }
         }

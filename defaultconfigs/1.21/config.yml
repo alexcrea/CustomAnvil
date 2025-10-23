@@ -304,6 +304,8 @@ lore_edit:
       # Color code are prefixed by "&" and hexadecimal color by "#"
       # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
+      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
+      # but any global tag will be allowed later when v2 release
       allow_color_code: true
       allow_hexadecimal_color: true
       allow_minimessage: true
@@ -321,10 +323,21 @@ lore_edit:
       shared_additive: false
       # If removing the lore consume the book & quil
       do_consume: false
-      # If the color should get back to color code or hex format
-      remove_color_on_remove: true
       # Cost of replacing colors
       remove_color_cost: 0
+      # Allowed some color and tags to be reverted to plain text
+      # Custom anvil will prioritise format that result is a smaller resulting text
+      # Note that not allowing certain format will lead to some lost of color or tags.
+      # If configuration are exact as append appending this book should result in the exact same color
+      #
+      # Color code will be prefixed by "&" and hexadecimal color by "#".
+      # If color code is allowed, "&" in the text will get converted to "&&"
+      # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
+      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
+      # but any global tag will be allowed later when v2 release
+      allow_color_code: true
+      allow_hexadecimal_color: true
+      allow_minimessage: true
 
   paper:
     # Permission is ca.lore_edit.paper
@@ -348,6 +361,8 @@ lore_edit:
       # Color code are prefixed by "&" and hexadecimal color by "#"
       # Color code will not be applied if it colors nothing. "&&" can be used to write "&"
       # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
+      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
+      # but any global tag will be allowed later when v2 release
       allow_color_code: true
       allow_hexadecimal_color: true
       allow_minimessage: true
@@ -364,10 +379,21 @@ lore_edit:
       shared_additive: false
       # If removing the lore line consume the paper
       do_consume: false
-      # If the color should get back to color code or hex format
-      remove_color_on_remove: true
       # Cost of replacing colors
       remove_color_cost: 0
+      # Allowed some color and tags to be reverted to plain text
+      # Custom anvil will prioritise format that result is a smaller resulting text
+      # Note that not allowing certain format will lead to some lost of color or tags.
+      # If configuration are exact as append appending this paper should result in the exact same color
+      #
+      # Color code will be prefixed by "&" and hexadecimal color by "#".
+      # If color code is allowed, "&" in the text will get converted to "&&"
+      # For minimessage see minimessage formating https://docs.papermc.io/adventure/minimessage/format/
+      # Note that only color and decoration tags are allowed for minimisage in the v1 version of this plugin
+      # but any global tag will be allowed later when v2 release
+      allow_color_code: true
+      allow_hexadecimal_color: true
+      allow_minimessage: true
 
 # Whether to show debug logging
 debug_log: false

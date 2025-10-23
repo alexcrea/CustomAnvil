@@ -5,7 +5,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
-import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 
@@ -16,7 +16,7 @@ class EditConfigExecutor : CommandExecutor {
             sender.sendMessage(GuiGlobalActions.NO_EDIT_PERM)
             return false
         }
-        if(DependencyManager.isFolia){
+        if(PlatformUtil.isFolia){
             sender.sendMessage("§cIt look like you are using Folia. Sadly Custom Anvil do not support Config gui for Folia.")
             sender.sendMessage("§eIt is may come in a future version.")
             sender.sendMessage("")

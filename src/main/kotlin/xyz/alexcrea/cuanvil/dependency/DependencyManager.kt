@@ -2,10 +2,10 @@ package xyz.alexcrea.cuanvil.dependency
 
 import com.willfp.eco.core.gui.player
 import io.delilaheve.CustomAnvil
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -24,13 +24,14 @@ import xyz.alexcrea.cuanvil.dependency.plugins.*
 import xyz.alexcrea.cuanvil.dependency.scheduler.BukkitScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.logging.Level
 
 object DependencyManager {
 
-    var isFolia: Boolean = false
     lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManager
     var externGuiTester: ExternGuiTester? = null
@@ -50,8 +51,7 @@ object DependencyManager {
         val pluginManager = Bukkit.getPluginManager()
 
         // Bukkit or Paper scheduler ?
-        isFolia = testIsFolia()
-        scheduler = if (isFolia) {
+        scheduler = if (PlatformUtil.isFolia) {
             CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
 
             FoliaScheduler()
@@ -305,29 +305,20 @@ object DependencyManager {
         return bypass
     }
 
-    fun stripLore(item: ItemStack): ArrayList<String> {
-        val lore = ArrayList<String>()
+    fun stripLore(item: ItemStack): MutableList<Component?> {
         val dummy = item.clone()
 
         enchantmentSquaredCompatibility?.stripLore(dummy)
 
-        val itemLore = dummy.itemMeta!!.lore
-        if (itemLore != null) lore.addAll(itemLore)
+        val itemLore = dummy.itemMeta?.componentLore() ?: return ArrayList()
 
+        val lore = ArrayList<Component?>()
+        lore.addAll(itemLore)
         return lore
     }
 
     fun updateLore(item: ItemStack) {
         enchantmentSquaredCompatibility?.updateLore(item)
-    }
-
-    private fun testIsFolia(): Boolean {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
-            return true
-        } catch (e: ClassNotFoundException) {
-            return false
-        }
     }
 
 }

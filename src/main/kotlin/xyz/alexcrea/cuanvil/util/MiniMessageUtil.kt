@@ -1,18 +1,33 @@
 package xyz.alexcrea.cuanvil.util
 
+import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 
 object MiniMessageUtil {
 
-    val mm = MiniMessage.builder()
-        .tags(TagResolver.resolver(
-            StandardTags.color(),
-            StandardTags.decorations()))
+    val color_only_mm = MiniMessage.builder()
+        .tags(
+            TagResolver.resolver(
+                StandardTags.color(),
+                StandardTags.decorations()
+            )
+        )
         .build()
 
+    val mm = if (PlatformUtil.isPaper) MiniMessage.miniMessage()
+    else color_only_mm
+
     val legacy_mm = LegacyComponentSerializer.legacySection()
+    val plain_text_mm = PlainTextComponentSerializer.plainText()
+
+    // Keeping track of this as most use of this can be replaced later on v2 with pure component alternative
+    fun fromLegacy(legacyText: String): TextComponent {
+        return legacy_mm.deserialize(legacyText)
+    }
 
 }

@@ -20,7 +20,6 @@ object LoreEditConfigUtil {
     const val ALLOW_MINIMESSAGE = "allow_minimessage"
     const val USE_COLOR_COST = "use_cost"
 
-    const val REMOVE_COLOR_ON_LORE_REMOVE = "remove_color_on_remove"
     const val REMOVE_COLOR_COST = "remove_color_cost"
 
     // Lore order config path
@@ -46,7 +45,6 @@ object LoreEditConfigUtil {
     const val DEFAULT_ALLOW_MINIMESSAGE = true
     const val DEFAULT_USE_COLOR_COST = 0
 
-    const val DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE = false
     const val DEFAULT_REMOVE_COLOR_COST = 0
 
     // Lore order config default
