@@ -195,7 +195,7 @@ class PrepareAnvilListener : Listener {
                 renameText, player,
                 ConfigOptions.permissionNeededForColor,
                 ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
-                AnvilColorUtil.ColorUseType.RENAME, true
+                AnvilColorUtil.ColorUseType.RENAME
             )
 
             if (component != null) {

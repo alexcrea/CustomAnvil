@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.permissions.Permissible
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import kotlin.text.indexOf
 
 object AnvilColorUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
@@ -29,8 +30,7 @@ object AnvilColorUtil {
         allowColorCode: Boolean,
         allowHexadecimalColor: Boolean,
         allowMinimessage: Boolean,
-        useType: ColorUseType,
-        isAppend: Boolean = true
+        useType: ColorUseType
     ): ColorPermissions {
         if (!allowColorCode && !allowHexadecimalColor && !allowMinimessage)
             return ColorPermissions(
@@ -49,10 +49,7 @@ object AnvilColorUtil {
                 useType.minimessagePerm
             ))
 
-        // Do not allow minimessage and hex color at the same time when coming from string to component (usually/assumed append)
-        val minimessageConflict = canUseMinimessage && isAppend
-
-        val canUseHexColor = !minimessageConflict &&
+        val canUseHexColor =
             allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
                 useType.hexColorPerm
             ))
@@ -71,12 +68,11 @@ object AnvilColorUtil {
         allowColorCode: Boolean,
         allowHexadecimalColor: Boolean,
         allowMinimessage: Boolean,
-        useType: ColorUseType,
-        isAppend: Boolean
+        useType: ColorUseType
     ): Component? {
         val permission = calculatePermissions(player, usePermission,
             allowColorCode, allowHexadecimalColor, allowMinimessage,
-            useType, isAppend)
+            useType)
         return handleColor(textToColorText, permission)
     }
 
@@ -101,7 +97,7 @@ object AnvilColorUtil {
         }
 
         if (permission.canUseHexColor) {
-            val nbReplacement = replaceHexToColor(textToColor, 7)
+            val nbReplacement = replaceHexToColor(textToColor, 7, permission.canUseMinimessage)
 
             if (nbReplacement > 0) useColor = true
         }
@@ -109,13 +105,13 @@ object AnvilColorUtil {
         val previousStr = textToColor.toString()
         var result: Component = MiniMessageUtil.legacy_mm.deserialize(previousStr)
         if(permission.canUseMinimessage) {
-            // we dance with formats here TODO maybe extract, if possible, only the "text" part and use it for compare with previous as tag would be missing?
+            // we dance with formats here
             val toMinimessage = MiniMessageUtil.mm.serialize(result)
             val hackySolution = toMinimessage.replace("\\<", "<")
             val fromMinimessage = MiniMessageUtil.mm.deserialize(hackySolution)
-            val toLegacy = MiniMessageUtil.legacy_mm.serialize(fromMinimessage)
+            val asPlain = MiniMessageUtil.plain_text_mm.serialize(fromMinimessage)
 
-            if(previousStr != toLegacy){
+            if(previousStr != asPlain){
                 useColor = true
                 result = fromMinimessage
             }
@@ -162,8 +158,10 @@ object AnvilColorUtil {
         // In case we still has some § around by lack of permission we need to convert it back from legacy
         // In other word it's time for dance #3
         val fromLegacy = MiniMessageUtil.legacy_mm.deserialize(legacyMessage.toString())
-        val middleGround = MiniMessageUtil.color_only_mm.serialize(fromLegacy)
-        val hackySolution = middleGround.replace("\\<", "<")
+        val middleGround = MiniMessageUtil.mm.serialize(fromLegacy)
+        val hackySolutionStb = StringBuilder(middleGround)
+        replaceAll(hackySolutionStb, "\\<", "<", 2)
+        val hackySolution = hackySolutionStb.toString()
 
         val result: String =
             if(permission.canUseMinimessage) hackySolution
@@ -202,7 +200,7 @@ object AnvilColorUtil {
      * @param endOffset Amount of character that should be ignored at the end.
      * @return The number of replacement was that was done.
      */
-    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int): Int {
+    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int, checkTag: Boolean): Int {
         val matcher: Matcher = HEX_PATTERN.matcher(builder)
 
         var numberOfChanges = 0
@@ -211,6 +209,10 @@ object AnvilColorUtil {
         while (matcher.find(startIndex)) {
             startIndex = matcher.start()
             if (startIndex >= builder.length - endOffset) break //HOW AND WHERE WOULD THIS HAPPEN ?????
+            if(checkTag && isInTag(builder, startIndex)) {
+                startIndex += 1 // Avoid infinite loop
+                continue
+            }
 
             builder.replace(startIndex, startIndex + 1, "§x")
             startIndex += 2
@@ -223,6 +225,32 @@ object AnvilColorUtil {
         }
 
         return numberOfChanges
+    }
+
+    // Simple check if < > with some smart check like <> > not taken into account
+    // This is easily bypassable but if the player want to bypass he has better alternative
+    // AKA should avoid getting into any tag
+    private fun isInTag(builder: StringBuilder, index: Int): Boolean {
+        // Check left tag we have < after last >
+        val left = builder.slice(0..index)
+        val leftIndex = left.lastIndexOf("<")
+        var rightIndex = left.lastIndexOf(">")
+
+        // last < do not exist or is before last >
+        if(leftIndex == -1 || rightIndex > leftIndex) return false
+
+        val right = builder.slice(index..<builder.length)
+        val newleftIndex = right.indexOf("<")
+        rightIndex = right.indexOf(">")
+
+        // first > do not exist or is after first < (if exist)
+        if (rightIndex == -1 || (newleftIndex != -1 && newleftIndex < rightIndex)) return false
+
+        // Then finally we use minimessage to check for tag
+        val expectedTag = builder.substring(leftIndex, newleftIndex + 1)
+        val notag = MiniMessageUtil.mm.stripTags(expectedTag)
+
+        return notag != expectedTag
     }
 
     /**

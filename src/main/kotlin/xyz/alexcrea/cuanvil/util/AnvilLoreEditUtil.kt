@@ -248,8 +248,7 @@ object AnvilLoreEditUtil {
             editType.allowColorCode,
             editType.allowHexColor,
             editType.allowMinimessage,
-            AnvilColorUtil.ColorUseType.LORE_EDIT,
-            editType.isAppend)
+            AnvilColorUtil.ColorUseType.LORE_EDIT)
     }
 
     private fun colorLine(line: String, permission: AnvilColorUtil.ColorPermissions): Component? {
