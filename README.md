@@ -28,7 +28,7 @@ the plugin can be downloaded on
 - Display XP cost instead of "too expensive" when above level 40. (see below for more information)
 - Can handle some custom enchantment plugins (see below for more information)
 - Gui to configure the plugin in game.
-- Support of color code and hexadecimal color
+- Support use of color code, hexadecimal color and minimessage for color/decoration
 - (Experimental) Folia support (gui do not work)
 ---
 ### Permissions:
@@ -41,9 +41,10 @@ ca.config.edit: Allow administrator to edit the plugin's config in game
 # Bellow permissions also require some config change to allow usage of features
 # usage of these permission is toggleable in basic config gui or config.yml
 
-# Permissions related to use of color
-ca.color.code: Allow player to use color code if enabled (toggleable)
-ca.color.hex: Allow player to use hexadecimal color if enabled (toggleable)
+# Permissions related to use of color and minimessage
+ca.color.code: Allow player to use color code on rename if enabled (toggleable)
+ca.color.hex: Allow player to use hexadecimal color on rename if enabled (toggleable)
+ca.rename.minimessage: Allow player to use minimessage formating on rename if enabled (toggleable) (only legacy compatible at the time)
 
 # Permissions related to edition of the lore
 ca.lore_edit.book: Allow player to edit lore via book and quil if enabled (toggleable)

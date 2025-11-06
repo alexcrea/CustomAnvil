@@ -1,97 +1,174 @@
 package xyz.alexcrea.cuanvil.util
 
+import net.kyori.adventure.text.Component
 import org.bukkit.permissions.Permissible
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import kotlin.text.indexOf
 
 object AnvilColorUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
     private val TRANSFORMED_HEX_PATTERN = Pattern.compile("§x(§[0-9a-fA-F]){6}") // pattern to find minecraft hex string
 
-    /**
-     * Color a stringbuilder object depending on allowed color type and player permissions on color use type
-     * @return if the stringbuilder was changed and color applied
-     */
-    fun handleColor(
-        textToColor: StringBuilder,
+    class ColorPermissions(
+        val canUseColorCode: Boolean,
+        val canUseHexColor: Boolean,
+        val canUseMinimessage: Boolean
+    ) {
+        fun allowed(): Boolean {
+            return canUseColorCode || canUseHexColor || canUseMinimessage
+        }
+
+        fun onlyMinimessage(): Boolean {
+            return canUseMinimessage && !canUseColorCode && !canUseHexColor
+        }
+    }
+
+    fun calculatePermissions(
         player: Permissible,
         usePermission: Boolean,
         allowColorCode: Boolean,
         allowHexadecimalColor: Boolean,
+        allowMinimessage: Boolean,
         useType: ColorUseType
-    ): Boolean {
-        if (!allowColorCode && !allowHexadecimalColor) return false
+    ): ColorPermissions {
+        if (!allowColorCode && !allowHexadecimalColor && !allowMinimessage)
+            return ColorPermissions(
+                canUseColorCode = false,
+                canUseHexColor = false,
+                canUseMinimessage = false
+            )
 
         val canUseColorCode =
             allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
                 useType.colorCodePerm
             ))
+
+        val canUseMinimessage =
+            allowMinimessage && (!usePermission || useType.minimessagePerm == null || player.hasPermission(
+                useType.minimessagePerm
+            ))
+
         val canUseHexColor =
             allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
                 useType.hexColorPerm
             ))
 
-        if ((!canUseColorCode) && (!canUseHexColor)) return false
+        return ColorPermissions(canUseColorCode, canUseHexColor, canUseMinimessage)
+    }
 
+    /**
+     * Color a string depending on allowed color type, color use type and player permissions
+     * @return colored component or null if nothing has been colored
+     */
+    fun handleColor(
+        textToColorText: String,
+        player: Permissible,
+        usePermission: Boolean,
+        allowColorCode: Boolean,
+        allowHexadecimalColor: Boolean,
+        allowMinimessage: Boolean,
+        useType: ColorUseType
+    ): Component? {
+        val permission = calculatePermissions(player, usePermission,
+            allowColorCode, allowHexadecimalColor, allowMinimessage,
+            useType)
+        return handleColor(textToColorText, permission)
+    }
+
+    /**
+     * Color a string depending on permitted use
+     * @return colored component or null if nothing has been colored
+     */
+    fun handleColor(
+        textToColorText: String,
+        permission: ColorPermissions
+    ): Component? {
+        if(!permission.allowed()) return null
+
+        val textToColor = StringBuilder(textToColorText)
         var useColor = false
         // Handle color code
-        if (canUseColorCode) {
+        if (permission.canUseColorCode) { // maybe should use LegacyComponentSerializer ?
             var nbReplacement = replaceAll(textToColor, "&", "§", 2)
             nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
 
             if (nbReplacement > 0) useColor = true
         }
 
-        if (canUseHexColor) {
-            val nbReplacement = replaceHexToColor(textToColor, 7)
+        if (permission.canUseHexColor) {
+            val nbReplacement = replaceHexToColor(textToColor, 7, permission.canUseMinimessage)
 
             if (nbReplacement > 0) useColor = true
         }
 
-        return useColor
+        val previousStr = textToColor.toString()
+        var result: Component = MiniMessageUtil.legacy_mm.deserialize(previousStr)
+        if(permission.canUseMinimessage) {
+            // we dance with formats here
+            val toMinimessage = MiniMessageUtil.mm.serialize(result)
+            val hackySolution = toMinimessage.replace("\\<", "<")
+            val fromMinimessage = MiniMessageUtil.mm.deserialize(hackySolution)
+            val asPlain = MiniMessageUtil.plain_text_mm.serialize(fromMinimessage)
+
+            if(previousStr != asPlain){
+                useColor = true
+                result = fromMinimessage
+            }
+        }
+
+        return if(useColor) result
+        else null
     }
 
     /**
-     * Revert a stringbuilder to a state where applying handleColor with the same options would give the same result
-     * @return if the stringbuilder was changed and color unapplied
+     * Best effort to revert a component to the smallest allowed string
+     * that would result in it getting closest as possible to handleColor
+     * with current set of permitted use
+     * @return a new component if had any change. null otherwise
      */
-    fun revertColor(
-        colorToText: StringBuilder,
-        player: Permissible,
-        usePermission: Boolean,
-        allowColorCode: Boolean,
-        allowHexadecimalColor: Boolean,
-        useType: ColorUseType
-    ): Boolean {
-        if (!allowColorCode && !allowHexadecimalColor) return false
+    fun revertColorSmallest(
+        component: Component?,
+        permission: ColorPermissions
+    ): String? {
+        if(!permission.allowed() || component == null) return null
 
-        val canUseColorCode =
-            allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
-                useType.colorCodePerm
-            ))
-        val canUseHexColor =
-            allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
-                useType.hexColorPerm
-            ))
+        val transformed = MiniMessageUtil.mm.serialize(component)
+        val plainTransform = MiniMessageUtil.plain_text_mm.serialize(component)
+        if(transformed == plainTransform) return null
+        if(permission.onlyMinimessage()){
+            return transformed
+        }
 
-        if ((!canUseColorCode) && (!canUseHexColor)) return false
-        var hasReversed = false
+        // smol dance so we transform the component that may contain other tag into only decoration & color for legacy
+        val coloredMessage = MiniMessageUtil.color_only_mm.deserialize(transformed)
+        val legacyMessage = StringBuilder(MiniMessageUtil.legacy_mm.serialize(coloredMessage))
 
         // Reverse hex pattern
-        if (canUseHexColor) {
-            val nbReplacement = replaceColorToHex(colorToText, 14)
-
-            if (nbReplacement > 0) hasReversed = true
+        if (permission.canUseHexColor) {
+            replaceColorToHex(legacyMessage, 14)
         }
 
-        if (canUseColorCode) {
-            replaceAll(colorToText, "&", "&&", 1)
-            val nbReplacement = replaceAll(colorToText, "§", "&", 2)
-
-            if (nbReplacement > 0) hasReversed = true
+        // Reverse color pattern
+        if (permission.canUseColorCode) {
+            replaceAll(legacyMessage, "&", "&&", 1)
+            replaceAll(legacyMessage, "§", "&", 2)
         }
 
-        return hasReversed
+        // In case we still has some § around by lack of permission we need to convert it back from legacy
+        // In other word it's time for dance #3
+        val fromLegacy = MiniMessageUtil.legacy_mm.deserialize(legacyMessage.toString())
+        val middleGround = MiniMessageUtil.mm.serialize(fromLegacy)
+        val hackySolutionStb = StringBuilder(middleGround)
+        replaceAll(hackySolutionStb, "\\<", "<", 2)
+        val hackySolution = hackySolutionStb.toString()
+
+        val result: String =
+            if(permission.canUseMinimessage) hackySolution
+            else MiniMessageUtil.mm.stripTags(hackySolution)
+
+        return if(result == plainTransform) null
+        else result
     }
 
     /**
@@ -123,7 +200,7 @@ object AnvilColorUtil {
      * @param endOffset Amount of character that should be ignored at the end.
      * @return The number of replacement was that was done.
      */
-    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int): Int {
+    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int, checkTag: Boolean): Int {
         val matcher: Matcher = HEX_PATTERN.matcher(builder)
 
         var numberOfChanges = 0
@@ -132,6 +209,10 @@ object AnvilColorUtil {
         while (matcher.find(startIndex)) {
             startIndex = matcher.start()
             if (startIndex >= builder.length - endOffset) break //HOW AND WHERE WOULD THIS HAPPEN ?????
+            if(checkTag && isInTag(builder, startIndex)) {
+                startIndex += 1 // Avoid infinite loop
+                continue
+            }
 
             builder.replace(startIndex, startIndex + 1, "§x")
             startIndex += 2
@@ -144,6 +225,32 @@ object AnvilColorUtil {
         }
 
         return numberOfChanges
+    }
+
+    // Simple check if < > with some smart check like <> > not taken into account
+    // This is easily bypassable but if the player want to bypass he has better alternative
+    // AKA should avoid getting into any tag
+    private fun isInTag(builder: StringBuilder, index: Int): Boolean {
+        // Check left tag we have < after last >
+        val left = builder.slice(0..index)
+        val leftIndex = left.lastIndexOf("<")
+        var rightIndex = left.lastIndexOf(">")
+
+        // last < do not exist or is before last >
+        if(leftIndex == -1 || rightIndex > leftIndex) return false
+
+        val right = builder.slice(index..<builder.length)
+        val newleftIndex = right.indexOf("<")
+        rightIndex = right.indexOf(">")
+
+        // first > do not exist or is after first < (if exist)
+        if (rightIndex == -1 || (newleftIndex != -1 && newleftIndex < rightIndex)) return false
+
+        // Then finally we use minimessage to check for tag
+        val expectedTag = builder.substring(leftIndex, newleftIndex + 1)
+        val notag = MiniMessageUtil.mm.stripTags(expectedTag)
+
+        return notag != expectedTag
     }
 
     /**
@@ -177,10 +284,11 @@ object AnvilColorUtil {
 
     enum class ColorUseType(
         val colorCodePerm: String?,
-        val hexColorPerm: String?
+        val hexColorPerm: String?,
+        val minimessagePerm: String?
     ) {
-        RENAME("ca.color.code", "ca.color.hex"),
-        LORE_EDIT(null, null)
+        RENAME("ca.color.code", "ca.color.hex", "ca.rename.minimessage"),
+        LORE_EDIT(null, null, null)
     }
 
 }

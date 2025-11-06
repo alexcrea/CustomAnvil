@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.15.1"
+version = "1.15.2"
 
 val effectiveVersion = "$version" +
         (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
@@ -34,6 +34,9 @@ repositories {
 dependencies {
     // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+
+    // minimessage
+    implementation("net.kyori:adventure-text-minimessage:4.25.0")
 
     // Gui library
     val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"

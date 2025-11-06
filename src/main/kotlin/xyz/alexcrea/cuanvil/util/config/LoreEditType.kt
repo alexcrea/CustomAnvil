@@ -3,14 +3,14 @@ package xyz.alexcrea.cuanvil.util.config
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_COLOR_CODE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_MINIMESSAGE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_COLOR_CODE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_MINIMESSAGE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_COST
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_USE_COLOR_COST
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_COST
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_COST_RANGE
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOR_COST
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOR_COST_RANGE
 import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT_CONFIG as CONFIG
@@ -79,25 +79,33 @@ enum class LoreEditType(
         }
 
     /**
-     * Allow usage of color code on lore add
+     * Allow usage or removal of color code
      */
     val allowColorCode: Boolean
         get() {
-            if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
             return CONFIG
                 .config
                 .getBoolean("$rootPath.$ALLOW_COLOR_CODE", DEFAULT_ALLOW_COLOR_CODE)
         }
 
     /**
-     * Allow usage of hexadecimal color on lore add
+     * Allow usage or removal of hexadecimal color
      */
     val allowHexColor: Boolean
         get() {
-            if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
             return CONFIG
                 .config
                 .getBoolean("${rootPath}.$ALLOW_HEX_COLOR", DEFAULT_ALLOW_HEX_COLOR)
+        }
+
+    /**
+     * Allow usage or removal of minimessage on lore add
+     */
+    val allowMinimessage: Boolean
+        get() {
+            return CONFIG
+                .config
+                .getBoolean("${rootPath}.$ALLOW_MINIMESSAGE", DEFAULT_ALLOW_MINIMESSAGE)
         }
 
     /**
@@ -112,17 +120,6 @@ enum class LoreEditType(
                 .takeIf { it in USE_COLOR_COST_RANGE }
                 ?: DEFAULT_USE_COLOR_COST
 
-        }
-
-    /**
-     * Should the color code & hex color should get removed on lore remove
-     */
-    val shouldRemoveColorOnLoreRemoval: Boolean
-        get() {
-            if (isAppend) throw IllegalStateException("Can only call with a remove edit type")
-            return CONFIG
-                .config
-                .getBoolean("${rootPath}.$REMOVE_COLOR_ON_LORE_REMOVE", DEFAULT_REMOVE_COLOR_ON_LORE_REMOVE)
         }
 
     /**
