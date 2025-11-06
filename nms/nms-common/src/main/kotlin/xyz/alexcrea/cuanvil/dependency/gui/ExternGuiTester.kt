@@ -1,8 +1,13 @@
 package xyz.alexcrea.cuanvil.dependency.gui
 
 import org.bukkit.inventory.InventoryView
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 
 interface ExternGuiTester {
+
+    object Const{
+        val cannonicalPaperAnvilMenu = "net.minecraft.world.inventory.AnvilMenu"
+    }
 
     val wesjdAnvilGuiName: String?
 
@@ -16,12 +21,17 @@ interface ExternGuiTester {
         val clazz = getContainerClass(inventory) ?: return false
 
         val clazzName = clazz.name
-        //TODO maybe instead of testing non default, better to be testing we are default ?
-        if (expectWesjd(clazzName)) return true
-        if (expectXenondevUI(clazzName)) return true
-        if (expectVanePortal(clazzName)) return true
+        if(!PlatformUtil.isPaper){
+            // Blacklist gui causing issue
+            if (expectWesjd(clazzName)) return true
+            if (expectXenondevUI(clazzName)) return true
+            if (expectVanePortal(clazzName)) return true
 
-        return false
+            return false
+        }
+
+        // Only allow cannonical anvil menu class
+        return !Const.cannonicalPaperAnvilMenu.equals(clazzName, true)
     }
 
     fun expectWesjd(name: String): Boolean {
