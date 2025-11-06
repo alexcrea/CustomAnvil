@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.15.2"
+version = "1.15.3"
 
 val effectiveVersion = "$version" +
         (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
@@ -52,6 +52,7 @@ dependencies {
     compileOnly(project(":impl:LegacyEcoEnchant"))
 
     // ExcellentEnchants
+    implementation(project(":impl:ExcellentEnchant5_3"))
     compileOnly("su.nightexpress.excellentenchants:Core:5.1.0") {
         exclude("org.spigotmc")
     }
