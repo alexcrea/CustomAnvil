@@ -25,6 +25,7 @@ import su.nightexpress.excellentenchants.registry.EnchantRegistry as PreV5Enchan
 class ExcellentEnchantsDependency {
 
     enum class ListenerVersion(val classPath: String) {
+        V5_3("su.nightexpress.excellentenchants.enchantment.EnchantRegistry"),
         V5("su.nightexpress.excellentenchants.manager.listener.AnvilListener"),
         PRE_V5("su.nightexpress.excellentenchants.enchantment.listener.AnvilListener"),
         LEGACY("su.nightexpress.excellentenchants.enchantment.listener.EnchantAnvilListener"),
@@ -49,6 +50,8 @@ class ExcellentEnchantsDependency {
 
         if (listenerVersion == null) {
             CustomAnvil.instance.logger.severe("Found issue with listener of Excellent Enchants. compatiblity is broken. please contact CustomAnvil devs")
+        } else{
+            CustomAnvil.log("Support version: " + listenerVersion.name)
         }
 
         var isModernCurseOfFragility = true
@@ -67,6 +70,13 @@ class ExcellentEnchantsDependency {
 
         // As excellent enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
         when (listenerVersion) {
+            ListenerVersion.V5_3 -> {
+                for (enchantment in ExcellentEnchant5_3Registry.getRegistered()) {
+                    EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
+                    EnchantmentApi.registerEnchantment(CAEEV5Enchantment(enchantment))
+                }
+            }
+
             ListenerVersion.V5 -> {
                 for (enchantment in V5EnchantRegistry.getRegistered()) {
                     EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
@@ -119,7 +129,9 @@ class ExcellentEnchantsDependency {
             }
 
             when (listenerVersion) {
-                ListenerVersion.V5 -> {
+                ListenerVersion.V5,
+                ListenerVersion.V5_3
+                    -> {
                     if (listener is V5AnvilListener) {
                         this.v5AnvilListener = listener
                         toUnregister.add(registeredListener)
@@ -151,7 +163,9 @@ class ExcellentEnchantsDependency {
         }
 
         when (listenerVersion) {
-            ListenerVersion.V5 -> this.usedAnvilListener = v5AnvilListener!!
+            ListenerVersion.V5,
+            ListenerVersion.V5_3
+                -> this.usedAnvilListener = v5AnvilListener!!
             ListenerVersion.PRE_V5 -> this.usedAnvilListener = preV5AnvilListener!!
             ListenerVersion.LEGACY -> this.usedAnvilListener = legacyAnvilListener!!
             null -> {}
@@ -205,7 +219,9 @@ class ExcellentEnchantsDependency {
     fun testAnvilResult(event: InventoryClickEvent): Any {
         if (event.inventory.getItem(2) != null) {
             when (listenerVersion) {
-                ListenerVersion.V5 -> v5AnvilListener!!.onClickAnvil(event)
+                ListenerVersion.V5,
+                ListenerVersion.V5_3
+                    -> v5AnvilListener!!.onClickAnvil(event)
                 ListenerVersion.PRE_V5 -> preV5AnvilListener!!.onClickAnvil(event)
                 ListenerVersion.LEGACY -> legacyAnvilListener!!.onClickAnvil(event)
                 null -> {}
