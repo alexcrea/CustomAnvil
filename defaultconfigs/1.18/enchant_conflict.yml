@@ -92,6 +92,10 @@ restriction_loyalty:
   enchantments: [ minecraft:loyalty ]
   notAffectedGroups: [ enchanted_book, trident ]
 
+restriction_luck_of_the_sea:
+  enchantments: [ minecraft:luck_of_the_sea ]
+  notAffectedGroups: [ enchanted_book, fishing_rod ]
+
 restriction_lure:
   enchantments: [ minecraft:lure ]
   notAffectedGroups: [ enchanted_book, fishing_rod ]

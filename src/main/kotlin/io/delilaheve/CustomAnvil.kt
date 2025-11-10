@@ -10,6 +10,7 @@ import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
@@ -64,7 +65,7 @@ open class CustomAnvil : JavaPlugin() {
         /**
          * Logging handler
          */
-        fun log(message: String) {
+        @JvmStatic fun log(message: String) {
             if (ConfigOptions.debugLog) {
                 instance.logger.info(message)
             }
@@ -78,7 +79,6 @@ open class CustomAnvil : JavaPlugin() {
                 instance.logger.info(message)
             }
         }
-
 
     }
 
@@ -94,6 +94,11 @@ open class CustomAnvil : JavaPlugin() {
             Bukkit.getPluginManager().disablePlugin(potentialPlugin)
             logger.warning("An old version of this plugin was detected")
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
+        }
+
+        if(!PlatformUtil.isPaper) {
+            logger.warning("It seems you are using spigot")
+            logger.warning("Please take notice that spigot is less supported than paper and derivatives")
         }
 
         // Add commands

@@ -9,7 +9,10 @@ import xyz.alexcrea.cuanvil.update.Version;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class PluginUpdates {
 
@@ -21,10 +24,13 @@ public class PluginUpdates {
         handlePluginUpdate();
     }
 
-    private static final Version V1_6_2 = new Version(1, 6, 2);
-    private static final Version V1_6_7 = new Version(1, 6, 7);
-    private static final Version V1_8_0 = new Version(1, 8, 0);
-    private static final Version V1_11_0 = new Version(1, 11, 0);
+    private static final Map<Version, Consumer<Set<ConfigHolder>>> updateMap = Map.of(
+            new Version(1, 6, 2), PUpdate_1_6_2::handleUpdate,
+            new Version(1, 6, 7), PUpdate_1_6_7::handleUpdate,
+            new Version(1, 8, 0), PUpdate_1_8_0::handleUpdate,
+            new Version(1, 11, 0), PUpdate_1_11_0::handleUpdate,
+            new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate
+    );
 
     // Handle only plugin update
     private static void handlePluginUpdate() {
@@ -33,35 +39,32 @@ public class PluginUpdates {
 
         Set<ConfigHolder> toSave = new HashSet<>();
 
-        if (V1_6_2.greaterThan(current)) {
-            PUpdate_1_6_2.handleUpdate(toSave);
-            // We assume 1.6.7 will run. TODO a better system instead of that I guess
-        }
-        if (V1_6_7.greaterThan(current)) {
-            PUpdate_1_6_7.handleUpdate(toSave);
-            // We assume 1.8.0 will run.
-        }
-        if (V1_8_0.greaterThan(current)) {
-            PUpdate_1_8_0.handleUpdate(toSave);
-            // We assume 1.11.0 will run.
-        }
-        if (V1_11_0.greaterThan(current)) {
-            PUpdate_1_11_0.handleUpdate(toSave);
+        AtomicReference<Version> latest = new AtomicReference<>(null);
 
-            finishConfiguration("1.11.0", toSave);
-        }
+        // Hopefully, should iterate in the "insertion" order
+        updateMap.forEach((ver, consumer) -> {
+            if (ver.greaterThan(current)) {
+                CustomAnvil.log("handling plugin update to " + ver);
+                consumer.accept(toSave);
 
+                latest.set(ver);
+            }
+        });
+
+        if (latest.get() != null) {
+            finishConfiguration(latest.get().toString(), toSave);
+        }
     }
 
     // Handle minecraft version update (not plugin version update)
-    public static void handleMCVersionUpdate(){
+    public static void handleMCVersionUpdate() {
         Version current = UpdateUtils.currentMinecraftVersion();
 
         boolean hadUpdate = false;
         hadUpdate |= Update_1_21.handleUpdate(current);
         hadUpdate |= Update_1_21_9.handleUpdate(current);
 
-        if(hadUpdate){
+        if (hadUpdate) {
             CustomAnvil.instance.getLogger().info("Updating Done !");
         }
     }
@@ -71,9 +74,16 @@ public class PluginUpdates {
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(CONFIG_VERSION_PATH, newVersion);
 
         toSave.add(ConfigHolder.DEFAULT_CONFIG);
+        // save
         for (ConfigHolder configHolder : toSave) {
             configHolder.saveToDisk(true);
         }
+
+        // then reload
+        for (ConfigHolder configHolder : toSave) {
+            configHolder.reload();
+        }
+
     }
 
 }
