@@ -71,7 +71,7 @@ public class UpdateHandler {
 
         boolean hadUpdate = false;
         for (MCUpdate mcUpdate : mcUpdateMap) {
-            hadUpdate |= mcUpdate.handleUpdate(current);
+            hadUpdate |= mcUpdate.handleUpdate(current, hadUpdate);
         }
 
         if (hadUpdate) {
