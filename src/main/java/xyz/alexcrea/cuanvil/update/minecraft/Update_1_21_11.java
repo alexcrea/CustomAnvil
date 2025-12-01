@@ -17,6 +17,7 @@ public class Update_1_21_11 extends MCUpdate{
         var baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
         var groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
         var conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
 
         // Create spear group
         groupConfig.set("spears.type", "include");
@@ -36,6 +37,9 @@ public class Update_1_21_11 extends MCUpdate{
         addAbsentToList(conflictConfig, "restriction_knockback.notAffectedGroups", "spears");
         addAbsentToList(conflictConfig, "restriction_fire_aspect.notAffectedGroups", "spears");
 
+        // Unit repair for spears
+
+
         // Create lunge enchant value and group
         baseConfig.set("enchant_limits.minecraft:lunge", 3);
         baseConfig.set("enchant_values.minecraft:lunge.item", 2);
@@ -51,6 +55,7 @@ public class Update_1_21_11 extends MCUpdate{
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
         ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true);
         ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
+        ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
 
         // imply reload of CONFLICT_HOLDER
         // We also do not need to reload base config as there is no object related to it.

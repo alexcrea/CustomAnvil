@@ -31,7 +31,8 @@ public class UpdateHandler {
             new Version(1, 6, 7), PUpdate_1_6_7::handleUpdate,
             new Version(1, 8, 0), PUpdate_1_8_0::handleUpdate,
             new Version(1, 11, 0), PUpdate_1_11_0::handleUpdate,
-            new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate
+            new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate,
+            new Version(1, 15, 6), PUpdate_1_15_6::handleUpdate
     );
 
     private static final List<MCUpdate> mcUpdateMap = List.of(
