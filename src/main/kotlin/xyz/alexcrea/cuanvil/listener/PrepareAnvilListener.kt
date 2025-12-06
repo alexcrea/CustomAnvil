@@ -213,7 +213,8 @@ class PrepareAnvilListener : Listener {
             else if (useColor) it.displayName
             else ChatColor.stripColor(it.displayName)
 
-            if (!displayName.contentEquals(renameText)) {
+
+            if (!displayName.contentEquals(renameText) && !(displayName == null && renameText == "")) {
                 it.setDisplayName(renameText)
                 resultItem.itemMeta = it
 
