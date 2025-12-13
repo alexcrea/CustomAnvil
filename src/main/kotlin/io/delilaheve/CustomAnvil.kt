@@ -19,8 +19,7 @@ import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
-import xyz.alexcrea.cuanvil.update.Update_1_21
-import xyz.alexcrea.cuanvil.update.plugin.PluginUpdates
+import xyz.alexcrea.cuanvil.update.UpdateHandler
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
 import java.io.FileReader
@@ -145,7 +144,7 @@ open class CustomAnvil : JavaPlugin() {
         }
 
         // Handle minecraft and plugin updates
-        PluginUpdates.handleUpdates()
+        UpdateHandler.handleUpdates()
 
         // Register enchantment of compatible plugin and load configuration change.
         DependencyManager.handleCompatibilityConfig()

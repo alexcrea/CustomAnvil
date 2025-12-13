@@ -1,33 +1,20 @@
-package xyz.alexcrea.cuanvil.update;
+package xyz.alexcrea.cuanvil.update.minecraft;
 
 import io.delilaheve.CustomAnvil;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.update.UpdateUtils;
+import xyz.alexcrea.cuanvil.update.Version;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
-public class Update_1_21 {
+public class Update_1_21 extends MCUpdate {
 
-    private static final Version V1_21 = new Version(1, 21);
-
-    public static boolean handleUpdate(Version current){
-        // Test if we are running in 1.21 or better
-        if(V1_21.greaterThan(current))
-            return false;
-
-        // if version path is not null then check if its it's before 1.21
-        String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
-        if(oldVersion != null){
-            var version = Version.fromString(oldVersion);
-            if(V1_21.lesserEqual(version)) return false;
-        }
-
-        doUpdate();
-        return true;
+    public Update_1_21() {
+        super(new Version(1, 21));
     }
 
-    private static void doUpdate() {
-        CustomAnvil.instance.getLogger().info("Updating config to support 1.21 ...");
-
+    @Override
+    protected void doUpdate() {
         var baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
         var groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
         var conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
@@ -75,8 +62,8 @@ public class Update_1_21 {
         // Add unit repair for mace
         unitConfig.set("breeze_rod.mace", 0.25);
 
-        // Set version string as 1.21
-        baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, V1_21.toString());
+        // Set version string as current
+        baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, version.toString());
 
         // Save
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
