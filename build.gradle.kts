@@ -76,6 +76,7 @@ dependencies {
 
     // Include nms
     implementation(project(":nms:nms-common"))
+    implementation(project(":nms:nms-paper"))
     for (nmsPart in reobfNMS) {
         implementation(project(":nms:$nmsPart", configuration = "reobf"))
     }

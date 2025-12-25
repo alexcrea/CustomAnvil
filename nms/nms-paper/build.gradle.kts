@@ -8,21 +8,21 @@ plugins {
 }
 
 dependencies {
-    // Used for nms
-    paperweight.paperDevBundle("1.21.10-R0.1-SNAPSHOT")
+    implementation(project(":nms:nms-common"))
 
-    // Protocolib
-    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
+    // Used for nms
+    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
 }
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
+
 }
 
 // Set target version
 tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "16"
-    targetCompatibility = "16"
+    sourceCompatibility = "18"
+    targetCompatibility = "18"
 
     options.encoding = "UTF-8"
 }
@@ -30,6 +30,6 @@ tasks.withType<JavaCompile>().configureEach {
 kotlin {
     compilerOptions {
         apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        jvmTarget.set(JvmTarget.JVM_16)
+        jvmTarget.set(JvmTarget.JVM_18)
     }
 }

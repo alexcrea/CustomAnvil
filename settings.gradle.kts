@@ -3,6 +3,8 @@ rootProject.name = "CustomAnvil"
 // NMS subproject
 include("nms:nms-common")
 findProject(":nms:nms-common")?.name = "nms-common"
+include("nms:nms-paper")
+findProject(":nms:nms-paper")?.name = "nms-paper"
 
 
 val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
