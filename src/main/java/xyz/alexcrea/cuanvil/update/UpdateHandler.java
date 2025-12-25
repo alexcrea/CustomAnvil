@@ -1,20 +1,22 @@
-package xyz.alexcrea.cuanvil.update.plugin;
+package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.update.UpdateUtils;
-import xyz.alexcrea.cuanvil.update.Update_1_21;
-import xyz.alexcrea.cuanvil.update.Update_1_21_9;
-import xyz.alexcrea.cuanvil.update.Version;
+import xyz.alexcrea.cuanvil.update.minecraft.MCUpdate;
+import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21;
+import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21_11;
+import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21_9;
+import xyz.alexcrea.cuanvil.update.plugin.*;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public class PluginUpdates {
+public class UpdateHandler {
 
     private static final String CONFIG_VERSION_PATH = "configVersion";
 
@@ -24,12 +26,19 @@ public class PluginUpdates {
         handlePluginUpdate();
     }
 
-    private static final Map<Version, Consumer<Set<ConfigHolder>>> updateMap = Map.of(
+    private static final Map<Version, Consumer<Set<ConfigHolder>>> pUpdateMap = Map.of(
             new Version(1, 6, 2), PUpdate_1_6_2::handleUpdate,
             new Version(1, 6, 7), PUpdate_1_6_7::handleUpdate,
             new Version(1, 8, 0), PUpdate_1_8_0::handleUpdate,
             new Version(1, 11, 0), PUpdate_1_11_0::handleUpdate,
-            new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate
+            new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate,
+            new Version(1, 15, 6), PUpdate_1_15_6::handleUpdate
+    );
+
+    private static final List<MCUpdate> mcUpdateMap = List.of(
+            new Update_1_21(),
+            new Update_1_21_9(),
+            new Update_1_21_11()
     );
 
     // Handle only plugin update
@@ -42,7 +51,7 @@ public class PluginUpdates {
         AtomicReference<Version> latest = new AtomicReference<>(null);
 
         // Hopefully, should iterate in the "insertion" order
-        updateMap.forEach((ver, consumer) -> {
+        pUpdateMap.forEach((ver, consumer) -> {
             if (ver.greaterThan(current)) {
                 CustomAnvil.log("handling plugin update to " + ver);
                 consumer.accept(toSave);
@@ -61,8 +70,9 @@ public class PluginUpdates {
         Version current = UpdateUtils.currentMinecraftVersion();
 
         boolean hadUpdate = false;
-        hadUpdate |= Update_1_21.handleUpdate(current);
-        hadUpdate |= Update_1_21_9.handleUpdate(current);
+        for (MCUpdate mcUpdate : mcUpdateMap) {
+            hadUpdate |= mcUpdate.handleUpdate(current, hadUpdate);
+        }
 
         if (hadUpdate) {
             CustomAnvil.instance.getLogger().info("Updating Done !");
