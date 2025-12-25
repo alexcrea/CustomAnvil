@@ -31,6 +31,9 @@ repositories {
     maven(url = "https://repo.nightexpressdev.com/releases")
 }
 
+val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
+    .get().split(",")
+
 dependencies {
     // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
@@ -74,23 +77,9 @@ dependencies {
     // Include nms
     implementation(project(":nms:nms-common"))
     implementation(project(":nms:nms-paper"))
-    implementation(project(":nms:v1_17R1", configuration = "reobf"))
-    implementation(project(":nms:v1_18R1", configuration = "reobf"))
-    implementation(project(":nms:v1_18R2", configuration = "reobf"))
-    implementation(project(":nms:v1_19R1", configuration = "reobf"))
-    implementation(project(":nms:v1_19R2", configuration = "reobf"))
-    implementation(project(":nms:v1_19R3", configuration = "reobf"))
-    implementation(project(":nms:v1_20R1", configuration = "reobf"))
-    implementation(project(":nms:v1_20R2", configuration = "reobf"))
-    implementation(project(":nms:v1_20R3", configuration = "reobf"))
-    implementation(project(":nms:v1_20R4", configuration = "reobf"))
-    implementation(project(":nms:v1_21R1", configuration = "reobf"))
-    implementation(project(":nms:v1_21R2", configuration = "reobf"))
-    implementation(project(":nms:v1_21R3", configuration = "reobf"))
-    implementation(project(":nms:v1_21R4", configuration = "reobf"))
-    implementation(project(":nms:v1_21R5", configuration = "reobf"))
-    implementation(project(":nms:v1_21R6", configuration = "reobf"))
-    implementation(project(":nms:v1_21R7", configuration = "reobf"))
+    for (nmsPart in reobfNMS) {
+        implementation(project(":nms:$nmsPart", configuration = "reobf"))
+    }
 
     // include kotlin for the offline jar
     implementation(kotlin("stdlib"))
@@ -170,7 +159,8 @@ tasks {
         filesMatching("plugin.yml") {
             expand(
                 "version" to effectiveVersion,
-                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" "
+                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" " +
+                ", \"net.kyori:adventure-platform-bukkit:4.4.1\""
             )
         }
 
@@ -260,13 +250,9 @@ object Meta {
     const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 }
 
-val disalowedDependency = setOf(
-    "nms-common", "kotlin-stdlib",
-    "v1_17R1",
-    "v1_18R1", "v1_18R2", "v1_19R1", "v1_19R2", "v1_19R3",
-    "v1_20R1", "v1_20R2", "v1_20R3", "v1_20R4",
-    "v1_21R1", "v1_21R2", "v1_21R3", "v1_21R4", "v1_21R5"
-)
+val disallowedDependency = HashSet<String>()
+disallowedDependency.addAll(reobfNMS)
+disallowedDependency.addAll(listOf("nms-common", "nms-paper", "kotlin-stdlib"))
 
 publishing {
     repositories {
@@ -334,7 +320,7 @@ publishing {
                         val artifactNode = ((child as Node).get("artifactId") as NodeList)[0] as Node
                         val artifactID = artifactNode.value() as String
 
-                        if(disalowedDependency.contains(artifactID)) {
+                        if(disallowedDependency.contains(artifactID)) {
                             toRemove.add(child)
                         }
                     }
