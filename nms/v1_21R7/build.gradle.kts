@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":nms:nms-common"))
 
     // Used for nms
-    paperweight.paperDevBundle("1.21.11-pre3-R0.1-SNAPSHOT") //TODO update to 1.21.11-R0.1-SNAPSHOT on release
+    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
 }
 
 repositories {
