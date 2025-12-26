@@ -88,7 +88,7 @@ as low priority as I work for the plugin on my free time for free.
 
 One of the configurations allow displaying price about 40 and removing Too Expensive. \
 By how the minecraft client work: price above 40 can only be displayed green, even if the player does not own enough experience level. 
-Minecraft version 1.17 to latest marked as supported do not need any dependency. \
+Minecraft version 1.18 to latest marked as supported do not need any ProtocoLib dependency. \
 Any recent paper version also are supported for this feature. 
 But you should wait for update for new version containing new enchantable item or new enchantments.
 Other version need ProtocoLib enabled on your server for this feature. \
