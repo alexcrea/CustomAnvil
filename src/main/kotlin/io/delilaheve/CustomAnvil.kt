@@ -10,6 +10,7 @@ import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
@@ -18,8 +19,7 @@ import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
-import xyz.alexcrea.cuanvil.update.Update_1_21
-import xyz.alexcrea.cuanvil.update.plugin.PluginUpdates
+import xyz.alexcrea.cuanvil.update.UpdateHandler
 import xyz.alexcrea.cuanvil.util.Metrics
 import java.io.File
 import java.io.FileReader
@@ -64,7 +64,7 @@ open class CustomAnvil : JavaPlugin() {
         /**
          * Logging handler
          */
-        fun log(message: String) {
+        @JvmStatic fun log(message: String) {
             if (ConfigOptions.debugLog) {
                 instance.logger.info(message)
             }
@@ -78,7 +78,6 @@ open class CustomAnvil : JavaPlugin() {
                 instance.logger.info(message)
             }
         }
-
 
     }
 
@@ -140,7 +139,7 @@ open class CustomAnvil : JavaPlugin() {
         }
 
         // Handle minecraft and plugin updates
-        PluginUpdates.handleUpdates()
+        UpdateHandler.handleUpdates()
 
         // Register enchantment of compatible plugin and load configuration change.
         DependencyManager.handleCompatibilityConfig()

@@ -1,37 +1,24 @@
-package xyz.alexcrea.cuanvil.update;
+package xyz.alexcrea.cuanvil.update.minecraft;
 
 import io.delilaheve.CustomAnvil;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.update.UpdateUtils;
+import xyz.alexcrea.cuanvil.update.Version;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
-public class Update_1_21_9 {
+public class Update_1_21_9 extends MCUpdate{
 
-    private static final Version V1_21_9 = new Version(1, 21, 9);
-
-    public static boolean handleUpdate(Version current){
-        // Test if we are running in 1.21.9 or better
-        if(V1_21_9.greaterThan(current))
-            return false;
-
-        // if version path is not null then check if its it's before 1.21.9
-        String oldVersion = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(UpdateUtils.MINECRAFT_VERSION_PATH);
-        if(oldVersion != null){
-            var version = Version.fromString(oldVersion);
-            if(V1_21_9.lesserEqual(version)) return false;
-        }
-
-        doUpdate();
-        return true;
+    public Update_1_21_9() {
+        super(new Version(1, 21, 9));
     }
 
-    private static void doUpdate() {
-        CustomAnvil.instance.getLogger().info("Updating config to support 1.21.9 ...");
-
+    @Override
+    protected void doUpdate() {
         var baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
         var groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
-        // Add mace to groups
+        // Add cooper items to groups
         addAbsentToList(groupConfig, "helmets.items", "copper_helmet");
         addAbsentToList(groupConfig, "chestplate.items", "copper_chestplate");
         addAbsentToList(groupConfig, "leggings.items", "copper_leggings");
@@ -43,8 +30,8 @@ public class Update_1_21_9 {
         addAbsentToList(groupConfig, "axes.items", "copper_axe");
         addAbsentToList(groupConfig, "swords.items", "copper_sword");
 
-        // Set version string as 1.21
-        baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, V1_21_9.toString());
+        // Set version string as current
+        baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, version.toString());
 
         // Save
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);

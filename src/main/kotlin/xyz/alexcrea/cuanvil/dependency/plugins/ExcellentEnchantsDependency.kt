@@ -13,6 +13,7 @@ import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.manager.listener.AnvilListener as V5AnvilListener
 
+//TODO newer version
 class ExcellentEnchantsDependency {
 
     init {

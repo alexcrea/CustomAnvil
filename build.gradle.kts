@@ -51,6 +51,7 @@ dependencies {
     compileOnly("com.willfp:eco:6.74.5")
 
     // ExcellentEnchants
+    implementation(project(":impl:ExcellentEnchant5_3"))
     compileOnly("su.nightexpress.excellentenchants:Core:5.1.0") {
         exclude("org.spigotmc")
     }
