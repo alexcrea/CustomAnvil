@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.dependency.util
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
@@ -27,42 +26,19 @@ object PlatformUtil {
         }
     }
 
-    val isPaper = hasClass("com.destroystokyo.paper.PaperConfig") ||
-            hasClass("io.papermc.paper.configuration.Configuration")
 
     val isFolia = hasClass("io.papermc.paper.threadedregions.RegionizedServer")
 
-    private val legacy_mm = LegacyComponentSerializer.legacySection()
+    val isMockbukkit = hasClass("org.mockbukkit.mockbukkit.exception.UnimplementedOperationException")
 
     // Lore
     fun ItemMeta.componentLore(): MutableList<Component> {
-        val lore: List<Component>?
-        if(isPaper){
-            lore = this.lore()
-        } else {
-            val legacyLores = this.lore ?: return ArrayList()
-
-            lore = ArrayList(legacyLores.size)
-            for (legacyLore in legacyLores) {
-                lore.add(legacy_mm.deserialize(legacyLore))
-            }
-        }
-
+        val lore = this.lore()
         return lore ?: ArrayList()
     }
 
     fun ItemMeta.setComponentLore(lore: List<Component?>) {
-        if(isPaper){
-            this.lore(lore)
-        } else {
-            val legacyLore = ArrayList<String?>(lore.size)
-            for (component in lore) {
-                legacyLore.add(if(component == null) null
-                else legacy_mm.serialize(component))
-            }
-
-            this.lore = legacyLore
-        }
+        this.lore(lore)
     }
 
     // Display name
@@ -70,32 +46,19 @@ object PlatformUtil {
 
     fun ItemMeta.componentDisplayName(): Component? {
         if(useCustomName){
-            if(!this.hasCustomName()) return null
+            if(!this.hasCustomName()) return null //TODO check if I can use customName
             return this.customName()
-        }else if(isPaper){
+        }else {
             if(!this.hasDisplayName()) return null
             return this.displayName()
-        } else {
-            if(!this.hasDisplayName()) return null
-
-            val legacy = this.displayName
-            return legacy_mm.deserialize(legacy)
         }
     }
 
     fun ItemMeta.setComponentDisplayName(component: Component?) {
         if(useCustomName){
             this.customName(component)
-        }else if(isPaper){
+        }else {
             this.displayName(component)
-        } else {
-            if(component == null){
-                this.setDisplayName(null)
-                return
-            }
-
-            val legacy = legacy_mm.serialize(component)
-            this.setDisplayName(legacy)
         }
     }
 

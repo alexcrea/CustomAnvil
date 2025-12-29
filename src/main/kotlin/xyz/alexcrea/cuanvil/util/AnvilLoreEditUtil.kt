@@ -47,7 +47,7 @@ object AnvilLoreEditUtil {
 
         lore.addAll(outLines)
 
-        meta.setComponentLore(lore)
+        meta.lore(lore)
         result.itemMeta = meta
 
         if (result == first) return null

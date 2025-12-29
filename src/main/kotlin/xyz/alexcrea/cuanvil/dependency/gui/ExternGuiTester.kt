@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.dependency.gui
 import org.bukkit.craftbukkit.inventory.CraftInventoryView
 import org.bukkit.inventory.InventoryView
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 
 object ExternGuiTester {
 
@@ -14,7 +15,7 @@ object ExternGuiTester {
     }
 
     fun testIfGui(view: InventoryView): Boolean {
-        if (DependencyManager.isMockbukkit) return false
+        if (PlatformUtil.isMockbukkit) return false
         val clazz = getContainerClass(view) ?: return false
 
         val clazzName = clazz.name

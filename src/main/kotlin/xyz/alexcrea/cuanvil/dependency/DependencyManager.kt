@@ -107,15 +107,6 @@ object DependencyManager {
 
     }
 
-    private fun testIsMockbukkit(): Boolean {
-        try {
-            Class.forName("org.mockbukkit.mockbukkit.exception.UnimplementedOperationException")
-            return true
-        } catch (e: ClassNotFoundException) {
-            return false
-        }
-    }
-
     fun handleCompatibilityConfig() {
         enchantmentSquaredCompatibility?.registerPluginConfiguration()
 

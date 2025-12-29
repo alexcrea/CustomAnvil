@@ -19,8 +19,7 @@ object MiniMessageUtil {
         )
         .build()
 
-    val mm = if (PlatformUtil.isPaper) MiniMessage.miniMessage()
-    else color_only_mm
+    val mm = MiniMessage.miniMessage()
 
     val legacy_mm = LegacyComponentSerializer.legacySection()
     val plain_text_mm = PlainTextComponentSerializer.plainText()
