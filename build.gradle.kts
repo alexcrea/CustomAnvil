@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version "2.1.0"
     java
     id("org.jetbrains.dokka").version("1.9.20")
-    id("com.gradleup.shadow").version("9.0.0-beta16")
+    id("com.gradleup.shadow").version("9.3.0")
     // Maven publish
     `maven-publish`
     signing
@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.15.7"
+version = "1.15.8"
 
 val effectiveVersion = "$version" +
         (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")

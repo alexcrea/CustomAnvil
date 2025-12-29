@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.dependency.gui
 
 import org.bukkit.inventory.InventoryView
-import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
 import java.lang.reflect.Method
 
 class GenericExternGuiTester: ExternGuiTester {
@@ -12,14 +11,16 @@ class GenericExternGuiTester: ExternGuiTester {
         private const val HANDLE_METHOD_NAME = "getHandle"
     }
 
-    var tested = false
+    var testExist = false
+    var inTesting = false
 
     var testedClass: String? = null
     lateinit var getHandleMethod: Method
 
     override fun getContainerClass(view: InventoryView): Class<Any>? {
         // In case we are in a test environment
-        if(!tested) testClassExist()
+        if(!testExist) testClassExist()
+        if(inTesting) return view.javaClass //TEMPORARY
 
         if(!testedClass.contentEquals(view.javaClass.name))
             return null
@@ -36,7 +37,7 @@ class GenericExternGuiTester: ExternGuiTester {
     }
 
     fun testClassExist() {
-        tested = true
+        testExist = true
 
         // We first try to get craft anvil interface,
         // but is absent on old version so we try craft inventory view before
@@ -53,6 +54,8 @@ class GenericExternGuiTester: ExternGuiTester {
         }
         catch (_: ClassNotFoundException) {}
         catch (_: NoSuchMethodException) {}
+
+        inTesting = true
     }
 
 }
