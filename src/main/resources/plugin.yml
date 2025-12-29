@@ -46,6 +46,9 @@ permissions:
   ca.color.hex:
     default: op
     description: Allow player to use hexadecimal color if enabled (toggleable)
+  ca.rename.minimessage:
+    default: op
+    description: Allow player to use minimessage formating on rename if enabled (toggleable) (only legacy compatible at the time)
   # lore edit permissions
   ca.lore_edit.book:
     default: op

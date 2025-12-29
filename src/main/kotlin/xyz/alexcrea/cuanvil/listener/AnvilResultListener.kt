@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_LEFT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
@@ -24,11 +25,13 @@ import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
+import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.min
 
 @Suppress("unstableApiUsage")
@@ -394,8 +397,6 @@ class AnvilResultListener : Listener {
             if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, xpCost)) return false
 
             // fill book meta
-            val meta = leftItem.itemMeta
-            if (meta == null || !meta.hasLore()) return false
             val lore = DependencyManager.stripLore(leftItem)
             if (lore.isEmpty()) return false
 
@@ -409,7 +410,9 @@ class AnvilResultListener : Listener {
                 val bookPage = StringBuilder()
                 lore.forEach {
                     if (bookPage.isNotEmpty()) bookPage.append('\n')
-                    bookPage.append(it)
+                    if(it == null) return@forEach
+
+                    bookPage.append(MiniMessageUtil.plain_text_mm.serialize(it))
                 }
 
                 val resultPage = bookPage.toString()
@@ -440,10 +443,10 @@ class AnvilResultListener : Listener {
         if (Material.PAPER != rightItem.type) return false
         val paperMeta = rightItem.itemMeta ?: return false
 
-        val editType = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
+        val editTypeIsAppend = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
 
         val xpCost = AtomicInteger()
-        if (editType) {
+        if (editTypeIsAppend) {
             if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem, xpCost)) return false
 
             val paperCopy: ItemStack?
@@ -453,7 +456,7 @@ class AnvilResultListener : Listener {
                 // Remove custom name to paper
                 paperCopy = rightItem.clone()
                 paperCopy.amount = 1
-                paperMeta.setDisplayName(null)
+                paperMeta.setComponentDisplayName(null)
                 paperCopy.itemMeta = paperMeta
             }
 
@@ -486,20 +489,18 @@ class AnvilResultListener : Listener {
                 rightClone = null
             } else {
                 val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
-                var line = if (removeEnd) lore[lore.size - 1]
+                val line = if (removeEnd) lore[lore.size - 1]
                 else lore[0]
 
-                // Overkill but uncolor the line
-                val tempList = ArrayList<String>(1)
-                tempList.add(line)
-                AnvilLoreEditUtil.uncolorLines(player, tempList, LoreEditType.REMOVE_PAPER)
-                line = tempList[0]
+                // uncolor the line
+                val ref = AtomicReference(line)
+                AnvilLoreEditUtil.uncolorLine(player, ref, LoreEditType.REMOVE_PAPER)
 
                 rightClone = rightItem.clone()
                 rightClone.amount = 1
 
                 val resultMeta = rightClone.itemMeta ?: return false
-                resultMeta.setDisplayName(line)
+                resultMeta.setComponentDisplayName(ref.get())
                 rightClone.itemMeta = resultMeta
             }
 

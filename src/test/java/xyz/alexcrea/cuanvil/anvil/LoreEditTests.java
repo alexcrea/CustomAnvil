@@ -289,9 +289,9 @@ public class LoreEditTests extends SharedCustomAnvilTest {
             if (type.isAppend()) {
                 ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_HEX_COLOR, true);
                 ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_COLOR_CODE, true);
+                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.ALLOW_MINIMESSAGE, true);
                 ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.USE_COLOR_COST, 0);
             } else {
-                ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE, false);
                 ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_COST, 0);
             }
 
@@ -437,7 +437,6 @@ public class LoreEditTests extends SharedCustomAnvilTest {
     public void testColorCost(LoreEditType type) {
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.USE_COLOR_COST, COLOR_USE_COST);
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_COST, COLOR_REMOVE_COST);
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE, true);
 
         TestDataContainer singleLData = singleLineTypeToTest.get(type);
         TestDataContainer multiLData = multiLineTypeToTest.get(type);
@@ -481,8 +480,6 @@ public class LoreEditTests extends SharedCustomAnvilTest {
     @ParameterizedTest
     @MethodSource("onlyRemoveTypes")
     public void testColorRemoveEnabled(LoreEditType type) {
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(type.getRootPath() + "." + LoreEditConfigUtil.REMOVE_COLOR_ON_LORE_REMOVE, true);
-
         TestDataContainer singleLData = singleLineTypeToTest.get(type);
         TestDataContainer multiLData = multiLineTypeToTest.get(type);
 
