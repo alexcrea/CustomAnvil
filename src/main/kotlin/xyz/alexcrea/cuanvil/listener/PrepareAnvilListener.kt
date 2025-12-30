@@ -41,7 +41,7 @@ class PrepareAnvilListener : Listener {
     }
 
     private fun ItemStack?.isAir(): Boolean {
-        return this == null || this.isEmpty
+        return this == null || this.type.isAir || this.amount == 0
     }
 
     /**
@@ -87,10 +87,9 @@ class PrepareAnvilListener : Listener {
             doRenaming(event, inventory, player, first)
             return
         }
-        second as ItemStack // not air we know it's not null
 
         // Test for merge
-        if (first.canMergeWith(second)) {
+        if (first.canMergeWith(second!!)) {
             doMerge(event, inventory, player, first, second)
             return
         }
@@ -109,7 +108,7 @@ class PrepareAnvilListener : Listener {
     private fun isImmutable(item: ItemStack?): Boolean {
         if (item.isAir()) return false
 
-        val meta = item.itemMeta
+        val meta = item!!.itemMeta
         return meta != null &&
                 (hasImmutableEnchants(meta) || hasImmutableStoredEnchants(meta))
     }
