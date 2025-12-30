@@ -3,7 +3,10 @@ package xyz.alexcrea.cuanvil.gui.config;
 import org.bukkit.inventory.ItemType;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
 public interface SelectItemTypeContainer {

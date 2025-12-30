@@ -4,7 +4,6 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max

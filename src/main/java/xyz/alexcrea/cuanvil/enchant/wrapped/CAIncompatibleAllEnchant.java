@@ -5,7 +5,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.enchant.*;
+import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
 import java.util.Map;
 

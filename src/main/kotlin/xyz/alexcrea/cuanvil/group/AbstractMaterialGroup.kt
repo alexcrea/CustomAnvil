@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.group
 
-import com.google.common.collect.ImmutableSet
 import org.bukkit.inventory.ItemType
 
 @Suppress("UnstableApiUsage")

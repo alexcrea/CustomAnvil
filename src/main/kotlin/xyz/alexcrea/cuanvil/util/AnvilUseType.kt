@@ -2,7 +2,6 @@ package xyz.alexcrea.cuanvil.util
 
 import org.bukkit.Material
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
-import xyz.alexcrea.cuanvil.util.config.LoreEditType
 
 enum class AnvilUseType(
     val typeName: String, val path: String,

@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.group
 
-import com.google.common.collect.ImmutableSet
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import org.bukkit.inventory.ItemType

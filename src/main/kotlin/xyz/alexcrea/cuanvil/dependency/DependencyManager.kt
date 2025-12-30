@@ -8,11 +8,11 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
-import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester

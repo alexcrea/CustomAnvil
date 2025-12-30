@@ -21,11 +21,7 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
-import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
-import xyz.alexcrea.cuanvil.util.AnvilUseType
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
-import xyz.alexcrea.cuanvil.util.MiniMessageUtil
+import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
