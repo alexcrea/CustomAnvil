@@ -56,7 +56,7 @@ class PrepareAnvilListener : Listener {
         // Test if custom anvil is bypassed before immutability test
         if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvXp(event.view, player, event.view.repairCost)
+            AnvilXpUtil.setAnvilInvXp(view, player, view.repairCost)
             return
         }
 
@@ -73,7 +73,7 @@ class PrepareAnvilListener : Listener {
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvXp(event.view, player, event.view.repairCost)
+            AnvilXpUtil.setAnvilInvXp(view, player, view.repairCost)
             return
         }
 
