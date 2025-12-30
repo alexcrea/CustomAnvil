@@ -17,6 +17,7 @@ public class Update_1_21_11 extends MCUpdate{
         var baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
         var groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
         var conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
 
         // Create spear group
         groupConfig.set("spears.type", "include");
@@ -36,6 +37,28 @@ public class Update_1_21_11 extends MCUpdate{
         addAbsentToList(conflictConfig, "restriction_knockback.notAffectedGroups", "spears");
         addAbsentToList(conflictConfig, "restriction_fire_aspect.notAffectedGroups", "spears");
 
+        // Unit repair for spears
+        unitConfig.set("gold_ingot.golden_spear", 0.25);
+        unitConfig.set("copper_ingot.copper_spear", 0.25);
+        unitConfig.set("iron_ingot.iron_spear", 0.25);
+        unitConfig.set("diamond.diamond_spear", 0.25);
+        unitConfig.set("netherite_ingot.netherite_spear", 0.25);
+
+        unitConfig.set("cobblestone.stone_spear", 0.25);
+        unitConfig.set("cobbled_deepslate.stone_spear", 0.25);
+
+        unitConfig.set("oak_planks.wooden_spear", 0.25);
+        unitConfig.set("spruce_planks.wooden_spear", 0.25);
+        unitConfig.set("birch_planks.wooden_spear", 0.25);
+        unitConfig.set("jungle_planks.wooden_spear", 0.25);
+        unitConfig.set("acacia_planks.wooden_spear", 0.25);
+        unitConfig.set("dark_oak_planks.wooden_spear", 0.25);
+        unitConfig.set("mangrove_planks.wooden_spear", 0.25);
+        unitConfig.set("cherry_planks.wooden_spear", 0.25);
+        unitConfig.set("bamboo_planks.wooden_spear", 0.25);
+        unitConfig.set("crimson_planks.wooden_spear", 0.25);
+        unitConfig.set("warped_planks.wooden_spear", 0.25);
+
         // Create lunge enchant value and group
         baseConfig.set("enchant_limits.minecraft:lunge", 3);
         baseConfig.set("enchant_values.minecraft:lunge.item", 2);
@@ -51,6 +74,7 @@ public class Update_1_21_11 extends MCUpdate{
         ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
         ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true);
         ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
+        ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
 
         // imply reload of CONFLICT_HOLDER
         // We also do not need to reload base config as there is no object related to it.

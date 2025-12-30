@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version "2.1.0"
     java
     id("org.jetbrains.dokka").version("1.9.20")
-    id("com.gradleup.shadow").version("9.0.0-beta16")
+    id("com.gradleup.shadow").version("9.3.0")
     // Maven publish
     `maven-publish`
     signing
@@ -30,6 +30,9 @@ repositories {
     // ExcellentEnchants
     maven(url = "https://repo.nightexpressdev.com/releases")
 }
+
+val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
+    .get().split(",")
 
 dependencies {
     // Paper
@@ -154,7 +157,8 @@ tasks {
         filesMatching("plugin.yml") {
             expand(
                 "version" to effectiveVersion,
-                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" "
+                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" " +
+                ", \"net.kyori:adventure-platform-bukkit:4.4.1\""
             )
         }
 
@@ -254,13 +258,9 @@ object Meta {
     const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 }
 
-val disalowedDependency = setOf(
-    "nms-common", "kotlin-stdlib",
-    "v1_17R1",
-    "v1_18R1", "v1_18R2", "v1_19R1", "v1_19R2", "v1_19R3",
-    "v1_20R1", "v1_20R2", "v1_20R3", "v1_20R4",
-    "v1_21R1", "v1_21R2", "v1_21R3", "v1_21R4", "v1_21R5"
-)
+val disallowedDependency = HashSet<String>()
+disallowedDependency.addAll(reobfNMS)
+disallowedDependency.addAll(listOf("nms-common", "nms-paper", "kotlin-stdlib"))
 
 publishing {
     repositories {
@@ -328,7 +328,7 @@ publishing {
                         val artifactNode = ((child as Node).get("artifactId") as NodeList)[0] as Node
                         val artifactID = artifactNode.value() as String
 
-                        if(disalowedDependency.contains(artifactID)) {
+                        if(disallowedDependency.contains(artifactID)) {
                             toRemove.add(child)
                         }
                     }

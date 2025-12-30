@@ -13,7 +13,7 @@ public abstract class MCUpdate {
         this.version = version;
     }
 
-    public boolean handleUpdate(Version current){
+    public boolean handleUpdate(Version current, boolean hadUpdate){
         // Test if we are running in this update version or better
         if(version.greaterThan(current))
             return false;
@@ -25,7 +25,9 @@ public abstract class MCUpdate {
             if(this.version.lesserEqual(version)) return false;
         }
 
-        CustomAnvil.instance.getLogger().info("Updating config to support " + version +" ...");
+        if(!hadUpdate){
+            CustomAnvil.instance.getLogger().info("Updating config to support minecraft " + current +" ...");
+        }
         doUpdate();
         return true;
     }
