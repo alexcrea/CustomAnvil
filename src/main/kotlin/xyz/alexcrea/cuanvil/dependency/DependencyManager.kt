@@ -4,7 +4,6 @@ import com.willfp.eco.core.gui.player
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
@@ -145,9 +144,8 @@ object DependencyManager {
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
+            event.view.player.sendRichMessage(
+                "${CustomAnvil.namePrefix} <red>Error while handling the anvil."
             )
             return true
         }
@@ -185,8 +183,7 @@ object DependencyManager {
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
             event.view.player.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
+                "${CustomAnvil.namePrefix} <red>Error while handling the anvil."
             )
             return true
         }
@@ -222,7 +219,7 @@ object DependencyManager {
         val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
-            return treatEvent;
+            return treatEvent
         } catch (e: Exception) {
             CustomAnvil.instance.logger.log(
                 Level.SEVERE,
@@ -235,8 +232,7 @@ object DependencyManager {
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
             event.view.player.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
+                "${CustomAnvil.namePrefix} <red>Error while handling the anvil."
             )
             return null
         }
@@ -264,8 +260,7 @@ object DependencyManager {
 
             // Finally, warn the player, maybe a lot of time but better warn than do nothing
             event.whoClicked.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
+                "[${CustomAnvil.namePrefix} <red>Error while handling the anvil."
             )
             return true
         }

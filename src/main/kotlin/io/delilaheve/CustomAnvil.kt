@@ -55,6 +55,9 @@ open class CustomAnvil : JavaPlugin() {
         // Config command name
         const val commandConfigName = "customanvilconfig"
 
+        // Rish name prefix for chat messages
+        const val namePrefix = "[<yellow>CustomAnvil<white>]"
+
         // Current plugin instance
         lateinit var instance: CustomAnvil
 
