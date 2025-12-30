@@ -40,6 +40,10 @@ class PrepareAnvilListener : Listener {
         const val ANVIL_OUTPUT_SLOT = 2
     }
 
+    private fun ItemStack?.isAir(): Boolean {
+        return this == null || this.isEmpty
+    }
+
     /**
      * Event handler logic for when an anvil contains items to be combined
      */
@@ -79,10 +83,11 @@ class PrepareAnvilListener : Listener {
         if (testCustomRecipe(event, player, first, second)) return
 
         // Test rename lonely item
-        if (second == null) {
+        if (second.isAir()) {
             doRenaming(event, view, player, first)
             return
         }
+        second as ItemStack // not air we know it's not null
 
         // Test for merge
         if (first.canMergeWith(second)) {
@@ -102,7 +107,7 @@ class PrepareAnvilListener : Listener {
     }
 
     private fun isImmutable(item: ItemStack?): Boolean {
-        if (item == null) return false
+        if (item.isAir()) return false
 
         val meta = item.itemMeta
         return meta != null &&
@@ -153,7 +158,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return false
 
         event.result = finalResult.result
-        if (finalResult.result == null) return false
+        if (finalResult.result.isAir()) return false
 
         AnvilXpUtil.setAnvilInvXp(event.view, player, finalResult.levelCost, true)
         return true
@@ -179,7 +184,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return
 
         event.result = finalResult.result
-        if (finalResult.result == null) return
+        if (finalResult.result.isAir()) return
 
         AnvilXpUtil.setAnvilInvXp(event.view, player, finalResult.levelCost)
     }
@@ -267,7 +272,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return
 
         event.result = finalResult.result
-        if (finalResult.result == null) return
+        if (finalResult.result.isAir()) return
 
         AnvilXpUtil.setAnvilInvXp(view, player, finalResult.levelCost)
     }
@@ -312,7 +317,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return false
 
         event.result = finalResult.result
-        if (finalResult.result == null) return false
+        if (finalResult.result.isAir()) return false
 
         AnvilXpUtil.setAnvilInvXp(view, player, finalResult.levelCost)
         return true
@@ -332,7 +337,7 @@ class PrepareAnvilListener : Listener {
             result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
         }
 
-        if (result == null || first == result) {
+        if (result.isAir() || first == result) {
             CustomAnvil.log("lore edit, But input is same as output")
             event.result = null
             return false
