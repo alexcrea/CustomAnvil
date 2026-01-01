@@ -4,7 +4,7 @@ import xyz.alexcrea.cuanvil.update.UpdateUtils
 
 object GuiTesterSelector {
 
-    val selectGuiTester: ExternGuiTester?
+    val selectGuiTester: GenericExternGuiTester?
         get() {
             val versionParts = UpdateUtils.currentMinecraftVersionArray()
             if (versionParts[0] != 1) return null

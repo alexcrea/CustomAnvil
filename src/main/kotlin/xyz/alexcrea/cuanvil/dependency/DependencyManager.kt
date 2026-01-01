@@ -16,7 +16,7 @@ import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
-import xyz.alexcrea.cuanvil.dependency.gui.ExternGuiTester
+import xyz.alexcrea.cuanvil.dependency.gui.GenericExternGuiTester
 import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
@@ -34,7 +34,7 @@ object DependencyManager {
 
     lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManager
-    var externGuiTester: ExternGuiTester? = null
+    var externGuiTester: GenericExternGuiTester? = null
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
