@@ -160,8 +160,10 @@ tasks {
         filesMatching("plugin.yml") {
             expand(
                 "version" to effectiveVersion,
-                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\" " +
-                ", \"net.kyori:adventure-platform-bukkit:4.4.1\""
+                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\"" +
+                ", \"net.kyori:adventure-text-minimessage:4.25.0\"" +
+                ", \"net.kyori:adventure-text-serializer-plain:4.25.0\"" +
+                ", \"net.kyori:adventure-text-serializer-legacy:4.25.0\""
             )
         }
 
