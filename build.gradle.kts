@@ -148,9 +148,10 @@ tasks {
         val name = "${rootProject.name}-${effectiveVersion}.jar"
         archiveFileName.set(name)
 
-        // Exclude kotlin std and its annotation
-        exclude("**/kotlin-stdlib*.jar")
-        exclude("**/annotations*.jar")
+        // Exclude kotlin std, annotations and adventure api
+        exclude("*kotlin/**")
+        exclude("**/annotations/**")
+        exclude("net/kyori/**")
 
         // Shadow necessary dependency
         relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
