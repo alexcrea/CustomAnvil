@@ -33,6 +33,26 @@ jobs:
           java-version: |
             21
           distribution: 'temurin'
+          cache: gradle
+
+      - name: Cache Gradle root and wrapper
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-root-${{ runner.os }}-${{ hashFiles('build.gradle*') }}
+          restore-keys: gradle-root-${{ runner.os }}-
+
+      # Setup paperweight cache
+      - name: Cache paperweight
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./nms/*/.gradle/caches/paperweight
+          key: paperweight-submodules-${{ runner.os }}-${{ hashFiles('nms/*/build.gradle*') }}
+          restore-keys: |
+            paperweight-submodules-${{ runner.os }}-
 
       # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
