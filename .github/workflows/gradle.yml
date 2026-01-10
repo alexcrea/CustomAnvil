@@ -12,9 +12,11 @@ on:
     branches: [ "v1.x.x", "v2.x.x" ]
   pull_request:
     branches: [ "v1.x.x", "v2.x.x" ]
+  release:
+    types: [published]
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -31,17 +33,17 @@ jobs:
           java-version: |
             21
           distribution: 'temurin'
-          cache: 'gradle'
 
       # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Get small commit hash
+        if: ${{ github.event_name != 'release' && success() }}
         run: echo "SMALL_COMMIT_HASH=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Build with Gradle Wrapper
@@ -63,7 +65,7 @@ jobs:
           echo "ONLINE_JAR_NAME=$(basename $ONLINE_JAR_PATH)" >> $GITHUB_ENV
           echo "OFFLINE_JAR_NAME=$(basename $OFFLINE_JAR_PATH)" >> $GITHUB_ENV
 
-      # upload the named jars
+      # upload the named jars as artifact
       - name: Upload online JAR artifact
         uses: actions/upload-artifact@v4
         with:
@@ -79,3 +81,12 @@ jobs:
       - name: Summarize tests results
         uses: jeantessier/test-summary-action@v1
         if: ${{ always() }}
+
+      # upload the jar to release
+      - name: Upload jar to release
+        if: ${{ github.event_name == 'release' && success() }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.ONLINE_JAR_PATH }}
+            ${{ env.OFFLINE_JAR_PATH }}
