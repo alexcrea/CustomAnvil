@@ -140,30 +140,21 @@ allprojects {
 
 }
 
+
 tasks {
 
-    // Online jar (use of libraries)
-    shadowJar {
-        // No suffix for this jar
-        val name = "${rootProject.name}-${effectiveVersion}.jar"
+    fun ShadowJar.configureBaseShadow(suffix: String, libraries: Array<String>) {
+        val processedSuffix = if(suffix.isEmpty()) "" else "-$suffix"
+        val name = "${rootProject.name}-${effectiveVersion}${processedSuffix}.jar"
         archiveFileName.set(name)
-
-        // Exclude kotlin std, annotations and adventure api
-        exclude("*kotlin/**")
-        exclude("**/annotations/**")
-        exclude("net/kyori/**")
 
         // Shadow necessary dependency
         relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
 
-        // Replace version and example fields in plugin.yml
         filesMatching("plugin.yml") {
             expand(
-                "version" to effectiveVersion,
-                "libraries" to " \"org.jetbrains.kotlin:kotlin-stdlib:2.1.0\"" +
-                ", \"net.kyori:adventure-text-minimessage:4.25.0\"" +
-                ", \"net.kyori:adventure-text-serializer-plain:4.25.0\"" +
-                ", \"net.kyori:adventure-text-serializer-legacy:4.25.0\""
+                "version" to effectiveVersion + processedSuffix,
+                "libraries" to libraries.joinToString(transform = { "\"$it\"" }),
             )
         }
 
@@ -171,36 +162,28 @@ tasks {
         dependsOn(processResources)
     }
 
-    // Offline jar (include kotlin std in the final jar fine)
-    val offlineJar by // Shadow necessary dependency
-    registering(
+    // Online jar (use of libraries)
+    shadowJar {
+        configureBaseShadow("",
+            arrayOf(
+                "org.jetbrains.kotlin:kotlin-stdlib:2.1.0",
+                "net.kyori:adventure-text-minimessage:4.25.0",
+                "net.kyori:adventure-text-serializer-plain:4.25.0",
+                "net.kyori:adventure-text-serializer-legacy:4.25.0",
+        ))
 
-        // Include all project other dependencies
-        ShadowJar
+        // Exclude kotlin std, annotations and adventure api
+        exclude("*kotlin/**")
+        exclude("**/annotations/**")
+        exclude("net/kyori/**")
+    }
 
-        // Add custom anvil compiled
-        ::class, fun ShadowJar.() {
-            val name = "${rootProject.name}-${effectiveVersion}-offline.jar"
-            archiveFileName.set(name)
+    val offlineJar by registering(ShadowJar::class) {
+        configureBaseShadow("offline", emptyArray())
 
-            // Shadow necessary dependency
-            relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
-
-            filesMatching("plugin.yml") {
-                expand(
-                    "version" to "$effectiveVersion-offline",
-                    "libraries" to ""
-                )
-            }
-
-            // Include all project other dependencies
-            from(project.configurations.runtimeClasspath)
-
-            // Add custom anvil compiled
-            from(sourceSets.main.get().output)
-
-            dependsOn(processResources)
-        })
+        from(sourceSets.main.get().output)
+        configurations = listOf(project.configurations.runtimeClasspath.get())
+    }
 
     // Make the online and offline jar on build
     named("build") {
