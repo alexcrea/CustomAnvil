@@ -2,7 +2,10 @@ import cn.lalaki.pub.BaseCentralPortalPlusExtension
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import groovy.util.Node
 import groovy.util.NodeList
+import io.papermc.hangarpublishplugin.model.HangarPublication
+import io.papermc.hangarpublishplugin.model.Platforms
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.ByteArrayOutputStream
 
 plugins {
     kotlin("jvm") version "2.1.0"
@@ -15,13 +18,16 @@ plugins {
     id("cn.lalaki.central").version("1.2.8")
     // Paper
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" apply false
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
 group = "xyz.alexcrea"
 version = "1.15.9"
 
+val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
+val isPreRelease = System.getenv("IS_PRERELEASE") == "true"
 val effectiveVersion = "$version" +
-        (if (System.getenv("SMALL_COMMIT_HASH") != null) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
+        (if (isDevBuild) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
 
 repositories {
     // EcoEnchants
@@ -170,7 +176,7 @@ tasks {
                 "net.kyori:adventure-text-minimessage:4.25.0",
                 "net.kyori:adventure-text-serializer-plain:4.25.0",
                 "net.kyori:adventure-text-serializer-legacy:4.25.0",
-        ))
+            ))
 
         // Exclude kotlin std, annotations and adventure api
         exclude("*kotlin/**")
@@ -318,4 +324,94 @@ publishing {
             }
         }
     }
+}
+
+// hangar publish
+
+fun executeGitCommand(vararg command: String): String {
+    val byteOut = ByteArrayOutputStream()
+    exec {
+        commandLine = listOf("git", *command)
+        standardOutput = byteOut
+    }
+    return byteOut.toString(Charsets.UTF_8.name()).trim()
+}
+
+
+fun latestCommitMessage(): String {
+    return executeGitCommand("log", "-1", "--pretty=%B")
+}
+
+fun changelog(isOnline: Boolean): String {
+    var changelog = if(isDevBuild) latestCommitMessage()
+    else System.getenv("RELEASE_CHANGELOG")
+
+    if(!isOnline) {
+        changelog = "This is an offline version of the plugin. \\\n" +
+                "This mean that this plugin libraries are shaded into this plugin \\\n" +
+                "You likely want to use the normal version of this plugin\n\n" + changelog
+    }
+
+    return changelog
+}
+
+hangarPublish {
+
+    fun HangarPublication.configure(isOnline: Boolean, devChannel: String, releaseChannel: String) {
+        version.set(effectiveVersion + if(isOnline) "" else "-offline")
+        channel.set(if (isDevBuild || isPreRelease) devChannel else releaseChannel)
+
+        changelog.set(changelog(isOnline))
+        id.set("CustomAnvil")
+        apiKey.set(System.getenv("HANGAR_API_TOKEN"))
+
+        platforms {
+            register(Platforms.PAPER) {
+                // Set the JAR file to upload
+                var task = if(isOnline) tasks.shadowJar
+                else tasks.named<ShadowJar>("offlineJar")
+
+                jar.set(task.flatMap { it.archiveFile })
+
+                // Set platform versions from gradle.properties file
+                val versions: List<String> = (property("paperVersion") as String)
+                    .split(",")
+                    .map { it.trim() }
+                platformVersions.set(versions)
+
+                dependencies {
+                    hangar("ProtocolLib") {
+                        required.set(false)
+                    }
+                    url("Disenchantment", "https://modrinth.com/plugin/disenchantment") {
+                        required.set(false)
+                    }
+                    url("ToolStats", "https://modrinth.com/plugin/toolstats") {
+                        required.set(false)
+                    }
+                    url("HavenBags", "https://www.spigotmc.org/resources/havenbags-shulker-like-player-bound-bags-1-17-1-21-4.110420/") {
+                        required.set(false)
+                    }
+                    url("EcoEnchants", "https://www.spigotmc.org/resources/ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/") {
+                        required.set(false)
+                    }
+                    hangar("EnchantsSquared") {
+                        required.set(false)
+                    }
+                    url("ExcellentEnchants", "https://www.spigotmc.org/resources/excellentenchants-%E2%AD%90-75-vanilla-like-enchantments.61693/") {
+                        required.set(false)
+                    }
+                }
+            }
+        }
+    }
+
+    publications.register("plugin") {
+        configure(true, "DevSnapshot", "Release")
+    }
+
+    publications.register("offline") {
+        configure(false, "OfflineSnapshot", "OfflineRelease")
+    }
+
 }
