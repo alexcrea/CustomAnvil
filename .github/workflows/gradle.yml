@@ -67,7 +67,7 @@ jobs:
         run: echo "SMALL_COMMIT_HASH=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Prepare release env variable
-        if: ${{ github.event_name != 'release' && success() }}
+        if: ${{ github.event_name == 'release' && success() }}
         run: |
           echo "RELEASE_CHANGELOG=${{ github.event.release.body }}" >> $GITHUB_ENV
           echo "IS_GITHUB_PRERELEASE=${{ github.event.release.prerelease }}" >> $GITHUB_ENV
