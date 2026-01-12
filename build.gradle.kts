@@ -27,11 +27,6 @@ version = "1.15.9"
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
 val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"
 
-println("testing env variable")
-println(System.getenv("IS_GITHUB_PRERELEASE"))
-println(System.getenv("IS_GITHUB_PRERELEASE") == "true")
-println(System.getenv("RELEASE_CHANGELOG"))
-
 val effectiveVersion = "$version" +
         (if (isDevBuild) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
 
@@ -364,7 +359,11 @@ fun changelog(isOnline: Boolean): String {
 hangarPublish {
 
     fun HangarPublication.configure(isOnline: Boolean, devChannel: String, releaseChannel: String) {
-        version.set(effectiveVersion + if(isOnline) "" else "-offline")
+        var versionName = effectiveVersion
+        if(isPreRelease) versionName+= "-pre"
+        if(!isOnline) versionName+= "-offline"
+
+        version.set(versionName)
         channel.set(if (isDevBuild || isPreRelease) devChannel else releaseChannel)
 
         changelog.set(changelog(isOnline))
