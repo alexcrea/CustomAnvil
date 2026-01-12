@@ -25,7 +25,13 @@ group = "xyz.alexcrea"
 version = "1.15.9"
 
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
-val isPreRelease = System.getenv("IS_PRERELEASE") == "true"
+val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"
+
+println("testing env variable")
+println(System.getenv("IS_GITHUB_PRERELEASE"))
+println(System.getenv("IS_GITHUB_PRERELEASE") == "true")
+println(System.getenv("RELEASE_CHANGELOG"))
+
 val effectiveVersion = "$version" +
         (if (isDevBuild) "-dev-${System.getenv("SMALL_COMMIT_HASH")!!}" else "")
 
