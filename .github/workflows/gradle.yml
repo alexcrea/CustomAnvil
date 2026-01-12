@@ -66,6 +66,12 @@ jobs:
         if: ${{ github.event_name != 'release' && success() }}
         run: echo "SMALL_COMMIT_HASH=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
+      - name: Prepare release env variable
+        if: ${{ github.event_name != 'release' && success() }}
+        run: |
+          echo "RELEASE_CHANGELOG=${{ github.event.release.body }}" >> $GITHUB_ENV
+          echo "IS_GITHUB_PRERELEASE=${{ github.event.release.prerelease }}" >> $GITHUB_ENV
+
       - name: Build with Gradle Wrapper
         run: ./gradlew build --parallel --stacktrace
 
@@ -114,7 +120,5 @@ jobs:
       - name: Hangar release
         if: ${{ (github.event_name != 'release' || github.event_name != 'push') && github.repository_owner == 'alexcrea' && success() }}
         env:
-          RELEASE_CHANGELOG: ${{ github.event.release.body }}
-          IS_GITHUB_PRERELEASE: ${{ github.event.release.prerelease }}
           HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
         run: ./gradlew publishAllPublicationsToHangar --stacktrace
