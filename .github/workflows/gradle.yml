@@ -73,7 +73,9 @@ jobs:
           echo "${{ github.event.release.body || '' }}" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "IS_GITHUB_PRERELEASE=${{ github.event.release.prerelease }}" >> $GITHUB_ENV
-          
+
+      - name: Prepare publish env variable
+        run: |
           echo MODRINTH_VERSIONS='["1.18.x", "1.19.x", "1.20.x", "1.21.x"]' >> $GITHUB_ENV
           echo MODRINTH_PLATFORMS='["spigot", "paper", "purpur", "folia"]' >> $GITHUB_ENV
 
