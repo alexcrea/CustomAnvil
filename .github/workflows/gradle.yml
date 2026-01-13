@@ -73,6 +73,9 @@ jobs:
           echo "${{ github.event.release.body || '' }}" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "IS_GITHUB_PRERELEASE=${{ github.event.release.prerelease }}" >> $GITHUB_ENV
+          
+          echo "MODRINTH_VERSIONS='["1.18.x", "1.19.x", "1.20.x", "1.21.x"]'" >> $GITHUB_ENV
+          echo "MODRINTH_PLATFORMS='["spigot", "paper", "purpur", "folia"]'" >> $GITHUB_ENV
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build --parallel --stacktrace
@@ -125,6 +128,31 @@ jobs:
           HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
         run: ./gradlew publishAllPublicationsToHangar --stacktrace
 
+      - name: Modrinth publish alpha
+        if: ${{ github.event_name == 'push' && github.repository_owner == 'alexcrea' && success() }}
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: S75Ueiq9
+          name: dev-${{ env.SMALL_COMMIT_HASH }}
+          version: dev-${{ env.SMALL_COMMIT_HASH }}
+          loaders: ${{ env.MODRINTH_PLATFORMS }}
+          game-versions: ${{ env.MODRINTH_VERSIONS }}
+          channel: alpha
+          files: build/libs/${{ env.ONLINE_JAR_NAME }}
+
+      - name: Modrinth publish release
+        if: ${{ github.event_name == 'release' && github.repository_owner == 'alexcrea' && success() }}
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: S75Ueiq9
+          name: ${{ github.event.release.name }}
+          version: ${{ github.event.release.tag_name }}${{ github.event.release.prerelease == false && '' || '-pre' }}
+          loaders: ${{ env.MODRINTH_PLATFORMS }}
+          game-versions: ${{ env.MODRINTH_VERSIONS }}
+          channel: ${{ github.event.release.prerelease == false && 'release' || 'beta' }}
+          files: build/libs/${{ env.ONLINE_JAR_NAME }}
 
       - name: Send release note to discord
         if: ${{ github.event_name == 'release' && github.repository_owner == 'alexcrea' && success() }}
@@ -133,7 +161,7 @@ jobs:
           webhook-url: ${{ secrets.RELEASE_WEBHOOK_URL }}
           content: |
             ${{ github.event.release.prerelease == false && '<@&1338546156325568642>' || '<@&1352296092989001768>' }}
-            # New ${{ github.event.release.prerelease == false && '' || 'beta' }} version of custom anvil ! <:CustomAnvil:1262550667986342001>([Modrinth](https://modrinth.com/plugin/customanvil), [Hangar](https://hangar.papermc.io/alexcrea/CustomAnvil) links) and [GitHub](${{ github.event.release.html_url }} links
-            -# note: automated release. spigot and modrinth are not uploaded yet. it is available in hangar and github
+            # New ${{ github.event.release.prerelease == false && 'beta' || '' }} version of custom anvil ! <:CustomAnvil:1262550667986342001>([Modrinth](https://modrinth.com/plugin/customanvil), [Hangar](https://hangar.papermc.io/alexcrea/CustomAnvil) and [GitHub](${{ github.event.release.html_url }}) links)
+            -# note: automated release. spigot is not uploaded yet. it is available in hangar and github
 
             ${{ env.RELEASE_CHANGELOG }}
