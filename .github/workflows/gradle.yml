@@ -74,8 +74,8 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           echo "IS_GITHUB_PRERELEASE=${{ github.event.release.prerelease }}" >> $GITHUB_ENV
           
-          echo "MODRINTH_VERSIONS='["1.18.x", "1.19.x", "1.20.x", "1.21.x"]'" >> $GITHUB_ENV
-          echo "MODRINTH_PLATFORMS='["spigot", "paper", "purpur", "folia"]'" >> $GITHUB_ENV
+          echo MODRINTH_VERSIONS='["1.18.x", "1.19.x", "1.20.x", "1.21.x"]' >> $GITHUB_ENV
+          echo MODRINTH_PLATFORMS='["spigot", "paper", "purpur", "folia"]' >> $GITHUB_ENV
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build --parallel --stacktrace
@@ -140,6 +140,7 @@ jobs:
           game-versions: ${{ env.MODRINTH_VERSIONS }}
           channel: alpha
           files: build/libs/${{ env.ONLINE_JAR_NAME }}
+          changelog: ${{ github.event.head_commit.message }}
 
       - name: Modrinth publish release
         if: ${{ github.event_name == 'release' && github.repository_owner == 'alexcrea' && success() }}
@@ -153,6 +154,7 @@ jobs:
           game-versions: ${{ env.MODRINTH_VERSIONS }}
           channel: ${{ github.event.release.prerelease == false && 'release' || 'beta' }}
           files: build/libs/${{ env.ONLINE_JAR_NAME }}
+          changelog: ${{ env.RELEASE_CHANGELOG }}
 
       - name: Send release note to discord
         if: ${{ github.event_name == 'release' && github.repository_owner == 'alexcrea' && success() }}
