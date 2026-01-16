@@ -353,6 +353,10 @@ fun changelog(isOnline: Boolean): String {
                 "You likely want to use the normal version of this plugin\n\n" + changelog
     }
 
+    if(changelog == null || changelog.isEmpty()) {
+        changelog = "empty changelog"
+    }
+
     return changelog
 }
 
