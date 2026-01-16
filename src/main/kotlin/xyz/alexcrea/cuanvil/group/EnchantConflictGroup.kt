@@ -7,10 +7,11 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 class EnchantConflictGroup(
     val name: String,
     private val cantConflict: AbstractMaterialGroup,
-    var minBeforeBlock: Int
+    var minBeforeBlock: Int,
 ) {
 
     private val enchantments = HashSet<CAEnchantment>()
+    private val conflictAfterLevel = HashMap<CAEnchantment, Int>()
 
     fun addEnchantment(enchant: CAEnchantment) {
         enchantments.add(enchant)
@@ -19,19 +20,37 @@ class EnchantConflictGroup(
         enchantments.addAll(enchants)
     }
 
-    fun allowed(enchants: Set<CAEnchantment>, mat: Material): Boolean {
+    private fun canBypassConflictByLevel(enchants: Map<CAEnchantment, Int>): Boolean {
+        // Either there no "conflict after"
+        if(conflictAfterLevel.isEmpty()) return false
+
+        // Or we check if any conflict after enchantment is true
+        for (entry in conflictAfterLevel) {
+            if(enchants.getOrDefault(entry.key, 0) >= entry.value)
+                return false
+        }
+
+        return true
+    }
+
+    fun allowed(enchants: Map<CAEnchantment, Int>, mat: Material): Boolean {
         if (enchantments.size < minBeforeBlock) {
             CustomAnvil.verboseLog("Conflicting bc of to many enchantments")
             return true
         }
 
-        if (cantConflict.contain(mat)) {
+        if (cantConflict.contain(mat))
             return true
-        }
+
+        // If empty we skip. else we
+        if(canBypassConflictByLevel(enchants))
+            return true
 
         // Count the amount of enchantment that are in the list
         var enchantAmount = 0
-        for (enchantment in enchants) {
+        for (entry in enchants) {
+            val enchantment = entry.key
+
             if (enchantment !in enchantments) continue
             CustomAnvil.verboseLog("Enchant ${enchantment.key} is in: ${enchantAmount + 1}/$minBeforeBlock ")
             if (++enchantAmount > minBeforeBlock) {
@@ -54,6 +73,21 @@ class EnchantConflictGroup(
     fun setEnchants(enchants: Set<CAEnchantment>) {
         enchantments.clear()
         enchantments.addAll(enchants)
+    }
+
+    fun getConflictAfters(): HashMap<CAEnchantment, Int> {
+        return conflictAfterLevel
+    }
+
+    fun putConflictAfterLevel(enchantment: CAEnchantment, level: Int): Boolean {
+        return null != (
+                if(level < 0) conflictAfterLevel.remove(enchantment)
+                else conflictAfterLevel.put(enchantment, level))
+    }
+
+    fun setConflictAfterLevel(conflictAfterLevel: HashMap<CAEnchantment, Int>) {
+        this.conflictAfterLevel.clear()
+        this.conflictAfterLevel.putAll(conflictAfterLevel)
     }
 
     fun getRepresentativeMaterial(): Material {

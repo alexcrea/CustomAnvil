@@ -16,6 +16,10 @@ class EnchantConflictManager {
         // Path for the enchantments list
         const val ENCH_LIST_PATH = "enchantments"
 
+        // Path for the enchantments list
+        //TODO add test and gui
+        const val AFTER_LEVEL_LIST_PATH = "conflict_after_level"
+
         // Path for group list related to the conflict
         const val CONFLICT_GROUP_PATH = "notAffectedGroups"
 
@@ -110,6 +114,25 @@ class EnchantConflictManager {
             }
         }
 
+        val conflictAfterLevels = section.getConfigurationSection(AFTER_LEVEL_LIST_PATH)
+        if(conflictAfterLevels != null) {
+            for (enchantName in conflictAfterLevels.getKeys(false)) {
+                val enchants = getEnchantByIdentifier(enchantName)
+                if (enchants.isEmpty()) {
+                    CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict after level for conflict $conflictName")
+                    continue
+                }
+
+                val value = conflictAfterLevels.getInt(enchantName, -1)
+                if(value < 0) continue
+
+                for (enchant in enchants) {
+                    val previous = conflict.getConflictAfters().getOrDefault(enchant, value)
+                    conflict.putConflictAfterLevel(enchant, value.coerceAtMost(previous))
+                }
+            }
+        }
+
         return conflict
     }
 
@@ -187,7 +210,7 @@ class EnchantConflictManager {
                 continue
             }
 
-            val allowed = conflict.allowed(appliedEnchants.keys, mat)
+            val allowed = conflict.allowed(appliedEnchants, mat)
             CustomAnvil.verboseLog("Was against $conflict and conflicting: ${!allowed} ")
             if (!allowed) {
                 if (conflict.getEnchants().size <= 1) {

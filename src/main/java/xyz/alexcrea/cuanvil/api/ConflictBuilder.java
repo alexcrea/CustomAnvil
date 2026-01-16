@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//TODO add conflict after level
 /**
  * A Builder for material conflict.
  */
