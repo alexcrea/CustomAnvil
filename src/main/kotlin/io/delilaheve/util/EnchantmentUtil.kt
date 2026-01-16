@@ -4,7 +4,6 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.entity.HumanEntity
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
 import kotlin.math.max
@@ -37,81 +36,90 @@ object EnchantmentUtil {
         var maxEnchantCount = ConfigOptions.getEnchantCountLimit(item.type)
         if(maxEnchantCount == null || maxEnchantCount < 0) maxEnchantCount = Int.MAX_VALUE
 
-        other.forEach { (enchantment, level) ->
-            if(!enchantment.isAllowed(player)) return@forEach
+        val allowed = other.filter { (enchantment, _) -> enchantment.isAllowed(player) }
+        val new = allowed.filter{ (enchantment, _) -> !containsKey(enchantment)}
+        val old = allowed.filter{ (enchantment, _) -> containsKey(enchantment)}
 
-            // Get max level or 255 if player can bypass
-            val maxLevel = if (bypassLevel) { 255 }
+        fun maxLevel(enchantment: CAEnchantment): Int {
+            val max = if (bypassLevel) { 255 }
             else { ConfigOptions.enchantLimit(enchantment) }
-            CustomAnvil.verboseLog("Max level of ${enchantment.key} is $maxLevel (bypassLevel is $bypassLevel)")
 
+            CustomAnvil.verboseLog("Max level of ${enchantment.key} is $max (bypassLevel is $bypassLevel)")
+            return max
+        }
+
+        old.forEach { (enchantment, level) ->
+            // Get max level or 255 if player can bypass
+            val maxLevel = maxLevel(enchantment)
             val cappedLevel = min(level, maxLevel)
 
-            // Enchantment not yet in result list
-            if (!containsKey(enchantment)) {
-                // Do not allow new enchantment if above maximum
-                if(this.size >= maxEnchantCount) return@forEach
+            val oldLevel = this[enchantment]!! // <- should not be null. (enchantment already in result list)
 
-                // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
-                this[enchantment] = cappedLevel
-                if(bypassFuse){
-                    CustomAnvil.verboseLog("Bypassed conflict check for ${enchantment.key}")
-                    return@forEach
-                }
-
-                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager
-                    .isConflicting(this, item, enchantment)
-
-                if (conflictType != ConflictType.NO_CONFLICT) {
-                    CustomAnvil.verboseLog("Enchantment not yet in result list, but there is conflict (${enchantment.key}, conflict: $conflictType)")
-                    this.remove(enchantment)
-                }
-
+            // ... and they're not the same level
+            if (oldLevel != cappedLevel) {
+                // apply the greater of the two or left one if right is above max
+                this[enchantment] = max(oldLevel, cappedLevel)
             }
-            // Enchantment already in result list
+            // ... and they're the same level
             else {
-                val oldLevel = this[enchantment]!! // <- should not be null. (enchantment already in result list)
-
-                if(bypassFuse){
-                    CustomAnvil.verboseLog("Bypassed conflict check for ${enchantment.key}")
-                } else {
-                    val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager
-                        .isConflicting(this, item, enchantment)
-
-                    // ... and they are conflicting
-                    if(conflictType != ConflictType.NO_CONFLICT){
+                // We test if it is allowed to merge at this level
+                if(!bypassLevel){
+                    val maxBeforeDisabled = ConfigOptions.maxBeforeMergeDisabled(enchantment)
+                    if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) {
                         CustomAnvil.verboseLog(
-                            "Enchantment already in result list, and they are conflicting (${enchantment.key}, conflict: $conflictType)")
+                            "Reached max merge before disable for ${enchantment.key}: $oldLevel/$maxBeforeDisabled)")
                         return@forEach
                     }
                 }
 
-                // ... and they're not the same level
-                if (oldLevel != cappedLevel) {
-                    // apply the greater of the two or left one if right is above max
-                    this[enchantment] = max(oldLevel, cappedLevel)
+                // Now we increase the enchantment level by 1
+                var newLevel = oldLevel + 1
+                newLevel = max(min(newLevel, maxLevel), oldLevel)
+                this[enchantment] = newLevel
+            }
 
-                }
-                // ... and they're the same level
-                else {
-                    // We test if it is allowed to merge at this level
-                    if(!bypassLevel){
-                        val maxBeforeDisabled = ConfigOptions.maxBeforeMergeDisabled(enchantment)
-                        if((maxBeforeDisabled > 0) && (oldLevel >= maxBeforeDisabled)) {
-                            CustomAnvil.verboseLog(
-                                "Reached max merge before disable for ${enchantment.key}: $oldLevel/$maxBeforeDisabled)")
-                            return@forEach
-                        }
-                    }
+            if(bypassFuse){
+                CustomAnvil.verboseLog("Bypassed conflict check for ${enchantment.key}")
+            } else {
+                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager
+                    .isConflicting(this, item, enchantment)
 
-                    // Now we increase the enchantment level by 1
-                    var newLevel = oldLevel + 1
-                    newLevel = max(min(newLevel, maxLevel), oldLevel)
-                    this[enchantment] = newLevel
-
+                // ... and they are conflicting
+                if(conflictType != ConflictType.NO_CONFLICT){
+                    CustomAnvil.verboseLog(
+                        "Enchantment already in result list, and they are conflicting (${enchantment.key}, conflict: $conflictType)")
+                    this[enchantment] = oldLevel
+                    return@forEach
                 }
             }
         }
+
+        // Try to add new now
+        new.forEach { (enchantment, level) ->
+            // Get max level or 255 if player can bypass
+            val maxLevel = maxLevel(enchantment)
+            val cappedLevel = min(level, maxLevel)
+
+            // Do not allow new enchantment if above maximum
+            if(this.size >= maxEnchantCount) return@forEach
+
+            // Add the enchantment if it doesn't have conflicts, or if player is allowed to bypass enchantment restrictions
+            this[enchantment] = cappedLevel
+            if(bypassFuse){
+                CustomAnvil.verboseLog("Bypassed conflict check for ${enchantment.key}")
+                return@forEach
+            }
+
+            val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager
+                .isConflicting(this, item, enchantment)
+
+            if (conflictType != ConflictType.NO_CONFLICT) {
+                CustomAnvil.verboseLog("Enchantment not yet in result list, but there is conflict (${enchantment.key}, conflict: $conflictType)")
+                this.remove(enchantment)
+            }
+
+        }
+
     }
 
 }

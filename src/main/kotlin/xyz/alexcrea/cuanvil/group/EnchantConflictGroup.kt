@@ -26,7 +26,8 @@ class EnchantConflictGroup(
 
         // Or we check if any conflict after enchantment is true
         for (entry in conflictAfterLevel) {
-            if(enchants.getOrDefault(entry.key, 0) >= entry.value)
+            val current = enchants.getOrDefault(entry.key, 0)
+            if(current > entry.value)
                 return false
         }
 
