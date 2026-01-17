@@ -37,7 +37,7 @@ class EnchantConflictGroup(
 
     private fun canBypassByAfterLevel(enchants: Map<CAEnchantment, Int>): Boolean {
         // Either there no "conflict after"
-        if(conflictAfterLevel.isEmpty()) return false
+        if(conflictBeforeLevel.isEmpty()) return false
 
         // Or we check if any conflict after enchantment is true
         for (entry in conflictBeforeLevel) {
