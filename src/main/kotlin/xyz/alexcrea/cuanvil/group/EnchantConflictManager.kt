@@ -16,9 +16,13 @@ class EnchantConflictManager {
         // Path for the enchantments list
         const val ENCH_LIST_PATH = "enchantments"
 
-        // Path for the enchantments list
+        // Path for list of enchantments conflicting before level
         //TODO add test and gui
-        const val AFTER_LEVEL_LIST_PATH = "conflict_after_level"
+        const val CONFLICT_AFTER_LEVEL_LIST_PATH = "conflict_after_level"
+
+        // Path for list of enchantments conflicting before level
+        //TODO add test and gui
+        const val CONFLICT_BEFORE_LEVEL_LIST_PATH = "conflict_before_level"
 
         // Path for group list related to the conflict
         const val CONFLICT_GROUP_PATH = "notAffectedGroups"
@@ -114,7 +118,8 @@ class EnchantConflictManager {
             }
         }
 
-        val conflictAfterLevels = section.getConfigurationSection(AFTER_LEVEL_LIST_PATH)
+        //TODO find a way to dry this two ?
+        val conflictAfterLevels = section.getConfigurationSection(CONFLICT_AFTER_LEVEL_LIST_PATH)
         if(conflictAfterLevels != null) {
             for (enchantName in conflictAfterLevels.getKeys(false)) {
                 val enchants = getEnchantByIdentifier(enchantName)
@@ -129,6 +134,25 @@ class EnchantConflictManager {
                 for (enchant in enchants) {
                     val previous = conflict.getConflictAfters().getOrDefault(enchant, value)
                     conflict.putConflictAfterLevel(enchant, value.coerceAtMost(previous))
+                }
+            }
+        }
+
+        val conflictBeforeLevels = section.getConfigurationSection(CONFLICT_BEFORE_LEVEL_LIST_PATH)
+        if(conflictBeforeLevels != null) {
+            for (enchantName in conflictBeforeLevels.getKeys(false)) {
+                val enchants = getEnchantByIdentifier(enchantName)
+                if (enchants.isEmpty()) {
+                    CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict after level for conflict $conflictName")
+                    continue
+                }
+
+                val value = conflictBeforeLevels.getInt(enchantName, -1)
+                if(value < 0) continue
+
+                for (enchant in enchants) {
+                    val previous = conflict.getConflictBefores().getOrDefault(enchant, value)
+                    conflict.putConflictBeforeLevel(enchant, value.coerceAtMost(previous))
                 }
             }
         }
