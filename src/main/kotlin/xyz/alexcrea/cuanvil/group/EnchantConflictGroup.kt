@@ -12,6 +12,7 @@ class EnchantConflictGroup(
 
     private val enchantments = HashSet<CAEnchantment>()
     private val conflictAfterLevel = HashMap<CAEnchantment, Int>()
+    private val conflictBeforeLevel = HashMap<CAEnchantment, Int>()
 
     fun addEnchantment(enchant: CAEnchantment) {
         enchantments.add(enchant)
@@ -20,7 +21,7 @@ class EnchantConflictGroup(
         enchantments.addAll(enchants)
     }
 
-    private fun canBypassConflictByLevel(enchants: Map<CAEnchantment, Int>): Boolean {
+    private fun canBypassByBeforeLevel(enchants: Map<CAEnchantment, Int>): Boolean {
         // Either there no "conflict after"
         if(conflictAfterLevel.isEmpty()) return false
 
@@ -32,6 +33,24 @@ class EnchantConflictGroup(
         }
 
         return true
+    }
+
+    private fun canBypassByAfterLevel(enchants: Map<CAEnchantment, Int>): Boolean {
+        // Either there no "conflict after"
+        if(conflictAfterLevel.isEmpty()) return false
+
+        // Or we check if any conflict after enchantment is true
+        for (entry in conflictBeforeLevel) {
+            val current = enchants.getOrDefault(entry.key, 0)
+            if(current < entry.value)
+                return false
+        }
+
+        return true
+    }
+
+    private fun canBypassConflictByLevel(enchants: Map<CAEnchantment, Int>): Boolean {
+        return canBypassByBeforeLevel(enchants) || canBypassByAfterLevel(enchants)
     }
 
     fun allowed(enchants: Map<CAEnchantment, Int>, mat: Material): Boolean {
@@ -89,6 +108,21 @@ class EnchantConflictGroup(
     fun setConflictAfterLevel(conflictAfterLevel: HashMap<CAEnchantment, Int>) {
         this.conflictAfterLevel.clear()
         this.conflictAfterLevel.putAll(conflictAfterLevel)
+    }
+
+    fun getConflictBefores(): HashMap<CAEnchantment, Int> {
+        return conflictBeforeLevel
+    }
+
+    fun putConflictBeforeLevel(enchantment: CAEnchantment, level: Int): Boolean {
+        return null != (
+                if(level < 0) conflictBeforeLevel.remove(enchantment)
+                else conflictBeforeLevel.put(enchantment, level))
+    }
+
+    fun setConflictBeforeLevel(conflictBeforeLevel: HashMap<CAEnchantment, Int>) {
+        this.conflictBeforeLevel.clear()
+        this.conflictBeforeLevel.putAll(conflictBeforeLevel)
     }
 
     fun getRepresentativeMaterial(): Material {
