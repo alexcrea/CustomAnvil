@@ -163,8 +163,8 @@ class ExcellentEnchantsDependency {
         }
 
         when (listenerVersion) {
+            ListenerVersion.V5_3,
             ListenerVersion.V5,
-            ListenerVersion.V5_3
                 -> this.usedAnvilListener = v5AnvilListener!!
             ListenerVersion.PRE_V5 -> this.usedAnvilListener = preV5AnvilListener!!
             ListenerVersion.LEGACY -> this.usedAnvilListener = legacyAnvilListener!!
@@ -184,11 +184,19 @@ class ExcellentEnchantsDependency {
         )
         this.handleRechargeMethod.setAccessible(true)
 
-        this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
-            "handleCombine",
-            PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
-        )
-        this.handleCombineMethod.setAccessible(true)
+        try {
+            this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
+                "anvilCombine",
+                PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
+            )
+            this.handleCombineMethod.setAccessible(true)
+        } catch (_: NoSuchMethodException) {
+            this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
+                "handleCombine",
+                PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
+            )
+            this.handleCombineMethod.setAccessible(true)
+        }
 
     }
 
