@@ -163,8 +163,8 @@ class ExcellentEnchantsDependency {
         }
 
         when (listenerVersion) {
+            ListenerVersion.V5_3,
             ListenerVersion.V5,
-            ListenerVersion.V5_3
                 -> this.usedAnvilListener = v5AnvilListener!!
             ListenerVersion.PRE_V5 -> this.usedAnvilListener = preV5AnvilListener!!
             ListenerVersion.LEGACY -> this.usedAnvilListener = legacyAnvilListener!!
@@ -185,7 +185,6 @@ class ExcellentEnchantsDependency {
         this.handleRechargeMethod.setAccessible(true)
 
         try {
-            this.usedAnvilListener.javaClass.methods.forEach { method -> CustomAnvil.instance.logger.warning { method.name } }
             this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
                 "anvilCombine",
                 PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
