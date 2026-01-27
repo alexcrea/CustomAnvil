@@ -184,11 +184,20 @@ class ExcellentEnchantsDependency {
         )
         this.handleRechargeMethod.setAccessible(true)
 
-        this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
-            "handleCombine",
-            PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
-        )
-        this.handleCombineMethod.setAccessible(true)
+        try {
+            this.usedAnvilListener.javaClass.methods.forEach { method -> CustomAnvil.instance.logger.warning { method.name } }
+            this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
+                "anvilCombine",
+                PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
+            )
+            this.handleCombineMethod.setAccessible(true)
+        } catch (_: NoSuchMethodException) {
+            this.handleCombineMethod = this.usedAnvilListener.javaClass.getDeclaredMethod(
+                "handleCombine",
+                PrepareAnvilEvent::class.java, ItemStack::class.java, ItemStack::class.java, ItemStack::class.java
+            )
+            this.handleCombineMethod.setAccessible(true)
+        }
 
     }
 
