@@ -30,6 +30,7 @@ object EnchantmentUtil {
     ) = mutableMapOf<CAEnchantment, Int>().apply {
         putAll(this@combineWith)
 
+        CustomAnvil.verboseLog("Testing merge")
         val bypassFuse = player.hasPermission(CustomAnvil.bypassFusePermission)
         val bypassLevel = player.hasPermission(CustomAnvil.bypassLevelPermission)
 

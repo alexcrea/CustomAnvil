@@ -71,6 +71,11 @@ class PrepareAnvilListener : Listener {
             return
         }
 
+        if (ConfigOptions.verboseDebugLog) {
+            CustomAnvil.verboseLog("Testing items:")
+            CustomAnvil.verboseLog("first: $first")
+            CustomAnvil.verboseLog("second: $second")
+        }
         if (isImmutable(first) || isImmutable(second)) {
             CustomAnvil.verboseLog("Skipping anvil process as one of the two item is immutable")
 
@@ -91,7 +96,9 @@ class PrepareAnvilListener : Listener {
         if (testCustomRecipe(event, inventory, player, first, second)) return
 
         // Test rename lonely item
-        if (second.isAir()) {
+        val isAir = second.isAir()
+        CustomAnvil.verboseLog("checking air in main logic: $isAir")
+        if (isAir) {
             doRenaming(event, inventory, player, first)
             return
         }
