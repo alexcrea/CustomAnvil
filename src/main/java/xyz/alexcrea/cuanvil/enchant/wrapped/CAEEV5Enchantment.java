@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
@@ -27,7 +28,7 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
         if (!hasConflicts()) return false;
 
         Set<String> conflicts = getExclusiveSet();
@@ -41,10 +42,10 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat, @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.equals(itemMat)) return false;
+    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType, @NotNull ItemStack item) {
+        if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) return false;
 
-        String key = itemMat.getKey().getKey();
+        String key = itemType.getKey();
         ItemSet primary = eeenchantment.getPrimaryItems();
         if (primary.getMaterials().contains(key)) return false;
 

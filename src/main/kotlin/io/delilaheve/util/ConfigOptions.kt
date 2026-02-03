@@ -348,7 +348,7 @@ object ConfigOptions {
      *
      * @return the current enchantment limit. -1 if none
      */
-    fun getEnchantCountLimit(type: Material): Int? {
+    fun getEnchantCountLimit(type: NamespacedKey): Int? {
         val limit = materialEnchantCountLimit(type)
 
         if(limit != null) return limit
@@ -362,8 +362,8 @@ object ConfigOptions {
      *
      * @return The current enchantment limit. -1 if none
      */
-    private fun materialEnchantCountLimit(type: Material): Int? {
-        val path = "$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.key.lowercase()}"
+    private fun materialEnchantCountLimit(type: NamespacedKey): Int? {
+        val path = "$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.lowercase()}"
         if(!ConfigHolder.DEFAULT_CONFIG.config.isInt(path))
             return null
 

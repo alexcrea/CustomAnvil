@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.util
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 
 object UnitRepairUtil {
 
@@ -22,7 +23,7 @@ object UnitRepairUtil {
         if (other == null) return null
         val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
         // Get configuration section if exist
-        val otherName = other.type.name.lowercase()
+        val otherName = other.customType.key.lowercase()
         var section = config.getConfigurationSection(otherName)
         if (section == null) {
             section = config.getConfigurationSection(otherName.uppercase())
@@ -44,7 +45,7 @@ object UnitRepairUtil {
      * If value is set to less than or equal to 0 then it will be set to default
      */
     private fun getRepairAmount(item: ItemStack, section: ConfigurationSection, default: Double): Double? {
-        val itemName = item.type.name.lowercase()
+        val itemName = item.customType.key.lowercase()
         val repairValue = if (section.isDouble(itemName)) {
             section.getDouble(itemName)
         } else if (section.isDouble(itemName.uppercase())) {

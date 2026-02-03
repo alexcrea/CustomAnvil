@@ -15,7 +15,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     void groupAddAndRemove() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
-        group.addToPolicy(Material.DIAMOND_PICKAXE); // We do not want it to be empty
+        group.addToPolicy(Material.DIAMOND_PICKAXE.getKey()); // We do not want it to be empty
 
         // Group not being set should not exist
         assertFalse(doGroupExist(groupName));
@@ -48,7 +48,7 @@ public class MaterialGroupApiTests extends ConfigResetCustomAnvilTest {
     void writeGroup_Reload() {
         String groupName = "group";
         IncludeGroup group = new IncludeGroup(groupName);
-        group.addToPolicy(Material.DIAMOND_PICKAXE); // We do not want it to be empty
+        group.addToPolicy(Material.DIAMOND_PICKAXE.getKey()); // We do not want it to be empty
 
         // Group not being set should not exist
         assertFalse(doGroupExist(groupName));

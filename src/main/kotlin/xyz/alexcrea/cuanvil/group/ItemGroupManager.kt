@@ -91,7 +91,7 @@ class ItemGroupManager {
                 }
                 continue
             }
-            group.addToPolicy(material)
+            group.addToPolicy(material.key)
         }
 
         // Read group to include in this group policy.

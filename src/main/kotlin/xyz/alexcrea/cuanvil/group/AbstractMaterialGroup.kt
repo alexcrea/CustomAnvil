@@ -1,7 +1,8 @@
 package xyz.alexcrea.cuanvil.group
 
 import org.bukkit.Material
-import java.util.*
+import org.bukkit.NamespacedKey
+import xyz.alexcrea.cuanvil.util.MaterialUtil
 
 abstract class AbstractMaterialGroup(private val name: String) {
     protected val includedMaterial by lazy { createDefaultSet() }
@@ -9,12 +10,12 @@ abstract class AbstractMaterialGroup(private val name: String) {
     /**
      * Get the group default set
      */
-    protected abstract fun createDefaultSet(): EnumSet<Material>
+    protected abstract fun createDefaultSet(): MutableSet<NamespacedKey>
 
     /**
      * Get if a material is allowed following the group policy
      */
-    open fun contain(mat: Material): Boolean {
+    open fun contain(mat: NamespacedKey): Boolean {
         return mat in getMaterials()
     }
 
@@ -27,13 +28,13 @@ abstract class AbstractMaterialGroup(private val name: String) {
      * Push a material to this group to follow this group policy
      * @return this instance.
      */
-    abstract fun addToPolicy(mat: Material): AbstractMaterialGroup
+    abstract fun addToPolicy(type: NamespacedKey): AbstractMaterialGroup
 
     /**
      * Push a list of material to this group to follow this group policy
      * @return this instance.
      */
-    fun addAll(vararg materials: Material): AbstractMaterialGroup {
+    fun addAll(vararg materials: NamespacedKey): AbstractMaterialGroup {
         for (material in materials) {
             addToPolicy(material)
         }
@@ -60,19 +61,19 @@ abstract class AbstractMaterialGroup(private val name: String) {
     /**
      * Get the group contained material as a set
      */
-    abstract fun getMaterials(): EnumSet<Material>
+    abstract fun getMaterials(): Set<NamespacedKey>
 
     /**
      * Get the group non-inherited material as a set
      */
-    open fun getNonGroupInheritedMaterials(): EnumSet<Material> {
+    open fun getNonGroupInheritedMaterials(): Set<NamespacedKey> {
         return includedMaterial
     }
 
     /**
      * Get the group non-inherited material as a set
      */
-    open fun setNonGroupInheritedMaterials(materials: EnumSet<Material>) {
+    open fun setNonGroupInheritedMaterials(materials: Set<NamespacedKey>) {
         this.includedMaterial.clear()
         this.includedMaterial.addAll(materials)
     }
@@ -102,8 +103,9 @@ abstract class AbstractMaterialGroup(private val name: String) {
         // Test inner material
         val matIterator = includedMaterial.iterator()
         while (matIterator.hasNext()) {
-            val material = matIterator.next()
-            if (material.isAir) continue
+            val key = matIterator.next()
+            val material = MaterialUtil.getMatFromKey(key)
+            if (material == null || material.isAir) continue
             return material
         }
         // Test included group representative material

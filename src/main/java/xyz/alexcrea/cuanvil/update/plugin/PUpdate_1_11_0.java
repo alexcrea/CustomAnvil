@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.update.plugin;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +12,7 @@ import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +71,12 @@ public class PUpdate_1_11_0 {
 
         // Create new group
         IncludeGroup group = new IncludeGroup(toolset);
-        group.addAll(toolMats);
+        NamespacedKey[] keys = new NamespacedKey[toolMats.length];
+        for (int i = 0; i < toolMats.length; i++) {
+            keys[i] = toolMats[i].getKey();
+        }
+
+        group.addAll(keys);
 
         MaterialGroupApi.addMaterialGroup(group, true);
 
@@ -77,8 +84,8 @@ public class PUpdate_1_11_0 {
         if (tools == null) return;
         if (!(tools instanceof IncludeGroup include)) return;
 
-        List<Material> mats = List.of(toolMats);
-        Set<Material> matSet = include.getNonGroupInheritedMaterials();
+        List<NamespacedKey> mats = List.of(keys);
+        Set<NamespacedKey> matSet = include.getNonGroupInheritedMaterials();
         if (!matSet.containsAll(mats)) return;
 
         mats.forEach(matSet::remove);

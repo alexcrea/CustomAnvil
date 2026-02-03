@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
@@ -39,7 +40,7 @@ public class CAEEPreV5Enchantment extends CABukkitEnchantment implements Additio
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
         if (!definition.hasConflicts()) return false;
 
         Set<String> conflicts = definition.getConflicts();
@@ -52,8 +53,8 @@ public class CAEEPreV5Enchantment extends CABukkitEnchantment implements Additio
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat, @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.equals(itemMat)) return false;
+    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType, @NotNull ItemStack item) {
+        if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) return false;
 
         return !definition.getSupportedItems().is(item);
     }

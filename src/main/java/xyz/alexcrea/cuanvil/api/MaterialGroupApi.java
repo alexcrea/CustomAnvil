@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.api;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -123,7 +124,7 @@ public class MaterialGroupApi {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
-        Set<Material> materialSet = group.getNonGroupInheritedMaterials();
+        Set<NamespacedKey> materialSet = group.getNonGroupInheritedMaterials();
         Set<AbstractMaterialGroup> groupSet = group.getGroups();
 
         boolean empty = true;
@@ -153,7 +154,7 @@ public class MaterialGroupApi {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
-        EnumSet<Material> materials = group.getMaterials();
+        Set<NamespacedKey> materials = group.getMaterials();
 
         if (materials.isEmpty()) return false;
 
@@ -163,8 +164,8 @@ public class MaterialGroupApi {
         return true;
     }
 
-    public static List<String> materialSetToStringList(@NotNull Set<Material> materials) {
-        return materials.stream().map(material -> material.getKey().getKey().toLowerCase()).toList();
+    public static List<String> materialSetToStringList(@NotNull Set<NamespacedKey> materials) {
+        return materials.stream().map(NamespacedKey::toString).toList();
     }
 
     public static List<String> materialGroupSetToStringList(@NotNull Set<AbstractMaterialGroup> groups) {

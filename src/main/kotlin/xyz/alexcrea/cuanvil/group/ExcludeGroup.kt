@@ -1,11 +1,12 @@
 package xyz.alexcrea.cuanvil.group
 
-import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import java.util.*
 
 class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
-    override fun createDefaultSet(): EnumSet<Material> {
-        return EnumSet.allOf(Material::class.java)
+
+    override fun createDefaultSet(): MutableSet<NamespacedKey> {
+        return NegativeSet(HashSet())
     }
 
     private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
@@ -20,9 +21,9 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         return false
     }
 
-    override fun addToPolicy(mat: Material): ExcludeGroup {
-        includedMaterial.remove(mat)
-        groupItems.remove(mat)
+    override fun addToPolicy(type: NamespacedKey): ExcludeGroup {
+        includedMaterial.remove(type)
+        groupItems.remove(type)
 
         return this
     }
@@ -60,7 +61,7 @@ class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
         }
     }
 
-    override fun getMaterials(): EnumSet<Material> {
+    override fun getMaterials(): MutableSet<NamespacedKey> {
         return groupItems
     }
 

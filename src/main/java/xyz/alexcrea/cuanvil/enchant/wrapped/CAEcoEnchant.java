@@ -4,6 +4,7 @@ import com.willfp.ecoenchants.enchant.EcoEnchant;
 import com.willfp.ecoenchants.target.EnchantmentTarget;
 import com.willfp.ecoenchants.type.EnchantmentType;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
@@ -23,7 +24,7 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
         if (enchantments.isEmpty()) return false;
 
         // Check if there is only self
@@ -61,9 +62,9 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
 
     @Override
     public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments,
-                                  @NotNull Material itemMat,
+                                  @NotNull NamespacedKey itemType,
                                   @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.equals(itemMat)) {
+        if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
             return false;
         }
 

@@ -7,6 +7,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
 class AnvilCustomRecipe(
     val name: String,
@@ -80,11 +81,7 @@ class AnvilCustomRecipe(
     }
 
     fun validate(): Boolean {
-        return (leftItem != null) && !(leftItem!!.type.isAir) && (leftItem!!.amount > 0) &&
-                //(rightItem != null) && !(rightItem!!.type.isAir) && (rightItem!!.amount > 0) &&
-                ((rightItem == null) || (!(rightItem!!.type.isAir) && (rightItem!!.amount > 0))) &&
-                (resultItem != null) && !(resultItem!!.type.isAir) && (resultItem!!.amount > 0)
-
+        return !leftItem.isAir && !rightItem.isAir && !resultItem.isAir
     }
 
     fun saveToFile(writeFile: Boolean, doBackup: Boolean) {
