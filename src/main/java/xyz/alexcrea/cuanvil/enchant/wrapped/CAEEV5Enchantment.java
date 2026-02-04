@@ -34,6 +34,7 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
 
         for (CAEnchantment caEnchantment : enchantments.keySet()) {
             if (conflicts.contains(caEnchantment.getName())) return true;
+            if (conflicts.contains(caEnchantment.getKey().toString())) return true;
         }
 
         return false;
