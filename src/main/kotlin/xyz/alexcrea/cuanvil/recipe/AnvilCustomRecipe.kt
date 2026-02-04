@@ -81,7 +81,9 @@ class AnvilCustomRecipe(
     }
 
     fun validate(): Boolean {
-        return !leftItem.isAir && !rightItem.isAir && !resultItem.isAir
+        return !leftItem.isAir &&
+                (rightItem == null || !resultItem.isAir) &&
+                !resultItem.isAir
     }
 
     fun saveToFile(writeFile: Boolean, doBackup: Boolean) {
@@ -159,7 +161,7 @@ class AnvilCustomRecipe(
         CustomAnvil.verboseLog("Testing $name $leftItem")
         // We assume this function can be call only if leftItem != null
 
-        // Test is valid
+        // Test if valid
         if (!validate()) return false
 
         val leftSimilar = leftItem!!.isSimilar(item1)
