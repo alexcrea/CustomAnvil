@@ -165,7 +165,7 @@ jobs:
           webhook-url: ${{ secrets.RELEASE_WEBHOOK_URL }}
           content: |
             ${{ github.event.release.prerelease == false && '<@&1338546156325568642>' || '<@&1352296092989001768>' }}
-            # New ${{ github.event.release.prerelease == false && 'beta' || '' }} version of custom anvil ! <:CustomAnvil:1262550667986342001>([Modrinth](https://modrinth.com/plugin/customanvil), [Hangar](https://hangar.papermc.io/alexcrea/CustomAnvil) and [GitHub](${{ github.event.release.html_url }}) links)
+            # New ${{ github.event.release.prerelease == false && '' || 'beta' }} version of custom anvil ! <:CustomAnvil:1262550667986342001>([Modrinth](https://modrinth.com/plugin/customanvil), [Hangar](https://hangar.papermc.io/alexcrea/CustomAnvil) and [GitHub](${{ github.event.release.html_url }}) links)
             -# note: automated release. spigot is not uploaded yet.
 
             ${{ env.RELEASE_CHANGELOG }}
