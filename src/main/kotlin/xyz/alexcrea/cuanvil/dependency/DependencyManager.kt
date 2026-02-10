@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.dependency
 
-import com.willfp.eco.core.gui.player
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -300,7 +299,7 @@ object DependencyManager {
         if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
 
         // Test if in an ax player warp rating gui
-        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.player) == true)) bypass = true
+        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.view.player) == true)) bypass = true
 
         return bypass
     }
