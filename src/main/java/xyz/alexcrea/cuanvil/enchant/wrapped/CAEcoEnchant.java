@@ -26,6 +26,10 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
         if (enchantments.isEmpty()) return false;
 
+        // Check if there is only self
+        if (enchantments.size() == 1 && this.equals(enchantments.keySet().stream().findFirst().get()))
+            return false;
+
         if (this.ecoEnchant.getConflictsWithEverything()) {
             return true;
         }
