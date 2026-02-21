@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Server" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/run/server.jar" />
+    <option name="PROGRAM_PARAMETERS" value="-nogui" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2" />
+  </configuration>
+</component>
