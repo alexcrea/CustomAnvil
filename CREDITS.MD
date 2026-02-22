@@ -1,7 +1,8 @@
-**Custom Anvil** is based on [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants) by  DelilahEve.
+Thanks **DelilahEve** for making [Unsafe Enchants](https://github.com/DelilahEve/UnsafeEnchants). \
+CustomAnvil was initially a fork of Unsafe Enchants where I wanted to add more and more and here we are now !
 
-Thanks for all the contributors of bukkit, spigot, the paper team and the adventure API developers
-thanks JetBrain for making IntelliJ
+Thanks for all the contributors of bukkit, spigot, the paper team and the adventure API developers \
+Thanks JetBrain for making IntelliJ
 
 ### Dependencies
 Here dependencies are used by custom anvil
@@ -11,7 +12,7 @@ Here dependencies are used by custom anvil
 - [test-summary-action](https://github.com/jeantessier/test-summary-action) by jeantessier
 - [modrinth-publish](https://github.com/cloudnode-pro/modrinth-publish) by Zefir
 - [discord-webhook](https://github.com/tsickert/discord-webhook) by tsickert
-- [bstats](https://bstats.org/) for keeping me motivated
+- Thanks [bstats](https://bstats.org/) for keeping me motivated
 
 ### Compatibility   
 Here is to credits all the author of plugins
@@ -26,11 +27,11 @@ It partially repeat the the [Compatibility list](https://github.com/alexcrea/Cus
 
 ### Special Thanks
 
-Thanks for Microsoft leading me into using a better operating system
+Thanks for Microsoft leading me into using a better operating system \
 Thanks for all the users trying my plugin for these niche use cases 
 and for reporting issues and giving ideas !
 
 Thanks coltonj96 for [UberEnchant](https://modrinth.com/plugin/uberenchant). 
-we may be incompatible with the anvil, but I do think it is a good alternative !
+we may be incompatible with the anvil, but I do think it is a good alternative ! \
 I wish one day to work on cross compatibiltiy
 
