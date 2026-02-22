@@ -11,6 +11,7 @@ Here dependencies are used by custom anvil
 - [test-summary-action](https://github.com/jeantessier/test-summary-action) by jeantessier
 - [modrinth-publish](https://github.com/cloudnode-pro/modrinth-publish) by Zefir
 - [discord-webhook](https://github.com/tsickert/discord-webhook) by tsickert
+- [bstats](https://bstats.org/) for keeping me motivated
 
 ### Compatibility   
 Here is to credits all the author of plugins
