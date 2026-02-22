@@ -81,12 +81,91 @@ open class CustomAnvil : JavaPlugin() {
 
     }
 
+    // stop plugin if we do not force a dirty start (true by default)
+    // Return true if start was stopped
+    private fun tryDirtyStart(): Boolean {
+        if(!ConfigHolder.DEFAULT_CONFIG.config.getBoolean("dirty_start", false)) {
+            Bukkit.getPluginManager().disablePlugin(this)
+            return true
+        }
+        return false
+    }
+
+    // stop plugin if we force a safe start (false by default)
+    // Return true if start was stopped
+    private fun trySafeStart(): Boolean {
+        if(ConfigHolder.DEFAULT_CONFIG.config.getBoolean("safe_start", false)) {
+            Bukkit.getPluginManager().disablePlugin(this)
+            return true
+        }
+        return false
+    }
+
     /**
      * Setup plugin for use
      */
     override fun onEnable() {
         instance = this
+        try {
+            legacyCheck()
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error trying to check for legacy system" , e)
+            if(trySafeStart()) return
+        }
 
+        // Add commands
+        try {
+            prepareCommand()
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error trying to register commands" , e)
+            if(trySafeStart()) return
+        }
+
+        // Load default configuration
+        try {
+            if(!ConfigHolder.loadDefaultConfig())
+                throw RuntimeException("Error loading configuration file")
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error occurred loading default configuration", e)
+            if(tryDirtyStart()) return
+        }
+
+        // Load dependency
+        try {
+            DependencyManager.loadDependency()
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error loading dependency compatibility", e)
+            if(tryDirtyStart()) return
+        }
+
+        // Register listeners
+        try {
+            registerListeners()
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error registering listeners", e)
+            if(tryDirtyStart()) return
+        }
+
+        // Load metrics
+        try {
+            Metrics(this, bstatsPluginId)
+        } catch (_: Exception) {}
+
+        // Load other thing later.
+        // It is so other dependent plugins can implement there event listener before we fire them.
+        DependencyManager.scheduler.scheduleGlobally(this) { loadEnchantmentSystemDirty() }
+    }
+
+    private fun loadEnchantmentSystemDirty() {
+        try {
+            loadEnchantmentSystem()
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error initializing enchantment ssytem", e)
+            tryDirtyStart()
+        }
+    }
+
+    private fun legacyCheck() {
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
         if (potentialPlugin != null) {
@@ -99,34 +178,17 @@ open class CustomAnvil : JavaPlugin() {
             logger.warning("It seems you are using spigot")
             logger.warning("Please take notice that spigot is less supported than paper and derivatives")
         }
+    }
 
-        // Add commands
-        prepareCommand()
-
-        // Load chat listener
+    private fun registerListeners() {
+        // Register chat listener
         chatListener = ChatEventListener()
         server.pluginManager.registerEvents(chatListener, this)
-
-        // Load default configuration
-        if (!ConfigHolder.loadDefaultConfig()) {
-            logger.log(Level.SEVERE,"could not load default config.")
-            return
-        }
-
-        // Load dependency
-        DependencyManager.loadDependency()
 
         // Register anvil events
         server.pluginManager.registerEvents(PrepareAnvilListener(), this)
         server.pluginManager.registerEvents(AnvilResultListener(), this)
         server.pluginManager.registerEvents(AnvilCloseListener(DependencyManager.packetManager), this)
-
-        // Load metrics
-        Metrics(this, bstatsPluginId)
-
-        // Load other thing later.
-        // It is so other dependent plugins can implement there event listener before we fire them.
-        DependencyManager.scheduler.scheduleGlobally(this, {loadEnchantmentSystem()})
     }
 
     private fun loadEnchantmentSystem(){
