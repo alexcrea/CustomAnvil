@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.listener.AnvilCloseListener
 import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
+import xyz.alexcrea.cuanvil.update.ModrinthUpdateChecker
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 import xyz.alexcrea.cuanvil.util.Metrics
@@ -31,8 +32,9 @@ import java.util.logging.Level
 open class CustomAnvil : JavaPlugin() {
 
     companion object {
-        // bstats plugin id
+        // pluginIDS
         private const val bstatsPluginId = 20923
+        private const val modrinthPluginID = "S75Ueiq9"
 
         // Permission string required to use the plugin's features
         const val affectedByPluginPermission = "ca.affected"
@@ -174,10 +176,25 @@ open class CustomAnvil : JavaPlugin() {
             logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
         }
 
-        if(!PlatformUtil.isPaper) {
+        val isPaper = PlatformUtil.isPaper
+        if(!isPaper) {
             logger.warning("It seems you are using spigot")
             logger.warning("Please take notice that spigot is less supported than paper and derivatives")
         }
+
+        val loader = if(isPaper) "paper" else "spigot"
+
+        val version = description.version
+        val featured = if(version.contains("dev")) null else true
+
+        ModrinthUpdateChecker(modrinthPluginID, loader, null)
+            .setFeatured(featured)
+            .setOnError { logger.log(Level.WARNING, "error trying to fetch latest update", it) }
+            .checkVersion { latestver: String? ->
+                if(latestver == null || version.contains(latestver)) return@checkVersion
+
+                logger.warning("An update may be available: $latestver")
+            }
     }
 
     private fun registerListeners() {
