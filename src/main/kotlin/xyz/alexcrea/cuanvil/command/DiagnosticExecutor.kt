@@ -22,12 +22,12 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.plugin.Plugin
-import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.packet.NoPacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.dependency.packet.versions.PaperPacketManager
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import java.util.*
 import java.util.stream.Collectors
@@ -42,8 +42,8 @@ class DiagnosticExecutor: CASubCommand() {
     enum class DiagParams(val value: String) {
         OS_PRIVACY("os_privacy"),
         PLUGIN_PRIVACY("plugin_privacy"),
-        NO_MERGE_TEST("no_merge_test");
-        // TODO enchant list
+        NO_MERGE_TEST("no_merge_test"),
+        FULL_ENCHANTMENT_DATA("full_enchantment_data"),
     }
 
     private fun fetchParameters(args: Array<out String>): EnumSet<DiagParams> {
@@ -142,9 +142,13 @@ class DiagnosticExecutor: CASubCommand() {
         prepareAnvilListeners(stb)
 
         if(!params.contains(DiagParams.NO_MERGE_TEST)){
-            if(sender is Player) {
-                testMerge(sender, stb)
-            }
+            if(sender is Player) testMerge(sender, stb)
+        }
+
+        stb.append("\n\nEnchantments data:")
+        partialEnchantmentData(stb)
+        if(params.contains(DiagParams.FULL_ENCHANTMENT_DATA)){
+            fullEnchantmentData(stb)
         }
     }
 
@@ -291,4 +295,26 @@ class DiagnosticExecutor: CASubCommand() {
         player.closeInventory()
     }
 
+    private fun fullEnchantmentData(stb: StringBuilder) {
+        for (enchantment in CAEnchantmentRegistry.getInstance().values()) {
+            stb.append("\n- ").append(enchantment.key.toString())
+                .append(" ").append(enchantment.name)
+                .append(" ").append(enchantment.defaultMaxLevel())
+        }
+    }
+
+    private fun partialEnchantmentData(stb: StringBuilder) {
+        val map = HashMap<String, Int>()
+        for (enchant in CAEnchantmentRegistry.getInstance().values()) {
+            map[enchant.key.namespace] = map.getOrDefault(enchant.key.namespace, 0) + 1
+        }
+
+        stb.append("\nNamespaces: ${
+            map.entries.stream()
+                .map { (key, value) -> "$key ($value)" }
+                .reduce { a, b -> "$a, $b" }.get()
+        }")
+
+    }
+    
 }
