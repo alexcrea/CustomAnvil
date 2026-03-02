@@ -33,8 +33,10 @@ abstract class CASubCommand: CommandExecutor {
         return true
     }
 
-    open fun tabCompleter(list: MutableList<String>) {
-
+    open fun tabCompleter(
+        sender: CommandSender,
+        args: Array<out String>,
+        list: MutableList<String>) {
     }
 
 }
