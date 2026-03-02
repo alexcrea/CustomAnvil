@@ -12,6 +12,8 @@ libraries: [${libraries}]
 commands:
   customanvil:
     description: Generic command for custom anvil
+    aliases:
+      - ca
   anvilconfigreload:
     description: Reload every config of this plugin
     permission: ca.command.reload
