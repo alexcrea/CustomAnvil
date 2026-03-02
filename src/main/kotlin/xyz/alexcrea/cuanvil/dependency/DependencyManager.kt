@@ -27,6 +27,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.util.logging.Level
 
 object DependencyManager {
@@ -141,6 +142,7 @@ object DependencyManager {
                 "Error while trying to handle custom anvil supported plugin: ",
                 e
             )
+            trackError(e)
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -180,6 +182,7 @@ object DependencyManager {
                 "Error while trying to handle custom anvil supported plugin: ",
                 e
             )
+            trackError(e)
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -233,6 +236,7 @@ object DependencyManager {
                 "Error while trying to handle custom anvil supported plugin: ",
                 e
             )
+            trackError(e)
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
@@ -262,6 +266,7 @@ object DependencyManager {
                 "Error while trying to handle custom anvil supported plugin: ",
                 e
             )
+            trackError(e)
 
             // Just in case to avoid illegal items
             event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)

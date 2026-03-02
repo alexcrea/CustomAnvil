@@ -10,6 +10,7 @@ import xyz.alexcrea.cuanvil.enchant.bulk.BukkitEnchantBulkOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -85,11 +86,13 @@ public class CAEnchantmentRegistry {
                 return false;
             }
 
+            var error = new IllegalStateException("enchantment " + enchantment.getKey() + " was already registered");
             CustomAnvil.instance.getLogger().log(Level.WARNING,
                     "Duplicate distinct registered enchantment. This should NOT happen any time.\n" +
                             "If you are a custom anvil developer: Maybe custom anvil detected your enchantment as a bukkit enchantment. " +
                             "you should maybe remove enchantment with the same key before registering yours",
-                    new IllegalStateException("enchantment " + enchantment.getKey() + " was already registered"));
+                    error);
+            MetricsUtil.INSTANCE.trackError(error);
             return false;
         }
 

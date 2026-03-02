@@ -25,7 +25,8 @@ object MetricsUtil {
         if(metricType.allowBStats) {
             try {
                 val metric = Metrics(plugin, BSTATS_PLUGIN_ID)
-                //TODO nms type custom chart
+                metric.addCustomChart(Metrics.SimplePie("nms_type") { nmsType })
+                metric.addCustomChart(Metrics.SimplePie("using_alpha") { isAlpha.toString() })
             } catch (_: Exception) {}
         }
 

@@ -165,8 +165,8 @@ tasks {
         archiveFileName.set(name)
 
         // Shadow necessary dependency
-        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.customanvil.inventoryframework")
-        relocate("dev.faststats", "xyz.alexcrea.customanvil.faststats")
+        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.cuanvil.inventoryframework")
+        relocate("dev.faststats", "xyz.alexcrea.cuanvil.faststats")
 
         filesMatching("plugin.yml") {
             expand(
