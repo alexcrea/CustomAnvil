@@ -17,14 +17,14 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     }
 
     private val editConfigCommand = EditConfigExecutor()
-    private val commands: ImmutableMap<String, CASubCommand>
+    private val commands = ImmutableMap.of(
+        "gui", editConfigCommand,
+        "reload", ReloadExecutor(),
+        "diagnostic", DiagnosticExecutor(),
+        //"debug", DebugExecutor(),
+    )
 
     init {
-        commands = ImmutableMap.of<String, CASubCommand>(
-            "gui", editConfigCommand,
-            "reload", ReloadExecutor(),
-            "diagnostic", Diagnostic(),
-        )
 
         println(plugin.getCommand(genericCommandName))
         val self = plugin.getCommand(genericCommandName)!!
@@ -61,13 +61,17 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         args: Array<out String>
     ): MutableList<String> {
         val result = ArrayList<String>()
-        if(args.isEmpty()) {
+        if(args.size < 3) {
             for (cmd in commands) {
                 result.add(cmd.key)
             }
         } else {
-            val subcmd = commands[args[0].lowercase()]
-            subcmd?.tabCompleter(result)
+            val subcmd = commands[args[1].lowercase()]
+
+            if(subcmd != null) {
+                val newArgs = args.copyOfRange(1, args.size)
+                subcmd.tabCompleter(sender, newArgs, result)
+            }
         }
 
         //assumed all provided tab completed string are lowercase

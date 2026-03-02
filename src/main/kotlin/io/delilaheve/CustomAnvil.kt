@@ -68,6 +68,8 @@ open class CustomAnvil : JavaPlugin() {
         // Chat message listener
         lateinit var chatListener: ChatEventListener
 
+        var latestVer: String? = null
+
         /**
          * Logging handler
          */
@@ -195,10 +197,11 @@ open class CustomAnvil : JavaPlugin() {
         ModrinthUpdateChecker(modrinthPluginID, loader, null)
             .setFeatured(featured)
             .setOnError { logger.log(Level.WARNING, "error trying to fetch latest update", it) }
-            .checkVersion { latestver: String? ->
-                if(latestver == null || version.contains(latestver)) return@checkVersion
+            .checkVersion { latestVer: String? ->
+                CustomAnvil.latestVer = latestVer
+                if(latestVer == null || version.contains(latestVer)) return@checkVersion
 
-                logger.warning("An update may be available: $latestver")
+                logger.warning("An update may be available: $latestVer")
             }
     }
 
@@ -296,8 +299,6 @@ open class CustomAnvil : JavaPlugin() {
         command = getCommand(commandConfigName)
         command?.setExecutor(EditConfigExecutor())
 
-        println(getCommand("customanvil"))
-        println(getCommand("customanvila"))
         CustomAnvilCmd(this)
     }
 
