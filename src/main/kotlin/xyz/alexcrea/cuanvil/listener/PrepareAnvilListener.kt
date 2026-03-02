@@ -38,6 +38,8 @@ class PrepareAnvilListener : Listener {
         const val ANVIL_INPUT_LEFT = 0
         const val ANVIL_INPUT_RIGHT = 1
         const val ANVIL_OUTPUT_SLOT = 2
+
+        var IS_EMPTY_TEST = false
     }
 
     private fun ItemStack?.isAir(): Boolean {
@@ -62,6 +64,12 @@ class PrepareAnvilListener : Listener {
 
         val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
+
+        if(IS_EMPTY_TEST) {
+            event.result = null
+            IS_EMPTY_TEST = false
+            return
+        }
 
         if (isImmutable(first) || isImmutable(second)) {
             CustomAnvil.verboseLog("Skipping anvil process as one of the two item is immutable")

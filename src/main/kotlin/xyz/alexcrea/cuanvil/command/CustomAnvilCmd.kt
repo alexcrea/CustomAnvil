@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import java.util.ArrayList
-import java.util.Arrays
 
 class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
 
@@ -61,12 +60,12 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         args: Array<out String>
     ): MutableList<String> {
         val result = ArrayList<String>()
-        if(args.size < 3) {
-            for (cmd in commands) {
+        if(args.size < 2) {
+             for (cmd in commands) {
                 result.add(cmd.key)
             }
         } else {
-            val subcmd = commands[args[1].lowercase()]
+            val subcmd = commands[args[0].lowercase()]
 
             if(subcmd != null) {
                 val newArgs = args.copyOfRange(1, args.size)
