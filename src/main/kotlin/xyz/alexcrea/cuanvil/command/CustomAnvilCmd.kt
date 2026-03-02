@@ -20,7 +20,6 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         "gui", editConfigCommand,
         "reload", ReloadExecutor(),
         "diagnostic", DiagnosticExecutor(),
-        //"debug", DebugExecutor(),
     )
 
     init {

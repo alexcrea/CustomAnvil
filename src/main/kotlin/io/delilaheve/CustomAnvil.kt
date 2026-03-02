@@ -23,6 +23,7 @@ import xyz.alexcrea.cuanvil.update.ModrinthUpdateChecker
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 import xyz.alexcrea.cuanvil.util.Metrics
+import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
 import java.util.logging.Level
@@ -34,7 +35,6 @@ open class CustomAnvil : JavaPlugin() {
 
     companion object {
         // pluginIDS
-        private const val bstatsPluginId = 20923
         private const val modrinthPluginID = "S75Ueiq9"
 
         // Permission string required to use the plugin's features
@@ -156,13 +156,15 @@ open class CustomAnvil : JavaPlugin() {
         }
 
         // Load metrics
-        try {
-            Metrics(this, bstatsPluginId)
-        } catch (_: Exception) {}
+        MetricsUtil.loadMetrics(this)
 
         // Load other thing later.
         // It is so other dependent plugins can implement there event listener before we fire them.
         DependencyManager.scheduler.scheduleGlobally(this) { loadEnchantmentSystemDirty() }
+    }
+
+    override fun onDisable() {
+        MetricsUtil.shutdownMetrics()
     }
 
     private fun loadEnchantmentSystemDirty() {

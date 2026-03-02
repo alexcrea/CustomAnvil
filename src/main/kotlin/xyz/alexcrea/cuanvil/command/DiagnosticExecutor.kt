@@ -37,6 +37,21 @@ class DiagnosticExecutor: CASubCommand() {
 
     companion object{
         private const val NO_DIAG_PERM = "You do not have permission to diagnostic this server"
+
+        fun fetchNMSType(): String {
+            val packetManager = DependencyManager.packetManager
+            val packetManagerClass = packetManager.javaClass
+
+            val result = when (packetManagerClass) {
+                PaperPacketManager::class.java -> "Paper NMS"
+                ProtocoLibWrapper::class.java -> "Protocolib"
+                NoPacketManager::class.java -> "None"
+                else -> "Version Specific"
+
+            }
+
+            return "$result ${if(packetManager.canSetInstantBuild) '✅' else '❌'}"
+        }
     }
 
     enum class DiagParams(val value: String) {
@@ -124,7 +139,10 @@ class DiagnosticExecutor: CASubCommand() {
 
     fun diagnostic(sender: CommandSender, stb: StringBuilder, params: Set<DiagParams>){
         stb.append("Server Info\n")
-        stb.append("\nPlugin Version: ").append(CustomAnvil.instance.description.version)
+        val version = CustomAnvil.instance.description.version
+        stb.append("\nPlugin Version: ").append(version)
+        if(version.contains("dev")) stb.append(" (alpha)")
+
         stb.append("\nLatest Update: ").append(CustomAnvil.latestVer)
         stb.append("\nServer Version: ").append(Bukkit.getVersion()).append(" (").append(Bukkit.getName()).append(')')
         stb.append("\nPlugin Enabled: ").append(if(CustomAnvil.instance.isEnabled) "Yes" else "No")
@@ -179,21 +197,6 @@ class DiagnosticExecutor: CASubCommand() {
 
         stb.append("\n\nEnchanting an item:")
         simulateAnvil(player, stb, sword, enchantedBook, enchantedSword)
-    }
-
-    private fun fetchNMSType(): String {
-        val packetManager = DependencyManager.packetManager
-        val packetManagerClass = packetManager.javaClass
-
-        val result = when (packetManagerClass) {
-            PaperPacketManager::class.java -> "Paper NMS"
-            ProtocoLibWrapper::class.java -> "Protocolib"
-            NoPacketManager::class.java -> "None"
-            else -> "Version Specific"
-
-        }
-
-        return "$result ${if(packetManager.canSetInstantBuild) '✅' else '❌'}"
     }
 
     private val Plugin.pluginNameDisplay: String
