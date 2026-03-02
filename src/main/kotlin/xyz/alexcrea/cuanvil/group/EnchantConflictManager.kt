@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import java.util.*
+import kotlin.collections.set
 
 class EnchantConflictManager {
 
@@ -118,46 +119,34 @@ class EnchantConflictManager {
             }
         }
 
-        //TODO find a way to dry this two ?
-        val conflictAfterLevels = section.getConfigurationSection(CONFLICT_AFTER_LEVEL_LIST_PATH)
-        if(conflictAfterLevels != null) {
-            for (enchantName in conflictAfterLevels.getKeys(false)) {
-                val enchants = getEnchantByIdentifier(enchantName)
-                if (enchants.isEmpty()) {
-                    CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict after level for conflict $conflictName")
-                    continue
-                }
+        val conflictsAfterLevel = section.getConfigurationSection(CONFLICT_AFTER_LEVEL_LIST_PATH)
+        val conflictsAfterMap = conflict.getConflictAfters()
+        fetchConditionalRestriction(conflictsAfterMap, conflictsAfterLevel, conflictName)
 
-                val value = conflictAfterLevels.getInt(enchantName, -1)
-                if(value < 0) continue
-
-                for (enchant in enchants) {
-                    val previous = conflict.getConflictAfters().getOrDefault(enchant, value)
-                    conflict.putConflictAfterLevel(enchant, value.coerceAtMost(previous))
-                }
-            }
-        }
-
-        val conflictBeforeLevels = section.getConfigurationSection(CONFLICT_BEFORE_LEVEL_LIST_PATH)
-        if(conflictBeforeLevels != null) {
-            for (enchantName in conflictBeforeLevels.getKeys(false)) {
-                val enchants = getEnchantByIdentifier(enchantName)
-                if (enchants.isEmpty()) {
-                    CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict after level for conflict $conflictName")
-                    continue
-                }
-
-                val value = conflictBeforeLevels.getInt(enchantName, -1)
-                if(value < 0) continue
-
-                for (enchant in enchants) {
-                    val previous = conflict.getConflictBefores().getOrDefault(enchant, value)
-                    conflict.putConflictBeforeLevel(enchant, value.coerceAtMost(previous))
-                }
-            }
-        }
+        val conflictsBeforeLevel = section.getConfigurationSection(CONFLICT_BEFORE_LEVEL_LIST_PATH)
+        val conflictsBeforeMap = conflict.getConflictsBefore()
+        fetchConditionalRestriction(conflictsBeforeMap, conflictsBeforeLevel, conflictName)
 
         return conflict
+    }
+
+    private fun fetchConditionalRestriction(restrictions: MutableMap<CAEnchantment, Int>, section: ConfigurationSection?, conflictName: String) {
+        if(section == null) return
+        for (enchantName in section.getKeys(false)) {
+            val enchants = getEnchantByIdentifier(enchantName)
+            if (enchants.isEmpty()) {
+                CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conditional restriction for conflict $conflictName")
+                continue
+            }
+
+            val value = section.getInt(enchantName, -1)
+            if(value < 0) continue
+
+            for (enchant in enchants) {
+                val previous = restrictions.getOrDefault(enchant, value)
+                restrictions[enchant] = value.coerceAtMost(previous)
+            }
+        }
     }
 
     private fun getEnchantByIdentifier(enchantName: String): List<CAEnchantment> {
