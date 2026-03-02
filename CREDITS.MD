@@ -13,6 +13,7 @@ Here dependencies are used by custom anvil
 - [modrinth-publish](https://github.com/cloudnode-pro/modrinth-publish) by Zefir
 - [discord-webhook](https://github.com/tsickert/discord-webhook) by tsickert
 - Thanks [bstats](https://bstats.org/) for keeping me motivated
+- And [FastStats](https://faststats.dev/) alternative to bstats in beta test
 - [ModrinthUpdateChecker](https://github.com/Clickism/ModrinthUpdateChecker) by Clickism and thanks to the modrinth team
 
 ### Compatibility   

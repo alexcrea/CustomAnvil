@@ -36,6 +36,12 @@ repositories {
 
     // ExcellentEnchants
     maven(url = "https://repo.nightexpressdev.com/releases")
+
+    // for fast stats
+    maven {
+        name = "thenextlvlReleases"
+        url = uri("https://repo.thenextlvl.net/releases")
+    }
 }
 
 val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
@@ -44,6 +50,9 @@ val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
 dependencies {
     // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+
+    // fast stats
+    implementation("dev.faststats.metrics:bukkit:0.16.0")
 
     // minimessage
     implementation("net.kyori:adventure-text-minimessage:4.25.0")
@@ -132,7 +141,7 @@ allprojects {
     // Set target version
     tasks.withType<JavaCompile>().configureEach {
         sourceCompatibility =
-            "16" // We aim for java 16 for minecraft 1.16.5. even if it not really suported by custom anvil.
+            "16" // We aim for java 16 for minecraft 1.16.5. even if it not really supported by custom anvil.
         targetCompatibility = "16"
 
         options.encoding = "UTF-8"
@@ -156,7 +165,8 @@ tasks {
         archiveFileName.set(name)
 
         // Shadow necessary dependency
-        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.inventoryframework")
+        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.customanvil.inventoryframework")
+        relocate("dev.faststats", "xyz.alexcrea.customanvil.faststats")
 
         filesMatching("plugin.yml") {
             expand(
