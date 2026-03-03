@@ -43,13 +43,17 @@ class DiagnosticExecutor: CASubCommand() {
             val packetManager = DependencyManager.packetManager
             val packetManagerClass = packetManager.javaClass
 
-            val result = when (packetManagerClass) {
-                PaperPacketManager::class.java -> "Paper NMS"
-                ProtocoLibWrapper::class.java -> "Protocolib"
-                NoPacketManager::class.java -> "None"
-                else -> "Version Specific"
-
+            val className = packetManagerClass.name
+            val result = if(className.contains("PaperPacket")) {
+                "Paper"
+            } else {
+                when (packetManagerClass) {
+                    ProtocoLibWrapper::class.java -> "Protocolib"
+                    NoPacketManager::class.java -> "None"
+                    else -> "Version Specific"
+                }
             }
+
 
             return "$result ${if(packetManager.canSetInstantBuild) '✅' else '❌'}"
         }
