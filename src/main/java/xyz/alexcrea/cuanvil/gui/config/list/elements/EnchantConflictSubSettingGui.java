@@ -25,6 +25,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -264,6 +265,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             updateGuiValues();
         } catch (Exception e) {
             CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating enchants for " + this.enchantConflict, e);
+            MetricsUtil.INSTANCE.trackError(e);
         }
 
         // Save file configuration to disk
@@ -308,6 +310,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             updateGuiValues();
         } catch (Exception e) {
             CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for " + this.enchantConflict, e);
+            MetricsUtil.INSTANCE.trackError(e);
         }
 
         // Save file configuration to disk

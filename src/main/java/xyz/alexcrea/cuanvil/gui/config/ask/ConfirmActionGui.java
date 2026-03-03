@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -41,6 +42,7 @@ public class ConfirmActionGui extends AbstractAskGui {
                 success = onConfirm.get();
             } catch (Exception e) {
                 CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not process confirmation supplier.", e);
+                MetricsUtil.INSTANCE.trackError(e);
                 success = false;
             }
 

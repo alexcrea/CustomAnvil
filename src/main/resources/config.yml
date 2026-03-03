@@ -1,7 +1,20 @@
 #
-# It is recommended that you use /configanvil to edit theses config.
+# It is recommended that you use /configanvil to edit most of these config.
 # You can still manually edit here if you like to. but if you do, don't forget to /anvilconfigreload after you changes !
 #
+
+# What service of metric should custom anvil use
+# Custom anvil collect generic information like server minecraft version, type, etc...
+# It can also collect error information if error is happening (currently faststats only)
+# It can also be disabled
+# Please refer to README for public metric link
+# Possible options: auto, bstat, faststats, disabled (auto by default)
+metric_type: auto
+
+# Allow to report errors made caused by this plugin (only for faststats)
+# This allows me to fix potentials issue that I'm not aware of
+# Accept true or false (true by default)
+metric_collect_errors: true
 
 # All anvil cost will be capped to limit_repair_value if enabled.
 #

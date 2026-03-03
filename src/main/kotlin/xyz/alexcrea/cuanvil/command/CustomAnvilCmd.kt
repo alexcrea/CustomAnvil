@@ -6,6 +6,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
+import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.util.ArrayList
 
 class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
@@ -20,7 +21,6 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         "gui", editConfigCommand,
         "reload", ReloadExecutor(),
         "diagnostic", DiagnosticExecutor(),
-        //"debug", DebugExecutor(),
     )
 
     init {
@@ -38,10 +38,14 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         args: Array<out String>
     ): Boolean {
         // Find sub command to execute based on the provided command name
-        val subcmd: CASubCommand? = if(args.isEmpty()) {
-            editConfigCommand
+        val subcmd: CASubCommand?
+        val newargs: Array<out String>
+        if(args.isEmpty()) {
+            subcmd = editConfigCommand
+            newargs = args
         }else {
-            commands[args[0].lowercase()]
+            subcmd = commands[args[0].lowercase()]
+            newargs = args.copyOfRange(1, args.size)
         }
 
         if(subcmd == null) {
@@ -49,8 +53,13 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
             return true
         }
 
-        val newargs = args.copyOfRange(1, args.size)
-        return subcmd.executeCommand(sender, cmd, cmdstr, newargs)
+        try {
+            return subcmd.executeCommand(sender, cmd, cmdstr, newargs)
+        } catch (e: Throwable) {
+            MetricsUtil.trackError(e)
+            sender.sendMessage("§cError running this command")
+            return false
+        }
     }
 
     override fun onTabComplete(

@@ -16,6 +16,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.util.logging.Level
 import kotlin.reflect.KClass
 
@@ -38,6 +39,7 @@ class DisenchantmentDependency {
                 Level.SEVERE, "Could not initialize disenchantment support" +
                         "please report this bug to the developer", e
             )
+            trackError(e)
         }
     }
 

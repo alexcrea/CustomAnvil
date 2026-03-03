@@ -22,7 +22,7 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.update.ModrinthUpdateChecker
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.UpdateHandler
-import xyz.alexcrea.cuanvil.util.Metrics
+import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
 import java.util.logging.Level
@@ -34,7 +34,6 @@ open class CustomAnvil : JavaPlugin() {
 
     companion object {
         // pluginIDS
-        private const val bstatsPluginId = 20923
         private const val modrinthPluginID = "S75Ueiq9"
 
         // Permission string required to use the plugin's features
@@ -118,7 +117,8 @@ open class CustomAnvil : JavaPlugin() {
         try {
             legacyCheck()
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error trying to check for legacy system" , e)
+            logger.log(Level.SEVERE, "error trying to check for legacy system", e)
+            MetricsUtil.trackError(e)
             if(trySafeStart()) return
         }
 
@@ -126,7 +126,8 @@ open class CustomAnvil : JavaPlugin() {
         try {
             prepareCommand()
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error trying to register commands" , e)
+            logger.log(Level.SEVERE, "error trying to register commands", e)
+            MetricsUtil.trackError(e)
             if(trySafeStart()) return
         }
 
@@ -136,6 +137,7 @@ open class CustomAnvil : JavaPlugin() {
                 throw RuntimeException("Error loading configuration file")
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "error occurred loading default configuration", e)
+            MetricsUtil.trackError(e)
             if(tryDirtyStart()) return
         }
 
@@ -144,6 +146,7 @@ open class CustomAnvil : JavaPlugin() {
             DependencyManager.loadDependency()
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "error loading dependency compatibility", e)
+            MetricsUtil.trackError(e)
             if(tryDirtyStart()) return
         }
 
@@ -152,24 +155,28 @@ open class CustomAnvil : JavaPlugin() {
             registerListeners()
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "error registering listeners", e)
+            MetricsUtil.trackError(e)
             if(tryDirtyStart()) return
         }
 
         // Load metrics
-        try {
-            Metrics(this, bstatsPluginId)
-        } catch (_: Exception) {}
+        MetricsUtil.loadMetrics(this)
 
         // Load other thing later.
         // It is so other dependent plugins can implement there event listener before we fire them.
         DependencyManager.scheduler.scheduleGlobally(this) { loadEnchantmentSystemDirty() }
     }
 
+    override fun onDisable() {
+        MetricsUtil.shutdownMetrics()
+    }
+
     private fun loadEnchantmentSystemDirty() {
         try {
             loadEnchantmentSystem()
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error initializing enchantment ssytem", e)
+            logger.log(Level.SEVERE, "error initializing enchantment system", e)
+            MetricsUtil.trackError(e)
             tryDirtyStart()
         }
     }
@@ -196,7 +203,10 @@ open class CustomAnvil : JavaPlugin() {
 
         ModrinthUpdateChecker(modrinthPluginID, loader, null)
             .setFeatured(featured)
-            .setOnError { logger.log(Level.WARNING, "error trying to fetch latest update", it) }
+            .setOnError {
+                logger.log(Level.WARNING, "error trying to fetch latest update", it)
+                MetricsUtil.trackError(it)
+            }
             .checkVersion { latestVer: String? ->
                 CustomAnvil.latestVer = latestVer
                 if(latestVer == null || version.contains(latestVer)) return@checkVersion

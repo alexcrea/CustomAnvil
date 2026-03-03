@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
+import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -145,6 +146,7 @@ public abstract class ConfigHolder {
                 sufficientSuccess = true;
             } catch (IOException e) {
                 CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not copy backup saving config " + base.getName(), e);
+                MetricsUtil.INSTANCE.trackError(e);
             }
         }
         // save last backup
@@ -275,6 +277,7 @@ public abstract class ConfigHolder {
                     this.deletedConfigFile.createNewFile();
                 } catch (IOException e) {
                     CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not create " + this.deletedConfigFile.getPath(), e);
+                    MetricsUtil.INSTANCE.trackError(e);
                 }
                 loadDeletedListFile(false);
 
@@ -312,6 +315,7 @@ public abstract class ConfigHolder {
                 this.deletedListConfig.save(this.deletedConfigFile);
             } catch (IOException e) {
                 CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not save " + this.deletedConfigFile.getPath(), e);
+                MetricsUtil.INSTANCE.trackError(e);
                 return false;
             }
 

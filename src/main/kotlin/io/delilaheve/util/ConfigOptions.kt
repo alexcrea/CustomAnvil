@@ -21,6 +21,9 @@ object ConfigOptions {
     // Path for config values
     // ----------------------
 
+    const val METRIC_TYPE = "metric_type"
+    const val METRIC_COLLECT_ERROR = "metric_collect_errors"
+
     const val CAP_ANVIL_COST = "limit_repair_cost"
     const val MAX_ANVIL_COST = "limit_repair_value"
     const val REMOVE_ANVIL_COST_LIMIT = "remove_repair_limit"
