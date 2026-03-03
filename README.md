@@ -68,7 +68,7 @@ Please note that 1.16.5 to 1.17.1 are not officially supported. Run at your own 
 
 ### For custom enchantment plugin developers
 For information about the API, please refer to [the Wiki](https://github.com/alexcrea/CustomAnvil/wiki) \
-(Please note that the wiki is currently incomplete)​
+(Please note that the wiki is currently incomplete)
 
 ---
 
@@ -76,7 +76,14 @@ For information about the API, please refer to [the Wiki](https://github.com/ale
 see [Here](https://github.com/alexcrea/CustomAnvil/tree/master/defaultconfigs)
 
 ---
-Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) for metric. You can [disable it](https://bstats.org/getting-started) if you like.
+### Metric And Telemetry
+Custom anvil [use bstat](https://bstats.org/plugin/bukkit/Unsafe%20Enchants%20Plus/20923) 
+and [faststats](https://faststats.dev/project/customanvil/minecraft-plugin) for metric and error reporting.
+
+You can select specific telemetry or disable all in config.yml. \
+You can also [disable bstat](https://bstats.org/getting-started) and [faststats](https://faststats.dev/info) in their /plugin folder if you like too.
+
+faststats is in beta testing please report me or them any error you encounter
 
 ### Credits and Thanks
 Credits and thanks can be seen [here](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/CREDITS.md)
