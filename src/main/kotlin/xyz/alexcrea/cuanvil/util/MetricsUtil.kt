@@ -17,7 +17,8 @@ object MetricsUtil {
     private var FAST_STATS_METRICS: BukkitMetrics? = null
 
     fun loadMetrics(plugin: CustomAnvil) {
-        val metricString = ConfigHolder.DEFAULT_CONFIG.config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
+        val config = ConfigHolder.DEFAULT_CONFIG.config
+        val metricString = config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
         val metricType = MetricType.from(metricString)
 
         val nmsType = DiagnosticExecutor.fetchNMSType()
@@ -31,15 +32,19 @@ object MetricsUtil {
         }
 
         if(metricType.allowFastStats) {
-            ERROR_TRACKER = ErrorTracker.contextAware();
+            val reportErrors = config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
+            if(reportErrors)
+                ERROR_TRACKER = ErrorTracker.contextAware()
+
             FAST_STATS_METRICS = BukkitMetrics.factory()
                 .addMetric(Metric.string("nms_type") { nmsType })
+                .addMetric(Metric.bool("replace_too_expensive") { ConfigOptions.doReplaceTooExpensive })
                 .addMetric(Metric.bool("using_alpha") { isAlpha })
                 .errorTracker(ERROR_TRACKER)
                 .token(FASTSTATS_TOKEN)
                 .create(plugin)
 
-            FAST_STATS_METRICS!!.ready()
+            if(reportErrors) FAST_STATS_METRICS!!.ready()
         }
     }
 
