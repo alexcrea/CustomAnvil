@@ -38,4 +38,8 @@ class EditConfigExecutor: CASubCommand() {
         return sender.hasPermission(CustomAnvil.editConfigPermission)
     }
 
+    override fun description(): String {
+        return "Gui to edit the plugin's config"
+    }
+
 }

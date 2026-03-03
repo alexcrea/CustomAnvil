@@ -204,6 +204,10 @@ class DiagnosticExecutor: CASubCommand() {
             return this.name + " v" + this.description.version
         }
 
+    override fun description(): String {
+        return "Basic diagnostic of this plugin"
+    }
+
     private fun pluginListDiag(sender: CommandSender, stb: StringBuilder) {
         val enabledPlugins: MutableList<Plugin?> = ArrayList<Plugin?>()
         val disabledPlugins: MutableList<Plugin?> = ArrayList<Plugin?>()

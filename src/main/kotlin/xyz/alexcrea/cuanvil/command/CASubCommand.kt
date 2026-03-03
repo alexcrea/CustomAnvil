@@ -39,4 +39,8 @@ abstract class CASubCommand: CommandExecutor {
         list: MutableList<String>) {
     }
 
+    open fun description(): String {
+        return "no description"
+    }
+
 }

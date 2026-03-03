@@ -39,6 +39,10 @@ class ReloadExecutor : CASubCommand() {
         return sender.hasPermission(CustomAnvil.commandReloadPermission)
     }
 
+    override fun description(): String {
+        return "Reload the configuration of this plugin"
+    }
+
     /**
      * Execute the command, return true if success or false otherwise
      */

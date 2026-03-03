@@ -9,7 +9,7 @@ import org.bukkit.command.TabCompleter
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.util.ArrayList
 
-class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
+class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
 
     // Name of the generic command
     companion object {
@@ -17,16 +17,20 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     }
 
     private val editConfigCommand = EditConfigExecutor()
+    private val helpCommand = HelpExecutor()
     private val commands = ImmutableMap.of(
         "gui", editConfigCommand,
         "reload", ReloadExecutor(),
         "diagnostic", DiagnosticExecutor(),
+        "help", helpCommand,
     )
 
     init {
         val self = plugin.getCommand(genericCommandName)!!
         self.setExecutor(this)
         self.tabCompleter = this
+
+        helpCommand.commands = commands
     }
 
     override fun onCommand(
@@ -68,8 +72,9 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     ): MutableList<String> {
         val result = ArrayList<String>()
         if(args.size < 2) {
-             for (cmd in commands) {
-                result.add(cmd.key)
+             for ((key, cmd) in commands) {
+                 if(!cmd.allowed(sender)) continue
+                 result.add(key)
             }
         } else {
             val subcmd = commands[args[0].lowercase()]
