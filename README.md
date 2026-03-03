@@ -28,14 +28,20 @@ the plugin can be downloaded on
 ---
 ### Permissions:
 ```yml
+# Generic and bypass permissions
 ca.affected: Player with this permission will be affected by the plugin
 ca.bypass.fuse: Allow player to combine every enchantments to every item (no custom limit)
 ca.bypass.level: Allow player to bypass every level limit (no custom limit)
-ca.command.reload: Allow administrator to reload the plugin's configs
-ca.config.edit: Allow administrator to edit the plugin's config in game
-# Bellow permissions also require some config change to allow usage of features
-# usage of these permission is toggleable in basic config gui or config.yml
 
+# Command permissions
+ca.command.reload: Allow administrator to reload the plugin's configs
+ca.command.diagnostic: Allow adminastator to diagnistic some simple problem with the plugin
+ca.config.edit: Allow administrator to edit the plugin's config in game
+
+# -----------------------------------------------------------------------------
+# Bellow permissions also require some config change to allow usage of features
+# Usage of these permission is toggleable in basic config gui or config.yml
+# -----------------------------------------------------------------------------
 # Permissions related to use of color and minimessage
 ca.color.code: Allow player to use color code on rename if enabled (toggleable)
 ca.color.hex: Allow player to use hexadecimal color on rename if enabled (toggleable)
@@ -47,10 +53,9 @@ ca.lore_edit.paper: Allow player to edit lore via paper if enabled (toggleable)
 ```
 
 ### Commands
-```yml
-anvilconfigreload or carl: Reload every config of this plugin
-customanvilconfig or configanvil: open a menu for administrator to edit plugin's config in game
-```
+
+run `customanvil help` to get information about available commands (need permissions to use them)
+
 ### Supported Plugins
 See the [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/COMPATIBILITY.md)
 
