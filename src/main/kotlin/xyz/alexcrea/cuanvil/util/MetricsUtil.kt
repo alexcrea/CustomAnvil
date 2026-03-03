@@ -52,8 +52,11 @@ object MetricsUtil {
         FAST_STATS_METRICS?.shutdown()
     }
 
+    var lastError: Throwable? = null
+
     fun trackError(e: Throwable) {
         ERROR_TRACKER?.trackError(e)
+        lastError = e
     }
 
     fun trackError(message: String) {

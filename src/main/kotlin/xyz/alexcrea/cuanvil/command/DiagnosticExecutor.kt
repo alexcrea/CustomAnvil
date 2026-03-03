@@ -29,6 +29,7 @@ import xyz.alexcrea.cuanvil.dependency.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.dependency.packet.versions.PaperPacketManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
+import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.util.*
 import java.util.stream.Collectors
 
@@ -59,6 +60,7 @@ class DiagnosticExecutor: CASubCommand() {
         PLUGIN_PRIVACY("plugin_privacy"),
         NO_MERGE_TEST("no_merge_test"),
         FULL_ENCHANTMENT_DATA("full_enchantment_data"),
+        INCLUDE_LAST_ERROR("include_last_error"),
     }
 
     private fun fetchParameters(args: Array<out String>): EnumSet<DiagParams> {
@@ -154,6 +156,8 @@ class DiagnosticExecutor: CASubCommand() {
                 .append(System.getProperty("os.arch"))
         }
 
+        stb.append("\nHad detect error: ").append(if(MetricsUtil.lastError != null) "Yes" else "No")
+
         if(!params.contains(DiagParams.PLUGIN_PRIVACY)) {
             pluginListDiag(sender, stb)
         }
@@ -167,6 +171,10 @@ class DiagnosticExecutor: CASubCommand() {
         partialEnchantmentData(stb)
         if(params.contains(DiagParams.FULL_ENCHANTMENT_DATA)){
             fullEnchantmentData(stb)
+        }
+
+        if(params.contains(DiagParams.INCLUDE_LAST_ERROR)){
+            includeLastError(stb)
         }
     }
 
@@ -321,6 +329,15 @@ class DiagnosticExecutor: CASubCommand() {
                 .map { (key, value) -> "$key ($value)" }
                 .reduce { a, b -> "$a, $b" }.get()
         }")
+
+    }
+
+    private fun includeLastError(stb: StringBuilder) {
+        val e = MetricsUtil.lastError ?: return
+
+        stb.append("\n\nLast stack trace: ${e.stackTraceToString()}")
+
+
 
     }
     
