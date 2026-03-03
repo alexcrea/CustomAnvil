@@ -24,8 +24,6 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     )
 
     init {
-
-        println(plugin.getCommand(genericCommandName))
         val self = plugin.getCommand(genericCommandName)!!
         self.setExecutor(this)
         self.tabCompleter = this
@@ -48,7 +46,7 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
             newargs = args.copyOfRange(1, args.size)
         }
 
-        if(subcmd == null) {
+        if(subcmd == null || !subcmd.allowed(sender)) {
             sender.sendMessage("Invalid subcommand. run `$cmdstr help` to see available commands")
             return true
         }
@@ -78,6 +76,8 @@ class CustomAnvilCmd(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
 
             if(subcmd != null) {
                 val newArgs = args.copyOfRange(1, args.size)
+                if(!subcmd.allowed(sender)) return result
+
                 subcmd.tabCompleter(sender, newArgs, result)
             }
         }
