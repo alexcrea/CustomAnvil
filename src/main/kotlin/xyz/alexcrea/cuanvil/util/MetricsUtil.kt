@@ -32,20 +32,30 @@ object MetricsUtil {
         }
 
         if(metricType.allowFastStats) {
-            val reportErrors = config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
-            if(reportErrors)
-                ERROR_TRACKER = ErrorTracker.contextAware()
-
-            FAST_STATS_METRICS = BukkitMetrics.factory()
-                .addMetric(Metric.string("nms_type") { nmsType })
-                .addMetric(Metric.bool("replace_too_expensive") { ConfigOptions.doReplaceTooExpensive })
-                .addMetric(Metric.bool("using_alpha") { isAlpha })
-                .errorTracker(ERROR_TRACKER)
-                .token(FASTSTATS_TOKEN)
-                .create(plugin)
-
-            if(reportErrors) FAST_STATS_METRICS!!.ready()
+            // Check support java 21 (metric only work in java 21)
+            val versionParts = System.getProperty("java.version").split(".")
+            val majorVersion = versionParts[0].toInt()
+            if (majorVersion >= 21) try {
+                faststatTelemetry(plugin, nmsType, isAlpha)
+            } catch (_: Throwable) {}
         }
+    }
+
+    private fun faststatTelemetry(plugin: CustomAnvil, nmsType: String, isAlpha: Boolean) {
+        val config = ConfigHolder.DEFAULT_CONFIG.config
+        val reportErrors = config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
+        if(reportErrors)
+            ERROR_TRACKER = ErrorTracker.contextAware()
+
+        FAST_STATS_METRICS = BukkitMetrics.factory()
+            .addMetric(Metric.string("nms_type") { nmsType })
+            .addMetric(Metric.bool("replace_too_expensive") { ConfigOptions.doReplaceTooExpensive })
+            .addMetric(Metric.bool("using_alpha") { isAlpha })
+            .errorTracker(ERROR_TRACKER)
+            .token(FASTSTATS_TOKEN)
+            .create(plugin)
+
+        if(reportErrors) FAST_STATS_METRICS!!.ready()
     }
 
     fun shutdownMetrics() {
