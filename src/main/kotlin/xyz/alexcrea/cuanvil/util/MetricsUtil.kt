@@ -32,10 +32,10 @@ object MetricsUtil {
         }
 
         if(metricType.allowFastStats) {
-            // Check support java 21 (metric only work in java 21)
+            // Check support java 17 (metric only work in java 17)
             val versionParts = System.getProperty("java.version").split(".")
             val majorVersion = versionParts[0].toInt()
-            if (majorVersion >= 21) try {
+            if (majorVersion >= 17) try {
                 faststatTelemetry(plugin, nmsType, isAlpha)
             } catch (_: Throwable) {}
         }
