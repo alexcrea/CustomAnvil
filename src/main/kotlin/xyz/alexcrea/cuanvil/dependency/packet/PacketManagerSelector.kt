@@ -8,14 +8,22 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 
 object PacketManagerSelector {
+
+    private const val PAPER_CRAFT_PLAYER_CLASS = "org.bukkit.craftbukkit.entity.CraftPlayer"
+
     fun selectPacketManager(forceProtocolib: Boolean): PacketManager {
         // Try to find version
         return if (forceProtocolib)
             protocolibIfPresent
-        else
-            reobfPacketManager ?:
-            if(PlatformUtil.isPaper) PaperPacketManager()
-            else protocolibIfPresent
+        else {
+            try {
+                Class.forName(PAPER_CRAFT_PLAYER_CLASS)
+
+                return PaperPacketManager()
+            } catch (_: ClassNotFoundException) {
+                return reobfPacketManager ?: protocolibIfPresent
+            }
+        }
     }
 
     private val protocolibIfPresent: PacketManager

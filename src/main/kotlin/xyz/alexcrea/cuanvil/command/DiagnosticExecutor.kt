@@ -26,7 +26,6 @@ import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.packet.NoPacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.ProtocoLibWrapper
-import xyz.alexcrea.cuanvil.dependency.packet.versions.PaperPacketManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.MetricsUtil
