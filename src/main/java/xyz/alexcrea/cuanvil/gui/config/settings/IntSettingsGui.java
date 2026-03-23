@@ -88,6 +88,7 @@ public class IntSettingsGui extends AbstractSettingGui {
     protected void updateValueDisplay() {
 
         PatternPane pane = getPane();
+        var displayNow = holder.valueDisplayName(now);
 
         // minus item
         GuiItem minusItem;
@@ -97,7 +98,7 @@ public class IntSettingsGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("§e" + now + " §f-> §e" + planned + " §r(§c-" + (now - planned) + "§r)");
+            meta.setDisplayName("§e" + displayNow + " §f-> §e" + planned + " §r(§c-" + holder.valueDisplayName(now - planned) + "§r)");
             meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
@@ -116,7 +117,7 @@ public class IntSettingsGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("§e" + now + " §f-> §e" + planned + " §r(§a+" + (planned - now) + "§r)");
+            meta.setDisplayName("§e" + displayNow + " §f-> §e" + planned + " §r(§a+" + holder.valueDisplayName(planned - now) + "§r)");
             meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
             item.setItemMeta(meta);
 
@@ -131,7 +132,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("§fValue: §e" + now);
+        resultMeta.setDisplayName("§fValue: §e" + displayNow);
         resultMeta.setLore(holder.displayLore);
 
         resultPaper.setItemMeta(resultMeta);
@@ -387,6 +388,10 @@ public class IntSettingsGui extends AbstractSettingGui {
         ) {
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
             return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
+        }
+
+        public String valueDisplayName(int value) {
+            return String.valueOf(value);
         }
 
     }

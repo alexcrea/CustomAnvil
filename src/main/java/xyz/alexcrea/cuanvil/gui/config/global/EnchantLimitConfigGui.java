@@ -17,7 +17,7 @@ import java.util.Locale;
  */
 public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
-    private static final String SECTION_NAME = "enchant_limits";
+    private static final String SECTION_NAME = ConfigOptions.ENCHANT_LIMIT_ROOT;
 
     private static EnchantLimitConfigGui INSTANCE = null;
 
@@ -41,18 +41,26 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         String key = enchant.getKey().toString().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
+        var defaultValue = enchant.defaultMaxLevel();
+
         return new IntSettingsGui.IntSettingFactory(prettyKey + " Limit", this,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Collections.singletonList(
                         "§7Maximum applied level of " + prettyKey
                 ),
-                0, 255,
-                enchant.defaultMaxLevel(),
+                -1, 255, -1,
                 1, 5, 10, 50, 100){
 
             @Override
             public int getConfiguredValue() {
-                return ConfigOptions.INSTANCE.enchantLimit(enchant);
+                var value = ConfigOptions.INSTANCE.rawEnchantLimit(enchant);
+                return Math.min(value, ConfigOptions.ENCHANT_LIMIT);
+            }
+
+            @Override
+            public String valueDisplayName(int value) {
+                if(value == -1) return "Default (" + defaultValue + ")";
+                return super.valueDisplayName(value);
             }
         };
     }

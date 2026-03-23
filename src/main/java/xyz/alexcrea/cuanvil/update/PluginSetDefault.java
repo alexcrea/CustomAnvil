@@ -30,7 +30,6 @@ public class PluginSetDefault {
         nbSet += trySetDefault(config, ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR);
         nbSet += trySetDefault(config, PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR);
         nbSet += trySetDefault(config, USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST);
-        nbSet += trySetDefault(config, DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT);
 
         // Lore Edit defaults
         for (@NotNull LoreEditType value : LoreEditType.values()) {
