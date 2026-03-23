@@ -72,7 +72,8 @@ public class IntSettingsGui extends AbstractSettingGui {
         assert meta != null;
 
         meta.setDisplayName("§eReset to default value");
-        meta.setLore(Collections.singletonList("§7Default value is §e" + holder.defaultVal));
+        meta.setLore(Collections.singletonList("§7Default value is §e" +
+                holder.valueDisplayName(ValueDisplayType.RESET, holder.defaultVal)));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -86,41 +87,23 @@ public class IntSettingsGui extends AbstractSettingGui {
      * Update item using the setting value to match the new value.
      */
     protected void updateValueDisplay() {
-
         PatternPane pane = getPane();
 
         // minus item
         GuiItem minusItem;
         if (now > holder.min) {
-            int planned = Math.max(holder.min, now - step);
-            ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
-            ItemMeta meta = item.getItemMeta();
-            assert meta != null;
-
-            meta.setDisplayName("§e" + now + " §f-> §e" + planned + " §r(§c-" + (now - planned) + "§r)");
-            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
-            item.setItemMeta(meta);
-
-            minusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
+            int planned = Math.min(holder.max, now + step);
+            minusItem = valueEditItem(Material.RED_TERRACOTTA, ValueDisplayType.REMOVE, planned);
         } else {
             minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
         pane.bindItem('-', minusItem);
 
         //plus item
-        // may do a function to generalise ?
         GuiItem plusItem;
         if (now < holder.max) {
             int planned = Math.min(holder.max, now + step);
-            ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
-            ItemMeta meta = item.getItemMeta();
-            assert meta != null;
-
-            meta.setDisplayName("§e" + now + " §f-> §e" + planned + " §r(§a+" + (planned - now) + "§r)");
-            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
-            item.setItemMeta(meta);
-
-            plusItem = new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
+            plusItem = valueEditItem(Material.GREEN_TERRACOTTA, ValueDisplayType.ADD, planned);
         } else {
             plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
@@ -131,7 +114,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("§fValue: §e" + now);
+        resultMeta.setDisplayName("§fValue: §e" + holder.valueDisplayName(ValueDisplayType.CURRENT, now));
         resultMeta.setLore(holder.displayLore);
 
         resultPaper.setItemMeta(resultMeta);
@@ -149,7 +132,21 @@ public class IntSettingsGui extends AbstractSettingGui {
         }
         pane.bindItem('D', returnToDefault);
 
+    }
 
+    private GuiItem valueEditItem(Material mat, ValueDisplayType type, int planned) {
+        ItemStack item = new ItemStack(mat);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        var nowDisplay = holder.valueDisplayName(type, now);
+        var plannedDisplay = holder.valueDisplayName(type, planned);
+        var deltaDisplay = holder.deltaDisplay(type, now, planned);
+        meta.setDisplayName("§e" + nowDisplay + " §f-> §e" + plannedDisplay + " §r(§c" + deltaDisplay + "§r)");
+
+        meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
+        item.setItemMeta(meta);
+        return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
     }
 
     /**
@@ -389,6 +386,23 @@ public class IntSettingsGui extends AbstractSettingGui {
             return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
+        protected String valueDisplayName(ValueDisplayType type, int value) {
+            return String.valueOf(value);
+        }
+
+        protected String deltaDisplay(ValueDisplayType type, int now, int planned) {
+            var delta = planned - now;
+            if(delta < 0) return "§c" + delta;
+            else return "§a+" + delta;
+        }
+
+    }
+
+    public enum ValueDisplayType {
+        ADD,
+        CURRENT,
+        REMOVE,
+        RESET,
     }
 
 }

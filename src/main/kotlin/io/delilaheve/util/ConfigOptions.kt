@@ -57,8 +57,6 @@ object ConfigOptions {
     const val ENCHANT_COUNT_LIMIT_DEFAULT = "$ENCHANT_COUNT_LIMIT_ROOT.default"
     const val ENCHANT_COUNT_LIMIT_ITEMS = "$ENCHANT_COUNT_LIMIT_ROOT.items"
 
-    const val DEFAULT_LIMIT_PATH = "default_limit"
-
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
@@ -102,8 +100,6 @@ object ConfigOptions {
     const val DEFAULT_PERMISSION_NEEDED_FOR_COLOR = true
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
-    const val DEFAULT_ENCHANT_LIMIT = 5
-
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
     private const val DEFAULT_VERBOSE_DEBUG_LOG = false
@@ -133,8 +129,7 @@ object ConfigOptions {
     val USE_OF_COLOR_COST_RANGE = 0..1000
 
     // Valid range for an enchantment limit
-    @JvmField
-    val ENCHANT_LIMIT_RANGE = 1..255
+    const val ENCHANT_LIMIT = 255
 
     // Valid range for an enchantment count limit
     @JvmField
@@ -349,16 +344,6 @@ object ConfigOptions {
     }
 
     /**
-     * Default enchantment limit
-     */
-    private val defaultEnchantLimit: Int
-        get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getInt(DEFAULT_LIMIT_PATH, DEFAULT_ENCHANT_LIMIT)
-        }
-
-    /**
      * Get material enchantment count limit
      *
      * @return the current enchantment limit. -1 if none
@@ -422,42 +407,37 @@ object ConfigOptions {
      * Get the given [enchantment]'s limit
      */
     fun enchantLimit(enchantment: CAEnchantment): Int {
+        val limit = rawEnchantLimit(enchantment)
+        if(limit >= 0) return limit.coerceAtMost(ENCHANT_LIMIT)
+
+        // get default
+        return enchantment.defaultMaxLevel()
+    }
+
+    /**
+     * Get the given [enchantment]'s limit
+     */
+    fun rawEnchantLimit(enchantment: CAEnchantment): Int {
         // Test namespace
         var limit = enchantLimit(enchantment.key.toString())
-        if (limit != null) return limit
+        if (limit >= 0) return limit
 
         // Test legacy (name only)
         limit = enchantLimit(enchantment.enchantmentName)
-        if (limit != null) return limit
+        if (limit >= 0) return limit
 
-        // get default (and test old legacy if present)
-        return getDefaultLevel(enchantment.enchantmentName)
+        // Default to negative
+        return -1
     }
 
     /**
      * Get the given [enchantmentName]'s limit
      */
-    private fun enchantLimit(enchantmentName: String): Int? {
+    private fun enchantLimit(enchantmentName: String): Int {
 
         val path = "${ENCHANT_LIMIT_ROOT}.$enchantmentName"
-        return CustomAnvil.instance
-            .config
-            .getInt(path, ENCHANT_LIMIT_RANGE.first - 1)
-            .takeIf { it in ENCHANT_LIMIT_RANGE }
-    }
-
-    /**
-     * Get default value if enchantment do not exist on config
-     */
-    private fun getDefaultLevel(
-        enchantmentName: String, // compatibility with 1.20.5. TODO better update system
-    ): Int {
-        if (enchantmentName == "sweeping_edge") {
-            val limit = enchantLimit("sweeping")
-            if (limit != null) return limit
-
-        }
-        return defaultEnchantLimit
+        return CustomAnvil.instance.config
+            .getInt(path, -1)
     }
 
     /**
@@ -529,20 +509,20 @@ object ConfigOptions {
     fun maxBeforeMergeDisabled(enchantment: CAEnchantment): Int {
         val key = enchantment.key.toString()
         var value = maxBeforeMergeDisabled(key)
-        if (value != null) return value
+        if (value >= 0) return value
 
         // Legacy name
         val legacy = enchantment.enchantmentName
         value = maxBeforeMergeDisabled(legacy)
-        if (value != null) return value
+        if (value >= 0) return value
 
         if (key == "minecraft:sweeping_edge") {
             value = maxBeforeMergeDisabled("minecraft:sweeping")
-            if (value != null) return value
+            if (value >= 0) return value
 
             // legacy name of legacy enchantment name
             value = maxBeforeMergeDisabled("sweeping")
-            if (value != null) return value
+            if (value >= 0) return value
         }
 
         return DEFAULT_MAX_BEFORE_MERGE_DISABLED
@@ -552,14 +532,13 @@ object ConfigOptions {
      * Get the given [enchantmentName]'s level before merge is disabled
      * a negative value would mean never disabled
      */
-    private fun maxBeforeMergeDisabled(enchantmentName: String): Int? {
+    private fun maxBeforeMergeDisabled(enchantmentName: String): Int {
         // find if set
         val path = "${DISABLE_MERGE_OVER_ROOT}.$enchantmentName"
 
         return CustomAnvil.instance
             .config
-            .getInt(path, ENCHANT_LIMIT_RANGE.min() - 1)
-            .takeIf { it in ENCHANT_LIMIT_RANGE }
+            .getInt(path, -1)
     }
 
     fun isImmutable(key: NamespacedKey): Boolean {

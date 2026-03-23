@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
+import io.delilaheve.util.ConfigOptions;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -180,13 +181,13 @@ public class EnchantmentApi {
     private static boolean tryWriteDefaultConfig(FileConfiguration defaultConfig, CAEnchantment enchantment, boolean override) {
         boolean hasChange = false;
 
-        String levelPath = "enchant_limits." + enchantment.getKey();
+        String levelPath = ConfigOptions.ENCHANT_LIMIT_ROOT + "." + enchantment.getKey();
         if(override || !defaultConfig.isSet(levelPath)){
             defaultConfig.set(levelPath, enchantment.defaultMaxLevel());
             hasChange = true;
         }
 
-        String basePath = "enchant_values." + enchantment.getKey();
+        String basePath = ConfigOptions.ENCHANT_VALUES_ROOT + "." + enchantment.getKey();
         EnchantmentRarity rarity = enchantment.defaultRarity();
 
         String itemPath = basePath + ".item";
