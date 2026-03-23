@@ -16,7 +16,7 @@ abstract class CASubCommand: CommandExecutor {
     ): Boolean {
         if(!alreadySaid){
             sender.sendMessage(ChatColor.RED.toString() +
-                    "Please not that this command will be replaced as a subcommand of `/customanvil`")
+                    "Please not that this command will be replaced as a subcommand of `/customanvil` or `/ca`")
             alreadySaid = true
         }
 
