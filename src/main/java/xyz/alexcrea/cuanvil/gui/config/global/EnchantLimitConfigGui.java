@@ -58,9 +58,17 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
             }
 
             @Override
-            public String valueDisplayName(int value) {
-                if(value == -1) return "Default (" + defaultValue + ")";
-                return super.valueDisplayName(value);
+            public String valueDisplayName(IntSettingsGui.ValueDisplayType type, int value) {
+
+                if(value < 0) {
+                    return switch (type) {
+                        case CURRENT -> "Default (" + defaultValue + ")";
+                        case RESET -> String.valueOf(defaultValue);
+                        default -> "Default";
+                    };
+
+                }
+                else return super.valueDisplayName(type, value);
             }
         };
     }
