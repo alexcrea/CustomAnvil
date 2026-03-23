@@ -71,7 +71,7 @@ dependencies {
     compileOnly(project(":impl:LegacyEcoEnchant"))
 
     // ExcellentEnchants
-    implementation(project(":impl:ExcellentEnchant5_3"))
+    implementation(project(":impl:ExcellentEnchant5_4"))
     compileOnly("su.nightexpress.excellentenchants:Core:5.1.0") {
         exclude("org.spigotmc")
     }

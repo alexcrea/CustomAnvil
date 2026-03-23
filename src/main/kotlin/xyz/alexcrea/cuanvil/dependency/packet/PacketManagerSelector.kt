@@ -1,10 +1,8 @@
 package xyz.alexcrea.cuanvil.dependency.packet
 
 import org.bukkit.Bukkit
-import su.nightexpress.nightcore.bridge.paper.PaperBridge
 import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
 import xyz.alexcrea.cuanvil.dependency.packet.versions.*
-import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 
 object PacketManagerSelector {

@@ -11,11 +11,7 @@ repositories {
 }
 
 dependencies {
-    // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
-
     // Excellent Enchant
-    compileOnly("su.nightexpress.excellentenchants:Core:5.3.0") {
-        exclude("org.spigotmc")
-    }
+    compileOnly("su.nightexpress.excellentenchants:Core:5.4.1")
+    compileOnly("su.nightexpress.nightcore:main:2.14.1")
 }

@@ -18,5 +18,5 @@ for (nmsPart in reobfNMS) {
 // compatibility subprojects
 include(":impl:LegacyEcoEnchant")
 findProject(":impl:LegacyEcoEnchant")?.name = "LegacyEcoEnchant"
-include("impl:ExcellentEnchant5_3")
-findProject(":impl:ExcellentEnchant5_3")?.name = "ExcellentEnchant5_3"
+include("impl:ExcellentEnchant5_4")
+findProject(":impl:ExcellentEnchant5_4")?.name = "ExcellentEnchant5_4"

@@ -11,6 +11,7 @@ import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
+import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
 import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
@@ -25,6 +26,7 @@ import su.nightexpress.excellentenchants.registry.EnchantRegistry as PreV5Enchan
 class ExcellentEnchantsDependency {
 
     enum class ListenerVersion(val classPath: String) {
+        V5_4("su.nightexpress.excellentenchants.enchantment.EnchantSettings"),
         V5_3("su.nightexpress.excellentenchants.enchantment.EnchantRegistry"),
         V5("su.nightexpress.excellentenchants.manager.listener.AnvilListener"),
         PRE_V5("su.nightexpress.excellentenchants.enchantment.listener.AnvilListener"),
@@ -70,14 +72,14 @@ class ExcellentEnchantsDependency {
 
         // As excellent enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
         when (listenerVersion) {
-            ListenerVersion.V5_3 -> {
+            ListenerVersion.V5_4 -> {
                 for (enchantment in ExcellentEnchant5_3Registry.getRegistered()) {
                     EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
-                    EnchantmentApi.registerEnchantment(CAEEV5Enchantment(enchantment))
+                    EnchantmentApi.registerEnchantment(CAEEV5_4Enchantment(enchantment))
                 }
             }
 
-            ListenerVersion.V5 -> {
+            ListenerVersion.V5, ListenerVersion.V5_3 -> {
                 for (enchantment in V5EnchantRegistry.getRegistered()) {
                     EnchantmentApi.unregisterEnchantment(enchantment.bukkitEnchantment.key)
                     EnchantmentApi.registerEnchantment(CAEEV5Enchantment(enchantment))
@@ -130,7 +132,8 @@ class ExcellentEnchantsDependency {
 
             when (listenerVersion) {
                 ListenerVersion.V5,
-                ListenerVersion.V5_3
+                ListenerVersion.V5_3,
+                ListenerVersion.V5_4,
                     -> {
                     if (listener is V5AnvilListener) {
                         this.v5AnvilListener = listener
@@ -165,6 +168,7 @@ class ExcellentEnchantsDependency {
         when (listenerVersion) {
             ListenerVersion.V5_3,
             ListenerVersion.V5,
+            ListenerVersion.V5_4,
                 -> this.usedAnvilListener = v5AnvilListener!!
             ListenerVersion.PRE_V5 -> this.usedAnvilListener = preV5AnvilListener!!
             ListenerVersion.LEGACY -> this.usedAnvilListener = legacyAnvilListener!!
@@ -228,7 +232,8 @@ class ExcellentEnchantsDependency {
         if (event.inventory.getItem(2) != null) {
             when (listenerVersion) {
                 ListenerVersion.V5,
-                ListenerVersion.V5_3
+                ListenerVersion.V5_3,
+                ListenerVersion.V5_4,
                     -> v5AnvilListener!!.onClickAnvil(event)
                 ListenerVersion.PRE_V5 -> preV5AnvilListener!!.onClickAnvil(event)
                 ListenerVersion.LEGACY -> legacyAnvilListener!!.onClickAnvil(event)
