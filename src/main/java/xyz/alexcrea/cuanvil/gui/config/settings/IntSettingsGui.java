@@ -92,7 +92,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         // minus item
         GuiItem minusItem;
         if (now > holder.min) {
-            int planned = Math.min(holder.max, now + step);
+            int planned = Math.max(holder.min, now - step);
             minusItem = valueEditItem(Material.RED_TERRACOTTA, ValueDisplayType.REMOVE, planned);
         } else {
             minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
@@ -102,7 +102,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         //plus item
         GuiItem plusItem;
         if (now < holder.max) {
-            int planned = Math.max(holder.min, now - step);
+            int planned = Math.min(holder.max, now + step);
             plusItem = valueEditItem(Material.GREEN_TERRACOTTA, ValueDisplayType.ADD, planned);
         } else {
             plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
