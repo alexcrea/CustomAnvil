@@ -102,7 +102,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         //plus item
         GuiItem plusItem;
         if (now < holder.max) {
-            int planned = Math.min(holder.max, now + step);
+            int planned = Math.max(holder.min, now - step);
             plusItem = valueEditItem(Material.GREEN_TERRACOTTA, ValueDisplayType.ADD, planned);
         } else {
             plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
