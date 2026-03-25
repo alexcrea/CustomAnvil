@@ -77,6 +77,12 @@ public class UpdateHandler {
         if (hadUpdate) {
             CustomAnvil.instance.getLogger().info("Updating Done !");
         }
+
+        if(current.major() == 1 && current.minor() < 21) {
+            var logger = CustomAnvil.instance.getLogger();
+            logger.warning("Your are running an old version of minecraft (lower than 1.21)");
+            logger.warning("Custom Anvil will stop supporting this version on the first of july 2026");
+        }
     }
 
     private static void finishConfiguration(@Nonnull String newVersion, @Nonnull Set<ConfigHolder> toSave) {
