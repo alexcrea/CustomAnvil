@@ -69,7 +69,9 @@ jobs:
       - name: Prepare release env variable
         if: ${{ github.event_name == 'release' && success() }}
         run: |
-          printf 'RELEASE_CHANGELOG=%s\n' "${{ github.event.release.body || '' }}" >> $GITHUB_ENV
+          echo "RELEASE_CHANGELOG<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.release.body || '' }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           echo "IS_GITHUB_PRERELEASE=${{ github.event.release.prerelease }}" >> $GITHUB_ENV
 
       - name: Prepare publish env variable
