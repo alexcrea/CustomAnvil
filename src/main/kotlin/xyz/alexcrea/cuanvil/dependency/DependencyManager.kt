@@ -5,10 +5,12 @@ import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
@@ -45,6 +47,8 @@ object DependencyManager {
     var havenBagsCompatibility: HavenBagsDependency? = null
 
     var axPlayerWarpsCompatibility: AxPlayerWarpsDependency? = null
+
+    var itemsAdderCompatibility: ItemsAdderDependency? = null
 
     val genericDependencies = ArrayList<GenericPluginDependency>()
 
@@ -98,6 +102,12 @@ object DependencyManager {
             axPlayerWarpsCompatibility = AxPlayerWarpsDependency()
         }
 
+        if (pluginManager.isPluginEnabled("ItemsAdder")){
+            val dependency = ItemsAdderDependency(pluginManager.getPlugin("ItemsAdder")!!)
+            itemsAdderCompatibility = dependency
+            genericDependencies.add(dependency)
+        }
+
         // "Generic" dependencies
         if (pluginManager.isPluginEnabled("ToolStats"))
             genericDependencies.add(ToolStatsDependency(pluginManager.getPlugin("ToolStats")!!))
@@ -138,27 +148,35 @@ object DependencyManager {
         ecoEnchantCompatibility?.handleConfigReload()
     }
 
+    private fun logException(target: CommandSender, e: Exception) {
+        CustomAnvil.instance.logger.log(
+            Level.SEVERE,
+            "Error while trying to handle custom anvil supported plugin: ",
+            e
+        )
+        trackError(e)
+
+        // Finally, warn the player
+        target.sendMessage(
+            "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
+                    ChatColor.RED.toString() + "Error while handling the anvil."
+        )
+    }
+
+    private fun logExceptionAndClear(target: CommandSender, inventory: Inventory, e: Exception) {
+        // Just in case to avoid illegal items
+        inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+
+        logException(target, e)
+    }
+
     // Return true if should bypass (either by a dependency or error)
     // called before immutability test
     fun earlyTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         try {
             return earlyUnsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
-            CustomAnvil.instance.logger.log(
-                Level.SEVERE,
-                "Error while trying to handle custom anvil supported plugin: ",
-                e
-            )
-            trackError(e)
-
-            // Just in case to avoid illegal items
-            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
-            )
+            logExceptionAndClear(event.view.player, event.inventory, e)
             return true
         }
     }
@@ -184,21 +202,7 @@ object DependencyManager {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
-            CustomAnvil.instance.logger.log(
-                Level.SEVERE,
-                "Error while trying to handle custom anvil supported plugin: ",
-                e
-            )
-            trackError(e)
-
-            // Just in case to avoid illegal items
-            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
-            )
+            logExceptionAndClear(event.view.player, event.inventory, e)
             return true
         }
     }
@@ -238,21 +242,7 @@ object DependencyManager {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent;
         } catch (e: Exception) {
-            CustomAnvil.instance.logger.log(
-                Level.SEVERE,
-                "Error while trying to handle custom anvil supported plugin: ",
-                e
-            )
-            trackError(e)
-
-            // Just in case to avoid illegal items
-            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.view.player.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
-            )
+            logExceptionAndClear(event.view.player, event.inventory, e)
             return null
         }
     }
@@ -268,21 +258,7 @@ object DependencyManager {
         try {
             return unsafeTryClickAnvilResultBypass(event, inventory)
         } catch (e: Exception) {
-            CustomAnvil.instance.logger.log(
-                Level.SEVERE,
-                "Error while trying to handle custom anvil supported plugin: ",
-                e
-            )
-            trackError(e)
-
-            // Just in case to avoid illegal items
-            event.inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-
-            // Finally, warn the player, maybe a lot of time but better warn than do nothing
-            event.whoClicked.sendMessage(
-                "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                        ChatColor.RED.toString() + "Error while handling the anvil."
-            )
+            logExceptionAndClear(event.view.player, event.inventory, e)
             return true
         }
     }
@@ -314,6 +290,23 @@ object DependencyManager {
         if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.view.player) == true)) bypass = true
 
         return bypass
+    }
+
+    // Clone item and use plugin specific clone if needed
+    fun cloneItem(event: PrepareAnvilEvent, item: ItemStack): ItemStack {
+        try {
+            return unsafeCloneItem(item)
+        } catch (e: Exception) {
+            logException(event.view.player, e)
+            return item.clone()
+        }
+    }
+
+    private fun unsafeCloneItem(item: ItemStack): ItemStack {
+        var cloned: ItemStack? = null
+
+        if(cloned == null) cloned = item.clone()
+        return cloned
     }
 
     fun stripLore(item: ItemStack): MutableList<Component?> {

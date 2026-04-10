@@ -155,7 +155,7 @@ class PrepareAnvilListener : Listener {
 
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, first, second)
 
-        val resultItem: ItemStack = recipe.resultItem!!.clone()
+        val resultItem: ItemStack = DependencyManager.cloneItem(event, recipe.resultItem!!)
         resultItem.amount *= amount
 
         // Maybe add an option on custom craft to ignore/not ignore penalty ??
@@ -179,7 +179,7 @@ class PrepareAnvilListener : Listener {
         event: PrepareAnvilEvent, inventory: AnvilInventory,
         player: HumanEntity, first: ItemStack
     ) {
-        val resultItem = first.clone()
+        val resultItem = DependencyManager.cloneItem(event, first)
         var anvilCost = handleRename(resultItem, inventory, player)
 
         // Test/stop if nothing changed.
@@ -251,7 +251,7 @@ class PrepareAnvilListener : Listener {
             .combineWith(second.findEnchantments(), first, player)
         var hasChanged = !isIdentical(first.findEnchantments(), newEnchants)
 
-        val resultItem = first.clone()
+        val resultItem = DependencyManager.cloneItem(event, first)
         var anvilCost = 0
         if(hasChanged){
             resultItem.setEnchantmentsUnsafe(newEnchants)
@@ -307,7 +307,7 @@ class PrepareAnvilListener : Listener {
     ): Boolean {
         val unitRepairAmount = first.getRepair(second) ?: return false
 
-        val resultItem = first.clone()
+        val resultItem = DependencyManager.cloneItem(event, first)
         var anvilCost = handleRename(resultItem, inventory, player)
 
         val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
