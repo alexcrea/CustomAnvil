@@ -31,6 +31,8 @@ class ItemGroupManager {
         for (key in keys) {
             if (groupMap.containsKey(key))
                 continue
+            if (!config.isConfigurationSection(key))
+                continue
             createGroup(config, keys, key)
         }
     }
@@ -51,6 +53,7 @@ class ItemGroupManager {
         key: String
     ): AbstractMaterialGroup {
         val groupSection = config.getConfigurationSection(key)!!
+
         val groupType = groupSection.getString(GROUP_TYPE_PATH, null)
 
         // Create Material group according to the group type
@@ -105,11 +108,13 @@ class ItemGroupManager {
                 continue
             }
             // Get other group or create it if not yet created
-            val otherGroup = if (!groupMap.containsKey(groupName)) {
+            val otherGroup =
+            if (!groupMap.containsKey(groupName)) {
+                if(!config.isConfigurationSection(groupName)) continue
                 createGroup(config, keys, groupName)
-            } else {
-                groupMap[groupName]!!
             }
+            else groupMap[groupName]!!
+
             // Avoid self reference or it will create an infinite loop
             if (otherGroup.isReferencing(group)) {
                 CustomAnvil.instance.logger.warning(

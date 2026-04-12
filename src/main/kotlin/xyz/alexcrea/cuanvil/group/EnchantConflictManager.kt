@@ -48,6 +48,11 @@ class EnchantConflictManager {
 
     lateinit var conflictList: ArrayList<EnchantConflictGroup>
 
+
+    private fun warnBadKey(key: String) {
+        CustomAnvil.instance.logger.warning("Invalid key $key for conflict: is not a conflict")
+    }
+
     // Read and prepare all conflict
     fun prepareConflicts(config: ConfigurationSection, itemManager: ItemGroupManager) {
         conflictList = ArrayList()
@@ -59,7 +64,11 @@ class EnchantConflictManager {
 
         val keys = config.getKeys(false)
         for (key in keys) {
-            val section = config.getConfigurationSection(key)!!
+            val section = config.getConfigurationSection(key)
+            if(section == null) {
+                warnBadKey(key)
+                continue
+            }
             val conflict = createConflict(section, itemManager, key)
 
             addConflict(conflict)
