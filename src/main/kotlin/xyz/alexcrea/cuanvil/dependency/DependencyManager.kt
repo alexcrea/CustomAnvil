@@ -303,10 +303,10 @@ object DependencyManager {
     }
 
     private fun unsafeCloneItem(item: ItemStack): ItemStack {
-        var cloned: ItemStack? = null
+        val cloned = itemsAdderCompatibility?.tryClone(item)
+        if(cloned != null) return cloned
 
-        if(cloned == null) cloned = item.clone()
-        return cloned
+        return item.clone()
     }
 
     fun stripLore(item: ItemStack): MutableList<Component?> {
