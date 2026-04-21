@@ -93,7 +93,7 @@ class PrepareAnvilListener : Listener {
         if (testCustomRecipe(event, inventory, player, first, second)) return
 
         // Test rename lonely item
-        val isAir = second.isAir()
+        val isAir = second.isAir
         CustomAnvil.verboseLog("checking air in main logic: $isAir")
         if (isAir) {
             doRenaming(event, inventory, player, first)
