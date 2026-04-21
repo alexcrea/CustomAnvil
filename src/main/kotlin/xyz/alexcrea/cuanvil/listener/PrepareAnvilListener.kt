@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.*
+import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -40,10 +41,6 @@ class PrepareAnvilListener : Listener {
         const val ANVIL_OUTPUT_SLOT = 2
 
         var IS_EMPTY_TEST = false
-    }
-
-    private fun ItemStack?.isAir(): Boolean {
-        return this == null || this.type.isAir || this.amount == 0
     }
 
     /**
@@ -96,7 +93,7 @@ class PrepareAnvilListener : Listener {
         if (testCustomRecipe(event, inventory, player, first, second)) return
 
         // Test rename lonely item
-        val isAir = second.isAir()
+        val isAir = second.isAir
         CustomAnvil.verboseLog("checking air in main logic: $isAir")
         if (isAir) {
             doRenaming(event, inventory, player, first)
@@ -121,7 +118,7 @@ class PrepareAnvilListener : Listener {
     }
 
     private fun isImmutable(item: ItemStack?): Boolean {
-        if (item.isAir()) return false
+        if (item.isAir) return false
 
         val meta = item!!.itemMeta
         return meta != null &&
@@ -172,7 +169,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return false
 
         event.result = finalResult.result
-        if (finalResult.result.isAir()) return false
+        if (finalResult.result.isAir) return false
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost, true)
         return true
@@ -198,7 +195,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return
 
         event.result = finalResult.result
-        if (finalResult.result.isAir()) return
+        if (finalResult.result.isAir) return
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
     }
@@ -286,7 +283,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return
 
         event.result = finalResult.result
-        if (finalResult.result.isAir()) return
+        if (finalResult.result.isAir) return
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
     }
@@ -331,7 +328,7 @@ class PrepareAnvilListener : Listener {
         if (finalResult == null) return false
 
         event.result = finalResult.result
-        if (finalResult.result.isAir()) return false
+        if (finalResult.result.isAir) return false
 
         AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
         return true
@@ -351,7 +348,7 @@ class PrepareAnvilListener : Listener {
             result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
         }
 
-        if (result.isAir() || first == result) {
+        if (result.isAir || first == result) {
             CustomAnvil.log("lore edit, But input is same as output")
             event.result = null
             return false

@@ -4,12 +4,14 @@ import com.willfp.ecoenchants.enchantments.EcoEnchant;
 import com.willfp.ecoenchants.enchantments.meta.EnchantmentTarget;
 import com.willfp.ecoenchants.enchantments.meta.EnchantmentType;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
+import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class CALegacyEcoEnchant extends CABukkitEnchantment implements Additiona
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
         if (enchantments.isEmpty()) return false;
 
         EnchantmentType type = this.ecoEnchant.getType();
@@ -48,14 +50,15 @@ public class CALegacyEcoEnchant extends CABukkitEnchantment implements Additiona
 
     @Override
     public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments,
-                                  @NotNull Material itemMat,
+                                  @NotNull NamespacedKey itemType,
                                   @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.equals(itemMat)) {
+        if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
             return false;
         }
 
+        var mat = MaterialUtil.INSTANCE.getMatFromKey(itemType);
         for (EnchantmentTarget target : this.ecoEnchant.getTargets()) {
-            if (target.getMaterials().contains(itemMat)) {
+            if (target.getMaterials().contains(mat)) {
                 return false;
             }
         }

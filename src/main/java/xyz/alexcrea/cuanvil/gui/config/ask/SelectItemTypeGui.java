@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,7 +53,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
             event.setCancelled(true);
 
             ItemStack cursor = event.getWhoClicked().getItemOnCursor();
-            if(cursor.getType().isAir()) return;
+            if(MaterialUtil.INSTANCE.isAir(cursor)) return;
 
             ItemStack finalItem;
             if(materialOnly){

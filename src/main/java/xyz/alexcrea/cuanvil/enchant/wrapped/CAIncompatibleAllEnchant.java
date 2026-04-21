@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -24,12 +25,12 @@ public class CAIncompatibleAllEnchant extends CABukkitEnchantment implements Add
 
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
         return !enchantments.isEmpty() && !(enchantments.size() == 1 && enchantments.containsKey(this));
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat, @NotNull ItemStack item) {
+    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType, @NotNull ItemStack item) {
         return false;
     }
 }

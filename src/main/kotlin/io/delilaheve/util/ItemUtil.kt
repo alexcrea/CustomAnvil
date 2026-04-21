@@ -4,6 +4,7 @@ import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -90,5 +91,5 @@ object ItemUtil {
      */
     fun ItemStack.canMergeWith(
         other: ItemStack?
-    ) = (other != null) && (type == other.type || (other.isEnchantedBook()))
+    ) = (other != null) && (customType == other.customType || (other.isEnchantedBook()))
 }

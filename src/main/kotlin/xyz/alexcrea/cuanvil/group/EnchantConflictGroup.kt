@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.group
 
 import io.delilaheve.CustomAnvil
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 
 class EnchantConflictGroup(
@@ -53,7 +54,7 @@ class EnchantConflictGroup(
         return canBypassByBeforeLevel(enchants) || canBypassByAfterLevel(enchants)
     }
 
-    fun allowed(enchants: Map<CAEnchantment, Int>, mat: Material): Boolean {
+    fun allowed(enchants: Map<CAEnchantment, Int>, mat: NamespacedKey): Boolean {
         if (enchantments.size < minBeforeBlock) {
             CustomAnvil.verboseLog("Conflicting bc of to many enchantments")
             return true

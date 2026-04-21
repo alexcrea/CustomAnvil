@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -18,18 +19,19 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-public class MaterialSelectSettingGui extends MappedElementListConfigGui<Material, GuiItem> {
+public class MaterialSelectSettingGui extends MappedElementListConfigGui<NamespacedKey, GuiItem> {
 
     private final SelectMaterialContainer selector;
     private final Gui backGui;
     private boolean instantRemove;
 
-    private final List<Material> defaultMaterials;
-    private final EnumSet<Material> illegalMaterials;
+    private final List<NamespacedKey> defaultMaterials;
+    private final Set<NamespacedKey> illegalMaterials;
     private final int defaultMaterialHash;
     private int nowMaterialHash;
 
@@ -161,8 +163,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
 
 
             // Save setting
-            EnumSet<Material> result = EnumSet.noneOf(Material.class);
-            result.addAll(this.elementGuiMap.keySet());
+            Set<NamespacedKey> result = new HashSet<>(this.elementGuiMap.keySet());
 
             if(!this.selector.setSelectedMaterials(result)){
                 player.sendMessage("§cSomething went wrong while saving the change of value.");
@@ -185,8 +186,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
             ItemStack cursor = player.getItemOnCursor();
 
             // Test if cursor material allowed
-            Material cursorMat = cursor.getType();
-            if(cursorMat.isAir()) return;
+            NamespacedKey cursorMat = MaterialUtil.INSTANCE.getCustomType(cursor);
+            if(MaterialUtil.INSTANCE.isAir(cursorMat)) return;
             if(this.illegalMaterials.contains(cursorMat)) return;
 
             // Update gui only if item did not exist before.
@@ -201,12 +202,12 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected ItemStack createItemForGeneric(Material material) {
-        ItemStack item = new ItemStack(material);
+    protected ItemStack createItemForGeneric(NamespacedKey material) {
+        ItemStack item = new ItemStack(Objects.requireNonNull(MaterialUtil.INSTANCE.getMatFromKey(material)));
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null) return item;
-        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase()));
+        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()));
         meta.setLore(Collections.singletonList("§7Click here to remove this material from the list"));
         meta.addItemFlags(ItemFlag.values());
 
@@ -216,22 +217,22 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<NamespacedKey> getEveryDisplayableInstanceOfGeneric() {
         return this.defaultMaterials;
     }
 
     @Override
-    protected void updateElement(Material material, GuiItem element) {
+    protected void updateElement(NamespacedKey material, GuiItem element) {
         // Nothing happen here I think
     }
 
     @Override
-    protected GuiItem newElementRequested(Material material, GuiItem newItem) {
+    protected GuiItem newElementRequested(NamespacedKey material, GuiItem newItem) {
         newItem.setAction(event -> {
             if(this.instantRemove){
                 removeMaterial(material);
             }else {
-                String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
+                String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
@@ -250,7 +251,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
         return newItem;
     }
 
-    private void removeMaterial(Material material) {
+    private void removeMaterial(NamespacedKey material) {
         if(this.elementGuiMap.containsKey(material)){
             this.nowMaterialHash ^= material.hashCode();
             setSaveItem();
@@ -260,18 +261,18 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Materia
     }
 
     @Override
-    protected GuiItem findItemFromElement(Material generic, GuiItem element) {
+    protected GuiItem findItemFromElement(NamespacedKey generic, GuiItem element) {
         return element;
     }
 
     @Override
-    protected GuiItem findGuiItemForRemoval(Material generic, GuiItem element) {
+    protected GuiItem findGuiItemForRemoval(NamespacedKey generic, GuiItem element) {
         return element;
     }
 
-    private static int hashFromMaterialList(List<Material> materialList){
+    private static int hashFromMaterialList(List<NamespacedKey> materialList){
         int defaultMaterialHash = 0;
-        for (Material material : materialList) {
+        for (NamespacedKey material : materialList) {
             defaultMaterialHash ^= material.hashCode();
         }
         return defaultMaterialHash;

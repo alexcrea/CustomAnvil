@@ -102,15 +102,15 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
     private fun writeMissingGroups(){
         // Write group that do not exist on custom anvil.
         val shield = IncludeGroup("shield")
-        shield.addToPolicy(Material.SHIELD)
+        shield.addToPolicy(Material.SHIELD.key)
         MaterialGroupApi.addMaterialGroup(shield)
 
         val elytra = IncludeGroup("elytra")
-        elytra.addToPolicy(Material.ELYTRA)
+        elytra.addToPolicy(Material.ELYTRA.key)
         MaterialGroupApi.addMaterialGroup(elytra)
 
         val trinkets = IncludeGroup("trinkets")
-        trinkets.addToPolicy(Material.ROTTEN_FLESH)
+        trinkets.addToPolicy(Material.ROTTEN_FLESH.key)
         MaterialGroupApi.addMaterialGroup(trinkets)
     }
 

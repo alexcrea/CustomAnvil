@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,7 +35,7 @@ object EnchantmentUtil {
         val bypassFuse = player.hasPermission(CustomAnvil.bypassFusePermission)
         val bypassLevel = player.hasPermission(CustomAnvil.bypassLevelPermission)
 
-        var maxEnchantCount = ConfigOptions.getEnchantCountLimit(item.type)
+        var maxEnchantCount = ConfigOptions.getEnchantCountLimit(item.customType)
         if(maxEnchantCount == null || maxEnchantCount < 0) maxEnchantCount = Int.MAX_VALUE
 
         val allowed = other.filter { (enchantment, _) -> enchantment.isAllowed(player) }

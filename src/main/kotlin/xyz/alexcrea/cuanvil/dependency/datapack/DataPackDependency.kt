@@ -145,7 +145,7 @@ object DataPackDependency {
                     CustomAnvil.instance.logger.warning("Could not find material $name for item group $groupName")
                     continue
                 }
-                group.addToPolicy(mat)
+                group.addToPolicy(mat.key)
             }
             for (name in section.getStringList("groups")) {
                 val otherGroup = MaterialGroupApi.getGroup(name)

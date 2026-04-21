@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -325,19 +326,19 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // ----------------------------
 
     @Override
-    public EnumSet<Material> getSelectedMaterials() {
+    public Set<NamespacedKey> getSelectedMaterials() {
         return this.group.getNonGroupInheritedMaterials();
     }
 
     @Override
-    public boolean setSelectedMaterials(EnumSet<Material> materials) {
+    public boolean setSelectedMaterials(Set<NamespacedKey> materials) {
         this.group.setNonGroupInheritedMaterials(materials);
 
         // Write to file configuration
         String[] groupNames = new String[materials.size()];
         int index = 0;
-        for (Material otherGroup : materials) {
-            groupNames[index++] = otherGroup.name().toLowerCase();
+        for (NamespacedKey otherGroup : materials) {
+            groupNames[index++] = otherGroup.getKey().toLowerCase();
         }
 
         ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName()+"."+ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
@@ -353,8 +354,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     @Override
-    public EnumSet<Material> illegalMaterials() {
-        return EnumSet.of(Material.AIR);
+    public Set<NamespacedKey> illegalMaterials() {
+        return Set.of(Material.AIR.getKey());
     }
 
     // ----------------------------
