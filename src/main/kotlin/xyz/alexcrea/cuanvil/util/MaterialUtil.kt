@@ -4,6 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.plugins.EcoItemDependencyUtil
 
 object MaterialUtil {
@@ -27,6 +28,12 @@ object MaterialUtil {
                 if(result != null) return result
             }
 
+            val itemAdder = DependencyManager.itemsAdderCompatibility
+            if(itemAdder != null) {
+                val result = itemAdder.getKey(this)
+                if (result != null) return result
+            }
+
             return this.type.key
         }
 
@@ -41,6 +48,12 @@ object MaterialUtil {
             if(result != null) return result
         }
 
+        val itemAdder = DependencyManager.itemsAdderCompatibility
+        if(itemAdder != null) {
+            val result = itemAdder.fromKey(key)
+            if (result != null) return result.type
+        }
+
         return bukkitMaterialFromKey(key)
     }
 
@@ -48,6 +61,12 @@ object MaterialUtil {
         if(HasEcoItem) {
             val result = EcoItemDependencyUtil.newEcoItemstack(key)
             if(result != null) return result
+        }
+
+        val itemAdder = DependencyManager.itemsAdderCompatibility
+        if(itemAdder != null) {
+            val result = itemAdder.fromKey(key)
+            if (result != null) return result
         }
 
         return ItemStack(bukkitMaterialFromKey(key)!!)
