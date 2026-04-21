@@ -11,6 +11,7 @@ import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
@@ -194,6 +195,10 @@ open class CustomAnvil : JavaPlugin() {
         if(!isPaper) {
             logger.warning("It seems you are using spigot")
             logger.warning("Please take notice that spigot is less supported than paper and derivatives")
+            if(MinecraftVersionUtil.isTooNewForSpigot) {
+                logger.warning("If replace too expensive is not working this is likely because of spigot")
+                logger.warning("As native nms is not supported for spigot starting 26.1")
+            }
         }
 
         val loader = if(isPaper) "paper" else "spigot"

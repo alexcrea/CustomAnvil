@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -282,9 +283,15 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         lore.add("§7If the player do not have the required xp level, the action will not be completable.");
 
         if(!this.packetManager.getCanSetInstantBuild()){
-            lore.add("");
-            lore.add("§4/!\\§cCaution§4/!\\ §cYou need ProtocoLib installed and working or a newer version of this plugin for this to work.");
-            lore.add("§cCurrently ProtocoLib is not detected.");
+            if(MinecraftVersionUtil.INSTANCE.isTooNewForSpigot()){
+                lore.add("");
+                lore.add("§4/!\\§cCaution§4/!\\ §cYou need ProtocoLib installed and working or a paper server.");
+                lore.add("§cCurrently ProtocoLib is not detected.");
+            } else {
+                lore.add("");
+                lore.add("§4/!\\§cCaution§4/!\\ §cYou need ProtocoLib installed and working or a newer version of this plugin for this to work.");
+                lore.add("§cCurrently ProtocoLib is not detected.");
+            }
         }
 
         String[] loreAsArray = new String[lore.size()];

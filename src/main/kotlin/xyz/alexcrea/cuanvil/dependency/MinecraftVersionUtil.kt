@@ -51,4 +51,9 @@ object MinecraftVersionUtil {
             }
         }
 
+    val isTooNewForSpigot: Boolean get() {
+        val versionParts = UpdateUtils.currentMinecraftVersionArray()
+        return versionParts[0] != 1
+    }
+
 }
