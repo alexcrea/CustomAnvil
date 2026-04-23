@@ -21,6 +21,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.inventory.view.AnvilView
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -193,11 +194,11 @@ class DiagnosticExecutor: CASubCommand() {
         damagedSword.itemMeta = meta
 
         meta = enchantedSword.itemMeta
-        meta!!.addEnchant(Enchantment.DAMAGE_ALL, 1, true)
+        meta!!.addEnchant(Enchantment.SHARPNESS, 1, true)
         enchantedSword.itemMeta = meta
 
         meta = enchantedBook.itemMeta
-        (meta as EnchantmentStorageMeta).addStoredEnchant(Enchantment.DAMAGE_ALL, 1, true)
+        (meta as EnchantmentStorageMeta).addStoredEnchant(Enchantment.SHARPNESS, 1, true)
         enchantedBook.itemMeta = meta
 
         stb.append("\n\nItem to Item repair:")
@@ -266,7 +267,7 @@ class DiagnosticExecutor: CASubCommand() {
         var event: PrepareAnvilEvent
         try {
             val fakeInv = Bukkit.createInventory(player, InventoryType.ANVIL)
-            invView = player.openInventory(fakeInv)!!
+            invView = player.openInventory(fakeInv)!! as AnvilView
             event = DependencyManager.createFakeEvent(invView, result)
         } catch (_: Throwable) {
             // Help

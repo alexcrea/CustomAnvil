@@ -55,7 +55,7 @@ val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
 
 dependencies {
     // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 
     // fast stats
     implementation("dev.faststats.metrics:bukkit:0.27.2")
