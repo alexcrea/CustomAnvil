@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
 import xyz.alexcrea.cuanvil.dependency.plugins.ExcellentEnchant5_4EnchantSettings;
@@ -15,7 +16,7 @@ public class CAEEV5_4Enchantment extends CAEEV5Enchantment {
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull Material itemMat) {
+    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemMat) {
         if(super.isEnchantConflict(enchantments, itemMat)) return true;
 
         var limit = ExcellentEnchant5_4EnchantSettings.anvilLimit();
