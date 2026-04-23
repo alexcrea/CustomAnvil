@@ -1,6 +1,6 @@
-package xyz.alexcrea.cuanvil.group
+package xyz.alexcrea.cuanvil.util
 
-class NegativeSet<T>(val negate: MutableSet<T>) : MutableSet<T> {
+open class NegativeSet<T>(val negate: MutableSet<T> = HashSet()) : MutableSet<T> {
 
     override fun iterator(): MutableIterator<T> {
         TODO("Not yet implemented") // can't be implemented I guess
@@ -15,7 +15,7 @@ class NegativeSet<T>(val negate: MutableSet<T>) : MutableSet<T> {
     }
 
     override fun addAll(elements: Collection<T>): Boolean {
-        return negate.removeAll(elements)
+        return negate.removeAll(elements.toSet())
     }
 
     override fun removeAll(elements: Collection<T>): Boolean {
@@ -34,7 +34,7 @@ class NegativeSet<T>(val negate: MutableSet<T>) : MutableSet<T> {
         TODO("Not yet implemented")
     }
 
-    override val size get() = TODO("Not yet implemented")
+    override val size: Int get() = TODO("Not yet implemented")
 
     override fun contains(element: T): Boolean {
         return !negate.contains(element)

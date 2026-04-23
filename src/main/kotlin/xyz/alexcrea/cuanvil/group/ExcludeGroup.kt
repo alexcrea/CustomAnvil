@@ -6,7 +6,7 @@ import java.util.*
 class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
 
     override fun createDefaultSet(): MutableSet<NamespacedKey> {
-        return NegativeSet(HashSet())
+        return NegativeMaterialSet()
     }
 
     private var includedGroup: MutableSet<AbstractMaterialGroup> = HashSet()
