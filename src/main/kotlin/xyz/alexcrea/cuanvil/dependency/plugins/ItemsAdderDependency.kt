@@ -35,4 +35,8 @@ class ItemsAdderDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
         return NamespacedKey.fromString(customItem.namespacedID)
     }
 
+    fun idsCount(): Set<String> {
+        return CustomStack.getNamespacedIdsInRegistry()
+    }
+
 }

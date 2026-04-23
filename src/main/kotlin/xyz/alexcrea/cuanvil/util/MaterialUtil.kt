@@ -76,5 +76,32 @@ object MaterialUtil {
         return getMatFromKey(key) != null
     }
 
+    fun getMaterialCount(): Int {
+        var count = Material.entries.size
+        if(HasEcoItem) {
+            count += EcoItemDependencyUtil.getItems().size
+        }
+
+        val itemAdder = DependencyManager.itemsAdderCompatibility
+        if(itemAdder != null) {
+            count += itemAdder.idsCount().size
+        }
+
+        return count
+    }
+
+    fun getMaterials(): MutableList<NamespacedKey> {
+        val all = ArrayList(Material.entries.map { it.key })
+        if(HasEcoItem) {
+            all.addAll(EcoItemDependencyUtil.getItems())
+        }
+
+        val itemAdder = DependencyManager.itemsAdderCompatibility
+        if(itemAdder != null) {
+            all.addAll(itemAdder.idsCount().map { NamespacedKey.fromString(it) })
+        }
+
+        return all
+    }
 
 }

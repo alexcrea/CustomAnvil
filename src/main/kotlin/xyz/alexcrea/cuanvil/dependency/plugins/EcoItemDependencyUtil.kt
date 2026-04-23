@@ -31,4 +31,8 @@ object EcoItemDependencyUtil {
         return ecoi.itemStack
     }
 
+    fun getItems(): List<NamespacedKey> {
+        return EcoItems.values().map { item -> item.id }
+    }
+
 }
