@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.enchant.bulk.SuperEnchantBulkOperation
 import xyz.alexcrea.cuanvil.enchant.wrapped.CASuperEnchantEnchantment
 import java.util.logging.Level
 
@@ -27,6 +28,10 @@ class SuperEnchantDependency(override val plugin: SuperEnchants): GenericPluginD
             return false
         }
         field.setAccessible(true)
+
+        val bulkOpperations = SuperEnchantBulkOperation(plugin)
+        EnchantmentApi.addBulkGet(bulkOpperations)
+        EnchantmentApi.addBulkClean(bulkOpperations)
 
         enchManager = field.get(plugin) as EnchantManager
         overrideReloadCommand()
