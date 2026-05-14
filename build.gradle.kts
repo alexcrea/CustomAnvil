@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
 
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.3.0"
     java
     id("org.jetbrains.dokka").version("1.9.20")
     id("com.gradleup.shadow").version("9.3.0")
@@ -94,6 +94,9 @@ dependencies {
     // AxPlayerWarps
     compileOnly(files("libs/AxPlayerWarps-1.10.3.jar"))
 
+    // SuperEnchants
+    compileOnly(files("libs/SuperEnchants-4.6.2-all.jar"))
+
     // Include nms
     implementation(project(":nms:nms-common"))
     implementation(project(":nms:nms-paper"))
@@ -153,7 +156,7 @@ allprojects {
 
     kotlin {
         compilerOptions {
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
             jvmTarget.set(JvmTarget.JVM_16)
         }
     }
@@ -187,7 +190,7 @@ tasks {
     shadowJar {
         configureBaseShadow("",
             arrayOf(
-                "org.jetbrains.kotlin:kotlin-stdlib:2.1.0",
+                "org.jetbrains.kotlin:kotlin-stdlib:2.3.0",
                 "net.kyori:adventure-text-minimessage:4.25.0",
                 "net.kyori:adventure-text-serializer-plain:4.25.0",
                 "net.kyori:adventure-text-serializer-legacy:4.25.0",
