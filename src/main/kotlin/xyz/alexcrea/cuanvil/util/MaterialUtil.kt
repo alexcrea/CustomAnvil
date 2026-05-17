@@ -19,11 +19,9 @@ object MaterialUtil {
             return Material.AIR.key == this
         }
 
-    private val HasEcoItem = Bukkit.getPluginManager().isPluginEnabled("EcoItems")
-
     val ItemStack.customType: NamespacedKey
         get() {
-            if(HasEcoItem) {
+            if(DependencyManager.ecoEnchantCompatibility != null) {
                 val result = EcoItemDependencyUtil.ecoItemNamespace(this)
                 if(result != null) return result
             }
@@ -43,7 +41,7 @@ object MaterialUtil {
     }
 
     fun getMatFromKey(key: NamespacedKey): Material? {
-        if(HasEcoItem) {
+        if(DependencyManager.ecoEnchantCompatibility != null) {
             val result = EcoItemDependencyUtil.ecoItemMaterialFromKey(key)
             if(result != null) return result
         }
@@ -58,7 +56,7 @@ object MaterialUtil {
     }
 
     fun itemFromKey(key: NamespacedKey): ItemStack {
-        if(HasEcoItem) {
+        if(DependencyManager.ecoEnchantCompatibility != null) {
             val result = EcoItemDependencyUtil.newEcoItemstack(key)
             if(result != null) return result
         }
@@ -78,7 +76,7 @@ object MaterialUtil {
 
     fun getMaterialCount(): Int {
         var count = Material.entries.size
-        if(HasEcoItem) {
+        if(DependencyManager.ecoEnchantCompatibility != null) {
             count += EcoItemDependencyUtil.getItems().size
         }
 
@@ -92,7 +90,7 @@ object MaterialUtil {
 
     fun getMaterials(): MutableList<NamespacedKey> {
         val all = ArrayList(Material.entries.map { it.key })
-        if(HasEcoItem) {
+        if(DependencyManager.ecoEnchantCompatibility != null) {
             all.addAll(EcoItemDependencyUtil.getItems())
         }
 
