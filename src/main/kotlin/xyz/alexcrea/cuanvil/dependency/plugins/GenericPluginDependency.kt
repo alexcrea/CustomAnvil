@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 
-open class GenericPluginDependency(protected val plugin: Plugin) {
+open class GenericPluginDependency(protected open val plugin: Plugin, private val testPrepare: Boolean = true) {
 
     private val preAnvil = ArrayList<RegisteredListener>()
     private val postAnvil = ArrayList<RegisteredListener>()
@@ -40,6 +40,8 @@ open class GenericPluginDependency(protected val plugin: Plugin) {
     }
 
     open fun testPrepareAnvil(event: PrepareAnvilEvent): Boolean {
+        if(!testPrepare) return false
+
         val previousResult = event.result
         event.result = null
 
@@ -53,6 +55,8 @@ open class GenericPluginDependency(protected val plugin: Plugin) {
     }
 
     open fun testAnvilResult(event: InventoryClickEvent): Boolean {
+        if(!testPrepare) return false
+
         for (registeredListener in postAnvil) {
             registeredListener.callEvent(event)
 

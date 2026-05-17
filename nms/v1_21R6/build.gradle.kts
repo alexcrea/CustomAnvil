@@ -28,7 +28,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 kotlin {
     compilerOptions {
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
         jvmTarget.set(JvmTarget.JVM_21)
     }
 }

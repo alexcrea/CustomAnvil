@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.dependency
 
+import com.maddoxh.superEnchants.SuperEnchants
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -103,6 +104,12 @@ object DependencyManager {
 
         if (pluginManager.isPluginEnabled("ItemsAdder"))
             genericDependencies.add(GenericPluginDependency(pluginManager.getPlugin("ItemsAdder")!!))
+
+        if (pluginManager.isPluginEnabled("SuperEnchants")){
+            val compatibility = SuperEnchantDependency(pluginManager.getPlugin("SuperEnchants")!! as SuperEnchants)
+            if(compatibility.registerEnchantments())
+                genericDependencies.add(compatibility)
+        }
 
         for (dependency in genericDependencies)
             dependency.redirectListeners()
