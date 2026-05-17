@@ -11,7 +11,7 @@ some of them are cool I recommend checking them out !
 ## Supported By CustomAnvil
 These plugins have compatibility handled by custom anvil. seek help on custom anvil and do not bother these developers
 
-#### Enchantment plugins
+#### Enchantment Plugins
 - [ExcellentEnchants](https://www.spigotmc.org/resources/excellentenchants-%E2%AD%90-75-vanilla-like-enchantments.61693/):
   Use ExcellentEnchants item type
 
@@ -22,7 +22,20 @@ These plugins have compatibility handled by custom anvil. seek help on custom an
 - [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/):
   Support by Custom Anvil but still experimental. Automatic configuration. Plugin is not actively developed anymore
 
-#### Anvil Mechanics
+- [SuperEnchants](https://modrinth.com/plugin/superenchants)
+  Use SuperEnchant restrictions system but new restriction can be added in custom anvil
+  
+
+#### Custom Items Plugins
+Custom Items support is considered unstable. If you find issue please report it !
+
+- [EcoItem](https://www.spigotmc.org/resources/30-sale%E2%8F%B3-ecoitems-%E2%AD%95-create-custom-items-%E2%9C%85-weapons-armors-tools-charms-%E2%9C%A8-item-levels-rarities.94601/) 
+  May have some issue. but should partially work I hope
+
+- [ItemAdder](https://www.spigotmc.org/resources/%E2%9C%A8itemsadder%E2%AD%90emotes-mobs-items-armors-hud-gui-emojis-blocks-wings-hats-liquids.73355/)
+  Need to fix unit item not working completly correctly as in can't have twice same base item 
+
+#### Anvil Mechanics Plugins
 - [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/)
   Partially use Custom Anvil maximum XP settings (>= 6.1.5)
 
@@ -39,9 +52,6 @@ These plugins have compatibility handled by custom anvil. seek help on custom an
 - [UberEnchant](https://modrinth.com/plugin/uberenchant) 
   Anvil handling as they are doing something similar to CustomAnvil.
 It is by no mean there faults and I recomend checking them out
-
-- [SuperEnchant](https://modrinth.com/plugin/superenchants) 
-  Reported potential incompatibility
 
 - [AdvencedEnchantments](https://ae.advancedplugins.net/) 
   Paid plugin I do not own as I did not get commissioned for support.
