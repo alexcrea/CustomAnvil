@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;

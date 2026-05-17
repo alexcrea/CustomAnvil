@@ -37,6 +37,9 @@ repositories {
     // ExcellentEnchants
     maven(url = "https://repo.nightexpressdev.com/releases")
 
+    // ItemsAdder
+    maven(url = "https://maven.devs.beer/")
+
     // for fast stats
     maven {
         name = "thenextlvlReleases"
@@ -96,6 +99,9 @@ dependencies {
 
     // SuperEnchants
     compileOnly(files("libs/SuperEnchants-4.6.2-all.jar"))
+
+    // ItemsAdder API
+    compileOnly("dev.lone:api-itemsadder:4.0.10")
 
     // Include nms
     implementation(project(":nms:nms-common"))
