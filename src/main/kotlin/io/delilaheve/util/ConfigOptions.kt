@@ -61,6 +61,12 @@ object ConfigOptions {
     const val ENCHANT_LIMIT_ROOT = "enchant_limits"
     const val ENCHANT_VALUES_ROOT = "enchant_values"
 
+    // Dialog menu rename
+    const val DIALOG_RENAME_ENABLED = "enable_dialog_rename"
+    const val DIALOG_MAX_SIZE = "dialog_rename_max_size"
+    const val DIALOG_RENAME_USE_PERMISSION = "permission_needed_for_dialog_rename"
+
+    // Others
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
 
     const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
@@ -106,6 +112,11 @@ object ConfigOptions {
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
     private const val DEFAULT_VERBOSE_DEBUG_LOG = false
+
+    // Dialog menu rename
+    const val DEFAULT_DIALOG_RENAME_ENABLED = false
+    const val DEFAULT_DIALOG_MAX_SIZE = 256
+    const val DEFAULT_DIALOG_RENAME_USE_PERMISSION = false
 
     // -------------
     // Config Ranges
@@ -414,6 +425,36 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
+        }
+
+    /**
+     * Is the dialog menu for rename enabled
+     */
+    val doRenameDialog: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(DIALOG_RENAME_ENABLED, DEFAULT_DIALOG_RENAME_ENABLED)
+        }
+
+    /**
+     * Do the dialog menu require permission
+     */
+    val doRenameDialogUsePermission: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(DIALOG_RENAME_USE_PERMISSION, DEFAULT_DIALOG_RENAME_USE_PERMISSION)
+        }
+
+    /**
+     * Do the dialog menu require permission
+     */
+    val renameDialogMaxSize: Int
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getInt(DIALOG_MAX_SIZE, DEFAULT_DIALOG_MAX_SIZE)
         }
 
     /**
