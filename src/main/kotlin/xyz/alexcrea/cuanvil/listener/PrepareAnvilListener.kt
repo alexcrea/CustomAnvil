@@ -230,7 +230,11 @@ class PrepareAnvilListener : Listener {
             else ChatColor.stripColor(it.displayName)
 
 
-            if (!displayName.contentEquals(renameText) && !(displayName == null && renameText == "")) {
+            if (!displayName.contentEquals(renameText) && !(displayName == null &&
+                        renameText == "" ||
+                        //TODO on recent paper check effective name instead
+                    renameText == CasedStringUtil.snakeToUpperSpacedCase(resultItem.type.name.lowercase())
+                    )) {
                 it.setDisplayName(renameText)
                 resultItem.itemMeta = it
 
