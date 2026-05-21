@@ -46,7 +46,13 @@ open class GenericPluginDependency(protected open val plugin: Plugin, private va
         event.result = null
 
         for (registeredListener in preAnvil) {
-            registeredListener.callEvent(event)
+            // We do not want error from another plugin to be our fault
+            try {
+                registeredListener.callEvent(event)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             if (event.result != null) return true
         }
 
@@ -58,7 +64,12 @@ open class GenericPluginDependency(protected open val plugin: Plugin, private va
         if(!testPrepare) return false
 
         for (registeredListener in postAnvil) {
-            registeredListener.callEvent(event)
+            // We do not want error from another plugin to be our fault
+            try {
+                registeredListener.callEvent(event)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
             if (event.inventory.getItem(2) == null) return true
         }
