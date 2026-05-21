@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
@@ -26,6 +27,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -41,6 +43,8 @@ class PrepareAnvilListener : Listener {
         const val ANVIL_OUTPUT_SLOT = 2
 
         var IS_EMPTY_TEST = false
+
+        const val RENAME_DIALOG_PERMISSION = "ca.rename.dialog"
     }
 
     /**
@@ -80,6 +84,8 @@ class PrepareAnvilListener : Listener {
             return
         }
 
+        tryRenameDialog(player, event)
+
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
@@ -115,6 +121,16 @@ class PrepareAnvilListener : Listener {
         CustomAnvil.log("no anvil fuse type found")
         event.result = null
 
+    }
+
+    private fun tryRenameDialog(
+        player: HumanEntity,
+        event: PrepareAnvilEvent
+    ) {
+        if(!ConfigOptions.doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return
+        if(ConfigOptions.doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return
+
+        AnvilRenameDialogUtil.anvilRenameDialog.tryShowDialog(player, event)
     }
 
     private fun isImmutable(item: ItemStack?): Boolean {
@@ -208,11 +224,8 @@ class PrepareAnvilListener : Listener {
         var useColor = false
         if (ConfigOptions.renameColorPossible && renameText != null) {
             val component = AnvilColorUtil.handleColor(
-                renameText, player,
-                ConfigOptions.permissionNeededForColor,
-                ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
-                AnvilColorUtil.ColorUseType.RENAME
-            )
+                renameText,
+                AnvilColorUtil.renamePermission(player))
 
             if (component != null) {
                 renameText = MiniMessageUtil.legacy_mm.serialize(component)
