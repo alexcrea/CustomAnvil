@@ -18,11 +18,12 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.*
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
@@ -44,7 +45,7 @@ class PrepareAnvilListener : Listener {
 
         var IS_EMPTY_TEST = false
 
-        const val RENAME_DIALOG_PERMISSION = "ca.rename.dialog"
+        private const val RENAME_DIALOG_PERMISSION = "ca.rename.dialog"
     }
 
     /**
@@ -127,10 +128,30 @@ class PrepareAnvilListener : Listener {
         player: HumanEntity,
         event: PrepareAnvilEvent
     ) {
-        if(!ConfigOptions.doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return
-        if(ConfigOptions.doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return
+        if(!canUseRenameDialog(player)) return
 
         AnvilRenameDialogUtil.anvilRenameDialog.tryShowDialog(player, event)
+    }
+
+    private fun canUseRenameDialog(player: HumanEntity): Boolean {
+        if(!ConfigOptions.doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return false
+        if(ConfigOptions.doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return false
+
+        return true
+    }
+
+    private fun processDialogPCD(it: ItemMeta, player: HumanEntity) {
+        val keepDialog = canUseRenameDialog(player) && ConfigOptions.shouldKeepRenameText
+
+        val pdc = it.persistentDataContainer
+        if(!keepDialog)
+            pdc.remove(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY)
+        else {
+            val text = AnvilRenameDialogUtil.anvilRenameDialog.currentText(player)
+            if(text == null || text.isBlank())
+                pdc.remove(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY)
+            else pdc.set(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY, PersistentDataType.STRING, text)
+        }
     }
 
     private fun isImmutable(item: ItemStack?): Boolean {
@@ -249,6 +270,7 @@ class PrepareAnvilListener : Listener {
                     renameText == CasedStringUtil.snakeToUpperSpacedCase(resultItem.type.name.lowercase())
                     )) {
                 it.setDisplayName(renameText)
+                processDialogPCD(it, player)
                 resultItem.itemMeta = it
 
                 sumCost += ConfigOptions.itemRenameCost

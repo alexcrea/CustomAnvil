@@ -19,16 +19,17 @@ import org.bukkit.craftbukkit.inventory.view.CraftAnvilView
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.Plugin
-import java.util.UUID
+import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Consumer
 import java.util.function.Supplier
-import kotlin.collections.set
 
 @Suppress("UnstableApiUsage")
 class AnvilRenameDialogImpl(
     val fromFormated: BiFunction<HumanEntity, Component?, String?>,
+    val keepUserPreviousDialog: Supplier<Boolean>,
     val maxLength: Supplier<Int>,
     val plugin: Plugin,
 ): AnvilRenameDialog {
@@ -118,9 +119,19 @@ class AnvilRenameDialogImpl(
     }
 
     private fun nameFromItem(player: HumanEntity, item: ItemStack?): String? {
-        return if(item?.hasItemMeta() != true || !item.itemMeta.hasCustomName())
-            PLAIN_TEXT_SERIALIZER.serializeOrNull(item?.effectiveName())
-        else fromFormated.apply(player, item.effectiveName())
+        // Already has text
+        if(item?.hasItemMeta() != true || !item.itemMeta.hasCustomName())
+            return PLAIN_TEXT_SERIALIZER.serializeOrNull(item?.effectiveName())
+
+        if(keepUserPreviousDialog.get() && item.hasItemMeta()) {
+            val lastName = item.itemMeta.persistentDataContainer.get(
+                AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY,
+                PersistentDataType.STRING)
+
+            if(lastName != null) return lastName
+        }
+
+        return fromFormated.apply(player, item.effectiveName())
     }
 
     private fun tryShowDialogScheduled(player: HumanEntity, event: PrepareAnvilEvent) {
@@ -176,6 +187,10 @@ class AnvilRenameDialogImpl(
         lastNames.remove(player.uniqueId)
         lastLeftItem.remove(player.uniqueId)
         runTaskMap.remove(player.uniqueId)?.cancel()
+    }
+
+    override fun currentText(player: HumanEntity): String? {
+        return lastNames[player.uniqueId]
     }
 
 }

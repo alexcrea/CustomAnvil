@@ -465,6 +465,16 @@ object ConfigOptions {
         }
 
     /**
+     * Should the text used for rename should be kept in the item's pdc
+     */
+    val shouldKeepRenameText: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(DIALOG_KEEP_USER_TEXT, DEFAULT_DIALOG_KEEP_USER_TEXT)
+        }
+
+    /**
      * Get the given [enchantment]'s limit
      */
     fun enchantLimit(enchantment: CAEnchantment): Int {

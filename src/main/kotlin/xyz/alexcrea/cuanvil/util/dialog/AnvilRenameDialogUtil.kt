@@ -2,7 +2,6 @@ package xyz.alexcrea.cuanvil.util.dialog
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
-import net.kyori.adventure.text.Component
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
@@ -24,6 +23,7 @@ object AnvilRenameDialogUtil {
             AnvilRenameDialogImpl({ player, component -> AnvilColorUtil.revertColorSmallest(
                 component, AnvilColorUtil.renamePermission(player)
             ) },
+                { ConfigOptions.shouldKeepRenameText },
                 { ConfigOptions.renameDialogMaxSize },
                 CustomAnvil.instance,
                 )
@@ -39,12 +39,12 @@ object AnvilRenameDialogUtil {
         override fun tryShowDialog(
             player: HumanEntity,
             event: PrepareAnvilEvent
-        ) {
+        ) {}
 
-        }
+        override fun closeInventory(player: HumanEntity) {}
 
-        override fun closeInventory(player: HumanEntity) {
-
+        override fun currentText(player: HumanEntity): String? {
+            return null
         }
 
     }
