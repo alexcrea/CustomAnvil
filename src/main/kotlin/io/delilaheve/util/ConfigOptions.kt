@@ -65,6 +65,7 @@ object ConfigOptions {
     const val DIALOG_RENAME_ENABLED = "enable_dialog_rename"
     const val DIALOG_MAX_SIZE = "dialog_rename_max_size"
     const val DIALOG_RENAME_USE_PERMISSION = "permission_needed_for_dialog_rename"
+    const val DIALOG_KEEP_USER_TEXT = "dialog_rename_keep_user_text"
 
     // Others
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
@@ -117,6 +118,7 @@ object ConfigOptions {
     const val DEFAULT_DIALOG_RENAME_ENABLED = false
     const val DEFAULT_DIALOG_MAX_SIZE = 256
     const val DEFAULT_DIALOG_RENAME_USE_PERMISSION = false
+    const val DEFAULT_DIALOG_KEEP_USER_TEXT = true
 
     // -------------
     // Config Ranges
@@ -141,6 +143,9 @@ object ConfigOptions {
     // Valid range for color use cost
     @JvmField
     val USE_OF_COLOR_COST_RANGE = 0..1000
+
+    @JvmField
+    val DIALOG_MAX_SIZE_RANGE = 0..Int.MAX_VALUE
 
     // Valid range for an enchantment limit
     const val ENCHANT_LIMIT = 255
@@ -455,6 +460,8 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getInt(DIALOG_MAX_SIZE, DEFAULT_DIALOG_MAX_SIZE)
+                .takeIf { it in DIALOG_MAX_SIZE_RANGE }
+                ?: DEFAULT_DIALOG_MAX_SIZE
         }
 
     /**
