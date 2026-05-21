@@ -4,7 +4,9 @@ import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
+import xyz.alexcrea.cuanvil.util.MaxDamageCheckerUtil
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -36,6 +38,13 @@ object ItemUtil {
 
     }
 
+    private fun maxDamage(damageable: Damageable): Int {
+        val ver = UpdateUtils.currentMinecraftVersion()
+        if(ver.major <= 1 && ver.minor <= 20 && ver.patch < 5) return Integer.MAX_VALUE
+
+        return MaxDamageCheckerUtil.getMaxDamage(damageable)
+    }
+
     /**
      * Set this [ItemStack]s durability from a combination of the
      * [first] and [second] item's durability values
@@ -55,7 +64,9 @@ object ItemUtil {
             val secondDurability = durability - secondDamage
             val combinedDurability = firstDurability + secondDurability
             val newDurability = min(combinedDurability, durability)
-            it.damage = durability - newDurability
+
+            val maxDamage = maxDamage(it)
+            it.damage = min(durability - newDurability, maxDamage)
             itemMeta = it
             return true
         }
