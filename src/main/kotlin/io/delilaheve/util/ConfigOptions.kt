@@ -461,7 +461,7 @@ object ConfigOptions {
                 .config
                 .getInt(DIALOG_MAX_SIZE, DEFAULT_DIALOG_MAX_SIZE)
                 .takeIf { it in DIALOG_MAX_SIZE_RANGE }
-                ?: DEFAULT_DIALOG_MAX_SIZE
+                ?: Int.MAX_VALUE
         }
 
     /**
