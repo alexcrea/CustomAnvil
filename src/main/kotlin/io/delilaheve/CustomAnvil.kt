@@ -210,7 +210,6 @@ open class CustomAnvil : JavaPlugin() {
             .setFeatured(featured)
             .setOnError {
                 logger.log(Level.WARNING, "error trying to fetch latest update", it)
-                MetricsUtil.trackError(it)
             }
             .checkVersion { latestVer: String? ->
                 CustomAnvil.latestVer = latestVer

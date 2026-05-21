@@ -55,7 +55,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // fast stats
-    implementation("dev.faststats.metrics:bukkit:0.19.0")
+    implementation("dev.faststats.metrics:bukkit:0.22.1")
 
     // minimessage
     implementation("net.kyori:adventure-text-minimessage:4.25.0")
