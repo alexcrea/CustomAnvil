@@ -247,7 +247,7 @@ object AnvilColorUtil {
         if (rightIndex == -1 || (newleftIndex != -1 && newleftIndex < rightIndex)) return false
 
         // Then finally we use minimessage to check for tag
-        val expectedTag = builder.substring(leftIndex, newleftIndex + 1)
+        val expectedTag = builder.substring(leftIndex, newleftIndex + index + 1)
         val notag = MiniMessageUtil.mm.stripTags(expectedTag)
 
         return notag != expectedTag
