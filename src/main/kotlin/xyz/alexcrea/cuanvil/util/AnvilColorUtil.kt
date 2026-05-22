@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.util
 
+import io.delilaheve.util.ConfigOptions
 import net.kyori.adventure.text.Component
 import org.bukkit.permissions.Permissible
 import java.util.regex.Matcher
@@ -13,7 +14,8 @@ object AnvilColorUtil {
     class ColorPermissions(
         val canUseColorCode: Boolean,
         val canUseHexColor: Boolean,
-        val canUseMinimessage: Boolean
+        val canUseMinimessage: Boolean,
+        val permissible: Permissible, // source of the permission. tried to avoid needing it but meh
     ) {
         fun allowed(): Boolean {
             return canUseColorCode || canUseHexColor || canUseMinimessage
@@ -36,7 +38,8 @@ object AnvilColorUtil {
             return ColorPermissions(
                 canUseColorCode = false,
                 canUseHexColor = false,
-                canUseMinimessage = false
+                canUseMinimessage = false,
+                player,
             )
 
         val canUseColorCode =
@@ -54,7 +57,7 @@ object AnvilColorUtil {
                 useType.hexColorPerm
             ))
 
-        return ColorPermissions(canUseColorCode, canUseHexColor, canUseMinimessage)
+        return ColorPermissions(canUseColorCode, canUseHexColor, canUseMinimessage, player)
     }
 
     /**
@@ -70,9 +73,11 @@ object AnvilColorUtil {
         allowMinimessage: Boolean,
         useType: ColorUseType
     ): Component? {
-        val permission = calculatePermissions(player, usePermission,
+        val permission = calculatePermissions(
+            player, usePermission,
             allowColorCode, allowHexadecimalColor, allowMinimessage,
-            useType)
+            useType
+        )
         return handleColor(textToColorText, permission)
     }
 
@@ -82,9 +87,10 @@ object AnvilColorUtil {
      */
     fun handleColor(
         textToColorText: String,
-        permission: ColorPermissions
-    ): Component? {
-        if(!permission.allowed()) return null
+        permission: ColorPermissions,
+
+        ): Component? {
+        if (!permission.allowed()) return null
 
         val textToColor = StringBuilder(textToColorText)
         var useColor = false
@@ -93,7 +99,12 @@ object AnvilColorUtil {
             var nbReplacement = replaceAll(textToColor, "&", "§", 2)
             nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
 
-            if (nbReplacement > 0) useColor = true
+            if (nbReplacement > 0) {
+                useColor = true
+
+                if (ConfigOptions.usePerColorCodePermission)
+                    filterPermissibleColorCode(textToColor, permission.permissible)
+            }
         }
 
         if (permission.canUseHexColor) {
@@ -104,21 +115,36 @@ object AnvilColorUtil {
 
         val previousStr = textToColor.toString()
         var result: Component = MiniMessageUtil.legacy_mm.deserialize(previousStr)
-        if(permission.canUseMinimessage) {
+        if (permission.canUseMinimessage) {
             // we dance with formats here
             val toMinimessage = MiniMessageUtil.mm.serialize(result)
             val hackySolution = toMinimessage.replace("\\<", "<")
             val fromMinimessage = MiniMessageUtil.mm.deserialize(hackySolution)
             val asPlain = MiniMessageUtil.plain_text_mm.serialize(fromMinimessage)
 
-            if(previousStr != asPlain){
+            if (previousStr != asPlain) {
                 useColor = true
                 result = fromMinimessage
             }
         }
 
-        return if(useColor) result
+        return if (useColor) result
         else null
+    }
+
+    private fun filterPermissibleColorCode(textToColor: StringBuilder, player: Permissible) {
+        var index = 0
+        while (true) {
+            index = textToColor.indexOf('§', index)
+            if (index == -1 || index == textToColor.length - 1) return
+
+            val next = textToColor[index + 1]
+            // check permission for this color
+            if(!player.hasPermission("ca.color.code.$next"))
+                textToColor.replace(index, index + 1, "&")
+
+            index++
+        }
     }
 
     /**
@@ -131,12 +157,12 @@ object AnvilColorUtil {
         component: Component?,
         permission: ColorPermissions
     ): String? {
-        if(!permission.allowed() || component == null) return null
+        if (!permission.allowed() || component == null) return null
 
         val transformed = MiniMessageUtil.mm.serialize(component)
         val plainTransform = MiniMessageUtil.plain_text_mm.serialize(component)
-        if(transformed == plainTransform) return null
-        if(permission.onlyMinimessage()){
+        if (transformed == plainTransform) return null
+        if (permission.onlyMinimessage()) {
             return transformed
         }
 
@@ -164,10 +190,10 @@ object AnvilColorUtil {
         val hackySolution = hackySolutionStb.toString()
 
         val result: String =
-            if(permission.canUseMinimessage) hackySolution
+            if (permission.canUseMinimessage) hackySolution
             else MiniMessageUtil.mm.stripTags(hackySolution)
 
-        return if(result == plainTransform) null
+        return if (result == plainTransform) null
         else result
     }
 
@@ -209,7 +235,7 @@ object AnvilColorUtil {
         while (matcher.find(startIndex)) {
             startIndex = matcher.start()
             if (startIndex >= builder.length - endOffset) break //HOW AND WHERE WOULD THIS HAPPEN ?????
-            if(checkTag && isInTag(builder, startIndex)) {
+            if (checkTag && isInTag(builder, startIndex)) {
                 startIndex += 1 // Avoid infinite loop
                 continue
             }
@@ -237,7 +263,7 @@ object AnvilColorUtil {
         var rightIndex = left.lastIndexOf(">")
 
         // last < do not exist or is before last >
-        if(leftIndex == -1 || rightIndex > leftIndex) return false
+        if (leftIndex == -1 || rightIndex > leftIndex) return false
 
         val right = builder.slice(index..<builder.length)
         val newleftIndex = right.indexOf("<")

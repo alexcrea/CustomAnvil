@@ -2,7 +2,6 @@ package io.delilaheve.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
-import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
@@ -44,6 +43,8 @@ object ConfigOptions {
     const val ALLOW_MINIMESSAGE = "allow_minimessage"
     const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
     const val USE_OF_COLOR_COST = "use_of_color_cost"
+
+    const val PER_COLOR_CODE_PERMISSION = "per_color_code_permission"
 
     // Work penalty config
     const val WORK_PENALTY_ROOT = "work_penalty"
@@ -99,6 +100,8 @@ object ConfigOptions {
     const val DEFAULT_ALLOW_MINIMESSAGE = false
     const val DEFAULT_PERMISSION_NEEDED_FOR_COLOR = true
     const val DEFAULT_USE_OF_COLOR_COST = 0
+
+    const val DEFAULT_PER_COLOR_CODE_PERMISSION = false
 
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
@@ -295,6 +298,16 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR)
+        }
+
+    /**
+     * Should each color code require a permission
+     */
+    val usePerColorCodePermission: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(PER_COLOR_CODE_PERMISSION, DEFAULT_PER_COLOR_CODE_PERMISSION)
         }
 
     /**

@@ -79,6 +79,18 @@ allow_color_code: false
 allow_hexadecimal_color: false
 allow_minimessage: false
 
+# This enables restricting color code for player having specific permission
+# It requires allow_color_code enabled for... obvious reasons
+#
+# For example: if player want to use "&aHello" it will be required that the player has
+# the permission "ca.color.code.a" as he used the color code "a"
+# In general permission to give to the player is "ca.color.code.[code]"
+#  where [code] is the color code you wish to allow the player
+#
+# It is kinda of useless when minimessage is supported as players would be able to bypass
+# that using the equivalent minimessage tag
+per_color_code_permission: false
+
 # Toggle if color should only be applicable if the player a certain permission.
 #
 # permission are "ca.color.code" for use of color code and "ca.color.hex" for use of hexadecimal color.
