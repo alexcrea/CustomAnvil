@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
+import xyz.alexcrea.cuanvil.dependency.econmy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
@@ -258,9 +259,11 @@ open class CustomAnvil : JavaPlugin() {
         MainConfigGui.getInstance().init(DependencyManager.packetManager)
         GuiSharedConstant.loadConstants()
 
+        // Prepare economy if possible
+        EconomyManager.setupEconomy(this)
+
         // Finally, re add default we may be missing
         PluginSetDefault.reAddMissingDefault()
-
     }
 
     fun reloadResource(

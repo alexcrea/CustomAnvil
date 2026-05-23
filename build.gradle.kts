@@ -40,11 +40,14 @@ repositories {
     // ItemsAdder
     maven(url = "https://maven.devs.beer/")
 
-    // for fast stats
+    // For fast stats
     maven {
         name = "thenextlvlReleases"
         url = uri("https://repo.thenextlvl.net/releases")
     }
+
+    // For vault unlocked
+    maven { url = uri("https://jitpack.io") }
 }
 
 val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
@@ -102,6 +105,9 @@ dependencies {
 
     // ItemsAdder API
     compileOnly("dev.lone:api-itemsadder:4.0.10")
+
+    // Vault api
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
     // Include nms
     implementation(project(":nms:nms-common"))
