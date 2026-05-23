@@ -240,7 +240,8 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load config
         if (!ConfigHolder.loadNonDefaultConfig()) {
-            logger.log(Level.SEVERE,"could not load non default config.")
+            logger.log(Level.SEVERE,"Plugin has an issue while trying to load non default config... exiting...")
+            server.pluginManager.disablePlugin(this)
             return
         }
 
