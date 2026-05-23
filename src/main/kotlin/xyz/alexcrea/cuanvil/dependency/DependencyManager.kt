@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.dependency
 
-import com.maddoxh.superEnchants.SuperEnchants
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -119,7 +118,7 @@ object DependencyManager {
             genericDependencies.add(GenericPluginDependency(pluginManager.getPlugin("ItemsAdder")!!))
 
         if (pluginManager.isPluginEnabled("SuperEnchants")) {
-            val compatibility = SuperEnchantDependency(pluginManager.getPlugin("SuperEnchants")!! as SuperEnchants)
+            val compatibility = SuperEnchantDependency(pluginManager.getPlugin("SuperEnchants")!!)
             if (compatibility.registerEnchantments())
                 genericDependencies.add(compatibility)
         }
@@ -170,11 +169,11 @@ object DependencyManager {
         )
     }
 
-    private fun logExceptionAndClear(target: CommandSender, view: AnvilView, e: Exception) {
+    private fun logExceptionAndClear(view: AnvilView, e: Exception) {
         // Just in case to avoid illegal items
         view.setItem(ANVIL_OUTPUT_SLOT, null)
 
-        logException(target, e)
+        logException(view.player, e)
     }
 
     // Return true if should bypass (either by a dependency or error)
@@ -183,7 +182,7 @@ object DependencyManager {
         try {
             return earlyUnsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.view, e)
+            logExceptionAndClear(event.view, e)
             return true
         }
     }
@@ -209,7 +208,7 @@ object DependencyManager {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.view, e)
+            logExceptionAndClear(event.view, e)
             return true
         }
     }
@@ -267,7 +266,7 @@ object DependencyManager {
         try {
             return unsafeTryClickAnvilResultBypass(event, view)
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.view, e)
+            logExceptionAndClear(view, e)
             return true
         }
     }

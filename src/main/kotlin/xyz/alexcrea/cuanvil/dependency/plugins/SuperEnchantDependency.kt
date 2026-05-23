@@ -8,16 +8,22 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.enchant.bulk.SuperEnchantBulkOperation
 import xyz.alexcrea.cuanvil.enchant.wrapped.CASuperEnchantEnchantment
 import java.util.logging.Level
 
-class SuperEnchantDependency(override val plugin: SuperEnchants): GenericPluginDependency(plugin, false) {
+class SuperEnchantDependency: GenericPluginDependency {
 
+    override val plugin: SuperEnchants
     lateinit var enchManager: EnchantManager
     val enchantments = ArrayList<CASuperEnchantEnchantment>()
+
+    constructor(plugin: Plugin) : super(plugin) {
+        this.plugin = plugin as SuperEnchants
+    }
 
     fun registerEnchantments(): Boolean{
         CustomAnvil.instance.logger.info("Preparing Super Enchant compatibility...")
