@@ -26,10 +26,10 @@ import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.*
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Listener for anvil events
@@ -60,7 +60,7 @@ class PrepareAnvilListener : Listener {
         // Test if custom anvil is bypassed before immutability test
         if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return
         }
 
@@ -90,7 +90,7 @@ class PrepareAnvilListener : Listener {
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return
         }
 
@@ -198,17 +198,17 @@ class PrepareAnvilListener : Listener {
         // Maybe add an option on custom craft to ignore/not ignore penalty ??
         val xpCost = recipe.determineCost(amount, first, resultItem)
 
-        val levelCost =
-            if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
+        val cost = AnvilCost()
+        cost.recipe = if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
             else AnvilXpUtil.calculateLevelForXp(xpCost)
 
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.CUSTOM_CRAFT, levelCost)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
         if (finalResult == null) return false
 
         event.result = finalResult.result
         if (finalResult.result.isAir) return false
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost, true)
+        AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost, true)
         return true
     }
 
@@ -217,7 +217,8 @@ class PrepareAnvilListener : Listener {
         player: HumanEntity, first: ItemStack
     ) {
         val resultItem = DependencyManager.cloneItem(event, first)
-        var anvilCost = handleRename(resultItem, inventory, player)
+        val cost = AnvilCost()
+        cost.rename = handleRename(resultItem, inventory, player)
 
         // Test/stop if nothing changed.
         if (first == resultItem) {
@@ -226,15 +227,15 @@ class PrepareAnvilListener : Listener {
             return
         }
 
-        anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
+        cost.penalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
 
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.RENAME_ONLY, anvilCost)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.RENAME_ONLY, cost)
         if (finalResult == null) return
 
         event.result = finalResult.result
         if (finalResult.result.isAir) return
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
+        AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
@@ -291,18 +292,18 @@ class PrepareAnvilListener : Listener {
         var hasChanged = !isIdentical(first.findEnchantments(), newEnchants)
 
         val resultItem = DependencyManager.cloneItem(event, first)
-        var anvilCost = 0
+        val cost = AnvilCost()
         if(hasChanged){
             resultItem.setEnchantmentsUnsafe(newEnchants)
             // Calculate enchantment cost
-            anvilCost+= AnvilXpUtil.getRightValues(second, resultItem)
+            cost.enchantment = AnvilXpUtil.getRightValues(second, resultItem)
         }
 
         // Calculate repair cost
         if (!first.isEnchantedBook() && !second.isEnchantedBook()) {
             // we only need to be concerned with repair when neither item is a book
             val repaired = resultItem.repairFrom(first, second)
-            anvilCost += if (repaired) ConfigOptions.itemRepairCost else 0
+            cost.repair = if (repaired) ConfigOptions.itemRepairCost else 0
             hasChanged = hasChanged || repaired
         }
 
@@ -313,18 +314,18 @@ class PrepareAnvilListener : Listener {
             return
         }
         // As calculatePenalty edit result, we need to calculate penalty after checking equality
-        anvilCost += AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
+        cost.penalty = AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
         // Calculate rename cost
-        anvilCost += handleRename(resultItem, inventory, player)
+        cost.rename = handleRename(resultItem, inventory, player)
 
         // Finally, we set result
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.MERGE, anvilCost)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.MERGE, cost)
         if (finalResult == null) return
 
         event.result = finalResult.result
         if (finalResult.result.isAir) return
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
+        AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
     }
 
     private fun isIdentical(
@@ -347,14 +348,15 @@ class PrepareAnvilListener : Listener {
         val unitRepairAmount = first.getRepair(second) ?: return false
 
         val resultItem = DependencyManager.cloneItem(event, first)
-        var anvilCost = handleRename(resultItem, inventory, player)
+        val cost = AnvilCost()
+        cost.rename = handleRename(resultItem, inventory, player)
 
         val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
         if (repairAmount > 0) {
-            anvilCost += repairAmount * ConfigOptions.unitRepairCost
+            cost.repair = repairAmount * ConfigOptions.unitRepairCost
         }
         // We do not care about right item penalty for unit repair
-        anvilCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.UNIT_REPAIR)
+        cost.penalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.UNIT_REPAIR)
 
         // Test/stop if nothing changed.
         if (first == resultItem) {
@@ -363,13 +365,13 @@ class PrepareAnvilListener : Listener {
             return true
         }
 
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.UNIT_REPAIR, anvilCost)
+        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.UNIT_REPAIR, cost)
         if (finalResult == null) return false
 
         event.result = finalResult.result
         if (finalResult.result.isAir) return false
 
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, finalResult.levelCost)
+        AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
         return true
     }
 
@@ -380,11 +382,11 @@ class PrepareAnvilListener : Listener {
         val type = second.type
         var result: ItemStack? = null
 
-        val xpCost = AtomicInteger()
+        val cost = AnvilCost()
         if (Material.WRITABLE_BOOK == type) {
-            result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, xpCost)
+            result = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, cost)
         } else if (Material.PAPER == type) {
-            result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, xpCost)
+            result = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, cost)
         }
 
         if (result.isAir || first == result) {
@@ -394,7 +396,7 @@ class PrepareAnvilListener : Listener {
         }
 
         event.result = result
-        AnvilXpUtil.setAnvilInvXp(inventory, event.view, player, xpCost.get())
+        AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
         return true
     }
 }

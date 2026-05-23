@@ -11,6 +11,7 @@ import valorless.havenbags.features.BagSkin
 import valorless.havenbags.features.BagUpgrade
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 
 class HavenBagsDependency {
 
@@ -53,14 +54,14 @@ class HavenBagsDependency {
         bagSkin.onPrepareAnvil(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil heaven bag anvil skin.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 
         bagUpgrade.onPrepareAnvil(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil heaven bag anvil upgrade.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 

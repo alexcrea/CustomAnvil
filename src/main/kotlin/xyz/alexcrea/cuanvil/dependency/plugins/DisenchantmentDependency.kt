@@ -16,6 +16,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.util.logging.Level
 import kotlin.reflect.KClass
@@ -58,14 +59,14 @@ class DisenchantmentDependency {
         DisenchantEvent.onEvent(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil item extract bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 
         ShatterEvent.onEvent(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil split enchant bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 

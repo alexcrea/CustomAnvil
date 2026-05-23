@@ -30,6 +30,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.util.logging.Level
 
@@ -235,12 +236,12 @@ object DependencyManager {
         event: PrepareAnvilEvent,
         result: ItemStack,
         useType: AnvilUseType,
-        cost: Int
+        cost: AnvilXpUtil.AnvilCost
     ): CATreatAnvilResultEvent? {
         val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
-            return treatEvent;
+            return treatEvent
         } catch (e: Exception) {
             logExceptionAndClear(event.view.player, event.inventory, e)
             return null

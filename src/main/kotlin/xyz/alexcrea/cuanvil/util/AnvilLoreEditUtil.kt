@@ -8,10 +8,10 @@ import org.bukkit.permissions.Permissible
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentLore
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
 object AnvilLoreEditUtil {
@@ -31,7 +31,7 @@ object AnvilLoreEditUtil {
         player: Permissible,
         first: ItemStack,
         book: BookMeta,
-        xpCost: AtomicInteger
+        cost: AnvilCost
     ): ItemStack? {
         if (!hasLoreEditByBookPermission(player)) return null
 
@@ -53,14 +53,14 @@ object AnvilLoreEditUtil {
         if (result == first) return null
 
         // Handle xp
-        xpCost.addAndGet(colorCost) // Cost of using color
-        xpCost.addAndGet(outLines.size * LoreEditType.APPEND_BOOK.perLineCost) // per line cost
-        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_BOOK)) // Fixed cost and work penalty
+        cost.lore = colorCost // Cost of using color
+        cost.lore += outLines.size * LoreEditType.APPEND_BOOK.perLineCost // per line cost
+        baseEditLoreXpCost(cost, first, result, LoreEditType.APPEND_BOOK) // Fixed cost and work penalty
 
         return result
     }
 
-    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, xpCost: AtomicInteger): ItemStack? {
+    fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, cost: AnvilCost): ItemStack? {
         if (!hasLoreEditByBookPermission(player)) return null
 
         // remove lore
@@ -78,9 +78,9 @@ object AnvilLoreEditUtil {
         if (result == first) return null
 
         // Handle xp
-        xpCost.addAndGet(uncolorCost)
-        xpCost.addAndGet(currentLore.size * LoreEditType.REMOVE_BOOK.perLineCost)
-        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_BOOK))
+        cost.lore = uncolorCost
+        cost.lore+= currentLore.size * LoreEditType.REMOVE_BOOK.perLineCost
+        baseEditLoreXpCost(cost, first, result, LoreEditType.REMOVE_BOOK)
 
         return result
     }
@@ -116,12 +116,12 @@ object AnvilLoreEditUtil {
         return null
     }
 
-    fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack, xpCost: AtomicInteger): ItemStack? {
+    fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack, cost: AnvilCost): ItemStack? {
         val isAppend = bookLoreEditIsAppend(first, second) ?: return null
 
         val meta = second.itemMeta as BookMeta
-        return if (isAppend) handleLoreAppendByBook(player, first, meta, xpCost)
-        else handleLoreRemoveByBook(player, first, xpCost)
+        return if (isAppend) handleLoreAppendByBook(player, first, meta, cost)
+        else handleLoreRemoveByBook(player, first, cost)
     }
 
     // Return true if appended, false if removed, null if neither
@@ -147,7 +147,7 @@ object AnvilLoreEditUtil {
         player: Permissible,
         first: ItemStack,
         second: ItemStack,
-        xpCost: AtomicInteger
+        cost: AnvilCost
     ): ItemStack? {
         if (!hasLoreEditByPaperPermission(player)) return null
 
@@ -175,13 +175,13 @@ object AnvilLoreEditUtil {
         if (result == first) return null
 
         // Handle xp
-        xpCost.addAndGet(colorCost)
-        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.APPEND_PAPER))
+        cost.lore = colorCost
+        baseEditLoreXpCost(cost, first, result, LoreEditType.APPEND_PAPER)
 
         return result
     }
 
-    fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack, xpCost: AtomicInteger): ItemStack? {
+    fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack, cost: AnvilCost): ItemStack? {
         if (!hasLoreEditByPaperPermission(player)) return null
 
         // remove lore line
@@ -213,8 +213,8 @@ object AnvilLoreEditUtil {
         val uncolorCost = uncolorLine(player, line, LoreEditType.REMOVE_PAPER)
 
         // Handle other xp
-        xpCost.addAndGet(uncolorCost)
-        xpCost.addAndGet(baseEditLoreXpCost(first, result, LoreEditType.REMOVE_PAPER))
+        cost.lore = uncolorCost
+        baseEditLoreXpCost(cost, first, result, LoreEditType.REMOVE_PAPER)
 
         return result
     }
@@ -223,23 +223,23 @@ object AnvilLoreEditUtil {
         player: HumanEntity,
         first: ItemStack,
         second: ItemStack,
-        xpCost: AtomicInteger
+        cost: AnvilCost
     ): ItemStack? {
         val isAppend = paperLoreEditIsAppend(first, second) ?: return null
 
-        return if (isAppend) handleLoreAppendByPaper(player, first, second, xpCost)
-        else handleLoreRemoveByPaper(player, first, xpCost)
+        return if (isAppend) handleLoreAppendByPaper(player, first, second, cost)
+        else handleLoreRemoveByPaper(player, first, cost)
     }
 
     private fun baseEditLoreXpCost(
+        cost: AnvilCost,
         first: ItemStack,
         result: ItemStack,
         editType: LoreEditType
-    ): Int {
-        var xpCost = editType.fixedCost
+    ) {
+        cost.lore+= editType.fixedCost
 
-        xpCost += AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
-        return xpCost
+        cost.penalty = AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
     }
 
     fun colorPermission(player: Permissible, editType: LoreEditType): AnvilColorUtil.ColorPermissions {

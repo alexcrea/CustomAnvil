@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.util.AnvilUseType;
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost;
 
 /**
  * Called after custom anvil processed the click on the result on the anvil inventory.
@@ -40,13 +41,13 @@ public class CATreatAnvilResultEvent extends Event {
     @Nullable
     private ItemStack result;
 
-    private int levelCost;
+    private final AnvilCost cost;
 
-    public CATreatAnvilResultEvent(@NotNull PrepareAnvilEvent event, AnvilUseType useType, @Nullable ItemStack result, int levelCost) {
+    public CATreatAnvilResultEvent(@NotNull PrepareAnvilEvent event, AnvilUseType useType, @Nullable ItemStack result, AnvilCost cost) {
         this.event = event;
         this.useType = useType;
         this.result = result;
-        this.levelCost = levelCost;
+        this.cost = cost;
     }
 
     /**
@@ -103,10 +104,12 @@ public class CATreatAnvilResultEvent extends Event {
      * <li>Item rename</li>
      * </ul>
      *
+     * @deprecated use #{@link #getCost()} instead
      * @return The current cost.
      */
+    @Deprecated(forRemoval = true, since = "1.17.0")
     public int getLevelCost() {
-        return levelCost;
+        return cost.sum();
     }
 
     /**
@@ -123,9 +126,33 @@ public class CATreatAnvilResultEvent extends Event {
      * <li>Item rename</li>
      * </ul>
      *
+     * @deprecated use #{@link #getCost()} and set value on this instead
      * @param levelCost The new cost.
      */
+    @Deprecated(forRemoval = true, since = "1.17.0")
     public void setLevelCost(int levelCost) {
-        this.levelCost = levelCost;
+        cost.setGeneric(levelCost - cost.getGeneric() - cost.sum());
     }
+
+    /**
+     * Allow access to the current cost of the event
+     * Note that modifying this object will change the event resulting cost
+     *
+     * <h3>Important note:</h3>
+     * the final price are re calculated on click for the following use case:
+     * <ul>
+     * <li>Custom craft</li>
+     * <li>Unit repair</li>
+     * <li>Lore edit</li>
+     * </ul>
+     * This value will be used as final price for:
+     * <li>Item merge</li>
+     * <li>Item rename</li>
+     *
+     * @return the current anvil cost
+     */
+    public AnvilCost getCost() {
+        return cost;
+    }
+
 }

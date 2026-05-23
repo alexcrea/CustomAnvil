@@ -23,16 +23,55 @@ object AnvilXpUtil {
 
     const val EXCLUSIVE_PENALTY_PREFIX = "repair_cost"
 
+    class AnvilCost {
+        private val isAlone: Boolean
+
+        var generic = 0
+        var enchantment = 0
+        var repair = 0
+        var rename = 0
+        var lore = 0
+        var penalty = 0
+        var recipe = 0
+
+        fun sum(): Int {
+            return generic + enchantment + repair + rename + lore + penalty + recipe
+        }
+
+        constructor(generic: Int) {
+            this.generic = generic
+            isAlone = true
+        }
+        constructor() {
+            isAlone = false
+        }
+    }
+
+    /**
+     * Display the required cost (either as xp or as )
+     */
+    fun setAnvilInvCost(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: HumanEntity,
+        cost: AnvilCost,
+        ignoreRules: Boolean = false
+    ) {
+        // TODO check require money or xp cost & display appropriately
+        setAnvilInvXp(inventory, view, player, cost.sum(), ignoreRules)
+    }
+
     /**
      * Display xp needed for the work on the anvil inventory
      */
-    fun setAnvilInvXp(
+    private fun setAnvilInvXp(
         inventory: AnvilInventory,
         view: InventoryView,
         player: HumanEntity,
         anvilCost: Int,
         ignoreRules: Boolean = false
     ) {
+        
         // Test repair cost limit
         val finalAnvilCost = if (
             !ignoreRules &&
@@ -78,7 +117,6 @@ object AnvilXpUtil {
             }
 
             player.updateInventory()
-
         }
     }
 

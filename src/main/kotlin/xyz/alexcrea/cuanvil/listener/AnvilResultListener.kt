@@ -25,6 +25,7 @@ import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
@@ -350,13 +351,13 @@ class AnvilResultListener : Listener {
     }
 
     private fun getFromLoreEditXpCost(
-        xpCost: AtomicInteger,
+        cost: AnvilCost,
         player: Player,
         inventory: AnvilInventory,
     ): Int {
         if (GameMode.CREATIVE == player.gameMode) return 0
 
-        val repairCost = xpCost.get()
+        val repairCost = cost.sum()
         return if ((inventory.maximumRepairCost <= repairCost)
             || (player.level < repairCost)
         ) Int.MIN_VALUE
@@ -376,9 +377,9 @@ class AnvilResultListener : Listener {
 
         val editType = AnvilLoreEditUtil.bookLoreEditIsAppend(leftItem, rightItem) ?: return false
 
-        val xpCost = AtomicInteger()
+        val cost = AnvilCost()
         if (editType) {
-            if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta, xpCost)) return false
+            if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta, cost)) return false
 
             // Remove pages to book
             val clearedBook: ItemStack?
@@ -394,10 +395,10 @@ class AnvilResultListener : Listener {
                 event, player, inventory,
                 null, 0,
                 clearedBook, 0,
-                output, getFromLoreEditXpCost(xpCost, player, inventory)
+                output, getFromLoreEditXpCost(cost, player, inventory)
             )
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, xpCost)) return false
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, cost)) return false
 
             // fill book meta
             val lore = DependencyManager.stripLore(leftItem)
@@ -430,7 +431,7 @@ class AnvilResultListener : Listener {
                 event, player, inventory,
                 null, 0,
                 rightCopy, 0,
-                output, getFromLoreEditXpCost(xpCost, player, inventory)
+                output, getFromLoreEditXpCost(cost, player, inventory)
             )
         }
     }
@@ -448,9 +449,9 @@ class AnvilResultListener : Listener {
 
         val editTypeIsAppend = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
 
-        val xpCost = AtomicInteger()
+        val cost = AnvilCost()
         if (editTypeIsAppend) {
-            if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem, xpCost)) return false
+            if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem, cost)) return false
 
             val paperCopy: ItemStack?
             if (LoreEditType.APPEND_PAPER.doConsume) {
@@ -468,18 +469,18 @@ class AnvilResultListener : Listener {
                     event, player, inventory,
                     paperCopy, 0,
                     rightItem, 1,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
+                    output, getFromLoreEditXpCost(cost, player, inventory)
                 )
             } else {
                 extractAnvilResult(
                     event, player, inventory,
                     null, 0,
                     paperCopy, 0,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
+                    output, getFromLoreEditXpCost(cost, player, inventory)
                 )
             }
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem, xpCost)) return false
+            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem, cost)) return false
 
             val leftMeta = leftItem.itemMeta
             if (leftMeta == null || !leftMeta.hasLore()) return false
@@ -512,14 +513,14 @@ class AnvilResultListener : Listener {
                     event, player, inventory,
                     rightClone, 0,
                     rightItem, 1,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
+                    output, getFromLoreEditXpCost(cost, player, inventory)
                 )
             } else {
                 extractAnvilResult(
                     event, player, inventory,
                     null, 0,
                     rightClone, 0,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
+                    output, getFromLoreEditXpCost(cost, player, inventory)
                 )
             }
         }
