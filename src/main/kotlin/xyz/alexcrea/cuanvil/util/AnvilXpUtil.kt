@@ -31,11 +31,12 @@ object AnvilXpUtil {
         var repair = 0
         var rename = 0
         var lore = 0
-        var penalty = 0
+        var illegalPenalty = 0
+        var workPenalty = 0
         var recipe = 0
 
         fun sum(): Int {
-            return generic + enchantment + repair + rename + lore + penalty + recipe
+            return generic + enchantment + repair + rename + lore + illegalPenalty + workPenalty + recipe
         }
 
         constructor(generic: Int) {
@@ -197,10 +198,8 @@ object AnvilXpUtil {
      * Function to calculate right enchantment values
      * it include enchantment placed on final item and conflicting enchantment
      */
-    fun getRightValues(right: ItemStack, result: ItemStack): Int {
+    fun getRightValues(right: ItemStack, result: ItemStack, cost: AnvilCost) {
         // Calculate right value and illegal enchant penalty
-        var illegalPenalty = 0
-        var rightValue = 0
 
         val rightIsFormBook = right.isEnchantedBook()
         val resultEnchs = result.findEnchantments()
@@ -218,7 +217,7 @@ object AnvilXpUtil {
                 resultEnchsKeys.remove(enchantment.key)
 
                 if (ConflictType.ENCHANTMENT_CONFLICT == conflictType) {
-                    illegalPenalty += ConfigOptions.sacrificeIllegalCost
+                    cost.illegalPenalty += ConfigOptions.sacrificeIllegalCost
                     CustomAnvil.verboseLog("Big conflict. Adding illegal price penalty")
                 }
                 continue
@@ -229,16 +228,14 @@ object AnvilXpUtil {
             val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
             val value = resultLevel * enchantmentMultiplier
             CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
-            rightValue += value
+            cost.enchantment += value
 
         }
         CustomAnvil.log(
             "Calculated right values: " +
-                    "rightValue: $rightValue, " +
-                    "illegalPenalty: $illegalPenalty"
+                    "rightValue: ${cost.enchantment}, " +
+                    "illegalPenalty: ${cost.illegalPenalty}"
         )
-
-        return rightValue + illegalPenalty
     }
 
     /**

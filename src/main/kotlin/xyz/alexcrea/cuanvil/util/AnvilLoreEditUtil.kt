@@ -239,7 +239,7 @@ object AnvilLoreEditUtil {
     ) {
         cost.lore+= editType.fixedCost
 
-        cost.penalty = AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
+        cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
     }
 
     fun colorPermission(player: Permissible, editType: LoreEditType): AnvilColorUtil.ColorPermissions {

@@ -237,11 +237,11 @@ object DependencyManager {
         result: ItemStack,
         useType: AnvilUseType,
         cost: AnvilXpUtil.AnvilCost
-    ): CATreatAnvilResultEvent? {
+    ): ItemStack? {
         val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
-            return treatEvent
+            return treatEvent.result
         } catch (e: Exception) {
             logExceptionAndClear(event.view.player, event.inventory, e)
             return null

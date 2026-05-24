@@ -72,6 +72,11 @@ object ConfigOptions {
 
     const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
 
+    // Monetary configs
+    const val MONETARY_USAGE_ROOT = "monetary_cost"
+    const val SHOULD_USE_MONEY = "$MONETARY_USAGE_ROOT.enabled"
+    const val MONEY_CURRENCY = "$MONETARY_USAGE_ROOT.currency"
+    const val MONETARY_MULTIPLIER_ROOT = "$MONETARY_USAGE_ROOT.multipliers"
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
@@ -109,6 +114,11 @@ object ConfigOptions {
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
     const val DEFAULT_PER_COLOR_CODE_PERMISSION = false
+
+    // Monetary configs
+    const val DEFAULT_SHOULD_USE_MONEY = false
+    const val DEFAULT_MONEY_CURRENCY = "default"
+    const val DEFAULT_MONEY_MULTIPLIER = 1.0
 
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
@@ -623,6 +633,29 @@ object ConfigOptions {
                 return true
         }
         return false
+    }
+
+    /*
+     * Monetary configs
+     */
+    val shouldUseMoney: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
+        }
+
+    val usedCurrency: String
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getString(MONEY_CURRENCY, DEFAULT_MONEY_CURRENCY)!!
+        }
+
+    fun getMonetaryMultiplier(type: String): Double {
+        return ConfigHolder.DEFAULT_CONFIG
+                .config
+            .getDouble("$MONETARY_MULTIPLIER_ROOT.$type", DEFAULT_MONEY_MULTIPLIER)
     }
 
 }

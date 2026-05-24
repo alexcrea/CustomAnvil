@@ -202,12 +202,7 @@ class PrepareAnvilListener : Listener {
         cost.recipe = if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
             else AnvilXpUtil.calculateLevelForXp(xpCost)
 
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
-        if (finalResult == null) return false
-
-        event.result = finalResult.result
-        if (finalResult.result.isAir) return false
-
+        event.result = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
         AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost, true)
         return true
     }
@@ -227,14 +222,9 @@ class PrepareAnvilListener : Listener {
             return
         }
 
-        cost.penalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
+        cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
 
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.RENAME_ONLY, cost)
-        if (finalResult == null) return
-
-        event.result = finalResult.result
-        if (finalResult.result.isAir) return
-
+        event.result = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.RENAME_ONLY, cost)
         AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
     }
 
@@ -296,7 +286,7 @@ class PrepareAnvilListener : Listener {
         if(hasChanged){
             resultItem.setEnchantmentsUnsafe(newEnchants)
             // Calculate enchantment cost
-            cost.enchantment = AnvilXpUtil.getRightValues(second, resultItem)
+            AnvilXpUtil.getRightValues(second, resultItem, cost)
         }
 
         // Calculate repair cost
@@ -309,22 +299,17 @@ class PrepareAnvilListener : Listener {
 
         // Test/stop if nothing changed.
         if (!hasChanged) {
-            CustomAnvil.log("Mergable with second, But input is same as output")
+            CustomAnvil.log("Mergeable with second, But input is same as output")
             event.result = null
             return
         }
         // As calculatePenalty edit result, we need to calculate penalty after checking equality
-        cost.penalty = AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
+        cost.workPenalty = AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
         // Calculate rename cost
         cost.rename = handleRename(resultItem, inventory, player)
 
         // Finally, we set result
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.MERGE, cost)
-        if (finalResult == null) return
-
-        event.result = finalResult.result
-        if (finalResult.result.isAir) return
-
+        event.result = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.MERGE, cost)
         AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
     }
 
@@ -356,7 +341,7 @@ class PrepareAnvilListener : Listener {
             cost.repair = repairAmount * ConfigOptions.unitRepairCost
         }
         // We do not care about right item penalty for unit repair
-        cost.penalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.UNIT_REPAIR)
+        cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.UNIT_REPAIR)
 
         // Test/stop if nothing changed.
         if (first == resultItem) {
@@ -365,12 +350,7 @@ class PrepareAnvilListener : Listener {
             return true
         }
 
-        val finalResult = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.UNIT_REPAIR, cost)
-        if (finalResult == null) return false
-
-        event.result = finalResult.result
-        if (finalResult.result.isAir) return false
-
+        event.result = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.UNIT_REPAIR, cost)
         AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
         return true
     }
