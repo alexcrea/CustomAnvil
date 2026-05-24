@@ -47,7 +47,7 @@ repositories {
     }
 
     // For vault unlocked
-    maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://repo.codemc.io/repository/creatorfromhell/") }
 }
 
 val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
@@ -107,7 +107,7 @@ dependencies {
     compileOnly("dev.lone:api-itemsadder:4.0.10")
 
     // Vault api
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
 
     // Include nms
     implementation(project(":nms:nms-common"))
