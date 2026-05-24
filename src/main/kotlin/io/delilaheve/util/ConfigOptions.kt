@@ -7,6 +7,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.AnvilUseType
 import java.util.*
@@ -640,9 +641,10 @@ object ConfigOptions {
      */
     val shouldUseMoney: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
+            return EconomyManager.economy?.initialized() == true &&
+                    ConfigHolder.DEFAULT_CONFIG
+                        .config
+                        .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
         }
 
     val usedCurrency: String

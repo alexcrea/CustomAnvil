@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.dependency.economy
 
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.math.BigDecimal
 
 interface EconomyManager {
 
@@ -21,7 +23,10 @@ interface EconomyManager {
 
     fun initialized(): Boolean
 
+    // We assume "initialized" got checked before these function get called
+    fun has(player: Player, money: BigDecimal): Boolean
+    fun remove(player: Player, money: BigDecimal): Boolean
 
-
+    fun format(money: BigDecimal): String;
 
 }
