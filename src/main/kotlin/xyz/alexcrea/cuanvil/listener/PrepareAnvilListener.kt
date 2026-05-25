@@ -13,6 +13,7 @@ import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -54,7 +55,8 @@ class PrepareAnvilListener : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         // Should find player
-        val player: HumanEntity = InventoryViewUtil.getInstance().getPlayer(event.view)
+        val player = InventoryViewUtil.getInstance().getPlayer(event.view)
+        if(player !is Player) return
         val inventory = event.inventory
 
         // Test if custom anvil is bypassed before immutability test
@@ -183,7 +185,7 @@ class PrepareAnvilListener : Listener {
     // return true if a custom recipe exist with these ingredients
     private fun testCustomRecipe(
         event: PrepareAnvilEvent, inventory: AnvilInventory,
-        player: HumanEntity,
+        player: Player,
         first: ItemStack, second: ItemStack?
     ): Boolean {
         val recipe = CustomRecipeUtil.getCustomRecipe(first, second)
@@ -209,7 +211,7 @@ class PrepareAnvilListener : Listener {
 
     private fun doRenaming(
         event: PrepareAnvilEvent, inventory: AnvilInventory,
-        player: HumanEntity, first: ItemStack
+        player: Player, first: ItemStack
     ) {
         val resultItem = DependencyManager.cloneItem(event, first)
         val cost = AnvilCost()
@@ -274,7 +276,7 @@ class PrepareAnvilListener : Listener {
 
     private fun doMerge(
         event: PrepareAnvilEvent, inventory: AnvilInventory,
-        player: HumanEntity,
+        player: Player,
         first: ItemStack, second: ItemStack
     ) {
         val newEnchants = first.findEnchantments()
@@ -327,7 +329,7 @@ class PrepareAnvilListener : Listener {
 
     // return true if there is a valid unit repair with these ingredients
     private fun testUnitRepair(
-        event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
+        event: PrepareAnvilEvent, inventory: AnvilInventory, player: Player,
         first: ItemStack, second: ItemStack
     ): Boolean {
         val unitRepairAmount = first.getRepair(second) ?: return false
@@ -356,7 +358,7 @@ class PrepareAnvilListener : Listener {
     }
 
     private fun testLoreEdit(
-        event: PrepareAnvilEvent, inventory: AnvilInventory, player: HumanEntity,
+        event: PrepareAnvilEvent, inventory: AnvilInventory, player: Player,
         first: ItemStack, second: ItemStack
     ): Boolean {
         val type = second.type

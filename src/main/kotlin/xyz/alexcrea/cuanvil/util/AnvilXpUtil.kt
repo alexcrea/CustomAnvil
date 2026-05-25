@@ -2,9 +2,12 @@ package xyz.alexcrea.cuanvil.util
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
+import io.delilaheve.util.ConfigOptions.getMonetaryMultiplier as moneyMultiplier
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import org.bukkit.GameMode
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.HumanEntity
@@ -16,7 +19,9 @@ import org.bukkit.inventory.meta.Repairable
 import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
+import java.math.BigDecimal
 import kotlin.math.min
 
 object AnvilXpUtil {
@@ -43,6 +48,7 @@ object AnvilXpUtil {
             this.generic = generic
             isAlone = true
         }
+
         constructor() {
             isAlone = false
         }
@@ -54,12 +60,14 @@ object AnvilXpUtil {
     fun setAnvilInvCost(
         inventory: AnvilInventory,
         view: InventoryView,
-        player: HumanEntity,
+        player: Player,
         cost: AnvilCost,
         ignoreRules: Boolean = false
     ) {
-        // TODO check require money or xp cost & display appropriately
-        setAnvilInvXp(inventory, view, player, cost.sum(), ignoreRules)
+        if (ConfigOptions.shouldUseMoney)
+            setAnvilPrice(inventory, view, player, cost)
+        else
+            setAnvilInvXp(inventory, view, player, cost.sum(), ignoreRules)
     }
 
     /**
@@ -72,7 +80,7 @@ object AnvilXpUtil {
         anvilCost: Int,
         ignoreRules: Boolean = false
     ) {
-        
+
         // Test repair cost limit
         val finalAnvilCost = if (
             !ignoreRules &&
@@ -117,6 +125,59 @@ object AnvilXpUtil {
                 DependencyManager.packetManager.setInstantBuild(player, bypassToExpensive)
             }
 
+            player.updateInventory()
+        }
+    }
+
+    fun asMonetaryCost(cost: AnvilCost): BigDecimal {
+        // multiply by per use type multipliers
+        return BigDecimal(cost.generic)
+            .add(BigDecimal(cost.enchantment).multiply(moneyMultiplier("enchantment")))
+            .add(BigDecimal(cost.repair).multiply(moneyMultiplier("repair")))
+            .add(BigDecimal(cost.rename).multiply(moneyMultiplier("rename")))
+            .add(BigDecimal(cost.lore).multiply(moneyMultiplier("lore_edit")))
+            .add(BigDecimal(cost.enchantment).multiply(moneyMultiplier("enchantment")))
+            .add(BigDecimal(cost.illegalPenalty).multiply(moneyMultiplier("work_penalty")))
+            .add(BigDecimal(cost.workPenalty).multiply(moneyMultiplier("work_penalty")))
+            .add(BigDecimal(cost.recipe).multiply(moneyMultiplier("recipe")))
+            .multiply(moneyMultiplier("global"))
+    }
+
+    /**
+     * Display monetary cost needed for the work on the anvil inventory
+     */
+    private fun setAnvilPrice(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: Player,
+        cost: AnvilCost,
+    ) {
+        val finalCost = asMonetaryCost(cost)
+
+        val has = EconomyManager.economy!!.has(player, finalCost)
+
+        val text = "Cost: " + (if(has) "§2" else "§4") +
+                EconomyManager.economy!!.format(finalCost)
+        AnvilTitleUtil.rename(view, text)
+
+        clearAnvilXpCost(inventory, view, player)
+    }
+
+    private fun clearAnvilXpCost(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: HumanEntity,
+    ) {
+        // TODO for 2.x.x use anvil view & set directly there
+        inventory.repairCost = 0
+
+        // retry after a tick
+        DependencyManager.scheduler.scheduleOnEntity(
+            CustomAnvil.instance, player
+        ) {
+            inventory.repairCost = 0
+
+            if (player !is Player) return@scheduleOnEntity
             player.updateInventory()
         }
     }

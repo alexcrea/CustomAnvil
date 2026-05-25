@@ -12,10 +12,10 @@ interface EconomyManager {
         fun setupEconomy(plugin: Plugin) {
             if (plugin.server.pluginManager.getPlugin("Vault") == null)
                 return
-            if(UnlockedEconomyManager.unlockedAvailable())
+            if (UnlockedEconomyManager.unlockedAvailable())
                 economy = UnlockedEconomyManager(plugin)
 
-            if(economy == null || !economy!!.initialized())
+            if (economy == null || !economy!!.initialized())
                 economy = VaultEconomyManager(plugin)
         }
 

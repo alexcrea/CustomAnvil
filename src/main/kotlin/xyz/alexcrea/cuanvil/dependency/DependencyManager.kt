@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -199,7 +200,7 @@ object DependencyManager {
     }
 
     // Return true if should bypass (either by a dependency or error)
-    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: Player): Boolean {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
@@ -208,7 +209,7 @@ object DependencyManager {
         }
     }
 
-    private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: Player): Boolean {
         // Run the event
         val bypassEvent = CAPreAnvilBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)

@@ -91,7 +91,7 @@ object ConfigOptions {
     const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
 
     // Minimum versions
-    val MINIMUM_MONETARY_COST_VER = Version(21, 0, 0)
+    val MINIMUM_MONETARY_COST_VER = Version(1, 21, 0)
 
     // ----------------------
     // Default config values

@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.math.BigDecimal
 
-class UnlockedEconomyManager: EconomyManager {
+class UnlockedEconomyManager : EconomyManager {
 
     val plugin: String
     val economy: Economy?
@@ -42,23 +42,27 @@ class UnlockedEconomyManager: EconomyManager {
     }
 
     override fun has(player: Player, money: BigDecimal): Boolean {
-        if(money.signum() <= 0) return true
+        if (money.signum() <= 0) return true
 
-        return economy!!.has(plugin,
+        return economy!!.has(
+            plugin,
             player.uniqueId,
             player.world.name,
             currency(),
-            money)
+            money
+        )
     }
 
     override fun remove(player: Player, money: BigDecimal): Boolean {
-        if(money.signum() <= 0) return true
+        if (money.signum() <= 0) return true
 
-        return economy!!.withdraw(plugin,
+        return economy!!.withdraw(
+            plugin,
             player.uniqueId,
             player.world.name,
             currency(),
-            money)
+            money
+        )
             .transactionSuccess()
     }
 

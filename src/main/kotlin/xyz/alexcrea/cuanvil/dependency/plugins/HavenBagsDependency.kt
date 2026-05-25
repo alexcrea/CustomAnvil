@@ -1,7 +1,7 @@
 package xyz.alexcrea.cuanvil.dependency.plugins
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -46,7 +46,7 @@ class HavenBagsDependency {
 
     }
 
-    fun testPrepareAnvil(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    fun testPrepareAnvil(event: PrepareAnvilEvent, player: Player): Boolean {
         val previousResult = event.result
         event.result = null
 

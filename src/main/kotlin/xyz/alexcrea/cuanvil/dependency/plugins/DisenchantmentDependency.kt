@@ -8,7 +8,7 @@ import com.jankominek.disenchantment.events.ShatterEvent
 import com.jankominek.disenchantment.listeners.DisenchantClickListener
 import com.jankominek.disenchantment.listeners.ShatterClickListener
 import io.delilaheve.CustomAnvil
-import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
@@ -51,7 +51,7 @@ class DisenchantmentDependency {
         InventoryClickEvent.getHandlerList().unregister(listener)
     }
 
-    fun testPrepareAnvil(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    fun testPrepareAnvil(event: PrepareAnvilEvent, player: Player): Boolean {
         val previousResult = event.result
         event.result = null
 

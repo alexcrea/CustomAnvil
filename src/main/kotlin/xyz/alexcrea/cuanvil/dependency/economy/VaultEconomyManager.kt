@@ -19,13 +19,13 @@ class VaultEconomyManager : EconomyManager {
     }
 
     override fun has(player: Player, money: BigDecimal): Boolean {
-        if(money.signum() <= 0) return true
+        if (money.signum() <= 0) return true
 
         return economy!!.has(player, money.toDouble())
     }
 
     override fun remove(player: Player, money: BigDecimal): Boolean {
-        if(money.signum() <= 0) return true
+        if (money.signum() <= 0) return true
 
         return economy!!.withdrawPlayer(player, money.toDouble()).transactionSuccess()
     }
