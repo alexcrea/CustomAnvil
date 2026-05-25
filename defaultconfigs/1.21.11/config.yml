@@ -452,6 +452,8 @@ lore_edit:
 
 # Allow to replace the xp cost by a monetary cost
 # If enabled it will not be bound to the experience level limits
+#
+# This feature can only be enabled starting with 1.21
 monetary_cost:
   enabled: false
   # If using vault unlocked this allow to specify what currency should be used for anvil usage

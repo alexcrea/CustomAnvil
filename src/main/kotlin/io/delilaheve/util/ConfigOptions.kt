@@ -9,7 +9,10 @@ import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.update.UpdateUtils
+import xyz.alexcrea.cuanvil.update.Version
 import xyz.alexcrea.cuanvil.util.AnvilUseType
+import java.math.BigDecimal
 import java.util.*
 
 /**
@@ -86,6 +89,9 @@ object ConfigOptions {
     // Debug flag
     const val DEBUG_LOGGING = "debug_log"
     const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
+
+    // Minimum versions
+    val MINIMUM_MONETARY_COST_VER = Version(21, 0, 0)
 
     // ----------------------
     // Default config values
@@ -637,11 +643,12 @@ object ConfigOptions {
     }
 
     /*
-     * Monetary configs
+     * Monetary configs (only for 1.21+)
      */
     val shouldUseMoney: Boolean
         get() {
             return EconomyManager.economy?.initialized() == true &&
+                    UpdateUtils.currentMinecraftVersion().greaterEqual(MINIMUM_MONETARY_COST_VER) &&
                     ConfigHolder.DEFAULT_CONFIG
                         .config
                         .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
@@ -654,10 +661,10 @@ object ConfigOptions {
                 .getString(MONEY_CURRENCY, DEFAULT_MONEY_CURRENCY)!!
         }
 
-    fun getMonetaryMultiplier(type: String): Double {
-        return ConfigHolder.DEFAULT_CONFIG
+    fun getMonetaryMultiplier(type: String): BigDecimal {
+        return BigDecimal(ConfigHolder.DEFAULT_CONFIG
                 .config
-            .getDouble("$MONETARY_MULTIPLIER_ROOT.$type", DEFAULT_MONEY_MULTIPLIER)
+            .getDouble("$MONETARY_MULTIPLIER_ROOT.$type", DEFAULT_MONEY_MULTIPLIER))
     }
 
 }
