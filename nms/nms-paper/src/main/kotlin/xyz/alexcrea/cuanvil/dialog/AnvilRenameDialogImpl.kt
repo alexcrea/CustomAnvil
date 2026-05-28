@@ -109,13 +109,16 @@ class AnvilRenameDialogImpl(
 
     private fun setName(player: HumanEntity, view: CraftAnvilView, name: String?) {
         val menu = (containerField.get(view) as AnvilMenu)
+        val isSameName = menu.itemName == name
         menu.itemName = name
 
         if(name == null)
             lastNames.remove(player.uniqueId)
         else
             lastNames[player.uniqueId] = name
-        CraftEventFactory.callPrepareResultEvent(menu, 2);
+
+        if(!isSameName)
+            CraftEventFactory.callPrepareResultEvent(menu, 2);
     }
 
     private fun nameFromItem(player: HumanEntity, item: ItemStack?): String? {
