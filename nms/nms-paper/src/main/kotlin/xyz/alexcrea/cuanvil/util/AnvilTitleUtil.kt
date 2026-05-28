@@ -6,6 +6,8 @@ import org.bukkit.inventory.InventoryView
 object AnvilTitleUtil {
 
     fun rename(view: InventoryView, name: String) {
+        if(view.title == name) return
+
         view.title = name
     }
 

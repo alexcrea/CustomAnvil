@@ -6,8 +6,6 @@ import io.delilaheve.util.ConfigOptions.getMonetaryMultiplier as moneyMultiplier
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.GameMode
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.HumanEntity
@@ -21,6 +19,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 import java.math.BigDecimal
 import kotlin.math.min
 
@@ -64,7 +63,7 @@ object AnvilXpUtil {
         cost: AnvilCost,
         ignoreRules: Boolean = false
     ) {
-        if (ConfigOptions.shouldUseMoney)
+        if (ConfigOptions.shouldUseMoney(player))
             setAnvilPrice(inventory, view, player, cost)
         else
             setAnvilInvXp(inventory, view, player, cost.sum(), ignoreRules)
@@ -226,6 +225,11 @@ object AnvilXpUtil {
         }
 
         return resultSum
+    }
+
+    fun onNoResult(player: HumanEntity, view: InventoryView) {
+        if (ConfigOptions.shouldUseMoney(player))
+            AnvilTitleUtil.rename(view, "")
     }
 
     private fun exclusivePenaltyKey(useType: AnvilUseType): NamespacedKey {

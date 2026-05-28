@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.listener
 
 import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil
+import com.jankominek.disenchantment.utils.AnvilCostUtils
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.combineWith
@@ -19,6 +20,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
@@ -45,8 +47,6 @@ class PrepareAnvilListener : Listener {
         const val ANVIL_OUTPUT_SLOT = 2
 
         var IS_EMPTY_TEST = false
-
-        private const val RENAME_DIALOG_PERMISSION = "ca.rename.dialog"
     }
 
     /**
@@ -121,29 +121,26 @@ class PrepareAnvilListener : Listener {
         // Test for lore edit
         if (testLoreEdit(event, inventory, player, first, second)) return
 
-        CustomAnvil.log("no anvil fuse type found")
         event.result = null
 
+    }
+
+    private fun setNoResult(event: PrepareAnvilEvent, view: InventoryView) {
+        event.result = null
+        AnvilXpUtil.onNoResult(view)
     }
 
     private fun tryRenameDialog(
         player: HumanEntity,
         event: PrepareAnvilEvent
     ) {
-        if(!canUseRenameDialog(player)) return
+        if(!ConfigOptions.canUseDialogRename(player)) return
 
         AnvilRenameDialogUtil.anvilRenameDialog.tryShowDialog(player, event)
     }
 
-    private fun canUseRenameDialog(player: HumanEntity): Boolean {
-        if(!ConfigOptions.doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return false
-        if(ConfigOptions.doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return false
-
-        return true
-    }
-
     private fun processDialogPCD(it: ItemMeta, player: HumanEntity) {
-        val keepDialog = canUseRenameDialog(player) && ConfigOptions.shouldKeepRenameText
+        val keepDialog = ConfigOptions.canUseDialogRename(player) && ConfigOptions.shouldKeepRenameText
 
         val pdc = it.persistentDataContainer
         if(!keepDialog)

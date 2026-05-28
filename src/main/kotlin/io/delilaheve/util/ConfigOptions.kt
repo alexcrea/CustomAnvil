@@ -3,15 +3,16 @@ package io.delilaheve.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import org.bukkit.NamespacedKey
+import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
-import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.update.Version
 import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 import java.math.BigDecimal
 import java.util.*
 
@@ -89,9 +90,6 @@ object ConfigOptions {
     // Debug flag
     const val DEBUG_LOGGING = "debug_log"
     const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
-
-    // Minimum versions
-    val MINIMUM_MONETARY_COST_VER = Version(1, 21, 0)
 
     // ----------------------
     // Default config values
@@ -180,6 +178,11 @@ object ConfigOptions {
 
     // Default max before merge disabled (negative mean enabled)
     const val DEFAULT_MAX_BEFORE_MERGE_DISABLED = -1
+
+    // -----------
+    // Permissions
+    // -----------
+    private const val RENAME_DIALOG_PERMISSION = "ca.rename.dialog"
 
     // -------------
     // Get methods
@@ -469,6 +472,13 @@ object ConfigOptions {
                 .getBoolean(DIALOG_RENAME_USE_PERMISSION, DEFAULT_DIALOG_RENAME_USE_PERMISSION)
         }
 
+    fun canUseDialogRename(player: HumanEntity): Boolean {
+        if(!doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return false
+        if(doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return false
+
+        return true
+    }
+
     /**
      * Do the dialog menu require permission
      */
@@ -643,16 +653,16 @@ object ConfigOptions {
     }
 
     /*
-     * Monetary configs (only for 1.21+)
+     * Monetary configs (only for 1.21.6+)
+     * Also require dialog rename
      */
-    val shouldUseMoney: Boolean
-        get() {
+    fun shouldUseMoney(player: HumanEntity): Boolean {
             return EconomyManager.economy?.initialized() == true &&
-                    UpdateUtils.currentMinecraftVersion().greaterEqual(MINIMUM_MONETARY_COST_VER) &&
+                    canUseDialogRename(player) &&
                     ConfigHolder.DEFAULT_CONFIG
                         .config
                         .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
-        }
+    }
 
     val usedCurrency: String
         get() {

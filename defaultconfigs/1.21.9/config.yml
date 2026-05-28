@@ -445,7 +445,10 @@ lore_edit:
 # Allow to replace the xp cost by a monetary cost
 # If enabled it will not be bound to the experience level limits
 #
-# This feature can only be enabled starting with 1.21
+# It also requires to enable dialog rename (set "enable_dialog_rename: false" a bit higher)
+# If dialog rename permission is enabled and player do not have the permission merge will fall back to vanilla xp cost
+#
+# As this feature require dialog rename, it can only be enabled starting with paper 1.21.6
 monetary_cost:
   enabled: false
   # If using vault unlocked this allow to specify what currency should be used for anvil usage
