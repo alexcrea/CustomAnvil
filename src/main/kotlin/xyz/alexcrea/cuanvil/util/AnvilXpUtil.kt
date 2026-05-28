@@ -157,7 +157,10 @@ object AnvilXpUtil {
 
         val text = "Cost: " + (if(has) "§2" else "§4") +
                 EconomyManager.economy!!.format(finalCost)
-        AnvilTitleUtil.rename(view, text)
+        AnvilTitleUtil.rename(view, text,
+            player,
+            AnvilRenameDialogUtil.anvilRenameDialog,
+            CustomAnvil.instance)
 
         clearAnvilXpCost(inventory, view, player)
     }
@@ -229,7 +232,10 @@ object AnvilXpUtil {
 
     fun onNoResult(player: HumanEntity, view: InventoryView) {
         if (ConfigOptions.shouldUseMoney(player))
-            AnvilTitleUtil.rename(view, "")
+            AnvilTitleUtil.rename(view, "",
+                player,
+                AnvilRenameDialogUtil.anvilRenameDialog,
+                CustomAnvil.instance)
     }
 
     private fun exclusivePenaltyKey(useType: AnvilUseType): NamespacedKey {

@@ -18,4 +18,6 @@ interface AnvilRenameDialog {
 
     fun currentText(player: HumanEntity): String?
 
+    fun isOpenFor(player: HumanEntity): Boolean
+
 }

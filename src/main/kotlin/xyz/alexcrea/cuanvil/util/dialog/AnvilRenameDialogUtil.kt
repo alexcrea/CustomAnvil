@@ -47,5 +47,9 @@ object AnvilRenameDialogUtil {
             return null
         }
 
+        override fun isOpenFor(player: HumanEntity): Boolean {
+            return false
+        }
+
     }
 }

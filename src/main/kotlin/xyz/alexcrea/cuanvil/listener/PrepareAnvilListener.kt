@@ -59,6 +59,8 @@ class PrepareAnvilListener : Listener {
         if(player !is Player) return
         val inventory = event.inventory
 
+        tryRenameDialog(player, event)
+
         // Test if custom anvil is bypassed before immutability test
         if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
@@ -86,8 +88,6 @@ class PrepareAnvilListener : Listener {
             event.result = null
             return
         }
-
-        tryRenameDialog(player, event)
 
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
@@ -127,7 +127,7 @@ class PrepareAnvilListener : Listener {
 
     private fun setNoResult(event: PrepareAnvilEvent, view: InventoryView) {
         event.result = null
-        AnvilXpUtil.onNoResult(view)
+        // TODO AnvilXpUtil.onNoResult(view)
     }
 
     private fun tryRenameDialog(
