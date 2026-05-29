@@ -18,6 +18,7 @@ import org.bukkit.craftbukkit.inventory.CraftInventoryView
 import org.bukkit.craftbukkit.inventory.view.CraftAnvilView
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.PrepareAnvilEvent
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.Plugin
@@ -49,6 +50,10 @@ class AnvilRenameDialogImpl(
         )
         private val USER_FACING_CONFIRM = Component.text("Confirm").color(TextColor.fromHexString("#40FF40"))
         private val USER_FACING_CANCEL = Component.text("Cancel").color(TextColor.fromHexString("#FF4040"))
+
+        fun itemDefaultName(item: ItemStack?): String? {
+            return PLAIN_TEXT_SERIALIZER.serializeOrNull(item?.effectiveName())
+        }
     }
 
     private val lastNames = HashMap<UUID, String>()
@@ -76,7 +81,7 @@ class AnvilRenameDialogImpl(
         val initialFinal = initial?.take(maxLength)
 
         val baseBuilder = DialogBase.builder(USER_FACING_RENAME_TITLE)
-            .canCloseWithEscape(false)
+            .canCloseWithEscape(true)
             .afterAction(DialogBase.DialogAfterAction.CLOSE)
             .inputs(
                 listOf(
@@ -116,18 +121,18 @@ class AnvilRenameDialogImpl(
         }
     }
 
-    private fun setResult(player: HumanEntity, view: CraftAnvilView, result: String?) {
-        val defaultName = PLAIN_TEXT_SERIALIZER.serializeOrNull(view.getItem(0)?.effectiveName())
+    private fun setResult(player: HumanEntity, view: InventoryView, result: String?) {
+        val defaultName = itemDefaultName(view.getItem(0))
         if (defaultName == result) {
             setName(player, view, "", null)
             if (defaultName != null) lastNames[player.uniqueId] = defaultName
-        } else setName(player, view, lastNames[player.uniqueId], result)
+        } else setName(player, view, result, result)
     }
 
-    private fun setName(player: HumanEntity, view: CraftAnvilView, name: String?, rename: String?) {
+    private fun setName(player: HumanEntity, view: InventoryView, name: String?, rename: String?) {
         val menu = (containerField.get(view) as AnvilMenu)
         val isSameName = menu.itemName == name
-        menu.itemName = name
+        menu.itemName = rename
 
         if (name == null)
             lastNames.remove(player.uniqueId)
@@ -180,10 +185,10 @@ class AnvilRenameDialogImpl(
             return
         }
 
-        if (lastName == renameText)
+        if (lastName == renameText || lastRename == renameText)
             return
 
-        if (renameText?.isBlank() == true) {
+        if (renameText?.isBlank() == true || renameText == itemDefaultName(leftItem)) {
             setName(player, view, lastName, lastRename)
             return
         }
@@ -215,6 +220,7 @@ class AnvilRenameDialogImpl(
 
     override fun closeInventory(player: HumanEntity) {
         lastNames.remove(player.uniqueId)
+        lastRenames.remove(player.uniqueId)
         lastLeftItem.remove(player.uniqueId)
         runTaskMap.remove(player.uniqueId)?.cancel()
     }
