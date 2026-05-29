@@ -54,25 +54,26 @@ class PrepareAnvilListener : Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
-        // Should find player
-        val player = InventoryViewUtil.getInstance().getPlayer(event.view)
-        if(player !is Player) return
+        val view = event.view
         val inventory = event.inventory
+
+        val player = JustForEasierHotswapUtil.getPlayerFromView(view)
+        if(player !is Player) return
 
         tryRenameDialog(player, event)
 
         // Test if custom anvil is bypassed before immutability test
         if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, AnvilCost(event.inventory.repairCost))
+            AnvilXpUtil.setAnvilInvCost(inventory, view, player, AnvilCost(event.inventory.repairCost))
             return
         }
 
-        val first = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
+        val first = inventory.getItem(ANVIL_INPUT_LEFT)
         val second = inventory.getItem(ANVIL_INPUT_RIGHT)
 
         if(IS_EMPTY_TEST) {
-            event.result = null
+            setNoResult(event, player, view)
             IS_EMPTY_TEST = false
             return
         }
@@ -85,33 +86,40 @@ class PrepareAnvilListener : Listener {
         if (isImmutable(first) || isImmutable(second)) {
             CustomAnvil.verboseLog("Skipping anvil process as one of the two item is immutable")
 
-            event.result = null
+            setNoResult(event, player, view)
             return
         }
 
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, AnvilCost(event.inventory.repairCost))
+            AnvilXpUtil.setAnvilInvCost(inventory, view, player, AnvilCost(event.inventory.repairCost))
             return
         }
 
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
+        if(first == null) {
+            setNoResult(event, player, view)
+            return
+        }
+
         // Test custom recipe
         if (testCustomRecipe(event, inventory, player, first, second)) return
 
         // Test rename lonely item
-        val isAir = second.isAir
-        CustomAnvil.verboseLog("checking air in main logic: $isAir")
-        if (isAir) {
-            doRenaming(event, inventory, player, first)
+        val shouldTryRename = second.isAir
+        CustomAnvil.verboseLog("checking air in main logic: $shouldTryRename")
+        if (shouldTryRename) {
+            if(!doRenaming(event, inventory, player, first))
+                setNoResult(event, player, view)
             return
         }
 
         // Test for merge
         if (first.canMergeWith(second!!)) {
-            doMerge(event, inventory, player, first, second)
+            if(!doMerge(event, inventory, player, first, second))
+                setNoResult(event, player, view)
             return
         }
 
@@ -121,13 +129,12 @@ class PrepareAnvilListener : Listener {
         // Test for lore edit
         if (testLoreEdit(event, inventory, player, first, second)) return
 
-        event.result = null
-
+        setNoResult(event, player, view)
     }
 
-    private fun setNoResult(event: PrepareAnvilEvent, view: InventoryView) {
+    private fun setNoResult(event: PrepareAnvilEvent, player: Player, view: InventoryView) {
         event.result = null
-        // TODO AnvilXpUtil.onNoResult(view)
+        AnvilXpUtil.onNoResult(player, view)
     }
 
     private fun tryRenameDialog(
@@ -209,7 +216,7 @@ class PrepareAnvilListener : Listener {
     private fun doRenaming(
         event: PrepareAnvilEvent, inventory: AnvilInventory,
         player: Player, first: ItemStack
-    ) {
+    ): Boolean {
         val resultItem = DependencyManager.cloneItem(event, first)
         val cost = AnvilCost()
         cost.rename = handleRename(resultItem, inventory, player)
@@ -217,14 +224,14 @@ class PrepareAnvilListener : Listener {
         // Test/stop if nothing changed.
         if (first == resultItem) {
             CustomAnvil.log("no right item, But input is same as output")
-            event.result = null
-            return
+            return false
         }
 
         cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
 
         event.result = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.RENAME_ONLY, cost)
         AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
+        return true
     }
 
     private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
@@ -275,7 +282,7 @@ class PrepareAnvilListener : Listener {
         event: PrepareAnvilEvent, inventory: AnvilInventory,
         player: Player,
         first: ItemStack, second: ItemStack
-    ) {
+    ): Boolean {
         val newEnchants = first.findEnchantments()
             .combineWith(second.findEnchantments(), first, player)
         var hasChanged = !isIdentical(first.findEnchantments(), newEnchants)
@@ -299,8 +306,7 @@ class PrepareAnvilListener : Listener {
         // Test/stop if nothing changed.
         if (!hasChanged) {
             CustomAnvil.log("Mergeable with second, But input is same as output")
-            event.result = null
-            return
+            return false
         }
         // As calculatePenalty edit result, we need to calculate penalty after checking equality
         cost.workPenalty = AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
@@ -310,6 +316,7 @@ class PrepareAnvilListener : Listener {
         // Finally, we set result
         event.result = DependencyManager.tryTreatAnvilResult(event, resultItem, AnvilUseType.MERGE, cost)
         AnvilXpUtil.setAnvilInvCost(inventory, event.view, player, cost)
+        return true
     }
 
     private fun isIdentical(

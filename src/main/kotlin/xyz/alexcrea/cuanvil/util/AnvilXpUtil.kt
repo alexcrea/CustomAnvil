@@ -232,7 +232,7 @@ object AnvilXpUtil {
 
     fun onNoResult(player: HumanEntity, view: InventoryView) {
         if (ConfigOptions.shouldUseMoney(player))
-            AnvilTitleUtil.rename(view, "",
+            AnvilTitleUtil.rename(view, "Repair & Name",
                 player,
                 AnvilRenameDialogUtil.anvilRenameDialog,
                 CustomAnvil.instance)
