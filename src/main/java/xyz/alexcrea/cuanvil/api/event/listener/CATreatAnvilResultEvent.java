@@ -109,7 +109,7 @@ public class CATreatAnvilResultEvent extends Event {
      */
     @Deprecated(forRemoval = true, since = "1.17.0")
     public int getLevelCost() {
-        return cost.sum();
+        return cost.asXpCost();
     }
 
     /**
@@ -131,7 +131,7 @@ public class CATreatAnvilResultEvent extends Event {
      */
     @Deprecated(forRemoval = true, since = "1.17.0")
     public void setLevelCost(int levelCost) {
-        cost.setGeneric(levelCost - cost.getGeneric() - cost.sum());
+        cost.setGeneric(levelCost - cost.getGeneric() - cost.asXpCost());
     }
 
     /**

@@ -17,6 +17,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_LEFT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
@@ -32,7 +33,6 @@ import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.min
 
@@ -89,6 +89,7 @@ class AnvilResultListener : Listener {
 
         // Rename
         if (rightItem == null) {
+            // BRUH
             event.result = Event.Result.ALLOW
             return
         }
@@ -246,14 +247,13 @@ class AnvilResultListener : Listener {
         rightItem: ItemStack?,
         rightRemoveCount: Int,
         output: ItemStack,
-        repairCost: Int,
+        cost: AnvilCost,
     ): Boolean {
         // To avoid vanilla, we cancel the event
         event.result = Event.Result.DENY
         event.isCancelled = true
 
-        // Assumed if player do not have enough xp then it returned MIN_VALUE
-        if (repairCost == Int.MIN_VALUE) return false
+        if (!cost.valid) return false
 
         // Where should we get the item
         val slotDestination = getActionSlot(event, player)
@@ -261,6 +261,13 @@ class AnvilResultListener : Listener {
 
         // If not creative middle click...
         if (event.click != ClickType.MIDDLE) {
+            if(cost.isMonetary) {
+                val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
+                if(!result) return false
+            } else {
+                player.level -= cost.asXpCost()
+            }
+
             // We remove what should be removed
             if (leftItem != null) leftItem.amount -= leftRemoveCount
             inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
@@ -269,7 +276,7 @@ class AnvilResultListener : Listener {
             inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
 
             inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-            player.level -= repairCost
+
         }
 
         // Finally, we add the item to the player
@@ -313,55 +320,75 @@ class AnvilResultListener : Listener {
         inventory: AnvilInventory, player: Player,
         leftItem: ItemStack, output: ItemStack,
         resultCopy: ItemStack, resultAmount: Int
-    ): Int {
-        if (player.gameMode == GameMode.CREATIVE) return 0
+    ): AnvilCost {
+        if (player.gameMode == GameMode.CREATIVE) return AnvilCost(0)
 
-        var repairCost = 0
+        val cost = AnvilCost()
         // Get repairCost
         leftItem.itemMeta?.let { leftMeta ->
             val leftName = leftMeta.displayName
             output.itemMeta?.let {
                 // Rename cost
                 if (!leftName.contentEquals(it.displayName)) {
-                    repairCost += ConfigOptions.itemRenameCost
+                    cost.rename += ConfigOptions.itemRenameCost
 
                     // Color cost
                     if (it.displayName.contains('§')) {
-                        repairCost += ConfigOptions.useOfColorCost
+                        cost.rename += ConfigOptions.useOfColorCost
                     }
                 }
             }
         }
 
-        repairCost += AnvilXpUtil.calculatePenalty(leftItem, null, resultCopy, AnvilUseType.UNIT_REPAIR)
-        repairCost += resultAmount * ConfigOptions.unitRepairCost
+        cost.workPenalty = AnvilXpUtil.calculatePenalty(leftItem, null, resultCopy, AnvilUseType.UNIT_REPAIR)
+        cost.repair = resultAmount * ConfigOptions.unitRepairCost
+
+        var sum = cost.repair
 
         if (
             !ConfigOptions.doRemoveCostLimit &&
             ConfigOptions.doCapCost
         ) {
-            repairCost = min(repairCost, ConfigOptions.maxAnvilCost)
+            val final = min(sum, ConfigOptions.maxAnvilCost)
+            cost.generic += (final - sum)
+
+            sum = final
         }
 
-        if ((inventory.maximumRepairCost <= repairCost)
-            || (player.level < repairCost)
-        ) return Int.MIN_VALUE
+        if (ConfigOptions.shouldUseMoney(player)) {
+            cost.isMonetary = true
+            if (!EconomyManager.economy!!.has(player, cost.asMonetaryCost()))
+                cost.valid = false
+        } else {
+            if ((inventory.maximumRepairCost <= sum)
+                || (player.level < sum)
+            ) cost.valid = false
+        }
 
-        return repairCost
+        return cost
     }
 
     private fun getFromLoreEditXpCost(
         cost: AnvilCost,
         player: Player,
         inventory: AnvilInventory,
-    ): Int {
-        if (GameMode.CREATIVE == player.gameMode) return 0
+    ): AnvilCost {
+        if (GameMode.CREATIVE == player.gameMode) return AnvilCost(0)
 
-        val repairCost = cost.sum()
-        return if ((inventory.maximumRepairCost <= repairCost)
-            || (player.level < repairCost)
-        ) Int.MIN_VALUE
-        else repairCost
+        if (ConfigOptions.shouldUseMoney(player)) {
+            cost.isMonetary = true
+            if (!EconomyManager.economy!!.has(player, cost.asMonetaryCost()))
+                cost.valid = false
+        } else {
+            val repairCost = cost.asXpCost()
+
+            if ((inventory.maximumRepairCost <= repairCost)
+                || (player.level < repairCost)
+            )
+                cost.valid = false
+        }
+
+        return cost
     }
 
     private fun handleBookLoreEdit(
@@ -414,7 +441,7 @@ class AnvilResultListener : Listener {
                 val bookPage = StringBuilder()
                 lore.forEach {
                     if (bookPage.isNotEmpty()) bookPage.append('\n')
-                    if(it == null) return@forEach
+                    if (it == null) return@forEach
 
                     bookPage.append(MiniMessageUtil.plain_text_mm.serialize(it))
                 }

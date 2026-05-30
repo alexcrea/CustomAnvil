@@ -29,6 +29,8 @@ object AnvilXpUtil {
 
     class AnvilCost {
         private val isAlone: Boolean
+        var valid = true // Get set as invalid if cost can be satisfied
+        var isMonetary = false
 
         var generic = 0
         var enchantment = 0
@@ -39,10 +41,6 @@ object AnvilXpUtil {
         var workPenalty = 0
         var recipe = 0
 
-        fun sum(): Int {
-            return generic + enchantment + repair + rename + lore + illegalPenalty + workPenalty + recipe
-        }
-
         constructor(generic: Int) {
             this.generic = generic
             isAlone = true
@@ -50,6 +48,24 @@ object AnvilXpUtil {
 
         constructor() {
             isAlone = false
+        }
+
+        fun asXpCost(): Int {
+            return generic + enchantment + repair + rename + lore + illegalPenalty + workPenalty + recipe
+        }
+
+        fun asMonetaryCost(): BigDecimal {
+            // multiply by per use type multipliers
+            return BigDecimal(generic)
+                .add(BigDecimal(enchantment).multiply(moneyMultiplier("enchantment")))
+                .add(BigDecimal(repair).multiply(moneyMultiplier("repair")))
+                .add(BigDecimal(rename).multiply(moneyMultiplier("rename")))
+                .add(BigDecimal(lore).multiply(moneyMultiplier("lore_edit")))
+                .add(BigDecimal(enchantment).multiply(moneyMultiplier("enchantment")))
+                .add(BigDecimal(illegalPenalty).multiply(moneyMultiplier("work_penalty")))
+                .add(BigDecimal(workPenalty).multiply(moneyMultiplier("work_penalty")))
+                .add(BigDecimal(recipe).multiply(moneyMultiplier("recipe")))
+                .multiply(moneyMultiplier("global"))
         }
     }
 
@@ -63,10 +79,11 @@ object AnvilXpUtil {
         cost: AnvilCost,
         ignoreRules: Boolean = false
     ) {
-        if (ConfigOptions.shouldUseMoney(player))
+        if (ConfigOptions.shouldUseMoney(player)) {
+            cost.isMonetary = true
             setAnvilPrice(inventory, view, player, cost)
-        else
-            setAnvilInvXp(inventory, view, player, cost.sum(), ignoreRules)
+        } else
+            setAnvilInvXp(inventory, view, player, cost.asXpCost(), ignoreRules)
     }
 
     /**
@@ -128,20 +145,6 @@ object AnvilXpUtil {
         }
     }
 
-    fun asMonetaryCost(cost: AnvilCost): BigDecimal {
-        // multiply by per use type multipliers
-        return BigDecimal(cost.generic)
-            .add(BigDecimal(cost.enchantment).multiply(moneyMultiplier("enchantment")))
-            .add(BigDecimal(cost.repair).multiply(moneyMultiplier("repair")))
-            .add(BigDecimal(cost.rename).multiply(moneyMultiplier("rename")))
-            .add(BigDecimal(cost.lore).multiply(moneyMultiplier("lore_edit")))
-            .add(BigDecimal(cost.enchantment).multiply(moneyMultiplier("enchantment")))
-            .add(BigDecimal(cost.illegalPenalty).multiply(moneyMultiplier("work_penalty")))
-            .add(BigDecimal(cost.workPenalty).multiply(moneyMultiplier("work_penalty")))
-            .add(BigDecimal(cost.recipe).multiply(moneyMultiplier("recipe")))
-            .multiply(moneyMultiplier("global"))
-    }
-
     /**
      * Display monetary cost needed for the work on the anvil inventory
      */
@@ -151,16 +154,19 @@ object AnvilXpUtil {
         player: Player,
         cost: AnvilCost,
     ) {
-        val finalCost = asMonetaryCost(cost)
+        val finalCost = cost.asMonetaryCost()
 
-        val has = EconomyManager.economy!!.has(player, finalCost)
+        val has = player.gameMode == GameMode.CREATIVE ||
+                EconomyManager.economy!!.has(player, finalCost)
 
-        val text = "Cost: " + (if(has) "§2" else "§4") +
+        val text = "Cost: " + (if (has) "§2" else "§4") +
                 EconomyManager.economy!!.format(finalCost)
-        AnvilTitleUtil.rename(view, text,
+        AnvilTitleUtil.rename(
+            view, text,
             player,
             AnvilRenameDialogUtil.anvilRenameDialog,
-            CustomAnvil.instance)
+            CustomAnvil.instance
+        )
 
         clearAnvilXpCost(inventory, view, player)
     }
@@ -232,10 +238,12 @@ object AnvilXpUtil {
 
     fun onNoResult(player: HumanEntity, view: InventoryView) {
         if (ConfigOptions.shouldUseMoney(player))
-            AnvilTitleUtil.rename(view, "Repair & Name",
+            AnvilTitleUtil.rename(
+                view, "Repair & Name",
                 player,
                 AnvilRenameDialogUtil.anvilRenameDialog,
-                CustomAnvil.instance)
+                CustomAnvil.instance
+            )
     }
 
     private fun exclusivePenaltyKey(useType: AnvilUseType): NamespacedKey {
