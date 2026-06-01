@@ -1,8 +1,8 @@
 package xyz.alexcrea.cuanvil.util
 
-import dev.faststats.bukkit.BukkitMetrics
-import dev.faststats.core.ErrorTracker
-import dev.faststats.core.data.Metric
+import dev.faststats.ErrorTracker
+import dev.faststats.bukkit.BukkitContext
+import dev.faststats.data.Metric
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import xyz.alexcrea.cuanvil.command.DiagnosticExecutor
@@ -14,7 +14,7 @@ object MetricsUtil {
     private const val FASTSTATS_TOKEN = "fc282b048adcc71a77bc00ace49e8a81"
 
     private var ERROR_TRACKER: ErrorTracker? = null
-    private var FAST_STATS_METRICS: BukkitMetrics? = null
+    private var FAST_STATS_METRICS: BukkitContext? = null
 
     fun loadMetrics(plugin: CustomAnvil) {
         val config = ConfigHolder.DEFAULT_CONFIG.config
@@ -47,13 +47,15 @@ object MetricsUtil {
         if(reportErrors)
             ERROR_TRACKER = ErrorTracker.contextAware()
 
-        FAST_STATS_METRICS = BukkitMetrics.factory()
-            .addMetric(Metric.string("nms_type") { nmsType })
-            .addMetric(Metric.bool("replace_too_expensive") { ConfigOptions.doReplaceTooExpensive })
-            .addMetric(Metric.bool("using_alpha") { isAlpha })
-            .errorTracker(ERROR_TRACKER)
-            .token(FASTSTATS_TOKEN)
-            .create(plugin)
+        FAST_STATS_METRICS = BukkitContext.Factory(plugin, FASTSTATS_TOKEN)
+            .metrics { factory -> factory
+                .addMetric(Metric.string("nms_type") { nmsType })
+                .addMetric(Metric.bool("replace_too_expensive") { ConfigOptions.doReplaceTooExpensive })
+                .addMetric(Metric.bool("using_alpha") { isAlpha })
+                .create()
+            }
+            .errorTrackerService(ERROR_TRACKER)
+            .create()
 
         if(reportErrors) FAST_STATS_METRICS!!.ready()
     }
