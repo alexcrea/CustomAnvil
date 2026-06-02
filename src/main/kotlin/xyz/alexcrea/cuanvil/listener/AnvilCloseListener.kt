@@ -7,6 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.AnvilInventory
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
+import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
 class AnvilCloseListener(private val packetManager: PacketManager) : Listener {
 
@@ -18,6 +19,7 @@ class AnvilCloseListener(private val packetManager: PacketManager) : Listener {
             packetManager.setInstantBuild(player, false)
         }
 
+        AnvilRenameDialogUtil.anvilRenameDialog.closeInventory(player)
     }
 
 }

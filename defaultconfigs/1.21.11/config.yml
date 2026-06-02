@@ -101,6 +101,24 @@ permission_needed_for_color: true
 # Valid values include 0 to 1000.
 use_of_color_cost: 0
 
+# Dialogue rename menu make use of dialog menu to allow bigger rename
+# You can also change the maximum size and set it to -1 or less for maximum
+#
+# This feature only work on paper 1.21.7 or later
+#
+# At the moment only english is available for this menu... sorry !
+#
+# CustomAnvil use "ca.rename.dialog" when permission
+enable_dialog_rename: false
+dialog_rename_max_size: 256
+permission_needed_for_dialog_rename: false
+
+# This allows custom anvil to not "guess" the text used for rename but store it in the item
+# It will make item stackable only and only if it had used the same rename text
+#
+# For practical reason. this only work when dialog rename is enabled
+dialog_rename_keep_user_text: true
+
 # Override limits for specific enchants
 #
 # Enchantments not listed here will use the value of default_limit

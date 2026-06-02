@@ -5,6 +5,7 @@ import io.delilaheve.util.ConfigOptions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.util.MetricType;
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil;
 import xyz.alexcrea.cuanvil.util.config.LoreEditType;
 
@@ -18,6 +19,9 @@ public class PluginSetDefault {
 
         int nbSet = 0;
 
+        nbSet += trySetDefault(config, METRIC_TYPE, MetricType.AUTO.getValue());
+        nbSet += trySetDefault(config, METRIC_COLLECT_ERROR, true);
+
         nbSet += trySetDefault(config, CAP_ANVIL_COST, DEFAULT_CAP_ANVIL_COST);
         nbSet += trySetDefault(config, MAX_ANVIL_COST, DEFAULT_MAX_ANVIL_COST);
         nbSet += trySetDefault(config, REMOVE_ANVIL_COST_LIMIT, DEFAULT_REMOVE_ANVIL_COST_LIMIT);
@@ -30,6 +34,7 @@ public class PluginSetDefault {
         nbSet += trySetDefault(config, ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR);
         nbSet += trySetDefault(config, PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR);
         nbSet += trySetDefault(config, USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST);
+        nbSet += trySetDefault(config, PER_COLOR_CODE_PERMISSION, DEFAULT_PER_COLOR_CODE_PERMISSION);
 
         // Lore Edit defaults
         for (@NotNull LoreEditType value : LoreEditType.values()) {
@@ -55,6 +60,11 @@ public class PluginSetDefault {
         nbSet += trySetDefault(config, PAPER_PERMISSION_NEEDED, DEFAULT_PAPER_PERMISSION_NEEDED);
 
         nbSet += trySetDefault(config, PAPER_EDIT_ORDER, DEFAULT_PAPER_EDIT_ORDER);
+
+        nbSet += trySetDefault(config, DIALOG_RENAME_ENABLED, DEFAULT_DIALOG_RENAME_ENABLED);
+        nbSet += trySetDefault(config, DIALOG_MAX_SIZE, DEFAULT_DIALOG_MAX_SIZE);
+        nbSet += trySetDefault(config, DIALOG_RENAME_USE_PERMISSION, DEFAULT_DIALOG_RENAME_USE_PERMISSION);
+        nbSet += trySetDefault(config, DIALOG_KEEP_USER_TEXT, DEFAULT_DIALOG_KEEP_USER_TEXT);
 
         if (nbSet > 0) {
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");

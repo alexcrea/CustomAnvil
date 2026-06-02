@@ -60,25 +60,11 @@ object AnvilColorUtil {
         return ColorPermissions(canUseColorCode, canUseHexColor, canUseMinimessage, player)
     }
 
-    /**
-     * Color a string depending on allowed color type, color use type and player permissions
-     * @return colored component or null if nothing has been colored
-     */
-    fun handleColor(
-        textToColorText: String,
-        player: Permissible,
-        usePermission: Boolean,
-        allowColorCode: Boolean,
-        allowHexadecimalColor: Boolean,
-        allowMinimessage: Boolean,
-        useType: ColorUseType
-    ): Component? {
-        val permission = calculatePermissions(
-            player, usePermission,
-            allowColorCode, allowHexadecimalColor, allowMinimessage,
-            useType
-        )
-        return handleColor(textToColorText, permission)
+    fun renamePermission(player: Permissible): ColorPermissions {
+        return calculatePermissions(player,
+            ConfigOptions.permissionNeededForColor,
+            ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
+            ColorUseType.RENAME)
     }
 
     /**

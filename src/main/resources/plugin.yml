@@ -63,6 +63,11 @@ permissions:
   ca.lore_edit.paper:
     default: op
     description: Allow player to edit lore via paper if enabled (toggleable)
+  # dialog menu permission
+  ca.rename.dialog:
+    default: op
+    description: Allow player to use the dialog rename menu (toggleable)
+
 
 # soft depend on old name of this plugin (UnsafeEnchantsPlus), so I can disable it if it is on the same server
 # Also depend to other plugin for compatibility
