@@ -225,6 +225,15 @@ object AnvilMergeUtil {
     ): UnitRepairResult {
         val unitRepairAmount = first.getRepair(second) ?: return UnitRepairResult.EMPTY
 
+        return testUnitRepair(inventory, player, first, second, unitRepairAmount)
+    }
+
+    fun testUnitRepair(
+            inventory: AnvilInventory,
+            player: Player,
+            first: ItemStack, second: ItemStack,
+            unitRepairAmount: Double
+        ): UnitRepairResult {
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
         cost.rename = handleRename(resultItem, inventory, player)

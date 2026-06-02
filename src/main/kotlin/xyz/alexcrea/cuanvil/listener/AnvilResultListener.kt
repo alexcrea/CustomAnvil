@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.listener
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
-import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -16,7 +15,8 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
-import xyz.alexcrea.cuanvil.anvil.AnvilUseType
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeUtil
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeUtil.AnvilResult
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
@@ -65,8 +65,9 @@ class AnvilResultListener : Listener {
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
 
+        // Deny by default. allow if working
+        event.result = Event.Result.DENY
         if (GameMode.CREATIVE != player.gameMode && inventory.repairCost >= inventory.maximumRepairCost) {
-            event.result = Event.Result.DENY
             return
         }
 
@@ -83,7 +84,6 @@ class AnvilResultListener : Listener {
 
         // Do not continue if there was no change
         if ((output == inventory.getItem(ANVIL_INPUT_LEFT))) {
-            event.result = Event.Result.DENY
             return
         }
 
@@ -102,10 +102,10 @@ class AnvilResultListener : Listener {
         }
 
         // Unit repair
-        val unitRepairResult = leftItem.getRepair(rightItem)
+        val unitRepairResult = leftItem.getRepair(rightItem) // Maybe this should be handlded "above" and like prepare result
         if (unitRepairResult != null) {
             onUnitRepairExtract(
-                leftItem, rightItem, output,
+                leftItem, rightItem,
                 unitRepairResult, event, player, inventory
             )
             return
@@ -238,6 +238,25 @@ class AnvilResultListener : Listener {
         return true
     }
 
+    // I don't know about side effect of "handling cost" at this level and not before so let be safe
+    private fun extractAnvilResult(
+        event: InventoryClickEvent,
+        player: Player,
+        inventory: AnvilInventory,
+        leftItem: ItemStack?,
+        leftRemoveCount: Int,
+        rightItem: ItemStack?,
+        rightRemoveCount: Int,
+        result: AnvilResult
+    ): Boolean {
+        if(result.isEmpty()) return false
+
+        processCost(inventory, player, result.cost)
+
+        return extractAnvilResult(event, player, inventory, leftItem, leftRemoveCount, rightItem,
+            rightRemoveCount, result.item!!, result.cost)
+    }
+
     private fun extractAnvilResult(
         event: InventoryClickEvent,
         player: Player,
@@ -290,59 +309,7 @@ class AnvilResultListener : Listener {
         return true
     }
 
-    private fun onUnitRepairExtract(
-        leftItem: ItemStack,
-        rightItem: ItemStack,
-        output: ItemStack,
-        unitRepairResult: Double,
-        event: InventoryClickEvent,
-        player: Player,
-        inventory: AnvilInventory
-    ) {
-        val resultCopy = leftItem.clone()
-        val resultAmount = resultCopy.unitRepair(
-            rightItem.amount, unitRepairResult
-        )
-
-        // Get repair cost
-        val repairCost = getUnitRepairCost(inventory, player, leftItem, output, resultCopy, resultAmount)
-
-        // And then we give the item manually
-        extractAnvilResult(
-            event, player, inventory,
-            null, 0,
-            rightItem, resultAmount,
-            resultCopy, repairCost
-        )
-    }
-
-    private fun getUnitRepairCost(
-        inventory: AnvilInventory, player: Player,
-        leftItem: ItemStack, output: ItemStack,
-        resultCopy: ItemStack, resultAmount: Int
-    ): AnvilCost {
-        if (player.gameMode == GameMode.CREATIVE) return AnvilCost(0)
-
-        val cost = AnvilCost()
-        // Get repairCost
-        leftItem.itemMeta?.let { leftMeta ->
-            val leftName = leftMeta.displayName
-            output.itemMeta?.let {
-                // Rename cost
-                if (!leftName.contentEquals(it.displayName)) {
-                    cost.rename += ConfigOptions.itemRenameCost
-
-                    // Color cost
-                    if (it.displayName.contains('§')) {
-                        cost.rename += ConfigOptions.useOfColorCost
-                    }
-                }
-            }
-        }
-
-        cost.workPenalty = AnvilXpUtil.calculatePenalty(leftItem, null, resultCopy, AnvilUseType.UNIT_REPAIR)
-        cost.repair = resultAmount * ConfigOptions.unitRepairCost
-
+    private fun processCost(inventory: AnvilInventory, player: Player, cost: AnvilCost) {
         var sum = cost.repair
 
         if (
@@ -364,8 +331,29 @@ class AnvilResultListener : Listener {
                 || (player.level < sum)
             ) cost.valid = false
         }
+    }
 
-        return cost
+    private fun onUnitRepairExtract(
+        leftItem: ItemStack,
+        rightItem: ItemStack,
+        unitRepairResult: Double,
+        event: InventoryClickEvent,
+        player: Player,
+        inventory: AnvilInventory
+    ) {
+        val result = AnvilMergeUtil.testUnitRepair(inventory, player,
+            leftItem.clone(), rightItem,
+            unitRepairResult)
+
+        if(result.isEmpty()) return
+
+        // And then we give the item manually
+        extractAnvilResult(
+            event, player, inventory,
+            null, 0,
+            rightItem, result.repairAmount,
+            result
+        )
     }
 
     private fun getFromLoreEditXpCost(
