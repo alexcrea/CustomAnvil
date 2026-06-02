@@ -26,7 +26,6 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_LEFT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
-import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
@@ -34,6 +33,7 @@ import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
+import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.min
@@ -148,14 +148,20 @@ class AnvilResultListener : Listener {
         result: CustomCraftResult,
     ) {
         val recipe = result.recipe!!
-        val xpCost = result.customCraftCost.rawCost
+        val rawCost = result.customCraftCost.rawCost
         val finalCost =
-            if (recipe.removeExactLinearXp) xpCost
-            else AnvilXpUtil.calculateLevelForXp(xpCost)
+            if (recipe.removeExactLinearXp) rawCost
+            else AnvilXpUtil.calculateLevelForXp(rawCost)
 
-        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $finalCost, level: ${player.level}, result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
+        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, " +
+                "cost: $finalCost, level: ${player.level}, " +
+                "result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
+
         if (player.gameMode != GameMode.CREATIVE) {
-            if (recipe.removeExactLinearXp) {
+            if(ConfigOptions.shouldUseMoney(player)) {
+                result.cost.isMonetary = true
+                if(!EconomyManager.economy!!.has(player, BigDecimal(rawCost))) return
+            } else if (recipe.removeExactLinearXp) {
                 val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
                 val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
                 val totalXp = levelXp + player.exp * delta
@@ -172,14 +178,11 @@ class AnvilResultListener : Listener {
         if (event.click != ClickType.MIDDLE &&
             !handleCustomCraftClick(
                 event,
-                recipe,
                 inventory,
                 player,
                 leftItem,
                 rightItem,
-                result.amount,
-                finalCost,
-                recipe.removeExactLinearXp
+                result
             )
         ) return
 
@@ -192,11 +195,14 @@ class AnvilResultListener : Listener {
     }
 
     private fun handleCustomCraftClick(
-        event: InventoryClickEvent, recipe: AnvilCustomRecipe,
+        event: InventoryClickEvent,
         inventory: AnvilInventory, player: Player,
         leftItem: ItemStack, rightItem: ItemStack?,
-        amount: Int, xpCost: Int, linearCost: Boolean = false
+        result: CustomCraftResult
     ): Boolean {
+        val amount = result.amount
+        val recipe = result.recipe!!
+
         // We remove what should be removed
         if (rightItem != null) {
             if (recipe.rightItem == null) return false// in case it changed
@@ -208,26 +214,7 @@ class AnvilResultListener : Listener {
         leftItem.amount -= amount * recipe.leftItem!!.amount
         inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
 
-        if (player.gameMode != GameMode.CREATIVE) {
-            //TODO monetary cost ? somehow
-            if (linearCost) {
-                val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
-                val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
-                var totalXp = levelXp + player.exp * delta
-                totalXp -= xpCost
-
-                val newLevel = AnvilXpUtil.calculateLevelForXp(totalXp.toInt())
-
-                val newLevelXp = AnvilXpUtil.calculateXpForLevel(newLevel)
-                val newDelta = AnvilXpUtil.calculateXpForLevel(newLevel + 1) - newLevelXp
-                val xp = (totalXp - newLevelXp) / newDelta
-
-                player.level = newLevel
-                player.exp = xp / newDelta
-            } else {
-                player.level -= xpCost
-            }
-        }
+        removeCustomCraftCost(player, result)
 
         // Then we try to find the new values for the anvil
         val newAmount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
@@ -249,6 +236,35 @@ class AnvilResultListener : Listener {
             player.updateInventory()
         }
         return true
+    }
+
+    private fun removeCustomCraftCost(player: Player, result: CustomCraftResult) {
+        if (player.gameMode == GameMode.CREATIVE) return
+
+        val rawCost = result.customCraftCost.rawCost
+        if(result.cost.isMonetary) {
+            EconomyManager.economy!!.remove(player, BigDecimal(rawCost))
+            return
+        }
+
+        if (result.recipe!!.removeExactLinearXp) {
+            val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
+            val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
+            var totalXp = levelXp + player.exp * delta
+            totalXp -= rawCost
+
+            val newLevel = AnvilXpUtil.calculateLevelForXp(totalXp.toInt())
+
+            val newLevelXp = AnvilXpUtil.calculateXpForLevel(newLevel)
+            val newDelta = AnvilXpUtil.calculateXpForLevel(newLevel + 1) - newLevelXp
+            val xp = (totalXp - newLevelXp) / newDelta
+
+            player.level = newLevel
+            player.exp = xp / newDelta
+        } else {
+            player.level -= rawCost
+        }
+
     }
 
     private fun tryRemoveCost(player: Player, cost: AnvilCost): Boolean {

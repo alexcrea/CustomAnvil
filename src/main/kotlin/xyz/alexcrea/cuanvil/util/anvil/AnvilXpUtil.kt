@@ -56,7 +56,7 @@ object AnvilXpUtil {
             return generic + enchantment + repair + rename + lore + illegalPenalty + workPenalty + recipe
         }
 
-        fun asMonetaryCost(): BigDecimal {
+        open fun asMonetaryCost(): BigDecimal {
             // multiply by per use type multipliers
             return BigDecimal(generic)
                 .add(BigDecimal(enchantment).multiply(moneyMultiplier("enchantment")))
@@ -71,7 +71,13 @@ object AnvilXpUtil {
         }
     }
 
-    class CustomCraftCost(val rawCost: Int): AnvilCost()
+    class CustomCraftCost(val rawCost: Int): AnvilCost() {
+
+        override fun asMonetaryCost(): BigDecimal {
+            return BigDecimal(rawCost)
+        }
+
+    }
 
     /**
      * Display the required cost (either as xp or as )
