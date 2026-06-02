@@ -104,7 +104,7 @@ class PrepareAnvilListener : Listener {
             return AnvilResult.EMPTY
 
         // Test custom recipe
-        var result = testCustomRecipe(player, first, second)
+        var result: AnvilResult = testCustomRecipe(player, first, second)
         if (!result.isEmpty())
             return result
 

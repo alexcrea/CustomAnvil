@@ -19,6 +19,7 @@ import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
+import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.CasedStringUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
@@ -28,6 +29,7 @@ import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.CustomCraftCost
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
@@ -65,6 +67,22 @@ object AnvilMergeLogic {
         }
     }
 
+    class CustomCraftResult: AnvilResult {
+        companion object {
+            val EMPTY = CustomCraftResult(null, CustomCraftCost(0), 0, null)
+        }
+
+        val customCraftCost: CustomCraftCost
+        val amount: Int
+        val recipe: AnvilCustomRecipe?
+
+        constructor(item: ItemStack?, cost: CustomCraftCost,
+                    amount: Int, recipe: AnvilCustomRecipe?) : super(item, cost, true) {
+            this.customCraftCost = cost
+            this.amount = amount
+            this.recipe = recipe
+        }
+    }
 
     class LoreEditResult: AnvilResult {
         companion object {
@@ -211,10 +229,10 @@ object AnvilMergeLogic {
     fun testCustomRecipe(
         player: Player,
         first: ItemStack, second: ItemStack?
-    ): AnvilResult {
+    ): CustomCraftResult {
         val recipe = CustomRecipeUtil.getCustomRecipe(first, second)
         CustomAnvil.verboseLog("custom recipe not null? ${recipe != null}")
-        if (recipe == null) return AnvilResult.EMPTY
+        if (recipe == null) return CustomCraftResult.EMPTY
 
         val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, first, second)
 
@@ -224,12 +242,13 @@ object AnvilMergeLogic {
         // Maybe add an option on custom craft to ignore/not ignore penalty ??
         val xpCost = recipe.determineCost(amount, first, resultItem)
 
-        val cost = AnvilCost()
+        val cost = CustomCraftCost(xpCost)
+        // This is for displayed cost
         cost.recipe = if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
         else AnvilXpUtil.calculateLevelForXp(xpCost)
 
         val result = DependencyManager.tryTreatAnvilResult(resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
-        return AnvilResult(result, cost, true)
+        return CustomCraftResult(result, cost, amount, recipe)
     }
 
     fun testUnitRepair(

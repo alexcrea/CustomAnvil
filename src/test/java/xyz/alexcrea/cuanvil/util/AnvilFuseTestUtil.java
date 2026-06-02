@@ -195,7 +195,7 @@ public class AnvilFuseTestUtil {
 
         simulateClick(anvil, player, data.expectedResult());
 
-        // Should have similated the click
+        // Should have simulated the click
         assertEqual(data.leftItem(), anvil.getFirstItem());
         assertEqual(data.rightItem(), anvil.getSecondItem());
         assertEqual(data.resultSlotItem(), anvil.getResult());
@@ -260,7 +260,7 @@ public class AnvilFuseTestUtil {
     }
 
     public static boolean isAir(@Nullable ItemStack item) {
-        return item == null || item.isEmpty();
+        return item == null || item.isEmpty() || item.getAmount() == 0;
     }
 
     public static void assertPriceEqual(Integer expectedPrice, int price) {

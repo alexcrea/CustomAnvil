@@ -17,7 +17,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.CustomCraftResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.LoreEditResult
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.UnitRepairResult
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
@@ -27,7 +29,6 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
-import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
@@ -73,12 +74,11 @@ class AnvilResultListener : Listener {
         }
 
         // Test custom recipe
-        val recipe = CustomRecipeUtil.getCustomRecipe(leftItem, rightItem)
-        if (recipe != null) {
-            event.result = Event.Result.ALLOW
+        val customRecipeResult = AnvilMergeLogic.testCustomRecipe(player, leftItem, rightItem)
+        if (!customRecipeResult.isEmpty()) {
             onCustomCraft(
-                event, recipe, player,
-                leftItem, rightItem, output, inventory
+                event, player, inventory,
+                leftItem, rightItem, customRecipeResult
             )
             return
         }
@@ -103,11 +103,13 @@ class AnvilResultListener : Listener {
         }
 
         // Unit repair
-        val unitRepairResult = leftItem.getRepair(rightItem) // Maybe this should be handlded "above" and like prepare result
-        if (unitRepairResult != null) {
+        val unitRepairResult = AnvilMergeLogic.testUnitRepair(
+            inventory, player,
+            leftItem, rightItem)
+        if (unitRepairResult.isEmpty()) {
             onUnitRepairExtract(
-                leftItem, rightItem,
-                unitRepairResult, event, player, inventory
+                rightItem, event, player, inventory,
+                unitRepairResult
             )
             return
         }
@@ -125,19 +127,14 @@ class AnvilResultListener : Listener {
 
     private fun onCustomCraft(
         event: InventoryClickEvent,
-        recipe: AnvilCustomRecipe,
         player: Player,
+        inventory: AnvilInventory,
         leftItem: ItemStack,
         rightItem: ItemStack?,
-        output: ItemStack,
-        inventory: AnvilInventory
+        result: CustomCraftResult,
     ) {
-        event.result = Event.Result.DENY
-
-        if (recipe.leftItem == null) return // in case it changed
-
-        val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
-        val xpCost = recipe.determineCost(amount, leftItem, output)
+        val recipe = result.recipe!!
+        val xpCost = result.customCraftCost.rawCost
         val finalCost =
             if (recipe.removeExactLinearXp) xpCost
             else AnvilXpUtil.calculateLevelForXp(xpCost)
@@ -166,7 +163,7 @@ class AnvilResultListener : Listener {
                 player,
                 leftItem,
                 rightItem,
-                amount,
+                result.amount,
                 finalCost,
                 recipe.removeExactLinearXp
             )
@@ -174,9 +171,9 @@ class AnvilResultListener : Listener {
 
         // Finally, we add the item to the player
         if (slotDestination.type == SlotType.CURSOR) {
-            player.setItemOnCursor(output)
+            player.setItemOnCursor(result.item)
         } else {// We assume SlotType == SlotType.INVENTORY
-            player.inventory.setItem(slotDestination.slot, output)
+            player.inventory.setItem(slotDestination.slot, result.item)
         }
     }
 
@@ -335,20 +332,13 @@ class AnvilResultListener : Listener {
     }
 
     private fun onUnitRepairExtract(
-        leftItem: ItemStack,
         rightItem: ItemStack,
-        unitRepairResult: Double,
         event: InventoryClickEvent,
         player: Player,
-        inventory: AnvilInventory
+        inventory: AnvilInventory,
+        result: UnitRepairResult,
     ) {
-        val result = AnvilMergeLogic.testUnitRepair(inventory, player,
-            leftItem.clone(), rightItem,
-            unitRepairResult)
-
-        if(result.isEmpty()) return
-
-        // And then we give the item manually
+        // We give the item manually
         extractAnvilResult(
             event, player, inventory,
             null, 0,

@@ -29,7 +29,7 @@ object AnvilXpUtil {
 
     const val EXCLUSIVE_PENALTY_PREFIX = "repair_cost"
 
-    class AnvilCost {
+    open class AnvilCost {
         private val isAlone: Boolean
         var valid = true // Get set as invalid if cost can be satisfied
         var isMonetary = false
@@ -70,6 +70,8 @@ object AnvilXpUtil {
                 .multiply(moneyMultiplier("global"))
         }
     }
+
+    class CustomCraftCost(val rawCost: Int): AnvilCost()
 
     /**
      * Display the required cost (either as xp or as )
