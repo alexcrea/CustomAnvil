@@ -28,9 +28,10 @@ import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
+import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
-object AnvilMergeUtil {
+object AnvilMergeLogic {
 
     open class AnvilResult {
         companion object {
@@ -61,6 +62,19 @@ object AnvilMergeUtil {
 
         constructor(item: ItemStack?, cost: AnvilCost, repairAmount: Int) : super(item, cost) {
             this.repairAmount = repairAmount
+        }
+    }
+
+
+    class LoreEditResult: AnvilResult {
+        companion object {
+            val EMPTY = LoreEditResult(null, AnvilCost(), LoreEditType.APPEND_PAPER)
+        }
+
+        val type: LoreEditType
+
+        constructor(item: ItemStack?, cost: AnvilCost, type: LoreEditType) : super(item, cost) {
+            this.type = type
         }
     }
 
@@ -258,23 +272,23 @@ object AnvilMergeUtil {
     fun testLoreEdit(
         player: Player,
         first: ItemStack, second: ItemStack
-    ): AnvilResult {
+    ): LoreEditResult {
         val type = second.type
-        var resultItem: ItemStack? = null
 
-        val cost = AnvilCost()
-        if (Material.WRITABLE_BOOK == type) {
-            resultItem = AnvilLoreEditUtil.tryLoreEditByBook(player, first, second, cost)
-        } else if (Material.PAPER == type) {
-            resultItem = AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second, cost)
-        }
+        val result = if (Material.WRITABLE_BOOK == type)
+            AnvilLoreEditUtil.tryLoreEditByBook(player, first, second)
+        else if (Material.PAPER == type)
+            AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second)
+        else LoreEditResult.EMPTY
 
-        if (resultItem.isAir || first == resultItem) {
+        if(result.isEmpty()) return result
+
+        if (result.item!!.isAir || first == result.item) {
             CustomAnvil.log("lore edit, But input is same as output")
-            return AnvilResult.EMPTY
+            return LoreEditResult.EMPTY
         }
 
-        return AnvilResult(resultItem, cost)
+        return result
     }
 
 }

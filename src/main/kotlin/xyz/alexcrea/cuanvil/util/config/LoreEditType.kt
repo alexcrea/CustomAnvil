@@ -18,20 +18,23 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT_CONFIG as CONFIG
 enum class LoreEditType(
     val rootPath: String,
     val useType: AnvilUseType,
+    val isBook: Boolean,
     val isAppend: Boolean,
     val isMultiLine: Boolean,
 ) {
-    APPEND_BOOK(AnvilUseType.LORE_EDIT_BOOK_APPEND, true, true),
-    REMOVE_BOOK(AnvilUseType.LORE_EDIT_BOOK_REMOVE, false, true),
-    APPEND_PAPER(AnvilUseType.LORE_EDIT_PAPER_APPEND, true, false),
-    REMOVE_PAPER(AnvilUseType.LORE_EDIT_PAPER_REMOVE, false, false),
+    APPEND_BOOK(AnvilUseType.LORE_EDIT_BOOK_APPEND, true, true, true),
+    REMOVE_BOOK(AnvilUseType.LORE_EDIT_BOOK_REMOVE, true, false, true),
+    APPEND_PAPER(AnvilUseType.LORE_EDIT_PAPER_APPEND, false, true, false),
+    REMOVE_PAPER(AnvilUseType.LORE_EDIT_PAPER_REMOVE, false, false, false),
     ;
 
     constructor(
         useType: AnvilUseType,
+        isPaper: Boolean,
         isAppend: Boolean,
         isMultiLine: Boolean,
-    ) : this(useType.path, useType, isAppend, isMultiLine)
+    ) : this(useType.path, useType,
+        isPaper, isAppend, isMultiLine)
 
     /**
      * If this edit type is enabled
