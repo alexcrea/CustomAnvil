@@ -2,10 +2,10 @@ package xyz.alexcrea.cuanvil.update.plugin;
 
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.configuration.file.FileConfiguration;
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 import xyz.alexcrea.cuanvil.gui.config.settings.WorkPenaltyTypeSettingGui;
-import xyz.alexcrea.cuanvil.util.AnvilUseType;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;

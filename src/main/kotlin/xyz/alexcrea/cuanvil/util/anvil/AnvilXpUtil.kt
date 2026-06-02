@@ -1,8 +1,7 @@
-package xyz.alexcrea.cuanvil.util
+package xyz.alexcrea.cuanvil.util.anvil
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
-import io.delilaheve.util.ConfigOptions.getMonetaryMultiplier as moneyMultiplier
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
@@ -15,13 +14,16 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import org.bukkit.persistence.PersistentDataType
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.util.AnvilTitleUtil
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 import java.math.BigDecimal
 import kotlin.math.min
+import io.delilaheve.util.ConfigOptions.getMonetaryMultiplier as moneyMultiplier
 
 object AnvilXpUtil {
 

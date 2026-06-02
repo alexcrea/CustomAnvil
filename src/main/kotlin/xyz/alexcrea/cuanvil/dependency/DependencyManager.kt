@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
@@ -30,9 +31,8 @@ import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
-import xyz.alexcrea.cuanvil.util.AnvilUseType
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import java.util.logging.Level
 
 object DependencyManager {
@@ -234,19 +234,20 @@ object DependencyManager {
 
     // Return null if there was an issue
     fun tryTreatAnvilResult(
-        event: PrepareAnvilEvent,
         result: ItemStack,
         useType: AnvilUseType,
         cost: AnvilXpUtil.AnvilCost
     ): ItemStack? {
-        val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
+        //TODO
+        /*val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent.result
         } catch (e: Exception) {
             logExceptionAndClear(event.view.player, event.inventory, e)
             return null
-        }
+        }*/
+        return result
     }
 
     private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResultEvent) {
@@ -295,11 +296,11 @@ object DependencyManager {
     }
 
     // Clone item and use plugin specific clone if needed
-    fun cloneItem(event: PrepareAnvilEvent, item: ItemStack): ItemStack {
+    fun cloneItem(player: HumanEntity, item: ItemStack): ItemStack {
         try {
             return unsafeCloneItem(item)
         } catch (e: Exception) {
-            logException(event.view.player, e)
+            logException(player, e)
             return item.clone()
         }
     }

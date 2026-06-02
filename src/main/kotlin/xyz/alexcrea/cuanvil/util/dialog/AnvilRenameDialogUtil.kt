@@ -8,7 +8,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialogImpl
 import xyz.alexcrea.cuanvil.update.UpdateUtils
-import xyz.alexcrea.cuanvil.util.AnvilColorUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
 
 object AnvilRenameDialogUtil {
 

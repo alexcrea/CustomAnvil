@@ -3,11 +3,11 @@ package xyz.alexcrea.cuanvil.recipe
 import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
-import xyz.alexcrea.cuanvil.util.AnvilUseType
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 
 class AnvilCustomRecipe(
     val name: String,

@@ -1,6 +1,6 @@
 package xyz.alexcrea.cuanvil.util.config
 
-import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_COLOR_CODE
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_HEX_COLOR
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_MINIMESSAGE

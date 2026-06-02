@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.util
+package xyz.alexcrea.cuanvil.util.anvil
 
 import io.delilaheve.util.ConfigOptions
 

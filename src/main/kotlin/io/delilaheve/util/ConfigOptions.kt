@@ -4,14 +4,13 @@ import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.HumanEntity
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
-import xyz.alexcrea.cuanvil.update.Version
-import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 import java.math.BigDecimal
 import java.util.*

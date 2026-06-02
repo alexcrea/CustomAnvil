@@ -11,11 +11,11 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 import xyz.alexcrea.cuanvil.gui.config.global.BasicConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
-import xyz.alexcrea.cuanvil.util.AnvilUseType;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

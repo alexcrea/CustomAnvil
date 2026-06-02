@@ -16,6 +16,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
@@ -23,13 +24,12 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
-import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
-import xyz.alexcrea.cuanvil.util.AnvilUseType
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*

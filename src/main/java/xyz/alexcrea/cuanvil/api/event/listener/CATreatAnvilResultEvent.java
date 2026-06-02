@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.util.AnvilUseType;
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost;
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost;
 
 /**
  * Called after custom anvil processed the click on the result on the anvil inventory.
@@ -18,8 +18,12 @@ import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost;
  * and {@link CAEarlyPreAnvilBypassEvent} for your use case
  * <p>
  * A null result will cancel this pre anvil event
+ *
+ * @deprecated Prepare anvil Event should not be provided as it can be called on result and therefor not have prepare anvil event
+ * TODO a replacement is necessary but not yet made
  */
 @SuppressWarnings("unused")
+@Deprecated(forRemoval = true, since = "1.17.0")
 public class CATreatAnvilResultEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();

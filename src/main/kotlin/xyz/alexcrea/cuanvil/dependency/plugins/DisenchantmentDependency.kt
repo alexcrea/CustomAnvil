@@ -15,9 +15,9 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
 import java.util.logging.Level
 import kotlin.reflect.KClass
 

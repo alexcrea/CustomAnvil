@@ -1,11 +1,11 @@
-package xyz.alexcrea.cuanvil.util
+package xyz.alexcrea.cuanvil.util.anvil
 
 import io.delilaheve.util.ConfigOptions
 import net.kyori.adventure.text.Component
 import org.bukkit.permissions.Permissible
+import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.text.indexOf
 
 object AnvilColorUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
