@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.listener
 
+import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
@@ -20,7 +21,6 @@ import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.testCustomRecipe
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.testLoreEdit
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.testUnitRepair
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
-import xyz.alexcrea.cuanvil.util.JustForEasierHotswapUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
@@ -49,7 +49,7 @@ class PrepareAnvilListener : Listener {
         val view = event.view
         val inventory = event.inventory
 
-        val player = JustForEasierHotswapUtil.getPlayerFromView(view)
+        val player = InventoryViewUtil.getInstance().getPlayer(view)
         if(player !is Player) return
 
         tryRenameDialog(player, event)

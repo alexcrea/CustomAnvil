@@ -90,15 +90,29 @@ class AnvilResultListener : Listener {
 
         // Rename
         if (rightItem == null) {
-            // BRUH
-            event.result = Event.Result.ALLOW
+            val result = AnvilMergeLogic.doRenaming(inventory, player, leftItem)
+            if(result.isEmpty()) return
+
+            extractAnvilResult(
+                event, player, inventory,
+                null, 0,
+                null, 0,
+                result
+            )
             return
         }
 
         // Merge
         val canMerge = leftItem.canMergeWith(rightItem)
         if (canMerge) {
-            event.result = Event.Result.ALLOW
+            val result = AnvilMergeLogic.doMerge(inventory, player, leftItem, rightItem)
+
+            extractAnvilResult(
+                event, player, inventory,
+                null, 0,
+                null, 0,
+                result
+            )
             return
         }
 
@@ -195,6 +209,7 @@ class AnvilResultListener : Listener {
         inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
 
         if (player.gameMode != GameMode.CREATIVE) {
+            //TODO monetary cost ? somehow
             if (linearCost) {
                 val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
                 val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
@@ -236,7 +251,18 @@ class AnvilResultListener : Listener {
         return true
     }
 
-    // I don't know about side effect of "handling cost" at this level and not before so let be safe
+    private fun tryRemoveCost(player: Player, cost: AnvilCost): Boolean {
+        if(player.gameMode == GameMode.CREATIVE) return true
+        if(cost.isMonetary) {
+            val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
+            if(!result) return false
+        } else {
+            player.level -= cost.asXpCost()
+        }
+
+        return true
+    }
+
     private fun extractAnvilResult(
         event: InventoryClickEvent,
         player: Player,
@@ -249,28 +275,13 @@ class AnvilResultListener : Listener {
     ): Boolean {
         if(result.isEmpty()) return false
 
-        processCost(inventory, player, result.cost)
-
-        return extractAnvilResult(event, player, inventory, leftItem, leftRemoveCount, rightItem,
-            rightRemoveCount, result.item!!, result.cost)
-    }
-
-    private fun extractAnvilResult(
-        event: InventoryClickEvent,
-        player: Player,
-        inventory: AnvilInventory,
-        leftItem: ItemStack?,
-        leftRemoveCount: Int,
-        rightItem: ItemStack?,
-        rightRemoveCount: Int,
-        output: ItemStack,
-        cost: AnvilCost,
-    ): Boolean {
         // To avoid vanilla, we cancel the event
         event.result = Event.Result.DENY
         event.isCancelled = true
+        val cost = result.cost
 
-        if (!cost.valid) return false
+        processCost(inventory, player, cost)
+        if (!cost.valid && player.gameMode != GameMode.CREATIVE) return false
 
         // Where should we get the item
         val slotDestination = getActionSlot(event, player)
@@ -278,12 +289,7 @@ class AnvilResultListener : Listener {
 
         // If not creative middle click...
         if (event.click != ClickType.MIDDLE) {
-            if(cost.isMonetary) {
-                val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
-                if(!result) return false
-            } else {
-                player.level -= cost.asXpCost()
-            }
+            if(!tryRemoveCost(player, cost)) return false
 
             // We remove what should be removed
             if (leftItem != null) leftItem.amount -= leftRemoveCount
@@ -298,9 +304,9 @@ class AnvilResultListener : Listener {
 
         // Finally, we add the item to the player
         if (SlotType.CURSOR == slotDestination.type) {
-            player.setItemOnCursor(output)
+            player.setItemOnCursor(result.item)
         } else {// We assume SlotType == SlotType.INVENTORY
-            player.inventory.setItem(slotDestination.slot, output)
+            player.inventory.setItem(slotDestination.slot, result.item)
         }
 
         // TODO probably anvil damage & sound here ??
