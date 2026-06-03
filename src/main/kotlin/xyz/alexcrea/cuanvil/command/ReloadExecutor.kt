@@ -12,10 +12,12 @@ import xyz.alexcrea.cuanvil.update.UpdateHandler
 
 class ReloadExecutor : CASubCommand() {
 
-    override fun executeCommand(sender: CommandSender,
-                           cmd: Command,
-                           cmdstr: String,
-                           args: Array<out String>): Boolean {
+    override fun executeCommand(
+        sender: CommandSender,
+        cmd: Command,
+        cmdstr: String,
+        args: Array<out String>
+    ): Boolean {
         if (!allowed(sender)) {
             sender.sendMessage("§cYou do not have permission to reload the config")
             return false

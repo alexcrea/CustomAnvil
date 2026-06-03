@@ -14,6 +14,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.inventory.view.AnvilView
 import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -31,6 +32,7 @@ import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
+@Suppress("UnstableApiUsage")
 object AnvilMergeLogic {
 
     open class AnvilResult {
@@ -103,7 +105,7 @@ object AnvilMergeLogic {
     ): AnvilResult {
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
-        cost.rename = handleRename(resultItem, inventory, player)
+        cost.rename = handleRename(resultItem, view, player)
 
         // Test/stop if nothing changed.
         if (first == resultItem) {
@@ -136,9 +138,9 @@ object AnvilMergeLogic {
         }
     }
 
-    private fun handleRename(resultItem: ItemStack, inventory: AnvilInventory, player: HumanEntity): Int {
+    private fun handleRename(resultItem: ItemStack, view: AnvilView, player: HumanEntity): Int {
         // Can be null
-        var renameText = ChatColor.stripColor(inventory.renameText)
+        var renameText = ChatColor.stripColor(view.renameText)
 
         var sumCost = 0
         var useColor = false
@@ -219,7 +221,7 @@ object AnvilMergeLogic {
         // As calculatePenalty edit result, we need to calculate penalty after checking equality
         cost.workPenalty = AnvilXpUtil.calculatePenalty(first, second, resultItem, AnvilUseType.MERGE)
         // Calculate rename cost
-        cost.rename = handleRename(resultItem, inventory, player)
+        cost.rename = handleRename(resultItem, view, player)
 
         val result =
             DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.MERGE, cost)
@@ -288,7 +290,7 @@ object AnvilMergeLogic {
     ): UnitRepairResult {
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
-        cost.rename = handleRename(resultItem, inventory, player)
+        cost.rename = handleRename(resultItem, view, player)
 
         val repairAmount = resultItem.unitRepair(second.amount, unitRepairAmount)
         if (repairAmount > 0)

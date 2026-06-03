@@ -21,6 +21,7 @@ import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import java.util.logging.Level
 import kotlin.reflect.KClass
 
+@Suppress("UnstableApiUsage")
 class DisenchantmentDependency {
 
     init {

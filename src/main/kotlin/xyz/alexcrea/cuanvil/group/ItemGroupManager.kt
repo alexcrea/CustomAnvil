@@ -41,7 +41,7 @@ class ItemGroupManager {
     fun createGroup(
         config: ConfigurationSection,
         name: String
-    ): AbstractMaterialGroup{
+    ): AbstractMaterialGroup {
         return createGroup(config, groupMap.keys, name)
     }
 
@@ -109,11 +109,10 @@ class ItemGroupManager {
             }
             // Get other group or create it if not yet created
             val otherGroup =
-            if (!groupMap.containsKey(groupName)) {
-                if(!config.isConfigurationSection(groupName)) continue
-                createGroup(config, keys, groupName)
-            }
-            else groupMap[groupName]!!
+                if (!groupMap.containsKey(groupName)) {
+                    if (!config.isConfigurationSection(groupName)) continue
+                    createGroup(config, keys, groupName)
+                } else groupMap[groupName]!!
 
             // Avoid self reference or it will create an infinite loop
             if (otherGroup.isReferencing(group)) {

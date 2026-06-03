@@ -4,7 +4,7 @@ import org.bukkit.NamespacedKey
 import xyz.alexcrea.cuanvil.util.MaterialUtil
 import xyz.alexcrea.cuanvil.util.NegativeSet
 
-class NegativeMaterialSet: NegativeSet<NamespacedKey>() {
+class NegativeMaterialSet : NegativeSet<NamespacedKey>() {
 
     override fun iterator(): MutableIterator<NamespacedKey> {
         val materials = MaterialUtil.getMaterials()

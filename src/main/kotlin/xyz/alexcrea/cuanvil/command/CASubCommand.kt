@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 
-abstract class CASubCommand: CommandExecutor {
+abstract class CASubCommand : CommandExecutor {
 
     private var alreadySaid = false;
     override fun onCommand(
@@ -15,9 +15,11 @@ abstract class CASubCommand: CommandExecutor {
         cmdstr: String,
         args: Array<out String>
     ): Boolean {
-        if(!alreadySaid){
-            sender.sendMessage(ChatColor.RED.toString() +
-                    "Please not that this command will be replaced as a subcommand of `/customanvil` or `/ca`")
+        if (!alreadySaid) {
+            sender.sendMessage(
+                ChatColor.RED.toString() +
+                        "Please not that this command will be replaced as a subcommand of `/customanvil` or `/ca`"
+            )
             alreadySaid = true
         }
 
@@ -28,7 +30,8 @@ abstract class CASubCommand: CommandExecutor {
         sender: CommandSender,
         cmd: Command,
         cmdstr: String,
-        args: Array<out String>): Boolean
+        args: Array<out String>
+    ): Boolean
 
     open fun allowed(sender: CommandSender): Boolean {
         return true
@@ -37,7 +40,8 @@ abstract class CASubCommand: CommandExecutor {
     open fun tabCompleter(
         sender: CommandSender,
         args: Array<out String>,
-        list: MutableList<String>) {
+        list: MutableList<String>
+    ) {
     }
 
     open fun description(): String {

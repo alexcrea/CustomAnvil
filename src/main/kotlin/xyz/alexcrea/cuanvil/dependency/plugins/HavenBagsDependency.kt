@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 
+@Suppress("UnstableApiUsage")
 class HavenBagsDependency {
 
     init {

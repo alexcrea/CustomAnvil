@@ -46,17 +46,17 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         val subcmdStr: String
 
         val newargs: Array<out String>
-        if(args.isEmpty()) {
+        if (args.isEmpty()) {
             subcmdStr = "config"
             subcmd = editConfigCommand
             newargs = args
-        }else {
+        } else {
             subcmdStr = args[0].lowercase()
             subcmd = commands[subcmdStr]
             newargs = args.copyOfRange(1, args.size)
         }
 
-        if(subcmd == null || !subcmd.allowed(sender)) {
+        if (subcmd == null || !subcmd.allowed(sender)) {
             sender.sendMessage("Invalid subcommand. run `$cmdstr help` to see available commands")
             return true
         }
@@ -77,18 +77,18 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         args: Array<out String>
     ): MutableList<String> {
         val result = ArrayList<String>()
-        if(args.size < 2) {
-             for ((key, cmd) in commands) {
-                 if(!cmd.allowed(sender)) continue
-                 if("gui".contentEquals(key)) continue
+        if (args.size < 2) {
+            for ((key, cmd) in commands) {
+                if (!cmd.allowed(sender)) continue
+                if("gui".contentEquals(key)) continue
                  result.add(key)
             }
         } else {
             val subcmd = commands[args[0].lowercase()]
 
-            if(subcmd != null) {
+            if (subcmd != null) {
                 val newArgs = args.copyOfRange(1, args.size)
-                if(!subcmd.allowed(sender)) return result
+                if (!subcmd.allowed(sender)) return result
 
                 subcmd.tabCompleter(sender, newArgs, result)
             }

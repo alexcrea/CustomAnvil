@@ -36,6 +36,7 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.lang.reflect.Constructor
 import java.util.logging.Level
 
+@Suppress("UnstableApiUsage")
 object DependencyManager {
 
     lateinit var scheduler: TaskScheduler

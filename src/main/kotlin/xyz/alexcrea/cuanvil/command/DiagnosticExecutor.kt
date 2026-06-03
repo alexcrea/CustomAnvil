@@ -31,9 +31,9 @@ import java.util.*
 import java.util.stream.Collectors
 
 
-class DiagnosticExecutor: CASubCommand() {
+class DiagnosticExecutor : CASubCommand() {
 
-    companion object{
+    companion object {
         const val NO_DIAG_PERM = "You do not have permission to diagnostic this server"
 
         fun fetchNMSType(): String {
@@ -41,7 +41,7 @@ class DiagnosticExecutor: CASubCommand() {
             val packetManagerClass = packetManager.javaClass
 
             val className = packetManagerClass.name
-            val result = if(className.contains("PaperPacket")) {
+            val result = if (className.contains("PaperPacket")) {
                 "Paper"
             } else {
                 when (packetManagerClass) {
@@ -52,7 +52,7 @@ class DiagnosticExecutor: CASubCommand() {
             }
 
 
-            return "$result ${if(packetManager.canSetInstantBuild) '✅' else '❌'}"
+            return "$result ${if (packetManager.canSetInstantBuild) '✅' else '❌'}"
         }
     }
 
@@ -73,7 +73,7 @@ class DiagnosticExecutor: CASubCommand() {
         }
 
         for (param in DiagParams.entries) {
-            if(argSet.contains(param.value))
+            if (argSet.contains(param.value))
                 result.add(param)
         }
 
@@ -83,12 +83,13 @@ class DiagnosticExecutor: CASubCommand() {
     override fun tabCompleter(
         sender: CommandSender,
         args: Array<out String>,
-        list: MutableList<String>) {
-        if(!allowed(sender)) return
+        list: MutableList<String>
+    ) {
+        if (!allowed(sender)) return
 
         val map = fetchParameters(args)
         for (param in DiagParams.entries) {
-            if(!map.contains(param))
+            if (!map.contains(param))
                 list.add(param.value)
         }
 
@@ -110,7 +111,7 @@ class DiagnosticExecutor: CASubCommand() {
         var hasError = false
         try {
             diagnostic(sender, stb, params)
-        } catch(e: Throwable){
+        } catch (e: Throwable) {
             stb.append("\n\nError happened trying to get diagnostic data:\n")
                 .append(e.message).append("\n")
                 .append(e.stackTrace.joinToString("\n"))
@@ -121,8 +122,9 @@ class DiagnosticExecutor: CASubCommand() {
         stb.append("\n```")
 
         if (sender is HumanEntity) {
-            if(hasError)
-                sender.spigot().sendMessage(TextComponent(ChatColor.RED.toString() + "There was an error running the diagnostic"))
+            if (hasError)
+                sender.spigot()
+                    .sendMessage(TextComponent(ChatColor.RED.toString() + "There was an error running the diagnostic"))
             val message = TextComponent(ChatColor.GREEN.toString() + "Click to copy diagnostic data")
 
             message.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stb.toString())
@@ -140,41 +142,41 @@ class DiagnosticExecutor: CASubCommand() {
         return sender.hasPermission(CustomAnvil.diagnosticPermission)
     }
 
-    fun diagnostic(sender: CommandSender, stb: StringBuilder, params: Set<DiagParams>){
+    fun diagnostic(sender: CommandSender, stb: StringBuilder, params: Set<DiagParams>) {
         stb.append("Server Info\n")
         val version = CustomAnvil.instance.description.version
         stb.append("\nPlugin Version: ").append(version)
-        if(version.contains("dev")) stb.append(" (alpha)")
+        if (version.contains("dev")) stb.append(" (alpha)")
 
         stb.append("\nLatest Update: ").append(CustomAnvil.latestVer)
         stb.append("\nServer Version: ").append(Bukkit.getVersion()).append(" (").append(Bukkit.getName()).append(')')
-        stb.append("\nPlugin Enabled: ").append(if(CustomAnvil.instance.isEnabled) "Yes" else "No")
+        stb.append("\nPlugin Enabled: ").append(if (CustomAnvil.instance.isEnabled) "Yes" else "No")
         stb.append("\nNMS type: ").append(fetchNMSType())
-        if(!params.contains(DiagParams.OS_PRIVACY)) {
+        if (!params.contains(DiagParams.OS_PRIVACY)) {
             stb.append("\nJava Version: ").append(System.getProperty("java.version"))
             stb.append("\nOS: ").append(System.getProperty("os.name")).append(" ")
                 .append(System.getProperty("os.version"))
                 .append(System.getProperty("os.arch"))
         }
 
-        stb.append("\nHad detect error: ").append(if(MetricsUtil.lastError != null) "Yes" else "No")
+        stb.append("\nHad detect error: ").append(if (MetricsUtil.lastError != null) "Yes" else "No")
 
-        if(!params.contains(DiagParams.PLUGIN_PRIVACY)) {
+        if (!params.contains(DiagParams.PLUGIN_PRIVACY)) {
             pluginListDiag(sender, stb)
         }
         prepareAnvilListeners(stb)
 
-        if(!params.contains(DiagParams.NO_MERGE_TEST)){
-            if(sender is Player) testMerge(sender, stb)
+        if (!params.contains(DiagParams.NO_MERGE_TEST)) {
+            if (sender is Player) testMerge(sender, stb)
         }
 
         stb.append("\n\nEnchantments data:")
         partialEnchantmentData(stb)
-        if(params.contains(DiagParams.FULL_ENCHANTMENT_DATA)){
+        if (params.contains(DiagParams.FULL_ENCHANTMENT_DATA)) {
             fullEnchantmentData(stb)
         }
 
-        if(params.contains(DiagParams.INCLUDE_LAST_ERROR)){
+        if (params.contains(DiagParams.INCLUDE_LAST_ERROR)) {
             includeLastError(stb)
         }
     }
@@ -286,22 +288,22 @@ class DiagnosticExecutor: CASubCommand() {
         val xp = invView.repairCost
         val maxXp = invView.maximumRepairCost
         val mergeResult = invView.getItem(2)
-        stb.append("\n${if(result == mergeResult) "E" else "Une"}xpected Result")
+        stb.append("\n${if (result == mergeResult) "E" else "Une"}xpected Result")
 
         PrepareAnvilListener().anvilCombineCheck(event)
         // Now we check if item and xp same
         stb.append("\nXP/Max XP: ")
-            .append(if(invView.repairCost == xp) "Correct" else "Incorrect")
+            .append(if (invView.repairCost == xp) "Correct" else "Incorrect")
             .append("/")
-            .append(if(invView.maximumRepairCost == maxXp) "Correct" else "Incorrect")
+            .append(if (invView.maximumRepairCost == maxXp) "Correct" else "Incorrect")
             .append(" (${invView.repairCost} $xp|${invView.maximumRepairCost} $maxXp)")
             .append("\nMerge result: ")
-            .append(if(invView.getItem(2) == mergeResult) "Correct" else "Incorrect")
+            .append(if (invView.getItem(2) == mergeResult) "Correct" else "Incorrect")
 
         PrepareAnvilListener.IS_EMPTY_TEST = true
         Bukkit.getPluginManager().callEvent(event)
         stb.append("\nNull result test: ")
-            .append(if(event.result == null) "Correct" else "Incorrect")
+            .append(if (event.result == null) "Correct" else "Incorrect")
 
         invView.setItem(0, null)
         invView.setItem(1, null)
@@ -323,11 +325,13 @@ class DiagnosticExecutor: CASubCommand() {
             map[enchant.key.namespace] = map.getOrDefault(enchant.key.namespace, 0) + 1
         }
 
-        stb.append("\nNamespaces: ${
+        stb.append(
+            "\nNamespaces: ${
             map.entries.stream()
                 .map { (key, value) -> "$key ($value)" }
                 .reduce { a, b -> "$a, $b" }.get()
-        }")
+        }"
+        )
 
     }
 
@@ -337,7 +341,6 @@ class DiagnosticExecutor: CASubCommand() {
         stb.append("\n\nLast stack trace: ${e.stackTraceToString()}")
 
 
-
     }
-    
+
 }

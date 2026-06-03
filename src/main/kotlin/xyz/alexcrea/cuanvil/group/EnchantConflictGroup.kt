@@ -18,18 +18,19 @@ class EnchantConflictGroup(
     fun addEnchantment(enchant: CAEnchantment) {
         enchantments.add(enchant)
     }
+
     fun addEnchantments(enchants: List<CAEnchantment>) {
         enchantments.addAll(enchants)
     }
 
     private fun canBypassByBeforeLevel(enchants: Map<CAEnchantment, Int>): Boolean {
         // Either there no "conflict after"
-        if(conflictsAfterLevel.isEmpty()) return false
+        if (conflictsAfterLevel.isEmpty()) return false
 
         // Or we check if any conflict after enchantment is true
         for (entry in conflictsAfterLevel) {
             val current = enchants.getOrDefault(entry.key, 0)
-            if(current > entry.value)
+            if (current > entry.value)
                 return false
         }
 
@@ -38,12 +39,12 @@ class EnchantConflictGroup(
 
     private fun canBypassByAfterLevel(enchants: Map<CAEnchantment, Int>): Boolean {
         // Either there no "conflict after"
-        if(conflictsBeforeLevel.isEmpty()) return false
+        if (conflictsBeforeLevel.isEmpty()) return false
 
         // Or we check if any conflict after enchantment is true
         for (entry in conflictsBeforeLevel) {
             val current = enchants.getOrDefault(entry.key, 0)
-            if(current < entry.value)
+            if (current < entry.value)
                 return false
         }
 
@@ -64,7 +65,7 @@ class EnchantConflictGroup(
             return true
 
         // If empty we skip. else we
-        if(canBypassConflictByLevel(enchants))
+        if (canBypassConflictByLevel(enchants))
             return true
 
         // Count the amount of enchantment that are in the list
@@ -102,7 +103,7 @@ class EnchantConflictGroup(
 
     fun putConflictAfterLevel(enchantment: CAEnchantment, level: Int): Boolean {
         return null != (
-                if(level < 0) conflictsAfterLevel.remove(enchantment)
+                if (level < 0) conflictsAfterLevel.remove(enchantment)
                 else conflictsAfterLevel.put(enchantment, level))
     }
 
@@ -117,7 +118,7 @@ class EnchantConflictGroup(
 
     fun putConflictsBeforeLevel(enchantment: CAEnchantment, level: Int): Boolean {
         return null != (
-                if(level < 0) conflictsBeforeLevel.remove(enchantment)
+                if (level < 0) conflictsBeforeLevel.remove(enchantment)
                 else conflictsBeforeLevel.put(enchantment, level))
     }
 

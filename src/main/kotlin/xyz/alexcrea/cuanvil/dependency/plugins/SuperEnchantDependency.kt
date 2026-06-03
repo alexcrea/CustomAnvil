@@ -15,7 +15,7 @@ import xyz.alexcrea.cuanvil.enchant.bulk.SuperEnchantBulkOperation
 import xyz.alexcrea.cuanvil.enchant.wrapped.CASuperEnchantEnchantment
 import java.util.logging.Level
 
-class SuperEnchantDependency: GenericPluginDependency {
+class SuperEnchantDependency : GenericPluginDependency {
 
     override val plugin: SuperEnchants
     lateinit var enchManager: EnchantManager
@@ -25,11 +25,11 @@ class SuperEnchantDependency: GenericPluginDependency {
         this.plugin = plugin as SuperEnchants
     }
 
-    fun registerEnchantments(): Boolean{
+    fun registerEnchantments(): Boolean {
         CustomAnvil.instance.logger.info("Preparing Super Enchant compatibility...")
 
         val field = SuperEnchants::class.java.getDeclaredField("enchantManager")
-        if(field == null) {
+        if (field == null) {
             CustomAnvil.instance.logger.log(Level.SEVERE, "Failed to initialize Super Enchant compatibility")
             return false
         }
@@ -67,7 +67,7 @@ class SuperEnchantDependency: GenericPluginDependency {
         reload?.setExecutor(ReloadInterceptor(reload.executor))
     }
 
-    inner class ReloadInterceptor(val other: CommandExecutor): CommandExecutor {
+    inner class ReloadInterceptor(val other: CommandExecutor) : CommandExecutor {
 
         override fun onCommand(
             sender: CommandSender,

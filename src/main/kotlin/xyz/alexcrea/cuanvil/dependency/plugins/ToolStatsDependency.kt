@@ -5,7 +5,6 @@ import lol.hyper.toolstats.tools.ItemChecker
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
-import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import java.lang.reflect.Method
 

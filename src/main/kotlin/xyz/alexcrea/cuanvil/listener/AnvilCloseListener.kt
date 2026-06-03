@@ -9,13 +9,14 @@ import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
+@Suppress("UnstableApiUsage")
 class AnvilCloseListener(private val packetManager: PacketManager) : Listener {
 
     @EventHandler
-    fun onAnvilClose(event: InventoryCloseEvent){
+    fun onAnvilClose(event: InventoryCloseEvent) {
         val player = event.player
-        if(event.view !is AnvilView) return
-        if(player is Player && GameMode.CREATIVE != player.gameMode){
+        if (event.view !is AnvilView) return
+        if (player is Player && GameMode.CREATIVE != player.gameMode) {
             packetManager.setInstantBuild(player, false)
         }
 

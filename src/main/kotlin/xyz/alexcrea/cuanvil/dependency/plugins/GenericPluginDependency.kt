@@ -24,7 +24,7 @@ open class GenericPluginDependency(protected open val plugin: Plugin, private va
         }
     }
 
-    open fun fillPreAnvil(preAnvil: ArrayList<RegisteredListener>){
+    open fun fillPreAnvil(preAnvil: ArrayList<RegisteredListener>) {
         // get PreAnvil and PostAnvil listeners
         for (registeredListener in PrepareAnvilEvent.getHandlerList().registeredListeners) {
 
@@ -35,12 +35,13 @@ open class GenericPluginDependency(protected open val plugin: Plugin, private va
 
     protected open fun fillPostAnvil(
         postAnvil: ArrayList<RegisteredListener>,
-        preAnvil: ArrayList<RegisteredListener>) {
+        preAnvil: ArrayList<RegisteredListener>
+    ) {
 
     }
 
     open fun testPrepareAnvil(event: PrepareAnvilEvent): Boolean {
-        if(!testPrepare) return false
+        if (!testPrepare) return false
 
         val previousResult = event.result
         event.result = null
@@ -61,7 +62,7 @@ open class GenericPluginDependency(protected open val plugin: Plugin, private va
     }
 
     open fun testAnvilResult(event: InventoryClickEvent): Boolean {
-        if(!testPrepare) return false
+        if (!testPrepare) return false
 
         for (registeredListener in postAnvil) {
             // We do not want error from another plugin to be our fault

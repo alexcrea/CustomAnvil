@@ -17,19 +17,19 @@ class ItemsAdderDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
         }
 
     fun tryClone(item: ItemStack): ItemStack? {
-        if(!isLoaded) return null
+        if (!isLoaded) return null
         val customItem = CustomStack.byItemStack(item) ?: return null
 
         return CustomStack.getInstance(customItem.namespacedID)?.itemStack
     }
 
     fun fromKey(key: NamespacedKey): ItemStack? {
-        if(!isLoaded) return null
+        if (!isLoaded) return null
         return CustomStack.getInstance(key.toString())?.itemStack
     }
 
-    fun getKey(item: ItemStack) : NamespacedKey? {
-        if(!isLoaded) return null
+    fun getKey(item: ItemStack): NamespacedKey? {
+        if (!isLoaded) return null
         val customItem = CustomStack.byItemStack(item) ?: return null
 
         return NamespacedKey.fromString(customItem.namespacedID)

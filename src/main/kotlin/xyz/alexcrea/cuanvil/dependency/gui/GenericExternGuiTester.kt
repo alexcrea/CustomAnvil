@@ -64,11 +64,11 @@ class GenericExternGuiTester {
     }
 
     // Try if were in another plugin anvil inventory
-    fun testIfGui(inventory: InventoryView): Boolean {
+    fun testIfGui(view: InventoryView): Boolean {
         // In case we are in a test environment
         if(isInTest()) return false
 
-        val clazz = getContainerClass(inventory) ?: return false
+        val clazz = getContainerClass(view) ?: return false
 
         val clazzName = clazz.name
         if(!PlatformUtil.isPaper){

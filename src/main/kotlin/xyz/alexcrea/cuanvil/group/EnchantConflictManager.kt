@@ -10,7 +10,6 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import java.util.*
-import kotlin.collections.set
 
 class EnchantConflictManager {
 

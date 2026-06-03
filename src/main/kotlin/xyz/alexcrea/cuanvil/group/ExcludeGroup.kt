@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.group
 
 import org.bukkit.NamespacedKey
-import java.util.*
 
 class ExcludeGroup(name: String) : AbstractMaterialGroup(name) {
 

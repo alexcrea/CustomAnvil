@@ -11,10 +11,9 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
@@ -37,6 +36,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.min
 
+@Suppress("UnstableApiUsage")
 class AnvilResultListener : Listener {
 
     companion object {
@@ -51,7 +51,7 @@ class AnvilResultListener : Listener {
     @EventHandler(ignoreCancelled = true)
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
-        val inventory = event.inventory as? AnvilInventory ?: return
+        val view = event.view as? AnvilView ?: return
         val view = event.view
 
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
@@ -59,17 +59,17 @@ class AnvilResultListener : Listener {
         }
 
         // Test if the event should bypass custom anvil.
-        if (DependencyManager.tryClickAnvilResultBypass(event, inventory)) return
+        if (DependencyManager.tryClickAnvilResultBypass(event, view)) return
 
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
-        val output = inventory.getItem(ANVIL_OUTPUT_SLOT) ?: return
-        val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
-        val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
+        val output = view.getItem(ANVIL_OUTPUT_SLOT) ?: return
+        val leftItem = view.getItem(ANVIL_INPUT_LEFT) ?: return
+        val rightItem = view.getItem(ANVIL_INPUT_RIGHT)
 
         // Deny by default. allow if working
         event.result = Event.Result.DENY
-        if (GameMode.CREATIVE != player.gameMode && inventory.repairCost >= inventory.maximumRepairCost) {
+        if (GameMode.CREATIVE != player.gameMode && view.repairCost >= view.maximumRepairCost) {
             return
         }
 
@@ -77,14 +77,14 @@ class AnvilResultListener : Listener {
         val customRecipeResult = AnvilMergeLogic.testCustomRecipe(view, inventory, player, leftItem, rightItem)
         if (!customRecipeResult.isEmpty()) {
             onCustomCraft(
-                event, player, inventory,
+                event, player, view,
                 leftItem, rightItem, customRecipeResult
             )
             return
         }
 
         // Do not continue if there was no change
-        if ((output == inventory.getItem(ANVIL_INPUT_LEFT))) {
+        if ((output == view.getItem(ANVIL_INPUT_LEFT))) {
             return
         }
 
@@ -94,7 +94,7 @@ class AnvilResultListener : Listener {
             if (result.isEmpty()) return
 
             extractAnvilResult(
-                event, player, inventory,
+                event, player, view,
                 null, 0,
                 null, 0,
                 result
@@ -108,7 +108,7 @@ class AnvilResultListener : Listener {
             val result = AnvilMergeLogic.doMerge(view, inventory, player, leftItem, rightItem)
 
             val worked = extractAnvilResult(
-                event, player, inventory,
+                event, player, view,
                 null, 0,
                 null, 0,
                 result
@@ -128,7 +128,7 @@ class AnvilResultListener : Listener {
         )
         if (!unitRepairResult.isEmpty()) {
             onUnitRepairExtract(
-                rightItem, event, player, inventory,
+                rightItem, event, player, view,
                 unitRepairResult
             )
             return
@@ -138,9 +138,9 @@ class AnvilResultListener : Listener {
         val loreResult = AnvilMergeLogic.testLoreEdit(player, leftItem, rightItem)
         if (!loreResult.isEmpty()) {
             if (loreResult.type.isBook)
-                handleBookLoreEdit(event, inventory, player, leftItem, rightItem, loreResult)
+                handleBookLoreEdit(event, view, player, leftItem, rightItem, loreResult)
             else
-                handlePaperLoreEdit(event, inventory, player, leftItem, rightItem, loreResult)
+                handlePaperLoreEdit(event, view, player, leftItem, rightItem, loreResult)
             return
         }
     }
@@ -148,7 +148,7 @@ class AnvilResultListener : Listener {
     private fun onCustomCraft(
         event: InventoryClickEvent,
         player: Player,
-        inventory: AnvilInventory,
+        view: AnvilView,
         leftItem: ItemStack,
         rightItem: ItemStack?,
         result: CustomCraftResult,
@@ -186,7 +186,7 @@ class AnvilResultListener : Listener {
         if (event.click != ClickType.MIDDLE &&
             !handleCustomCraftClick(
                 event,
-                inventory,
+                view,
                 player,
                 leftItem,
                 rightItem,
@@ -204,7 +204,7 @@ class AnvilResultListener : Listener {
 
     private fun handleCustomCraftClick(
         event: InventoryClickEvent,
-        inventory: AnvilInventory, player: Player,
+        view: AnvilView, player: Player,
         leftItem: ItemStack, rightItem: ItemStack?,
         result: CustomCraftResult
     ): Boolean {
@@ -216,11 +216,11 @@ class AnvilResultListener : Listener {
             if (recipe.rightItem == null) return false// in case it changed
 
             rightItem.amount -= amount * recipe.rightItem!!.amount
-            inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
+            view.setItem(ANVIL_INPUT_RIGHT, rightItem)
         }
 
         leftItem.amount -= amount * recipe.leftItem!!.amount
-        inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
+        view.setItem(ANVIL_INPUT_LEFT, leftItem)
 
         removeCustomCraftCost(player, result)
 
@@ -229,17 +229,15 @@ class AnvilResultListener : Listener {
 
         CustomAnvil.verboseLog("new amount is $newAmount")
         if (newAmount <= 0 || recipe.exactCount) {
-            inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+            view.setItem(ANVIL_OUTPUT_SLOT, null)
         } else {
             val resultItem: ItemStack = recipe.resultItem!!.clone()
             resultItem.amount *= newAmount
 
             val newXp = newAmount * newAmount
 
-            inventory.repairCost = newXp
-            event.view.setProperty(InventoryView.Property.REPAIR_COST, newXp)
-
-            inventory.setItem(ANVIL_OUTPUT_SLOT, resultItem)
+            view.repairCost = newXp
+            view.setItem(ANVIL_OUTPUT_SLOT, resultItem)
 
             player.updateInventory()
         }
@@ -305,7 +303,7 @@ class AnvilResultListener : Listener {
     private fun extractAnvilResult(
         event: InventoryClickEvent,
         player: Player,
-        inventory: AnvilInventory,
+        view: AnvilView,
         leftItem: ItemStack?,
         leftRemoveCount: Int,
         rightItem: ItemStack?,
@@ -322,7 +320,7 @@ class AnvilResultListener : Listener {
         event.isCancelled = true
         val cost = result.cost
 
-        processCost(inventory, player, cost)
+        processCost(view, player, cost)
         if (!cost.valid && player.gameMode != GameMode.CREATIVE) {
             CustomAnvil.verboseLog("Player cannot afford the cost")
             return false
@@ -338,12 +336,12 @@ class AnvilResultListener : Listener {
 
             // We remove what should be removed
             if (leftItem != null) leftItem.amount -= leftRemoveCount
-            inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
+            view.setItem(ANVIL_INPUT_LEFT, leftItem)
 
             if (rightItem != null) rightItem.amount -= rightRemoveCount
-            inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
+            view.setItem(ANVIL_INPUT_RIGHT, rightItem)
 
-            inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+            view.setItem(ANVIL_OUTPUT_SLOT, null)
 
         }
 
@@ -358,7 +356,7 @@ class AnvilResultListener : Listener {
         return true
     }
 
-    private fun processCost(inventory: AnvilInventory, player: Player, cost: AnvilCost) {
+    private fun processCost(view: AnvilView, player: Player, cost: AnvilCost) {
         var sum = cost.repair
 
         if (
@@ -376,7 +374,7 @@ class AnvilResultListener : Listener {
             if (!EconomyManager.economy!!.has(player, cost.asMonetaryCost()))
                 cost.valid = false
         } else {
-            if ((inventory.maximumRepairCost <= sum)
+            if ((view.maximumRepairCost <= sum)
                 || (player.level < sum)
             ) cost.valid = false
         }
@@ -386,12 +384,12 @@ class AnvilResultListener : Listener {
         rightItem: ItemStack,
         event: InventoryClickEvent,
         player: Player,
-        inventory: AnvilInventory,
+        view: AnvilView,
         result: UnitRepairResult,
     ) {
         // We give the item manually
         extractAnvilResult(
-            event, player, inventory,
+            event, player, view,
             null, 0,
             rightItem, result.repairAmount,
             result
@@ -400,21 +398,21 @@ class AnvilResultListener : Listener {
 
     private fun handleBookLoreEdit(
         event: InventoryClickEvent,
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
         result: LoreEditResult
     ) {
         if (result.type.isAppend)
-            handleBookLoreAppend(event, inventory, player, rightItem, result)
+            handleBookLoreAppend(event, view, player, rightItem, result)
         else
-            handleBookLoreRemove(event, inventory, player, leftItem, rightItem, result)
+            handleBookLoreRemove(event, view, player, leftItem, rightItem, result)
     }
 
     private fun handleBookLoreAppend(
         event: InventoryClickEvent,
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         rightItem: ItemStack,
         result: LoreEditResult
@@ -432,7 +430,7 @@ class AnvilResultListener : Listener {
         }
 
         extractAnvilResult(
-            event, player, inventory,
+            event, player, view,
             null, 0,
             clearedBook, 0,
             result
@@ -441,7 +439,7 @@ class AnvilResultListener : Listener {
 
     private fun handleBookLoreRemove(
         event: InventoryClickEvent,
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
@@ -477,7 +475,7 @@ class AnvilResultListener : Listener {
         }
 
         extractAnvilResult(
-            event, player, inventory,
+            event, player, view,
             null, 0,
             rightCopy, 0,
             result
@@ -486,21 +484,21 @@ class AnvilResultListener : Listener {
 
     private fun handlePaperLoreEdit(
         event: InventoryClickEvent,
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
         result: LoreEditResult
     ) {
         if (result.type.isAppend)
-            handlePaperLoreAppend(event, inventory, player, rightItem, result)
+            handlePaperLoreAppend(event, view, player, rightItem, result)
         else
-            handlePaperLoreRemove(event, inventory, player, leftItem, rightItem, result)
+            handlePaperLoreRemove(event, view, player, leftItem, rightItem, result)
     }
 
     private fun handlePaperLoreAppend(
         event: InventoryClickEvent,
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         rightItem: ItemStack,
         result: LoreEditResult
@@ -525,14 +523,14 @@ class AnvilResultListener : Listener {
 
         if (rightItem.amount > 1) {
             extractAnvilResult(
-                event, player, inventory,
+                event, player, view,
                 paperCopy, 0,
                 rightItem, 1,
                 result
             )
         } else {
             extractAnvilResult(
-                event, player, inventory,
+                event, player, view,
                 null, 0,
                 paperCopy, 0,
                 result
@@ -542,7 +540,7 @@ class AnvilResultListener : Listener {
 
     private fun handlePaperLoreRemove(
         event: InventoryClickEvent,
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
@@ -577,14 +575,14 @@ class AnvilResultListener : Listener {
 
         if (rightItem.amount > 1) {
             extractAnvilResult(
-                event, player, inventory,
+                event, player, view,
                 rightClone, 0,
                 rightItem, 1,
                 result
             )
         } else {
             extractAnvilResult(
-                event, player, inventory,
+                event, player, view,
                 null, 0,
                 rightClone, 0,
                 result

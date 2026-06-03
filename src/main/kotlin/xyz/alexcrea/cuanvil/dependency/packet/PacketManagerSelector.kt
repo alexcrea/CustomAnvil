@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.dependency.packet
 import org.bukkit.Bukkit
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
-import xyz.alexcrea.cuanvil.dependency.packet.versions.*
+import xyz.alexcrea.cuanvil.dependency.packet.versions.PaperPacketManager
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 
 object PacketManagerSelector {

@@ -17,10 +17,10 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
 import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant as LegacyCurseOfFragilityEnchant
-import su.nightexpress.excellentenchants.manager.listener.AnvilListener as V5AnvilListener
 import su.nightexpress.excellentenchants.enchantment.listener.AnvilListener as PreV5AnvilListener
 import su.nightexpress.excellentenchants.enchantment.listener.EnchantAnvilListener as LegacyAnvilListener
 import su.nightexpress.excellentenchants.enchantment.registry.EnchantRegistry as LegacyEnchantRegistry
+import su.nightexpress.excellentenchants.manager.listener.AnvilListener as V5AnvilListener
 import su.nightexpress.excellentenchants.registry.EnchantRegistry as PreV5EnchantRegistry
 
 // I don't like that I need to support older version. if I could just drop older support it would be sooo nice
@@ -53,7 +53,7 @@ class ExcellentEnchantsDependency {
 
         if (listenerVersion == null) {
             CustomAnvil.instance.logger.severe("Found issue with listener of Excellent Enchants. compatiblity is broken. please contact CustomAnvil devs")
-        } else{
+        } else {
             CustomAnvil.log("Support version: " + listenerVersion.name)
         }
 
@@ -171,6 +171,7 @@ class ExcellentEnchantsDependency {
             ListenerVersion.V5,
             ListenerVersion.V5_4,
                 -> this.usedAnvilListener = v5AnvilListener!!
+
             ListenerVersion.PRE_V5 -> this.usedAnvilListener = preV5AnvilListener!!
             ListenerVersion.LEGACY -> this.usedAnvilListener = legacyAnvilListener!!
             null -> {}
@@ -238,6 +239,7 @@ class ExcellentEnchantsDependency {
                 ListenerVersion.V5_3,
                 ListenerVersion.V5_4,
                     -> v5AnvilListener!!.onClickAnvil(event)
+
                 ListenerVersion.PRE_V5 -> preV5AnvilListener!!.onClickAnvil(event)
                 ListenerVersion.LEGACY -> legacyAnvilListener!!.onClickAnvil(event)
                 null -> {}

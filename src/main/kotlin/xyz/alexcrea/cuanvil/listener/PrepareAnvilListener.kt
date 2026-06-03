@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.listener
 
-import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
@@ -16,6 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
 import xyz.alexcrea.cuanvil.anvil.AnvilCost
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.doMerge
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.doRenaming
@@ -30,6 +30,7 @@ import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 /**
  * Listener for anvil events
  */
+@Suppress("UnstableApiUsage")
 class PrepareAnvilListener : Listener {
 
     companion object {
@@ -48,24 +49,23 @@ class PrepareAnvilListener : Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun anvilCombineCheck(event: PrepareAnvilEvent) {
         val view = event.view
-        val inventory = event.inventory
+        val player = view.player
 
-        val player = InventoryViewUtil.getInstance().getPlayer(view)
-        if(player !is Player) return
+        if (player !is Player) return
 
         tryRenameDialog(player, event)
 
         // Test if custom anvil is bypassed before immutability test
         if (DependencyManager.earlyTryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvCost(inventory, view, player, AnvilCost(event.inventory.repairCost))
+            AnvilXpUtil.setAnvilInvCost(view, player, AnvilCost(view.repairCost))
             return
         }
 
-        val first = inventory.getItem(ANVIL_INPUT_LEFT)
-        val second = inventory.getItem(ANVIL_INPUT_RIGHT)
+        val first = view.getItem(ANVIL_INPUT_LEFT)
+        val second = view.getItem(ANVIL_INPUT_RIGHT)
 
-        if(IS_EMPTY_TEST) {
+        if (IS_EMPTY_TEST) {
             IS_EMPTY_TEST = false
             applyResult(event, player, AnvilResult.EMPTY)
             return
@@ -86,7 +86,7 @@ class PrepareAnvilListener : Listener {
         // Test if the event should bypass custom anvil.
         if (DependencyManager.tryEventPreAnvilBypass(event, player)) {
             // even if we got bypassed we still want to set price
-            AnvilXpUtil.setAnvilInvCost(inventory, view, player, AnvilCost(event.inventory.repairCost))
+            AnvilXpUtil.setAnvilInvCost(view, player, AnvilCost(view.repairCost))
             return
         }
 
@@ -100,9 +100,9 @@ class PrepareAnvilListener : Listener {
         view: InventoryView, //TODO use anvil view
         inventory: AnvilInventory,
         player: Player,
-        first: ItemStack?, second: ItemStack?) : AnvilResult
-    {
-        if(first == null)
+        first: ItemStack?, second: ItemStack?
+    ): AnvilResult {
+        if (first == null)
             return AnvilResult.EMPTY
 
         // Test custom recipe
@@ -137,7 +137,7 @@ class PrepareAnvilListener : Listener {
         player: HumanEntity,
         event: PrepareAnvilEvent
     ) {
-        if(!ConfigOptions.canUseDialogRename(player)) return
+        if (!ConfigOptions.canUseDialogRename(player)) return
 
         AnvilRenameDialogUtil.anvilRenameDialog.tryShowDialog(player, event)
     }
@@ -171,7 +171,7 @@ class PrepareAnvilListener : Listener {
     private fun applyResult(event: PrepareAnvilEvent, player: Player, result: AnvilResult) {
         event.result = result.item
 
-        AnvilXpUtil.setAnvilResult(event.inventory, event.view, player, result)
+        AnvilXpUtil.setAnvilResult(event.view, player, result)
     }
 
 }
