@@ -8,6 +8,6 @@ plugins {
 // Imitate needed class and method to support legacy version of EcoEnchant
 dependencies {
     // Spigot api
-    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 
 }

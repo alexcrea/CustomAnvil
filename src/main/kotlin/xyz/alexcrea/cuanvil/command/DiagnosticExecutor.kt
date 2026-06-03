@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.command
 
-import com.github.stefvanschie.inventoryframework.inventoryview.interface_.InventoryViewUtil
 import io.delilaheve.CustomAnvil
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent
@@ -16,8 +15,6 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
@@ -263,7 +260,7 @@ class DiagnosticExecutor: CASubCommand() {
     }
 
     fun simulateAnvil(player: Player, stb: StringBuilder, left: ItemStack?, right: ItemStack?, result: ItemStack?) {
-        var invView: InventoryView
+        var invView: AnvilView
         var event: PrepareAnvilEvent
         try {
             val fakeInv = Bukkit.createInventory(player, InventoryType.ANVIL)
@@ -275,42 +272,40 @@ class DiagnosticExecutor: CASubCommand() {
             val anvilTypeField = menuTypeClazz.getField("ANVIL")
             val anvilType = anvilTypeField.get(null)
             val createMethod = anvilType.javaClass.getMethod("create", HumanEntity::class.java)
-            invView = createMethod.invoke(anvilType, player) as InventoryView
+            invView = createMethod.invoke(anvilType, player) as AnvilView
 
             player.openInventory(invView)
 
-            val anvilViewClass = Class.forName("org.bukkit.inventory.view.AnvilView")
-            val constructor = PrepareAnvilEvent::class.java.getConstructor(anvilViewClass, ItemStack::class.java)
+            val constructor = PrepareAnvilEvent::class.java.getConstructor(AnvilView::class.java, ItemStack::class.java)
             event = constructor.newInstance(invView, result)
         }
 
-        val fakeInv = InventoryViewUtil.getInstance().getTopInventory(invView) as AnvilInventory
-        fakeInv.setItem(0, left)
-        fakeInv.setItem(1, right)
+        invView.setItem(0, left)
+        invView.setItem(1, right)
 
-        val xp = fakeInv.repairCost
-        val maxXp = fakeInv.maximumRepairCost
-        val mergeResult = fakeInv.getItem(2)
+        val xp = invView.repairCost
+        val maxXp = invView.maximumRepairCost
+        val mergeResult = invView.getItem(2)
         stb.append("\n${if(result == mergeResult) "E" else "Une"}xpected Result")
 
         PrepareAnvilListener().anvilCombineCheck(event)
         // Now we check if item and xp same
         stb.append("\nXP/Max XP: ")
-            .append(if(fakeInv.repairCost == xp) "Correct" else "Incorrect")
+            .append(if(invView.repairCost == xp) "Correct" else "Incorrect")
             .append("/")
-            .append(if(fakeInv.maximumRepairCost == maxXp) "Correct" else "Incorrect")
-            .append(" (${fakeInv.repairCost} $xp|${fakeInv.maximumRepairCost} $maxXp)")
+            .append(if(invView.maximumRepairCost == maxXp) "Correct" else "Incorrect")
+            .append(" (${invView.repairCost} $xp|${invView.maximumRepairCost} $maxXp)")
             .append("\nMerge result: ")
-            .append(if(fakeInv.getItem(2) == mergeResult) "Correct" else "Incorrect")
+            .append(if(invView.getItem(2) == mergeResult) "Correct" else "Incorrect")
 
         PrepareAnvilListener.IS_EMPTY_TEST = true
         Bukkit.getPluginManager().callEvent(event)
         stb.append("\nNull result test: ")
             .append(if(event.result == null) "Correct" else "Incorrect")
 
-        fakeInv.setItem(0, null)
-        fakeInv.setItem(1, null)
-        fakeInv.setItem(2, null)
+        invView.setItem(0, null)
+        invView.setItem(1, null)
+        invView.setItem(2, null)
         player.closeInventory()
     }
 

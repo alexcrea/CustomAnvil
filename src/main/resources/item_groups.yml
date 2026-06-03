@@ -121,7 +121,6 @@ wearable:
     - player_head
     - creeper_head
     - dragon_head
-    # do not exist in 1.18 but exist in future update
     - piglin_head
   groups:
     - armors

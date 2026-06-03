@@ -21,8 +21,8 @@ repositories {
 
 // Set target version
 tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "16"
-    targetCompatibility = "16"
+    sourceCompatibility = "21"
+    targetCompatibility = "21"
 
     options.encoding = "UTF-8"
 }
@@ -30,6 +30,6 @@ tasks.withType<JavaCompile>().configureEach {
 kotlin {
     compilerOptions {
         apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
-        jvmTarget.set(JvmTarget.JVM_16)
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }

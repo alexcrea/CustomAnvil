@@ -4,7 +4,7 @@ prefix: "Custom Anvil"
 version: ${version}
 folia-supported: true
 description: Allow to customise anvil mechanics
-api-version: 1.16
+api-version: 1.21
 load: POSTWORLD
 authors: [ DelilahEve, alexcrea ]
 libraries: [${libraries}]

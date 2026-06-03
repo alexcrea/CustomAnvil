@@ -4,7 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.view.AnvilView
 import org.bukkit.plugin.RegisteredListener
 import valorless.havenbags.HavenBags
 import valorless.havenbags.features.BagSkin
@@ -54,14 +54,14 @@ class HavenBagsDependency {
         bagSkin.onPrepareAnvil(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil heaven bag anvil skin.")
-            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
+            AnvilXpUtil.setAnvilInvCost(event.view, player, AnvilCost(event.view.repairCost))
             return true
         }
 
         bagUpgrade.onPrepareAnvil(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil heaven bag anvil upgrade.")
-            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
+            AnvilXpUtil.setAnvilInvCost(event.view, player, AnvilCost(event.view.repairCost))
             return true
         }
 
@@ -69,8 +69,8 @@ class HavenBagsDependency {
         return false
     }
 
-    fun testAnvilResult(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
-        val result = inventory.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)?.clone()
+    fun testAnvilResult(event: InventoryClickEvent, view: AnvilView): Boolean {
+        val result = view.getItem(PrepareAnvilListener.ANVIL_OUTPUT_SLOT)?.clone()
 
         if (HavenBags.IsBag(result)) {
             CustomAnvil.log("Detected anvil click haven bag bypass.")

@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.anvil.AnvilCost
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
@@ -169,9 +170,9 @@ object DependencyManager {
         )
     }
 
-    private fun logExceptionAndClear(target: CommandSender, inventory: Inventory, e: Exception) {
+    private fun logExceptionAndClear(target: CommandSender, view: AnvilView, e: Exception) {
         // Just in case to avoid illegal items
-        inventory.setItem(ANVIL_OUTPUT_SLOT, null)
+        view.setItem(ANVIL_OUTPUT_SLOT, null)
 
         logException(target, e)
     }
@@ -182,7 +183,7 @@ object DependencyManager {
         try {
             return earlyUnsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.inventory, e)
+            logExceptionAndClear(event.view.player, event.view, e)
             return true
         }
     }
@@ -208,7 +209,7 @@ object DependencyManager {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.inventory, e)
+            logExceptionAndClear(event.view.player, event.view, e)
             return true
         }
     }
@@ -262,16 +263,16 @@ object DependencyManager {
     }
 
     // Return true if should bypass (either by a dependency or error)
-    fun tryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
+    fun tryClickAnvilResultBypass(event: InventoryClickEvent, view: AnvilView): Boolean {
         try {
-            return unsafeTryClickAnvilResultBypass(event, inventory)
+            return unsafeTryClickAnvilResultBypass(event, view)
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.inventory, e)
+            logExceptionAndClear(event.view.player, event.view, e)
             return true
         }
     }
 
-    private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, inventory: AnvilInventory): Boolean {
+    private fun unsafeTryClickAnvilResultBypass(event: InventoryClickEvent, view: AnvilView): Boolean {
         // Run the event
         val bypassEvent = CAClickResultBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
@@ -279,10 +280,10 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if disenchantment used event click
-        if (!bypass && (disenchantmentCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true
+        if (!bypass && (disenchantmentCompatibility?.testAnvilResult(event, view) == true)) bypass = true
 
         // Test if haven bag used event click
-        if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, inventory) == true)) bypass = true
+        if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, view) == true)) bypass = true
 
         // Test if disenchantment used event click
         if (!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
@@ -292,10 +293,10 @@ object DependencyManager {
         }
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && externGuiTester.testIfGui(event.view)) bypass = true
+        if (!bypass && externGuiTester.testIfGui(view)) bypass = true
 
         // Test if in an ax player warp rating gui
-        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.view.player) == true)) bypass = true
+        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(view.player) == true)) bypass = true
 
         return bypass
     }

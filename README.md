@@ -73,10 +73,9 @@ See the [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x
 
 One of the configurations allow displaying price about 40 and removing Too Expensive. \
 By how the minecraft client work: price above 40 can only be displayed green, even if the player does not own enough experience level. 
-spigot version 1.18 to 1.21.11 do not need any ProtocoLib dependency. (26.1.0 or above requires it) \
-Any recent paper version also are supported for this feature. 
-But you should wait for update for new version containing new enchantable item or new enchantments if any of this got added.
-Else it is, likely, fine to use the current version you are ussing on a new paper version
+You do not need Protocolib unless you are using spigot above in 26.1 or above \
+
+But you should wait for update or announcement for new version containing new enchantable item or new enchantments.
 
 ### For custom enchantment plugin developers
 For information about the API, please refer to [the Wiki](https://github.com/alexcrea/CustomAnvil/wiki) \

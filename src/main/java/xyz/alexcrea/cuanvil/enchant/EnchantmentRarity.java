@@ -1,6 +1,6 @@
 package xyz.alexcrea.cuanvil.enchant;
 
-// because spigot (1.18) do not look like to provide access to enchantment rarity I need to do it myself...
+// because spigot (1.21) do not look like to provide access to enchantment rarity I need to do it myself...
 public class EnchantmentRarity {
 
     public static final EnchantmentRarity NO_RARITY = new EnchantmentRarity(0, 0);
