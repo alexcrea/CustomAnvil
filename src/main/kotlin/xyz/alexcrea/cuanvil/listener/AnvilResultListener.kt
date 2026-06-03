@@ -160,7 +160,7 @@ class AnvilResultListener : Listener {
         if (player.gameMode != GameMode.CREATIVE) {
             if(ConfigOptions.shouldUseMoney(player)) {
                 result.cost.isMonetary = true
-                if(!EconomyManager.economy!!.has(player, BigDecimal(rawCost))) return
+                if(!EconomyManager.economy!!.has(player, result.cost.asMonetaryCost())) return
             } else if (recipe.removeExactLinearXp) {
                 val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
                 val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
@@ -243,7 +243,7 @@ class AnvilResultListener : Listener {
 
         val rawCost = result.customCraftCost.rawCost
         if(result.cost.isMonetary) {
-            EconomyManager.economy!!.remove(player, BigDecimal(rawCost))
+            EconomyManager.economy!!.remove(player, result.cost.asMonetaryCost())
             return
         }
 
@@ -262,7 +262,7 @@ class AnvilResultListener : Listener {
             player.level = newLevel
             player.exp = xp / newDelta
         } else {
-            player.level -= rawCost
+            player.level -= AnvilXpUtil.calculateLevelForXp(rawCost)
         }
 
     }

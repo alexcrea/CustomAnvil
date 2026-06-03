@@ -456,7 +456,10 @@ lore_edit:
 # It also requires to enable dialog rename (set "enable_dialog_rename: false" a bit higher)
 # If dialog rename permission is enabled and player do not have the permission merge will fall back to vanilla xp cost
 #
-# As this feature require dialog rename, it can only be enabled starting with paper 1.21.6
+# If you are using custom craft I recommend using Linear Xp Cost with Exact Linear Xp as normal Xp Cost will act "weird"
+# But Linear Xp will act as 1$ time global multiplier. In other word: like you expect
+#
+# As this feature require dialog rename, it can only be enabled starting with paper 1.21.6 and later
 monetary_cost:
   enabled: false
   # If using vault unlocked this allow to specify what currency should be used for anvil usage

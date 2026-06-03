@@ -75,6 +75,7 @@ object AnvilXpUtil {
 
         override fun asMonetaryCost(): BigDecimal {
             return BigDecimal(rawCost)
+                .multiply(moneyMultiplier("global"))
         }
 
     }
