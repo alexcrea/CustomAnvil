@@ -17,7 +17,7 @@ import xyz.alexcrea.cuanvil.update.Version
 import java.io.InputStreamReader
 
 object DataPackDependency {
-    private val START_DETECT_VERSION = Version(1, 19, 0)
+    private val START_DETECT_VERSION = Version(1, 20, 5)
 
     /**
      * Map of the latest CustomAnvil update related to the pack
