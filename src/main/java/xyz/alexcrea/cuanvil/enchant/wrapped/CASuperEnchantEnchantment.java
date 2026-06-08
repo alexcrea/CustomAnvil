@@ -24,7 +24,7 @@ public class CASuperEnchantEnchantment extends CAEnchantmentBase implements Addi
     private @NotNull EnchantManager enchantManager;
 
     public CASuperEnchantEnchantment(@NotNull CustomEnchant enchant, @NotNull Plugin plugin, @NotNull EnchantManager enchantManager) {
-        super(NamespacedKey.fromString(enchant.getId(), plugin), EnchantmentRarity.NO_RARITY, enchant.getMaxLevel());
+        super(NamespacedKey.fromString(enchant.getId(), plugin), EnchantmentRarity.COMMON, enchant.getMaxLevel());
 
         this.enchant = enchant;
         this.enchantManager = enchantManager;
