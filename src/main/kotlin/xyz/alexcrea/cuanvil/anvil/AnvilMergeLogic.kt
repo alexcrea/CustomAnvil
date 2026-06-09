@@ -55,7 +55,7 @@ object AnvilMergeLogic {
         }
     }
 
-    class UnitRepairResult: AnvilResult {
+    class UnitRepairResult : AnvilResult {
         companion object {
             val EMPTY = UnitRepairResult(null, AnvilCost(), 0)
         }
@@ -67,7 +67,7 @@ object AnvilMergeLogic {
         }
     }
 
-    class CustomCraftResult: AnvilResult {
+    class CustomCraftResult : AnvilResult {
         companion object {
             val EMPTY = CustomCraftResult(null, CustomCraftCost(0), 0, null)
         }
@@ -76,15 +76,17 @@ object AnvilMergeLogic {
         val amount: Int
         val recipe: AnvilCustomRecipe?
 
-        constructor(item: ItemStack?, cost: CustomCraftCost,
-                    amount: Int, recipe: AnvilCustomRecipe?) : super(item, cost, true) {
+        constructor(
+            item: ItemStack?, cost: CustomCraftCost,
+            amount: Int, recipe: AnvilCustomRecipe?
+        ) : super(item, cost, true) {
             this.customCraftCost = cost
             this.amount = amount
             this.recipe = recipe
         }
     }
 
-    class LoreEditResult: AnvilResult {
+    class LoreEditResult : AnvilResult {
         companion object {
             val EMPTY = LoreEditResult(null, AnvilCost(), LoreEditType.APPEND_PAPER)
         }
@@ -96,8 +98,9 @@ object AnvilMergeLogic {
         }
     }
 
-    fun doRenaming(inventory: AnvilInventory,
-                   player: Player, first: ItemStack
+    fun doRenaming(
+        inventory: AnvilInventory,
+        player: Player, first: ItemStack
     ): AnvilResult {
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
@@ -115,15 +118,19 @@ object AnvilMergeLogic {
         return AnvilResult(result, cost)
     }
 
-    private fun processDialogPCD(it: ItemMeta, player: HumanEntity) {
+    private fun processDialogPCD(meta: ItemMeta, player: HumanEntity) {
+        val text = AnvilRenameDialogUtil.anvilRenameDialog.currentText(player)
+        return processPCD(meta, player, text)
+    }
+
+    fun processPCD(meta: ItemMeta, player: HumanEntity, text: String?) {
         val keepDialog = ConfigOptions.canUseDialogRename(player) && ConfigOptions.shouldKeepRenameText
 
-        val pdc = it.persistentDataContainer
-        if(!keepDialog)
+        val pdc = meta.persistentDataContainer
+        if (!keepDialog)
             pdc.remove(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY)
         else {
-            val text = AnvilRenameDialogUtil.anvilRenameDialog.currentText(player)
-            if(text == null || text.isBlank())
+            if (text == null || text.isBlank())
                 pdc.remove(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY)
             else pdc.set(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY, PersistentDataType.STRING, text)
         }
@@ -138,7 +145,8 @@ object AnvilMergeLogic {
         if (ConfigOptions.renameColorPossible && renameText != null) {
             val component = AnvilColorUtil.handleColor(
                 renameText,
-                AnvilColorUtil.renamePermission(player))
+                AnvilColorUtil.renamePermission(player)
+            )
 
             if (component != null) {
                 renameText = MiniMessageUtil.legacy_mm.serialize(component)
@@ -160,7 +168,8 @@ object AnvilMergeLogic {
                         renameText == "" ||
                         //TODO on recent paper check effective name instead
                         renameText == CasedStringUtil.snakeToUpperSpacedCase(resultItem.type.name.lowercase())
-                        )) {
+                        )
+            ) {
                 it.setDisplayName(renameText)
                 processDialogPCD(it, player)
                 resultItem.itemMeta = it
@@ -184,7 +193,7 @@ object AnvilMergeLogic {
 
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
-        if(hasChanged){
+        if (hasChanged) {
             resultItem.setEnchantmentsUnsafe(newEnchants)
             // Calculate enchantment cost
             AnvilXpUtil.getRightValues(second, resultItem, cost)
@@ -217,9 +226,9 @@ object AnvilMergeLogic {
         firstEnchants: MutableMap<CAEnchantment, Int>,
         resultEnchants: MutableMap<CAEnchantment, Int>
     ): Boolean {
-        if(firstEnchants.size != resultEnchants.size) return false
+        if (firstEnchants.size != resultEnchants.size) return false
         for (entry in resultEnchants) {
-            if(firstEnchants.getOrDefault(entry.key, entry.value-1) != entry.value) return false
+            if (firstEnchants.getOrDefault(entry.key, entry.value - 1) != entry.value) return false
         }
 
         return true
@@ -262,11 +271,11 @@ object AnvilMergeLogic {
     }
 
     fun testUnitRepair(
-            inventory: AnvilInventory,
-            player: Player,
-            first: ItemStack, second: ItemStack,
-            unitRepairAmount: Double
-        ): UnitRepairResult {
+        inventory: AnvilInventory,
+        player: Player,
+        first: ItemStack, second: ItemStack,
+        unitRepairAmount: Double
+    ): UnitRepairResult {
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
         cost.rename = handleRename(resultItem, inventory, player)
@@ -300,7 +309,7 @@ object AnvilMergeLogic {
             AnvilLoreEditUtil.tryLoreEditByPaper(player, first, second)
         else LoreEditResult.EMPTY
 
-        if(result.isEmpty()) return result
+        if (result.isEmpty()) return result
 
         if (result.item!!.isAir || first == result.item) {
             CustomAnvil.log("lore edit, But input is same as output")

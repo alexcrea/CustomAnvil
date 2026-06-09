@@ -91,7 +91,7 @@ class AnvilResultListener : Listener {
         // Rename
         if (rightItem == null) {
             val result = AnvilMergeLogic.doRenaming(inventory, player, leftItem)
-            if(result.isEmpty()) return
+            if (result.isEmpty()) return
 
             extractAnvilResult(
                 event, player, inventory,
@@ -119,7 +119,8 @@ class AnvilResultListener : Listener {
         // Unit repair
         val unitRepairResult = AnvilMergeLogic.testUnitRepair(
             inventory, player,
-            leftItem, rightItem)
+            leftItem, rightItem
+        )
         if (unitRepairResult.isEmpty()) {
             onUnitRepairExtract(
                 rightItem, event, player, inventory,
@@ -130,8 +131,8 @@ class AnvilResultListener : Listener {
 
         // For lore edit
         val loreResult = AnvilMergeLogic.testLoreEdit(player, leftItem, rightItem)
-        if(!loreResult.isEmpty()) {
-            if(loreResult.type.isBook)
+        if (!loreResult.isEmpty()) {
+            if (loreResult.type.isBook)
                 handleBookLoreEdit(event, inventory, player, leftItem, rightItem, loreResult)
             else
                 handlePaperLoreEdit(event, inventory, player, leftItem, rightItem, loreResult)
@@ -153,14 +154,16 @@ class AnvilResultListener : Listener {
             if (recipe.removeExactLinearXp) rawCost
             else AnvilXpUtil.calculateLevelForXp(rawCost)
 
-        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, " +
-                "cost: $finalCost, level: ${player.level}, " +
-                "result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
+        CustomAnvil.log(
+            "gamemode: ${player.gameMode != GameMode.CREATIVE}, " +
+                    "cost: $finalCost, level: ${player.level}, " +
+                    "result: ${player.totalExperience < finalCost} ${player.level < finalCost}"
+        )
 
         if (player.gameMode != GameMode.CREATIVE) {
-            if(ConfigOptions.shouldUseMoney(player)) {
+            if (ConfigOptions.shouldUseMoney(player)) {
                 result.cost.isMonetary = true
-                if(!EconomyManager.economy!!.has(player, result.cost.asMonetaryCost())) return
+                if (!EconomyManager.economy!!.has(player, result.cost.asMonetaryCost())) return
             } else if (recipe.removeExactLinearXp) {
                 val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
                 val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
@@ -242,7 +245,7 @@ class AnvilResultListener : Listener {
         if (player.gameMode == GameMode.CREATIVE) return
 
         val rawCost = result.customCraftCost.rawCost
-        if(result.cost.isMonetary) {
+        if (result.cost.isMonetary) {
             EconomyManager.economy!!.remove(player, result.cost.asMonetaryCost())
             return
         }
@@ -268,10 +271,10 @@ class AnvilResultListener : Listener {
     }
 
     private fun tryRemoveCost(player: Player, cost: AnvilCost): Boolean {
-        if(player.gameMode == GameMode.CREATIVE) return true
-        if(cost.isMonetary) {
+        if (player.gameMode == GameMode.CREATIVE) return true
+        if (cost.isMonetary) {
             val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
-            if(!result) return false
+            if (!result) return false
         } else {
             player.level -= cost.asXpCost()
         }
@@ -289,7 +292,7 @@ class AnvilResultListener : Listener {
         rightRemoveCount: Int,
         result: AnvilResult
     ): Boolean {
-        if(result.isEmpty()) return false
+        if (result.isEmpty()) return false
 
         // To avoid vanilla, we cancel the event
         event.result = Event.Result.DENY
@@ -305,7 +308,7 @@ class AnvilResultListener : Listener {
 
         // If not creative middle click...
         if (event.click != ClickType.MIDDLE) {
-            if(!tryRemoveCost(player, cost)) return false
+            if (!tryRemoveCost(player, cost)) return false
 
             // We remove what should be removed
             if (leftItem != null) leftItem.amount -= leftRemoveCount
@@ -417,7 +420,7 @@ class AnvilResultListener : Listener {
         leftItem: ItemStack,
         rightItem: ItemStack,
         result: LoreEditResult
-    ){
+    ) {
         val bookMeta = rightItem.itemMeta as BookMeta? ?: return
 
         // fill book meta
@@ -486,6 +489,10 @@ class AnvilResultListener : Listener {
             paperCopy = rightItem.clone()
             paperCopy.amount = 1
             paperMeta.setComponentDisplayName(null)
+
+            // Remove pcd name
+            AnvilMergeLogic.processPCD(paperMeta, player, null)
+
             paperCopy.itemMeta = paperMeta
         }
 
