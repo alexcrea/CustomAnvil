@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
+import xyz.alexcrea.cuanvil.util.ModernPrepareAnvilCreator
 import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant as LegacyCurseOfFragilityEnchant
@@ -219,13 +220,16 @@ class ExcellentEnchantsDependency {
     }
 
     fun treatAnvilResult(event: CATreatAnvilResult2Event) {
-        val result = event.result
-        if (result == null) return
+        val result = event.result ?: return
 
         val first: ItemStack = treatInput(event.leftItem)
         val second: ItemStack = treatInput(event.rightItem)
-
-        val fakeEvent = PrepareAnvilEvent(event.view, result)
+        val fakeEvent: PrepareAnvilEvent = try {
+            //TODO remove this on legacy removal
+            PrepareAnvilEvent(event.view, result)
+        } catch (_: NoSuchMethodError) {
+            ModernPrepareAnvilCreator.createPrepareAnvil(event.view, result)
+        }
         handleCombineMethod.invoke(this.usedAnvilListener, fakeEvent, first, second, result)
 
         event.result = fakeEvent.result
