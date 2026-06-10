@@ -8,11 +8,15 @@ public class CustomAnvilTests extends DefaultCustomAnvilTest {
 
     @Test
     public void simpleInitTest() {
-        Assertions.assertNotNull(server);
-        Assertions.assertNotNull(plugin);
+        try {
+            Assertions.assertNotNull(server);
+            Assertions.assertNotNull(plugin);
 
-        // Test shutdown
-        plugin.onDisable();
+            // Test shutdown
+            plugin.onDisable();
+        } catch (Exception e) {
+            Assertions.fail(e);
+        }
     }
 
 }

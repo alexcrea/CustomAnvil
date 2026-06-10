@@ -7,6 +7,7 @@ import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import xyz.alexcrea.cuanvil.command.DiagnosticExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 
 object MetricsUtil {
 
@@ -17,6 +18,8 @@ object MetricsUtil {
     private var FAST_STATS_METRICS: BukkitContext? = null
 
     fun loadMetrics(plugin: CustomAnvil) {
+        if(DependencyManager.externGuiTester.isInTest()) return
+
         val config = ConfigHolder.DEFAULT_CONFIG.config
         val metricString = config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
         val metricType = MetricType.from(metricString)
