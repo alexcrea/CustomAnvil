@@ -29,8 +29,6 @@ import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
 import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.CustomCraftCost
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
@@ -115,7 +113,8 @@ object AnvilMergeLogic {
         }
 
         cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
-        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.RENAME_ONLY, cost)
+        val result =
+            DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.RENAME_ONLY, cost)
 
         return AnvilResult(result, cost)
     }
@@ -220,7 +219,8 @@ object AnvilMergeLogic {
         // Calculate rename cost
         cost.rename = handleRename(resultItem, inventory, player)
 
-        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.MERGE, cost)
+        val result =
+            DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.MERGE, cost)
 
         return AnvilResult(result, cost)
     }
@@ -261,7 +261,8 @@ object AnvilMergeLogic {
         cost.recipe = if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
         else AnvilXpUtil.calculateLevelForXp(xpCost)
 
-        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
+        val result =
+            DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
         return CustomCraftResult(result, cost, amount, recipe)
     }
 
@@ -300,7 +301,8 @@ object AnvilMergeLogic {
             return UnitRepairResult.EMPTY
         }
 
-        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.UNIT_REPAIR, cost)
+        val result =
+            DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.UNIT_REPAIR, cost)
         return UnitRepairResult(result, cost, repairAmount)
     }
 

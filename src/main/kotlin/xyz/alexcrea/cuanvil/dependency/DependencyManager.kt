@@ -14,6 +14,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
@@ -33,7 +34,6 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import java.util.logging.Level
 
 object DependencyManager {
@@ -240,7 +240,7 @@ object DependencyManager {
         player: HumanEntity,
         result: ItemStack,
         useType: AnvilUseType,
-        cost: AnvilXpUtil.AnvilCost
+        cost: AnvilCost
     ): ItemStack? {
         val treatEvent = CATreatAnvilResult2Event(view, inventory, useType, result, cost)
         try {

@@ -8,8 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.anvil.AnvilCost;
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil;
 
 /**
  * Called after custom anvil processed the click on the result on the anvil inventory.
@@ -48,7 +48,7 @@ public class CATreatAnvilResult2Event extends Event {
     @Nullable
     private ItemStack result;
 
-    private final AnvilXpUtil.AnvilCost cost;
+    private final AnvilCost cost;
 
     @ApiStatus.Internal
     public CATreatAnvilResult2Event(
@@ -56,7 +56,7 @@ public class CATreatAnvilResult2Event extends Event {
             Inventory inv,
             AnvilUseType useType,
             @Nullable ItemStack result,
-            AnvilXpUtil.AnvilCost cost) {
+            AnvilCost cost) {
         this.view = view;
         this.useType = useType;
 
@@ -190,7 +190,7 @@ public class CATreatAnvilResult2Event extends Event {
      *
      * @return the current anvil cost
      */
-    public AnvilXpUtil.AnvilCost getCost() {
+    public AnvilCost getCost() {
         return cost;
     }
 }

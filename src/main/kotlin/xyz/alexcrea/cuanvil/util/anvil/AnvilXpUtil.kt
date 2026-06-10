@@ -14,6 +14,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import org.bukkit.persistence.PersistentDataType
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -21,64 +22,11 @@ import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.util.AnvilTitleUtil
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
-import java.math.BigDecimal
 import kotlin.math.min
-import io.delilaheve.util.ConfigOptions.getMonetaryMultiplier as moneyMultiplier
 
 object AnvilXpUtil {
 
     const val EXCLUSIVE_PENALTY_PREFIX = "repair_cost"
-
-    open class AnvilCost {
-        private val isAlone: Boolean
-        var valid = true // Get set as invalid if cost can be satisfied
-        var isMonetary = false
-
-        var generic = 0
-        var enchantment = 0
-        var repair = 0
-        var rename = 0
-        var lore = 0
-        var illegalPenalty = 0
-        var workPenalty = 0
-        var recipe = 0
-
-        constructor(generic: Int) {
-            this.generic = generic
-            isAlone = true
-        }
-
-        constructor() {
-            isAlone = false
-        }
-
-        fun asXpCost(): Int {
-            return generic + enchantment + repair + rename + lore + illegalPenalty + workPenalty + recipe
-        }
-
-        open fun asMonetaryCost(): BigDecimal {
-            // multiply by per use type multipliers
-            return BigDecimal(generic)
-                .add(BigDecimal(enchantment).multiply(moneyMultiplier("enchantment")))
-                .add(BigDecimal(repair).multiply(moneyMultiplier("repair")))
-                .add(BigDecimal(rename).multiply(moneyMultiplier("rename")))
-                .add(BigDecimal(lore).multiply(moneyMultiplier("lore_edit")))
-                .add(BigDecimal(enchantment).multiply(moneyMultiplier("enchantment")))
-                .add(BigDecimal(illegalPenalty).multiply(moneyMultiplier("work_penalty")))
-                .add(BigDecimal(workPenalty).multiply(moneyMultiplier("work_penalty")))
-                .add(BigDecimal(recipe).multiply(moneyMultiplier("recipe")))
-                .multiply(moneyMultiplier("global"))
-        }
-    }
-
-    class CustomCraftCost(val rawCost: Int): AnvilCost() {
-
-        override fun asMonetaryCost(): BigDecimal {
-            return BigDecimal(rawCost)
-                .multiply(moneyMultiplier("global"))
-        }
-
-    }
 
     /**
      * Display the required cost (either as xp or as )

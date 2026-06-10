@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.anvil.AnvilCost;
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost;
 
 /**
  * Called after custom anvil processed the click on the result on the anvil inventory.
@@ -108,8 +108,8 @@ public class CATreatAnvilResultEvent extends Event {
      * <li>Item rename</li>
      * </ul>
      *
-     * @deprecated use #{@link #getCost()} instead
      * @return The current cost.
+     * @deprecated use #{@link #getCost()} instead
      */
     @Deprecated(forRemoval = true, since = "1.17.0")
     public int getLevelCost() {
@@ -130,8 +130,8 @@ public class CATreatAnvilResultEvent extends Event {
      * <li>Item rename</li>
      * </ul>
      *
-     * @deprecated use #{@link #getCost()} and set value on this instead
      * @param levelCost The new cost.
+     * @deprecated use #{@link #getCost()} and set value on this instead
      */
     @Deprecated(forRemoval = true, since = "1.17.0")
     public void setLevelCost(int levelCost) {

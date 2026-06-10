@@ -9,9 +9,9 @@ import org.bukkit.plugin.RegisteredListener
 import valorless.havenbags.HavenBags
 import valorless.havenbags.features.BagSkin
 import valorless.havenbags.features.BagUpgrade
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
 
 class HavenBagsDependency {
 

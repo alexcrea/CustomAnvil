@@ -15,6 +15,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.doMerge
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.doRenaming
@@ -24,7 +25,6 @@ import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.testUnitRepair
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 
 /**

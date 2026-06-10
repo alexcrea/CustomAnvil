@@ -15,6 +15,7 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.CustomCraftResult
@@ -30,10 +31,8 @@ import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
-import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil.AnvilCost
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
-import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.min
@@ -481,7 +480,6 @@ class AnvilResultListener : Listener {
         result: LoreEditResult
     ) {
         val paperMeta = rightItem.itemMeta ?: return
-
 
 
         val paperCopy: ItemStack?
