@@ -36,6 +36,11 @@ class GenericExternGuiTester {
         getHandleMethod = clazz.getMethod(HANDLE_METHOD_NAME)
     }
 
+    fun isInTest(): Boolean {
+        if(!testExist) testClassExist()
+        return inTesting
+    }
+
     fun testClassExist() {
         testExist = true
 
@@ -61,8 +66,7 @@ class GenericExternGuiTester {
     // Try if were in another plugin anvil inventory
     fun testIfGui(inventory: InventoryView): Boolean {
         // In case we are in a test environment
-        if(!testExist) testClassExist()
-        if(inTesting) return false
+        if(isInTest()) return false
 
         val clazz = getContainerClass(inventory) ?: return false
 

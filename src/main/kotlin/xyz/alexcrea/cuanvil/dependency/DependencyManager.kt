@@ -23,7 +23,6 @@ import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.GenericExternGuiTester
-import xyz.alexcrea.cuanvil.dependency.gui.GuiTesterSelector
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManagerSelector
 import xyz.alexcrea.cuanvil.dependency.plugins.*
@@ -40,7 +39,7 @@ object DependencyManager {
 
     lateinit var scheduler: TaskScheduler
     lateinit var packetManager: PacketManager
-    var externGuiTester: GenericExternGuiTester? = null
+    var externGuiTester: GenericExternGuiTester = GenericExternGuiTester()
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
@@ -68,7 +67,6 @@ object DependencyManager {
         // Packet Manager
         val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
         packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
-        externGuiTester = GuiTesterSelector.selectGuiTester
 
         // Enchantment Squared dependency
         if (pluginManager.isPluginEnabled("EnchantsSquared")) {
@@ -192,7 +190,7 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+        if (!bypass && externGuiTester.testIfGui(event.view)) bypass = true
 
         // Test if in an ax player warp rating gui
         if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(player) == true)) bypass = true
@@ -289,7 +287,7 @@ object DependencyManager {
         }
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && (externGuiTester?.testIfGui(event.view) == true)) bypass = true
+        if (!bypass && externGuiTester.testIfGui(event.view)) bypass = true
 
         // Test if in an ax player warp rating gui
         if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(event.view.player) == true)) bypass = true
