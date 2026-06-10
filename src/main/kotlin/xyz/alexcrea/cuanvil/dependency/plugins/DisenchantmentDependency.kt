@@ -8,15 +8,16 @@ import com.jankominek.disenchantment.events.ShatterEvent
 import com.jankominek.disenchantment.listeners.DisenchantClickListener
 import com.jankominek.disenchantment.listeners.ShatterClickListener
 import io.delilaheve.CustomAnvil
-import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import java.util.logging.Level
 import kotlin.reflect.KClass
 
@@ -50,7 +51,7 @@ class DisenchantmentDependency {
         InventoryClickEvent.getHandlerList().unregister(listener)
     }
 
-    fun testPrepareAnvil(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    fun testPrepareAnvil(event: PrepareAnvilEvent, player: Player): Boolean {
         val previousResult = event.result
         event.result = null
 
@@ -58,14 +59,14 @@ class DisenchantmentDependency {
         DisenchantEvent.onEvent(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil item extract bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 
         ShatterEvent.onEvent(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil split enchant bypass.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 

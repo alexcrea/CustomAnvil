@@ -432,6 +432,34 @@ lore_edit:
       allow_hexadecimal_color: false
       allow_minimessage: true
 
+# Allow to replace the xp cost by a monetary cost
+# If enabled it will not be bound to the experience level limits
+#
+# It also requires to enable dialog rename (set "enable_dialog_rename: false" a bit higher)
+# If dialog rename permission is enabled and player do not have the permission merge will fall back to vanilla xp cost
+#
+# If you are using custom craft I recommend using Linear Xp Cost with Exact Linear Xp as normal Xp Cost will act "weird"
+# But Linear Xp will act as 1$ time global multiplier. In other word: like you expect
+#
+# As this feature require dialog rename, it can only be enabled starting with paper 1.21.6 and later
+monetary_cost:
+  enabled: false
+  # If using vault unlocked this allow to specify what currency should be used for anvil usage
+  # default being the default currency
+  currency: default
+  # multiply the anvil cost by a value to allow to have price a big bigger than like 40
+  multipliers:
+    # global multipliers. all usage type will be multiplied by this value
+    global: 1.0
+    # usage specific type. it will only apply for specific xp "reason"
+    enchantment: 1.0 # related to enchantments level
+    repair: 1.0 # for repairing via unit repair (per unit)
+    rename: 1.0 # for renaming the item
+    lore_edit: 1.0 # for changing the lore of the item (only if lore edit is enabled)
+    illegal_penalty: 1.0 # for trying to combine illegal enchantment
+    work_penalty: 1.0 # for work penalty (aka use penalty)
+    recipe: 1.0 # for custom anvil recipe cost
+
 # Whether to show debug logging
 debug_log: false
 

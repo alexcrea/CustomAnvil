@@ -3,12 +3,16 @@ package io.delilaheve.util
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
 import org.bukkit.NamespacedKey
+import org.bukkit.entity.HumanEntity
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType.WorkPenaltyPart
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
-import xyz.alexcrea.cuanvil.util.AnvilUseType
+import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
+import java.math.BigDecimal
 import java.util.*
 
 /**
@@ -72,6 +76,11 @@ object ConfigOptions {
 
     const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
 
+    // Monetary configs
+    const val MONETARY_USAGE_ROOT = "monetary_cost"
+    const val SHOULD_USE_MONEY = "$MONETARY_USAGE_ROOT.enabled"
+    const val MONEY_CURRENCY = "$MONETARY_USAGE_ROOT.currency"
+    const val MONETARY_MULTIPLIER_ROOT = "$MONETARY_USAGE_ROOT.multipliers"
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
@@ -109,6 +118,11 @@ object ConfigOptions {
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
     const val DEFAULT_PER_COLOR_CODE_PERMISSION = false
+
+    // Monetary configs
+    const val DEFAULT_SHOULD_USE_MONEY = false
+    const val DEFAULT_MONEY_CURRENCY = "default"
+    const val DEFAULT_MONEY_MULTIPLIER = 1.0
 
     // Debug flag
     private const val DEFAULT_DEBUG_LOG = false
@@ -163,6 +177,11 @@ object ConfigOptions {
 
     // Default max before merge disabled (negative mean enabled)
     const val DEFAULT_MAX_BEFORE_MERGE_DISABLED = -1
+
+    // -----------
+    // Permissions
+    // -----------
+    private const val RENAME_DIALOG_PERMISSION = "ca.rename.dialog"
 
     // -------------
     // Get methods
@@ -452,6 +471,13 @@ object ConfigOptions {
                 .getBoolean(DIALOG_RENAME_USE_PERMISSION, DEFAULT_DIALOG_RENAME_USE_PERMISSION)
         }
 
+    fun canUseDialogRename(player: HumanEntity): Boolean {
+        if(!doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return false
+        if(doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return false
+
+        return true
+    }
+
     /**
      * Do the dialog menu require permission
      */
@@ -623,6 +649,31 @@ object ConfigOptions {
                 return true
         }
         return false
+    }
+
+    /*
+     * Monetary configs (only for 1.21.6+)
+     * Also require dialog rename
+     */
+    fun shouldUseMoney(player: HumanEntity): Boolean {
+            return EconomyManager.economy?.initialized() == true &&
+                    canUseDialogRename(player) &&
+                    ConfigHolder.DEFAULT_CONFIG
+                        .config
+                        .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
+    }
+
+    val usedCurrency: String
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getString(MONEY_CURRENCY, DEFAULT_MONEY_CURRENCY)!!
+        }
+
+    fun getMonetaryMultiplier(type: String): BigDecimal {
+        return BigDecimal(ConfigHolder.DEFAULT_CONFIG
+                .config
+            .getDouble("$MONETARY_MULTIPLIER_ROOT.$type", DEFAULT_MONEY_MULTIPLIER))
     }
 
 }

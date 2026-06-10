@@ -7,15 +7,19 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.GenericExternGuiTester
@@ -29,7 +33,6 @@ import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
-import xyz.alexcrea.cuanvil.util.AnvilUseType
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.util.logging.Level
 
@@ -198,7 +201,7 @@ object DependencyManager {
     }
 
     // Return true if should bypass (either by a dependency or error)
-    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: Player): Boolean {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
         } catch (e: Exception) {
@@ -207,7 +210,7 @@ object DependencyManager {
         }
     }
 
-    private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    private fun unsafeTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: Player): Boolean {
         // Run the event
         val bypassEvent = CAPreAnvilBypassEvent(event)
         Bukkit.getPluginManager().callEvent(bypassEvent)
@@ -232,22 +235,24 @@ object DependencyManager {
 
     // Return null if there was an issue
     fun tryTreatAnvilResult(
-        event: PrepareAnvilEvent,
+        view: InventoryView,
+        inventory: Inventory, // TODO REMOVE, use view instead on legacy removal
+        player: HumanEntity,
         result: ItemStack,
         useType: AnvilUseType,
-        cost: Int
-    ): CATreatAnvilResultEvent? {
-        val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
+        cost: AnvilCost
+    ): ItemStack? {
+        val treatEvent = CATreatAnvilResult2Event(view, inventory, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
-            return treatEvent;
+            return treatEvent.result
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.inventory, e)
+            logExceptionAndClear(player, inventory, e)
             return null
         }
     }
 
-    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResultEvent) {
+    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResult2Event) {
         Bukkit.getPluginManager().callEvent(event)
 
         excellentEnchantsCompatibility?.treatAnvilResult(event)
@@ -293,11 +298,11 @@ object DependencyManager {
     }
 
     // Clone item and use plugin specific clone if needed
-    fun cloneItem(event: PrepareAnvilEvent, item: ItemStack): ItemStack {
+    fun cloneItem(player: HumanEntity, item: ItemStack): ItemStack {
         try {
             return unsafeCloneItem(item)
         } catch (e: Exception) {
-            logException(event.view.player, e)
+            logException(player, e)
             return item.clone()
         }
     }

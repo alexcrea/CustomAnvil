@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.config;
 
 import com.google.common.collect.ImmutableMap;
 import org.jetbrains.annotations.Nullable;
-import xyz.alexcrea.cuanvil.util.AnvilUseType;
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
 
 import java.util.EnumMap;
 

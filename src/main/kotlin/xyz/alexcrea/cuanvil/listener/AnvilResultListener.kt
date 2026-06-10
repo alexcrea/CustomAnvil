@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.listener
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
-import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -16,22 +15,25 @@ import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.CustomCraftResult
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.LoreEditResult
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.UnitRepairResult
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_LEFT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
-import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
-import xyz.alexcrea.cuanvil.util.AnvilLoreEditUtil
-import xyz.alexcrea.cuanvil.util.AnvilUseType
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
-import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
+import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.min
 
@@ -50,6 +52,7 @@ class AnvilResultListener : Listener {
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val inventory = event.inventory as? AnvilInventory ?: return
+        val view = event.view
 
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
             return
@@ -64,84 +67,104 @@ class AnvilResultListener : Listener {
         val leftItem = inventory.getItem(ANVIL_INPUT_LEFT) ?: return
         val rightItem = inventory.getItem(ANVIL_INPUT_RIGHT)
 
+        // Deny by default. allow if working
+        event.result = Event.Result.DENY
         if (GameMode.CREATIVE != player.gameMode && inventory.repairCost >= inventory.maximumRepairCost) {
-            event.result = Event.Result.DENY
             return
         }
 
         // Test custom recipe
-        val recipe = CustomRecipeUtil.getCustomRecipe(leftItem, rightItem)
-        if (recipe != null) {
-            event.result = Event.Result.ALLOW
+        val customRecipeResult = AnvilMergeLogic.testCustomRecipe(view, inventory, player, leftItem, rightItem)
+        if (!customRecipeResult.isEmpty()) {
             onCustomCraft(
-                event, recipe, player,
-                leftItem, rightItem, output, inventory
+                event, player, inventory,
+                leftItem, rightItem, customRecipeResult
             )
             return
         }
 
         // Do not continue if there was no change
         if ((output == inventory.getItem(ANVIL_INPUT_LEFT))) {
-            event.result = Event.Result.DENY
             return
         }
 
         // Rename
         if (rightItem == null) {
-            event.result = Event.Result.ALLOW
+            val result = AnvilMergeLogic.doRenaming(view, inventory, player, leftItem)
+            if (result.isEmpty()) return
+
+            extractAnvilResult(
+                event, player, inventory,
+                null, 0,
+                null, 0,
+                result
+            )
             return
         }
 
         // Merge
         val canMerge = leftItem.canMergeWith(rightItem)
         if (canMerge) {
-            event.result = Event.Result.ALLOW
+            val result = AnvilMergeLogic.doMerge(view, inventory, player, leftItem, rightItem)
+
+            extractAnvilResult(
+                event, player, inventory,
+                null, 0,
+                null, 0,
+                result
+            )
             return
         }
 
         // Unit repair
-        val unitRepairResult = leftItem.getRepair(rightItem)
-        if (unitRepairResult != null) {
+        val unitRepairResult = AnvilMergeLogic.testUnitRepair(
+            view, inventory, player,
+            leftItem, rightItem
+        )
+        if (unitRepairResult.isEmpty()) {
             onUnitRepairExtract(
-                leftItem, rightItem, output,
-                unitRepairResult, event, player, inventory
+                rightItem, event, player, inventory,
+                unitRepairResult
             )
             return
         }
 
         // For lore edit
-        if (handleBookLoreEdit(event, inventory, player, leftItem, rightItem, output)) {
-            return
-        } else if (handlePaperLoreEdit(event, inventory, player, leftItem, rightItem, output)) {
+        val loreResult = AnvilMergeLogic.testLoreEdit(player, leftItem, rightItem)
+        if (!loreResult.isEmpty()) {
+            if (loreResult.type.isBook)
+                handleBookLoreEdit(event, inventory, player, leftItem, rightItem, loreResult)
+            else
+                handlePaperLoreEdit(event, inventory, player, leftItem, rightItem, loreResult)
             return
         }
-
-        // Else there was no working situation somehow so we deny
-        event.result = Event.Result.DENY
     }
 
     private fun onCustomCraft(
         event: InventoryClickEvent,
-        recipe: AnvilCustomRecipe,
         player: Player,
+        inventory: AnvilInventory,
         leftItem: ItemStack,
         rightItem: ItemStack?,
-        output: ItemStack,
-        inventory: AnvilInventory
+        result: CustomCraftResult,
     ) {
-        event.result = Event.Result.DENY
-
-        if (recipe.leftItem == null) return // in case it changed
-
-        val amount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
-        val xpCost = recipe.determineCost(amount, leftItem, output)
+        val recipe = result.recipe!!
+        val rawCost = result.customCraftCost.rawCost
         val finalCost =
-            if (recipe.removeExactLinearXp) xpCost
-            else AnvilXpUtil.calculateLevelForXp(xpCost)
+            if (recipe.removeExactLinearXp) rawCost
+            else AnvilXpUtil.calculateLevelForXp(rawCost)
 
-        CustomAnvil.log("gamemode: ${player.gameMode != GameMode.CREATIVE}, cost: $finalCost, level: ${player.level}, result: ${player.totalExperience < finalCost} ${player.level < finalCost}")
+        CustomAnvil.log(
+            "gamemode: ${player.gameMode != GameMode.CREATIVE}, " +
+                    "cost: $finalCost, level: ${player.level}, " +
+                    "result: ${player.totalExperience < finalCost} ${player.level < finalCost}"
+        )
+
         if (player.gameMode != GameMode.CREATIVE) {
-            if (recipe.removeExactLinearXp) {
+            if (ConfigOptions.shouldUseMoney(player)) {
+                result.cost.isMonetary = true
+                if (!EconomyManager.economy!!.has(player, result.cost.asMonetaryCost())) return
+            } else if (recipe.removeExactLinearXp) {
                 val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
                 val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
                 val totalXp = levelXp + player.exp * delta
@@ -158,31 +181,31 @@ class AnvilResultListener : Listener {
         if (event.click != ClickType.MIDDLE &&
             !handleCustomCraftClick(
                 event,
-                recipe,
                 inventory,
                 player,
                 leftItem,
                 rightItem,
-                amount,
-                finalCost,
-                recipe.removeExactLinearXp
+                result
             )
         ) return
 
         // Finally, we add the item to the player
         if (slotDestination.type == SlotType.CURSOR) {
-            player.setItemOnCursor(output)
+            player.setItemOnCursor(result.item)
         } else {// We assume SlotType == SlotType.INVENTORY
-            player.inventory.setItem(slotDestination.slot, output)
+            player.inventory.setItem(slotDestination.slot, result.item)
         }
     }
 
     private fun handleCustomCraftClick(
-        event: InventoryClickEvent, recipe: AnvilCustomRecipe,
+        event: InventoryClickEvent,
         inventory: AnvilInventory, player: Player,
         leftItem: ItemStack, rightItem: ItemStack?,
-        amount: Int, xpCost: Int, linearCost: Boolean = false
+        result: CustomCraftResult
     ): Boolean {
+        val amount = result.amount
+        val recipe = result.recipe!!
+
         // We remove what should be removed
         if (rightItem != null) {
             if (recipe.rightItem == null) return false// in case it changed
@@ -194,25 +217,7 @@ class AnvilResultListener : Listener {
         leftItem.amount -= amount * recipe.leftItem!!.amount
         inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
 
-        if (player.gameMode != GameMode.CREATIVE) {
-            if (linearCost) {
-                val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
-                val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
-                var totalXp = levelXp + player.exp * delta
-                totalXp -= xpCost
-
-                val newLevel = AnvilXpUtil.calculateLevelForXp(totalXp.toInt())
-
-                val newLevelXp = AnvilXpUtil.calculateXpForLevel(newLevel)
-                val newDelta = AnvilXpUtil.calculateXpForLevel(newLevel + 1) - newLevelXp
-                val xp = (totalXp - newLevelXp) / newDelta
-
-                player.level = newLevel
-                player.exp = xp / newDelta
-            } else {
-                player.level -= xpCost
-            }
-        }
+        removeCustomCraftCost(player, result)
 
         // Then we try to find the new values for the anvil
         val newAmount = CustomRecipeUtil.getCustomRecipeAmount(recipe, leftItem, rightItem)
@@ -236,6 +241,47 @@ class AnvilResultListener : Listener {
         return true
     }
 
+    private fun removeCustomCraftCost(player: Player, result: CustomCraftResult) {
+        if (player.gameMode == GameMode.CREATIVE) return
+
+        val rawCost = result.customCraftCost.rawCost
+        if (result.cost.isMonetary) {
+            EconomyManager.economy!!.remove(player, result.cost.asMonetaryCost())
+            return
+        }
+
+        if (result.recipe!!.removeExactLinearXp) {
+            val levelXp = AnvilXpUtil.calculateXpForLevel(player.level)
+            val delta = AnvilXpUtil.calculateXpForLevel(player.level + 1) - levelXp
+            var totalXp = levelXp + player.exp * delta
+            totalXp -= rawCost
+
+            val newLevel = AnvilXpUtil.calculateLevelForXp(totalXp.toInt())
+
+            val newLevelXp = AnvilXpUtil.calculateXpForLevel(newLevel)
+            val newDelta = AnvilXpUtil.calculateXpForLevel(newLevel + 1) - newLevelXp
+            val xp = (totalXp - newLevelXp) / newDelta
+
+            player.level = newLevel
+            player.exp = xp / newDelta
+        } else {
+            player.level -= AnvilXpUtil.calculateLevelForXp(rawCost)
+        }
+
+    }
+
+    private fun tryRemoveCost(player: Player, cost: AnvilCost): Boolean {
+        if (player.gameMode == GameMode.CREATIVE) return true
+        if (cost.isMonetary) {
+            val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
+            if (!result) return false
+        } else {
+            player.level -= cost.asXpCost()
+        }
+
+        return true
+    }
+
     private fun extractAnvilResult(
         event: InventoryClickEvent,
         player: Player,
@@ -244,15 +290,17 @@ class AnvilResultListener : Listener {
         leftRemoveCount: Int,
         rightItem: ItemStack?,
         rightRemoveCount: Int,
-        output: ItemStack,
-        repairCost: Int,
+        result: AnvilResult
     ): Boolean {
+        if (result.isEmpty()) return false
+
         // To avoid vanilla, we cancel the event
         event.result = Event.Result.DENY
         event.isCancelled = true
+        val cost = result.cost
 
-        // Assumed if player do not have enough xp then it returned MIN_VALUE
-        if (repairCost == Int.MIN_VALUE) return false
+        processCost(inventory, player, cost)
+        if (!cost.valid && player.gameMode != GameMode.CREATIVE) return false
 
         // Where should we get the item
         val slotDestination = getActionSlot(event, player)
@@ -260,6 +308,8 @@ class AnvilResultListener : Listener {
 
         // If not creative middle click...
         if (event.click != ClickType.MIDDLE) {
+            if (!tryRemoveCost(player, cost)) return false
+
             // We remove what should be removed
             if (leftItem != null) leftItem.amount -= leftRemoveCount
             inventory.setItem(ANVIL_INPUT_LEFT, leftItem)
@@ -268,99 +318,58 @@ class AnvilResultListener : Listener {
             inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
 
             inventory.setItem(ANVIL_OUTPUT_SLOT, null)
-            player.level -= repairCost
+
         }
 
         // Finally, we add the item to the player
         if (SlotType.CURSOR == slotDestination.type) {
-            player.setItemOnCursor(output)
+            player.setItemOnCursor(result.item)
         } else {// We assume SlotType == SlotType.INVENTORY
-            player.inventory.setItem(slotDestination.slot, output)
+            player.inventory.setItem(slotDestination.slot, result.item)
         }
 
         // TODO probably anvil damage & sound here ??
         return true
     }
 
-    private fun onUnitRepairExtract(
-        leftItem: ItemStack,
-        rightItem: ItemStack,
-        output: ItemStack,
-        unitRepairResult: Double,
-        event: InventoryClickEvent,
-        player: Player,
-        inventory: AnvilInventory
-    ) {
-        val resultCopy = leftItem.clone()
-        val resultAmount = resultCopy.unitRepair(
-            rightItem.amount, unitRepairResult
-        )
-
-        // Get repair cost
-        val repairCost = getUnitRepairCost(inventory, player, leftItem, output, resultCopy, resultAmount)
-
-        // And then we give the item manually
-        extractAnvilResult(
-            event, player, inventory,
-            null, 0,
-            rightItem, resultAmount,
-            resultCopy, repairCost
-        )
-    }
-
-    private fun getUnitRepairCost(
-        inventory: AnvilInventory, player: Player,
-        leftItem: ItemStack, output: ItemStack,
-        resultCopy: ItemStack, resultAmount: Int
-    ): Int {
-        if (player.gameMode == GameMode.CREATIVE) return 0
-
-        var repairCost = 0
-        // Get repairCost
-        leftItem.itemMeta?.let { leftMeta ->
-            val leftName = leftMeta.displayName
-            output.itemMeta?.let {
-                // Rename cost
-                if (!leftName.contentEquals(it.displayName)) {
-                    repairCost += ConfigOptions.itemRenameCost
-
-                    // Color cost
-                    if (it.displayName.contains('§')) {
-                        repairCost += ConfigOptions.useOfColorCost
-                    }
-                }
-            }
-        }
-
-        repairCost += AnvilXpUtil.calculatePenalty(leftItem, null, resultCopy, AnvilUseType.UNIT_REPAIR)
-        repairCost += resultAmount * ConfigOptions.unitRepairCost
+    private fun processCost(inventory: AnvilInventory, player: Player, cost: AnvilCost) {
+        var sum = cost.repair
 
         if (
             !ConfigOptions.doRemoveCostLimit &&
             ConfigOptions.doCapCost
         ) {
-            repairCost = min(repairCost, ConfigOptions.maxAnvilCost)
+            val final = min(sum, ConfigOptions.maxAnvilCost)
+            cost.generic += (final - sum)
+
+            sum = final
         }
 
-        if ((inventory.maximumRepairCost <= repairCost)
-            || (player.level < repairCost)
-        ) return Int.MIN_VALUE
-
-        return repairCost
+        if (ConfigOptions.shouldUseMoney(player)) {
+            cost.isMonetary = true
+            if (!EconomyManager.economy!!.has(player, cost.asMonetaryCost()))
+                cost.valid = false
+        } else {
+            if ((inventory.maximumRepairCost <= sum)
+                || (player.level < sum)
+            ) cost.valid = false
+        }
     }
 
-    private fun getFromLoreEditXpCost(
-        xpCost: AtomicInteger,
+    private fun onUnitRepairExtract(
+        rightItem: ItemStack,
+        event: InventoryClickEvent,
         player: Player,
         inventory: AnvilInventory,
-    ): Int {
-        if (GameMode.CREATIVE == player.gameMode) return 0
-
-        val repairCost = xpCost.get()
-        return if ((inventory.maximumRepairCost <= repairCost)
-            || (player.level < repairCost)
-        ) Int.MIN_VALUE
-        else repairCost
+        result: UnitRepairResult,
+    ) {
+        // We give the item manually
+        extractAnvilResult(
+            event, player, inventory,
+            null, 0,
+            rightItem, result.repairAmount,
+            result
+        )
     }
 
     private fun handleBookLoreEdit(
@@ -369,70 +378,84 @@ class AnvilResultListener : Listener {
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
-        output: ItemStack,
-    ): Boolean {
-        if (Material.WRITABLE_BOOK != rightItem.type) return false
-        val bookMeta = rightItem.itemMeta as BookMeta? ?: return false
+        result: LoreEditResult
+    ) {
+        if (result.type.isAppend)
+            handleBookLoreAppend(event, inventory, player, rightItem, result)
+        else
+            handleBookLoreRemove(event, inventory, player, leftItem, rightItem, result)
+    }
 
-        val editType = AnvilLoreEditUtil.bookLoreEditIsAppend(leftItem, rightItem) ?: return false
+    private fun handleBookLoreAppend(
+        event: InventoryClickEvent,
+        inventory: AnvilInventory,
+        player: Player,
+        rightItem: ItemStack,
+        result: LoreEditResult
+    ) {
+        val bookMeta = rightItem.itemMeta as BookMeta? ?: return
 
-        val xpCost = AtomicInteger()
-        if (editType) {
-            if (output != AnvilLoreEditUtil.handleLoreAppendByBook(player, leftItem, bookMeta, xpCost)) return false
-
-            // Remove pages to book
-            val clearedBook: ItemStack?
-            if (LoreEditType.APPEND_BOOK.doConsume) {
-                clearedBook = null
-            } else {
-                clearedBook = rightItem.clone()
-                bookMeta.pages = Collections.emptyList()
-                clearedBook.itemMeta = bookMeta
-            }
-
-            return extractAnvilResult(
-                event, player, inventory,
-                null, 0,
-                clearedBook, 0,
-                output, getFromLoreEditXpCost(xpCost, player, inventory)
-            )
+        // Remove pages to book
+        val clearedBook: ItemStack?
+        if (LoreEditType.APPEND_BOOK.doConsume) {
+            clearedBook = null
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByBook(player, leftItem, xpCost)) return false
+            clearedBook = rightItem.clone()
+            bookMeta.pages = Collections.emptyList()
+            clearedBook.itemMeta = bookMeta
+        }
 
-            // fill book meta
-            val lore = DependencyManager.stripLore(leftItem)
-            if (lore.isEmpty()) return false
+        extractAnvilResult(
+            event, player, inventory,
+            null, 0,
+            clearedBook, 0,
+            result
+        )
+    }
 
-            val rightCopy: ItemStack?
-            if (LoreEditType.REMOVE_BOOK.doConsume) {
-                rightCopy = null
-            } else {
-                // Uncolor the page
-                AnvilLoreEditUtil.uncolorLines(player, lore, LoreEditType.REMOVE_BOOK)
+    private fun handleBookLoreRemove(
+        event: InventoryClickEvent,
+        inventory: AnvilInventory,
+        player: Player,
+        leftItem: ItemStack,
+        rightItem: ItemStack,
+        result: LoreEditResult
+    ) {
+        val bookMeta = rightItem.itemMeta as BookMeta? ?: return
 
-                val bookPage = StringBuilder()
-                lore.forEach {
-                    if (bookPage.isNotEmpty()) bookPage.append('\n')
-                    if(it == null) return@forEach
+        // fill book meta
+        val lore = DependencyManager.stripLore(leftItem)
+        if (lore.isEmpty()) return
 
-                    bookPage.append(MiniMessageUtil.plain_text_mm.serialize(it))
-                }
+        val rightCopy: ItemStack?
+        if (LoreEditType.REMOVE_BOOK.doConsume) {
+            rightCopy = null
+        } else {
+            // Uncolor the page
+            AnvilLoreEditUtil.uncolorLines(player, lore, LoreEditType.REMOVE_BOOK)
 
-                val resultPage = bookPage.toString()
-                //TODO maybe check page size ? bc it may be too big ???
+            val bookPage = StringBuilder()
+            lore.forEach {
+                if (bookPage.isNotEmpty()) bookPage.append('\n')
+                if (it == null) return@forEach
 
-                rightCopy = rightItem.clone()
-                bookMeta.setPages(resultPage)
-                rightCopy.itemMeta = bookMeta
+                bookPage.append(MiniMessageUtil.plain_text_mm.serialize(it))
             }
 
-            return extractAnvilResult(
-                event, player, inventory,
-                null, 0,
-                rightCopy, 0,
-                output, getFromLoreEditXpCost(xpCost, player, inventory)
-            )
+            val resultPage = bookPage.toString()
+            //TODO maybe check page size ? bc it may be too big ???
+
+            rightCopy = rightItem.clone()
+            bookMeta.setPages(resultPage)
+            rightCopy.itemMeta = bookMeta
         }
+
+        extractAnvilResult(
+            event, player, inventory,
+            null, 0,
+            rightCopy, 0,
+            result
+        )
     }
 
     private fun handlePaperLoreEdit(
@@ -441,89 +464,106 @@ class AnvilResultListener : Listener {
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
-        output: ItemStack,
-    ): Boolean {
-        if (Material.PAPER != rightItem.type) return false
-        val paperMeta = rightItem.itemMeta ?: return false
+        result: LoreEditResult
+    ) {
+        if (result.type.isAppend)
+            handlePaperLoreAppend(event, inventory, player, rightItem, result)
+        else
+            handlePaperLoreRemove(event, inventory, player, leftItem, rightItem, result)
+    }
 
-        val editTypeIsAppend = AnvilLoreEditUtil.paperLoreEditIsAppend(leftItem, rightItem) ?: return false
+    private fun handlePaperLoreAppend(
+        event: InventoryClickEvent,
+        inventory: AnvilInventory,
+        player: Player,
+        rightItem: ItemStack,
+        result: LoreEditResult
+    ) {
+        val paperMeta = rightItem.itemMeta ?: return
 
-        val xpCost = AtomicInteger()
-        if (editTypeIsAppend) {
-            if (output != AnvilLoreEditUtil.handleLoreAppendByPaper(player, leftItem, rightItem, xpCost)) return false
 
-            val paperCopy: ItemStack?
-            if (LoreEditType.APPEND_PAPER.doConsume) {
-                paperCopy = null
-            } else {
-                // Remove custom name to paper
-                paperCopy = rightItem.clone()
-                paperCopy.amount = 1
-                paperMeta.setComponentDisplayName(null)
-                paperCopy.itemMeta = paperMeta
-            }
-
-            return if (rightItem.amount > 1) {
-                extractAnvilResult(
-                    event, player, inventory,
-                    paperCopy, 0,
-                    rightItem, 1,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
-                )
-            } else {
-                extractAnvilResult(
-                    event, player, inventory,
-                    null, 0,
-                    paperCopy, 0,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
-                )
-            }
+        val paperCopy: ItemStack?
+        if (LoreEditType.APPEND_PAPER.doConsume) {
+            paperCopy = null
         } else {
-            if (output != AnvilLoreEditUtil.handleLoreRemoveByPaper(player, leftItem, xpCost)) return false
+            // Remove custom name to paper
+            paperCopy = rightItem.clone()
+            paperCopy.amount = 1
+            paperMeta.setComponentDisplayName(null)
 
-            val leftMeta = leftItem.itemMeta
-            if (leftMeta == null || !leftMeta.hasLore()) return false
-            val lore = DependencyManager.stripLore(leftItem)
-            if (lore.isEmpty()) return false
+            // Remove pcd name
+            AnvilMergeLogic.processPCD(paperMeta, player, null)
 
-            // Create result item
-            val rightClone: ItemStack?
-            if (LoreEditType.REMOVE_PAPER.doConsume) {
-                rightClone = null
-            } else {
-                val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
-                val line = if (removeEnd) lore[lore.size - 1]
-                else lore[0]
-
-                // uncolor the line
-                val ref = AtomicReference(line)
-                AnvilLoreEditUtil.uncolorLine(player, ref, LoreEditType.REMOVE_PAPER)
-
-                rightClone = rightItem.clone()
-                rightClone.amount = 1
-
-                val resultMeta = rightClone.itemMeta ?: return false
-                resultMeta.setComponentDisplayName(ref.get())
-                rightClone.itemMeta = resultMeta
-            }
-
-            return if (rightItem.amount > 1) {
-                extractAnvilResult(
-                    event, player, inventory,
-                    rightClone, 0,
-                    rightItem, 1,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
-                )
-            } else {
-                extractAnvilResult(
-                    event, player, inventory,
-                    null, 0,
-                    rightClone, 0,
-                    output, getFromLoreEditXpCost(xpCost, player, inventory)
-                )
-            }
+            paperCopy.itemMeta = paperMeta
         }
 
+        if (rightItem.amount > 1) {
+            extractAnvilResult(
+                event, player, inventory,
+                paperCopy, 0,
+                rightItem, 1,
+                result
+            )
+        } else {
+            extractAnvilResult(
+                event, player, inventory,
+                null, 0,
+                paperCopy, 0,
+                result
+            )
+        }
+    }
+
+    private fun handlePaperLoreRemove(
+        event: InventoryClickEvent,
+        inventory: AnvilInventory,
+        player: Player,
+        leftItem: ItemStack,
+        rightItem: ItemStack,
+        result: LoreEditResult
+    ) {
+        val leftMeta = leftItem.itemMeta
+        if (leftMeta == null || !leftMeta.hasLore()) return
+
+        val lore = DependencyManager.stripLore(leftItem)
+        if (lore.isEmpty()) return
+
+        // Create result item
+        val rightClone: ItemStack?
+        if (LoreEditType.REMOVE_PAPER.doConsume) {
+            rightClone = null
+        } else {
+            val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
+            val line = if (removeEnd) lore[lore.size - 1]
+            else lore[0]
+
+            // uncolor the line
+            val ref = AtomicReference(line)
+            AnvilLoreEditUtil.uncolorLine(player, ref, LoreEditType.REMOVE_PAPER)
+
+            rightClone = rightItem.clone()
+            rightClone.amount = 1
+
+            val resultMeta = rightClone.itemMeta ?: return
+            resultMeta.setComponentDisplayName(ref.get())
+            rightClone.itemMeta = resultMeta
+        }
+
+        if (rightItem.amount > 1) {
+            extractAnvilResult(
+                event, player, inventory,
+                rightClone, 0,
+                rightItem, 1,
+                result
+            )
+        } else {
+            extractAnvilResult(
+                event, player, inventory,
+                null, 0,
+                rightClone, 0,
+                result
+            )
+        }
     }
 
     /**

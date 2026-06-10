@@ -1,7 +1,7 @@
 package xyz.alexcrea.cuanvil.dependency.plugins
 
 import io.delilaheve.CustomAnvil
-import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
@@ -9,8 +9,9 @@ import org.bukkit.plugin.RegisteredListener
 import valorless.havenbags.HavenBags
 import valorless.havenbags.features.BagSkin
 import valorless.havenbags.features.BagUpgrade
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
-import xyz.alexcrea.cuanvil.util.AnvilXpUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 
 class HavenBagsDependency {
 
@@ -45,7 +46,7 @@ class HavenBagsDependency {
 
     }
 
-    fun testPrepareAnvil(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
+    fun testPrepareAnvil(event: PrepareAnvilEvent, player: Player): Boolean {
         val previousResult = event.result
         event.result = null
 
@@ -53,14 +54,14 @@ class HavenBagsDependency {
         bagSkin.onPrepareAnvil(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil heaven bag anvil skin.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 
         bagUpgrade.onPrepareAnvil(event)
         if (event.result != null) {
             CustomAnvil.log("Detected pre anvil heaven bag anvil upgrade.")
-            AnvilXpUtil.setAnvilInvXp(event.inventory, event.view, player, event.inventory.repairCost)
+            AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, AnvilCost(event.inventory.repairCost))
             return true
         }
 

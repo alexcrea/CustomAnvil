@@ -2,8 +2,10 @@ package xyz.alexcrea.cuanvil.api.event.listener;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.anvil.AnvilCost;
@@ -17,14 +19,10 @@ import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
  * {@link CAPreAnvilBypassEvent}
  * and {@link CAEarlyPreAnvilBypassEvent} for your use case
  * <p>
- * A null result will cancel this pre anvil event
- *
- * @deprecated Prepare anvil Event cannot be provided as it can be called on result and therefore not have prepared anvil event
- * use {@link CATreatAnvilResult2Event} instead
+ * A null result will cancel this event
  */
 @SuppressWarnings("unused")
-@Deprecated(forRemoval = true, since = "1.17.0")
-public class CATreatAnvilResultEvent extends Event {
+public class CATreatAnvilResult2Event extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
@@ -38,30 +36,49 @@ public class CATreatAnvilResultEvent extends Event {
     }
 
     @NotNull
-    private final PrepareAnvilEvent event;
+    private final InventoryView view;
 
     private final AnvilUseType useType;
+
+    @Nullable
+    private final ItemStack left;
+    @Nullable
+    private final ItemStack right;
 
     @Nullable
     private ItemStack result;
 
     private final AnvilCost cost;
 
-    public CATreatAnvilResultEvent(@NotNull PrepareAnvilEvent event, AnvilUseType useType, @Nullable ItemStack result, AnvilCost cost) {
-        this.event = event;
+    @ApiStatus.Internal
+    public CATreatAnvilResult2Event(
+            @NotNull InventoryView view,
+            Inventory inv,
+            AnvilUseType useType,
+            @Nullable ItemStack result,
+            AnvilCost cost) {
+        this.view = view;
         this.useType = useType;
+
+        this.left = inv.getItem(0); // TODO use view here
+        this.right = inv.getItem(1);
         this.result = result;
         this.cost = cost;
     }
 
     /**
-     * Get the bukkit inventory click event causing to this event.
+     * Get the bukkit inventory view.
+     * <p>
+     * Temporarily marked as internal as it will get changed to anvil view on legacy removal
+     * so signature will change
      *
-     * @return The click event causing to this event.
+     * @return The inventory view of this event.
      */
-    public @NotNull PrepareAnvilEvent getEvent() {
-        return event;
+    @ApiStatus.Internal
+    public @NotNull InventoryView getView() {
+        return view;
     }
+
 
     /**
      * Get the type of use source of the result.
@@ -70,6 +87,24 @@ public class CATreatAnvilResultEvent extends Event {
      */
     public AnvilUseType getUseType() {
         return useType;
+    }
+
+    /**
+     * Get the left item of the anvil use
+     *
+     * @return the left item
+     */
+    public @Nullable ItemStack getLeftItem() {
+        return left;
+    }
+
+    /**
+     * Get the right item of the anvil use
+     *
+     * @return the right item
+     */
+    public @Nullable ItemStack getRightItem() {
+        return right;
     }
 
     /**
@@ -158,5 +193,4 @@ public class CATreatAnvilResultEvent extends Event {
     public AnvilCost getCost() {
         return cost;
     }
-
 }

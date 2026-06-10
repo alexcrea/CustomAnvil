@@ -8,11 +8,12 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
+import xyz.alexcrea.cuanvil.util.ModernPrepareAnvilCreator
 import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant as LegacyCurseOfFragilityEnchant
@@ -218,14 +219,20 @@ class ExcellentEnchantsDependency {
         return handleRechargeMethod.invoke(this.usedAnvilListener, event, first, second) as Boolean
     }
 
-    fun treatAnvilResult(event: CATreatAnvilResultEvent) {
-        val result = event.result
-        if (result == null) return
+    fun treatAnvilResult(event: CATreatAnvilResult2Event) {
+        val result = event.result ?: return
 
-        val first: ItemStack = treatInput(event.event.inventory.getItem(0))
-        val second: ItemStack = treatInput(event.event.inventory.getItem(1))
+        val first: ItemStack = treatInput(event.leftItem)
+        val second: ItemStack = treatInput(event.rightItem)
+        val fakeEvent: PrepareAnvilEvent = try {
+            //TODO remove this on legacy removal
+            PrepareAnvilEvent(event.view, result)
+        } catch (_: NoSuchMethodError) {
+            ModernPrepareAnvilCreator.createPrepareAnvil(event.view, result)
+        }
+        handleCombineMethod.invoke(this.usedAnvilListener, fakeEvent, first, second, result)
 
-        handleCombineMethod.invoke(this.usedAnvilListener, event.event, first, second, result)
+        event.result = fakeEvent.result
     }
 
     fun testAnvilResult(event: InventoryClickEvent): Any {

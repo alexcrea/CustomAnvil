@@ -1,4 +1,4 @@
-package xyz.alexcrea.cuanvil.util
+package xyz.alexcrea.cuanvil.util.anvil
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
@@ -14,9 +14,14 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import org.bukkit.persistence.PersistentDataType
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
+import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
+import xyz.alexcrea.cuanvil.util.AnvilTitleUtil
+import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
 import kotlin.math.min
 
 object AnvilXpUtil {
@@ -24,15 +29,33 @@ object AnvilXpUtil {
     const val EXCLUSIVE_PENALTY_PREFIX = "repair_cost"
 
     /**
+     * Display the required cost (either as xp or as )
+     */
+    fun setAnvilInvCost(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: Player,
+        cost: AnvilCost,
+        ignoreRules: Boolean = false
+    ) {
+        if (ConfigOptions.shouldUseMoney(player)) {
+            cost.isMonetary = true
+            setAnvilPrice(inventory, view, player, cost)
+        } else
+            setAnvilInvXp(inventory, view, player, cost.asXpCost(), ignoreRules)
+    }
+
+    /**
      * Display xp needed for the work on the anvil inventory
      */
-    fun setAnvilInvXp(
+    private fun setAnvilInvXp(
         inventory: AnvilInventory,
         view: InventoryView,
         player: HumanEntity,
         anvilCost: Int,
         ignoreRules: Boolean = false
     ) {
+
         // Test repair cost limit
         val finalAnvilCost = if (
             !ignoreRules &&
@@ -78,7 +101,51 @@ object AnvilXpUtil {
             }
 
             player.updateInventory()
+        }
+    }
 
+    /**
+     * Display monetary cost needed for the work on the anvil inventory
+     */
+    private fun setAnvilPrice(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: Player,
+        cost: AnvilCost,
+    ) {
+        val finalCost = cost.asMonetaryCost()
+
+        val has = player.gameMode == GameMode.CREATIVE ||
+                EconomyManager.economy!!.has(player, finalCost)
+
+        val text = "Cost: " + (if (has) "§2" else "§4") +
+                EconomyManager.economy!!.format(finalCost)
+        AnvilTitleUtil.rename(
+            view, text,
+            player,
+            AnvilRenameDialogUtil.anvilRenameDialog,
+            CustomAnvil.instance
+        )
+
+        clearAnvilXpCost(inventory, view, player)
+    }
+
+    private fun clearAnvilXpCost(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: HumanEntity,
+    ) {
+        // TODO for 2.x.x use anvil view & set directly there
+        inventory.repairCost = 0
+
+        // retry after a tick
+        DependencyManager.scheduler.scheduleOnEntity(
+            CustomAnvil.instance, player
+        ) {
+            inventory.repairCost = 0
+
+            if (player !is Player) return@scheduleOnEntity
+            player.updateInventory()
         }
     }
 
@@ -128,6 +195,16 @@ object AnvilXpUtil {
         return resultSum
     }
 
+    fun onNoResult(player: HumanEntity, view: InventoryView) {
+        if (ConfigOptions.shouldUseMoney(player))
+            AnvilTitleUtil.rename(
+                view, "Repair & Name",
+                player,
+                AnvilRenameDialogUtil.anvilRenameDialog,
+                CustomAnvil.instance
+            )
+    }
+
     private fun exclusivePenaltyKey(useType: AnvilUseType): NamespacedKey {
         return NamespacedKey(CustomAnvil.instance, "${EXCLUSIVE_PENALTY_PREFIX}_${useType.typeName}")
     }
@@ -159,10 +236,8 @@ object AnvilXpUtil {
      * Function to calculate right enchantment values
      * it include enchantment placed on final item and conflicting enchantment
      */
-    fun getRightValues(right: ItemStack, result: ItemStack): Int {
+    fun getRightValues(right: ItemStack, result: ItemStack, cost: AnvilCost) {
         // Calculate right value and illegal enchant penalty
-        var illegalPenalty = 0
-        var rightValue = 0
 
         val rightIsFormBook = right.isEnchantedBook()
         val resultEnchs = result.findEnchantments()
@@ -180,7 +255,7 @@ object AnvilXpUtil {
                 resultEnchsKeys.remove(enchantment.key)
 
                 if (ConflictType.ENCHANTMENT_CONFLICT == conflictType) {
-                    illegalPenalty += ConfigOptions.sacrificeIllegalCost
+                    cost.illegalPenalty += ConfigOptions.sacrificeIllegalCost
                     CustomAnvil.verboseLog("Big conflict. Adding illegal price penalty")
                 }
                 continue
@@ -191,16 +266,14 @@ object AnvilXpUtil {
             val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
             val value = resultLevel * enchantmentMultiplier
             CustomAnvil.log("Value for ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
-            rightValue += value
+            cost.enchantment += value
 
         }
         CustomAnvil.log(
             "Calculated right values: " +
-                    "rightValue: $rightValue, " +
-                    "illegalPenalty: $illegalPenalty"
+                    "rightValue: ${cost.enchantment}, " +
+                    "illegalPenalty: ${cost.illegalPenalty}"
         )
-
-        return rightValue + illegalPenalty
     }
 
     /**
