@@ -12,12 +12,13 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.GenericExternGuiTester
@@ -234,23 +235,24 @@ object DependencyManager {
 
     // Return null if there was an issue
     fun tryTreatAnvilResult(
+        view: InventoryView,
+        inventory: Inventory, // TODO REMOVE, use view instead on legacy removal
+        player: HumanEntity,
         result: ItemStack,
         useType: AnvilUseType,
         cost: AnvilXpUtil.AnvilCost
     ): ItemStack? {
-        //TODO
-        /*val treatEvent = CATreatAnvilResultEvent(event, useType, result, cost)
+        val treatEvent = CATreatAnvilResult2Event(view, inventory, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent.result
         } catch (e: Exception) {
-            logExceptionAndClear(event.view.player, event.inventory, e)
+            logExceptionAndClear(player, inventory, e)
             return null
-        }*/
-        return result
+        }
     }
 
-    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResultEvent) {
+    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResult2Event) {
         Bukkit.getPluginManager().callEvent(event)
 
         excellentEnchantsCompatibility?.treatAnvilResult(event)

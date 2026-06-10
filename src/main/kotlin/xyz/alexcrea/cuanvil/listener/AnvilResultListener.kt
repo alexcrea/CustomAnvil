@@ -53,6 +53,7 @@ class AnvilResultListener : Listener {
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val inventory = event.inventory as? AnvilInventory ?: return
+        val view = event.view
 
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
             return
@@ -74,7 +75,7 @@ class AnvilResultListener : Listener {
         }
 
         // Test custom recipe
-        val customRecipeResult = AnvilMergeLogic.testCustomRecipe(player, leftItem, rightItem)
+        val customRecipeResult = AnvilMergeLogic.testCustomRecipe(view, inventory, player, leftItem, rightItem)
         if (!customRecipeResult.isEmpty()) {
             onCustomCraft(
                 event, player, inventory,
@@ -90,7 +91,7 @@ class AnvilResultListener : Listener {
 
         // Rename
         if (rightItem == null) {
-            val result = AnvilMergeLogic.doRenaming(inventory, player, leftItem)
+            val result = AnvilMergeLogic.doRenaming(view, inventory, player, leftItem)
             if (result.isEmpty()) return
 
             extractAnvilResult(
@@ -105,7 +106,7 @@ class AnvilResultListener : Listener {
         // Merge
         val canMerge = leftItem.canMergeWith(rightItem)
         if (canMerge) {
-            val result = AnvilMergeLogic.doMerge(inventory, player, leftItem, rightItem)
+            val result = AnvilMergeLogic.doMerge(view, inventory, player, leftItem, rightItem)
 
             extractAnvilResult(
                 event, player, inventory,
@@ -118,7 +119,7 @@ class AnvilResultListener : Listener {
 
         // Unit repair
         val unitRepairResult = AnvilMergeLogic.testUnitRepair(
-            inventory, player,
+            view, inventory, player,
             leftItem, rightItem
         )
         if (unitRepairResult.isEmpty()) {
@@ -480,6 +481,8 @@ class AnvilResultListener : Listener {
         result: LoreEditResult
     ) {
         val paperMeta = rightItem.itemMeta ?: return
+
+
 
         val paperCopy: ItemStack?
         if (LoreEditType.APPEND_PAPER.doConsume) {

@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
@@ -218,14 +218,17 @@ class ExcellentEnchantsDependency {
         return handleRechargeMethod.invoke(this.usedAnvilListener, event, first, second) as Boolean
     }
 
-    fun treatAnvilResult(event: CATreatAnvilResultEvent) {
+    fun treatAnvilResult(event: CATreatAnvilResult2Event) {
         val result = event.result
         if (result == null) return
 
-        val first: ItemStack = treatInput(event.event.inventory.getItem(0))
-        val second: ItemStack = treatInput(event.event.inventory.getItem(1))
+        val first: ItemStack = treatInput(event.leftItem)
+        val second: ItemStack = treatInput(event.rightItem)
 
-        handleCombineMethod.invoke(this.usedAnvilListener, event.event, first, second, result)
+        val fakeEvent = PrepareAnvilEvent(event.view, result)
+        handleCombineMethod.invoke(this.usedAnvilListener, fakeEvent, first, second, result)
+
+        event.result = fakeEvent.result
     }
 
     fun testAnvilResult(event: InventoryClickEvent): Any {

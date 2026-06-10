@@ -13,6 +13,7 @@ import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.AnvilInventory
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
@@ -99,6 +100,7 @@ object AnvilMergeLogic {
     }
 
     fun doRenaming(
+        view: InventoryView, //TODO use anvil view
         inventory: AnvilInventory,
         player: Player, first: ItemStack
     ): AnvilResult {
@@ -113,7 +115,7 @@ object AnvilMergeLogic {
         }
 
         cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.RENAME_ONLY)
-        val result = DependencyManager.tryTreatAnvilResult(resultItem, AnvilUseType.RENAME_ONLY, cost)
+        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.RENAME_ONLY, cost)
 
         return AnvilResult(result, cost)
     }
@@ -183,6 +185,7 @@ object AnvilMergeLogic {
     }
 
     fun doMerge(
+        view: InventoryView, //TODO use anvil view instead
         inventory: AnvilInventory,
         player: Player,
         first: ItemStack, second: ItemStack
@@ -217,7 +220,7 @@ object AnvilMergeLogic {
         // Calculate rename cost
         cost.rename = handleRename(resultItem, inventory, player)
 
-        val result = DependencyManager.tryTreatAnvilResult(resultItem, AnvilUseType.MERGE, cost)
+        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.MERGE, cost)
 
         return AnvilResult(result, cost)
     }
@@ -236,6 +239,8 @@ object AnvilMergeLogic {
 
     // return true if a custom recipe exist with these ingredients
     fun testCustomRecipe(
+        view: InventoryView, //TODO use anvil view instead
+        inventory: AnvilInventory,
         player: Player,
         first: ItemStack, second: ItemStack?
     ): CustomCraftResult {
@@ -256,21 +261,23 @@ object AnvilMergeLogic {
         cost.recipe = if (recipe.removeExactLinearXp) AnvilXpUtil.calculateMinimumLevelForXp(xpCost)
         else AnvilXpUtil.calculateLevelForXp(xpCost)
 
-        val result = DependencyManager.tryTreatAnvilResult(resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
+        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.CUSTOM_CRAFT, cost)
         return CustomCraftResult(result, cost, amount, recipe)
     }
 
     fun testUnitRepair(
+        view: InventoryView, //TODO use anvil view
         inventory: AnvilInventory,
         player: Player,
         first: ItemStack, second: ItemStack
     ): UnitRepairResult {
         val unitRepairAmount = first.getRepair(second) ?: return UnitRepairResult.EMPTY
 
-        return testUnitRepair(inventory, player, first, second, unitRepairAmount)
+        return testUnitRepair(view, inventory, player, first, second, unitRepairAmount)
     }
 
     fun testUnitRepair(
+        view: InventoryView, //TODO use anvil view instead
         inventory: AnvilInventory,
         player: Player,
         first: ItemStack, second: ItemStack,
@@ -293,7 +300,7 @@ object AnvilMergeLogic {
             return UnitRepairResult.EMPTY
         }
 
-        val result = DependencyManager.tryTreatAnvilResult(resultItem, AnvilUseType.UNIT_REPAIR, cost)
+        val result = DependencyManager.tryTreatAnvilResult(view, inventory, player, resultItem, AnvilUseType.UNIT_REPAIR, cost)
         return UnitRepairResult(result, cost, repairAmount)
     }
 
