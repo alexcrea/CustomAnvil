@@ -9,9 +9,6 @@ import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import org.bukkit.inventory.view.AnvilView
@@ -239,19 +236,18 @@ object DependencyManager {
 
     // Return null if there was an issue
     fun tryTreatAnvilResult(
-        view: InventoryView,
-        inventory: Inventory, // TODO REMOVE, use view instead on legacy removal
+        view: AnvilView,
         player: HumanEntity,
         result: ItemStack,
         useType: AnvilUseType,
         cost: AnvilCost
     ): ItemStack? {
-        val treatEvent = CATreatAnvilResult2Event(view, inventory, useType, result, cost)
+        val treatEvent = CATreatAnvilResult2Event(view, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent.result
         } catch (e: Exception) {
-            logExceptionAndClear(player, inventory, e)
+            logExceptionAndClear(view, e)
             return null
         }
     }

@@ -8,6 +8,7 @@ import org.bukkit.GameMode
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
@@ -199,7 +200,7 @@ object AnvilXpUtil {
         return resultSum
     }
 
-    fun onNoResult(player: HumanEntity, view: InventoryView) {
+    fun onNoResult(player: HumanEntity, view: AnvilView) {
         if (ConfigOptions.shouldUseMoney(player))
             AnvilTitleUtil.rename(
                 view, "Repair & Name",

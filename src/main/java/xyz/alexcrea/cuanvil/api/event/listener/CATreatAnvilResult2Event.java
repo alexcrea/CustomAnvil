@@ -5,6 +5,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +22,7 @@ import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
  * <p>
  * A null result will cancel this event
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnstableApiUsage"})
 public class CATreatAnvilResult2Event extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -36,7 +37,7 @@ public class CATreatAnvilResult2Event extends Event {
     }
 
     @NotNull
-    private final InventoryView view;
+    private final AnvilView view;
 
     private final AnvilUseType useType;
 
@@ -50,32 +51,26 @@ public class CATreatAnvilResult2Event extends Event {
 
     private final AnvilCost cost;
 
-    @ApiStatus.Internal
     public CATreatAnvilResult2Event(
-            @NotNull InventoryView view,
-            Inventory inv,
+            @NotNull AnvilView view,
             AnvilUseType useType,
             @Nullable ItemStack result,
             AnvilCost cost) {
         this.view = view;
         this.useType = useType;
 
-        this.left = inv.getItem(0); // TODO use view here
-        this.right = inv.getItem(1);
+        this.left = view.getItem(0);
+        this.right = view.getItem(1);
         this.result = result;
         this.cost = cost;
     }
 
     /**
      * Get the bukkit inventory view.
-     * <p>
-     * Temporarily marked as internal as it will get changed to anvil view on legacy removal
-     * so signature will change
      *
      * @return The inventory view of this event.
      */
-    @ApiStatus.Internal
-    public @NotNull InventoryView getView() {
+    public @NotNull AnvilView getView() {
         return view;
     }
 

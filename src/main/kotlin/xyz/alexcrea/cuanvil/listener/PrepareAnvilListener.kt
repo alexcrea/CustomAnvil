@@ -9,8 +9,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.inventory.meta.ItemMeta
@@ -92,13 +90,12 @@ class PrepareAnvilListener : Listener {
 
         if (!player.hasPermission(CustomAnvil.affectedByPluginPermission)) return
 
-        val result = getResult(view, inventory, player, first, second)
+        val result = getResult(view, player, first, second)
         applyResult(event, player, result)
     }
 
     fun getResult(
-        view: InventoryView, //TODO use anvil view
-        inventory: AnvilInventory,
+        view: AnvilView,
         player: Player,
         first: ItemStack?, second: ItemStack?
     ): AnvilResult {
@@ -106,7 +103,7 @@ class PrepareAnvilListener : Listener {
             return AnvilResult.EMPTY
 
         // Test custom recipe
-        var result: AnvilResult = testCustomRecipe(view, inventory, player, first, second)
+        var result: AnvilResult = testCustomRecipe(view, player, first, second)
         if (!result.isEmpty())
             return result
 
@@ -114,14 +111,14 @@ class PrepareAnvilListener : Listener {
         val shouldTryRename = second.isAir
         CustomAnvil.verboseLog("checking air in main logic: $shouldTryRename")
         if (shouldTryRename)
-            return doRenaming(view, inventory, player, first)
+            return doRenaming(view, player, first)
 
         // Test for merge
         if (first.canMergeWith(second!!))
-            return doMerge(view, inventory, player, first, second)
+            return doMerge(view, player, first, second)
 
         // Test for unit repair
-        result = testUnitRepair(view, inventory, player, first, second)
+        result = testUnitRepair(view, player, first, second)
         if (!result.isEmpty())
             return result
 

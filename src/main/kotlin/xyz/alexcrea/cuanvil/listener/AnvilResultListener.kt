@@ -52,7 +52,6 @@ class AnvilResultListener : Listener {
     fun anvilExtractionCheck(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
         val view = event.view as? AnvilView ?: return
-        val view = event.view
 
         if (event.rawSlot != ANVIL_OUTPUT_SLOT) {
             return
@@ -74,7 +73,7 @@ class AnvilResultListener : Listener {
         }
 
         // Test custom recipe
-        val customRecipeResult = AnvilMergeLogic.testCustomRecipe(view, inventory, player, leftItem, rightItem)
+        val customRecipeResult = AnvilMergeLogic.testCustomRecipe(view, player, leftItem, rightItem)
         if (!customRecipeResult.isEmpty()) {
             onCustomCraft(
                 event, player, view,
@@ -90,7 +89,7 @@ class AnvilResultListener : Listener {
 
         // Rename
         if (rightItem == null) {
-            val result = AnvilMergeLogic.doRenaming(view, inventory, player, leftItem)
+            val result = AnvilMergeLogic.doRenaming(view, player, leftItem)
             if (result.isEmpty()) return
 
             extractAnvilResult(
@@ -105,7 +104,7 @@ class AnvilResultListener : Listener {
         // Merge
         val canMerge = leftItem.canMergeWith(rightItem)
         if (canMerge) {
-            val result = AnvilMergeLogic.doMerge(view, inventory, player, leftItem, rightItem)
+            val result = AnvilMergeLogic.doMerge(view, player, leftItem, rightItem)
 
             val worked = extractAnvilResult(
                 event, player, view,
@@ -123,7 +122,7 @@ class AnvilResultListener : Listener {
 
         // Unit repair
         val unitRepairResult = AnvilMergeLogic.testUnitRepair(
-            view, inventory, player,
+            view, player,
             leftItem, rightItem
         )
         if (!unitRepairResult.isEmpty()) {
@@ -185,7 +184,6 @@ class AnvilResultListener : Listener {
         // Handle not creative middle click...
         if (event.click != ClickType.MIDDLE &&
             !handleCustomCraftClick(
-                event,
                 view,
                 player,
                 leftItem,
@@ -203,7 +201,6 @@ class AnvilResultListener : Listener {
     }
 
     private fun handleCustomCraftClick(
-        event: InventoryClickEvent,
         view: AnvilView, player: Player,
         leftItem: ItemStack, rightItem: ItemStack?,
         result: CustomCraftResult
