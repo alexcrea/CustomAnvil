@@ -1,7 +1,7 @@
 # Custom Anvil
 
 **Custom Anvil** is a plugin that allows server administrators to customize every aspect of the anvil's mechanics. 
-It is expected to work on 1.18 to 1.21.7 minecraft servers running spigot or paper.
+It is expected to work on 1.18 to 26.1.2 minecraft servers running spigot or paper.
 (the plugin support of 1.16.5 to 1.17.1 is experimental and may encounter issues)
 
 ### Download Locations:
