@@ -1,8 +1,6 @@
 # Custom Anvil
 
 **Custom Anvil** is a plugin that allows server administrators to customize every aspect of the anvil's mechanics. 
-It is expected to work on 1.18 to 26.1.2 minecraft servers running spigot or paper.
-(the plugin support of 1.16.5 to 1.17.1 is experimental and may encounter issues)
 
 ### Download Locations:
 
@@ -16,7 +14,7 @@ the plugin can be downloaded on
 - Vanilla like default configuration.
 - Custom enchantment level limit.
 - Custom anvil recipes.
-- Custom enchant restrictions (allow unsafe enchantment only for a group of item or create new restriction).
+- Custom enchant restrictions (allows unsafe enchantment only for a group of item or create new restriction).
 - Custom items of unit repairs (repair damaged with unit of "material", for example the repair of diamond sword by diamonds).
 - Custom XP cost for every aspect of the anvil.
 - Permissions to bypass level limit or enchantment restriction.
@@ -25,8 +23,12 @@ the plugin can be downloaded on
 - Gui to configure the plugin in game.
 - Support use of color code, hexadecimal color and minimessage for color/decoration
 - (Experimental) Folia support (gui do not work)
+- (Experimental) Dialog rename (allows longer rename)
+- (Experimental) Anvil with monetary cost (using vault) (require dialog rename)
+And others !
 ---
 ### Permissions:
+Note that for most of them you also need to enable feature and in most case enable use of permission for the specfic feature (indicated with `(toggleable)`)
 ```yml
 # Generic and bypass permissions
 ca.affected: Player with this permission will be affected by the plugin
@@ -44,17 +46,22 @@ ca.config.edit: Allow administrator to edit the plugin's config in game
 # -----------------------------------------------------------------------------
 # Permissions related to use of color and minimessage
 ca.color.code: Allow player to use color code on rename if enabled (toggleable)
+ca.color.code.[thecode] (for example ca.color.code.a): Allows usage of only certain color code (toggleable)
 ca.color.hex: Allow player to use hexadecimal color on rename if enabled (toggleable)
-ca.rename.minimessage: Allow player to use minimessage formating on rename if enabled (toggleable) (only legacy compatible at the time)
+ca.rename.minimessage: Allow player to use minimessage formating on rename if enabled (toggleable)
 
 # Permissions related to edition of the lore
 ca.lore_edit.book: Allow player to edit lore via book and quil if enabled (toggleable)
 ca.lore_edit.paper: Allow player to edit lore via paper if enabled (toggleable)
+
+# Others
+ca.rename.dialog: Allow player to use the rename dialog (toggleable)
 ```
 
 ### Commands
 
-run `customanvil help` to get information about available commands (need permissions to use them)
+run `/customanvil help` to get information about available commands  \
+this only show subcommands you have permission for
 
 ### Supported Plugins
 See the [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/COMPATIBILITY.md)
@@ -97,3 +104,6 @@ Credits and thanks can be seen [here](https://github.com/alexcrea/CustomAnvil/bl
 
 ### Known issue:
 Most unknown registered enchantments (by unsupported custom enchantment plugin & datapacks) will not have restriction by default. Planned but no eta.
+
+### Do you need help with the plugin, or have any issue or suggestion?
+You can ask on the discussion page, create a [GitHub issue](https://github.com/alexcrea/CustomAnvil/issues) or join my [discord](https://discord.gg/KHUNsUfRYJ)​
