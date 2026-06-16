@@ -5,7 +5,7 @@ Thanks for all the contributors of bukkit, spigot, the paper team and the advent
 Thanks JetBrain for making IntelliJ
 
 ### Dependencies
-Here dependencies are used by custom anvil
+These dependencies (or a modified version of) are used by custom anvil
 - [IF](https://github.com/stefvanschie/IF) an inventory framework by stefvanschie
 - [Mockbukkit](https://github.com/MockBukkit/MockBukkit) for unit testing
 - [CentralPortalPlus](https://github.com/lalakii/central-portal-plus) by lalakii
@@ -17,23 +17,18 @@ Here dependencies are used by custom anvil
 - [ModrinthUpdateChecker](https://github.com/Clickism/ModrinthUpdateChecker) by Clickism and thanks to the modrinth team
 
 ### Compatibility   
-Here is to credits all the author of plugins
-It partially repeat the the [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/COMPATIBILITY.md)
-- Big Thanks for H7KZ for [Disenchantment](https://github.com/H7KZ/Disenchantment)
-- [Enchantment²](https://www.spigotmc.org/resources/enchants-squared-the-enchantsplus-rewrite-custom-enchantments-that-act-like-vanilla-ones.86747/) by Athlaeos
-- [EcoEnchant](https://www.spigotmc.org/resources/ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/) by Auxilor
-- [ExcellentEnchants](https://www.spigotmc.org/resources/excellentenchants-%E2%AD%90-75-vanilla-like-enchantments.61693/) by NightExpress
-- [HavenBags](https://www.spigotmc.org/resources/havenbags-shulker-like-player-bound-bags-1-17-1-21-4.110420/) by hyperdefined
-- [AxPlayerWarp](https://modrinth.com/project/QDJHDKvi) by ArtillexStudios
-- [ToolsStats](https://modrinth.com/project/oBZj9E15) by Valorless
+Thanks to all the cool creator making the minecraft plugin's ecosystem works ! \
+See [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/COMPATIBILITY.md) for details
+
+but especially, Big Thanks for H7KZ maker of [Disenchantment](https://github.com/H7KZ/Disenchantment)
 
 ### Special Thanks
 
-Thanks for Microsoft leading me into using a better operating system \
 Thanks for all the users trying my plugin for these niche use cases 
-and for reporting issues and giving ideas !
+, reporting issues and giving ideas !
 
 Thanks coltonj96 for [UberEnchant](https://modrinth.com/plugin/uberenchant). 
 we may be incompatible with the anvil, but I do think it is a good alternative ! \
-I wish one day to work on cross compatibiltiy
+I wish one day to work on cross compatibiltiy \
+* If custom anvil do not work well for you or your use case give it a try ! *
 
