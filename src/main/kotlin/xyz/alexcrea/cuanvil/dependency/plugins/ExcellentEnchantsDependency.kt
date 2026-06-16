@@ -13,7 +13,7 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
-import xyz.alexcrea.cuanvil.util.ModernPrepareAnvilCreator
+import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant as LegacyCurseOfFragilityEnchant
@@ -117,6 +117,8 @@ class ExcellentEnchantsDependency {
 
     private lateinit var handleRechargeMethod: Method
     private lateinit var handleCombineMethod: Method
+
+    private val prepareAnvilConstructor = PrepareAnvilEvent::class.java.constructors.first() as Constructor<PrepareAnvilEvent>
 
     fun redirectListeners() {
         val toUnregister = ArrayList<RegisteredListener>()
@@ -224,12 +226,8 @@ class ExcellentEnchantsDependency {
 
         val first: ItemStack = treatInput(event.leftItem)
         val second: ItemStack = treatInput(event.rightItem)
-        val fakeEvent: PrepareAnvilEvent = try {
-            //TODO remove this on legacy removal
-            PrepareAnvilEvent(event.view, result)
-        } catch (_: NoSuchMethodError) {
-            ModernPrepareAnvilCreator.createPrepareAnvil(event.view, result)
-        }
+        val fakeEvent = prepareAnvilConstructor.newInstance(event.view, result)
+
         handleCombineMethod.invoke(this.usedAnvilListener, fakeEvent, first, second, result)
 
         event.result = fakeEvent.result
