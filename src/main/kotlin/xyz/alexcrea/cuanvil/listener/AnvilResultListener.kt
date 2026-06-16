@@ -121,7 +121,7 @@ class AnvilResultListener : Listener {
             view, inventory, player,
             leftItem, rightItem
         )
-        if (unitRepairResult.isEmpty()) {
+        if (!unitRepairResult.isEmpty()) {
             onUnitRepairExtract(
                 rightItem, event, player, inventory,
                 unitRepairResult
