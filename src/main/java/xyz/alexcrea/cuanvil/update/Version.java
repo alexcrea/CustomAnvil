@@ -21,7 +21,11 @@ public record Version(int major, int minor, int patch) {
         int[] versionParts = new int[]{0, 0, 0};
 
         for (int i = 0; i < Math.min(3, partialVersion.length); i++) {
-            versionParts[i] = Integer.parseInt(partialVersion[i]);
+            try {
+                versionParts[i] = Integer.parseInt(partialVersion[i]);
+            } catch (NumberFormatException e) {
+                break;
+            }
         }
         return new Version(versionParts[0], versionParts[1], versionParts[2]);
     }
