@@ -38,8 +38,8 @@ object PacketManagerSelector {
     // Reobfuscated packet manager for spigot or paper as it remap
     private val reobfPacketManager: PacketManagerBase?
         get() {
-            val versionParts = UpdateUtils.currentMinecraftVersionArray()
-            if (versionParts[0] != 1) return null
+            val versionParts = UpdateUtils.currentMinecraftVersion()
+            if (versionParts.major != 1) return null
 
             try {
                 val clazz = Class.forName("xyz.alexcrea.cuanvil.dependency.packet.versions." +
@@ -47,7 +47,7 @@ object PacketManagerSelector {
 
                 val manager = clazz.getConstructor().newInstance()
                 return manager as PacketManagerBase
-            } catch (e: ClassNotFoundException) {
+            } catch (_: ClassNotFoundException) {
                 return null
             }
         }

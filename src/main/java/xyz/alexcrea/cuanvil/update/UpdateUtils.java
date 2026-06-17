@@ -15,22 +15,6 @@ public class UpdateUtils {
         return Version.fromString(versionString);
     }
 
-    @Deprecated
-    public static int[] currentMinecraftVersionArray() {
-        String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
-        return UpdateUtils.readVersionFromString(versionString);
-    }
-
-    public static int[] readVersionFromString(String versionString) {
-        String[] partialVersion = versionString.split("\\.");
-        int[] versionParts = new int[]{0, 0, 0};
-
-        for (int i = 0; i < Math.min(3, partialVersion.length); i++) {
-            versionParts[i] = Integer.parseInt(partialVersion[i]);
-        }
-        return versionParts;
-    }
-
     public static void addToStringList(FileConfiguration config, String path, String... toAdd) {
         List<String> groups = new ArrayList<>(config.getStringList(path));
         groups.addAll(Arrays.asList(toAdd));

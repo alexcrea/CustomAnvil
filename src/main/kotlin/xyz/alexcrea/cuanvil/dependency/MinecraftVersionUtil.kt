@@ -6,29 +6,29 @@ object MinecraftVersionUtil {
 
     val craftbukkitVersion: String?
         get() {
-            val versionParts = UpdateUtils.currentMinecraftVersionArray()
-            if (versionParts[0] != 1) return null
+            val version = UpdateUtils.currentMinecraftVersion()
+            if (version.major != 1) return null
 
-            return when (versionParts[1]) {
-                17 -> when (versionParts[2]) {
+            return when (version.minor) {
+                17 -> when (version.patch) {
                     0, 1 -> "1_17R1"
                     else -> null
                 }
 
-                18 -> when (versionParts[2]) {
+                18 -> when (version.patch) {
                     0, 1 -> "1_18R1"
                     2 -> "1_18R2"
                     else -> null
                 }
 
-                19 -> when (versionParts[2]) {
+                19 -> when (version.patch) {
                     0, 1, 2 -> "1_19R1"
                     3 -> "1_19R2"
                     4 -> "1_19R3"
                     else -> null
                 }
 
-                20 -> when (versionParts[2]) {
+                20 -> when (version.patch) {
                     0, 1 -> "1_20R1"
                     2 -> "1_20R2"
                     3, 4 -> "1_20R3"
@@ -36,7 +36,7 @@ object MinecraftVersionUtil {
                     else -> null
                 }
 
-                21 -> when (versionParts[2]) {
+                21 -> when (version.patch) {
                     0, 1 -> "1_21R1"
                     2, 3 -> "1_21R2"
                     4 -> "1_21R3"
@@ -52,8 +52,7 @@ object MinecraftVersionUtil {
         }
 
     val isTooNewForSpigot: Boolean get() {
-        val versionParts = UpdateUtils.currentMinecraftVersionArray()
-        return versionParts[0] != 1
+        return UpdateUtils.currentMinecraftVersion().major != 1
     }
 
 }
