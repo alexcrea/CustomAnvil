@@ -270,13 +270,19 @@ class AnvilResultListener : Listener {
 
     }
 
-    private fun tryRemoveCost(player: Player, cost: AnvilCost): Boolean {
+    private fun tryRemoveCost(player: Player, result: AnvilResult): Boolean {
         if (player.gameMode == GameMode.CREATIVE) return true
+
+        val cost = result.cost
         if (cost.isMonetary) {
             val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
             if (!result) return false
         } else {
-            player.level -= cost.asXpCost()
+            val xpCost = cost.filteredXpCost()
+            if (xpCost > AnvilXpUtil.maximumXpCost(result.ignoreXpRules)) return false
+            if (player.level < xpCost) return false
+
+            player.level -= xpCost
         }
 
         return true
@@ -308,7 +314,7 @@ class AnvilResultListener : Listener {
 
         // If not creative middle click...
         if (event.click != ClickType.MIDDLE) {
-            if (!tryRemoveCost(player, cost)) return false
+            if (!tryRemoveCost(player, result)) return false
 
             // We remove what should be removed
             if (leftItem != null) leftItem.amount -= leftRemoveCount

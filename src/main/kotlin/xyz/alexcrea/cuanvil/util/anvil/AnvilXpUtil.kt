@@ -22,7 +22,6 @@ import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.util.AnvilTitleUtil
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
-import kotlin.math.min
 
 object AnvilXpUtil {
 
@@ -42,7 +41,15 @@ object AnvilXpUtil {
             cost.isMonetary = true
             setAnvilPrice(inventory, view, player, cost)
         } else
-            setAnvilInvXp(inventory, view, player, cost.asXpCost(), ignoreRules)
+            setAnvilInvXp(inventory, view, player, cost.filteredXpCost(ignoreRules), ignoreRules)
+    }
+
+    fun maximumXpCost(ignoreRules: Boolean = false): Int {
+        return if (ConfigOptions.doRemoveCostLimit || ignoreRules) {
+            Int.MAX_VALUE
+        } else {
+            ConfigOptions.maxAnvilCost + 1
+        }
     }
 
     /**
@@ -55,28 +62,11 @@ object AnvilXpUtil {
         anvilCost: Int,
         ignoreRules: Boolean = false
     ) {
-
-        // Test repair cost limit
-        val finalAnvilCost = if (
-            !ignoreRules &&
-            !ConfigOptions.doRemoveCostLimit &&
-            ConfigOptions.doCapCost
-        ) {
-            min(anvilCost, ConfigOptions.maxAnvilCost)
-        } else {
-            anvilCost
-        }
-
-        val maximumRepairCost =
-            if (ConfigOptions.doRemoveCostLimit || ignoreRules) {
-                Int.MAX_VALUE
-            } else {
-                ConfigOptions.maxAnvilCost + 1
-            }
+        val maximumRepairCost = maximumXpCost(ignoreRules)
 
         // Try first just in case another plugin, or the test need this
         inventory.maximumRepairCost = maximumRepairCost
-        inventory.repairCost = finalAnvilCost
+        inventory.repairCost = anvilCost
         // TODO for 2.x.x use anvil view & set directly there
 
         /* Because Minecraft likes to have the final say in the repair cost displayed
@@ -87,15 +77,15 @@ object AnvilXpUtil {
         ) {
             // retry after a tick
             inventory.maximumRepairCost = maximumRepairCost
-            inventory.repairCost = finalAnvilCost
+            inventory.repairCost = anvilCost
             // TODO for 2.x.x use anvil view & set directly there
 
             if (player !is Player) return@scheduleOnEntity
 
             if (player.gameMode != GameMode.CREATIVE) {
                 val bypassToExpensive = (ConfigOptions.doReplaceTooExpensive) &&
-                        (finalAnvilCost >= 40) &&
-                        finalAnvilCost < inventory.maximumRepairCost
+                        (anvilCost >= 40) &&
+                        anvilCost < inventory.maximumRepairCost
 
                 DependencyManager.packetManager.setInstantBuild(player, bypassToExpensive)
             }

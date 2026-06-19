@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.anvil
 
+import io.delilaheve.util.ConfigOptions
 import java.math.BigDecimal
+import kotlin.math.min
 import io.delilaheve.util.ConfigOptions.getMonetaryMultiplier as moneyMultiplier
 
 open class AnvilCost {
@@ -28,6 +30,21 @@ open class AnvilCost {
 
     fun asXpCost(): Int {
         return generic + enchantment + repair + rename + lore + illegalPenalty + workPenalty + recipe
+    }
+
+    fun filteredXpCost(ignoreRules: Boolean = false): Int {
+        val original = asXpCost()
+
+        // Test repair cost limit
+        return if (
+            !ignoreRules &&
+            !ConfigOptions.doRemoveCostLimit &&
+            ConfigOptions.doCapCost
+        ) {
+            min(original, ConfigOptions.maxAnvilCost)
+        } else {
+            original
+        }
     }
 
     open fun asMonetaryCost(): BigDecimal {
