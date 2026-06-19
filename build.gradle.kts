@@ -22,7 +22,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.17.2"
+version = "1.17.3"
 
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
 val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"
@@ -58,7 +58,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // fast stats
-    implementation("dev.faststats.metrics:bukkit:0.26.1")
+    implementation("dev.faststats.metrics:bukkit:0.27.0")
 
     // minimessage
     implementation("net.kyori:adventure-text-minimessage:4.25.0")
