@@ -468,6 +468,33 @@ monetary_cost:
     work_penalty: 1.0 # for work penalty (aka use penalty)
     recipe: 1.0 # for custom anvil recipe cost
 
+# Chance that an anvil get degraded
+# set it to zero if you wish to disable it
+anvil_degradation: 0.12
+
+# see https://www.digminecraft.com/lists/sound_list_pc.php
+# for a list of most of the sounds
+anvil_sound:
+  enabled: true
+  # The sound are weighted so if there is multiples of them one is selected randomly
+  # so if you want to add a "rare sound" as an easter egg you can !
+  # If invalid, it will be removed from the list. and if empty it will use the default
+  use:
+    default:
+      sound: block.anvil.use
+      category: blocks
+      volume: 1.0
+      pitch: 1.0
+      weight: 1.0
+  destroy:
+    default:
+      sound: block.anvil.destroy
+      category: blocks
+      volume: 1.0
+      pitch: 1.0
+      weight: 1.0
+
+
 # Whether to show debug logging
 debug_log: false
 
