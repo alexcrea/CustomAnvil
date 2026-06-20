@@ -13,5 +13,5 @@ repositories {
 dependencies {
     // Excellent Enchant
     compileOnly("su.nightexpress.excellentenchants:Core:5.4.1")
-    compileOnly("su.nightexpress.nightcore:main:2.14.1")
+    compileOnly("su.nightexpress.nightcore:main:2.16.2")
 }
