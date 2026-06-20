@@ -24,8 +24,8 @@ class PaperPacketManager : PacketManagerBase(), PacketManager {
             sendedAbilities.mayfly = playerAbilities.mayfly
             sendedAbilities.instabuild = instantBuild
             sendedAbilities.mayBuild = playerAbilities.mayBuild
-            sendedAbilities.flyingSpeed = playerAbilities.flyingSpeed
-            sendedAbilities.walkingSpeed = playerAbilities.walkingSpeed
+            sendedAbilities.setFlyingSpeed(playerAbilities.getFlyingSpeed())
+            sendedAbilities.setWalkingSpeed(playerAbilities.getWalkingSpeed())
         }
         val packet = ClientboundPlayerAbilitiesPacket(sendedAbilities)
         nmsPlayer.connection.send(packet)
