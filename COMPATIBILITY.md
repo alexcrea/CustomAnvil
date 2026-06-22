@@ -13,7 +13,8 @@ These plugins have compatibility handled by custom anvil. seek help on custom an
 
 #### Enchantment Plugins
 - [ExcellentEnchants](https://www.spigotmc.org/resources/excellentenchants-%E2%AD%90-75-vanilla-like-enchantments.61693/) by NightExpress:
-  Use ExcellentEnchants item type
+  Use ExcellentEnchants item type \
+  Also use ExcellentEnchant max enchant limit
 
 - [EcoEnchant](https://www.spigotmc.org/resources/ecoenchants-%E2%AD%95-250-enchantments-%E2%9C%85-create-custom-enchants-%E2%9C%A8-essentials-cmi-support.79573/) by Auxilor:
   Need to use /anvilconfigreload or a server restart to add newly added enchantment.
