@@ -22,7 +22,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "1.17.4"
+version = "1.17.5"
 
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
 val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"

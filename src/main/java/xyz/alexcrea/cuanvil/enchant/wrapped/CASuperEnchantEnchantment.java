@@ -5,6 +5,7 @@ import com.maddoxh.superEnchants.enchants.EnchantManager;
 import com.maddoxh.superEnchants.items.EnchantApplicator;
 import com.maddoxh.superEnchants.items.EnchantReader;
 import com.maddoxh.superEnchants.util.ConflictChecker;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -68,6 +69,8 @@ public class CASuperEnchantEnchantment extends CAEnchantmentBase implements Addi
 
     @Override
     public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType, @NotNull ItemStack item) {
+        if(Material.ENCHANTED_BOOK.equals(item.getType())) return false;
+
         return !enchant.canApplyTo(item.getType());
     }
 }
