@@ -2,8 +2,8 @@ package xyz.alexcrea.cuanvil.api.event.listener;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.anvil.AnvilCost;
@@ -17,13 +17,9 @@ import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
  * {@link CAPreAnvilBypassEvent}
  * and {@link CAEarlyPreAnvilBypassEvent} for your use case
  * <p>
- * A null result will cancel this pre anvil event
- *
- * @deprecated Prepare anvil Event cannot be provided as it can be called on result and therefore not have prepared anvil event
- * use {@link CATreatAnvilResult2Event} instead
+ * A null result will cancel this event
  */
-@SuppressWarnings("unused")
-@Deprecated(forRemoval = true, since = "1.17.0")
+@SuppressWarnings({"unused", "UnstableApiUsage"})
 public class CATreatAnvilResultEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -38,30 +34,43 @@ public class CATreatAnvilResultEvent extends Event {
     }
 
     @NotNull
-    private final PrepareAnvilEvent event;
+    private final AnvilView view;
 
     private final AnvilUseType useType;
+
+    @Nullable
+    private final ItemStack left;
+    @Nullable
+    private final ItemStack right;
 
     @Nullable
     private ItemStack result;
 
     private final AnvilCost cost;
 
-    public CATreatAnvilResultEvent(@NotNull PrepareAnvilEvent event, AnvilUseType useType, @Nullable ItemStack result, AnvilCost cost) {
-        this.event = event;
+    public CATreatAnvilResultEvent(
+            @NotNull AnvilView view,
+            AnvilUseType useType,
+            @Nullable ItemStack result,
+            AnvilCost cost) {
+        this.view = view;
         this.useType = useType;
+
+        this.left = view.getItem(0);
+        this.right = view.getItem(1);
         this.result = result;
         this.cost = cost;
     }
 
     /**
-     * Get the bukkit inventory click event causing to this event.
+     * Get the bukkit inventory view.
      *
-     * @return The click event causing to this event.
+     * @return The inventory view of this event.
      */
-    public @NotNull PrepareAnvilEvent getEvent() {
-        return event;
+    public @NotNull AnvilView getView() {
+        return view;
     }
+
 
     /**
      * Get the type of use source of the result.
@@ -70,6 +79,24 @@ public class CATreatAnvilResultEvent extends Event {
      */
     public AnvilUseType getUseType() {
         return useType;
+    }
+
+    /**
+     * Get the left item of the anvil use
+     *
+     * @return the left item
+     */
+    public @Nullable ItemStack getLeftItem() {
+        return left;
+    }
+
+    /**
+     * Get the right item of the anvil use
+     *
+     * @return the right item
+     */
+    public @Nullable ItemStack getRightItem() {
+        return right;
     }
 
     /**
@@ -95,50 +122,6 @@ public class CATreatAnvilResultEvent extends Event {
     }
 
     /**
-     * Get the level cost displayed on the anvil.
-     * <h3>Important note:</h3>
-     * the final price are re calculated on click for the following use case:
-     * <ul>
-     * <li>Custom craft</li>
-     * <li>Unit repair</li>
-     * <li>Lore edit</li>
-     * </ul>
-     * This value will be used as final price for:
-     * <li>Item merge</li>
-     * <li>Item rename</li>
-     * </ul>
-     *
-     * @return The current cost.
-     * @deprecated use #{@link #getCost()} instead
-     */
-    @Deprecated(forRemoval = true, since = "1.17.0")
-    public int getLevelCost() {
-        return cost.asXpCost();
-    }
-
-    /**
-     * Set the level cost displayed on the anvil.
-     * <h3>Important note:</h3>
-     * the final price are re calculated on click for the following use case:
-     * <ul>
-     * <li>Custom craft</li>
-     * <li>Unit repair</li>
-     * <li>Lore edit</li>
-     * </ul>
-     * This value will be used as final price for:
-     * <li>Item merge</li>
-     * <li>Item rename</li>
-     * </ul>
-     *
-     * @param levelCost The new cost.
-     * @deprecated use #{@link #getCost()} and set value on this instead
-     */
-    @Deprecated(forRemoval = true, since = "1.17.0")
-    public void setLevelCost(int levelCost) {
-        cost.setGeneric(levelCost - cost.getGeneric() - cost.asXpCost());
-    }
-
-    /**
      * Allow access to the current cost of the event
      * Note that modifying this object will change the event resulting cost
      *
@@ -158,5 +141,4 @@ public class CATreatAnvilResultEvent extends Event {
     public AnvilCost getCost() {
         return cost;
     }
-
 }

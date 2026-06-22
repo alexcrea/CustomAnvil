@@ -387,7 +387,7 @@ public class ConflictBuilder {
      */
     protected void appendEnchantments(@NotNull EnchantConflictGroup conflict) {
         for (String enchantmentName : getEnchantmentNames()) {
-            if (appendEnchantments(conflict, EnchantmentApi.getListByName(enchantmentName)) == 0) {
+            if (appendEnchantments(conflict, EnchantmentApi.getByName(enchantmentName)) == 0) {
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
             }

@@ -156,29 +156,13 @@ public class CAEnchantmentRegistry {
     }
 
     /**
-     * Gets the enchantment by the provided name.
-     *
-     * @param name Name to fetch.
-     * @return Registered enchantment. null if absent.
-     * @deprecated use {@link #getListByName(String)}
-     */
-    @Deprecated(since = "1.6.3")
-    @Nullable
-    public CAEnchantment getByName(@NotNull String name) {
-        List<CAEnchantment> enchantments = getListByName(name);
-        if (enchantments.isEmpty()) return null;
-
-        return enchantments.get(0);
-    }
-
-    /**
      * Gets list of enchantment using the provided name.
      *
      * @param name Name to fetch.
      * @return List of registered enchantment.
      */
     @NotNull
-    public List<CAEnchantment> getListByName(@NotNull String name) {
+    public List<CAEnchantment> getByName(@NotNull String name) {
         return byNameMap.getOrDefault(name, Collections.emptyList());
     }
 

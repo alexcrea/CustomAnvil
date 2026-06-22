@@ -94,29 +94,6 @@ public class AnvilRecipeBuilder {
      * Get the xp level cost per craft. (default 0)
      *
      * @return The xp level cost per craft
-     * @deprecated use {@link #getLevelCostPerCraft() getLevelCostPerCraft} instead
-     */
-    @Deprecated(since = "1.13.0")
-    public int getXpCostPerCraft() {
-        return getLevelCostPerCraft();
-    }
-
-    /**
-     * Sets the xp level cost per craft.
-     *
-     * @param xpCostPerCraft The xp level cost per craft
-     * @return This recipe builder instance.
-     * @deprecated use {@link #setLevelCostPerCraft(int) setLevelCostPerCraft} instead
-     */
-    @Deprecated(since = "1.13.0")
-    public AnvilRecipeBuilder setXpCostPerCraft(int xpCostPerCraft) {
-        return setLevelCostPerCraft(xpCostPerCraft);
-    }
-
-    /**
-     * Get the xp level cost per craft. (default 0)
-     *
-     * @return The xp level cost per craft
      */
     public int getLevelCostPerCraft() {
         return levelCostPerCraft;

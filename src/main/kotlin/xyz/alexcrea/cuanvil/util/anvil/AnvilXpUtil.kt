@@ -8,8 +8,6 @@ import org.bukkit.GameMode
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
-import org.bukkit.inventory.AnvilInventory
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import org.bukkit.inventory.view.AnvilView
@@ -86,7 +84,6 @@ object AnvilXpUtil {
         // Try first just in case another plugin, or the test need this
         view.maximumRepairCost = maximumRepairCost
         view.repairCost = anvilCost
-        // TODO for 2.x.x use anvil view & set directly there
 
         /* Because Minecraft likes to have the final say in the repair cost displayed
             * we need to wait for the event to end before overriding it, this ensures that

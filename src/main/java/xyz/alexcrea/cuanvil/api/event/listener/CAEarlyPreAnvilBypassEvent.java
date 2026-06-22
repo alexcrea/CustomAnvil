@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * You should also use {@link CAClickResultBypassEvent} if you want to use this event for something useful.
  * <p>
- * It is also recommended that you read about {@link CAPreAnvilBypassEvent} and {@link CATreatAnvilResult2Event}
+ * It is also recommended that you read about {@link CAPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
  * as your use case may be more prone to use theses.
  */
 public class CAEarlyPreAnvilBypassEvent extends Event implements Cancellable {

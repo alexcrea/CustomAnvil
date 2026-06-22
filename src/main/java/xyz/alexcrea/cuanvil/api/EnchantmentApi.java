@@ -133,26 +133,13 @@ public class EnchantmentApi {
     }
 
     /**
-     * Get by name an enchantment.
-     *
-     * @param name The name used to fetch
-     * @return The custom anvil enchantment of this name. null if not found.
-     * @deprecated use {@link #getListByName(String)}
-     */
-    @Deprecated(since = "1.6.3")
-    @Nullable
-    public static CAEnchantment getByName(@NotNull String name) {
-        return CAEnchantment.getByName(name);
-    }
-
-    /**
      * Get list of enchantment using the provided name.
      *
      * @param name The name used to fetch
      * @return List of custom anvil enchantments of this name. May be empty if not found.
      */
-    public static List<CAEnchantment> getListByName(@NotNull String name) {
-        return CAEnchantment.getListByName(name);
+    public static List<CAEnchantment> getByName(@NotNull String name) {
+        return CAEnchantment.getByName(name);
     }
 
     /**

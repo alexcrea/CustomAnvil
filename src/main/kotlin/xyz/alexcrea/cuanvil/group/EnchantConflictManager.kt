@@ -153,7 +153,7 @@ class EnchantConflictManager {
 
         }
 
-        return CAEnchantment.getListByName(enchantName)
+        return CAEnchantment.getByName(enchantName)
     }
 
 

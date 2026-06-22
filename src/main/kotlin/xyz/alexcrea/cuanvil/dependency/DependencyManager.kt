@@ -10,13 +10,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.ItemStack
-import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import org.bukkit.inventory.view.AnvilView
+import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.api.event.listener.CAClickResultBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAEarlyPreAnvilBypassEvent
 import xyz.alexcrea.cuanvil.api.event.listener.CAPreAnvilBypassEvent
-import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
+import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResultEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.datapack.DataPackDependency
 import xyz.alexcrea.cuanvil.dependency.gui.GenericExternGuiTester
@@ -242,7 +242,7 @@ object DependencyManager {
         useType: AnvilUseType,
         cost: AnvilCost
     ): ItemStack? {
-        val treatEvent = CATreatAnvilResult2Event(view, useType, result, cost)
+        val treatEvent = CATreatAnvilResultEvent(view, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent.result
@@ -252,7 +252,7 @@ object DependencyManager {
         }
     }
 
-    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResult2Event) {
+    private fun unsafeTryTreatAnvilResult(event: CATreatAnvilResultEvent) {
         Bukkit.getPluginManager().callEvent(event)
 
         excellentEnchantsCompatibility?.treatAnvilResult(event)

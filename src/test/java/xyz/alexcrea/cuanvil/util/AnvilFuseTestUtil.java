@@ -71,7 +71,7 @@ public class AnvilFuseTestUtil {
         List<CAEnchantment> enchantments = new ArrayList<>();
 
         for (String enchantmentName : enchantmentNames) {
-            List<CAEnchantment> enchantmentList = CAEnchantment.getListByName(enchantmentName);
+            List<CAEnchantment> enchantmentList = CAEnchantment.getByName(enchantmentName);
             Assertions.assertNotEquals(0, enchantmentList.size(),
                     "Could not find enchantment \"" + enchantmentName + "\"");
 

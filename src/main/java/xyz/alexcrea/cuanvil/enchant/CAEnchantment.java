@@ -235,24 +235,13 @@ public interface CAEnchantment {
     }
 
     /**
-     * Gets the enchantment by the provided name.
-     * @param name Name to fetch.
-     * @return Registered enchantment. null if absent.
-     *
-     * @deprecated use {@link #getListByName(String)}
-     */
-    @Deprecated(since = "1.6.3")
-    static @Nullable CAEnchantment getByName(@NotNull String name){
-        return CAEnchantmentRegistry.getInstance().getByName(name);
-    }
-
-    /**
      * Gets list of enchantment using the provided name.
+     *
      * @param name Name to fetch.
      * @return List of registered enchantment.
      */
-    static List<CAEnchantment> getListByName(@NotNull String name){
-        return CAEnchantmentRegistry.getInstance().getListByName(name);
+    static List<CAEnchantment> getByName(@NotNull String name){
+        return CAEnchantmentRegistry.getInstance().getByName(name);
     }
 
 }
