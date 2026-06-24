@@ -20,6 +20,7 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     private val helpCommand = HelpExecutor()
     private val commands = ImmutableMap.of(
         "gui", editConfigCommand,
+        "config", editConfigCommand,
         "reload", ReloadExecutor(),
         "diagnostic", DiagnosticExecutor(),
         "debug", DebugToggleExecutor(),
@@ -42,12 +43,16 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
     ): Boolean {
         // Find sub command to execute based on the provided command name
         val subcmd: CASubCommand?
+        val subcmdStr: String
+
         val newargs: Array<out String>
         if(args.isEmpty()) {
+            subcmdStr = "config"
             subcmd = editConfigCommand
             newargs = args
         }else {
-            subcmd = commands[args[0].lowercase()]
+            subcmdStr = args[0].lowercase()
+            subcmd = commands[subcmdStr]
             newargs = args.copyOfRange(1, args.size)
         }
 
@@ -57,7 +62,7 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         }
 
         try {
-            return subcmd.executeCommand(sender, cmd, cmdstr, newargs)
+            return subcmd.executeCommand(sender, cmd, subcmdStr, newargs)
         } catch (e: Throwable) {
             MetricsUtil.trackError(e)
             sender.sendMessage("§cError running this command")

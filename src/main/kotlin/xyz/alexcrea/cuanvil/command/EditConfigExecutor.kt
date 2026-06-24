@@ -29,6 +29,10 @@ class EditConfigExecutor: CASubCommand() {
             return false
         }
 
+        if ("gui".equals(cmdstr, ignoreCase = true)) {
+            sender.sendMessage("§c/ca gui has been moved to /ca config")
+        }
+
         MainConfigGui.getInstance().show(sender)
 
         return true
