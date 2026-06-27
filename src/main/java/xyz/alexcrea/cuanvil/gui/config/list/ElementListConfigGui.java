@@ -23,17 +23,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.Predicate;
 
-public abstract class ElementListConfigGui< T > extends ChestGui implements ValueUpdatableGui {
-
-    private final String namePrefix;
-
-    protected PatternPane backgroundPane;
+public abstract class ElementListConfigGui<T> extends ChestGui implements ValueUpdatableGui {
 
     public static final int LIST_FILLER_START_X = 1;
     public static final int LIST_FILLER_START_Y = 1;
     public static final int LIST_FILLER_LENGTH = 7;
     public static final int LIST_FILLER_HEIGHT = 4;
+
+    private final String namePrefix;
+
+    protected PatternPane backgroundPane;
+
+    private Predicate<T> filter = (t) -> true;
 
     protected ElementListConfigGui(@NotNull String title, Gui parent) {
         super(6, title, CustomAnvil.instance);
@@ -46,7 +49,11 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     }
 
-    protected Pattern getBackgroundPattern(){
+    public void setFilter(Predicate<T> filter) {
+        this.filter = filter;
+    }
+
+    protected Pattern getBackgroundPattern() {
         return new Pattern(
                 GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
                 GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
@@ -81,7 +88,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
     protected GuiItem goLeftItem;
     protected GuiItem goRightItem;
 
-    protected void prepareStaticValues(){
+    protected void prepareStaticValues() {
         // Left item creation for consumer & bind
         this.goLeftItem = new GuiItem(new ItemStack(Material.RED_STAINED_GLASS_PANE), event -> {
             HumanEntity viewer = event.getWhoClicked();
@@ -113,16 +120,17 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
         }, CustomAnvil.instance);
 
         GuiItem createNew = prepareCreateNewItem();
-        if(createNew != null){
+        if (createNew != null) {
             this.backgroundPane.bindItem('C', createNew);
         }
     }
-    protected void reloadValues(){
+
+    protected void reloadValues() {
         this.firstPage.clear();
         this.pages.clear();
         this.pages.add(this.firstPage);
 
-        for (T generic : getEveryDisplayableInstanceOfGeneric()) {
+        for (T generic : getDisplayableInstanceOfGeneric()) {
             updateValueForGeneric(generic, false);
         }
 
@@ -247,7 +255,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
         // set title
         StringBuilder title = new StringBuilder(this.namePrefix);
         int pagesSize = this.pages.size();
-        if(pagesSize > 1){
+        if (pagesSize > 1) {
             title.append(" (").append(pageID + 1).append('/').append(pagesSize).append(')');
         }
         setTitle(title.toString());
@@ -288,7 +296,7 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     public void removeGeneric(T generic) {
         GuiItem item = findGuiItemForRemoval(generic);
-        if(item == null) return;
+        if (item == null) return;
         removeFromPage(item);
 
         update();
@@ -300,7 +308,11 @@ public abstract class ElementListConfigGui< T > extends ChestGui implements Valu
 
     protected abstract void updateGeneric(T generic, ItemStack usedItem);
 
-    protected abstract Collection<T> getEveryDisplayableInstanceOfGeneric();
+    protected abstract Collection<T> getEveryInstanceOfGeneric();
+
+    protected Collection<T> getDisplayableInstanceOfGeneric() {
+        return getEveryInstanceOfGeneric().stream().filter(filter).toList();
+    }
 
     @Override
     public void updateGuiValues() {

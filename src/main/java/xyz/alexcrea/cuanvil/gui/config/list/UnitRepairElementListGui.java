@@ -134,7 +134,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<String, Do
     }
 
     @Override
-    protected Collection<String> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<String> getEveryInstanceOfGeneric() {
         ArrayList<String> keys = new ArrayList<>();
         if(!this.shouldWork){
             return keys;

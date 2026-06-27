@@ -77,7 +77,7 @@ public class UnitRepairConfigGui extends
     }
 
     @Override
-    protected Collection<Material> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<Material> getEveryInstanceOfGeneric() {
         ArrayList<Material> materials = new ArrayList<>();
 
         for (String matName : ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getKeys(false)) {

@@ -63,7 +63,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     }
 
     @Override
-    protected Collection<CAEnchantment> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<CAEnchantment> getEveryInstanceOfGeneric() {
         Stream<CAEnchantment> toDisplayStream;
         if(this.displayUnselected){
             toDisplayStream = CAEnchantmentRegistry.getInstance().getNameSortedEnchantments().stream();

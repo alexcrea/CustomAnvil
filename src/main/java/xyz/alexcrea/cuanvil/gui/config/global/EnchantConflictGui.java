@@ -97,7 +97,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     }
 
     @Override
-    protected Collection<EnchantConflictGroup> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<EnchantConflictGroup> getEveryInstanceOfGeneric() {
         return ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
     }
 

@@ -113,7 +113,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
 
     @Override
-    protected Collection<AnvilCustomRecipe> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<AnvilCustomRecipe> getEveryInstanceOfGeneric() {
         return ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().getRecipeList();
     }
 }

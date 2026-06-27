@@ -62,7 +62,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected Collection<IncludeGroup> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<IncludeGroup> getEveryInstanceOfGeneric() {
         ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
 
         for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {

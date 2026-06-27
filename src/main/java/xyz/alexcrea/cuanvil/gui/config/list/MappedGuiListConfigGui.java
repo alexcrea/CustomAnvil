@@ -80,7 +80,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
 
             // Try to find if it already exists in a for loop
             // Not the most efficient on large number of conflict, but it should not run often.
-            for (T generic : getEveryDisplayableInstanceOfGeneric()) {
+            for (T generic : getDisplayableInstanceOfGeneric()) {
                 if (generic.toString().equalsIgnoreCase(message)) {
                     player.sendMessage("§cPlease enter a "+genericDisplayedName()+" name that do not already exist...");
                     // wait next message.
