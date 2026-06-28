@@ -36,7 +36,7 @@ import java.util.stream.Collectors
 class DiagnosticExecutor: CASubCommand() {
 
     companion object{
-        private const val NO_DIAG_PERM = "You do not have permission to diagnostic this server"
+        const val NO_DIAG_PERM = "You do not have permission to diagnostic this server"
 
         fun fetchNMSType(): String {
             val packetManager = DependencyManager.packetManager

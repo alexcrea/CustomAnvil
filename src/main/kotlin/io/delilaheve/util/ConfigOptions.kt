@@ -128,6 +128,9 @@ object ConfigOptions {
     private const val DEFAULT_DEBUG_LOG = false
     private const val DEFAULT_VERBOSE_DEBUG_LOG = false
 
+    var OVERRIDE_DEBUG_LOG: Boolean? = null
+    var OVERRIDE_VERBOSE_DEBUG_LOG: Boolean? = null
+
     // Dialog menu rename
     const val DEFAULT_DIALOG_RENAME_ENABLED = false
     const val DEFAULT_DIALOG_MAX_SIZE = 256
@@ -436,6 +439,9 @@ object ConfigOptions {
      */
     val debugLog: Boolean
         get() {
+            val overrider = OVERRIDE_DEBUG_LOG
+            if(overrider != null) return overrider
+
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
@@ -446,6 +452,9 @@ object ConfigOptions {
      */
     val verboseDebugLog: Boolean
         get() {
+            val overrider = OVERRIDE_VERBOSE_DEBUG_LOG
+            if(overrider != null) return overrider
+
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)

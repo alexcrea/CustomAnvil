@@ -71,21 +71,35 @@ open class CustomAnvil : JavaPlugin() {
 
         var latestVer: String? = null
 
+        // Debug
+        val debugStorageQueue = ArrayDeque<String>()
+
+        private fun addToLogQueue(message: String) {
+            if(debugStorageQueue.size >= 200) {
+                // Let not store infinite debug logs lol
+                debugStorageQueue.removeFirst()
+            }
+
+            debugStorageQueue.addLast(message)
+        }
+
         /**
          * Logging handler
          */
         @JvmStatic fun log(message: String) {
             if (ConfigOptions.debugLog) {
                 instance.logger.info(message)
+                addToLogQueue(message)
             }
         }
 
         /**
          * Vebose Logging handler
          */
-        fun verboseLog(message: String) {
+        @JvmStatic fun verboseLog(message: String) {
             if (ConfigOptions.verboseDebugLog) {
                 instance.logger.info(message)
+                addToLogQueue(message)
             }
         }
 
