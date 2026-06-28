@@ -171,11 +171,7 @@ class PrepareAnvilListener : Listener {
     private fun applyResult(event: PrepareAnvilEvent, player: Player, result: AnvilResult) {
         event.result = result.item
 
-        if(result.item == null) {
-            AnvilXpUtil.onNoResult(player, event.view)
-            return
-        }
-        AnvilXpUtil.setAnvilInvCost(event.inventory, event.view, player, result.cost, result.ignoreXpRules)
+        AnvilXpUtil.setAnvilResult(event.inventory, event.view, player, result)
     }
 
 }

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
 import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.anvil.AnvilCost
+import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -28,7 +29,23 @@ object AnvilXpUtil {
     const val EXCLUSIVE_PENALTY_PREFIX = "repair_cost"
 
     /**
-     * Display the required cost (either as xp or as )
+     * Display the required cost (either as xp or as money) or reset anvil price depending on result
+     */
+    fun setAnvilResult(
+        inventory: AnvilInventory,
+        view: InventoryView,
+        player: Player,
+        result: AnvilResult) {
+        if(result.item == null) {
+            onNoResult(player, view)
+            return
+        }
+
+        setAnvilInvCost(inventory, view, player, result.cost, result.ignoreXpRules)
+    }
+
+    /**
+     * Display the required cost (either as xp or as money)
      */
     fun setAnvilInvCost(
         inventory: AnvilInventory,

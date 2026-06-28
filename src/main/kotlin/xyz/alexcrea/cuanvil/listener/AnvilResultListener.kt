@@ -107,12 +107,17 @@ class AnvilResultListener : Listener {
         if (canMerge) {
             val result = AnvilMergeLogic.doMerge(view, inventory, player, leftItem, rightItem)
 
-            extractAnvilResult(
+            val worked = extractAnvilResult(
                 event, player, inventory,
                 null, 0,
                 null, 0,
                 result
             )
+            if(!worked) {
+                CustomAnvil.verboseLog("Merge extract failed. reset the displayed price")
+                // Reset the price
+                AnvilXpUtil.setAnvilResult(inventory, view, player, result)
+            }
             return
         }
 
@@ -276,11 +281,20 @@ class AnvilResultListener : Listener {
         val cost = result.cost
         if (cost.isMonetary) {
             val result = EconomyManager.economy!!.remove(player, cost.asMonetaryCost())
-            if (!result) return false
+            if (!result) {
+                CustomAnvil.verboseLog("Could not remove monetary cost ${cost.asMonetaryCost()}")
+                return false
+            }
         } else {
             val xpCost = cost.filteredXpCost()
-            if (xpCost > AnvilXpUtil.maximumXpCost(result.ignoreXpRules)) return false
-            if (player.level < xpCost) return false
+            if (xpCost > AnvilXpUtil.maximumXpCost(result.ignoreXpRules)) {
+                CustomAnvil.verboseLog("Cost above maximum $xpCost > ${AnvilXpUtil.maximumXpCost(result.ignoreXpRules)}")
+                return false
+            }
+            if (player.level < xpCost) {
+                CustomAnvil.verboseLog("Player do not have enough xp ${player.level} < $xpCost")
+                return false
+            }
 
             player.level -= xpCost
         }
@@ -298,7 +312,10 @@ class AnvilResultListener : Listener {
         rightRemoveCount: Int,
         result: AnvilResult
     ): Boolean {
-        if (result.isEmpty()) return false
+        if (result.isEmpty()) {
+            CustomAnvil.verboseLog("Merge result is empty")
+            return false
+        }
 
         // To avoid vanilla, we cancel the event
         event.result = Event.Result.DENY
@@ -306,7 +323,10 @@ class AnvilResultListener : Listener {
         val cost = result.cost
 
         processCost(inventory, player, cost)
-        if (!cost.valid && player.gameMode != GameMode.CREATIVE) return false
+        if (!cost.valid && player.gameMode != GameMode.CREATIVE) {
+            CustomAnvil.verboseLog("Player cannot afford the cost")
+            return false
+        }
 
         // Where should we get the item
         val slotDestination = getActionSlot(event, player)
