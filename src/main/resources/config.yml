@@ -119,6 +119,9 @@ permission_needed_for_dialog_rename: false
 # For practical reason. this only work when dialog rename is enabled
 dialog_rename_keep_user_text: true
 
+# Also count left item enchantments for the final price
+include_left_enchantment_for_cost: false
+
 # Override limits for specific enchants
 #
 # Enchantments not listed here will use the value of default_limit

@@ -198,7 +198,7 @@ object AnvilMergeLogic {
         if (hasChanged) {
             resultItem.setEnchantmentsUnsafe(newEnchants)
             // Calculate enchantment cost
-            AnvilXpUtil.getRightValues(second, resultItem, cost)
+            AnvilXpUtil.getRightValues(first, second, resultItem, cost)
         }
 
         // Calculate repair cost

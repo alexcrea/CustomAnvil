@@ -75,6 +75,8 @@ object ConfigOptions {
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
 
     const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
+    
+    const val INCLUDE_LEFT_ENCHANTMENT_FOR_COST = "include_left_enchantment_for_cost"
 
     // Monetary configs
     const val MONETARY_USAGE_ROOT = "monetary_cost"
@@ -109,6 +111,8 @@ object ConfigOptions {
     const val DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = false
 
     const val DEFAULT_ENCHANT_COUNT_LIMIT = -1
+
+    const val DEFAULT_INCLUDE_LEFT_ENCHANTMENT_FOR_COST = false
 
     // Color related config
     const val DEFAULT_ALLOW_COLOR_CODE = false
@@ -432,6 +436,13 @@ object ConfigOptions {
                 .getInt(ENCHANT_COUNT_LIMIT_DEFAULT, DEFAULT_ENCHANT_COUNT_LIMIT)
                 .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
                 ?: DEFAULT_ENCHANT_COUNT_LIMIT
+        }
+
+    val includeLeftEnchantmentForCost: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(INCLUDE_LEFT_ENCHANTMENT_FOR_COST, DEFAULT_INCLUDE_LEFT_ENCHANTMENT_FOR_COST)
         }
 
     /**
