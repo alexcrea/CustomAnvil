@@ -76,7 +76,7 @@ open class CustomAnvil : JavaPlugin() {
 
         private fun addToLogQueue(message: String) {
             if(debugStorageQueue.size >= 200) {
-                // Let not store infinite debug logs lol
+                // Let not store infinite debug logs
                 debugStorageQueue.removeFirst()
             }
 
@@ -88,7 +88,8 @@ open class CustomAnvil : JavaPlugin() {
          */
         @JvmStatic fun log(message: String) {
             if (ConfigOptions.debugLog) {
-                instance.logger.info(message)
+                if(ConfigOptions.showDebugLogInConsole)
+                    instance.logger.info(message)
                 addToLogQueue(message)
             }
         }
@@ -98,7 +99,8 @@ open class CustomAnvil : JavaPlugin() {
          */
         @JvmStatic fun verboseLog(message: String) {
             if (ConfigOptions.verboseDebugLog) {
-                instance.logger.info(message)
+                if(ConfigOptions.showDebugLogInConsole)
+                    instance.logger.info(message)
                 addToLogQueue(message)
             }
         }

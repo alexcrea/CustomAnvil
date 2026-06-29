@@ -174,8 +174,8 @@ enchant_limits:
 
 # Multipliers used to calculate the enchantment's value in repair/combining
 #
-# Values here are pulled from the fandom wiki:
-# https://minecraft.fandom.com/wiki/Anvil_mechanics#Costs_for_combining_enchantments
+# Values here are pulled from the minecraft wiki:
+# https://minecraft.wiki/w/Anvil_mechanics#Costs_for_combining_enchantments
 #
 # If an enchantment is missing values here, or is less than 0, it will default to 0
 #
@@ -468,5 +468,8 @@ debug_log: false
 
 # Whether to show verbose debug logging
 debug_log_verbose: false
+
+# Whether to show inside the console or require to run /ca debug get
+display_debug_in_console: false
 
 configVersion: 1.11.0

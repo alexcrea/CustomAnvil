@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.hover.content.Text
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import xyz.alexcrea.cuanvil.command.DiagnosticExecutor.Companion.NO_DIAG_PERM
 
 class DebugToggleExecutor : CASubCommand() {
@@ -87,12 +88,16 @@ class DebugToggleExecutor : CASubCommand() {
             stb.append('\n').append(log)
         }
 
-        val message = TextComponent(ChatColor.GREEN.toString() + "Click to copy log data")
+        if (sender is Player) {
+            val message = TextComponent(ChatColor.GREEN.toString() + "Click to copy log data")
 
-        message.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stb.toString())
-        message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text("§7Click to copy"))
+            message.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stb.toString())
+            message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text("§7Click to copy"))
 
-        sender.spigot().sendMessage(message);
+            sender.spigot().sendMessage(message);
+        } else {
+            sender.sendMessage(stb.toString())
+        }
     }
 
     override fun tabCompleter(sender: CommandSender, args: Array<out String>, list: MutableList<String>) {

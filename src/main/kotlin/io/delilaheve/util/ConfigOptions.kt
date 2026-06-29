@@ -91,6 +91,7 @@ object ConfigOptions {
     // Debug flag
     const val DEBUG_LOGGING = "debug_log"
     const val VERBOSE_DEBUG_LOGGING = "debug_log_verbose"
+    const val SHOW_CONSOLE_DEBUG_LOGGING = "display_debug_in_console"
 
     // ----------------------
     // Default config values
@@ -129,8 +130,9 @@ object ConfigOptions {
     const val DEFAULT_MONEY_MULTIPLIER = 1.0
 
     // Debug flag
-    private const val DEFAULT_DEBUG_LOG = false
-    private const val DEFAULT_VERBOSE_DEBUG_LOG = false
+    const val DEFAULT_DEBUG_LOG = false
+    const val DEFAULT_VERBOSE_DEBUG_LOG = false
+    const val DEFAULT_SHOW_CONSOLE_DEBUG_LOGGING = false
 
     var OVERRIDE_DEBUG_LOG: Boolean? = null
     var OVERRIDE_VERBOSE_DEBUG_LOG: Boolean? = null
@@ -469,6 +471,19 @@ object ConfigOptions {
             return ConfigHolder.DEFAULT_CONFIG
                 .config
                 .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
+        }
+
+    /**
+     * Whether to show debug in console
+     */
+    val showDebugLogInConsole: Boolean
+        get() {
+            val overrider = OVERRIDE_VERBOSE_DEBUG_LOG
+            if(overrider != null) return overrider
+
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(SHOW_CONSOLE_DEBUG_LOGGING, DEFAULT_SHOW_CONSOLE_DEBUG_LOGGING)
         }
 
     /**

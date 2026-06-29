@@ -66,6 +66,12 @@ public class PluginSetDefault {
         nbSet += trySetDefault(config, DIALOG_RENAME_USE_PERMISSION, DEFAULT_DIALOG_RENAME_USE_PERMISSION);
         nbSet += trySetDefault(config, DIALOG_KEEP_USER_TEXT, DEFAULT_DIALOG_KEEP_USER_TEXT);
 
+        nbSet += trySetDefault(config, INCLUDE_LEFT_ENCHANTMENT_FOR_COST, DEFAULT_INCLUDE_LEFT_ENCHANTMENT_FOR_COST);
+
+        nbSet += trySetDefault(config, DEBUG_LOGGING, DEFAULT_DEBUG_LOG);
+        nbSet += trySetDefault(config, VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG);
+        nbSet += trySetDefault(config, SHOW_CONSOLE_DEBUG_LOGGING, DEFAULT_SHOW_CONSOLE_DEBUG_LOGGING);
+
         if (nbSet > 0) {
             CustomAnvil.instance.getLogger().info("Adding " + nbSet + " absent default config values.");
             ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
