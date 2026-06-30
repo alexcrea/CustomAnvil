@@ -191,9 +191,7 @@ object AnvilMergeLogic {
         val firstEnchants = EnchantmentApi.getEnchantments(first)
         val secondEnchants = EnchantmentApi.getEnchantments(second)
 
-        // newEnchants will be mutated by combineWith
-        val newEnchants = HashMap(firstEnchants)
-        newEnchants.combineWith(secondEnchants, first, player)
+        val newEnchants = firstEnchants.combineWith(secondEnchants, first, player)
 
         var hasChanged = !isIdentical(firstEnchants, newEnchants)
 
