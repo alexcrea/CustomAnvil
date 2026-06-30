@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -41,6 +42,10 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         super("Group Config");
 
         init();
+    }
+
+    public GroupConfigGui(Gui parent) {
+        super("Group Config", parent);
     }
 
     @Override

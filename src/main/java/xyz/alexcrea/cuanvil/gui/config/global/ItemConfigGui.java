@@ -18,7 +18,9 @@ import java.util.Collections;
 public class ItemConfigGui extends ChestGui {
 
     public EnchantConflictGui enchantConflictGui;
-
+    public GroupConfigGui groupConfigGui;
+    public UnitRepairConfigGui unitRepairConfigGui;
+    public CustomRecipeConfigGui customRecipeConfigGui;
 
     public ItemConfigGui(Material display, NamespacedKey material) {
         super(3, material.getKey() + " Config", CustomAnvil.instance);
@@ -62,7 +64,7 @@ public class ItemConfigGui extends ChestGui {
         groupMeta.setLore(Collections.singletonList("§7Click here to open item group menu"));
         groupItemstack.setItemMeta(groupMeta);
 
-        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.getInstance());
+        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, getGroupConfigGui(material));
 
         pane.bindItem('6', groupConfigItem);
 
@@ -75,6 +77,7 @@ public class ItemConfigGui extends ChestGui {
         unitRepairMeta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
         unirRepairItemstack.setItemMeta(unitRepairMeta);
 
+        //TODO
         GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.getInstance());
         pane.bindItem('7', unitRepairItem);
 
@@ -87,12 +90,12 @@ public class ItemConfigGui extends ChestGui {
         customRecipeMeta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
         customRecipeItemstack.setItemMeta(customRecipeMeta);
 
+        //TODO
         GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.getInstance());
         pane.bindItem('8', customRecipeItem);
-
     }
 
-    private Gui getEnchantConflictGui(NamespacedKey material) {
+    private EnchantConflictGui getEnchantConflictGui(NamespacedKey material) {
         if (enchantConflictGui == null) {
             enchantConflictGui = new EnchantConflictGui(this);
             enchantConflictGui.setFilter(group ->
@@ -103,4 +106,17 @@ public class ItemConfigGui extends ChestGui {
 
         return enchantConflictGui;
     }
+
+    private GroupConfigGui getGroupConfigGui(NamespacedKey material) {
+        if (groupConfigGui == null) {
+            groupConfigGui = new GroupConfigGui(this);
+            groupConfigGui.setFilter(group ->
+                    group.contain(material)
+            );
+            groupConfigGui.init();
+        }
+
+        return groupConfigGui;
+    }
+
 }
