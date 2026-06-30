@@ -41,7 +41,7 @@ public class SuperEnchantBulkOperation implements BulkGetEnchantOperation, BulkC
 
     @Override
     public void bulkClear(@NotNull ItemStack item, @NotNull ItemMeta meta) {
-        // item meta is not preferred for enchantment squared clear
+        // item meta is not preferred for super enchant
     }
 
 }

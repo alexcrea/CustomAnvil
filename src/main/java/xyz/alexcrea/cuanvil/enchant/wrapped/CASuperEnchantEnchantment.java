@@ -73,4 +73,14 @@ public class CASuperEnchantEnchantment extends CAEnchantmentBase implements Addi
 
         return !enchant.canApplyTo(item.getType());
     }
+
+    @Override
+    public boolean isCleanOptimised() {
+        return true;
+    }
+
+    @Override
+    public boolean isGetOptimised() {
+        return true;
+    }
 }

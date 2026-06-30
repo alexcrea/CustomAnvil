@@ -217,7 +217,9 @@ public class EnchantmentApi {
     }
 
     /**
-     * Add a bulk get operator.
+     * Add a bulk get operator. (not needed for proper "bukkit" enchantments)
+     * <p>
+     * Do not forget to mark your enchantments as {@link CAEnchantment#isGetOptimised() Get Optimized}
      * @param operation An optimised get enchantments operation
      */
     public static void addBulkGet(@NotNull BulkGetEnchantOperation operation){
@@ -226,7 +228,9 @@ public class EnchantmentApi {
 
     /**
      * Add a bulk clean operator.
-     * @param operation An optimised clean enchantments operation
+     * @param operation An optimised clean enchantments operation (not needed for proper "bukkit" enchantments)
+     * <p>
+     * Do not forget to mark your enchantments as {@link CAEnchantment#isCleanOptimised() Clean Optimized}
      */
     public static void addBulkClean(@NotNull BulkCleanEnchantOperation operation){
         CAEnchantmentRegistry.getInstance().getOptimisedCleanOperators().add(operation);
