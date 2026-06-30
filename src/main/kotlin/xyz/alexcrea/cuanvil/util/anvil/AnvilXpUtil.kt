@@ -33,8 +33,7 @@ object AnvilXpUtil {
      * Display the required cost (either as xp or as money) or reset anvil price depending on result
      */
     fun setAnvilResult(
-        inventory: AnvilInventory,
-        view: InventoryView,
+        view: AnvilView,
         player: Player,
         result: AnvilResult
     ) {
@@ -43,7 +42,7 @@ object AnvilXpUtil {
             return
         }
 
-        setAnvilInvCost(inventory, view, player, result.cost, result.ignoreXpRules)
+        setAnvilInvCost(view, player, result.cost, result.ignoreXpRules)
     }
 
     /**

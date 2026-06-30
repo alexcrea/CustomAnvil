@@ -115,7 +115,7 @@ class AnvilResultListener : Listener {
             if(!worked) {
                 CustomAnvil.verboseLog("Merge extract failed. reset the displayed price")
                 // Reset the price
-                AnvilXpUtil.setAnvilResult(inventory, view, player, result)
+                AnvilXpUtil.setAnvilResult(view, player, result)
             }
             return
         }
