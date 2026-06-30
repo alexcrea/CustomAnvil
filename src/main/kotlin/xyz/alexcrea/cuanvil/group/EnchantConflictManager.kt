@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
@@ -66,7 +67,7 @@ class EnchantConflictManager {
         val keys = config.getKeys(false)
         for (key in keys) {
             val section = config.getConfigurationSection(key)
-            if(section == null) {
+            if (section == null) {
                 warnBadKey(key)
                 continue
             }
@@ -140,8 +141,12 @@ class EnchantConflictManager {
         return conflict
     }
 
-    private fun fetchConditionalRestriction(restrictions: MutableMap<CAEnchantment, Int>, section: ConfigurationSection?, conflictName: String) {
-        if(section == null) return
+    private fun fetchConditionalRestriction(
+        restrictions: MutableMap<CAEnchantment, Int>,
+        section: ConfigurationSection?,
+        conflictName: String
+    ) {
+        if (section == null) return
         for (enchantName in section.getKeys(false)) {
             val enchants = getEnchantByIdentifier(enchantName)
             if (enchants.isEmpty()) {
@@ -150,7 +155,7 @@ class EnchantConflictManager {
             }
 
             val value = section.getInt(enchantName, -1)
-            if(value < 0) continue
+            if (value < 0) continue
 
             for (enchant in enchants) {
                 val previous = restrictions.getOrDefault(enchant, value)
@@ -259,7 +264,8 @@ class EnchantConflictManager {
         }
 
         if ((result != ConflictType.ITEM_CONFLICT) && (newEnchant is AdditionalTestEnchantment)) {
-            val partialItem = createPartialResult(item, immutableEnchants)
+            val partialItem = item.clone()
+            EnchantmentApi.setEnchantments(partialItem, immutableEnchants)
 
             if (newEnchant.isItemConflict(immutableEnchants, type, partialItem)) {
                 return ConflictType.ITEM_CONFLICT
@@ -268,17 +274,6 @@ class EnchantConflictManager {
         }
 
         return result
-    }
-
-    private fun createPartialResult(item: ItemStack, enchantments: Map<CAEnchantment, Int>): ItemStack {
-        val newItem = item.clone()
-
-        CAEnchantment.clearEnchants(newItem)
-        enchantments.forEach { enchantment ->
-            enchantment.key.addEnchantmentUnsafe(newItem, enchantment.value)
-        }
-
-        return newItem
     }
 
 }

@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
+import xyz.alexcrea.cuanvil.api.EnchantmentApi;
 import xyz.alexcrea.cuanvil.data.AnvilClickTestData;
 import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -47,7 +48,7 @@ public class AnvilFuseTestUtil {
         }
 
         ItemStack item = new ItemStack(material);
-        ItemUtil.INSTANCE.setEnchantmentsUnsafe(item, enchantmentMap);
+        EnchantmentApi.setEnchantments(item, enchantmentMap);
 
         ItemMeta meta = item.getItemMeta();
         ((Repairable) meta).setRepairCost(repairCost);

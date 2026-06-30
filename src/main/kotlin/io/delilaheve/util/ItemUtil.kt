@@ -21,23 +21,6 @@ object ItemUtil {
      */
     fun ItemStack.isEnchantedBook() = type == ENCHANTED_BOOK
 
-    /**
-     * Find the enchantment map for this [ItemStack] and return it as a [MutableMap]
-     */
-    fun ItemStack.findEnchantments(): MutableMap<CAEnchantment, Int> = CAEnchantment.getEnchants(this)
-
-    /**
-     * Apply an [enchantments] map to this [ItemStack]
-     */
-    fun ItemStack.setEnchantmentsUnsafe(enchantments: Map<CAEnchantment, Int>) {
-        CAEnchantment.clearEnchants(this)
-
-        enchantments.forEach { (enchantment, level) ->
-            enchantment.addEnchantmentUnsafe(this, level)
-        }
-
-    }
-
     private fun maxDamage(damageable: Damageable): Int {
         val ver = UpdateUtils.currentMinecraftVersion()
         if(ver.major <= 1 && ver.minor <= 20 && ver.patch < 5) return Integer.MAX_VALUE

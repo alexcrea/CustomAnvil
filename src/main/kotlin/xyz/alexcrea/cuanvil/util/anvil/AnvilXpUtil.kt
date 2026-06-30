@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.util.anvil
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.enchantmentName
-import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
 import org.bukkit.GameMode
 import org.bukkit.NamespacedKey
@@ -17,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.anvil.AnvilCost
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
@@ -247,8 +247,8 @@ object AnvilXpUtil {
         // Calculate right value and illegal enchant penalty
 
         val rightIsFormBook = right.isEnchantedBook()
-        val rightEnchs = right.findEnchantments()
-        val resultEnchs = result.findEnchantments()
+        val rightEnchs = EnchantmentApi.getEnchantments(right)
+        val resultEnchs = EnchantmentApi.getEnchantments(result)
         val resultEnchsKeys = HashMap(resultEnchs)
 
         var rightValue = 0
@@ -282,7 +282,7 @@ object AnvilXpUtil {
         }
         if(ConfigOptions.includeLeftEnchantmentForCost) {
             val leftIsFormBook = left.isEnchantedBook()
-            val leftEnchs = left.findEnchantments()
+            val leftEnchs = EnchantmentApi.getEnchantments(left)
             for (enchantment in leftEnchs) {
                 // Do not process enchantment that are present on the sacrifice
                 if(rightEnchs.contains(enchantment.key)) continue

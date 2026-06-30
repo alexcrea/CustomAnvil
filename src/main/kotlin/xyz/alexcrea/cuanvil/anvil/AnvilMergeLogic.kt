@@ -3,10 +3,8 @@ package xyz.alexcrea.cuanvil.anvil
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.EnchantmentUtil.combineWith
-import io.delilaheve.util.ItemUtil.findEnchantments
 import io.delilaheve.util.ItemUtil.isEnchantedBook
 import io.delilaheve.util.ItemUtil.repairFrom
-import io.delilaheve.util.ItemUtil.setEnchantmentsUnsafe
 import io.delilaheve.util.ItemUtil.unitRepair
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -17,6 +15,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
+import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
@@ -189,14 +188,19 @@ object AnvilMergeLogic {
         player: Player,
         first: ItemStack, second: ItemStack
     ): AnvilResult {
-        val newEnchants = first.findEnchantments()
-            .combineWith(second.findEnchantments(), first, player)
-        var hasChanged = !isIdentical(first.findEnchantments(), newEnchants)
+        val firstEnchants = EnchantmentApi.getEnchantments(first)
+        val secondEnchants = EnchantmentApi.getEnchantments(second)
+
+        // newEnchants will be mutated by combineWith
+        val newEnchants = HashMap(firstEnchants)
+        newEnchants.combineWith(secondEnchants, first, player)
+
+        var hasChanged = !isIdentical(firstEnchants, newEnchants)
 
         val resultItem = DependencyManager.cloneItem(player, first)
         val cost = AnvilCost()
         if (hasChanged) {
-            resultItem.setEnchantmentsUnsafe(newEnchants)
+            EnchantmentApi.setEnchantments(resultItem, newEnchants)
             // Calculate enchantment cost
             AnvilXpUtil.getRightValues(first, second, resultItem, cost)
         }
