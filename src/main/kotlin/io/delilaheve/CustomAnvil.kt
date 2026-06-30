@@ -145,7 +145,7 @@ open class CustomAnvil : JavaPlugin() {
 
         // Add commands
         try {
-            prepareCommand()
+            CustomAnvilCommand(this)
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "error trying to register commands", e)
             MetricsUtil.trackError(e)
@@ -328,16 +328,6 @@ open class CustomAnvil : JavaPlugin() {
             return null
         }
         return yamlConfig
-    }
-
-    fun prepareCommand() {
-        var command = getCommand(commandReloadName)
-        command?.setExecutor(ReloadExecutor())
-
-        command = getCommand(commandConfigName)
-        command?.setExecutor(EditConfigExecutor())
-
-        CustomAnvilCommand(this)
     }
 
 }

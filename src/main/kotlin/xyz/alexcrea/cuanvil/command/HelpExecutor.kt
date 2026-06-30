@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 
-class HelpExecutor : CASubCommand() {
+class HelpExecutor : CASubCommand {
 
     lateinit var commands: ImmutableMap<String, CASubCommand>
 
@@ -25,6 +25,17 @@ class HelpExecutor : CASubCommand() {
         sender.sendMessage(stb.toString())
 
         return true
+    }
+
+    override fun allowed(sender: CommandSender): Boolean {
+        return true
+    }
+
+    override fun tabCompleter(
+        sender: CommandSender,
+        args: Array<out String>,
+        list: MutableList<String>
+    ) {
     }
 
     override fun description(): String {

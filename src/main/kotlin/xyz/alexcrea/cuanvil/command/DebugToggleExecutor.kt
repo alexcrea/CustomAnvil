@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.alexcrea.cuanvil.command.DiagnosticExecutor.Companion.NO_DIAG_PERM
 
-class DebugToggleExecutor : CASubCommand() {
+class DebugToggleExecutor : CASubCommand {
 
     override fun description(): String {
         return "Used to toggle debug logs and retrieve it"

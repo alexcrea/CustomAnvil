@@ -10,7 +10,7 @@ import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 
-class ReloadExecutor : CASubCommand() {
+class ReloadExecutor : CASubCommand {
 
     override fun executeCommand(
         sender: CommandSender,
@@ -38,6 +38,13 @@ class ReloadExecutor : CASubCommand() {
 
     override fun allowed(sender: CommandSender): Boolean {
         return sender.hasPermission(CustomAnvil.commandReloadPermission)
+    }
+
+    override fun tabCompleter(
+        sender: CommandSender,
+        args: Array<out String>,
+        list: MutableList<String>
+    ) {
     }
 
     override fun description(): String {

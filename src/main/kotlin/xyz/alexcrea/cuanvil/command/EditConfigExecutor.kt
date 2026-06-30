@@ -14,14 +14,10 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
-class EditConfigExecutor : CASubCommand() {
+class EditConfigExecutor : CASubCommand {
 
     override fun allowed(sender: CommandSender): Boolean {
         return sender.hasPermission(CustomAnvil.editConfigPermission)
-    }
-
-    override fun description(): String {
-        return "Gui to edit the plugin's config"
     }
 
     override fun executeCommand(
@@ -116,6 +112,15 @@ class EditConfigExecutor : CASubCommand() {
                 else -> listOf()
             }
         )
+    override fun tabCompleter(
+        sender: CommandSender,
+        args: Array<out String>,
+        list: MutableList<String>
+    ) {
+    }
+
+    override fun description(): String {
+        return "Gui to edit the plugin's config"
     }
 
 }

@@ -30,8 +30,7 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.util.*
 import java.util.stream.Collectors
 
-
-class DiagnosticExecutor : CASubCommand() {
+class DiagnosticExecutor : CASubCommand {
 
     companion object {
         const val NO_DIAG_PERM = "You do not have permission to diagnostic this server"
@@ -327,10 +326,10 @@ class DiagnosticExecutor : CASubCommand() {
 
         stb.append(
             "\nNamespaces: ${
-            map.entries.stream()
-                .map { (key, value) -> "$key ($value)" }
-                .reduce { a, b -> "$a, $b" }.get()
-        }"
+                map.entries.stream()
+                    .map { (key, value) -> "$key ($value)" }
+                    .reduce { a, b -> "$a, $b" }.get()
+            }"
         )
 
     }
