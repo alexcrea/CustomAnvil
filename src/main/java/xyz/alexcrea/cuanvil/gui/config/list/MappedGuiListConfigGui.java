@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -14,19 +15,22 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGui.LazyElement<?>>
-        extends MappedElementListConfigGui< T, S > {
+public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui.LazyElement<?>>
+        extends MappedElementListConfigGui<T, S> {
 
     protected MappedGuiListConfigGui(@NotNull String title) {
         super(title);
+    }
 
+    protected MappedGuiListConfigGui(@NotNull String title, @NotNull Gui parent) {
+        super(title, parent);
     }
 
     @Override
     public void reloadValues() {
         this.elementGuiMap.forEach((conflict, element) -> {
             ElementMappedToListGui gui = element.getStored();
-            if(gui != null) gui.cleanAndBeUnusable();
+            if (gui != null) gui.cleanAndBeUnusable();
         });
         this.elementGuiMap.clear();
 
@@ -49,7 +53,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
     @Override
     protected void updateElement(T generic, S element) {
         ElementMappedToListGui gui = element.getStored();
-        if(gui != null) gui.updateLocal();
+        if (gui != null) gui.updateLocal();
     }
 
     @Override
@@ -58,7 +62,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
     }
 
     @Override
-    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player){
+    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {
         AtomicReference<Consumer<String>> selfRef = new AtomicReference<>();
         Consumer<String> selfCallback = (message) -> {
             if (message == null) return;
@@ -71,7 +75,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
 
             message = message.toLowerCase(Locale.ROOT);
             if ("cancel".equalsIgnoreCase(message)) {
-                player.sendMessage(genericDisplayedName()+" creation cancelled...");
+                player.sendMessage(genericDisplayedName() + " creation cancelled...");
                 show(player);
                 return;
             }
@@ -82,7 +86,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
             // Not the most efficient on large number of conflict, but it should not run often.
             for (T generic : getDisplayableInstanceOfGeneric()) {
                 if (generic.toString().equalsIgnoreCase(message)) {
-                    player.sendMessage("§cPlease enter a "+genericDisplayedName()+" name that do not already exist...");
+                    player.sendMessage("§cPlease enter a " + genericDisplayedName() + " name that do not already exist...");
                     // wait next message.
                     CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
                     return;
@@ -90,7 +94,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
             }
 
             T generic = createAndSaveNewEmptyGeneric(message);
-            if(generic == null) {// we don't know what to do. so we back up by opening this gui.
+            if (generic == null) {// we don't know what to do. so we back up by opening this gui.
                 this.show(player);
                 return;
             }
@@ -117,6 +121,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
 
         private final GuiItem parentItem;
         private final LazyValue<Consumer<InventoryClickEvent>> lazyOpenConsumer;
+
         public LazyElement(GuiItem parentItem, Supplier<T> valueSupplier) {
             super(valueSupplier);
             this.parentItem = parentItem;
@@ -131,7 +136,7 @@ public abstract class MappedGuiListConfigGui< T, S extends MappedGuiListConfigGu
         }
 
         @NotNull
-        public Consumer<InventoryClickEvent> openAction(){
+        public Consumer<InventoryClickEvent> openAction() {
             return event -> lazyOpenConsumer.get().accept(event);
         }
 

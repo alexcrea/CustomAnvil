@@ -9,7 +9,10 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
+import xyz.alexcrea.cuanvil.gui.config.global.ItemConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
+import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
+import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
 class EditConfigExecutor : CASubCommand() {
 
@@ -82,7 +85,13 @@ class EditConfigExecutor : CASubCommand() {
     }
 
     private fun processItem(sender: HumanEntity) {
-        // TODO open item edit gui
+        val item = sender.inventory.itemInMainHand
+        if(item.isAir) {
+            sender.sendMessage("Cannot configure the item in hand")
+            return
+        }
+
+        ItemConfigGui(item.type, item.customType).show(sender)
     }
 
     private fun processOpen(sender: HumanEntity) {

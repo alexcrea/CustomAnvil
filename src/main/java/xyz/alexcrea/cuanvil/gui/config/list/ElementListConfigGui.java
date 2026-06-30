@@ -68,7 +68,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     protected ArrayList<OutlinePane> pages;
     protected HashMap<UUID, Integer> pageMap;
 
-    public void init() { // Why I'm using an init function ? //TODO determine why is it using a init function and not used on constructor.
+    public void init() {
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
         this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
         addPane(this.backgroundPane);
