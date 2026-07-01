@@ -154,7 +154,6 @@ enchant_limits:
   minecraft:knockback: 2
   minecraft:fire_aspect: 2
   minecraft:looting: 3
-  minecraft:sweeping: 3
   minecraft:sweeping_edge: 3
   minecraft:efficiency: 5
   minecraft:unbreaking: 3
@@ -293,9 +292,6 @@ enchant_values:
   minecraft:swift_sneak:
     item: 8
     book: 4
-  minecraft:sweeping:
-    item: 4
-    book: 2
   minecraft:sweeping_edge:
     item: 4
     book: 2
@@ -489,5 +485,5 @@ debug_log_verbose: false
 # Whether to show inside the console or require to run /ca debug get
 display_debug_in_console: false
 
-configVersion: 1.15.5
+configVersion: 1.17.7
 lowMinecraftVersion: 1.21.11

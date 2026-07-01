@@ -2,10 +2,7 @@ package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.update.minecraft.MCUpdate;
-import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21;
-import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21_11;
-import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21_9;
+import xyz.alexcrea.cuanvil.update.minecraft.*;
 import xyz.alexcrea.cuanvil.update.plugin.*;
 
 import javax.annotation.Nonnull;
@@ -32,10 +29,12 @@ public class UpdateHandler {
             new Version(1, 8, 0), PUpdate_1_8_0::handleUpdate,
             new Version(1, 11, 0), PUpdate_1_11_0::handleUpdate,
             new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate,
-            new Version(1, 15, 6), PUpdate_1_15_6::handleUpdate
+            new Version(1, 15, 6), PUpdate_1_15_6::handleUpdate,
+            new Version(1, 17, 7), PUpdate_1_17_7::handleUpdate
     );
 
     private static final List<MCUpdate> mcUpdateMap = List.of(
+            new Update_1_20_5(),
             new Update_1_21(),
             new Update_1_21_9(),
             new Update_1_21_11()

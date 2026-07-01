@@ -270,7 +270,6 @@ restriction_soul_speed:
 
 restriction_sweeping_edge:
   enchantments:
-  - minecraft:sweeping
   - minecraft:sweeping_edge
   notAffectedGroups:
   - enchanted_book

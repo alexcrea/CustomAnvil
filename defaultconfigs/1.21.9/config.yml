@@ -152,7 +152,6 @@ enchant_limits:
   minecraft:knockback: 2
   minecraft:fire_aspect: 2
   minecraft:looting: 3
-  minecraft:sweeping: 3
   minecraft:sweeping_edge: 3
   minecraft:efficiency: 5
   minecraft:unbreaking: 3
@@ -290,9 +289,6 @@ enchant_values:
   minecraft:swift_sneak:
     item: 8
     book: 4
-  minecraft:sweeping:
-    item: 4
-    book: 2
   minecraft:sweeping_edge:
     item: 4
     book: 2
