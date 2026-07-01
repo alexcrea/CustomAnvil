@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.plugins.EcoItemDependencyUtil
+import javax.annotation.Nullable
 
 object MaterialUtil {
 
@@ -35,11 +36,13 @@ object MaterialUtil {
             return this.type.key
         }
 
+    @Nullable
     private fun bukkitMaterialFromKey(key: NamespacedKey): Material? {
         //TODO on paper only transition Registry.MATERIAL.get(key)
         return Material.matchMaterial(key.toString())
     }
 
+    @Nullable
     fun getMatFromKey(key: NamespacedKey): Material? {
         if(DependencyManager.ecoEnchantCompatibility != null) {
             val result = EcoItemDependencyUtil.ecoItemMaterialFromKey(key)

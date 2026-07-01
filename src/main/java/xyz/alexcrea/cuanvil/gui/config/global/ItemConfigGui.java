@@ -2,7 +2,6 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -118,5 +117,17 @@ public class ItemConfigGui extends ChestGui {
 
         return groupConfigGui;
     }
+
+    /*private UnitRepairConfigGui getUnitRepairConfigGui(NamespacedKey material) {
+        if (unitRepairConfigGui == null) {
+            unitRepairConfigGui = new UnitRepairConfigGui(this);
+            unitRepairConfigGui.setFilter(otherMat ->
+                    group.contain(material) //TODO check material & what inside
+            );
+            unitRepairConfigGui.init();
+        }
+
+        return unitRepairConfigGui;
+    }*/
 
 }

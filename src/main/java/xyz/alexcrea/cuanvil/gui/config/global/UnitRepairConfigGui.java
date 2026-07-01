@@ -1,9 +1,10 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -13,24 +14,25 @@ import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class UnitRepairConfigGui extends
-        MappedGuiListConfigGui<Material, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
+        MappedGuiListConfigGui<NamespacedKey, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
 
     private static UnitRepairConfigGui INSTANCE;
 
     @Nullable
-    public static UnitRepairConfigGui getCurrentInstance(){
+    public static UnitRepairConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
     @NotNull
-    public static UnitRepairConfigGui getInstance(){
-        if(INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
+    public static UnitRepairConfigGui getInstance() {
+        if (INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
 
         return INSTANCE;
     }
@@ -41,8 +43,12 @@ public class UnitRepairConfigGui extends
         init();
     }
 
+    public UnitRepairConfigGui(Gui parent) {
+        super("Unit Repair Config", parent);
+    }
+
     @Override
-    protected LazyElement<UnitRepairElementListGui> newInstanceOfGui(Material material, GuiItem item) {
+    protected LazyElement<UnitRepairElementListGui> newInstanceOfGui(NamespacedKey material, GuiItem item) {
         return new LazyElement<>(item, () -> {
             UnitRepairElementListGui element = new UnitRepairElementListGui(material, this);
             element.init();
@@ -51,23 +57,34 @@ public class UnitRepairConfigGui extends
     }
 
     @Override
-    protected ItemStack createItemForGeneric(Material material) {
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(material.name().toLowerCase());
-        String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.name().toLowerCase());
+    protected ItemStack createItemForGeneric(@NotNull NamespacedKey material) {
+        var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        var section = unitConfig.getConfigurationSection(material.toString().toLowerCase());
+        var legacySection = unitConfig.getConfigurationSection(material.toString().toLowerCase());
 
-        if(material.isAir()){
-            material = Material.BARRIER;
+        String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
+
+        var display = MaterialUtil.INSTANCE.getMatFromKey(material);
+
+        if (display == null || display.isAir()) {
+            display = Material.BARRIER;
         }
 
-        int reparableItemCount = materialSection == null ? 0 : materialSection.getKeys(false).size(); // Probably an expensive call but... why not
+        var reparable = new HashSet<String>();
+        if (section != null)
+            reparable.addAll(section.getKeys(false));
+        if (legacySection != null)
+            reparable.addAll(legacySection.getKeys(false));
 
-        ItemStack item = new ItemStack(material);
+        var reparableItemCount = reparable.size();
+
+        ItemStack item = new ItemStack(display);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eRepaired by " +materialName);
+        meta.setDisplayName("§eRepaired by " + materialName);
         meta.setLore(Arrays.asList(
-                "§7There is currently §e" +reparableItemCount+ " §7reparable item with "+materialName,
+                "§7There is currently §e" + reparableItemCount + " §7reparable item with " + materialName,
                 "§7Click here to open the menu to edit reparable item by " + materialName
         ));
 
@@ -77,13 +94,16 @@ public class UnitRepairConfigGui extends
     }
 
     @Override
-    protected Collection<Material> getEveryInstanceOfGeneric() {
-        ArrayList<Material> materials = new ArrayList<>();
+    protected Collection<NamespacedKey> getEveryInstanceOfGeneric() {
+        var materials = new HashSet<NamespacedKey>();
+        var config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
 
-        for (String matName : ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getKeys(false)) {
-            Material mat = Material.getMaterial(matName.toUpperCase());
-            if(mat != null){
-                materials.add(mat);
+        for (String matName : config.getKeys(false)) {
+            if(!config.isConfigurationSection(matName)) continue;
+
+            NamespacedKey material = NamespacedKey.fromString(matName.toLowerCase());
+            if (material != null) {
+                materials.add(material);
             }
         }
         return materials;
@@ -113,7 +133,7 @@ public class UnitRepairConfigGui extends
                             "§7You like to be an unit repair item",
                     this,
                     (itemStack, player) -> {
-                        Material type = itemStack.getType();
+                        NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
                         // Add new material
                         updateValueForGeneric(type, true);
 
@@ -126,9 +146,9 @@ public class UnitRepairConfigGui extends
     }
 
     @NotNull
-    public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(Material mat){
+    public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(NamespacedKey mat) {
         LazyElement<UnitRepairElementListGui> element = this.elementGuiMap.get(mat);
-        if(element == null){
+        if (element == null) {
             updateValueForGeneric(mat, false);
 
             element = this.elementGuiMap.get(mat);
@@ -141,8 +161,10 @@ public class UnitRepairConfigGui extends
     protected String genericDisplayedName() {
         return "this function Should not be used.";
     }
+
     @Override // Not used in this implementation.
-    protected Material createAndSaveNewEmptyGeneric(String name) {
+    protected NamespacedKey createAndSaveNewEmptyGeneric(String name) {
         return null;
     }
+
 }
