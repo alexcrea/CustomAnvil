@@ -39,13 +39,6 @@ class EnchantConflictManager {
 
         // Default name for a joining group
         const val DEFAULT_GROUP_NAME = "joinedGroup"
-
-        // 1.20.5 compatibility TODO better update system
-        private val SWEEPING_EDGE_ENCHANT = Collections.singletonList<CAEnchantment>(
-            CAEnchantment.getByKey(NamespacedKey.minecraft("sweeping_edge"))
-                ?: CAEnchantment.getByKey(Enchantment.SWEEPING_EDGE.key)
-        )
-
     }
 
     lateinit var conflictList: ArrayList<EnchantConflictGroup>
@@ -170,14 +163,6 @@ class EnchantConflictManager {
             val enchantment = CAEnchantment.getByKey(key)
             if (enchantment != null) return Collections.singletonList(enchantment)
 
-        }
-
-        // Temporary solution for 1.20.5
-        when (enchantName) {
-            "minecraft:sweeping", "sweeping",
-            "minecraft:sweeping_edge", "sweeping_edge" -> {
-                return SWEEPING_EDGE_ENCHANT
-            }
         }
 
         return CAEnchantment.getListByName(enchantName)

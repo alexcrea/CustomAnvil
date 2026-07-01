@@ -613,20 +613,9 @@ object ConfigOptions {
      * Get default value if enchantment do not exist on config
      */
     private fun getDefaultValue(
-        enchantment: CAEnchantment, // compatibility with 1.20.5. TODO better update system
+        enchantment: CAEnchantment,
         isFromBook: Boolean
     ): Int {
-
-        val enchantmentName = enchantment.key.toString()
-        if (enchantmentName == "minecraft:sweeping_edge") {
-            var limit = enchantmentValue("minecraft:sweeping", isFromBook)
-            if (limit != null) return limit
-
-            // legacy name
-            limit = enchantmentValue("sweeping", isFromBook)
-            if (limit != null) return limit
-        }
-
         val rarity = enchantment.defaultRarity()
         return if (isFromBook)
             rarity.bookValue
@@ -647,15 +636,6 @@ object ConfigOptions {
         val legacy = enchantment.enchantmentName
         value = maxBeforeMergeDisabled(legacy)
         if (value >= 0) return value
-
-        if (key == "minecraft:sweeping_edge") {
-            value = maxBeforeMergeDisabled("minecraft:sweeping")
-            if (value >= 0) return value
-
-            // legacy name of legacy enchantment name
-            value = maxBeforeMergeDisabled("sweeping")
-            if (value >= 0) return value
-        }
 
         return DEFAULT_MAX_BEFORE_MERGE_DISABLED
     }
