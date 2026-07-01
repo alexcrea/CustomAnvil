@@ -60,7 +60,7 @@ public class UnitRepairConfigGui extends
     protected ItemStack createItemForGeneric(@NotNull NamespacedKey material) {
         var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
         var section = unitConfig.getConfigurationSection(material.toString().toLowerCase());
-        var legacySection = unitConfig.getConfigurationSection(material.toString().toLowerCase());
+        var legacySection = unitConfig.getConfigurationSection(material.getKey().toLowerCase());
 
         String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
 

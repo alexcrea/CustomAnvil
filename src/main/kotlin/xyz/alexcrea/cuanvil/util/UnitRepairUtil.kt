@@ -25,7 +25,7 @@ object UnitRepairUtil {
         if (other == null) return null
         val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
 
-        val result = findRepairValue(this, other, config) ?: return null
+        val result = findRawRepairValue(this, other, config) ?: return null
 
         if(result > 0) return result
 
@@ -36,7 +36,7 @@ object UnitRepairUtil {
         return userDefault
     }
 
-    private fun findRepairValue(
+    private fun findRawRepairValue(
         self: ItemStack,
         other: ItemStack,
         config: FileConfiguration
@@ -48,6 +48,17 @@ object UnitRepairUtil {
         if (result != null) return result
 
         return checkSection(config, material.key, selfType)
+    }
+
+    fun findRawRepairValue(
+        self: NamespacedKey,
+        other: NamespacedKey,
+        config: FileConfiguration
+    ): Double? {
+        val result = checkSection(config, other.toString(), self)
+        if (result != null) return result
+
+        return checkSection(config, other.key, self)
     }
 
     fun checkSection(

@@ -9,8 +9,10 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 
 import java.util.Collections;
 
@@ -40,7 +42,7 @@ public class ItemConfigGui extends ChestGui {
 
         displayMeta.setDisplayName("§aConfiguring " + material);
         displayItemstack.setItemMeta(displayMeta);
-        pane.bindItem('D',  new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
+        pane.bindItem('D', new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
 
         // Enchantment Conflicts item
         ItemStack enchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
@@ -76,8 +78,7 @@ public class ItemConfigGui extends ChestGui {
         unitRepairMeta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
         unirRepairItemstack.setItemMeta(unitRepairMeta);
 
-        //TODO
-        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.getInstance());
+        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, getUnitRepairConfigGui(material));
         pane.bindItem('7', unitRepairItem);
 
         // Custom recipe item
@@ -118,16 +119,17 @@ public class ItemConfigGui extends ChestGui {
         return groupConfigGui;
     }
 
-    /*private UnitRepairConfigGui getUnitRepairConfigGui(NamespacedKey material) {
+    private UnitRepairConfigGui getUnitRepairConfigGui(NamespacedKey material) {
         if (unitRepairConfigGui == null) {
             unitRepairConfigGui = new UnitRepairConfigGui(this);
             unitRepairConfigGui.setFilter(otherMat ->
-                    group.contain(material) //TODO check material & what inside
+                    otherMat.equals(material) || UnitRepairUtil.INSTANCE.findRawRepairValue(
+                            material, otherMat, ConfigHolder.UNIT_REPAIR_HOLDER.getConfig()) != null
             );
             unitRepairConfigGui.init();
         }
 
         return unitRepairConfigGui;
-    }*/
+    }
 
 }
