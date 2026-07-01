@@ -37,6 +37,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     protected PatternPane backgroundPane;
 
     private Predicate<T> filter = (t) -> true;
+    private boolean hasDefaultFilter = true;
 
     protected ElementListConfigGui(@NotNull String title, Gui parent) {
         super(6, title, CustomAnvil.instance);
@@ -51,6 +52,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
 
     public void setFilter(Predicate<T> filter) {
         this.filter = filter;
+        this.hasDefaultFilter = false;
     }
 
     protected Pattern getBackgroundPattern() {
@@ -119,7 +121,12 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
             viewer.setItemOnCursor(cursor);
         }, CustomAnvil.instance);
 
-        GuiItem createNew = prepareCreateNewItem();
+        GuiItem createNew;
+        if(hasDefaultFilter)
+            createNew = prepareCreateNewItem();
+        else
+            createNew = GuiSharedConstant.SECONDARY_BACKGROUND_ITEM;
+
         if (createNew != null) {
             this.backgroundPane.bindItem('C', createNew);
         }

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 
@@ -27,7 +28,7 @@ public class ItemConfigGui extends ChestGui {
     public CustomRecipeConfigGui customRecipeConfigGui;
 
     public ItemConfigGui(@NotNull Material display, @NotNull NamespacedKey material) {
-        super(3, material.getKey() + " Config", CustomAnvil.instance);
+        super(3, CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()) + " Config", CustomAnvil.instance);
 
         Pattern pattern = new Pattern(
                 "0000D0000",
