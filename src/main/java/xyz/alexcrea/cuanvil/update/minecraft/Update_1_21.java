@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.update.minecraft;
 
-import io.delilaheve.CustomAnvil;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.update.UpdateUtils;
 import xyz.alexcrea.cuanvil.update.Version;
