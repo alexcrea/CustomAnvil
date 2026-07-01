@@ -23,6 +23,7 @@ import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.group.ConflictType
 import xyz.alexcrea.cuanvil.util.AnvilTitleUtil
 import xyz.alexcrea.cuanvil.util.dialog.AnvilRenameDialogUtil
+import kotlin.math.sqrt
 
 object AnvilXpUtil {
 
@@ -35,8 +36,9 @@ object AnvilXpUtil {
         inventory: AnvilInventory,
         view: InventoryView,
         player: Player,
-        result: AnvilResult) {
-        if(result.item == null) {
+        result: AnvilResult
+    ) {
+        if (result.item == null) {
             onNoResult(player, view)
             return
         }
@@ -246,7 +248,8 @@ object AnvilXpUtil {
     fun getRightValues(left: ItemStack, right: ItemStack, result: ItemStack, cost: AnvilCost) {
         // Calculate right value and illegal enchant penalty
 
-        val rightIsFormBook = right.isEnchantedBook()
+        val isToBook = left.isEnchantedBook()
+        val isFromBook = right.isEnchantedBook()
         val rightEnchs = EnchantmentApi.getEnchantments(right)
         val resultEnchs = EnchantmentApi.getEnchantments(result)
         val resultEnchsKeys = HashMap(resultEnchs)
@@ -274,22 +277,21 @@ object AnvilXpUtil {
             // We know "enchantment.key in resultEnchs" true
             val resultLevel = resultEnchs[enchantment.key]!!
 
-            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, rightIsFormBook)
+            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isFromBook, isToBook)
             val value = resultLevel * enchantmentMultiplier
             CustomAnvil.log("Value for sacrifice item ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
             rightValue += value
 
         }
-        if(ConfigOptions.includeLeftEnchantmentForCost) {
-            val leftIsFormBook = left.isEnchantedBook()
+        if (ConfigOptions.includeLeftEnchantmentForCost) {
             val leftEnchs = EnchantmentApi.getEnchantments(left)
             for (enchantment in leftEnchs) {
                 // Do not process enchantment that are present on the sacrifice
-                if(rightEnchs.contains(enchantment.key)) continue
+                if (rightEnchs.contains(enchantment.key)) continue
 
                 val resultLevel = resultEnchs.getOrDefault(enchantment.key, 0)
 
-                val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, leftIsFormBook)
+                val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isFromBook, isToBook)
                 val value = resultLevel * enchantmentMultiplier
                 CustomAnvil.log("Value for left item ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
                 leftValue += value
@@ -312,15 +314,15 @@ object AnvilXpUtil {
      */
     fun calculateLevelForXp(xp: Int): Int {
         return when {
-            xp <= 352 -> (Math.sqrt((xp + 9).toDouble()) - 3).toInt()
+            xp <= 352 -> (sqrt((xp + 9).toDouble()) - 3).toInt()
             xp <= 1507 -> {
                 val inner = (2.0 / 5.0) * (xp - 7839.0 / 40.0)
-                (81.0 / 10.0 + Math.sqrt(inner)).toInt()
+                (81.0 / 10.0 + sqrt(inner)).toInt()
             }
 
             else -> {
                 val inner = (2.0 / 9.0) * (xp - 54215.0 / 72.0)
-                (325.0 / 18.0 + Math.sqrt(inner)).toInt()
+                (325.0 / 18.0 + sqrt(inner)).toInt()
             }
         }
     }

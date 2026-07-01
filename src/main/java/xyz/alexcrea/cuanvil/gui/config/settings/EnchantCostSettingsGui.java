@@ -285,14 +285,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          */
         @Override
         public int getConfiguredValue() {
-            return ConfigOptions.INSTANCE.enchantmentValue(enchantment, false);
+            return ConfigOptions.INSTANCE.enchantmentValue(enchantment, false, false);
         }
 
         /**
          * @return The configured value for the enchant setting book value.
          */
         public int getConfiguredBookValue() {
-            return ConfigOptions.INSTANCE.enchantmentValue(enchantment, true);
+            return ConfigOptions.INSTANCE.enchantmentValue(enchantment, false, true);
         }
 
         @Override

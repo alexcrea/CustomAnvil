@@ -49,8 +49,8 @@ public class DefaultConfigTests extends SharedCustomAnvilTest {
         CAEnchantment enchantment = CAEnchantmentRegistry.getInstance().getByKey(key);
         Assertions.assertNotNull(enchantment, "Enchantment was somehow not found");
 
-        int itemValue = ConfigOptions.INSTANCE.enchantmentValue(enchantment, false);
-        int bookValue = ConfigOptions.INSTANCE.enchantmentValue(enchantment, true);
+        int itemValue = ConfigOptions.INSTANCE.enchantmentValue(enchantment, false, false);
+        int bookValue = ConfigOptions.INSTANCE.enchantmentValue(enchantment, false, true);
 
         EnchantmentRarity rarity = enchantment.defaultRarity();
 

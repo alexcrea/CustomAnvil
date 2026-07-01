@@ -86,6 +86,7 @@ object ConfigOptions {
 
     // Keys for specific enchantment values
     private const val KEY_BOOK = "book"
+    private const val KEY_BOOK_ON_BOOK = "book_on_book"
     private const val KEY_ITEM = "item"
 
     // Debug flag
@@ -578,14 +579,15 @@ object ConfigOptions {
      */
     fun enchantmentValue(
         enchantment: CAEnchantment,
-        isFromBook: Boolean
+        isToBook: Boolean,
+        isFromBook: Boolean,
     ): Int {
         // Test namespace
-        var limit = enchantmentValue(enchantment.key.toString(), isFromBook)
+        var limit = enchantmentValue(enchantment.key.toString(), isToBook, isFromBook)
         if (limit != null) return limit
 
         // Test legacy (name only)
-        limit = enchantmentValue(enchantment.enchantmentName, isFromBook)
+        limit = enchantmentValue(enchantment.enchantmentName, isToBook, isFromBook)
         if (limit != null) return limit
 
         // get default (and test old legacy if present)
@@ -599,13 +601,22 @@ object ConfigOptions {
      */
     private fun enchantmentValue(
         enchantmentName: String,
-        isFromBook: Boolean
+        isToBook: Boolean,
+        isFromBook: Boolean,
     ): Int? {
         val typeKey = if (isFromBook) KEY_BOOK else KEY_ITEM
         val path = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$typeKey"
-        return CustomAnvil.instance
-            .config
-            .getInt(path, DEFAULT_ENCHANT_VALUE - 1)
+
+        val config = ConfigHolder.DEFAULT_CONFIG.config
+        if(isFromBook && isToBook) {
+            val specialPath = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$KEY_BOOK_ON_BOOK"
+
+            if(config.isInt(specialPath))
+                return config.getInt(specialPath)
+                    .takeIf { it >= DEFAULT_ENCHANT_VALUE }
+        }
+
+        return config.getInt(path, DEFAULT_ENCHANT_VALUE - 1)
             .takeIf { it >= DEFAULT_ENCHANT_VALUE }
     }
 
