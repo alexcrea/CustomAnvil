@@ -9,9 +9,12 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 
 import java.util.Collections;
@@ -23,7 +26,7 @@ public class ItemConfigGui extends ChestGui {
     public UnitRepairConfigGui unitRepairConfigGui;
     public CustomRecipeConfigGui customRecipeConfigGui;
 
-    public ItemConfigGui(Material display, NamespacedKey material) {
+    public ItemConfigGui(@NotNull Material display, @NotNull NamespacedKey material) {
         super(3, material.getKey() + " Config", CustomAnvil.instance);
 
         Pattern pattern = new Pattern(
@@ -90,12 +93,11 @@ public class ItemConfigGui extends ChestGui {
         customRecipeMeta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
         customRecipeItemstack.setItemMeta(customRecipeMeta);
 
-        //TODO
-        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.getInstance());
+        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, getCustomRecipeConfigGui(material));
         pane.bindItem('8', customRecipeItem);
     }
 
-    private EnchantConflictGui getEnchantConflictGui(NamespacedKey material) {
+    private EnchantConflictGui getEnchantConflictGui(@NotNull NamespacedKey material) {
         if (enchantConflictGui == null) {
             enchantConflictGui = new EnchantConflictGui(this);
             enchantConflictGui.setFilter(group ->
@@ -107,7 +109,7 @@ public class ItemConfigGui extends ChestGui {
         return enchantConflictGui;
     }
 
-    private GroupConfigGui getGroupConfigGui(NamespacedKey material) {
+    private GroupConfigGui getGroupConfigGui(@NotNull NamespacedKey material) {
         if (groupConfigGui == null) {
             groupConfigGui = new GroupConfigGui(this);
             groupConfigGui.setFilter(group ->
@@ -119,7 +121,7 @@ public class ItemConfigGui extends ChestGui {
         return groupConfigGui;
     }
 
-    private UnitRepairConfigGui getUnitRepairConfigGui(NamespacedKey material) {
+    private UnitRepairConfigGui getUnitRepairConfigGui(@NotNull NamespacedKey material) {
         if (unitRepairConfigGui == null) {
             unitRepairConfigGui = new UnitRepairConfigGui(this);
             unitRepairConfigGui.setFilter(otherMat ->
@@ -130,6 +132,27 @@ public class ItemConfigGui extends ChestGui {
         }
 
         return unitRepairConfigGui;
+    }
+
+    private CustomRecipeConfigGui getCustomRecipeConfigGui(@NotNull NamespacedKey material) {
+        if (customRecipeConfigGui == null) {
+            customRecipeConfigGui = new CustomRecipeConfigGui(this);
+            customRecipeConfigGui.setFilter(recipe -> {
+                if(isMaterial(recipe.getLeftItem(), material)) return true;
+                if(isMaterial(recipe.getRightItem(), material)) return true;
+                return isMaterial(recipe.getResultItem(), material);
+                }
+            );
+            customRecipeConfigGui.init();
+        }
+
+        return customRecipeConfigGui;
+    }
+
+    private boolean isMaterial(@Nullable ItemStack item, @NotNull NamespacedKey material) {
+        if(item == null) return false;
+
+        return material.equals(MaterialUtil.INSTANCE.getCustomType(item));
     }
 
 }
