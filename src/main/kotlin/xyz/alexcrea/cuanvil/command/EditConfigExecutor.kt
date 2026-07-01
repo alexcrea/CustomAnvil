@@ -25,7 +25,7 @@ class EditConfigExecutor: CASubCommand() {
             sender.sendMessage("§eIt is may come in a future version.")
             sender.sendMessage("")
             sender.sendMessage("§eCurrently you need to edit manually the config or copy from another server (spigot or better)")
-            sender.sendMessage("§eThen /anvilconfigreload after config file is edited")
+            sender.sendMessage("§eThen /ca reload after config file is edited")
             return false
         }
 

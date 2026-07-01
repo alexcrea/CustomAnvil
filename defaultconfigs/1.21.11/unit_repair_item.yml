@@ -1,6 +1,6 @@
 #
 # It is recommended that you use /configanvil to edit theses config.
-# You can still manually edit here if you like to. but if you do, don't forget to /anvilconfigreload after you changes !
+# You can still manually edit here if you like to. but if you do, don't forget to /ca reload after you changes !
 #
 
 # Unit repair configuration
@@ -104,7 +104,7 @@ leather:
 phantom_membrane:
   elytra: 0.25
 
-scute:
+turtle_scute:
   turtle_helmet: 0.25
 
 oak_planks:
