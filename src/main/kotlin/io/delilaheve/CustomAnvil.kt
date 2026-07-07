@@ -24,6 +24,7 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.update.ModrinthUpdateChecker
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.UpdateHandler
+import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
@@ -223,7 +224,8 @@ open class CustomAnvil : JavaPlugin() {
         val version = description.version
         val featured = if(version.contains("dev")) null else true
 
-        ModrinthUpdateChecker(modrinthPluginID, loader, null)
+        ModrinthUpdateChecker(modrinthPluginID, loader,
+            UpdateUtils.currentMinecraftVersion().toString())
             .setFeatured(featured)
             .setOnError {
                 logger.log(Level.WARNING, "error trying to fetch latest update", it)
