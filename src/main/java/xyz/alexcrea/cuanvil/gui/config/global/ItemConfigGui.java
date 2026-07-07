@@ -27,7 +27,11 @@ public class ItemConfigGui extends ChestGui {
     public CustomRecipeConfigGui customRecipeConfigGui;
 
     public ItemConfigGui(@NotNull Material display, @NotNull NamespacedKey material) {
-        super(3, CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()) + " Config", CustomAnvil.instance);
+        super(3,
+                CasedStringUtil.snakeToUpperSpacedCase(
+                        material.getKey().toLowerCase()
+                ) + " Config",
+                CustomAnvil.instance);
 
         Pattern pattern = new Pattern(
                 "0000D0000",

@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.ItemConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
@@ -80,7 +81,7 @@ class EditConfigExecutor : CASubCommand() {
             }
         }
 
-        // TODO open enchantments edit gui
+        EnchantConfigGui(enchantToFilter).show(sender)
 
     }
 
