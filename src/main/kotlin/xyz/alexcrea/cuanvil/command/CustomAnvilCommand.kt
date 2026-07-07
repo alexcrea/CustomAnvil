@@ -80,6 +80,7 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         if(args.size < 2) {
              for ((key, cmd) in commands) {
                  if(!cmd.allowed(sender)) continue
+                 if("gui".contentEquals(key)) continue
                  result.add(key)
             }
         } else {
