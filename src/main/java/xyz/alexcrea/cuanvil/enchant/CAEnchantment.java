@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkCleanEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
+import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +45,14 @@ public interface CAEnchantment {
      */
     @NotNull
     String getName();
+
+    /**
+     * Get the enchantment name prettified (upper spaced case)
+     * @return Prettier enchantment name
+     */
+    default String getPrettyName() {
+        return CasedStringUtil.snakeToUpperSpacedCase(getName());
+    }
 
     /**
      * Get the default maximum level of this enchantment.

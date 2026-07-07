@@ -318,9 +318,9 @@ public class IntSettingsGui extends AbstractSettingGui {
             this.defaultVal = defaultVal;
             this.steps = steps;
 
-            if(displayLore == null){
+            if (displayLore == null) {
                 this.displayLore = Collections.emptyList();
-            }else {
+            } else {
                 this.displayLore = displayLore;
             }
         }
@@ -392,7 +392,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         protected String deltaDisplay(ValueDisplayType type, int now, int planned) {
             var delta = planned - now;
-            if(delta < 0) return "§c" + delta;
+            if (delta < 0) return "§c" + delta;
             else return "§a+" + delta;
         }
 

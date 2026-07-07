@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -14,27 +15,32 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public abstract class MappedElementListConfigGui< T, S > extends ElementListConfigGui< T > {
+public abstract class MappedElementListConfigGui<T, S> extends ElementListConfigGui<T> {
 
     protected final HashMap<T, S> elementGuiMap;
-    protected MappedElementListConfigGui(@NotNull String title) {
-        super(title, MainConfigGui.getInstance());
+
+    protected MappedElementListConfigGui(@NotNull String title, @NotNull Gui parent) {
+        super(title, parent);
         this.elementGuiMap = new HashMap<>();
 
     }
 
+    protected MappedElementListConfigGui(@NotNull String title) {
+        this(title, MainConfigGui.getInstance());
+    }
+
     @Override
-    protected GuiItem prepareCreateNewItem(){
+    protected GuiItem prepareCreateNewItem() {
         // Create new conflict item
         ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("§aCreate new "+genericDisplayedName());
+        createMeta.setDisplayName("§aCreate new " + genericDisplayedName());
         createMeta.setLore(Arrays.asList(
-                "§7Create a new "+genericDisplayedName()+".",
-                "§7You will be asked to name the "+genericDisplayedName()+" in chat.",
-                "§7Then, you should edit the "+genericDisplayedName()+" config as you need"
+                "§7Create a new " + genericDisplayedName() + ".",
+                "§7You will be asked to name the " + genericDisplayedName() + " in chat.",
+                "§7Then, you should edit the " + genericDisplayedName() + " config as you need"
         ));
 
         createItem.setItemMeta(createMeta);
@@ -51,8 +57,8 @@ public abstract class MappedElementListConfigGui< T, S > extends ElementListConf
             }
             player.closeInventory();
 
-            player.sendMessage("§eWrite the "+genericDisplayedName()+" name you want to create in the chat.\n" +
-                    "§eOr write §ccancel §eto go back to "+genericDisplayedName()+" config menu");
+            player.sendMessage("§eWrite the " + genericDisplayedName() + " name you want to create in the chat.\n" +
+                    "§eOr write §ccancel §eto go back to " + genericDisplayedName() + " config menu");
 
             CustomAnvil.Companion.getChatListener().setListenedCallback(player, prepareCreateItemConsumer(player));
 

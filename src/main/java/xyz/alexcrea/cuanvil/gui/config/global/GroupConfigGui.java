@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -43,6 +44,10 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         init();
     }
 
+    public GroupConfigGui(Gui parent) {
+        super("Group Config", parent);
+    }
+
     @Override
     protected ItemStack createItemForGeneric(IncludeGroup group) {
         ItemStack item = new ItemStack(group.getRepresentativeMaterial());
@@ -62,7 +67,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected Collection<IncludeGroup> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<IncludeGroup> getEveryInstanceOfGeneric() {
         ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
 
         for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {

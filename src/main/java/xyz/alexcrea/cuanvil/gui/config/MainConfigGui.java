@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
@@ -39,116 +40,142 @@ public class MainConfigGui extends ChestGui {
         GuiGlobalItems.addBackgroundItem(pane);
 
         // Basic config item
-        ItemStack basicConfigItemstack = new ItemStack(Material.COMMAND_BLOCK);
-        ItemMeta basicConfigMeta = basicConfigItemstack.getItemMeta();
-        assert basicConfigMeta != null;
-
-        basicConfigMeta.setDisplayName("§aBasic Config Menu");
-        basicConfigMeta.setLore(Collections.singletonList("§7Click here to open basic config menu"));
-        basicConfigItemstack.setItemMeta(basicConfigMeta);
-
-        GuiItem basicConfigItem = GuiGlobalItems.goToGuiItem(basicConfigItemstack, new BasicConfigGui(packetManager));
+        var basicConfigItem = basicConfigItem(new BasicConfigGui(packetManager));
         pane.bindItem('1', basicConfigItem);
 
         // enchant level limit item
-        ItemStack enchantLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
-        ItemMeta enchantLimitMeta = enchantLimitItemstack.getItemMeta();
-        assert enchantLimitMeta != null;
-
-        enchantLimitMeta.setDisplayName("§aEnchantment Level Limit");
-        enchantLimitMeta.setLore(Collections.singletonList("§7Click here to open enchantment level limit menu"));
-        enchantLimitItemstack.setItemMeta(enchantLimitMeta);
-
-        GuiItem enchantLimitItem = GuiGlobalItems.goToGuiItem(enchantLimitItemstack, new EnchantLimitConfigGui());
+        var enchantLimitItem = enchantLimitItem(new EnchantLimitConfigGui());
         pane.bindItem('2', enchantLimitItem);
 
         // enchant level limit item
-        ItemStack enchantMergeLimitItemstack = new ItemStack(Material.ENCHANTED_BOOK);
-        ItemMeta enchantMergeLimitMeta = enchantMergeLimitItemstack.getItemMeta();
-        assert enchantMergeLimitMeta != null;
-
-        enchantMergeLimitMeta.setDisplayName("§aEnchantment Merge Limit");
-        enchantMergeLimitMeta.setLore(Collections.singletonList("§7Click here to open enchantment merge limit menu"));
-        enchantMergeLimitItemstack.setItemMeta(enchantMergeLimitMeta);
-
-        GuiItem enchantMergeLimitItem = GuiGlobalItems.goToGuiItem(enchantMergeLimitItemstack, new EnchantMergeLimitConfigGui());
+        var enchantMergeLimitItem = enchantMergeLimitItem(new EnchantMergeLimitConfigGui());
         pane.bindItem('3', enchantMergeLimitItem);
 
         // enchant cost item
-        ItemStack enchantCostItemstack = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        ItemMeta enchantCostMeta = enchantCostItemstack.getItemMeta();
-        assert enchantCostMeta != null;
-
-        enchantCostMeta.setDisplayName("§aEnchantment Cost");
-        enchantCostMeta.setLore(Collections.singletonList("§7Click here to open enchantment costs menu"));
-        enchantCostItemstack.setItemMeta(enchantCostMeta);
-
-        GuiItem enchantCostItem = GuiGlobalItems.goToGuiItem(enchantCostItemstack, new EnchantCostConfigGui());
+        var enchantCostItem = enchantCostItem(new EnchantCostConfigGui());
         pane.bindItem('4', enchantCostItem);
 
         // Enchantment Conflicts item
-        ItemStack enchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
-        ItemMeta enchantConflictMeta = enchantConflictItemstack.getItemMeta();
-        assert enchantConflictMeta != null;
-
-        enchantConflictMeta.setDisplayName("§aEnchantment Conflict");
-        enchantConflictMeta.setLore(Collections.singletonList("§7Click here to open enchantment conflict menu"));
-        enchantConflictItemstack.setItemMeta(enchantConflictMeta);
-
-        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, EnchantConflictGui.getInstance());
+        var enchantConflictItem = enchantConflictItem(EnchantConflictGui.getInstance());
         pane.bindItem('5', enchantConflictItem);
 
         // Group config items
-        ItemStack groupItemstack = new ItemStack(Material.CHEST);
-        ItemMeta groupMeta = groupItemstack.getItemMeta();
-        assert groupMeta != null;
-
-        groupMeta.setDisplayName("§aItem Groups");
-        groupMeta.setLore(Collections.singletonList("§7Click here to open item group menu"));
-        groupItemstack.setItemMeta(groupMeta);
-
-        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, GroupConfigGui.getInstance());
-
+        var groupConfigItem = groupConfigItem(GroupConfigGui.getInstance());
         pane.bindItem('6', groupConfigItem);
 
         // Unit repair item
-        ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);
-        ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
-        assert unitRepairMeta != null;
-
-        unitRepairMeta.setDisplayName("§aUnit Repair");
-        unitRepairMeta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
-        unirRepairItemstack.setItemMeta(unitRepairMeta);
-
-        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, UnitRepairConfigGui.getInstance());
+        var unitRepairItem = unitRepairItem(UnitRepairConfigGui.getInstance());
         pane.bindItem('7', unitRepairItem);
 
         // Custom recipe item
-        ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);
-        ItemMeta customRecipeMeta = customRecipeItemstack.getItemMeta();
-        assert customRecipeMeta != null;
-
-        customRecipeMeta.setDisplayName("§aCustom recipes");
-        customRecipeMeta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
-        customRecipeItemstack.setItemMeta(customRecipeMeta);
-
-        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, CustomRecipeConfigGui.getInstance());
+        var customRecipeItem = customRecipeItem(CustomRecipeConfigGui.getInstance());
         pane.bindItem('8', customRecipeItem);
 
         // quit item
-        ItemStack quitItemstack = new ItemStack(Material.BARRIER);
-        ItemMeta quitMeta = quitItemstack.getItemMeta();
-        assert quitMeta != null;
+        pane.bindItem('Q', quitItem());
+    }
 
-        quitMeta.setDisplayName("§cQuit");
-        quitItemstack.setItemMeta(quitMeta);
+    public static GuiItem basicConfigItem(Gui target) {
+        var item = new ItemStack(Material.COMMAND_BLOCK);
+        var meta = item.getItemMeta();
+        assert meta != null;
 
-        GuiItem quitItem = new GuiItem(quitItemstack, event -> {
+        meta.setDisplayName("§aBasic Config Menu");
+        meta.setLore(Collections.singletonList("§7Click here to open basic config menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem enchantLimitItem(Gui target) {
+        var item = new ItemStack(Material.ENCHANTED_BOOK);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aEnchantment Level Limit");
+        meta.setLore(Collections.singletonList("§7Click here to open enchantment level limit menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem enchantMergeLimitItem(Gui target) {
+        ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aEnchantment Merge Limit");
+        meta.setLore(Collections.singletonList("§7Click here to open enchantment merge limit menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem enchantCostItem(Gui target) {
+        ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aEnchantment Cost");
+        meta.setLore(Collections.singletonList("§7Click here to open enchantment costs menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem enchantConflictItem(Gui target) {
+        var item = new ItemStack(Material.OAK_FENCE);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aEnchantment Conflict");
+        meta.setLore(Collections.singletonList("§7Click here to open enchantment conflict menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem groupConfigItem(Gui target) {
+        var item = new ItemStack(Material.CHEST);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aItem Groups");
+        meta.setLore(Collections.singletonList("§7Click here to open item group menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem unitRepairItem(Gui target) {
+        var item = new ItemStack(Material.DIAMOND);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aUnit Repair");
+        meta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
+        item.setItemMeta(meta);
+
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem customRecipeItem(Gui target) {
+        var item = new ItemStack(Material.CRAFTING_TABLE);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§aCustom recipes");
+        meta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
+        item.setItemMeta(meta);
+        return GuiGlobalItems.goToGuiItem(item, target);
+    }
+
+    public static GuiItem quitItem() {
+        var item = new ItemStack(Material.BARRIER);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        meta.setDisplayName("§cQuit");
+        item.setItemMeta(meta);
+
+        return new GuiItem(item, event -> {
             event.setCancelled(true);
             event.getWhoClicked().closeInventory();
         }, CustomAnvil.instance);
-        pane.bindItem('Q', quitItem);
-
     }
 
 }

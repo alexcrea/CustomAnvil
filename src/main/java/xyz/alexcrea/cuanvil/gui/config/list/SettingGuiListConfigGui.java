@@ -15,10 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui< T >{
+public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui<T> {
 
     protected HashMap<T, GuiItem> guiItemMap;
     protected HashMap<T, S> factoryMap;
+
     protected SettingGuiListConfigGui(@NotNull String title, Gui parent) {
         super(title, parent);
         this.guiItemMap = new HashMap<>();
@@ -44,7 +45,7 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
 
     @Override
     public void updateValueForGeneric(T generic, boolean shouldUpdate) {
-        if(!this.factoryMap.containsKey(generic)){
+        if (!this.factoryMap.containsKey(generic)) {
             // Create new item & factory
             S factory = createFactory(generic);
             GuiItem newItem = itemFromFactory(generic, factory);
@@ -52,7 +53,7 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
             addToPage(newItem);
             this.guiItemMap.put(generic, newItem);
             this.factoryMap.put(generic, factory);
-        }else{
+        } else {
             S factory = this.factoryMap.get(generic);
             // Update old item
             GuiItem oldItem = this.guiItemMap.get(generic);
@@ -61,7 +62,7 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
             updateGuiItem(oldItem, newItem);
         }
 
-        if(shouldUpdate){
+        if (shouldUpdate) {
             update();
         }
     }
@@ -74,7 +75,7 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
         super.reloadValues();
     }
 
-    private void updateGuiItem(GuiItem oldITem, GuiItem newItem){
+    private void updateGuiItem(GuiItem oldITem, GuiItem newItem) {
         oldITem.setItem(newItem.getItem());
         oldITem.setProperties(newItem.getProperties());
         oldITem.setVisible(newItem.isVisible());
@@ -86,17 +87,22 @@ public abstract class SettingGuiListConfigGui< T, S extends SettingGui.SettingGu
     }
 
     @Override // Not used
-    protected void updateGeneric(T generic, ItemStack usedItem) {}
+    protected void updateGeneric(T generic, ItemStack usedItem) {
+    }
+
     @Override // Not used
     protected ItemStack createItemForGeneric(T generic) {
         return null;
     }
 
     protected abstract List<String> getCreateItemLore();
+
     protected abstract Consumer<InventoryClickEvent> getCreateClickConsumer();
+
     protected abstract String createItemName();
 
     protected abstract S createFactory(T generic);
+
     protected abstract GuiItem itemFromFactory(T generic, S factory);
 
 

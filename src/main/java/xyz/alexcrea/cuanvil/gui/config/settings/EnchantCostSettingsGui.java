@@ -183,7 +183,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         assert nowMeta != null;
 
         nowMeta.setDisplayName("§fValue: §e" + nowBook);
-        if(!holder.displayLore.isEmpty()){
+        if (!holder.displayLore.isEmpty()) {
             nowMeta.setLore(holder.displayLore);
         }
 
@@ -201,7 +201,6 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             returnToDefault = GuiGlobalItems.backgroundItem();
         }
         pane.bindItem('D', returnToDefault);
-
 
     }
 

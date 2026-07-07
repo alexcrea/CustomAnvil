@@ -49,16 +49,16 @@ public class Update_1_21_9 extends MCUpdate{
 
     public static void addCopperUnitRepair(FileConfiguration unitConfig) {
         // Add unit repair
-        unitConfig.set("copper_ingot.copper_helmet", 0.25);
-        unitConfig.set("copper_ingot.copper_chestplate", 0.25);
-        unitConfig.set("copper_ingot.copper_leggings", 0.25);
-        unitConfig.set("copper_ingot.copper_boots", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_helmet", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_chestplate", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_leggings", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_boots", 0.25);
 
-        unitConfig.set("copper_ingot.copper_pickaxe", 0.25);
-        unitConfig.set("copper_ingot.copper_shovel", 0.25);
-        unitConfig.set("copper_ingot.copper_hoe", 0.25);
-        unitConfig.set("copper_ingot.copper_axe", 0.25);
-        unitConfig.set("copper_ingot.copper_sword", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_pickaxe", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_shovel", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_hoe", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_axe", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_sword", 0.25);
     }
 
 }

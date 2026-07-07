@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -24,26 +25,30 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     private static EnchantConflictGui INSTANCE;
 
     @Nullable
-    public static EnchantConflictGui getCurrentInstance(){
+    public static EnchantConflictGui getCurrentInstance() {
         return INSTANCE;
     }
 
     @NotNull
-    public static EnchantConflictGui getInstance(){
-        if(INSTANCE == null) INSTANCE = new EnchantConflictGui();
+    public static EnchantConflictGui getInstance() {
+        if (INSTANCE == null) INSTANCE = new EnchantConflictGui();
 
         return INSTANCE;
     }
 
+    // Need to init myself
+    public EnchantConflictGui(Gui parent) {
+        super("Conflict Config", parent);
+    }
 
     private EnchantConflictGui() {
-        super( "Conflict Config");
+        super("Conflict Config");
 
         init();
     }
 
     @Override
-    protected EnchantConflictGroup createAndSaveNewEmptyGeneric(String name){
+    protected EnchantConflictGroup createAndSaveNewEmptyGeneric(String name) {
         // Create new empty conflict and display it to the admin
         EnchantConflictGroup conflict = new EnchantConflictGroup(
                 name,
@@ -97,7 +102,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     }
 
     @Override
-    protected Collection<EnchantConflictGroup> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<EnchantConflictGroup> getEveryInstanceOfGeneric() {
         return ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
     }
 

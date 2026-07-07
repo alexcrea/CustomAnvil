@@ -38,26 +38,26 @@ public class Update_1_21_11 extends MCUpdate{
         addAbsentToList(conflictConfig, "restriction_fire_aspect.notAffectedGroups", "spears");
 
         // Unit repair for spears
-        unitConfig.set("gold_ingot.golden_spear", 0.25);
-        unitConfig.set("copper_ingot.copper_spear", 0.25);
-        unitConfig.set("iron_ingot.iron_spear", 0.25);
-        unitConfig.set("diamond.diamond_spear", 0.25);
-        unitConfig.set("netherite_ingot.netherite_spear", 0.25);
+        unitConfig.set("minecraft:gold_ingot.minecraft:golden_spear", 0.25);
+        unitConfig.set("minecraft:copper_ingot.minecraft:copper_spear", 0.25);
+        unitConfig.set("minecraft:iron_ingot.minecraft:iron_spear", 0.25);
+        unitConfig.set("minecraft:diamond.minecraft:diamond_spear", 0.25);
+        unitConfig.set("minecraft:netherite_ingot.minecraft:netherite_spear", 0.25);
 
-        unitConfig.set("cobblestone.stone_spear", 0.25);
-        unitConfig.set("cobbled_deepslate.stone_spear", 0.25);
+        unitConfig.set("minecraft:cobblestone.stone_spear", 0.25);
+        unitConfig.set("minecraft:cobbled_deepslate.stone_spear", 0.25);
 
-        unitConfig.set("oak_planks.wooden_spear", 0.25);
-        unitConfig.set("spruce_planks.wooden_spear", 0.25);
-        unitConfig.set("birch_planks.wooden_spear", 0.25);
-        unitConfig.set("jungle_planks.wooden_spear", 0.25);
-        unitConfig.set("acacia_planks.wooden_spear", 0.25);
-        unitConfig.set("dark_oak_planks.wooden_spear", 0.25);
-        unitConfig.set("mangrove_planks.wooden_spear", 0.25);
-        unitConfig.set("cherry_planks.wooden_spear", 0.25);
-        unitConfig.set("bamboo_planks.wooden_spear", 0.25);
-        unitConfig.set("crimson_planks.wooden_spear", 0.25);
-        unitConfig.set("warped_planks.wooden_spear", 0.25);
+        unitConfig.set("minecraft:oak_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:spruce_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:birch_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:jungle_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:acacia_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:dark_oak_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:mangrove_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:cherry_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:bamboo_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:crimson_planks.minecraft:wooden_spear", 0.25);
+        unitConfig.set("minecraft:warped_planks.minecraft:wooden_spear", 0.25);
 
         // Create lunge enchant value and group
         baseConfig.set("enchant_limits.minecraft:lunge", 3);

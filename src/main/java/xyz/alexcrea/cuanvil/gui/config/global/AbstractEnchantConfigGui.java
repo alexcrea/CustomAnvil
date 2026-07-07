@@ -1,11 +1,11 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
-import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -31,13 +31,17 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
         super(title);
     }
 
+    protected AbstractEnchantConfigGui(String title, Gui parent) {
+        super(title, parent);
+    }
+
     @Override
     public void updateGuiValues() { //TODO maybe optimise it.
         reloadValues();
     }
 
     @Override
-    protected Collection<CAEnchantment> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<CAEnchantment> getEveryInstanceOfGeneric() {
         return CAEnchantmentRegistry.getInstance().getNameSortedEnchantments();
     }
 
@@ -73,7 +77,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
             this.pages.clear();
             this.pages.add(this.firstPage);
 
-            for (CAEnchantment enchantment : getEveryDisplayableInstanceOfGeneric()) {
+            for (CAEnchantment enchantment : getDisplayableInstanceOfGeneric()) {
                 GuiItem item = this.guiItemMap.get(enchantment);
 
                 if(item == null) {

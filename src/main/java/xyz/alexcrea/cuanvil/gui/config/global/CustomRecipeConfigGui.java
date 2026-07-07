@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -38,6 +39,10 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         super("Custom Recipe Config");
 
         init();
+    }
+
+    public CustomRecipeConfigGui(Gui parent) {
+        super("Custom Recipe Config", parent);
     }
 
     @Override
@@ -113,7 +118,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
 
     @Override
-    protected Collection<AnvilCustomRecipe> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<AnvilCustomRecipe> getEveryInstanceOfGeneric() {
         return ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().getRecipeList();
     }
 }

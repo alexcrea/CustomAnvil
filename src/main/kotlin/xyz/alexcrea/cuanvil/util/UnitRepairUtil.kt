@@ -1,6 +1,8 @@
 package xyz.alexcrea.cuanvil.util
 
+import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
@@ -11,7 +13,7 @@ object UnitRepairUtil {
     private const val DEFAULT_DEFAULT_UNIT_REPAIR = 0.25
 
     // Path to user default unit repair value
-    private const val UNIT_REPAIR_DEFAULT_PATH = "default_repair_amount"
+    public const val UNIT_REPAIR_DEFAULT_PATH = "default_repair_amount"
 
     /**
      * Get the % of repair by unit [other] will do to this [ItemStack].
@@ -22,40 +24,56 @@ object UnitRepairUtil {
     ): Double? {
         if (other == null) return null
         val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
-        // Get configuration section if exist
-        val otherName = other.customType.key.lowercase()
-        var section = config.getConfigurationSection(otherName)
-        if (section == null) {
-            section = config.getConfigurationSection(otherName.uppercase())
-            if (section == null) return null
 
-        }
-        // Get repair amount
-        var userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)
-        if (userDefault <= 0) {
-            userDefault = DEFAULT_DEFAULT_UNIT_REPAIR
-        }
+        val result = findRawRepairValue(this, other, config) ?: return null
 
-        return getRepairAmount(this, section, userDefault)
+        if(result > 0) return result
+
+        // Get default
+        val userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)
+        if (userDefault <= 0)
+            return DEFAULT_DEFAULT_UNIT_REPAIR
+        return userDefault
     }
 
-    /**
-     * Get the item % repaired by this configuration section of a unit repair.
-     * null if not found.
-     * If value is set to less than or equal to 0 then it will be set to default
-     */
-    private fun getRepairAmount(item: ItemStack, section: ConfigurationSection, default: Double): Double? {
-        val itemName = item.customType.key.lowercase()
-        val repairValue = if (section.isDouble(itemName)) {
-            section.getDouble(itemName)
-        } else if (section.isDouble(itemName.uppercase())) {
-            section.getDouble(itemName.uppercase())
-        } else {
-            return null
-        }
-        if (repairValue <= 0)
-            return default
-        return repairValue
+    private fun findRawRepairValue(
+        self: ItemStack,
+        other: ItemStack,
+        config: FileConfiguration
+    ): Double? {
+        val material = other.customType
+        val selfType = self.customType
+
+        val result = checkSection(config, material.toString(), selfType)
+        if (result != null) return result
+
+        return checkSection(config, material.key, selfType)
+    }
+
+    fun findRawRepairValue(
+        self: NamespacedKey,
+        other: NamespacedKey,
+        config: FileConfiguration
+    ): Double? {
+        val result = checkSection(config, other.toString(), self)
+        if (result != null) return result
+
+        return checkSection(config, other.key, self)
+    }
+
+    fun checkSection(
+        config: FileConfiguration,
+        path: String,
+        material: NamespacedKey
+    ): Double? {
+        val section = config.getConfigurationSection(path) ?: return null
+
+        if (section.isDouble(material.toString()))
+            return section.getDouble(material.toString())
+        if (section.isDouble(material.key))
+            return section.getDouble(material.key)
+
+        return null
     }
 
 }

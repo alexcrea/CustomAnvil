@@ -217,7 +217,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     @Override
-    protected Collection<NamespacedKey> getEveryDisplayableInstanceOfGeneric() {
+    protected Collection<NamespacedKey> getEveryInstanceOfGeneric() {
         return this.defaultMaterials;
     }
 
