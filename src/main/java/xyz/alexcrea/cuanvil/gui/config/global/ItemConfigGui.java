@@ -12,13 +12,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
-
-import java.util.Collections;
 
 public class ItemConfigGui extends ChestGui {
 
@@ -33,7 +32,7 @@ public class ItemConfigGui extends ChestGui {
         Pattern pattern = new Pattern(
                 "0000D0000",
                 "056000780",
-                "000000000"
+                "Q00000000"
         );
         PatternPane pane = new PatternPane(0, 0, 9, 3, pattern);
         addPane(pane);
@@ -49,53 +48,23 @@ public class ItemConfigGui extends ChestGui {
         pane.bindItem('D', new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
 
         // Enchantment Conflicts item
-        ItemStack enchantConflictItemstack = new ItemStack(Material.OAK_FENCE);
-        ItemMeta enchantConflictMeta = enchantConflictItemstack.getItemMeta();
-        assert enchantConflictMeta != null;
-
-        enchantConflictMeta.setDisplayName("§aEnchantment Conflict");
-        enchantConflictMeta.setLore(Collections.singletonList("§7Click here to open enchantment conflict menu"));
-        enchantConflictItemstack.setItemMeta(enchantConflictMeta);
-
-        GuiItem enchantConflictItem = GuiGlobalItems.goToGuiItem(enchantConflictItemstack, getEnchantConflictGui(material));
+        GuiItem enchantConflictItem = MainConfigGui.enchantConflictItem(getEnchantConflictGui(material));
         pane.bindItem('5', enchantConflictItem);
 
         // Group config items
-        ItemStack groupItemstack = new ItemStack(Material.CHEST);
-        ItemMeta groupMeta = groupItemstack.getItemMeta();
-        assert groupMeta != null;
-
-        groupMeta.setDisplayName("§aItem Groups");
-        groupMeta.setLore(Collections.singletonList("§7Click here to open item group menu"));
-        groupItemstack.setItemMeta(groupMeta);
-
-        GuiItem groupConfigItem = GuiGlobalItems.goToGuiItem(groupItemstack, getGroupConfigGui(material));
-
+        GuiItem groupConfigItem = MainConfigGui.groupConfigItem(getGroupConfigGui(material));
         pane.bindItem('6', groupConfigItem);
 
         // Unit repair item
-        ItemStack unirRepairItemstack = new ItemStack(Material.DIAMOND);
-        ItemMeta unitRepairMeta = unirRepairItemstack.getItemMeta();
-        assert unitRepairMeta != null;
-
-        unitRepairMeta.setDisplayName("§aUnit Repair");
-        unitRepairMeta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
-        unirRepairItemstack.setItemMeta(unitRepairMeta);
-
-        GuiItem unitRepairItem = GuiGlobalItems.goToGuiItem(unirRepairItemstack, getUnitRepairConfigGui(material));
+        GuiItem unitRepairItem = MainConfigGui.unitRepairItem(getUnitRepairConfigGui(material));
         pane.bindItem('7', unitRepairItem);
 
         // Custom recipe item
-        ItemStack customRecipeItemstack = new ItemStack(Material.CRAFTING_TABLE);
-        ItemMeta customRecipeMeta = customRecipeItemstack.getItemMeta();
-        assert customRecipeMeta != null;
-
-        customRecipeMeta.setDisplayName("§aCustom recipes");
-        customRecipeMeta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
-        customRecipeItemstack.setItemMeta(customRecipeMeta);
-
-        GuiItem customRecipeItem = GuiGlobalItems.goToGuiItem(customRecipeItemstack, getCustomRecipeConfigGui(material));
+        GuiItem customRecipeItem = MainConfigGui.customRecipeItem(getCustomRecipeConfigGui(material));
         pane.bindItem('8', customRecipeItem);
+
+        // quit item
+        pane.bindItem('Q', MainConfigGui.quitItem());
     }
 
     private EnchantConflictGui getEnchantConflictGui(@NotNull NamespacedKey material) {
@@ -139,10 +108,10 @@ public class ItemConfigGui extends ChestGui {
         if (customRecipeConfigGui == null) {
             customRecipeConfigGui = new CustomRecipeConfigGui(this);
             customRecipeConfigGui.setFilter(recipe -> {
-                if(isMaterial(recipe.getLeftItem(), material)) return true;
-                if(isMaterial(recipe.getRightItem(), material)) return true;
-                return isMaterial(recipe.getResultItem(), material);
-                }
+                        if (isMaterial(recipe.getLeftItem(), material)) return true;
+                        if (isMaterial(recipe.getRightItem(), material)) return true;
+                        return isMaterial(recipe.getResultItem(), material);
+                    }
             );
             customRecipeConfigGui.init();
         }
@@ -151,7 +120,7 @@ public class ItemConfigGui extends ChestGui {
     }
 
     private boolean isMaterial(@Nullable ItemStack item, @NotNull NamespacedKey material) {
-        if(item == null) return false;
+        if (item == null) return false;
 
         return material.equals(MaterialUtil.INSTANCE.getCustomType(item));
     }

@@ -86,7 +86,7 @@ class EditConfigExecutor : CASubCommand() {
 
     private fun processItem(sender: HumanEntity) {
         val item = sender.inventory.itemInMainHand
-        if(item.isAir) {
+        if (item.isAir) {
             sender.sendMessage("Cannot configure the item in hand")
             return
         }
