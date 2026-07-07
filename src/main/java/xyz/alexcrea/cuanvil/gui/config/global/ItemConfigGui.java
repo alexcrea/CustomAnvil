@@ -21,10 +21,10 @@ import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 
 public class ItemConfigGui extends ChestGui {
 
-    public EnchantConflictGui enchantConflictGui;
-    public GroupConfigGui groupConfigGui;
-    public UnitRepairConfigGui unitRepairConfigGui;
-    public CustomRecipeConfigGui customRecipeConfigGui;
+    private EnchantConflictGui enchantConflictGui;
+    private GroupConfigGui groupConfigGui;
+    private UnitRepairConfigGui unitRepairConfigGui;
+    private CustomRecipeConfigGui customRecipeConfigGui;
 
     public ItemConfigGui(@NotNull Material display, @NotNull NamespacedKey material) {
         super(3,

@@ -1,11 +1,13 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
@@ -36,14 +38,22 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         init();
     }
 
+    public EnchantLimitConfigGui(Gui parent) {
+        super("§8Enchantment Level Limit", parent);
+    }
+
     @Override
     public IntSettingsGui.IntSettingFactory createFactory(CAEnchantment enchant) {
+        return createFactory(enchant, this);
+    }
+
+    public static IntSettingsGui.IntSettingFactory createFactory(CAEnchantment enchant, ValueUpdatableGui parent) {
         String key = enchant.getKey().toString().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
         var defaultValue = enchant.defaultMaxLevel();
 
-        return new IntSettingsGui.IntSettingFactory(prettyKey + " Limit", this,
+        return new IntSettingsGui.IntSettingFactory(prettyKey + " Limit", parent,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Collections.singletonList(
                         "§7Maximum applied level of " + prettyKey

@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -28,6 +29,10 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
      */
     protected AbstractEnchantConfigGui(String title) {
         super(title);
+    }
+
+    protected AbstractEnchantConfigGui(String title, Gui parent) {
+        super(title, parent);
     }
 
     @Override

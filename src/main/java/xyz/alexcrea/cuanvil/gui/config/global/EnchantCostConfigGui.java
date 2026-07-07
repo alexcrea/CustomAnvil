@@ -1,14 +1,14 @@
 package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.enchant.EnchantmentProperties;
-import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
+import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -18,12 +18,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static io.delilaheve.util.ConfigOptions.ENCHANT_VALUES_ROOT;
+
 /**
  * Global Config gui for enchantment cost settings.
  */
 public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSettingsGui.EnchantCostSettingFactory> {
-
-    private static final String SECTION_NAME = "enchant_values";
 
     private static EnchantCostConfigGui INSTANCE = null;
 
@@ -37,18 +37,29 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      */
     public EnchantCostConfigGui() {
         super("§8Enchantment Level Cost");
-        if(INSTANCE == null) INSTANCE = this;
+        if (INSTANCE == null) INSTANCE = this;
 
         init();
     }
 
+    /**
+     * Constructor of this Global gui for enchantment cost settings.
+     */
+    public EnchantCostConfigGui(Gui parent) {
+        super("§8Enchantment Level Cost", parent);
+    }
+
     @Override
     public EnchantCostSettingsGui.EnchantCostSettingFactory createFactory(CAEnchantment enchant) {
+        return createFactory(enchant, this);
+    }
+
+    public static EnchantCostSettingsGui.EnchantCostSettingFactory createFactory(CAEnchantment enchant, ValueUpdatableGui parent) {
         String key = enchant.getKey().toString().toLowerCase(Locale.ENGLISH);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
-        return new EnchantCostSettingsGui.EnchantCostSettingFactory(prettyKey + " Cost", this,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+        return new EnchantCostSettingsGui.EnchantCostSettingFactory(prettyKey + " Cost", parent,
+                ENCHANT_VALUES_ROOT + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7How many level should " + prettyKey,
                         "§7cost when applied by book or by another item."
@@ -74,7 +85,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         lore.add("§7Book Cost: §e" + bookCost);
 
         List<String> displayLore = factory.getDisplayLore();
-        if(!displayLore.isEmpty()){
+        if (!displayLore.isEmpty()) {
             lore.add("");
             lore.addAll(displayLore);
         }
