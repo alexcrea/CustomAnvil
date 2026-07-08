@@ -33,6 +33,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
+import java.lang.reflect.Constructor
 import java.util.logging.Level
 
 object DependencyManager {
@@ -103,7 +104,7 @@ object DependencyManager {
             axPlayerWarpsCompatibility = AxPlayerWarpsDependency()
         }
 
-        if (pluginManager.isPluginEnabled("ItemsAdder")){
+        if (pluginManager.isPluginEnabled("ItemsAdder")) {
             val dependency = ItemsAdderDependency(pluginManager.getPlugin("ItemsAdder")!!)
             itemsAdderCompatibility = dependency
             genericDependencies.add(dependency)
@@ -116,10 +117,14 @@ object DependencyManager {
         if (pluginManager.isPluginEnabled("ItemsAdder"))
             genericDependencies.add(GenericPluginDependency(pluginManager.getPlugin("ItemsAdder")!!))
 
-        if (pluginManager.isPluginEnabled("SuperEnchants")){
+        if (pluginManager.isPluginEnabled("SuperEnchants")) {
             val compatibility = SuperEnchantDependency(pluginManager.getPlugin("SuperEnchants")!! as SuperEnchants)
-            if(compatibility.registerEnchantments())
+            if (compatibility.registerEnchantments())
                 genericDependencies.add(compatibility)
+        }
+
+        if (pluginManager.isPluginEnabled("EnchantedBook")) {
+            genericDependencies.add(EnchantedBookDependency(pluginManager.getPlugin("EnchantedBook")!!))
         }
 
         for (dependency in genericDependencies)
@@ -307,7 +312,7 @@ object DependencyManager {
 
     private fun unsafeCloneItem(item: ItemStack): ItemStack {
         val cloned = itemsAdderCompatibility?.tryClone(item)
-        if(cloned != null) return cloned
+        if (cloned != null) return cloned
 
         return item.clone()
     }
@@ -326,6 +331,14 @@ object DependencyManager {
 
     fun updateLore(item: ItemStack) {
         enchantmentSquaredCompatibility?.updateLore(item)
+    }
+
+
+    private val prepareAnvilConstructor =
+        PrepareAnvilEvent::class.java.constructors.first() as Constructor<PrepareAnvilEvent>
+
+    fun createFakeEvent(view: InventoryView, result: ItemStack?): PrepareAnvilEvent {
+        return prepareAnvilConstructor.newInstance(view, result)
     }
 
 }

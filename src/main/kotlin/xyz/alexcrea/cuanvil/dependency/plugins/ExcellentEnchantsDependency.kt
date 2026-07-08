@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.RegisteredListener
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.api.event.listener.CATreatAnvilResult2Event
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
@@ -118,8 +119,6 @@ class ExcellentEnchantsDependency {
     private lateinit var handleRechargeMethod: Method
     private lateinit var handleCombineMethod: Method
 
-    private val prepareAnvilConstructor = PrepareAnvilEvent::class.java.constructors.first() as Constructor<PrepareAnvilEvent>
-
     fun redirectListeners() {
         val toUnregister = ArrayList<RegisteredListener>()
         // get required PrepareAnvilEvent listener
@@ -226,7 +225,7 @@ class ExcellentEnchantsDependency {
 
         val first: ItemStack = treatInput(event.leftItem)
         val second: ItemStack = treatInput(event.rightItem)
-        val fakeEvent = prepareAnvilConstructor.newInstance(event.view, result)
+        val fakeEvent = DependencyManager.createFakeEvent(event.view, result)
 
         handleCombineMethod.invoke(this.usedAnvilListener, fakeEvent, first, second, result)
 

@@ -40,6 +40,8 @@ Custom Items support is considered unstable. If you find issue please report it 
 - [Disenchantment](https://www.spigotmc.org/resources/disenchantment-1-21-1-1-20-6-new-book-splitting-mechanics.110741/) by H7KZ
   Partially use Custom Anvil maximum XP settings (>= 6.1.5)
 
+- [EnchantedBook](https://modrinth.com/plugin/enchantedbook) by Minacle
+
 - [HavenBags](https://www.spigotmc.org/resources/havenbags-shulker-like-player-bound-bags-1-17-1-21-4.110420/) by hyperdefined
   For bag upgrade and skin via anvil. (version >= 1.31.0)
 

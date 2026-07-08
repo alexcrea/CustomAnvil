@@ -267,7 +267,7 @@ class DiagnosticExecutor: CASubCommand() {
         try {
             val fakeInv = Bukkit.createInventory(player, InventoryType.ANVIL)
             invView = player.openInventory(fakeInv)!!
-            event = PrepareAnvilEvent(invView, result)
+            event = DependencyManager.createFakeEvent(invView, result)
         } catch (e: Throwable) {
             // Help
             val menuTypeClazz = Class.forName("org.bukkit.inventory.MenuType")
