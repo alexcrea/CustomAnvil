@@ -128,7 +128,7 @@ public class EnchantmentApi {
      * @return The custom anvil enchantment of this key. null if not found.
      */
     @Nullable
-    public static CAEnchantment getByKey(@NotNull NamespacedKey key) {
+    public static CAEnchantment getByKey(@Nullable NamespacedKey key) {
         return CAEnchantment.getByKey(key);
     }
 

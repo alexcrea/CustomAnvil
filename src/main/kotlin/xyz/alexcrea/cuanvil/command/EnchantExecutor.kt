@@ -2,10 +2,14 @@ package xyz.alexcrea.cuanvil.command
 
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
+import io.delilaheve.util.ItemUtil.isEnchantedBook
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
+import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
 class EnchantExecutor : CASubCommand() {
@@ -37,22 +41,18 @@ class EnchantExecutor : CASubCommand() {
                 sender.sendMessage("Missing enchantment parameter")
                 return true
             }
-
-            1 -> {
-                sender.sendMessage("Missing level parameter")
-                return true
-            }
         }
 
-        val enchants = EnchantmentApi.getListByName(args[0].lowercase())
-        if (enchants.isEmpty()) {
+        val enchant = firstEnchantment(args[0])
+        if (enchant == null) {
             sender.sendMessage("Enchantment not found: ${args[0]}")
             return true
         }
 
-        val enchant = enchants.iterator().next()
+        val level = if (args.size > 1)
+            args[1].toIntOrNull()?.coerceIn(0, ConfigOptions.ENCHANT_LIMIT)
+        else 1
 
-        val level = args[1].toIntOrNull()?.coerceIn(0, ConfigOptions.ENCHANT_LIMIT)
         if (level == null) {
             sender.sendMessage("Invalid number: ${args[1]}")
             return true
@@ -66,8 +66,15 @@ class EnchantExecutor : CASubCommand() {
 
         if (level == 0) {
             enchant.removeFrom(inHand)
+
+            if (inHand.isEnchantedBook() && EnchantmentApi.getEnchantments(inHand).isEmpty())
+                inHand.type = Material.BOOK
+
             sender.sendMessage("${enchant.prettyName} removed")
         } else {
+            if (Material.BOOK == inHand.type)
+                inHand.type = Material.ENCHANTED_BOOK
+
             enchant.addEnchantmentUnsafe(inHand, level)
             sender.sendMessage("${enchant.prettyName} set to level $level")
         }
@@ -92,10 +99,8 @@ class EnchantExecutor : CASubCommand() {
         sender: HumanEntity,
         name: String
     ): Collection<String> {
-        val enchants = EnchantmentApi.getListByName(name.lowercase())
-        if (enchants.isEmpty()) return listOf()
+        val enchant = firstEnchantment(name) ?: return listOf()
 
-        val enchant = enchants.iterator().next()
         val limit = ConfigOptions.enchantLimit(enchant)
         val result = mutableListOf<String>()
 
@@ -108,6 +113,14 @@ class EnchantExecutor : CASubCommand() {
             result.add("0")
 
         return result
+    }
+
+    private fun firstEnchantment(name: String): CAEnchantment? {
+        val enchants = EnchantmentApi.getListByName(name.lowercase())
+        if (!enchants.isEmpty())
+            return enchants.iterator().next()
+
+        return EnchantmentApi.getByKey(NamespacedKey.fromString(name))
     }
 
 }

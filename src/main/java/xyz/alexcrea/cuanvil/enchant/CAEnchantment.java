@@ -230,7 +230,7 @@ public interface CAEnchantment {
      * @param key The enchantment key
      * @return Array of enchantment.
      */
-    static @Nullable CAEnchantment getByKey(@NotNull NamespacedKey key){
+    static @Nullable CAEnchantment getByKey(@Nullable NamespacedKey key){
         return CAEnchantmentRegistry.getInstance().getByKey(key);
     }
 

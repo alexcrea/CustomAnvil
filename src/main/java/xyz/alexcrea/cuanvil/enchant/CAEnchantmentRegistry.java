@@ -151,7 +151,7 @@ public class CAEnchantmentRegistry {
      * @return Registered enchantment. null if absent.
      */
     @Nullable
-    public CAEnchantment getByKey(@NotNull NamespacedKey key) {
+    public CAEnchantment getByKey(@Nullable NamespacedKey key) {
         return byKeyMap.get(key);
     }
 
