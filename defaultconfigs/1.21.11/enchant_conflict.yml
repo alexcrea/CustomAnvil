@@ -275,10 +275,7 @@ restriction_sweeping_edge:
   - enchanted_book
   - swords
 
-# Do not exist in 1.18,  that mean useInFuture will be set to true
-# useInFuture set to true also mean it will not warn if there is an issue
 restriction_swift_sneak:
-  useInFuture: true
   enchantments:
   - minecraft:swift_sneak
   notAffectedGroups:

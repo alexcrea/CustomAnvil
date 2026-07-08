@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.group
 import io.delilaheve.CustomAnvil
 import org.bukkit.NamespacedKey
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment
@@ -32,10 +31,6 @@ class EnchantConflictManager {
 
         // Path for the maximum number of enchantment before validating the conflict
         const val ENCH_MAX_PATH = "maxEnchantmentBeforeConflict"
-
-        // Path for a flag: if the enchantment will be used in the last supported version
-        // TODO maybe replace this system by a list of "future" enchantment.
-        private const val FUTURE_USE_PATH = "useInFuture"
 
         // Default name for a joining group
         const val DEFAULT_GROUP_NAME = "joinedGroup"
@@ -101,8 +96,6 @@ class EnchantConflictManager {
         itemManager: ItemGroupManager,
         conflictName: String
     ): EnchantConflictGroup {
-        // Is it planed for the future
-        val futureUse = section.getBoolean(FUTURE_USE_PATH, false)
         // Create conflict
         val conflict = createConflictObject(section, itemManager, conflictName)
         // Read and add enchantment to conflict
@@ -110,17 +103,13 @@ class EnchantConflictManager {
         for (enchantName in enchantList) {
             val enchants = getEnchantByIdentifier(enchantName)
             if (enchants.isEmpty()) {
-                if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
-                    CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
-                }
+                CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
                 continue
             }
             conflict.addEnchantments(enchants)
         }
         if (conflict.getEnchants().isEmpty()) {
-            if (!futureUse) { //TODO future use will be deprecated once the new update system is finished
-                CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not do anything")
-            }
+            CustomAnvil.instance.logger.warning("Conflict $conflictName do not have valid enchantment, it will not do anything")
         }
 
         val conflictsAfterLevel = section.getConfigurationSection(CONFLICT_AFTER_LEVEL_LIST_PATH)
