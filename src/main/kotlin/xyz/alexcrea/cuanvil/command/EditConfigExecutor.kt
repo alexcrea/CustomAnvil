@@ -20,6 +20,10 @@ class EditConfigExecutor : CASubCommand {
         return sender.hasPermission(CustomAnvil.editConfigPermission)
     }
 
+    override fun description(): String {
+        return "Gui to edit the plugin's config"
+    }
+
     override fun executeCommand(
         sender: CommandSender,
         cmd: Command,
@@ -68,7 +72,7 @@ class EditConfigExecutor : CASubCommand {
                 return
             }
         } else {
-            enchantToFilter = HashSet(EnchantmentApi.getListByName(args[1].lowercase()))
+            enchantToFilter = HashSet(EnchantmentApi.getByName(args[1].lowercase()))
 
             if (enchantToFilter.isEmpty()) {
                 sender.sendMessage("No enchantment found with the name \"${args[1]}\"")
@@ -112,15 +116,6 @@ class EditConfigExecutor : CASubCommand {
                 else -> listOf()
             }
         )
-    override fun tabCompleter(
-        sender: CommandSender,
-        args: Array<out String>,
-        list: MutableList<String>
-    ) {
-    }
-
-    override fun description(): String {
-        return "Gui to edit the plugin's config"
     }
 
 }

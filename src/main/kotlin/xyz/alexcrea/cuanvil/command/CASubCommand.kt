@@ -23,7 +23,7 @@ interface CASubCommand {
 
     fun description(): String
 
-    protected fun allEnchantmentsByName(): Collection<String> {
+    fun allEnchantmentsByName(): Collection<String> {
         val names = mutableSetOf<String>()
         for (enchantment in CAEnchantmentRegistry.getInstance().values()) {
             names.add(enchantment.name)

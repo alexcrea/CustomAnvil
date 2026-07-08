@@ -12,7 +12,7 @@ import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
-class EnchantExecutor : CASubCommand() {
+class EnchantExecutor : CASubCommand {
 
 
     override fun allowed(sender: CommandSender): Boolean {
