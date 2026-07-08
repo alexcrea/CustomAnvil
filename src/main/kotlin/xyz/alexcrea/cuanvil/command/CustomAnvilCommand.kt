@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import xyz.alexcrea.cuanvil.util.MetricsUtil
-import java.util.ArrayList
 
 class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
 
@@ -18,13 +17,14 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
 
     private val editConfigCommand = EditConfigExecutor()
     private val helpCommand = HelpExecutor()
-    private val commands = ImmutableMap.of(
+    private val commands: ImmutableMap<String, CASubCommand> = ImmutableMap.of(
         "gui", editConfigCommand,
         "config", editConfigCommand,
         "reload", ReloadExecutor(),
         "diagnostic", DiagnosticExecutor(),
         "debug", DebugToggleExecutor(),
         "help", helpCommand,
+        "enchant", EnchantExecutor(),
     )
 
     init {
@@ -95,9 +95,11 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         }
 
         //assumed all provided tab completed string are lowercase
+        val prefix = args[args.size - 1]
         return result.stream()
-            .filter { it.startsWith(args[args.size - 1]) }
+            .filter { it.startsWith(prefix) }
             .sorted()
             .toList()
     }
+
 }

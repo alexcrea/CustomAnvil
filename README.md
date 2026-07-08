@@ -39,7 +39,8 @@ ca.bypass.level: Allow player to bypass every level limit (no custom limit)
 
 # Command permissions
 ca.command.reload: Allow administrator to reload the plugin's configs
-ca.command.diagnostic: Allow adminastator to diagnistic some simple problem with the plugin
+ca.command.diagnostic: Get debug information about the plugin and server
+ca.command.enchantment: Allows to set enchantment to holden item
 ca.config.edit: Allow administrator to edit the plugin's config in game
 
 # -----------------------------------------------------------------------------

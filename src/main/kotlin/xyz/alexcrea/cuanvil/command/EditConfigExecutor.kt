@@ -7,7 +7,6 @@ import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
-import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.ItemConfigGui
@@ -103,16 +102,6 @@ class EditConfigExecutor : CASubCommand() {
     //  Tab completer
     // ---------------
 
-    private fun allEnchantmentsByName(): Collection<String> {
-        val names = mutableSetOf<String>()
-        for (enchantment in CAEnchantmentRegistry.getInstance().values()) {
-            names.add(enchantment.name)
-            names.add(enchantment.key.toString())
-        }
-
-        return names
-    }
-
     override fun tabCompleter(sender: CommandSender, args: Array<out String>, list: MutableList<String>) {
         list.addAll(
             when (args.size) {
@@ -127,7 +116,6 @@ class EditConfigExecutor : CASubCommand() {
                 else -> listOf()
             }
         )
-
     }
 
 }

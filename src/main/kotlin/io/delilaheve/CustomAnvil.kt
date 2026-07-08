@@ -57,6 +57,8 @@ open class CustomAnvil : JavaPlugin() {
         // Permission string required to edit the plugin's config
         const val editConfigPermission = "ca.config.edit"
 
+        // Permission string required to edit the plugin's config
+        const val giveEnchantmentPermission = "ca.command.enchantment"
 
         // Command Name to reload the config
         const val commandReloadName = "anvilconfigreload"

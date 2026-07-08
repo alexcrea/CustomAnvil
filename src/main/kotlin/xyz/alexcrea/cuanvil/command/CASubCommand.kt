@@ -4,6 +4,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 
 abstract class CASubCommand: CommandExecutor {
 
@@ -41,6 +42,16 @@ abstract class CASubCommand: CommandExecutor {
 
     open fun description(): String {
         return "no description"
+    }
+
+    protected fun allEnchantmentsByName(): Collection<String> {
+        val names = mutableSetOf<String>()
+        for (enchantment in CAEnchantmentRegistry.getInstance().values()) {
+            names.add(enchantment.name)
+            names.add(enchantment.key.toString())
+        }
+
+        return names
     }
 
 }

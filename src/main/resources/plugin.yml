@@ -43,6 +43,9 @@ permissions:
   ca.command.diagnostic:
     default: op
     description: Get debug information about the plugin and server
+  ca.command.enchantment:
+    default: op
+    description: Allows to set enchantment to holden item
   ca.config.edit:
     default: op
     description: Allow administrator to edit the plugin's config in game
