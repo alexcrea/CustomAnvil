@@ -130,9 +130,9 @@ class DiagnosticExecutor: CASubCommand() {
             message.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stb.toString())
             message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text("§7Click to copy"))
 
-            sender.spigot().sendMessage(message);
+            sender.spigot().sendMessage(message)
         } else {
-            sender.sendMessage(stb.toString());
+            sender.sendMessage(stb.toString())
         }
 
         return true
@@ -268,7 +268,7 @@ class DiagnosticExecutor: CASubCommand() {
             val fakeInv = Bukkit.createInventory(player, InventoryType.ANVIL)
             invView = player.openInventory(fakeInv)!!
             event = DependencyManager.createFakeEvent(invView, result)
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             // Help
             val menuTypeClazz = Class.forName("org.bukkit.inventory.MenuType")
             val anvilTypeField = menuTypeClazz.getField("ANVIL")

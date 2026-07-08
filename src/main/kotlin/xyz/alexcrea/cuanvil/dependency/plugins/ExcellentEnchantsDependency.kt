@@ -14,7 +14,6 @@ import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEPreV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAEEV5_4Enchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CALegacyEEEnchantment
-import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import su.nightexpress.excellentenchants.api.EnchantRegistry as V5EnchantRegistry
 import su.nightexpress.excellentenchants.enchantment.impl.universal.CurseOfFragilityEnchant as LegacyCurseOfFragilityEnchant
@@ -48,7 +47,7 @@ class ExcellentEnchantsDependency {
 
                 listenerVersion = value
                 break
-            } catch (ignored: ClassNotFoundException) {
+            } catch (_: ClassNotFoundException) {
             }
         }
 
@@ -61,7 +60,7 @@ class ExcellentEnchantsDependency {
         var isModernCurseOfFragility = true
         try {
             Class.forName("su.nightexpress.excellentenchants.enchantment.universal.CurseOfFragilityEnchant")
-        } catch (ignored: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
             isModernCurseOfFragility = false
         }
 

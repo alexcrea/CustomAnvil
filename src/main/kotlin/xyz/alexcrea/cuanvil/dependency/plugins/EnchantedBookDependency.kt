@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.dependency.plugins
 
+import org.bukkit.event.Event
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
@@ -10,17 +11,21 @@ class EnchantedBookDependency(plugin: Plugin) : GenericPluginDependency(plugin) 
 
     override fun testAnvilResult(event: InventoryClickEvent): Boolean {
         val view = event.view
+        val inv = event.inventory
 
-        val current = view.getItem(ANVIL_OUTPUT_SLOT)
-        view.setItem(ANVIL_OUTPUT_SLOT, null)
-        val fakeEvent = DependencyManager.createFakeEvent(event.view, null)
+        //TODO use view here (v2)
+        val current = inv.getItem(ANVIL_OUTPUT_SLOT)
+        inv.setItem(ANVIL_OUTPUT_SLOT, null)
+        val fakeEvent = DependencyManager.createFakeEvent(view, null)
 
         if (testPrepareAnvil(fakeEvent)) {
-            event.isCancelled = false
+            event.result = Event.Result.DEFAULT
+
+            inv.setItem(ANVIL_INPUT_LEFT, fakeEvent.result)
             return true
         }
 
-        view.setItem(ANVIL_INPUT_LEFT, current)
+        inv.setItem(ANVIL_INPUT_LEFT, current)
         return false
     }
 
