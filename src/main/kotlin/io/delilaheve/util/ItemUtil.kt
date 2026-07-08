@@ -1,9 +1,9 @@
 package io.delilaheve.util
 
+import org.bukkit.Material
 import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
-import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import xyz.alexcrea.cuanvil.util.MaxDamageCheckerUtil
@@ -21,11 +21,11 @@ object ItemUtil {
      */
     fun ItemStack.isEnchantedBook() = type == ENCHANTED_BOOK
 
-    private fun maxDamage(damageable: Damageable): Int {
+    private fun maxDamage(type: Material, damageable: Damageable): Int {
         val ver = UpdateUtils.currentMinecraftVersion()
-        if(ver.major <= 1 && ver.minor <= 20 && ver.patch < 5) return Integer.MAX_VALUE
+        if(ver.major <= 1 && ver.minor <= 20 && ver.patch < 5) return type.maxDurability.toInt()
 
-        return MaxDamageCheckerUtil.getMaxDamage(damageable)
+        return MaxDamageCheckerUtil.getMaxDamage(type, damageable)
     }
 
     /**
@@ -37,23 +37,22 @@ object ItemUtil {
         first: ItemStack,
         second: ItemStack
     ): Boolean {
-        (itemMeta as? Damageable)?.let {
-            val durability = type.maxDurability.toInt()
-            val firstDamage = (first.itemMeta as? Damageable)?.damage ?: 0
-            if (firstDamage == 0) return false
+        val meta = itemMeta
+        if(meta !is Damageable) return false
 
-            val firstDurability = durability - firstDamage
-            val secondDamage = (second.itemMeta as? Damageable)?.damage ?: 0
-            val secondDurability = durability - secondDamage
-            val combinedDurability = firstDurability + secondDurability
-            val newDurability = min(combinedDurability, durability)
+        val maxDamage = maxDamage(type, meta)
+        val damage = (first.itemMeta as? Damageable)?.damage ?: 0
+        if (damage == 0) return false
 
-            val maxDamage = maxDamage(it)
-            it.damage = min(durability - newDurability, maxDamage)
-            itemMeta = it
-            return true
-        }
-        return false
+        val firstDurability = maxDamage - damage
+        val secondDamage = (second.itemMeta as? Damageable)?.damage ?: 0
+        val secondDurability = maxDamage - secondDamage
+        val combinedDurability = firstDurability + secondDurability
+        val newDurability = min(combinedDurability, maxDamage)
+
+        meta.damage = min(maxDamage - newDurability, maxDamage)
+        this.itemMeta = meta
+        return true
     }
 
     fun ItemStack.unitRepair(

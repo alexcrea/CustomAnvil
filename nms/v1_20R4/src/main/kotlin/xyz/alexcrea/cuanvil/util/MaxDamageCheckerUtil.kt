@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.util
 
+import org.bukkit.Material
 import org.bukkit.inventory.meta.Damageable
 
 // I LOVE support of old versions and needing to do modules like that
@@ -10,8 +11,8 @@ object MaxDamageCheckerUtil {
     /**
      * @return max damage or int max if not set
       */
-    fun getMaxDamage(meta: Damageable): Int {
-        if(!meta.hasMaxDamage()) return Integer.MAX_VALUE
+    fun getMaxDamage(type: Material, meta: Damageable): Int {
+        if(!meta.hasMaxDamage()) return type.maxDurability.toInt()
         return meta.maxDamage
     }
 
