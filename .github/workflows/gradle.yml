@@ -8,12 +8,9 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "v1.x.x", "v2.x.x" ]
-  pull_request:
-    branches: [ "v1.x.x", "v2.x.x" ]
   release:
     types: [published]
+    branches: [ "v1.x.x" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -35,7 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: |
-            21
+            25
           distribution: 'temurin'
           cache: gradle
 
@@ -115,27 +112,6 @@ jobs:
             build/libs/${{ env.ONLINE_JAR_NAME }}
             build/libs/${{ env.OFFLINE_JAR_NAME }}
 
-      - name: Hangar release
-        if: ${{ (github.event_name != 'release' || github.event_name != 'push') && github.repository_owner == 'alexcrea' && success() }}
-        env:
-          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
-          RELEASE_CHANGELOG: ${{ github.event.release.body }}
-        run: ./gradlew publishAllPublicationsToHangar --stacktrace
-
-      - name: Modrinth publish alpha
-        if: ${{ github.event_name == 'push' && github.repository_owner == 'alexcrea' && success() }}
-        uses: cloudnode-pro/modrinth-publish@v2
-        with:
-          token: ${{ secrets.MODRINTH_TOKEN }}
-          project: S75Ueiq9
-          name: dev-${{ env.SMALL_COMMIT_HASH }}
-          version: dev-${{ env.SMALL_COMMIT_HASH }}
-          loaders: ${{ env.MODRINTH_PLATFORMS }}
-          game-versions: ${{ env.MODRINTH_VERSIONS }}
-          channel: alpha
-          files: build/libs/${{ env.ONLINE_JAR_NAME }}
-          changelog: ${{ github.event.head_commit.message }}
-
       - name: Modrinth publish release
         if: ${{ github.event_name == 'release' && github.repository_owner == 'alexcrea' && success() }}
         uses: cloudnode-pro/modrinth-publish@v2
@@ -156,8 +132,7 @@ jobs:
         with:
           webhook-url: ${{ secrets.RELEASE_WEBHOOK_URL }}
           content: |
-            ${{ github.event.release.prerelease == false && '<@&1338546156325568642>' || '<@&1352296092989001768>' }}
-            # New ${{ github.event.release.prerelease && 'beta ' || '' }}version of custom anvil ! <:CustomAnvil:1262550667986342001>([Modrinth](https://modrinth.com/plugin/customanvil), [Hangar](https://hangar.papermc.io/alexcrea/CustomAnvil) and [GitHub](${{ github.event.release.html_url }}) links)
-            -# note: automated release. spigot is not uploaded yet.
+            <@&1525259349423947867>
+            # New bugfix for CustomAnvil v1 ! <:CustomAnvil:1262550667986342001> [Modrinth](https://modrinth.com/plugin/customanvil) and [GitHub](${{ github.event.release.html_url }}) links)
 
             ${{ github.event.release.body }}
