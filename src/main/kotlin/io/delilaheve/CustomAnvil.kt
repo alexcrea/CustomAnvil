@@ -11,7 +11,6 @@ import xyz.alexcrea.cuanvil.command.EditConfigExecutor
 import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
-import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
@@ -25,6 +24,7 @@ import xyz.alexcrea.cuanvil.update.ModrinthUpdateChecker
 import xyz.alexcrea.cuanvil.update.PluginSetDefault
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 import xyz.alexcrea.cuanvil.update.UpdateUtils
+import xyz.alexcrea.cuanvil.update.Version
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.io.File
 import java.io.FileReader
@@ -203,6 +203,13 @@ open class CustomAnvil : JavaPlugin() {
     }
 
     private fun legacyCheck() {
+        val currentVersion = UpdateUtils.currentMinecraftVersion()
+        if (currentVersion.greaterEqual(Version(1, 21, 0))) {
+            logger.warning("You are running a Minecraft version above or equal to 1.21.0")
+            logger.warning("Please use CustomAnvil v2 instead if you wish to use the plugin with this version.")
+            Bukkit.getPluginManager().disablePlugin(this)
+            return
+        }
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
         if (potentialPlugin != null) {
@@ -215,10 +222,6 @@ open class CustomAnvil : JavaPlugin() {
         if(!isPaper) {
             logger.warning("It seems you are using spigot")
             logger.warning("Please take notice that spigot is less supported than paper and derivatives")
-            if(MinecraftVersionUtil.isTooNewForSpigot) {
-                logger.warning("If replace too expensive is not working this is likely because of spigot")
-                logger.warning("As native nms is not supported for spigot starting 26.1")
-            }
         }
 
         val loader = if(isPaper) "paper" else "spigot"

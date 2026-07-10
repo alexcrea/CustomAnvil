@@ -51,8 +51,4 @@ object MinecraftVersionUtil {
             }
         }
 
-    val isTooNewForSpigot: Boolean get() {
-        return UpdateUtils.currentMinecraftVersion().major != 1
-    }
-
 }
