@@ -334,7 +334,7 @@ object DependencyManager {
     private val prepareAnvilConstructor =
         PrepareAnvilEvent::class.java.constructors.first() as Constructor<PrepareAnvilEvent>
 
-    fun createFakeEvent(view: InventoryView, result: ItemStack?): PrepareAnvilEvent {
+    fun createFakeEvent(view: AnvilView, result: ItemStack?): PrepareAnvilEvent {
         return prepareAnvilConstructor.newInstance(view, result)
     }
 

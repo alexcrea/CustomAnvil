@@ -2,17 +2,18 @@ package xyz.alexcrea.cuanvil.util
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import org.bukkit.entity.HumanEntity
-import org.bukkit.inventory.InventoryView
+import org.bukkit.inventory.view.AnvilView
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import java.util.HashMap
 import java.util.UUID
 
+@Suppress("UnstableApiUsage")
 object AnvilTitleUtil {
 
     private val runTaskMap = HashMap<UUID, ScheduledTask>()
 
-    private fun actualRename(view: InventoryView, name: String, player: HumanEntity, anvilDialog: AnvilRenameDialog) {
+    private fun actualRename(view: AnvilView, name: String, player: HumanEntity, anvilDialog: AnvilRenameDialog) {
         runTaskMap.remove(player.uniqueId)
         if (view.title == name) return
 
@@ -24,7 +25,7 @@ object AnvilTitleUtil {
 
     // We don't want to rename instantly it is causing issue with rename text
     // especially as it can "override" current ui when it is rename ui time but rename ui also need some delay
-    fun rename(view: InventoryView, name: String, player: HumanEntity, anvilDialog: AnvilRenameDialog, plugin: Plugin) {
+    fun rename(view: AnvilView, name: String, player: HumanEntity, anvilDialog: AnvilRenameDialog, plugin: Plugin) {
         runTaskMap.remove(player.uniqueId)?.cancel()
 
         val task = player.scheduler.runDelayed(

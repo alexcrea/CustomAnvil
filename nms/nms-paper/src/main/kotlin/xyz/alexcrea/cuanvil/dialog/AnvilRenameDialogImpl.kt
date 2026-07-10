@@ -18,8 +18,8 @@ import org.bukkit.craftbukkit.inventory.CraftInventoryView
 import org.bukkit.craftbukkit.inventory.view.CraftAnvilView
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.PrepareAnvilEvent
-import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.view.AnvilView
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.Plugin
 import java.util.*
@@ -121,7 +121,7 @@ class AnvilRenameDialogImpl(
         }
     }
 
-    private fun setResult(player: HumanEntity, view: InventoryView, result: String?) {
+    private fun setResult(player: HumanEntity, view: AnvilView, result: String?) {
         val defaultName = itemDefaultName(view.getItem(0))
         if (defaultName == result) {
             setName(player, view, "", null)
@@ -129,7 +129,7 @@ class AnvilRenameDialogImpl(
         } else setName(player, view, result, result)
     }
 
-    private fun setName(player: HumanEntity, view: InventoryView, name: String?, rename: String?) {
+    private fun setName(player: HumanEntity, view: AnvilView, name: String?, rename: String?) {
         val menu = (containerField.get(view) as AnvilMenu)
         val isSameName = menu.itemName == name
         menu.itemName = rename

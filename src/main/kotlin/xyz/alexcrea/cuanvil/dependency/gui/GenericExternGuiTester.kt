@@ -1,10 +1,11 @@
 package xyz.alexcrea.cuanvil.dependency.gui
 
-import org.bukkit.inventory.InventoryView
+import org.bukkit.inventory.view.AnvilView
 import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import java.lang.reflect.Method
 
+@Suppress("UnstableApiUsage")
 class GenericExternGuiTester {
 
     companion object {
@@ -21,7 +22,7 @@ class GenericExternGuiTester {
     var testedClass: String? = null
     lateinit var getHandleMethod: Method
 
-    private fun getContainerClass(view: InventoryView): Class<Any>? {
+    private fun getContainerClass(view: AnvilView): Class<Any>? {
         if(!testedClass.contentEquals(view.javaClass.name))
             return null
 
@@ -64,7 +65,7 @@ class GenericExternGuiTester {
     }
 
     // Try if were in another plugin anvil inventory
-    fun testIfGui(view: InventoryView): Boolean {
+    fun testIfGui(view: AnvilView): Boolean {
         // In case we are in a test environment
         if(isInTest()) return false
 

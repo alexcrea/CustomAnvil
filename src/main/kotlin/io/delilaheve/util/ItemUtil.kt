@@ -5,7 +5,6 @@ import org.bukkit.Material.ENCHANTED_BOOK
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import xyz.alexcrea.cuanvil.update.UpdateUtils
-import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import kotlin.math.ceil
 import kotlin.math.max
@@ -49,7 +48,6 @@ object ItemUtil {
         val secondDurability = maxDamage - secondDamage
         val combinedDurability = firstDurability + secondDurability
         val newDurability = min(combinedDurability, maxDamage)
-            val maxDamage = if(it.hasMaxDamage()) it.maxDamage else Int.MAX_VALUE
 
         meta.damage = min(maxDamage - newDurability, maxDamage)
         this.itemMeta = meta
