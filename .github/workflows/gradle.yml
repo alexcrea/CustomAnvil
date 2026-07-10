@@ -9,11 +9,12 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "v1.x.x", "v2.x.x", "v3.x.x" ]
+    branches: [ "v2.x.x" ]
   pull_request:
-    branches: [ "v1.x.x", "v2.x.x", "v3.x.x" ]
+    branches: [ "v2.x.x" ]
   release:
     types: [published]
+    branches: [ "v2.x.x" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -35,7 +36,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: |
-            21
+            25
           distribution: 'temurin'
           cache: gradle
 
