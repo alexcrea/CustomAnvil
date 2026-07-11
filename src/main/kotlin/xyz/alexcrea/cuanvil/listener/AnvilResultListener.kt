@@ -4,13 +4,16 @@ import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
 import io.delilaheve.util.ItemUtil.canMergeWith
 import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.AnvilInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.inventory.view.AnvilView
@@ -20,6 +23,7 @@ import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.AnvilResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.CustomCraftResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.LoreEditResult
 import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.UnitRepairResult
+import xyz.alexcrea.cuanvil.config.AnvilFinishOptions
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.economy.EconomyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
@@ -349,7 +353,9 @@ class AnvilResultListener : Listener {
             player.inventory.setItem(slotDestination.slot, result.item)
         }
 
-        // TODO probably anvil damage & sound here ??
+        if (event.click != ClickType.MIDDLE)
+            handleAnvilMechanic(player, view, player.gameMode != GameMode.CREATIVE)
+
         return true
     }
 
@@ -374,6 +380,68 @@ class AnvilResultListener : Listener {
             if ((view.maximumRepairCost <= sum)
                 || (player.level < sum)
             ) cost.valid = false
+        }
+    }
+
+    // Process both sound & degradation
+    private fun handleAnvilMechanic(player: HumanEntity, view: AnvilView, canDegrade: Boolean) {
+        // ok so we do not provide a getLocation on view ?
+        val inv = view.topInventory as? AnvilInventory
+        val location = inv?.location
+
+        val wasDestroyed = canDegrade && tryDegradeAnvil(view, location)
+        tryPlaySound(location, player, wasDestroyed)
+    }
+
+    private fun tryDegradeAnvil(view: AnvilView, location: Location?): Boolean {
+        val world = location?.world ?: return false
+        if (Math.random() > AnvilFinishOptions.degradation_chance) return false
+
+        val block = world.getBlockAt(location)
+
+        val next = when (block.type) {
+            Material.ANVIL -> Material.CHIPPED_ANVIL
+            Material.CHIPPED_ANVIL -> Material.DAMAGED_ANVIL
+            Material.DAMAGED_ANVIL -> Material.AIR
+            else -> return false
+        }
+
+        block.type = next
+
+        if (next == Material.AIR) {
+            view.close()
+            return true
+        }
+
+        return false
+    }
+
+    private fun tryPlaySound(
+        location: Location?,
+        player: HumanEntity,
+        wasDestroyed: Boolean,
+    ) {
+        val world = location?.world
+
+        if (!AnvilFinishOptions.sound_enabled) return
+
+        val sound = AnvilFinishOptions.getAnvilSound(wasDestroyed)
+        if(world == null) {
+            player.world.playSound(
+                player,
+                sound.sound,
+                sound.category,
+                sound.volume,
+                sound.pitch,
+            )
+        } else {
+            world.playSound(
+                location,
+                sound.sound,
+                sound.category,
+                sound.volume,
+                sound.pitch,
+            )
         }
     }
 
