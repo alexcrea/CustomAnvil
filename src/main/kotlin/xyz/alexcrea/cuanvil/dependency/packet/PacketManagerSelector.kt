@@ -12,7 +12,7 @@ object PacketManagerSelector {
 
     fun selectPacketManager(forceProtocolib: Boolean): PacketManager {
         // Try to find version
-        if(DependencyManager.externGuiTester.isInTest())
+        if(DependencyManager.inTesting)
             return NoPacketManager()
 
         return if (forceProtocolib)

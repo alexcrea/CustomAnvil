@@ -42,6 +42,8 @@ object DependencyManager {
     lateinit var packetManager: PacketManager
     var externGuiTester: GenericExternGuiTester = GenericExternGuiTester()
 
+    val inTesting = externGuiTester.isInTest()
+
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
     var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null

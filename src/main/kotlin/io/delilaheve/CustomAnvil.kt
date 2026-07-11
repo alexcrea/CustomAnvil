@@ -204,7 +204,8 @@ open class CustomAnvil : JavaPlugin() {
 
     private fun legacyCheck() {
         val currentVersion = UpdateUtils.currentMinecraftVersion()
-        if (currentVersion.greaterEqual(Version(1, 21, 0))) {
+        if (currentVersion.greaterEqual(Version(1, 21, 0))
+            && !DependencyManager.inTesting) {
             logger.warning("You are running a Minecraft version above or equal to 1.21.0")
             logger.warning("Please use CustomAnvil v2 instead if you wish to use the plugin with this version.")
             Bukkit.getPluginManager().disablePlugin(this)

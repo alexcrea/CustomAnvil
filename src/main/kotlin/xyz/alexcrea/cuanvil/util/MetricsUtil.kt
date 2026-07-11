@@ -18,7 +18,7 @@ object MetricsUtil {
     private var FAST_STATS_METRICS: BukkitContext? = null
 
     fun loadMetrics(plugin: CustomAnvil) {
-        if(DependencyManager.externGuiTester.isInTest()) return
+        if(DependencyManager.inTesting) return
 
         val config = ConfigHolder.DEFAULT_CONFIG.config
         val metricString = config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
