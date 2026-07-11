@@ -358,7 +358,7 @@ class AnvilResultListener : Listener {
         }
 
         if (event.click != ClickType.MIDDLE)
-            handleAnvilMechanic(player, view, player.gameMode != GameMode.CREATIVE)
+            handleAnvilMechanic(player, inventory, player.gameMode != GameMode.CREATIVE)
 
         return true
     }
@@ -388,16 +388,15 @@ class AnvilResultListener : Listener {
     }
 
     // Process both sound & degradation
-    private fun handleAnvilMechanic(player: HumanEntity, view: AnvilView, canDegrade: Boolean) {
+    private fun handleAnvilMechanic(player: HumanEntity, inventory: AnvilInventory, canDegrade: Boolean) {
         // ok so we do not provide a getLocation on view ?
-        val inv = view.topInventory as? AnvilInventory
-        val location = inv?.location
+        val location = inventory.location
 
-        val wasDestroyed = canDegrade && tryDegradeAnvil(view, location)
-        tryPlaySound(location, player, wasDestroyed)
+        val wasDestroyed = canDegrade && tryDegradeAnvil(player, location)
+        tryPlaySound(location, wasDestroyed)
     }
 
-    private fun tryDegradeAnvil(view: AnvilView, location: Location?): Boolean {
+    private fun tryDegradeAnvil(player: HumanEntity, location: Location?): Boolean {
         val world = location?.world ?: return false
         if (Math.random() > AnvilFinishOptions.degradation_chance) return false
 
@@ -413,7 +412,7 @@ class AnvilResultListener : Listener {
         block.type = next
 
         if (next == Material.AIR) {
-            view.close()
+            player.closeInventory()
             return true
         }
 
@@ -422,7 +421,6 @@ class AnvilResultListener : Listener {
 
     private fun tryPlaySound(
         location: Location?,
-        player: HumanEntity,
         wasDestroyed: Boolean,
     ) {
         val world = location?.world
@@ -430,23 +428,13 @@ class AnvilResultListener : Listener {
         if (!AnvilFinishOptions.sound_enabled) return
 
         val sound = AnvilFinishOptions.getAnvilSound(wasDestroyed)
-        if(world == null) {
-            player.world.playSound(
-                player,
-                sound.sound,
-                sound.category,
-                sound.volume,
-                sound.pitch,
-            )
-        } else {
-            world.playSound(
-                location,
-                sound.sound,
-                sound.category,
-                sound.volume,
-                sound.pitch,
-            )
-        }
+        world?.playSound(
+            location,
+            sound.sound,
+            sound.category,
+            sound.volume,
+            sound.pitch,
+        )
     }
 
     private fun onUnitRepairExtract(
