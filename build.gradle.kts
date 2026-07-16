@@ -34,9 +34,6 @@ repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
 
-    // ExcellentEnchants
-    maven(url = "https://repo.nightexpressdev.com/releases")
-
     // ItemsAdder
     maven(url = "https://maven.devs.beer/")
 
@@ -82,11 +79,12 @@ dependencies {
 
     // ExcellentEnchants
     implementation(project(":impl:ExcellentEnchant5_4"))
-    compileOnly("su.nightexpress.excellentenchants:Core:5.1.0") {
-        exclude("org.spigotmc")
-    }
-    compileOnly(files("libs/ExcellentEnchants-4.3.3-striped.jar")) // For pre v5 excellent enchants
-    compileOnly(files("libs/ExcellentEnchants-4.1.0-striped.jar")) // For legacy excellent enchants
+    compileOnly(files("libs/ExcellentEnchants/ExcellentEnchants-4.3.3-striped.jar")) // For pre v5 excellent enchants
+    compileOnly(files("libs/ExcellentEnchants/ExcellentEnchants-4.1.0-striped.jar")) // For legacy excellent enchants
+    // early v5 excellent enchants
+    compileOnly(files("libs/ExcellentEnchants/Core-5.1.0.jar"))
+    compileOnly(files("libs/ExcellentEnchants/API-5.1.0.jar"))
+    compileOnly(files("libs/ExcellentEnchants/main-2.7.9.jar"))
 
     // Disenchantment
     compileOnly(files("libs/Disenchantment-6.1.5.jar"))
