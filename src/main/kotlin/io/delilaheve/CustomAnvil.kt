@@ -136,7 +136,7 @@ open class CustomAnvil : JavaPlugin() {
     override fun onEnable() {
         instance = this
         try {
-            legacyCheck()
+            if(legacyCheck()) return
         } catch (e: Exception) {
             logger.log(Level.SEVERE, "error trying to check for legacy system", e)
             MetricsUtil.trackError(e)
@@ -202,14 +202,15 @@ open class CustomAnvil : JavaPlugin() {
         }
     }
 
-    private fun legacyCheck() {
+    private fun legacyCheck(): Boolean {
         val currentVersion = UpdateUtils.currentMinecraftVersion()
         if (currentVersion.greaterEqual(Version(1, 21, 0))
-            && !DependencyManager.inTesting) {
+            && !DependencyManager.inTesting
+            && !"true".equals(System.getenv("CUSTOM_ANVIL_BYPASS_LEGACY_CHECK"), true)) {
             logger.warning("You are running a Minecraft version above or equal to 1.21.0")
             logger.warning("Please use CustomAnvil v2 instead if you wish to use the plugin with this version.")
             Bukkit.getPluginManager().disablePlugin(this)
-            return
+            return true
         }
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
@@ -242,6 +243,7 @@ open class CustomAnvil : JavaPlugin() {
 
                 logger.warning("An update may be available: $latestVer")
             }
+        return false
     }
 
     private fun registerListeners() {
