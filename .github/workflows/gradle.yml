@@ -53,7 +53,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: |
-            ./*/.gradle/caches/paperweight
+            ./nms/*/.gradle/caches/paperweight
+            ./.gradle/caches/paperweight
           key: paperweight-submodules-${{ runner.os }}-${{ hashFiles('nms/*/build.gradle*') }}
           restore-keys: |
             paperweight-submodules-${{ runner.os }}-
