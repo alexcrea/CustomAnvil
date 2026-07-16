@@ -31,6 +31,7 @@ import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
+import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
@@ -92,7 +93,7 @@ class AnvilResultListener : Listener {
         }
 
         // Rename
-        if (rightItem == null) {
+        if (rightItem.isAir) {
             val result = AnvilMergeLogic.doRenaming(view, inventory, player, leftItem)
             if (result.isEmpty()) return
 
@@ -106,7 +107,7 @@ class AnvilResultListener : Listener {
         }
 
         // Merge
-        val canMerge = leftItem.canMergeWith(rightItem)
+        val canMerge = leftItem.canMergeWith(rightItem!!)
         if (canMerge) {
             val result = AnvilMergeLogic.doMerge(view, inventory, player, leftItem, rightItem)
 
