@@ -399,7 +399,7 @@ hangarPublish {
         version.set(versionName)
         var releaseChannel = if (isDevBuild || isPreRelease) devChannel else releaseChannel
         if(releaseChannel == null) return
-        channel.set(channel)
+        channel.set(releaseChannel)
 
         changelog.set(changelog(isOnline))
         id.set("CustomAnvil")
