@@ -67,14 +67,7 @@ object PlatformUtil {
         }
     }
 
-    // Display name
-    private val useCustomName = hasMethod(ItemStack::class.java, "customName")
-
     fun ItemMeta.componentDisplayName(): Component? {
-        if (useCustomName) {
-            if (!this.hasCustomName()) return null
-            return this.customName()
-        }
         if (!this.hasDisplayName()) return null
 
         return if (isPaper) {
@@ -85,9 +78,7 @@ object PlatformUtil {
     }
 
     fun ItemMeta.setComponentDisplayName(component: Component?, fallback: String? = null) {
-        if (useCustomName) {
-            this.customName(component)
-        } else if (isPaper) {
+        if (isPaper) {
             this.displayName(component)
         } else {
             if (component == null) {
