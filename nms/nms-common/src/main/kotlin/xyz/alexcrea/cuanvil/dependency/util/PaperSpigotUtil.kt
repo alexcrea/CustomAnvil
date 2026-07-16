@@ -37,7 +37,7 @@ object PlatformUtil {
     // Lore
     fun ItemMeta.componentLore(): MutableList<Component> {
         val lore: List<Component>?
-        if(isPaper){
+        if (isPaper) {
             lore = this.lore()
         } else {
             val legacyLores = this.lore ?: return ArrayList()
@@ -52,13 +52,15 @@ object PlatformUtil {
     }
 
     fun ItemMeta.setComponentLore(lore: List<Component?>) {
-        if(isPaper){
+        if (isPaper) {
             this.lore(lore)
         } else {
             val legacyLore = ArrayList<String?>(lore.size)
             for (component in lore) {
-                legacyLore.add(if(component == null) null
-                else legacy_mm.serialize(component))
+                legacyLore.add(
+                    if (component == null) null
+                    else legacy_mm.serialize(component)
+                )
             }
 
             this.lore = legacyLore
@@ -69,32 +71,31 @@ object PlatformUtil {
     private val useCustomName = hasMethod(ItemStack::class.java, "customName")
 
     fun ItemMeta.componentDisplayName(): Component? {
-        if(useCustomName){
-            if(!this.hasCustomName()) return null
+        if (useCustomName) {
+            if (!this.hasCustomName()) return null
             return this.customName()
-        }else if(isPaper){
-            if(!this.hasDisplayName()) return null
-            return this.displayName()
-        } else {
-            if(!this.hasDisplayName()) return null
+        }
+        if (!this.hasDisplayName()) return null
 
-            val legacy = this.displayName
-            return legacy_mm.deserialize(legacy)
+        return if (isPaper) {
+            this.displayName()
+        } else {
+            legacy_mm.deserialize(this.displayName)
         }
     }
 
-    fun ItemMeta.setComponentDisplayName(component: Component?) {
-        if(useCustomName){
+    fun ItemMeta.setComponentDisplayName(component: Component?, fallback: String? = null) {
+        if (useCustomName) {
             this.customName(component)
-        }else if(isPaper){
+        } else if (isPaper) {
             this.displayName(component)
         } else {
-            if(component == null){
+            if (component == null) {
                 this.setDisplayName(null)
                 return
             }
 
-            val legacy = legacy_mm.serialize(component)
+            val legacy = fallback ?: legacy_mm.serialize(component)
             this.setDisplayName(legacy)
         }
     }

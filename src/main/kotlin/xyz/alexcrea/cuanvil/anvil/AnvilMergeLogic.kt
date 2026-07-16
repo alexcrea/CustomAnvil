@@ -6,6 +6,7 @@ import io.delilaheve.util.EnchantmentUtil.combineWith
 import io.delilaheve.util.ItemUtil.isEnchantedBook
 import io.delilaheve.util.ItemUtil.repairFrom
 import io.delilaheve.util.ItemUtil.unitRepair
+import net.kyori.adventure.text.Component
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
@@ -16,6 +17,7 @@ import org.bukkit.inventory.view.AnvilView
 import org.bukkit.persistence.PersistentDataType
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
@@ -138,11 +140,12 @@ object AnvilMergeLogic {
     private fun handleRename(resultItem: ItemStack, view: AnvilView, player: HumanEntity): Int {
         // Can be null
         var renameText = ChatColor.stripColor(view.renameText)
+        var component: Component? = null
 
         var sumCost = 0
         var useColor = false
         if (ConfigOptions.renameColorPossible && renameText != null) {
-            val component = AnvilColorUtil.handleColor(
+            component = AnvilColorUtil.handleColor(
                 renameText,
                 AnvilColorUtil.renamePermission(player)
             )
@@ -169,7 +172,11 @@ object AnvilMergeLogic {
                         renameText == CasedStringUtil.snakeToUpperSpacedCase(resultItem.type.name.lowercase())
                         )
             ) {
-                it.setDisplayName(renameText)
+                if (component == null)
+                    component = if (renameText == null || renameText.isEmpty()) null
+                    else Component.text(renameText)
+                it.setComponentDisplayName(component, renameText)
+
                 processDialogPCD(it, player)
                 resultItem.itemMeta = it
 
