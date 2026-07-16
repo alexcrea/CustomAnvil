@@ -391,13 +391,15 @@ fun changelog(isOnline: Boolean): String {
 
 hangarPublish {
 
-    fun HangarPublication.configure(isOnline: Boolean, devChannel: String, releaseChannel: String) {
+    fun HangarPublication.configure(isOnline: Boolean, devChannel: String?, releaseChannel: String) {
         var versionName = effectiveVersion
         if(isPreRelease) versionName+= "-pre"
         if(!isOnline) versionName+= "-offline"
 
         version.set(versionName)
-        channel.set(if (isDevBuild || isPreRelease) devChannel else releaseChannel)
+        var releaseChannel = if (isDevBuild || isPreRelease) devChannel else releaseChannel
+        if(releaseChannel == null) return
+        channel.set(channel)
 
         changelog.set(changelog(isOnline))
         id.set("CustomAnvil")
@@ -449,7 +451,7 @@ hangarPublish {
     }
 
     publications.register("offline") {
-        configure(false, "OfflineSnapshot", "OfflineRelease")
+        configure(false, null, "OfflineRelease")
     }
 
 }
