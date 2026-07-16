@@ -36,11 +36,10 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Cache Gradle root and wrapper
+      - name: Cache Gradle wrapper
         uses: actions/cache@v3
         with:
           path: |
-            ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-root-${{ runner.os }}-${{ hashFiles('build.gradle*') }}
           restore-keys: gradle-root-${{ runner.os }}-
@@ -50,7 +49,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ./nms/*/.gradle/caches/paperweight
+            ./*/.gradle/caches/paperweight
           key: paperweight-submodules-${{ runner.os }}-${{ hashFiles('nms/*/build.gradle*') }}
           restore-keys: |
             paperweight-submodules-${{ runner.os }}-
@@ -59,6 +58,8 @@ jobs:
       # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-provider: basic
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
