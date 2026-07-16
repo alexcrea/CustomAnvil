@@ -82,6 +82,6 @@ object ItemUtil {
      * The two items should either be the same type, or, the [other] is a book
      */
     fun ItemStack.canMergeWith(
-        other: ItemStack?
-    ) = (other != null) && (customType == other.customType || (other.isEnchantedBook()))
+        other: ItemStack
+    ) = customType == other.customType || (other.isEnchantedBook())
 }
