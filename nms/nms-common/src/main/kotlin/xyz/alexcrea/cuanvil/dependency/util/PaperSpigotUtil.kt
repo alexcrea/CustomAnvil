@@ -68,7 +68,7 @@ object PlatformUtil {
     }
 
     // Display name
-    private val useCustomName = hasMethod(ItemStack::class.java, "customName")
+    private val useCustomName = hasMethod(ItemMeta::class.java, "customName")
 
     fun ItemMeta.componentDisplayName(): Component? {
         if (useCustomName) {
