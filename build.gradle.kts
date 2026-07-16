@@ -450,8 +450,10 @@ hangarPublish {
         configure(true, "DevSnapshot", "Release")
     }
 
-    publications.register("offline") {
-        configure(false, null, "OfflineRelease")
+    if(!isDevBuild) {
+        publications.register("offline") {
+            configure(false, null, "OfflineRelease")
+        }
     }
 
 }
