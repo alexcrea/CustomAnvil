@@ -4,6 +4,7 @@ import io.delilaheve.CustomAnvil
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
+import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import kotlin.math.min
 
 object CustomRecipeUtil {
@@ -32,7 +33,7 @@ object CustomRecipeUtil {
         return if(recipe.exactCount) {
             if(leftItem.amount != recipe.leftItem!!.amount){
                 0
-            }else if(rightItem != null && rightItem.amount != recipe.rightItem!!.amount){
+            }else if(!rightItem.isAir && rightItem!!.amount != recipe.rightItem!!.amount){
                 0
             }else{
                 1
@@ -43,7 +44,7 @@ object CustomRecipeUtil {
             val resultItem = recipe.resultItem!! // we know exist as the recipe was returned to us
             val maxResultAmount = resultItem.maxStackSize/resultItem.amount
             val maxLeftAmount = leftItem.amount/recipe.leftItem!!.amount
-            val maxRightAmount = if(rightItem == null){ maxLeftAmount } else{ rightItem.amount/recipe.rightItem!!.amount }
+            val maxRightAmount = if(rightItem.isAir){ maxLeftAmount } else{ rightItem!!.amount/recipe.rightItem!!.amount }
 
             CustomAnvil.verboseLog("resultItem: $resultItem, maxResultAmount: $maxResultAmount, maxLeftAmount: $maxLeftAmount, maxRightAmount: $maxRightAmount")
 

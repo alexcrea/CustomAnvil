@@ -176,8 +176,8 @@ class AnvilCustomRecipe(
         CustomAnvil.verboseLog("Left item passed !")
 
         // we don't know if right item can be
-        if (rightItem == null) { // null test
-            if (item2 != null) return false
+        if (rightItem.isAir) { // null test
+            if (!item2.isAir) return false
         } else {
             val rightSimilar = rightItem!!.isSimilar(item2)
             CustomAnvil.verboseLog("Right similar: $rightSimilar")
