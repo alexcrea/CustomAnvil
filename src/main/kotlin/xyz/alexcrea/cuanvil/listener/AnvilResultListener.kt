@@ -216,10 +216,10 @@ class AnvilResultListener : Listener {
         val recipe = result.recipe!!
 
         // We remove what should be removed
-        if (rightItem != null) {
-            if (recipe.rightItem == null) return false// in case it changed
+        if (!rightItem.isAir) {
+            if (recipe.rightItem.isAir) return false// in case it changed
 
-            rightItem.amount -= amount * recipe.rightItem!!.amount
+            rightItem!!.amount -= amount * recipe.rightItem!!.amount
             inventory.setItem(ANVIL_INPUT_RIGHT, rightItem)
         }
 
