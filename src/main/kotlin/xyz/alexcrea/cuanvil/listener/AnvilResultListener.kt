@@ -247,6 +247,8 @@ class AnvilResultListener : Listener {
 
             player.updateInventory()
         }
+
+        handleAnvilMechanic(player, inventory)
         return true
     }
 
@@ -359,7 +361,7 @@ class AnvilResultListener : Listener {
         }
 
         if (event.click != ClickType.MIDDLE)
-            handleAnvilMechanic(player, inventory, player.gameMode != GameMode.CREATIVE)
+            handleAnvilMechanic(player, inventory)
 
         return true
     }
@@ -386,6 +388,11 @@ class AnvilResultListener : Listener {
                 || (player.level < sum)
             ) cost.valid = false
         }
+    }
+
+    // Process both sound & degradation
+    private fun handleAnvilMechanic(player: HumanEntity, inventory: AnvilInventory) {
+        return handleAnvilMechanic(player, inventory, player.gameMode != GameMode.CREATIVE)
     }
 
     // Process both sound & degradation
