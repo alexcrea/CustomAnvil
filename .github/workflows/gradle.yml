@@ -124,6 +124,6 @@ jobs:
           webhook-url: ${{ secrets.RELEASE_WEBHOOK_URL }}
           content: |
             <@&1525259349423947867>
-            # New bugfix for CustomAnvil v1 ! <:CustomAnvil:1262550667986342001> [Modrinth](https://modrinth.com/plugin/customanvil) and [GitHub](${{ github.event.release.html_url }}) links)
+            # New bugfix for CustomAnvil v1 ! <:CustomAnvil:1262550667986342001> [Modrinth](https://modrinth.com/plugin/customanvil) and [GitHub](${{ github.event.release.html_url }}) links
 
             ${{ github.event.release.body }}
