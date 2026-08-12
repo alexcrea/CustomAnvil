@@ -67,7 +67,7 @@ run `/customanvil help` to get information about available commands  \
 this only show subcommands you have permission for
 
 ### Supported Plugins
-See the [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/COMPATIBILITY.md)
+See the [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v2.x.x/COMPATIBILITY.md)
 
 ### Overriding Too Expensive
 
@@ -97,7 +97,7 @@ You can also [disable bstat](https://bstats.org/getting-started) and [faststats]
 faststats is in beta testing please report me or them any error you encounter
 
 ### Credits and Thanks
-Credits and thanks can be seen [here](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/CREDITS.md)
+Credits and thanks can be seen [here](https://github.com/alexcrea/CustomAnvil/blob/v2.x.x/CREDITS.md)
 
 ### Planned:
 - Better Folia support (make gui work. fix some dirty handled parts)

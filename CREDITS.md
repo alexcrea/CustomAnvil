@@ -18,7 +18,7 @@ These dependencies (or a modified version of) are used by custom anvil
 
 ### Compatibility   
 Thanks to all the cool creator making the minecraft plugin's ecosystem works ! \
-See [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v1.x.x/COMPATIBILITY.md) for details
+See [Compatibility list](https://github.com/alexcrea/CustomAnvil/blob/v2.x.x/COMPATIBILITY.md) for details
 
 but especially, Big Thanks for H7KZ maker of [Disenchantment](https://github.com/H7KZ/Disenchantment)
 
