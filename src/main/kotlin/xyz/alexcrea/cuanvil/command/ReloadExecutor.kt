@@ -8,6 +8,7 @@ import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
+import xyz.alexcrea.cuanvil.lang.Lang
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 
 class ReloadExecutor : CASubCommand {
@@ -57,6 +58,9 @@ class ReloadExecutor : CASubCommand {
     private fun commandBody(hardfail: Boolean): Boolean {
         try {
             if (!ConfigHolder.reloadAllFromDisk(hardfail)) return false
+
+            // reload language config
+            Lang.reload()
 
             // Then update all global gui containing value from config
             BasicConfigGui.getInstance()?.updateGuiValues()

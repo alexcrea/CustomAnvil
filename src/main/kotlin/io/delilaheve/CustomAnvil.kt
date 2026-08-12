@@ -17,6 +17,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
+import xyz.alexcrea.cuanvil.lang.Lang
 import xyz.alexcrea.cuanvil.listener.AnvilCloseListener
 import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
@@ -135,6 +136,25 @@ open class CustomAnvil : JavaPlugin() {
      */
     override fun onEnable() {
         instance = this
+        // Load default configuration
+        try {
+            if(!ConfigHolder.loadDefaultConfig())
+                throw RuntimeException("Error loading configuration file")
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error occurred loading default configuration", e)
+            MetricsUtil.trackError(e)
+            if(tryDirtyStart()) return
+        }
+
+        // Load language
+        try {
+            Lang.reload()
+        } catch (e: Exception) {
+            logger.log(Level.SEVERE, "error occurred loading language file", e)
+            MetricsUtil.trackError(e)
+            if(tryDirtyStart()) return
+        }
+
         try {
             legacyCheck()
         } catch (e: Exception) {
@@ -142,6 +162,7 @@ open class CustomAnvil : JavaPlugin() {
             MetricsUtil.trackError(e)
             if(trySafeStart()) return
         }
+
 
         // Add commands
         try {
@@ -152,15 +173,6 @@ open class CustomAnvil : JavaPlugin() {
             if(trySafeStart()) return
         }
 
-        // Load default configuration
-        try {
-            if(!ConfigHolder.loadDefaultConfig())
-                throw RuntimeException("Error loading configuration file")
-        } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error occurred loading default configuration", e)
-            MetricsUtil.trackError(e)
-            if(tryDirtyStart()) return
-        }
 
         // Load dependency
         try {
