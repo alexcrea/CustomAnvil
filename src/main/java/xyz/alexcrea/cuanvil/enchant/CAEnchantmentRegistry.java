@@ -99,8 +99,7 @@ public class CAEnchantmentRegistry {
         if ((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())) {
             hasWarnedRegistering = true;
 
-            CustomAnvil.instance.getLogger().log(Level.WARNING,
-                    "Duplicate registered enchantment name. Please check that configuration is using namespace.");
+            CustomAnvil.Companion.log("Duplicate registered enchantment name. Please check that configuration is using namespace.");
         }
 
         byKeyMap.put(enchantment.getKey(), enchantment);
