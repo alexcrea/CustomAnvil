@@ -46,6 +46,7 @@ object DependencyManager {
 
     var enchantmentSquaredCompatibility: EnchantmentSquaredDependency? = null
     var ecoEnchantCompatibility: EcoEnchantDependency? = null
+    var hasEcoItem: Boolean = false
     var excellentEnchantsCompatibility: ExcellentEnchantsDependency? = null
 
     var disenchantmentCompatibility: DisenchantmentDependency? = null
@@ -81,6 +82,10 @@ object DependencyManager {
         if (pluginManager.isPluginEnabled("EcoEnchants")) {
             ecoEnchantCompatibility = EcoEnchantDependency(pluginManager.getPlugin("EcoEnchants")!!)
             ecoEnchantCompatibility!!.disableAnvilListener()
+        }
+        // EcoItem check
+        if (pluginManager.isPluginEnabled("EcoItems")) {
+            hasEcoItem = true
         }
 
         // Excellent Enchants dependency

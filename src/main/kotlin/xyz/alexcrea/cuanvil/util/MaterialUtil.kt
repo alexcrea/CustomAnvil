@@ -21,7 +21,7 @@ object MaterialUtil {
 
     val ItemStack.customType: NamespacedKey
         get() {
-            if(DependencyManager.ecoEnchantCompatibility != null) {
+            if(DependencyManager.hasEcoItem) {
                 val result = EcoItemDependencyUtil.ecoItemNamespace(this)
                 if(result != null) return result
             }
@@ -43,7 +43,7 @@ object MaterialUtil {
 
     @Nullable
     fun getMatFromKey(key: NamespacedKey): Material? {
-        if(DependencyManager.ecoEnchantCompatibility != null) {
+        if(DependencyManager.hasEcoItem) {
             val result = EcoItemDependencyUtil.ecoItemMaterialFromKey(key)
             if(result != null) return result
         }
@@ -58,7 +58,7 @@ object MaterialUtil {
     }
 
     fun itemFromKey(key: NamespacedKey): ItemStack {
-        if(DependencyManager.ecoEnchantCompatibility != null) {
+        if(DependencyManager.hasEcoItem) {
             val result = EcoItemDependencyUtil.newEcoItemstack(key)
             if(result != null) return result
         }
@@ -78,7 +78,7 @@ object MaterialUtil {
 
     fun getMaterialCount(): Int {
         var count = Material.entries.size
-        if(DependencyManager.ecoEnchantCompatibility != null) {
+        if(DependencyManager.hasEcoItem) {
             count += EcoItemDependencyUtil.getItems().size
         }
 
@@ -92,7 +92,7 @@ object MaterialUtil {
 
     fun getMaterials(): MutableList<NamespacedKey> {
         val all = ArrayList(Material.entries.map { it.key })
-        if(DependencyManager.ecoEnchantCompatibility != null) {
+        if(DependencyManager.hasEcoItem) {
             all.addAll(EcoItemDependencyUtil.getItems())
         }
 
