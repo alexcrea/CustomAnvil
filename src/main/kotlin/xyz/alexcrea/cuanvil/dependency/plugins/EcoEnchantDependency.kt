@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.dependency.plugins
 import com.willfp.eco.core.EcoPlugin
 import com.willfp.ecoenchants.enchant.EcoEnchant
 import com.willfp.ecoenchants.enchant.EcoEnchants
-import com.willfp.ecoenchants.mechanics.infiniteIfNegative
+import com.willfp.ecoenchants.enchant.UtilKt
 import io.delilaheve.CustomAnvil
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
@@ -35,7 +35,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
     }
 
     public fun getEcoLevelLimit(): Int {
-        return (ecoEnchantPlugin as EcoPlugin).configYml.getInt("anvil.enchant-limit").infiniteIfNegative()
+        return UtilKt.infiniteIfNegative((ecoEnchantPlugin as EcoPlugin).configYml.getInt("anvil.enchant-limit"))
     }
 
     fun disableAnvilListener() {
@@ -51,7 +51,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
             return
         }
 
-        val enchantments = EcoEnchants.values()
+        val enchantments = EcoEnchants.INSTANCE.values()
         for (ecoEnchant in enchantments) {
             EnchantmentApi.unregisterEnchantment(ecoEnchant.enchantment) // As eco enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
             EnchantmentApi.registerEnchantment(CAEcoEnchant(ecoEnchant))
@@ -71,7 +71,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
         // Should not happen in known case.
         if (this.ecoEnchantOldEnchantments == null) return
 
-        val newEnchantments = EcoEnchants.values()
+        val newEnchantments = EcoEnchants.INSTANCE.values()
 
         // Add new enchantments
         for (ecoEnchant in newEnchantments)
