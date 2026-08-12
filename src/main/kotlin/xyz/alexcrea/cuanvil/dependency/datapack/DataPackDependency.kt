@@ -223,7 +223,11 @@ object DataPackDependency {
 
     private fun setEnchantAsAll(ench: String) {
         // We assume current is not null and of type CABukkitEnchantment
-        val current = EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!) as CABukkitEnchantment
+        val current = EnchantmentApi.getByKey(NamespacedKey.fromString(ench)!!) as? CABukkitEnchantment
+        if(current == null) {
+            CustomAnvil.instance.logger.warning("Could not find enchant $ench")
+            return
+        }
 
         // We need to replace current wrapped enchantment with the all conflict wrapper
         EnchantmentApi.unregisterEnchantment(current)
