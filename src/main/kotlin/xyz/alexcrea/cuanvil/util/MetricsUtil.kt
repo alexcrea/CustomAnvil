@@ -74,8 +74,8 @@ object MetricsUtil {
         lastError = e
     }
 
-    fun trackError(message: String) {
-        ERROR_TRACKER?.trackError(message)
+    fun trackError(message: String, cause: Throwable? = null) {
+        trackError(RuntimeException(message, cause))
     }
 }
 

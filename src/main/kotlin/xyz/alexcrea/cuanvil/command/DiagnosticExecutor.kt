@@ -122,8 +122,7 @@ class DiagnosticExecutor : CASubCommand {
 
         if (sender is HumanEntity) {
             if (hasError)
-                sender.spigot()
-                    .sendMessage(TextComponent(ChatColor.RED.toString() + "There was an error running the diagnostic"))
+                sender.sendMessage(ChatColor.RED.toString() + "There was an error running the diagnostic")
             val message = TextComponent(ChatColor.GREEN.toString() + "Click to copy diagnostic data")
 
             message.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stb.toString())

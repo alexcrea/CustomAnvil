@@ -1,4 +1,5 @@
 name: English
+last-updated: 2.1.0
 
 warning:
   load:
@@ -27,3 +28,38 @@ error:
     resource:
       fail: "Resource %path Could not be loaded or reloaded."
       hard-fail: "Disabling plugin."
+
+command:
+  shared:
+    no-diag-permission: "<red>You do not have permission to diagnostic this server"
+    # I try to avoid using & for color but this is for a bungee text component
+    hover-copy: "§7Click to copy"
+    warning:
+      missing-subcmd: "Need to specify a subcommand. for example %example1 or %example2"
+  root:
+    warning:
+      unknown-sub: "<red>Invalid subcommand. run <yellow>`%command help` <red>to see available commands"
+    error:
+      generic: "<red>Error running this command"
+  debug:
+    description: "Used to toggle debug logs and retrieve them"
+    log-cleared: "Log Cleared"
+    toggled: "Debug toggled to %type"
+    # I try to avoid using & for color but this is for a bungee text component
+    copy: "§aClick to copy log data"
+    data:
+      header: "Debug Log data:"
+      line-count: "Found %count lines"
+    warning:
+      unspecified-type: "Need to specify which type of debug to toggle: \"default\" or \"verbose\""
+      no-log: "No log to show ? make sure you tried with debug log toggled (%command)"
+  diagnostic:
+    description: "Basic diagnostic of this plugin"
+    had-error: "<red>There was an error running the diagnostic"
+    # I try to avoid using & for color but this is for a bungee text component
+    copy: "§aClick to copy diagnostic data"
+  config:
+    description: "Used to edit the configuration of the plugin"
+
+    warning:
+      legacy-name: "<red>/ca gui has been moved to /ca config"

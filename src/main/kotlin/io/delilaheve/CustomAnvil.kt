@@ -16,7 +16,8 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.lang.Lang
-import xyz.alexcrea.cuanvil.lang.Lang.translate
+import xyz.alexcrea.cuanvil.lang.MsgError
+import xyz.alexcrea.cuanvil.lang.MsgWarning
 import xyz.alexcrea.cuanvil.listener.AnvilCloseListener
 import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
@@ -111,12 +112,12 @@ open class CustomAnvil : JavaPlugin() {
         /**
          * Error Logging handler
          */
-        @JvmStatic fun logError(message: String, throwable: Throwable? = null, track: Boolean = true) {
-            instance.logger.log(Level.SEVERE, message, throwable)
-            addToLogQueue(message)
+        @JvmStatic fun logError(message: String, throwable: Throwable? = null, track: Boolean = true, level: Level = Level.SEVERE) {
+            instance.logger.log(level, message, throwable)
+            addToLogQueue("Error: $message")
 
-            if(track && throwable != null) {
-                MetricsUtil.trackError(throwable)
+            if(track) {
+                MetricsUtil.trackError(message, throwable)
             }
         }
     }
@@ -168,7 +169,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             legacyCheck()
         } catch (e: Exception) {
-            logError("error.load.legacy.failed".translate(), e)
+            MsgError.LOAD_LEGACY_FAILED.log(e)
             if(trySafeStart()) return
         }
 
@@ -177,7 +178,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             CustomAnvilCommand(this)
         } catch (e: Exception) {
-            logError("error.load.command-register".translate(), e)
+            MsgError.LOAD_COMMAND_REGISTER.log(e)
             if(trySafeStart()) return
         }
 
@@ -186,7 +187,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             DependencyManager.loadDependency()
         } catch (e: Exception) {
-            logError("error.load.compatibility".translate(), e)
+            MsgError.LOAD_COMPATIBILITY.log(e)
             if(tryDirtyStart()) return
         }
 
@@ -194,7 +195,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             registerListeners()
         } catch (e: Exception) {
-            logError("error.load.listeners".translate(), e)
+            MsgError.LOAD_LISTENERS.log(e)
             if(tryDirtyStart()) return
         }
 
@@ -215,18 +216,15 @@ open class CustomAnvil : JavaPlugin() {
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
         if (potentialPlugin != null) {
             Bukkit.getPluginManager().disablePlugin(potentialPlugin)
-            logger.warning("warning.load.legacy.old-name.1".translate())
-            logger.warning("warning.load.legacy.old-name.2".translate())
+            MsgWarning.LOAD_LEGACY_OLD_NAME.log()
         }
 
         val isPaper = PlatformUtil.isPaper
         if(!isPaper) {
-            logger.warning("warning.load.legacy.spigot.1".translate())
-            logger.warning("warning.load.legacy.spigot.2".translate())
-            if(MinecraftVersionUtil.isTooNewForSpigot) {
-                logger.warning("warning.load.legacy.spigot-old.1".translate())
-                logger.warning("warning.load.legacy.spigot-old.1".translate())
-            }
+            MsgWarning.LOAD_LEGACY_SPIGOT.log()
+            if(MinecraftVersionUtil.isTooNewForSpigot)
+                MsgWarning.LOAD_LEGACY_SPIGOT_OLD.log()
+
         }
 
         val loader = if(isPaper) "paper" else "spigot"
@@ -238,13 +236,13 @@ open class CustomAnvil : JavaPlugin() {
             UpdateUtils.currentMinecraftVersion().toString())
             .setFeatured(featured)
             .setOnError {
-                logger.log(Level.WARNING, "error.load.update.check-fail".translate(), it)
+                MsgError.LOAD_UPDATE_CHECK_FAIL.log(it, level = Level.WARNING, track = false)
             }
             .checkVersion { latestVer: String? ->
                 CustomAnvil.latestVer = latestVer
                 if(latestVer == null || version.contains(latestVer)) return@checkVersion
 
-                logger.warning("warning.load.update.available".translate(Pair("version", latestVer)))
+                MsgWarning.LOAD_UPDATE_AVAILABLE.log(latestVer)
             }
     }
 
@@ -263,7 +261,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             loadEnchantmentSystem()
         } catch (e: Exception) {
-            logError("error.load.enchant-system".translate(), e)
+            MsgError.LOAD_ENCHANT_SYSTEM.log(e)
             tryDirtyStart()
         }
     }
@@ -278,7 +276,7 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load config
         if (!ConfigHolder.loadNonDefaultConfig()) {
-            logError("error.load.non-default-config".translate())
+            MsgError.LOAD_NON_DEFAULT_CONFIG.log()
             server.pluginManager.disablePlugin(this)
             return
         }
@@ -332,16 +330,15 @@ open class CustomAnvil : JavaPlugin() {
         try {
             val configReader = FileReader(resourceFile)
             yamlConfig.load(configReader)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            MsgError.RELOAD_FAIL.log(e, resourceFile.path)
             if (hardFailSafe) {
                 // This is important and may impact gameplay if it does not load.
                 // Failsafe is to stop the plugin
-                logError("error.reload.resource.fail".translate(Pair("path", resourceFile.path)))
-                logError("error.reload.resource.hard-fail".translate())
+                MsgError.RELOAD_HARD_FAIL.log()
                 Bukkit.getPluginManager().disablePlugin(this)
-            } else {
-                logError("error.reload.resource.fail".translate(Pair("path", resourceFile.path)))
             }
+
             return null
         }
         return yamlConfig

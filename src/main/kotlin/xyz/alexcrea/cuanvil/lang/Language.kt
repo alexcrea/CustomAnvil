@@ -7,7 +7,6 @@ import java.io.File
 import java.io.InputStreamReader
 import java.util.logging.Level
 
-
 class Language(private val id: String, private val default: Boolean = false) {
 
     private val resourcePath: String
