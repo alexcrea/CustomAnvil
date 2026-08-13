@@ -1,0 +1,29 @@
+name: English
+
+warning:
+  load:
+    legacy:
+      old-name:
+        1: "An old version of this plugin was detected"
+        2: "Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus"
+      spigot:
+        1: "It seems you are using spigot"
+        2: "Please take notice that spigot is less supported than paper and derivatives"
+      spigot-old:
+        1: "If replace too expensive is not working this is likely because of spigot"
+        2: "As native nms is not supported for spigot starting 26.1"
+    update.available: "An update may be available: %version"
+
+error:
+  load:
+    legacy.failed: "error trying to check for legacy system"
+    update.check-fail: "error trying to fetch latest update"
+    command-register: "error trying to register commands"
+    compatibility: "error loading dependency compatibility"
+    listeners: "error registering listeners"
+    enchant-system: "error initializing enchantment system"
+    non-default-config: "Plugin has an issue while trying to load non default config... exiting..."
+  reload:
+    resource:
+      fail: "Resource %path Could not be loaded or reloaded."
+      hard-fail: "Disabling plugin."
