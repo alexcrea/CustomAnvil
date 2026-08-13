@@ -5,6 +5,7 @@ import com.willfp.ecoenchants.enchant.EcoEnchant
 import com.willfp.ecoenchants.enchant.EcoEnchants
 import com.willfp.ecoenchants.enchant.UtilKt
 import io.delilaheve.CustomAnvil
+import org.bukkit.Bukkit
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.plugin.Plugin
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
@@ -22,11 +23,11 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
         try {
             Class.forName("com.willfp.ecoenchants.enchant.EcoEnchants")
             isLegacy = false
-        } catch (_: ClassNotFoundException) {
+        } catch(_: ClassNotFoundException) {
         }
 
         this.isLegacy = isLegacy;
-        if (isLegacy) {
+        if(isLegacy) {
             this.legacyDependency = LegacyEcoEnchantDependency()
         } else {
             this.legacyDependency = null
@@ -34,25 +35,27 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
 
     }
 
-    public fun getEcoLevelLimit(): Int {
+    fun getEcoLevelLimit(): Int {
         return UtilKt.infiniteIfNegative((ecoEnchantPlugin as EcoPlugin).configYml.getInt("anvil.enchant-limit"))
     }
 
     fun disableAnvilListener() {
         PrepareAnvilEvent.getHandlerList().unregister(this.ecoEnchantPlugin)
+        // I don't like that but modern ee use eco prepare anvil event
+        PrepareAnvilEvent.getHandlerList().unregister(Bukkit.getPluginManager().getPlugin("eco")!!)
     }
 
     private var ecoEnchantOldEnchantments: MutableSet<EcoEnchant>? = null
     fun registerEnchantments() {
         CustomAnvil.instance.logger.info("Preparing Eco Enchant compatibility...")
 
-        if (isLegacy) {
+        if(isLegacy) {
             legacyDependency!!.registerEnchantments();
             return
         }
 
         val enchantments = EcoEnchants.INSTANCE.values()
-        for (ecoEnchant in enchantments) {
+        for(ecoEnchant in enchantments) {
             EnchantmentApi.unregisterEnchantment(ecoEnchant.enchantment) // As eco enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
             EnchantmentApi.registerEnchantment(CAEcoEnchant(ecoEnchant))
         }
@@ -63,24 +66,24 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
     }
 
     fun handleConfigReload() {
-        if (isLegacy) {
+        if(isLegacy) {
             legacyDependency!!.handleConfigReload()
             return
         }
 
         // Should not happen in known case.
-        if (this.ecoEnchantOldEnchantments == null) return
+        if(this.ecoEnchantOldEnchantments == null) return
 
         val newEnchantments = EcoEnchants.INSTANCE.values()
 
         // Add new enchantments
-        for (ecoEnchant in newEnchantments)
-            if (!this.ecoEnchantOldEnchantments!!.contains(ecoEnchant))
+        for(ecoEnchant in newEnchantments)
+            if(!this.ecoEnchantOldEnchantments!!.contains(ecoEnchant))
                 EnchantmentApi.registerEnchantment(CAEcoEnchant(ecoEnchant))
 
         // Remove old enchantments that not now currently used
         this.ecoEnchantOldEnchantments!!.removeAll(newEnchantments)
-        for (oldEnchantment in this.ecoEnchantOldEnchantments!!) {
+        for(oldEnchantment in this.ecoEnchantOldEnchantments!!) {
             EnchantmentApi.unregisterEnchantment(oldEnchantment.enchantment)
         }
 
