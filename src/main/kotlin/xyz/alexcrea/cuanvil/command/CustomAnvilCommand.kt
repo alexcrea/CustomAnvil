@@ -6,6 +6,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
+import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 
 class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
@@ -57,15 +58,15 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         }
 
         if (subcmd == null || !subcmd.allowed(sender)) {
-            sender.sendMessage("Invalid subcommand. run `$cmdstr help` to see available commands")
+            MsgCommand.ROOT_UNKNOWN_SUBCOMMAND.send(sender, cmdstr)
             return true
         }
 
         try {
             return subcmd.executeCommand(sender, cmd, subcmdStr, newargs)
         } catch (e: Throwable) {
-            MetricsUtil.trackError(e)
-            sender.sendMessage("§cError running this command")
+            CustomAnvil.logError("Error running /$cmdstr ${args.joinToString(" ")}", e)
+            MsgCommand.ROOT_ERROR_SUBCOMMAND.send(sender)
             return false
         }
     }

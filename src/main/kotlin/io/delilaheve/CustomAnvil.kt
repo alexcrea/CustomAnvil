@@ -1,6 +1,7 @@
 package io.delilaheve
 
 import io.delilaheve.util.ConfigOptions
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
@@ -76,7 +77,7 @@ open class CustomAnvil : JavaPlugin() {
         var latestVer: String? = null
 
         // Debug
-        val debugStorageQueue = ArrayDeque<String>()
+        val debugStorageQueue = ArrayDeque<Component>()
 
         private fun addToLogQueue(message: String) {
             if(debugStorageQueue.size >= 200) {
@@ -84,7 +85,7 @@ open class CustomAnvil : JavaPlugin() {
                 debugStorageQueue.removeFirst()
             }
 
-            debugStorageQueue.addLast(message)
+            debugStorageQueue.addLast(Component.text(message))
         }
 
         /**

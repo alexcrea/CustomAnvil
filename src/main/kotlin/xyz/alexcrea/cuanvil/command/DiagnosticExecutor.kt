@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.chat.hover.content.Text
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -25,15 +24,17 @@ import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.packet.NoPacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.util.*
 import java.util.stream.Collectors
 
+@Suppress("UnstableApiUsage")
 class DiagnosticExecutor : CASubCommand {
 
     companion object {
-        const val NO_DIAG_PERM = "You do not have permission to diagnostic this server"
 
         fun fetchNMSType(): String {
             val packetManager = DependencyManager.packetManager
@@ -101,7 +102,7 @@ class DiagnosticExecutor : CASubCommand {
         args: Array<out String>
     ): Boolean {
         if (!allowed(sender)) {
-            sender.sendMessage(NO_DIAG_PERM)
+            MsgCommand.SHARED_NO_DIAG_PERM.send(sender)
             return false
         }
 
@@ -122,11 +123,11 @@ class DiagnosticExecutor : CASubCommand {
 
         if (sender is HumanEntity) {
             if (hasError)
-                sender.sendMessage(ChatColor.RED.toString() + "There was an error running the diagnostic")
-            val message = TextComponent(ChatColor.GREEN.toString() + "Click to copy diagnostic data")
+                MsgCommand.DIAGNOSTIC_ERROR_GENERIC.send(sender)
+            val message = TextComponent(MsgCommand.DIAGNOSTIC_COPY.legacy())
 
             message.clickEvent = ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stb.toString())
-            message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text("§7Click to copy"))
+            message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, Text(MsgCommand.SHARED_HOVER_COPY.legacy()))
 
             sender.spigot().sendMessage(message)
         } else {
@@ -213,8 +214,8 @@ class DiagnosticExecutor : CASubCommand {
             return this.name + " v" + this.description.version
         }
 
-    override fun description(): String {
-        return "Basic diagnostic of this plugin"
+    override fun description(): MessageLike {
+        return MsgCommand.DIAGNOSTIC_DESCRIPTION
     }
 
     private fun pluginListDiag(sender: CommandSender, stb: StringBuilder) {

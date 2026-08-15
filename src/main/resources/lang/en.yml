@@ -32,8 +32,9 @@ error:
 command:
   shared:
     no-diag-permission: "<red>You do not have permission to diagnostic this server"
-    # I try to avoid using & for color but this is for a bungee text component
-    hover-copy: "§7Click to copy"
+    hover-copy: "<gray>Click to copy"
+    unknown-subcmd: "Unknown subcommand %command"
+    no-permission: "No permission to execute this command"
     warning:
       missing-subcmd: "Need to specify a subcommand. for example %example1 or %example2"
   root:
@@ -45,21 +46,47 @@ command:
     description: "Used to toggle debug logs and retrieve them"
     log-cleared: "Log Cleared"
     toggled: "Debug toggled to %type"
-    # I try to avoid using & for color but this is for a bungee text component
-    copy: "§aClick to copy log data"
+    copy: "<green>Click to copy log data"
     data:
       header: "Debug Log data:"
       line-count: "Found %count lines"
     warning:
       unspecified-type: "Need to specify which type of debug to toggle: \"default\" or \"verbose\""
+      invalid-type: "Invalid debug type \"%type\""
       no-log: "No log to show ? make sure you tried with debug log toggled (%command)"
   diagnostic:
     description: "Basic diagnostic of this plugin"
     had-error: "<red>There was an error running the diagnostic"
-    # I try to avoid using & for color but this is for a bungee text component
-    copy: "§aClick to copy diagnostic data"
+    copy: "<green>Click to copy diagnostic data"
   config:
     description: "Used to edit the configuration of the plugin"
-
+    folia-issue:
+      1: "<red>It look like you are using Folia. Sadly Custom Anvil do not support Config gui for Folia."
+      2: "<yellow>It is may come in a future version."
+      3: ""
+      4: "<yellow>Currently you need to edit manually the config or copy from another server (spigot or better)"
+      5: "<yellow>Then /ca reload after config file is edited"
+    enchantment:
+      no_hand: "No enchantment found in the item you are holding"
+      no_name: "No enchantment found with the name %name"
     warning:
       legacy-name: "<red>/ca gui has been moved to /ca config"
+      cannot_configure: "Cannot configure the item in hand"
+  enchant:
+    description: "Allows to set enchantment to holden item"
+    warning:
+      missing_parameter: "Missing enchantment parameter"
+      not_found: "Enchantment not found: %path"
+      malformed_number: "Invalid number: %num"
+      cannot_enchant: "Cannot enchant this item"
+    removed: "%name removed"
+    set: "%name set to level %level"
+  help:
+    description: "Help command"
+    header: "List of available commands:"
+  reload:
+    description: "Reload the configuration of this plugin"
+    start: "<yellow>Reloading config..."
+    success: "<green>Config reloaded !"
+    fail: "<red>Config was not able to be reloaded..."
+    hard-fail: "<red>Hard fail, plugin disabled"
