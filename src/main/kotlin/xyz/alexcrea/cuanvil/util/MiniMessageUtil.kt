@@ -25,9 +25,4 @@ object MiniMessageUtil {
     val legacy_mm = LegacyComponentSerializer.legacySection()
     val plain_text_mm = PlainTextComponentSerializer.plainText()
 
-    // Keeping track of this as most use of this can be replaced later on v2 with pure component alternative
-    fun fromLegacy(legacyText: String): TextComponent {
-        return legacy_mm.deserialize(legacyText)
-    }
-
 }

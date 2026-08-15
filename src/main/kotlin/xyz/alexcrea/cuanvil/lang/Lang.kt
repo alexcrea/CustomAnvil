@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.lang
 
 import io.delilaheve.CustomAnvil
+import org.bukkit.configuration.ConfigurationSection
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 object Lang {
@@ -25,6 +26,13 @@ object Lang {
         CustomAnvil.log("Missing language data for ${lang.name} using default")
 
         return default.get(key) ?: key
+    }
+
+    fun getSection(key: String): ConfigurationSection? {
+        val value = lang.getSection(key)
+        if(value != null) return value
+
+        return default.getSection(key)
     }
 
     /*

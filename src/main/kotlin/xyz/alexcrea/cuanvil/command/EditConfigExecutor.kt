@@ -11,7 +11,7 @@ import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.ItemConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
-import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
@@ -22,7 +22,7 @@ class EditConfigExecutor : CASubCommand {
         return sender.hasPermission(CustomAnvil.editConfigPermission)
     }
 
-    override fun description(): MessageLike {
+    override fun description(): Message {
         return MsgCommand.CONFIG_DESCRIPTION
     }
 

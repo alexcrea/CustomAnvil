@@ -9,13 +9,13 @@ import net.md_5.bungee.api.chat.hover.content.Text
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
-import xyz.alexcrea.cuanvil.util.MiniMessageUtil
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 
 class DebugToggleExecutor : CASubCommand {
 
-    override fun description(): MessageLike {
+    override fun description(): Message {
         return MsgCommand.DEBUG_DESCRIPTION
     }
 
@@ -88,7 +88,7 @@ class DebugToggleExecutor : CASubCommand {
         val stb = StringBuilder(MsgCommand.DEBUG_DATA_HEADER.unformatted()).append(' ')
         stb.append(MsgCommand.DEBUG_DATA_LINE_COUNT.unformatted(CustomAnvil.debugStorageQueue.size))
         for(log in CustomAnvil.debugStorageQueue) {
-            stb.append('\n').append(MiniMessageUtil.plain_text_mm.serialize(log))
+            stb.append('\n').append(log.serializePlain())
         }
 
         if(sender is Player) {

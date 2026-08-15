@@ -10,6 +10,7 @@ import xyz.alexcrea.cuanvil.anvil.AnvilMergeLogic.LoreEditResult
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentLore
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
@@ -320,7 +321,7 @@ object AnvilLoreEditUtil {
                 hasUndidColor = true
                 result = clearedLine
             } else {
-                result = MiniMessageUtil.plain_text_mm.serialize(line)
+                result = line.serializePlain()
             }
 
             lines[index] = MiniMessageUtil.plain_text_mm.deserialize(result)
@@ -354,7 +355,7 @@ object AnvilLoreEditUtil {
             result = clearedLine
         } else {
             // Remove extra tags
-            result = MiniMessageUtil.plain_text_mm.serialize(coloredComponent)
+            result = coloredComponent.serializePlain()
         }
         line.set(MiniMessageUtil.plain_text_mm.deserialize(result))
 

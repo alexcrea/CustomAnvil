@@ -24,7 +24,7 @@ import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.packet.NoPacketManager
 import xyz.alexcrea.cuanvil.dependency.packet.ProtocoLibWrapper
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
-import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener
 import xyz.alexcrea.cuanvil.util.MetricsUtil
@@ -214,7 +214,7 @@ class DiagnosticExecutor : CASubCommand {
             return this.name + " v" + this.description.version
         }
 
-    override fun description(): MessageLike {
+    override fun description(): Message {
         return MsgCommand.DIAGNOSTIC_DESCRIPTION
     }
 

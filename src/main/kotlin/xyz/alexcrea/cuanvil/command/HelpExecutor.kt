@@ -2,16 +2,15 @@ package xyz.alexcrea.cuanvil.command
 
 import com.google.common.collect.ImmutableMap
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.util.ComponentUtil.send
 
 class HelpExecutor : CASubCommand {
 
-    override fun description(): MessageLike {
+    override fun description(): Message {
         return MsgCommand.HELP_DESCRIPTION
     }
 
@@ -23,7 +22,7 @@ class HelpExecutor : CASubCommand {
         cmdstr: String,
         args: Array<out String>,
     ): Boolean {
-        var text = MsgCommand.HELP_HEADER.formatted()
+        var text = MsgCommand.HELP_HEADER.formatted().first()
         for((key, cmd) in commands) {
             if(!cmd.allowed(sender)) continue
 

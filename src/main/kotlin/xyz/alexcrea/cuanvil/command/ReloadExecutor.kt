@@ -9,13 +9,13 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
 import xyz.alexcrea.cuanvil.lang.Lang
-import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 
 class ReloadExecutor : CASubCommand {
 
-    override fun description(): MessageLike {
+    override fun description(): Message {
         return MsgCommand.RELOAD_DESCRIPTION
     }
 

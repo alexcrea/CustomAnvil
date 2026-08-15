@@ -22,6 +22,8 @@ import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe
 import xyz.alexcrea.cuanvil.util.CasedStringUtil
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
@@ -151,7 +153,7 @@ object AnvilMergeLogic {
             )
 
             if (component != null) {
-                renameText = MiniMessageUtil.legacy_mm.serialize(component)
+                renameText = component.serializeLegacy()
 
                 sumCost += ConfigOptions.useOfColorCost
                 useColor = true

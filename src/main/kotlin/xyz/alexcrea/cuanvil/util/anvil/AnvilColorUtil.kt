@@ -3,6 +3,9 @@ package xyz.alexcrea.cuanvil.util.anvil
 import io.delilaheve.util.ConfigOptions
 import net.kyori.adventure.text.Component
 import org.bukkit.permissions.Permissible
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeMM
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -103,10 +106,10 @@ object AnvilColorUtil {
         var result: Component = MiniMessageUtil.legacy_mm.deserialize(previousStr)
         if (permission.canUseMinimessage) {
             // we dance with formats here
-            val toMinimessage = MiniMessageUtil.mm.serialize(result)
+            val toMinimessage = result.serializeMM()
             val hackySolution = toMinimessage.replace("\\<", "<")
             val fromMinimessage = MiniMessageUtil.mm.deserialize(hackySolution)
-            val asPlain = MiniMessageUtil.plain_text_mm.serialize(fromMinimessage)
+            val asPlain = fromMinimessage.serializePlain()
 
             if (previousStr != asPlain) {
                 useColor = true
@@ -145,8 +148,8 @@ object AnvilColorUtil {
     ): String? {
         if (!permission.allowed() || component == null) return null
 
-        val transformed = MiniMessageUtil.mm.serialize(component)
-        val plainTransform = MiniMessageUtil.plain_text_mm.serialize(component)
+        val transformed = component.serializeMM()
+        val plainTransform = component.serializePlain()
         if (transformed == plainTransform) return null
         if (permission.onlyMinimessage()) {
             return transformed
@@ -154,7 +157,7 @@ object AnvilColorUtil {
 
         // smol dance so we transform the component that may contain other tag into only decoration & color for legacy
         val coloredMessage = MiniMessageUtil.color_only_mm.deserialize(transformed)
-        val legacyMessage = StringBuilder(MiniMessageUtil.legacy_mm.serialize(coloredMessage))
+        val legacyMessage = StringBuilder(coloredMessage.serializeLegacy())
 
         // Reverse hex pattern
         if (permission.canUseHexColor) {

@@ -3,32 +3,15 @@ package xyz.alexcrea.cuanvil.lang
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
+import org.bukkit.configuration.ConfigurationSection
 import xyz.alexcrea.cuanvil.util.ComponentUtil.send
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import java.util.logging.Level
 import kotlin.math.min
 
-interface MessageLike {
-
-    fun log(vararg params: Any)
-
-    fun send(destination: CommandSender, vararg params: Any)
-
-    fun unformatted(vararg params: Any): String
-
-    fun formatted(vararg params: Any): Component
-
-    fun legacy(vararg params: Any): String {
-        val formated = formatted(*params)
-        return MiniMessageUtil.legacy_mm.serialize(formated)
-    }
-}
-
-enum class MessageType {
-    DEFAULT, WARNING, ERROR, COMMAND, UI,
-}
-
-open class Message(val key: String, vararg val params: String) : MessageLike {
+open class Message(val key: String, vararg val params: String) {
 
     protected fun replaceParameters(stb: StringBuilder, vararg values: Any) {
         // replace all placeholder thingy %key -> value
@@ -52,7 +35,7 @@ open class Message(val key: String, vararg val params: String) : MessageLike {
         }
     }
 
-    override fun unformatted(vararg params: Any): String {
+    private fun unformattedMonoline(vararg params: Any): String {
         val translated = Lang.getTranslated(key)
         if(params.isEmpty() && this.params.isEmpty()) return translated
 
@@ -61,19 +44,71 @@ open class Message(val key: String, vararg val params: String) : MessageLike {
         return stb.toString()
     }
 
-    override fun formatted(vararg params: Any): Component {
-        val unformatted = unformatted(*params)
+    private fun unformattedMultiline(section: ConfigurationSection, vararg params: Any): String {
+        val stb = StringBuilder()
 
-        return MiniMessageUtil.mm.deserialize(unformatted)
+        for(key in section.getKeys(false)) {
+            if(!section.isString(key)) continue
+            if(!stb.isEmpty()) stb.append('\n')
+
+            stb.append(section.getString(key))
+        }
+
+        replaceParameters(stb, *params)
+        return stb.toString()
     }
 
-    override fun log(vararg params: Any) {
-        val text = unformatted(*params)
+    fun unformatted(vararg params: Any): String {
+        val section = Lang.getSection(key)
+        if(section != null) return unformattedMultiline(section, *params)
 
-        CustomAnvil.instance.logger.info(text)
+        return unformattedMonoline(*params)
     }
 
-    override fun send(destination: CommandSender, vararg params: Any) {
+    private fun formattedMultiline(section: ConfigurationSection, vararg params: Any): List<Component> {
+        val result = ArrayList<Component>()
+
+        for(key in section.getKeys(false)) {
+            if(!section.isString(key)) continue
+
+            val stb = StringBuilder(section.getString(key))
+            replaceParameters(stb, *params)
+
+            result.add(MiniMessageUtil.mm.deserialize(stb.toString()))
+        }
+
+        return result
+    }
+
+    fun formatted(vararg params: Any): List<Component> {
+        val section = Lang.getSection(key)
+        if(section != null) return formattedMultiline(section, *params)
+
+        val translated = unformattedMonoline(key, *params)
+
+        return listOf(MiniMessageUtil.mm.deserialize(translated))
+    }
+
+    fun legacy(vararg params: Any): String {
+        val formated = formatted(*params)
+
+        val stb = StringBuilder()
+        for(component in formated) {
+            if(!stb.isEmpty()) stb.append('\n')
+            stb.append(component.serializeLegacy())
+        }
+        return stb.toString()
+    }
+
+    open fun log(vararg params: Any) {
+        val texts = formatted(*params)
+
+        for(component in texts) {
+            CustomAnvil.instance.logger.info(component.serializePlain())
+        }
+    }
+
+    open fun send(destination: CommandSender, vararg params: Any) {
         formatted(*params).send(destination)
     }
 }
@@ -81,83 +116,32 @@ open class Message(val key: String, vararg val params: String) : MessageLike {
 class WarningMessage(key: String, vararg params: String) : Message("warning.$key", *params) {
 
     override fun log(vararg params: Any) {
-        val text = unformatted(*params)
+        val texts = formatted(*params)
 
-        CustomAnvil.instance.logger.warning(text)
+        for(component in texts) {
+            CustomAnvil.instance.logger.warning(component.serializePlain())
+        }
     }
-
 }
 
 class ErrorMessage(key: String, vararg params: String) : Message("error.$key", *params) {
 
     override fun log(vararg params: Any) {
-        val text = unformatted(*params)
+        val texts = formatted(*params)
 
-        CustomAnvil.logError(text)
+        for(component in texts) {
+            CustomAnvil.logError(component.serializePlain())
+        }
     }
 
     fun log(e: Throwable, vararg params: Any, level: Level = Level.SEVERE, track: Boolean = true) {
-        val text = unformatted(*params)
+        val texts = formatted(*params)
 
-        CustomAnvil.logError(text, e, track, level)
+        for(component in texts) {
+            CustomAnvil.logError(component.serializePlain(), e, track, level)
+        }
     }
 }
-
 
 class CommandMessage(key: String, vararg params: String) : Message("command.$key", *params)
 class UIMessage(key: String, vararg params: String) : Message("ui.$key", *params)
-
-class MultiLineMessage(type: MessageType, baseKey: String, count: Int, vararg params: String) : MessageLike {
-
-    private val messages = ArrayList<MessageLike>()
-
-    init {
-        for(i in 1 until count + 1) {
-            val message = createNew(type, "$baseKey.$i", *params)
-            messages.add(message)
-        }
-    }
-
-    private fun createNew(type: MessageType, key: String, vararg params: String): MessageLike {
-        return when(type) {
-            MessageType.DEFAULT -> Message(key, *params)
-            MessageType.WARNING -> WarningMessage(key, *params)
-            MessageType.ERROR -> ErrorMessage(key, *params)
-            MessageType.COMMAND -> CommandMessage(key, *params)
-            MessageType.UI -> UIMessage(key, *params)
-        }
-    }
-
-    override fun log(vararg params: Any) {
-        for(message in messages) {
-            message.log(*params)
-        }
-    }
-
-    override fun send(destination: CommandSender, vararg params: Any) {
-        for(message in messages) {
-            message.send(destination, *params)
-        }
-    }
-
-    override fun unformatted(vararg params: Any): String {
-        val stb = StringBuilder()
-        stb.append(messages[0].unformatted(*params))
-
-        for(i in 1 until messages.size) {
-            stb.append('\n').append(messages[i].unformatted(*params))
-        }
-
-        return stb.toString()
-    }
-
-    override fun formatted(vararg params: Any): Component {
-        val component = messages[0].formatted(*params)
-
-        for(i in 1 until messages.size) {
-            component.appendNewline().append(messages[i].formatted(*params))
-        }
-
-        return component
-    }
-}

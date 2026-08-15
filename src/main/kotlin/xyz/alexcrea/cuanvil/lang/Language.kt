@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.lang
 
 import io.delilaheve.CustomAnvil
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -48,6 +49,10 @@ class Language(private val id: String, private val default: Boolean = false) {
 
     fun get(key: String): String? {
         return conf.getString(key)
+    }
+
+    fun getSection(key: String): ConfigurationSection? {
+        return conf.getConfigurationSection(key)
     }
 
     val name: String

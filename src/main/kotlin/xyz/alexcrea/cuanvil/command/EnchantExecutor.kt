@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
-import xyz.alexcrea.cuanvil.lang.MessageLike
+import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
@@ -21,7 +21,7 @@ class EnchantExecutor : CASubCommand {
         return sender.hasPermission(CustomAnvil.giveEnchantmentPermission)
     }
 
-    override fun description(): MessageLike {
+    override fun description(): Message {
         return MsgCommand.ENCHANT_DESCRIPTION
     }
 

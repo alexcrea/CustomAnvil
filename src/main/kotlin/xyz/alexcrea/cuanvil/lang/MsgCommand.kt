@@ -4,12 +4,6 @@ import xyz.alexcrea.cuanvil.lang.CommandMessage as Message
 
 object MsgCommand {
 
-    fun multiLine(basekey: String, count: Int): MultiLineMessage {
-        return MultiLineMessage(
-            MessageType.COMMAND, basekey, count
-        )
-    }
-
     // Root
     val ROOT_UNKNOWN_SUBCOMMAND = Message("root.warning.unknown-sub", "command")
     val ROOT_ERROR_SUBCOMMAND = Message("root.error.generic")
@@ -42,7 +36,7 @@ object MsgCommand {
     // Config
     val CONFIG_DESCRIPTION = Message("config.description")
     val CONFIG_LEGACY_NAME_WARNING = Message("config.warning.legacy-name")
-    val CONFIG_FOLIA_ISSUE = multiLine("config.folia-issue", 5)
+    val CONFIG_FOLIA_ISSUE = Message("config.folia-issue")
 
     val CONFIG_ENCHANTMENT_NO_IN_HAND = Message("config.enchantment.no_hand")
     val CONFIG_ENCHANTMENT_NO_NAME = Message("config.enchantment.no_name", "name")
