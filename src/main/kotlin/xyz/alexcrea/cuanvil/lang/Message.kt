@@ -84,7 +84,7 @@ open class Message(val key: String, vararg val params: String) {
         val section = Lang.getSection(key)
         if(section != null) return formattedMultiline(section, *params)
 
-        val translated = unformattedMonoline(key, *params)
+        val translated = unformattedMonoline(*params)
 
         return listOf(MiniMessageUtil.mm.deserialize(translated))
     }

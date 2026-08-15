@@ -35,7 +35,7 @@ class DebugToggleExecutor : CASubCommand {
         }
 
         if(args.isEmpty()) {
-            MsgCommand.SHARED_MISSING_SUBCOMMAND.send(sender)
+            MsgCommand.SHARED_MISSING_SUBCOMMAND.send(sender, "\"toggle\"", "\"get\"")
             return true
         }
         when(args[0].lowercase()) {
