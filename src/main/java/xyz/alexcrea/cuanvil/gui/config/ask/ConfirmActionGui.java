@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class ConfirmActionGui extends AbstractAskGui {
 
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
 
@@ -47,7 +48,7 @@ public class ConfirmActionGui extends AbstractAskGui {
             }
 
             if (!success) {
-                event.getWhoClicked().sendMessage("§cAction could not be completed. ");
+                MsgUI.INSTANCE.getCONFIRM_ACTION_FAILED().send(player);
             }
             backOnConfirm.show(player);
 

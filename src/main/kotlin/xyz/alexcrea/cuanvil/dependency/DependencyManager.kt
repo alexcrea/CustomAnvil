@@ -28,6 +28,7 @@ import xyz.alexcrea.cuanvil.dependency.scheduler.FoliaScheduler
 import xyz.alexcrea.cuanvil.dependency.scheduler.TaskScheduler
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
+import xyz.alexcrea.cuanvil.lang.MsgWarning
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.lang.IllegalStateException
@@ -158,18 +159,14 @@ object DependencyManager {
     }
 
     private fun logException(target: CommandSender, e: Exception) {
-        CustomAnvil.instance.logger.log(
-            Level.SEVERE,
+        CustomAnvil.logError(
             "Error while trying to handle custom anvil supported plugin: ",
             e
         )
         trackError(e)
 
         // Finally, warn the player
-        target.sendMessage(
-            "[" + ChatColor.YELLOW.toString() + "CustomAnvil" + ChatColor.WHITE.toString() + "] " +
-                    ChatColor.RED.toString() + "Error while handling the anvil."
-        )
+        MsgWarning.DEPENDENCY_GENERIC_EXCEPTION.send(target)
     }
 
     private fun logExceptionAndClear(view: AnvilView, e: Exception) {

@@ -144,4 +144,4 @@ class ErrorMessage(key: String, vararg params: String) : Message("error.$key", *
 }
 
 class CommandMessage(key: String, vararg params: String) : Message("command.$key", *params)
-class UIMessage(key: String, vararg params: String) : Message("ui.$key", *params)
+class UIMessage(key: String, vararg params: String) : Message("config-ui.$key", *params)

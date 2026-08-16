@@ -23,6 +23,7 @@ import xyz.alexcrea.cuanvil.gui.config.settings.MaterialSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.*;
@@ -113,7 +114,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             // Do not allow to open inventory if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             // test if group is used & cancel & warn user if so

@@ -16,6 +16,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 import xyz.alexcrea.cuanvil.gui.config.global.BasicConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -73,7 +74,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
             // Do not allow to open inventory if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             new WorkPenaltyTypeSettingGui(parent).show(player);

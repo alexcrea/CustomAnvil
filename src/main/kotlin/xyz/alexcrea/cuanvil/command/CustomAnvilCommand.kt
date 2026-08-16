@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import xyz.alexcrea.cuanvil.lang.MsgCommand
-import xyz.alexcrea.cuanvil.util.MetricsUtil
 
 class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
 

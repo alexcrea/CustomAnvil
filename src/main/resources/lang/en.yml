@@ -90,3 +90,23 @@ command:
     success: "<green>Config reloaded !"
     fail: "<red>Config was not able to be reloaded..."
     hard-fail: "<red>Hard fail, plugin disabled"
+
+config-ui:
+  shared:
+    no-permission: "<red>You do not have permission to edit the config"
+  confirm-action:
+    fail: "<red>Action could not be completed."
+  element-list:
+    instruction-new:
+      1: "<yellow>Write the %type name you want to create in the chat."
+      2: "<yellow>Or write <red>cancel <yellow>to go back to %type config menu"
+    cancelled-new: "%type creation cancelled..."
+    duplicated-new: "<red>Please enter a %type name that do not already exist..."
+  unit-repair:
+    element:
+      title: "Select item to be repaired."
+      description:
+        1: "<gray>Click here with an item to set the item"
+        2: "<gray>You like to be repaired by %name"
+      cannot-damage-new: "<red>This item can't be damaged, so it can't be repaired."
+      same-type-new: "<red>Item can't repair something of the same type."

@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
@@ -70,11 +71,11 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
                         NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
 
                         if (!(meta instanceof Damageable)) {
-                            player.sendMessage("§cThis item can't be damaged, so it can't be repaired.");
+                            MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_CANNOT_REPAIR_NEW().send(player);
                             return;
                         }
                         if (type.equals(this.parentMaterial)) {
-                            player.sendMessage("§cItem can't repair something of the same type.");
+                            MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_SAME_TYPE_NEW().send(player);
                             return;
                         }
 

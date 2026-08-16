@@ -10,9 +10,9 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConfigGui
 import xyz.alexcrea.cuanvil.gui.config.global.ItemConfigGui
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 import xyz.alexcrea.cuanvil.lang.Message
 import xyz.alexcrea.cuanvil.lang.MsgCommand
+import xyz.alexcrea.cuanvil.lang.MsgUI
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
@@ -35,7 +35,7 @@ class EditConfigExecutor : CASubCommand {
         if(sender !is HumanEntity) return false
 
         if(!allowed(sender)) {
-            sender.sendMessage(GuiGlobalActions.NO_EDIT_PERM)
+            MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(sender)
             return false
         }
         if(PlatformUtil.isFolia) {
