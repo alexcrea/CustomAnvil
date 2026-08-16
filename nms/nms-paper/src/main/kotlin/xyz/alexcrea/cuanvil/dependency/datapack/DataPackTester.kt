@@ -30,8 +30,11 @@ object DataPackTester {
                     return emptyList()
                 }
                 return legacyNames
-            } catch (e: Exception){
+            } catch (_: Exception){
                 // Assume cause UnimplementedOperationException on mock server
+                return Collections.emptyList()
+            } catch(_: NoSuchMethodError) {
+                // Idk newer spigot may not have that ?
                 return Collections.emptyList()
             }
         }
