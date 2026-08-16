@@ -19,6 +19,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.ElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collections;
@@ -34,8 +35,10 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
 
     Set<AbstractMaterialGroup> selectedGroups;
 
-    public GroupSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
-        super(6, title, parent);
+    public GroupSelectSettingGui(
+            @NotNull Message title, @NotNull String param,
+            ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
+        super(6, title.textHolder(param), parent);
         this.groupContainer = groupContainer;
         //Not used but planned
         this.page = page;

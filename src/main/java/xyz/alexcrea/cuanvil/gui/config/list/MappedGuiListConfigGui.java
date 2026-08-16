@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.LazyValue;
 
@@ -19,12 +20,20 @@ import java.util.function.Supplier;
 public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui.LazyElement<?>>
         extends MappedElementListConfigGui<T, S> {
 
-    protected MappedGuiListConfigGui(@NotNull String title) {
-        super(title);
+    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull String param) {
+        super(title, param);
     }
 
-    protected MappedGuiListConfigGui(@NotNull String title, @NotNull Gui parent) {
-        super(title, parent);
+    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull String param, @NotNull Gui parent) {
+        super(title, param, parent);
+    }
+
+    protected MappedGuiListConfigGui(@NotNull Message title) {
+        super(title, "");
+    }
+
+    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull Gui parent) {
+        super(title, "", parent);
     }
 
     @Override

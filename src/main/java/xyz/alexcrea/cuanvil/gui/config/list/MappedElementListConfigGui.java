@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 
 import java.util.Arrays;
@@ -20,14 +21,14 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
 
     protected final HashMap<T, S> elementGuiMap;
 
-    protected MappedElementListConfigGui(@NotNull String title, @NotNull Gui parent) {
-        super(title, parent);
+    protected MappedElementListConfigGui(@NotNull Message title, @NotNull String param, @NotNull Gui parent) {
+        super(title, param, parent);
         this.elementGuiMap = new HashMap<>();
 
     }
 
-    protected MappedElementListConfigGui(@NotNull String title) {
-        this(title, MainConfigGui.getInstance());
+    protected MappedElementListConfigGui(@NotNull Message title, @NotNull String param) {
+        this(title, param, MainConfigGui.getInstance());
     }
 
     @Override

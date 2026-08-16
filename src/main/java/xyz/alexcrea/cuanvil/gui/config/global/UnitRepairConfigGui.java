@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
@@ -38,13 +39,13 @@ public class UnitRepairConfigGui extends
     }
 
     private UnitRepairConfigGui() {
-        super("Unit Repair Config");
+        super(MsgUI.INSTANCE.getUNIT_REPAIR_TITLE());
 
         init();
     }
 
     public UnitRepairConfigGui(Gui parent) {
-        super("Unit Repair Config", parent);
+        super(MsgUI.INSTANCE.getUNIT_REPAIR_TITLE(), parent);
     }
 
     @Override
@@ -128,9 +129,8 @@ public class UnitRepairConfigGui extends
             clickEvent.setCancelled(true);
 
             new SelectItemTypeGui(
-                    "Select unit repair item.",
-                    "§7Click here with an item to set the item\n" +
-                            "§7You like to be an unit repair item",
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_TITLE(), "",
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_DESCRIPTION(), "",
                     this,
                     (itemStack, player) -> {
                         NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);

@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
@@ -36,13 +37,13 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
     }
 
     private CustomRecipeConfigGui() {
-        super("Custom Recipe Config");
+        super(MsgUI.INSTANCE.getCUSTOM_RECIPE_TITLE());
 
         init();
     }
 
     public CustomRecipeConfigGui(Gui parent) {
-        super("Custom Recipe Config", parent);
+        super(MsgUI.INSTANCE.getCUSTOM_RECIPE_TITLE(), parent);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         ItemMeta meta = displayedItem.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");
+        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");//TODO MESSAGE
         meta.addItemFlags(ItemFlag.values());
 
         meta.setLore(getRecipeLore(recipe));
@@ -72,7 +73,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
     private static @NotNull ArrayList<String> getRecipeLore(AnvilCustomRecipe recipe) {
         boolean shouldWork = recipe.validate();
 
-        ArrayList<String> lore = new ArrayList<>();
+        ArrayList<String> lore = new ArrayList<>();//TODO MESSAGE
         lore.add("§7Is valid:    §" + (shouldWork ? "aYes" : "cNo"));
         lore.add("§7Exact count:    §" + (recipe.getExactCount() ? "aYes" : "cNo"));
         lore.add("§7Recipe Level Cost: §e" + recipe.getLevelCostPerCraft());
@@ -90,7 +91,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
     @Override
     protected String genericDisplayedName() {
-        return "custom recipe";
+        return "custom recipe";//TODO MESSAGE
     }
 
     @Override

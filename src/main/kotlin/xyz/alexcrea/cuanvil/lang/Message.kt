@@ -1,5 +1,7 @@
 package xyz.alexcrea.cuanvil.lang
 
+import com.github.stefvanschie.inventoryframework.adventuresupport.ComponentHolder
+import com.github.stefvanschie.inventoryframework.adventuresupport.TextHolder
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
@@ -22,6 +24,7 @@ open class Message(val key: String, vararg val params: String) {
         for(i in 0 until min(params.size, values.size)) {
             val key = params[i]
             val replacement = values[i].toString()
+            if(replacement.isEmpty()) continue //May not be good but can be changed if cause an issue
 
             var current = 0
             while(true) {
@@ -77,9 +80,11 @@ open class Message(val key: String, vararg val params: String) {
             result.add(MiniMessageUtil.mm.deserialize(stb.toString()))
         }
 
+        if(result.isEmpty()) return listOf(Component.text(key))
         return result
     }
 
+    // return a list of AT LEAST 1 element. calling first is safe
     fun formatted(vararg params: Any): List<Component> {
         val section = Lang.getSection(key)
         if(section != null) return formattedMultiline(section, *params)
@@ -87,6 +92,21 @@ open class Message(val key: String, vararg val params: String) {
         val translated = unformattedMonoline(*params)
 
         return listOf(MiniMessageUtil.mm.deserialize(translated))
+    }
+
+    fun formattedConcatenated(vararg params: Any): Component {
+        val formated = formatted(*params)
+
+        var result = formated.first()
+        for(i in 1 until formated.size) {
+            result = result.appendNewline().append(formated[i])
+        }
+
+        return result
+    }
+
+    fun textHolder(vararg params: Any): TextHolder {
+        return ComponentHolder.of(formattedConcatenated(*params))
     }
 
     fun legacy(vararg params: Any): String {

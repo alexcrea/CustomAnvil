@@ -19,6 +19,7 @@ import xyz.alexcrea.cuanvil.gui.config.settings.ItemSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -36,7 +37,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     public CustomRecipeSubSettingGui(
             @NotNull CustomRecipeConfigGui parent,
             @NotNull AnvilCustomRecipe anvilRecipe) {
-        super(4, "§e" + CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()) + " §8Config");
+        super(4, CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()));
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
 
@@ -73,19 +74,19 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        deleteMeta.setDisplayName("§4DELETE RECIPE");
-        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));
+        deleteMeta.setDisplayName("§4DELETE RECIPE");//TODO MESSAGE
+        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));//TODO MESSAGE
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
 
         // Displayed item will be updated later
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
-        this.exactCountFactory = new BoolSettingsGui.BoolSettingFactory("§8Exact count ?", this,
+        this.exactCountFactory = new BoolSettingsGui.BoolSettingFactory("§8Exact count ?", this,//TODO MESSAGE
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG);
 
-        this.removeExactLinearXpFactory = new BoolSettingsGui.BoolSettingFactory("§8Remove exact linear xp ?", this,
+        this.removeExactLinearXpFactory = new BoolSettingsGui.BoolSettingFactory("§8Remove exact linear xp ?", this,//TODO MESSAGE
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 this.anvilRecipe + "." + AnvilCustomRecipe.REMOVE_EXACT_XP_CONFIG, AnvilCustomRecipe.DEFAULT_REMOVE_EXACT_XP_CONFIG);
 
@@ -93,18 +94,18 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cRemove exact linear xp ?");
-        meta.setLore(Collections.singletonList("§7Not usable if linear cost is 0"));
+        meta.setDisplayName("§cRemove exact linear xp ?");//TODO MESSAGE
+        meta.setLore(Collections.singletonList("§7Not usable if linear cost is 0"));//TODO MESSAGE
         item.setItemMeta(meta);
         this.noRemoveExactLinearXp = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        this.levelCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Level Cost", this,
+        this.levelCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Level Cost", this,//TODO MESSAGE
                 this.anvilRecipe + "." + AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG, 1, 5, 10);
 
-        this.linearXpCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Linear Xp Cost", this,
+        this.linearXpCostFactory = new IntSettingsGui.IntSettingFactory("§8Recipe Linear Xp Cost", this,//TODO MESSAGE
                 this.anvilRecipe + "." + AnvilCustomRecipe.LINEAR_XP_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 null,
@@ -117,21 +118,21 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 "§7Set the left item of the custom craft",
-                "§7\u25A0 + \u25A1 = \u25A1");
+                "§7■ + □ = □");//TODO MESSAGE
 
         this.rightItemFactory = new ItemSettingGui.ItemSettingFactory("§eRecipe Right §8Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
                 "§7Set the right item of the custom craft",
-                "§7\u25A1 + \u25A0 = \u25A1");
+                "§7□ + ■ = □");//TODO MESSAGE
 
         this.resultItemFactory = new ItemSettingGui.ItemSettingFactory("§aRecipe Result §8Item", this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
                 "§7Set the result item of the custom craft",
-                "§7\u25A1 + \u25A1 = \u25A0");
+                "§7□ + □ = ■");//TODO MESSAGE
 
         // Now we update the items
         updateLocal();
@@ -162,8 +163,9 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
             return success;
         };
 
-        return new ConfirmActionGui("§cDelete §e" + CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString()) + "§c?",
-                "§7Confirm that you want to delete this conflict.",
+        var type = CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString());
+        return new ConfirmActionGui(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_TITLE(), type,
+                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_DESCRIPTION(), type,
                 this, this.parent, deleteSupplier
         );
     }

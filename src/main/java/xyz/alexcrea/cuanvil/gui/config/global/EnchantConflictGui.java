@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
@@ -38,11 +39,11 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     // Need to init myself
     public EnchantConflictGui(Gui parent) {
-        super("Conflict Config", parent);
+        super(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_TITLE(), parent);
     }
 
     private EnchantConflictGui() {
-        super("Conflict Config");
+        super(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_TITLE());
 
         init();
     }
@@ -80,8 +81,8 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " §fConflict");
-        meta.setLore(Arrays.asList(
+        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " §fConflict"); //TODO MESSAGE
+        meta.setLore(Arrays.asList(//TODO MESSAGE
                 "§7Enchantment count:       §e" + conflict.getEnchants().size(),
                 "§7Group count:               §e" + conflict.getCantConflictGroup().getGroups().size(),
                 "§7Min enchantments count: §e" + conflict.getMinBeforeBlock()
@@ -98,7 +99,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     @Override
     protected String genericDisplayedName() {
-        return "conflict";
+        return "conflict";//TODO MESSAGE
     }
 
     @Override

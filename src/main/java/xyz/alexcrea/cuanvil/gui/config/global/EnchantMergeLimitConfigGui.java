@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantMergeLimitConfigGui() {
-        super("§8Enchantment Maximum Merge Level");
+        super(MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_TITLE());
         if(INSTANCE == null) INSTANCE = this;
 
         init();
@@ -39,7 +40,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantMergeLimitConfigGui(Gui parent) {
-        super("§8Enchantment Maximum Merge Level", parent);
+        super(MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_TITLE(), parent);
     }
 
 
@@ -52,6 +53,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
         String key = enchant.getKey().toString().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
+        //TODO MESSAGE
         return new IntSettingsGui.IntSettingFactory(prettyKey + " Merge Limit", parent,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(

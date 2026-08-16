@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collections;
@@ -32,14 +33,14 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantLimitConfigGui() {
-        super("§8Enchantment Level Limit");
+        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_TITLE());
         if(INSTANCE == null) INSTANCE = this;
 
         init();
     }
 
     public EnchantLimitConfigGui(Gui parent) {
-        super("§8Enchantment Level Limit", parent);
+        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_TITLE(), parent);
     }
 
     @Override

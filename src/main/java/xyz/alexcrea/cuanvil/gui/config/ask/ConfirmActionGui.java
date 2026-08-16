@@ -9,21 +9,26 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
 public class ConfirmActionGui extends AbstractAskGui {
 
-    public ConfirmActionGui(@NotNull String title, String actionDescription,
+    public ConfirmActionGui(@NotNull Message title, @NotNull String titleParam,
+                            @Nullable Message actionDescription, @NotNull String actionParam,
                             Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
                             boolean permanent) {
-        super(3, title, backOnCancel);
+        super(3, title, titleParam, backOnCancel);
 
         // Save item
         this.pane.bindItem('S', new GuiItem(
@@ -42,7 +47,7 @@ public class ConfirmActionGui extends AbstractAskGui {
             try {
                 success = onConfirm.get();
             } catch (Exception e) {
-                CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not process confirmation supplier.", e);
+                CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not process confirmation supplier.", e); //TODO MESSAGE
                 MetricsUtil.INSTANCE.trackError(e);
                 success = false;
             }
@@ -58,18 +63,19 @@ public class ConfirmActionGui extends AbstractAskGui {
         ItemStack infoItem = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItem.getItemMeta();
 
-        infoMeta.setDisplayName("§eAre you sure ?");
+        infoMeta.setDisplayName("§eAre you sure ?"); //TODO MESSAGE
         if(actionDescription != null){
-            infoMeta.setLore(Arrays.asList(actionDescription.split("\n")));
+            ComponentUtil.INSTANCE.applyLore(actionDescription.formatted(), infoMeta);
         }
 
         infoItem.setItemMeta(infoMeta);
 
         pane.bindItem('I', new GuiItem(infoItem, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
-    public ConfirmActionGui(@NotNull String title, String actionDescription,
+    public ConfirmActionGui(@NotNull Message title, @NotNull String titleParam,
+                            @Nullable Message actionDescription, @NotNull String actionParam,
                             Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm){
-        this(title, actionDescription, backOnCancel, backOnConfirm, onConfirm, true);
+        this(title, titleParam, actionDescription, actionParam, backOnCancel, backOnConfirm, onConfirm, true);
     }
 
 

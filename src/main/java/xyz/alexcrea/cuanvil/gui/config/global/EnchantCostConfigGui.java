@@ -11,6 +11,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     public EnchantCostConfigGui() {
-        super("§8Enchantment Level Cost");
+        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_TITLE());
         if (INSTANCE == null) INSTANCE = this;
 
         init();
@@ -46,7 +47,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     public EnchantCostConfigGui(Gui parent) {
-        super("§8Enchantment Level Cost", parent);
+        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_TITLE(), parent);
     }
 
     @Override
@@ -58,6 +59,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         String key = enchant.getKey().toString().toLowerCase(Locale.ENGLISH);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
+        //TODO MESSAGE
         return new EnchantCostSettingsGui.EnchantCostSettingFactory(prettyKey + " Cost", parent,
                 ENCHANT_VALUES_ROOT + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(

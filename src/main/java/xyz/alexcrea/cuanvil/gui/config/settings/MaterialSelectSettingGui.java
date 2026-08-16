@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
@@ -38,9 +39,10 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
     public MaterialSelectSettingGui(
             @NotNull SelectMaterialContainer selector,
-            @NotNull String title,
+            @NotNull Message title,
+            @NotNull String param,
             @NotNull Gui backGui) {
-        super(title);
+        super(title, param);//TODO MESSAGE make param go down
         this.selector = selector;
         this.backGui = backGui;
         this.instantRemove = false;
@@ -237,8 +239,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
-                        "Remove " + materialName,
-                        "§7Confirm Remove " + materialName.toLowerCase() + " from this list.",
+                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_TITLE(), materialName,
+                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_DESCRIPTION(), materialName.toLowerCase(),
                         this, this,
                         () -> {
                             removeMaterial(material);

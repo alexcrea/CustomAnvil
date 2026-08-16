@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -27,11 +28,11 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
      *
      * @param title Title of the gui.
      */
-    protected AbstractEnchantConfigGui(String title) {
+    protected AbstractEnchantConfigGui(Message title) {
         super(title);
     }
 
-    protected AbstractEnchantConfigGui(String title, Gui parent) {
+    protected AbstractEnchantConfigGui(Message title, Gui parent) {
         super(title, parent);
     }
 

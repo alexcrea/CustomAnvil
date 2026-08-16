@@ -15,6 +15,7 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.LazyValue;
 
@@ -39,13 +40,13 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     public GroupConfigGui() {
-        super("Group Config");
+        super(MsgUI.INSTANCE.getMATERIAL_GROUP_TITLE());
 
         init();
     }
 
     public GroupConfigGui(Gui parent) {
-        super("Group Config", parent);
+        super(MsgUI.INSTANCE.getMATERIAL_GROUP_TITLE(), parent);
     }
 
     @Override

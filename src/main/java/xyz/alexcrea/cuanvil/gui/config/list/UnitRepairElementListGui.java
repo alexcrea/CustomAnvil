@@ -33,12 +33,16 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     private boolean shouldWork = true;
 
+    private static String prettifiedName(NamespacedKey parentMaterial) {
+        return CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
+    }
+
     public UnitRepairElementListGui(@NotNull NamespacedKey parentMaterial,
                                     @NotNull UnitRepairConfigGui parentGui) {
-        super("§e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase()) + " §rUnit repair");
+        super(MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_TITLE(), prettifiedName(parentMaterial));
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
-        this.materialName = CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
+        this.materialName = prettifiedName(parentMaterial);
 
         GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
     }
@@ -62,20 +66,19 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
             event.setCancelled(true);
 
             new SelectItemTypeGui(
-                    "Select item to be repaired.",
-                    "§7Click here with an item to set the item\n" +
-                            "§7You like to be repaired by " + this.materialName,
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_TITLE(), this.materialName,
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_DESCRIPTION(), this.materialName,
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
                         NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
 
                         if (!(meta instanceof Damageable)) {
-                            MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_CANNOT_REPAIR_NEW().send(player);
+                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR().send(player);
                             return;
                         }
                         if (type.equals(this.parentMaterial)) {
-                            MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_SAME_TYPE_NEW().send(player);
+                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_SAME_TYPE().send(player);
                             return;
                         }
 

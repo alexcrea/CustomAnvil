@@ -113,6 +113,26 @@ object PlatformUtil {
         }
 
         return false
+    }    /**
+     * Try to send paper component to the player
+     *
+     * @param component The used component
+     * @return true if sent, else otherwise
+     */
+
+    /**
+     * Try to set component lore of an item
+     *
+     * @param components The used component lore
+     * @return true if sent, else otherwise
+     */
+    fun ItemMeta.setPaperLore(components: List<Component>): Boolean {
+        if(isPaper) {
+            this.lore(components)
+            return true
+        }
+
+        return false
     }
 
 }
