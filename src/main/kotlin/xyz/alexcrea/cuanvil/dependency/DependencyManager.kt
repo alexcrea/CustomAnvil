@@ -30,7 +30,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.componentLore
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
-import java.lang.reflect.Constructor
+import java.lang.IllegalStateException
 import java.util.logging.Level
 
 @Suppress("UnstableApiUsage")
@@ -337,10 +337,14 @@ object DependencyManager {
 
 
     private val prepareAnvilConstructor =
-        PrepareAnvilEvent::class.java.constructors.first() as Constructor<PrepareAnvilEvent>
+        PrepareAnvilEvent::class.java.constructors.first()
 
     fun createFakeEvent(view: AnvilView, result: ItemStack?): PrepareAnvilEvent {
-        return prepareAnvilConstructor.newInstance(view, result)
+        val result = prepareAnvilConstructor.newInstance(view, result)
+        if(result !is PrepareAnvilEvent)
+            throw IllegalStateException("Could not create a PrepareAnvilEvent ?")
+
+        return result
     }
 
 }

@@ -10,13 +10,20 @@ class LegacyEcoEnchantDependency {
 
 
     private var ecoEnchantOldEnchantments: MutableSet<EcoEnchant>? = null
+    private fun unregisterEnchantment(enchant: Any) {
+        EnchantmentApi.unregisterEnchantment((enchant as Enchantment).key)
+    }
+
+    private fun registerEnchantment(ecoEnchant: EcoEnchant, enchant: Any) {
+        EnchantmentApi.registerEnchantment(CALegacyEcoEnchant(ecoEnchant, enchant as Enchantment))
+    }
+
     fun registerEnchantments() {
         val enchantments = EcoEnchants.values()
         for (ecoEnchant in enchantments) {
-            ecoEnchant as Enchantment
-
-            EnchantmentApi.unregisterEnchantment(ecoEnchant) // As eco enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
-            EnchantmentApi.registerEnchantment(CALegacyEcoEnchant(ecoEnchant, ecoEnchant))
+            // As eco enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
+            unregisterEnchantment(ecoEnchant)
+            registerEnchantment(ecoEnchant, ecoEnchant)
         }
 
         ecoEnchantOldEnchantments = HashSet(enchantments)
@@ -31,13 +38,13 @@ class LegacyEcoEnchantDependency {
         // Add new enchantments
         for (ecoEnchant in newEnchantments)
             if (!this.ecoEnchantOldEnchantments!!.contains(ecoEnchant))
-                EnchantmentApi.registerEnchantment(CALegacyEcoEnchant(ecoEnchant, ecoEnchant as Enchantment))
+                registerEnchantment(ecoEnchant, ecoEnchant)
 
 
         // Remove old enchantments that not now currently used
         this.ecoEnchantOldEnchantments!!.removeAll(newEnchantments)
         for (oldEnchantment in this.ecoEnchantOldEnchantments!!) {
-            EnchantmentApi.unregisterEnchantment(oldEnchantment as Enchantment)
+            unregisterEnchantment(oldEnchantment)
         }
 
         this.ecoEnchantOldEnchantments = HashSet(newEnchantments)

@@ -13,6 +13,7 @@ object AnvilTitleUtil {
 
     private val runTaskMap = HashMap<UUID, ScheduledTask>()
 
+    @Suppress("DEPRECATION")
     private fun actualRename(view: AnvilView, name: String, player: HumanEntity, anvilDialog: AnvilRenameDialog) {
         runTaskMap.remove(player.uniqueId)
         if (view.title == name) return

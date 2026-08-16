@@ -18,9 +18,13 @@ class ToolStatsDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
         getTokenMethod.trySetAccessible()
     }
 
-    private fun ItemChecker.getTokenSafe(item: ItemStack?): Array<String> {
-        if (item == null) return arrayOf()
-        return getTokenMethod.invoke(this, item) as Array<String>
+    private fun ItemChecker.getTokenSafe(item: ItemStack?): Array<*> {
+        if (item == null) return arrayOf<Any>()
+        val result = getTokenMethod.invoke(this, item)
+        if(result !is Array<*>)
+            throw IllegalStateException("Could not get token from ToolStats")
+
+        return result
     }
 
     override fun testAnvilResult(event: InventoryClickEvent): Boolean {

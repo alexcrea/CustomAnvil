@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
+@Suppress("DEPRECATION")
 class ItemsAdderDependency(plugin: Plugin) : GenericPluginDependency(plugin) {
     var isLoaded: Boolean = false
         get() {
