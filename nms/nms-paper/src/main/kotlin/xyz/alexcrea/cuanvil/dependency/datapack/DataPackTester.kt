@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION", "removal")
 package xyz.alexcrea.cuanvil.dependency.datapack
 
 import io.papermc.paper.datapack.Datapack
@@ -21,10 +22,10 @@ object DataPackTester {
                 return Bukkit.getDatapackManager().enabledPacks
                     .stream().map { obj: Datapack -> obj.name }
                     .toList()
-            } catch (e: NoSuchMethodException) {
+            } catch (_: NoSuchMethodException) {
                 try {
                     DataPack::class.java.getDeclaredMethod("getKey")
-                } catch (e: NoSuchMethodException) {
+                } catch (_: NoSuchMethodException) {
                     System.err.println("Could not find compatible datapack manager")
                     System.err.println("If you are using a datapack that should be compatible with CustomAnvil. It will not get detected...")
                     return emptyList()

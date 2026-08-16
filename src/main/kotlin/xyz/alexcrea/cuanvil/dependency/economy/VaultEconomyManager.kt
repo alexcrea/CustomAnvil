@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package xyz.alexcrea.cuanvil.dependency.economy
 
 import net.milkbowl.vault.economy.Economy
