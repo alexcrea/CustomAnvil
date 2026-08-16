@@ -178,7 +178,10 @@ tasks {
 
     fun ShadowJar.configureBaseShadow(suffix: String, libraries: Array<String>) {
         val processedSuffix = if(suffix.isEmpty()) "" else "-$suffix"
-        val name = "${rootProject.name}-${effectiveVersion}${processedSuffix}.jar"
+        val version = effectiveVersion
+        val name = "${rootProject.name}-${version}${processedSuffix}.jar"
+        val librariesExpendTo = libraries.joinToString(transform = { "\"$it\"" })
+
         archiveFileName.set(name)
 
         // Shadow necessary dependency
@@ -187,8 +190,8 @@ tasks {
 
         filesMatching("plugin.yml") {
             expand(
-                "version" to effectiveVersion + processedSuffix,
-                "libraries" to libraries.joinToString(transform = { "\"$it\"" }),
+                "version" to version + processedSuffix,
+                "libraries" to librariesExpendTo,
             )
         }
 
