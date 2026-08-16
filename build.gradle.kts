@@ -22,7 +22,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "2.0.1"
+version = "2.0.2"
 
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
 val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"
@@ -158,8 +158,8 @@ allprojects {
     // Set target version
     tasks.withType<JavaCompile>().configureEach {
         sourceCompatibility =
-            "16" // We aim for java 16 for minecraft 1.16.5. even if it not really supported by custom anvil.
-        targetCompatibility = "16"
+            "21" // We aim for java 21 for minecraft 1.21.0
+        targetCompatibility = "21"
 
         options.encoding = "UTF-8"
     }
@@ -167,7 +167,7 @@ allprojects {
     kotlin {
         compilerOptions {
             apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
-            jvmTarget.set(JvmTarget.JVM_16)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -212,7 +212,7 @@ tasks {
         exclude("net/kyori/**")
     }
 
-    val offlineJar by registering(ShadowJar::class) {
+    val offlineJar = register<ShadowJar>("OfflineJar") {
         configureBaseShadow("offline", emptyArray())
 
         from(sourceSets.main.get().output)
@@ -226,12 +226,12 @@ tasks {
 
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
+val sourcesJar = tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(kotlin.sourceSets.main.get().kotlin)
 }
 
-val javadocJar by tasks.registering(Jar::class, fun Jar.() {
+val javadocJar = tasks.register<Jar>("javadocJar", fun Jar.() {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Javadoc JAR"
     archiveClassifier.set("javadoc")
@@ -355,10 +355,9 @@ publishing {
 }
 
 // hangar publish
-
 fun executeGitCommand(vararg command: String): String {
     val byteOut = ByteArrayOutputStream()
-    exec {
+    providers.exec {
         commandLine = listOf("git", *command)
         standardOutput = byteOut
     }
@@ -395,9 +394,9 @@ hangarPublish {
         if(!isOnline) versionName+= "-offline"
 
         version.set(versionName)
-        var releaseChannel = if (isDevBuild || isPreRelease) devChannel else releaseChannel
-        if(releaseChannel == null) return
-        channel.set(releaseChannel)
+        var finalReleaseChannel = if (isDevBuild || isPreRelease) devChannel else releaseChannel
+        if(finalReleaseChannel == null) return
+        channel.set(finalReleaseChannel)
 
         changelog.set(changelog(isOnline))
         id.set("CustomAnvil")
