@@ -8,17 +8,17 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
 
 plugins {
-    kotlin("jvm") version "2.3.0"
+    kotlin("jvm") version "2.4.0"
     java
-    id("org.jetbrains.dokka").version("1.9.20")
-    id("com.gradleup.shadow").version("9.3.0")
+    id("org.jetbrains.dokka").version("2.2.0")
+    id("com.gradleup.shadow").version("9.6.1")
     // Maven publish
     `maven-publish`
     signing
-    id("cn.lalaki.central").version("1.2.8")
+    id("cn.lalaki.central").version("2.0.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" apply false
-    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" apply false
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
 group = "xyz.alexcrea"
@@ -166,7 +166,7 @@ allprojects {
 
     kotlin {
         compilerOptions {
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_4)
             jvmTarget.set(JvmTarget.JVM_21)
         }
     }
@@ -200,7 +200,7 @@ tasks {
     shadowJar {
         configureBaseShadow("",
             arrayOf(
-                "org.jetbrains.kotlin:kotlin-stdlib:2.3.0",
+                "org.jetbrains.kotlin:kotlin-stdlib:2.4.0",
                 "net.kyori:adventure-text-minimessage:4.25.0",
                 "net.kyori:adventure-text-serializer-plain:4.25.0",
                 "net.kyori:adventure-text-serializer-legacy:4.25.0",
