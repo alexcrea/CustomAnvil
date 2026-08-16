@@ -5,7 +5,6 @@ import groovy.util.NodeList
 import io.papermc.hangarpublishplugin.model.HangarPublication
 import io.papermc.hangarpublishplugin.model.Platforms
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.ByteArrayOutputStream
 
 plugins {
     kotlin("jvm") version "2.4.0"
@@ -215,7 +214,7 @@ tasks {
         exclude("net/kyori/**")
     }
 
-    val offlineJar = register<ShadowJar>("OfflineJar") {
+    val offlineJar = register<ShadowJar>("offlineJar") {
         configureBaseShadow("offline", emptyArray())
 
         from(sourceSets.main.get().output)
@@ -358,35 +357,25 @@ publishing {
 }
 
 // hangar publish
-fun executeGitCommand(vararg command: String): String {
-    val byteOut = ByteArrayOutputStream()
-    providers.exec {
-        commandLine = listOf("git", *command)
-        standardOutput = byteOut
-    }
-    return byteOut.toString(Charsets.UTF_8.name()).trim()
+fun latestCommitMessage(): Provider<String> {
+    return providers.exec {
+        commandLine("git", "log", "-1", "--pretty=%B")
+    }.standardOutput.asText.map(String::trim)
 }
 
-
-fun latestCommitMessage(): String {
-    return executeGitCommand("log", "-1", "--pretty=%B")
-}
-
-fun changelog(isOnline: Boolean): String {
-    var changelog = if(isDevBuild) latestCommitMessage()
-    else System.getenv("RELEASE_CHANGELOG")
-
-    if(!isOnline) {
-        changelog = "This is an offline version of the plugin. \\\n" +
-                "This mean that this plugin libraries are shaded into this plugin \\\n" +
-                "You likely want to use the normal version of this plugin\n\n" + changelog
-    }
-
-    if(changelog == null || changelog.isEmpty()) {
-        changelog = "empty changelog"
-    }
+fun changelog(isOnline: Boolean): Provider<String> {
+    val changelog = if(isDevBuild) latestCommitMessage()
+    else providers.environmentVariable("RELEASE_CHANGELOG")
 
     return changelog
+        .filter{!it.isEmpty()}
+        .map {
+        if(!isOnline)
+            return@map "This is an offline version of the plugin. \\\n" +
+                    "This mean that this plugin libraries are shaded into this plugin \\\n" +
+                    "You likely want to use the normal version of this plugin\n\n" + it
+        else return@map it
+    }.orElse("empty changelog")
 }
 
 hangarPublish {
@@ -400,6 +389,7 @@ hangarPublish {
         channel.set(if (isDevBuild || isPreRelease) devChannel else releaseChannel)
 
         changelog.set(changelog(isOnline))
+
         id.set("CustomAnvil")
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
 
