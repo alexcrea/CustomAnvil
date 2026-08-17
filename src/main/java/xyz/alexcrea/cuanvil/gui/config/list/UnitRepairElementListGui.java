@@ -93,7 +93,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
 
                         // Display material edit setting
-                        this.factoryMap.get(materialName).create().show(player);
+                        this.factoryMap.get(type).create().show(player);
                     },
                     true
             ).show(event.getWhoClicked());
