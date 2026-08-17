@@ -4,7 +4,9 @@ import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.inventory.meta.ItemMeta
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.sendPaperMessage
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setPaperLore
+import xyz.alexcrea.cuanvil.lang.Message
 
 object ComponentUtil {
 
@@ -37,6 +39,10 @@ object ComponentUtil {
     fun List<Component>.applyLore(meta: ItemMeta) {
         if(!meta.setPaperLore(this))
             meta.lore = this.map {obj -> obj.serializeLegacy()}
+    }
+
+    fun ItemMeta.setMessageName(message: Message) {
+        this.setComponentDisplayName(message.formattedConcatenated())
     }
 
 }

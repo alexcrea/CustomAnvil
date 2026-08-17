@@ -13,12 +13,11 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgError;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
-import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -47,8 +46,7 @@ public class ConfirmActionGui extends AbstractAskGui {
             try {
                 success = onConfirm.get();
             } catch (Exception e) {
-                CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not process confirmation supplier.", e); //TODO MESSAGE
-                MetricsUtil.INSTANCE.trackError(e);
+                CustomAnvil.Companion.logError(MsgError.INSTANCE.getCONFIRM_ACTION_GENERIC().unformatted(), e, true, Level.WARNING);
                 success = false;
             }
 
@@ -62,10 +60,11 @@ public class ConfirmActionGui extends AbstractAskGui {
         // Info item
         ItemStack infoItem = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItem.getItemMeta();
+        assert infoMeta != null;
 
-        infoMeta.setDisplayName("§eAre you sure ?"); //TODO MESSAGE
+        ComponentUtil.INSTANCE.setMessageName(infoMeta, MsgUI.INSTANCE.getCONFIRM_ACTION_ARE_YOU_SURE());
         if(actionDescription != null){
-            ComponentUtil.INSTANCE.applyLore(actionDescription.formatted(), infoMeta);
+            ComponentUtil.INSTANCE.applyLore(actionDescription.formatted(actionParam), infoMeta);
         }
 
         infoItem.setItemMeta(infoMeta);

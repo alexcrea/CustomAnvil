@@ -8,6 +8,9 @@ object MsgUI {
     val SHARED_TYPED_CONFIG_TITLE = Message("shared.typed-config-title", "type")
 
     val CONFIRM_ACTION_FAILED = Message("confirm-action.fail")
+    val CONFIRM_ACTION_ARE_YOU_SURE = Message("confirm-action.is-user-sure")
+
+    val SELECT_ITEM_TYPE_PLACE_HERE = Message("select-item-type.place-here")
 
     val ELEMENT_LIST_INSTRUCTION_NEW = Message("element-list.instruction-new", "type")
     val ELEMENT_LIST_CANCELLED_NEW = Message("element-list.cancelled-new", "type")

@@ -19,8 +19,11 @@ object MsgError {
     val RELOAD_HARD_FAIL = ErrorMessage("reload.resource.hardfail")
 
     /*
-     * ----------
-     *  Commands
-     * ----------
+     * ----
+     *  UI
+     * ----
      */
+    val CONFIRM_ACTION_GENERIC = ErrorMessage("confirm-action.generic")
+
+
 }

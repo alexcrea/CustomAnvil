@@ -6,10 +6,26 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder
 
 object Lang {
 
-    private val default = Language(DEFAULT_LANG, false)
-    private var lang = default
+    private lateinit var default: Language
+    private lateinit var lang: Language
 
-    fun reload() {
+    fun loadDefault() {
+        default = Language(DEFAULT_LANG, false)
+        lang = default
+        reload()
+    }
+
+    fun reload(): Boolean {
+        try {
+            unsafeReload()
+            return true
+        } catch(e: Exception) {
+            CustomAnvil.logError("Error loading language $langID", e, false)
+            return false
+        }
+    }
+
+    private fun unsafeReload() {
         val langID = langID
         if(lang.name == langID && lang != default)
             lang.reload()

@@ -161,7 +161,7 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load language
         try {
-            Lang.reload()
+            Lang.loadDefault()
         } catch (e: Exception) {
             logError("error occurred loading language file", e)
             if(tryDirtyStart()) return

@@ -62,7 +62,7 @@ class ReloadExecutor : CASubCommand {
             if(!ConfigHolder.reloadAllFromDisk(hardfail)) return false
 
             // reload language config
-            Lang.reload()
+            if(!Lang.reload()) return false
 
             // Then update all global gui containing value from config
             BasicConfigGui.getInstance()?.updateGuiValues()

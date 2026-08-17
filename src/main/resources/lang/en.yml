@@ -30,6 +30,9 @@ error:
       fail: "Resource %path Could not be loaded or reloaded."
       hard-fail: "Disabling plugin."
 
+  confirm-action:
+    generic: "Could not process confirmation supplier."
+
 command:
   shared:
     no-diag-permission: "<red>You do not have permission to diagnostic this server"
@@ -106,6 +109,10 @@ config-ui:
 
   confirm-action:
     fail: "<red>Action could not be completed."
+    is-user-sure: "<yellow>Are you sure ?"
+
+  select-item-type:
+    place-here: "<yellow>Place an item here"
 
   element-list:
     instruction-new:

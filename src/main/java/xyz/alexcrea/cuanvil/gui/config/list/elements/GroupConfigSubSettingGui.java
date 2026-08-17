@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 import xyz.alexcrea.cuanvil.group.*;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
@@ -65,13 +64,9 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         // Delete item
         ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta deleteMeta = deleteItem.getItemMeta();
-
         assert deleteMeta != null;
-        PlatformUtil.INSTANCE.setComponentDisplayName(
-                deleteMeta,
-                MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME().formattedConcatenated(),
-                null
-        );
+
+        ComponentUtil.INSTANCE.setMessageName(deleteMeta, MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME());
         ComponentUtil.INSTANCE.applyLore(
                 MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_LORE().formatted(),
                 deleteMeta
@@ -88,11 +83,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectItemMeta = selectItem.getItemMeta();
         assert selectItemMeta != null;
 
-        PlatformUtil.INSTANCE.setComponentDisplayName(
-                selectItemMeta,
-                materialSelectionName.formattedConcatenated(name),
-                null
-        );
+        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName);
 
         selectItem.setItemMeta(selectItemMeta);
         this.materialSelection = new GuiItem(selectItem, (event) -> {
@@ -109,11 +100,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectGroupMeta = selectGroup.getItemMeta();
         assert selectGroupMeta != null;
 
-        PlatformUtil.INSTANCE.setComponentDisplayName(
-                selectGroupMeta,
-                selectGroupName.formattedConcatenated(name),
-                null
-        );
+        ComponentUtil.INSTANCE.setMessageName(selectGroupMeta, selectGroupName);
 
         selectGroup.setItemMeta(selectGroupMeta);
         this.groupSelection = new GuiItem(selectGroup, (event) -> {

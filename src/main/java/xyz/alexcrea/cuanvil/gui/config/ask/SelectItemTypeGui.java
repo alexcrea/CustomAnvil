@@ -9,7 +9,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
@@ -17,7 +16,6 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
@@ -89,8 +87,9 @@ public class SelectItemTypeGui extends AbstractAskGui {
             @NotNull String param
     ){
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
 
-        meta.setDisplayName("§ePlace an item here"); //TODO MESSAGE
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getSELECT_ITEM_TYPE_PLACE_HERE());
         ComponentUtil.INSTANCE.applyLore(actionDescription.formatted(param), meta);
 
         item.setItemMeta(meta);
