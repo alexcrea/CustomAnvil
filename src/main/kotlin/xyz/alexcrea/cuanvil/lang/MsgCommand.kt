@@ -20,6 +20,7 @@ object MsgCommand {
     val DEBUG_LOG_CLEARED = Message("debug.log-cleared")
     val DEBUG_TOGGLED = Message("debug.toggled", "type")
     val DEBUG_COPY = Message("debug.copy")
+    val DEBUG_LANG_COPY = Message("debug.copy-lang")
 
     val DEBUG_DATA_HEADER = Message("debug.data.header")
     val DEBUG_DATA_LINE_COUNT = Message("debug.data.line-count", "count")
@@ -45,8 +46,8 @@ object MsgCommand {
 
     // Enchant
     val ENCHANT_DESCRIPTION = Message("enchant.description")
-    val ENCHANT_REMOVE = Message("enchant.remove.", "name")
-    val ENCHANT_SET = Message("enchant.set.", "name", "level")
+    val ENCHANT_REMOVE = Message("enchant.removed", "name")
+    val ENCHANT_SET = Message("enchant.set", "name", "level")
 
     val ENCHANT_MISSING_PARAMETER_WARNING = Message("enchant.warning.missing_parameter")
     val ENCHANT_NOT_FOUND_WARNING = Message("enchant.warning.not_found", "path")

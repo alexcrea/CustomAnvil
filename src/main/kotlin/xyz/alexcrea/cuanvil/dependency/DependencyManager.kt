@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.dependency
 import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -32,7 +31,6 @@ import xyz.alexcrea.cuanvil.lang.MsgWarning
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
 import xyz.alexcrea.cuanvil.util.MetricsUtil.trackError
 import java.lang.IllegalStateException
-import java.util.logging.Level
 
 @Suppress("UnstableApiUsage")
 object DependencyManager {
@@ -166,7 +164,7 @@ object DependencyManager {
         trackError(e)
 
         // Finally, warn the player
-        MsgWarning.DEPENDENCY_GENERIC_EXCEPTION.send(target)
+        MsgWarning.ANVIL_GENERIC_EXCEPTION.send(target)
     }
 
     private fun logExceptionAndClear(view: AnvilView, e: Exception) {

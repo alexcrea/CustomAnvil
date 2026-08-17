@@ -16,7 +16,7 @@ object MsgError {
     val LOAD_NON_DEFAULT_CONFIG = ErrorMessage("load.non-default-config")
 
     val RELOAD_FAIL = ErrorMessage("reload.resource.fail", "path")
-    val RELOAD_HARD_FAIL = ErrorMessage("reload.resource.hardfail")
+    val RELOAD_HARD_FAIL = ErrorMessage("reload.resource.hard-fail")
 
     /*
      * ----

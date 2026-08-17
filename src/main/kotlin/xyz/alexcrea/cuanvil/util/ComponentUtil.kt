@@ -41,8 +41,8 @@ object ComponentUtil {
             meta.lore = this.map {obj -> obj.serializeLegacy()}
     }
 
-    fun ItemMeta.setMessageName(message: Message) {
-        this.setComponentDisplayName(message.formattedConcatenated())
+    fun ItemMeta.setMessageName(message: Message, vararg params: Any) {
+        this.setComponentDisplayName(message.formattedConcatenated(*params))
     }
 
 }

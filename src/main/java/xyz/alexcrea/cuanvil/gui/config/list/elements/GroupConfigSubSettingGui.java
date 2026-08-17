@@ -83,7 +83,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectItemMeta = selectItem.getItemMeta();
         assert selectItemMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName);
+        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName, name);
 
         selectItem.setItemMeta(selectItemMeta);
         this.materialSelection = new GuiItem(selectItem, (event) -> {
@@ -100,7 +100,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectGroupMeta = selectGroup.getItemMeta();
         assert selectGroupMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(selectGroupMeta, selectGroupName);
+        ComponentUtil.INSTANCE.setMessageName(selectGroupMeta, selectGroupName, name);
 
         selectGroup.setItemMeta(selectGroupMeta);
         this.groupSelection = new GuiItem(selectGroup, (event) -> {

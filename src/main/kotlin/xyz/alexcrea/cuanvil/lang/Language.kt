@@ -55,6 +55,45 @@ class Language(private val id: String, private val default: Boolean = false) {
         return conf.getConfigurationSection(key)
     }
 
+    fun has(key: String): Boolean {
+        if(conf.isString(key)) return true
+
+        // we want at all child key as valid numbers and valid key if claimed to be multi line
+        val section = getSection(key) ?: return false
+        for(key in section.getKeys(false)) {
+            if(key.toUIntOrNull() == null) return false
+            if(!section.isString(key)) return false
+        }
+
+        return true
+    }
+
+    fun getFilteredKeys(): Collection<String> {
+        val result = ArrayList<String>()
+
+        // First pass we ignore key from root
+        for(root in conf.getKeys(false)) {
+            val section = conf.getConfigurationSection(root) ?: continue
+
+            exploreDeeper(section, root, result)
+        }
+
+        return result
+    }
+
+    private fun exploreDeeper(section: ConfigurationSection, root: String, result: ArrayList<String>) {
+        for(key in section.getKeys(false)) {
+            val newRoot = "$root.$key"
+            if(has(key)) {
+                result.add(newRoot)
+                continue
+            }
+
+            val newSection = section.getConfigurationSection(key) ?: continue
+            exploreDeeper(newSection, newRoot, result)
+        }
+    }
+
     val name: String
         get() = conf.getString("name", id)!!
 }

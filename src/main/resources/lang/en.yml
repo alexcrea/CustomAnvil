@@ -14,6 +14,8 @@ warning:
         1: "If replace too expensive is not working this is likely because of spigot"
         2: "As native nms is not supported for spigot starting 26.1"
     update.available: "An update may be available: %version"
+  anvil:
+    generic: "<white>[<yellow>CustomAnvil<white>] <red>Error while handling the anvil."
 
 error:
   load:
@@ -53,6 +55,7 @@ command:
     log-cleared: "Log Cleared"
     toggled: "Debug toggled to %type"
     copy: "<green>Click to copy log data"
+    copy-lang: "<green>Click to copy detailed lang issues"
     data:
       header: "Debug Log data:"
       line-count: "Found %count lines"
@@ -122,14 +125,14 @@ config-ui:
     duplicated-new: "<red>Please enter a %type name that do not already exist..."
 
   unit-repair:
-    tile: "Unit Repair Config"
+    title: "Unit Repair Config <reset>(%page/%max_page)"
     new:
       title: "Select unit repair item."
       description:
         1: "<gray>Click here with an item to set the item"
         2: "<gray>You like to be an unit repair item"
     element:
-      title: "<yellow>%type <red>Unit repair"
+      title: "<yellow>%type <red>Unit repair <reset>(%page/%max_page)"
       new:
         title: "Select item to be repaired."
         description:
@@ -139,23 +142,23 @@ config-ui:
         same-type: "<red>Item can't repair something of the same type."
 
   custom-recipe:
-    title: "Custom Recipe Config"
+    title: "Custom Recipe Config <reset>(%page/%max_page)"
     element:
       delete:
         title: "<red>Delete <yellow>%type<red>?"
         description: "<gray>Confirm that you want to delete this recipe."
 
   enchant-level-cost:
-    title: "<dark_gray>Enchantment Level Limit"
+    title: "<dark_gray>Enchantment Level Limit <reset>(%page/%max_page)"
 
   enchant-level-limit:
-    title: "<dark_gray>Enchantment Level Limit"
+    title: "<dark_gray>Enchantment Level Limit <reset>(%page/%max_page)"
 
   enchant-merge-limit:
-    title: "<dark_gray>Enchantment Maximum Merge Level"
+    title: "<dark_gray>Enchantment Maximum Merge Level <reset>(%page/%max_page)"
 
   enchant-conflict:
-    title: "Conflict Config"
+    title: "Conflict Config <reset>(%page/%max_page)"
     element:
       selected-enchantments: "<yellow>%group<dark_purple>" # likely need page and max page
       selected-sub-groups: "<yellow>%group <red>Groups"
@@ -164,7 +167,7 @@ config-ui:
         description: "<gray>Confirm that you want to delete this conflict."
 
   material-group:
-    title: "Group Config"
+    title: "Group Config <reset>(%page/%max_page)"
     element:
       selected-materials: "<yellow>%group <red>Materials"
       selected-sub-groups: "<yellow>%group <red>Groups"

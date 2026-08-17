@@ -15,6 +15,6 @@ object MsgWarning {
     val LOAD_LEGACY_SPIGOT = Message("load.legacy.spigot")
     val LOAD_LEGACY_SPIGOT_OLD = Message("load.legacy.spigot-old")
 
-    val DEPENDENCY_GENERIC_EXCEPTION = Message("config-ui.shared.no-permission")
+    val ANVIL_GENERIC_EXCEPTION = Message("anvil.generic")
 
 }

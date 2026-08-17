@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.lang
 import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
 import xyz.alexcrea.cuanvil.config.ConfigHolder
+import java.util.stream.Stream
 
 object Lang {
 
@@ -49,6 +50,18 @@ object Lang {
         if(value != null) return value
 
         return default.getSection(key)
+    }
+
+    fun currentLang(): String {
+        return lang.name
+    }
+
+    fun has(key: String): Boolean {
+        return lang.has(key)
+    }
+
+    fun getKeys(): Collection<String> {
+        return lang.getFilteredKeys()
     }
 
     /*

@@ -10,10 +10,23 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil.send
 import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
 import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
+import java.util.Collections
 import java.util.logging.Level
 import kotlin.math.min
 
-open class Message(val key: String, vararg val params: String) {
+open class Message(val key: String, vararg val params: String, register: Boolean = true) {
+
+    companion object {
+        private val values = ArrayList<Message>()
+
+        fun getValues(): Collection<Message> {
+            return Collections.unmodifiableCollection(values)
+        }
+    }
+
+    init {
+        if(register) values.add(this)
+    }
 
     protected fun replaceParameters(stb: StringBuilder, vararg values: Any) {
         // replace all placeholder thingy %key -> value
