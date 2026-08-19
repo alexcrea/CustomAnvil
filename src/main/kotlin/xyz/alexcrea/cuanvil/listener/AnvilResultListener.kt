@@ -197,6 +197,9 @@ class AnvilResultListener : Listener {
                 result
             )
         ) return
+        else if(player.gameMode != GameMode.CREATIVE) {
+            return
+        }
 
         // Finally, we add the item to the player
         if (slotDestination.type == SlotType.CURSOR) {
@@ -351,6 +354,8 @@ class AnvilResultListener : Listener {
 
             inventory.setItem(ANVIL_OUTPUT_SLOT, null)
 
+        } else if(player.gameMode != GameMode.CREATIVE) {
+            return false
         }
 
         // Finally, we add the item to the player
