@@ -5,16 +5,21 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,20 +110,21 @@ public class BoolSettingsGui extends AbstractSettingGui {
         }
 
         // create & set Value item
-        ArrayList<String> valueLore = new ArrayList<>();
-        if(!holder.displayLore.isEmpty()){
-            valueLore.addAll(holder.displayLore);
-            valueLore.add("");
+        ArrayList<Component> valueLore = new ArrayList<>();
+        if(holder.displayLore != null){
+            valueLore.addAll(ComponentUtil.INSTANCE.asComponents(holder.displayLore));
+            valueLore.add(Component.empty());
         }
-        valueLore.add(AbstractSettingGui.CLICK_LORE);
+        valueLore.addAll(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted());
 
         ItemStack valueItemStack = new ItemStack(displayedMat);
         ItemMeta valueMeta = valueItemStack.getItemMeta();
         assert valueMeta != null;
 
-        valueMeta.setDisplayName(displayedName);
-        valueMeta.setLore(valueLore);
+        valueMeta.setDisplayName(displayedName);//TODO MESSAGE ?
+        ComponentUtil.INSTANCE.applyLore(valueLore, valueMeta);
         valueItemStack.setItemMeta(valueMeta);
+
         GuiItem resultItem = new GuiItem(valueItemStack, inverseNowConsumer(), CustomAnvil.instance);
 
         pane.bindItem('v', resultItem);
@@ -166,13 +172,15 @@ public class BoolSettingsGui extends AbstractSettingGui {
      */
     public static class BoolSettingFactory extends SettingGuiFactory {
         @NotNull
-        String title;
+        Message title;
         @NotNull
         ValueUpdatableGui parent;
         boolean defaultVal;
 
-        @NotNull
-        List<String> displayLore;
+        @Nullable
+        List<Message> displayLore;
+        @Nullable
+        Object param;
 
         /**
          * Constructor for a boolean setting gui factory.
@@ -185,22 +193,25 @@ public class BoolSettingsGui extends AbstractSettingGui {
          * @param displayLore  Gui display item lore.
          */
         public BoolSettingFactory(
-                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull Message title, @NotNull ValueUpdatableGui parent,
                 @NotNull ConfigHolder config, @NotNull String configPath,
-                boolean defaultVal, String... displayLore) {
+                boolean defaultVal,
+                @Nullable Object param, @Nullable Message... displayLore) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
-            this.displayLore = Arrays.asList(displayLore);
+
+            this.displayLore = displayLore == null ? null : Arrays.asList(displayLore);
+            this.param = param;
         }
 
         /**
          * @return Get setting's gui title.
          */
         @NotNull
-        public String getTitle() {
+        public Message getTitle() {
             return title;
         }
 
@@ -225,25 +236,36 @@ public class BoolSettingsGui extends AbstractSettingGui {
          * The item will have its value written in the lore part of the item.
          *
          * @param name Name of the item.
+         * @param params parameters for the given name.
          * @return A formatted GuiItem that will create and open a GUI for the boolean setting.
          */
-        public GuiItem getItem(String name){
+        public GuiItem getItem(
+                @NotNull Message name,
+                Object... params
+        ){
             // Get item properties
             boolean value = getConfiguredValue();
 
             Material itemMat;
-            StringBuilder itemName = new StringBuilder("§e");
+            Component itemName = name.formattedConcatenated(params);
+
             String finalValue;
             if (value) {
                 itemMat = Material.GREEN_TERRACOTTA;
-                finalValue = "§aYes";
+                finalValue = "<green>Yes";//TODO MESSAGE
             } else {
                 itemMat = Material.RED_TERRACOTTA;
-                finalValue = "§cNo";
+                finalValue = "<red>No";//TODO MESSAGE
             }
-            itemName.append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName, finalValue, this.displayLore, false);
+            return GuiGlobalItems.createGuiItemFromProperties(
+                    this,
+                    itemMat, itemName,
+                    finalValue,
+                    this.displayLore,
+                    false,
+                    this.param
+            );
         }
 
         /**
@@ -258,7 +280,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
             // Get item properties
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
 
-            return getItem(CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(MsgUI.INSTANCE.getSHARED_YELLOW_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

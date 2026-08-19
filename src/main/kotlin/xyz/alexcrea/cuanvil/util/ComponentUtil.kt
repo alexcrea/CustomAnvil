@@ -31,7 +31,7 @@ object ComponentUtil {
             destination.sendMessage(this.serializeLegacy())
     }
 
-    fun List<Component>.send(destination: CommandSender) {
+    fun Collection<Component>.send(destination: CommandSender) {
         for(component in this)
             component.send(destination)
     }
@@ -41,8 +41,25 @@ object ComponentUtil {
             meta.lore = this.map {obj -> obj.serializeLegacy()}
     }
 
-    fun ItemMeta.setMessageName(message: Message, vararg params: Any) {
+    fun ItemMeta.setMessageName(message: Message, vararg params: Any?) {
         this.setComponentDisplayName(message.formattedConcatenated(*params))
     }
+
+    fun List<Message>.asComponents(vararg params: Any?): List<Component> {
+        val result = ArrayList<Component>()
+        for(message in this) {
+            result.addAll(message.formatted(*params))
+        }
+        return result
+    }
+
+    fun Array<Message>.asComponents(vararg params: Any?): List<Component> {
+        val result = ArrayList<Component>()
+        for(message in this) {
+            result.addAll(message.formatted(*params))
+        }
+        return result
+    }
+
 
 }

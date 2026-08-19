@@ -17,8 +17,11 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -168,13 +171,13 @@ public class ItemSettingGui extends AbstractSettingGui {
      */
     public static class ItemSettingFactory extends SettingGuiFactory {
         @NotNull
-        String title;
+        Message title;
         @NotNull
         ValueUpdatableGui parent;
         @Nullable
         ItemStack defaultVal;
         @NotNull
-        List<String> displayLore;
+        List<Message> displayLore;
 
         /**
          * Constructor for an item setting gui factory.
@@ -187,10 +190,10 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param displayLore Gui display item lore.
          */
         public ItemSettingFactory(
-                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull Message title, @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
                 @Nullable ItemStack defaultVal,
-                String... displayLore) {
+                Message... displayLore) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
@@ -203,7 +206,7 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @return Get setting's gui title.
          */
         @NotNull
-        public String getTitle() {
+        public Message getTitle() {
             return title;
         }
 
@@ -215,7 +218,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         }
 
         @NotNull
-        public List<String> getDisplayLore() {
+        public List<Message> getDisplayLore() {
             return this.displayLore;
         }
 
@@ -245,8 +248,9 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
+            //TODO MESSAGE name ?
             meta.setDisplayName("§a" + name);
-            meta.setLore(getDisplayLore());
+            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(getDisplayLore()), meta);
             meta.addItemFlags(ItemFlag.values());
 
             item.setItemMeta(meta);

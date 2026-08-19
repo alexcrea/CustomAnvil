@@ -11,13 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 /**
  * An instance gui used to edit a setting.
  */
 public abstract class AbstractSettingGui extends ChestGui implements SettingGui {
-
-    public static final String CLICK_LORE = "§7Click Here to change the value";
 
     private PatternPane pane;
 
@@ -40,8 +39,8 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    protected AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
-        this(rows, StringHolder.of(title), parent);
+    protected AbstractSettingGui(int rows, @NotNull Message title, ValueUpdatableGui parent) {
+        this(rows, title.textHolder(), parent);
     }
 
     protected GuiItem saveItem;

@@ -22,6 +22,7 @@ import java.util.function.BiConsumer;
 public class SelectItemTypeGui extends AbstractAskGui {
 
     private ItemStack selectedItem;
+
     public SelectItemTypeGui(@NotNull Message title,
                              @NotNull String titleParam,
                              @NotNull Message actionDescription,
@@ -37,7 +38,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
 
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
@@ -59,9 +60,9 @@ public class SelectItemTypeGui extends AbstractAskGui {
             if(MaterialUtil.INSTANCE.isAir(cursor)) return;
 
             ItemStack finalItem;
-            if(materialOnly){
+            if(materialOnly) {
                 finalItem = setDisplayMeta(new ItemStack(cursor.getType()), actionDescription, descriptionParam);
-            }else{
+            } else {
                 finalItem = cursor.clone();
             }
             this.selectedItem = finalItem.clone();
@@ -85,7 +86,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
             @NotNull ItemStack item,
             @NotNull Message actionDescription,
             @NotNull String param
-    ){
+    ) {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 

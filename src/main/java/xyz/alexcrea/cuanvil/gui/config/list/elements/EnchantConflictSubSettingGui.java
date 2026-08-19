@@ -26,6 +26,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.util.*;
@@ -71,8 +72,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        deleteMeta.setDisplayName("§4DELETE CONFLICT");//TODO MESSAGE
-        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));//TODO MESSAGE
+        ComponentUtil.INSTANCE.setMessageName(deleteMeta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_NAME());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -97,12 +98,9 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         }, CustomAnvil.instance);
 
         this.minBeforeActiveSettingFactory = new IntSettingsGui.IntSettingFactory(
-                "§8Minimum enchantment count",//TODO MESSAGE
+                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_TITLE(),
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
-                Arrays.asList(
-                        "§7Minimum enchantment count set to X mean only X enchantment can be put",
-                        "§7on an item before the conflict is active."
-                ),
+                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION(),
                 0, 255, 0, 1
         );
 
@@ -210,8 +208,10 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
         this.groupSettingItem.setItem(groupItem); // Just in case
 
-        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(Material.COMMAND_BLOCK,
-                "Minimum Enchantment Count"));//TODO MESSAGE
+        this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(
+                Material.COMMAND_BLOCK,
+                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM()
+        ));
         update();
     }
 

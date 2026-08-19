@@ -54,11 +54,10 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
 
         var defaultValue = enchant.defaultMaxLevel();
 
-        return new IntSettingsGui.IntSettingFactory(prettyKey + " Limit", parent,
+        return new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_TITLE(), parent,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
-                Collections.singletonList(
-                        "§7Maximum applied level of " + prettyKey
-                ),
+                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_DESCRIPTION(), prettyKey,
                 -1, 255, -1,
                 1, 5, 10, 50, 100){
 
@@ -88,7 +87,9 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     public GuiItem itemFromFactory(CAEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
         return inventoryFactory.getItem(
                 Material.ENCHANTED_BOOK,
-                inventoryFactory.getTitle());
+                inventoryFactory.getTitle(),
+                inventoryFactory.getParam()
+        );
     }
 
 }

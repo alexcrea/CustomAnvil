@@ -15,9 +15,12 @@ import xyz.alexcrea.cuanvil.lang.Message;
 public abstract class AbstractAskGui extends ChestGui {
 
     protected PatternPane pane;
-    AbstractAskGui(int rows,
-                   @NotNull Message name, @NotNull String param,
-                   Gui backOnCancel){
+
+    AbstractAskGui(
+            int rows,
+            @NotNull Message name, @NotNull String param,
+            Gui backOnCancel
+    ) {
         super(rows, name.textHolder(param), CustomAnvil.instance);
 
         Pattern pattern = getGuiPattern();

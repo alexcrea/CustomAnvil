@@ -61,7 +61,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         ItemMeta meta = displayedItem.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");//TODO MESSAGE
+        meta.setDisplayName("<yellow>" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " <white>Custom recipe");//TODO MESSAGE
         meta.addItemFlags(ItemFlag.values());
 
         meta.setLore(getRecipeLore(recipe));

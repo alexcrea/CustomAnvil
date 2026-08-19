@@ -23,10 +23,12 @@ import java.util.logging.Level;
 
 public class ConfirmActionGui extends AbstractAskGui {
 
-    public ConfirmActionGui(@NotNull Message title, @NotNull String titleParam,
-                            @Nullable Message actionDescription, @NotNull String actionParam,
-                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
-                            boolean permanent) {
+    public ConfirmActionGui(
+            @NotNull Message title, @NotNull String titleParam,
+            @Nullable Message actionDescription, @NotNull String actionParam,
+            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
+            boolean permanent
+    ) {
         super(3, title, titleParam, backOnCancel);
 
         // Save item
@@ -71,9 +73,11 @@ public class ConfirmActionGui extends AbstractAskGui {
 
         pane.bindItem('I', new GuiItem(infoItem, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
-    public ConfirmActionGui(@NotNull Message title, @NotNull String titleParam,
-                            @Nullable Message actionDescription, @NotNull String actionParam,
-                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm){
+    public ConfirmActionGui(
+            @NotNull Message title, @NotNull String titleParam,
+            @Nullable Message actionDescription, @NotNull String actionParam,
+            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm
+    ){
         this(title, titleParam, actionDescription, actionParam, backOnCancel, backOnConfirm, onConfirm, true);
     }
 

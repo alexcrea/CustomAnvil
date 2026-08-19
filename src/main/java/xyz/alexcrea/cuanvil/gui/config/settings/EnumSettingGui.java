@@ -15,6 +15,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.Collections;
 import java.util.List;
@@ -137,7 +138,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
      */
     public abstract static class EnumSettingFactory<T extends Enum<T> & ConfigurableEnum> extends SettingGuiFactory {
         @NotNull
-        String title;
+        Message title;
         @NotNull
         ValueUpdatableGui parent;
 
@@ -150,7 +151,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @param config     Configuration holder of this setting.
          */
         protected EnumSettingFactory(
-                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull Message title, @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config) {
             super(configPath, config);
             this.title = title;
@@ -161,7 +162,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @return Get setting's gui title.
          */
         @NotNull
-        public String getTitle() {
+        public Message getTitle() {
             return title;
         }
 

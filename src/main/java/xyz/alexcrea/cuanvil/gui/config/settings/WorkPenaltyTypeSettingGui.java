@@ -15,55 +15,48 @@ import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
 import xyz.alexcrea.cuanvil.gui.config.global.BasicConfigGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
-
-    private static final String INCREASING_EXPLANATION = "§eIncreasing§7: will penalty be increased (in item)";
-    private static final String ADDING_EXPLANATION = "§eAdditive§7: will penalty be added to the cost";
-
-    private static final String SHARED_EXPLANATION = "§eShared§7: Vanilla, shared penalty. it will be kept from before the plugin installation.";
-    private static final String EXCLUSIVE_EXPLANATION = "§eExclusive§7: Custom, per anvil use type penalty. it will be lost after plugin uninstallation";
 
     private final @NotNull WorkPenaltyType currentType;
     private final @NotNull Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> items;
 
     public WorkPenaltyTypeSettingGui(@NotNull BasicConfigGui parent) {
-        super(4, "§8Work Penalty Type", parent);
+        super(4, MsgUI.INSTANCE.getBASIC_WORK_PENALTY_TITLE(), parent);
 
         this.currentType = ConfigOptions.INSTANCE.getWorkPenaltyType();
         this.items = new EnumMap<>(this.currentType.getPartMap());
 
-        for (AnvilUseType type : useTypes.keySet()) {
+        for(AnvilUseType type : useTypes.keySet()) {
             updateGuiForType(type);
         }
     }
 
     public static GuiItem getDisplayItem(@NotNull BasicConfigGui parent,
                                          @NotNull Material itemMat,
-                                         @NotNull String name) {
-        List<String> displayLore = new ArrayList<>();
+                                         @NotNull Message name) {
+        var item = new ItemStack(itemMat);
 
-        displayLore.add("§7Work penalty increase the price for every anvil use.");
-        displayLore.add("§7This config allow you to choose the comportment of work penalty.");
-        displayLore.add(INCREASING_EXPLANATION);
-        displayLore.add(ADDING_EXPLANATION);
-        displayLore.add("");
-        displayLore.add("§7About shared/exclusive penalty:");
-        displayLore.add(SHARED_EXPLANATION);
-        displayLore.add(EXCLUSIVE_EXPLANATION);
+        var meta = item.getItemMeta();
+        assert meta != null;
 
-        ItemStack item = new ItemStack(itemMat);
+        var lore = new ArrayList<Message>();
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_LORE());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_LORE_BREAK());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
 
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        meta.setLore(displayLore);
+        ComponentUtil.INSTANCE.setMessageName(meta, name);
+        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
 
         item.setItemMeta(meta);
 
@@ -72,7 +65,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
             HumanEntity player = event.getWhoClicked();
 
             // Do not allow to open inventory if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
@@ -111,6 +104,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         char exclusiveAdditive = typeVals.charAt(4);
 
         WorkPenaltyType.WorkPenaltyPart part = items.get(type);
+        //TODO MESSAGE
         String increasingStr = (part.penaltyIncrease() ? "§a" : "§c") + "Increasing";
         String additiveStr = (part.penaltyAdditive() ? "§a" : "§c") + "Additive";
         String exclusiveIncreasingStr = (part.exclusivePenaltyIncrease() ? "§a" : "§c") + "Increasing";
@@ -124,6 +118,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         displayLore.add("§eExclusive§7: " + exclusiveAdditiveStr + " §7| " + exclusiveIncreasingStr);
 
         ItemMeta meta = displayItem.getItemMeta();
+        assert meta != null;
         meta.setDisplayName("§e" + type.getDisplayName());
         meta.setLore(displayLore);
         displayItem.setItemMeta(meta);
@@ -137,9 +132,14 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ItemStack incrementItem = new ItemStack(part.penaltyIncrease() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
 
         meta = incrementItem.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(increasingStr);
-        meta.setLore(List.of(INCREASING_EXPLANATION));
-        meta.setLore(List.of(SHARED_EXPLANATION));
+
+        var lore = new ArrayList<Message>();
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
+
+        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
         incrementItem.setItemMeta(meta);
 
         pane.bindItem(increment, new GuiItem(incrementItem, (event) -> {
@@ -157,9 +157,14 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ItemStack additiveItem = new ItemStack(part.penaltyAdditive() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
 
         meta = additiveItem.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(additiveStr);
-        meta.setLore(List.of(ADDING_EXPLANATION));
-        meta.setLore(List.of(SHARED_EXPLANATION));
+
+        lore.clear();
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
+
+        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
         additiveItem.setItemMeta(meta);
 
         pane.bindItem(additive, new GuiItem(additiveItem, (event) -> {
@@ -177,9 +182,14 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ItemStack exclusiveIncrementItem = new ItemStack(part.exclusivePenaltyIncrease() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
 
         meta = exclusiveIncrementItem.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(exclusiveIncreasingStr);
-        meta.setLore(List.of(INCREASING_EXPLANATION));
-        meta.setLore(List.of(EXCLUSIVE_EXPLANATION));
+
+        lore.clear();
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
+
+        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
         exclusiveIncrementItem.setItemMeta(meta);
 
         pane.bindItem(exclusiveIncrement, new GuiItem(exclusiveIncrementItem, (event) -> {
@@ -197,9 +207,14 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ItemStack exclusiveAdditiveItem = new ItemStack(part.exclusivePenaltyAdditive() ? Material.GREEN_TERRACOTTA : Material.RED_TERRACOTTA);
 
         meta = exclusiveAdditiveItem.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(exclusiveAdditiveStr);
-        meta.setLore(List.of(ADDING_EXPLANATION));
-        meta.setLore(List.of(EXCLUSIVE_EXPLANATION));
+
+        lore.clear();
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
+        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
+
+        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
         exclusiveAdditiveItem.setItemMeta(meta);
 
         pane.bindItem(exclusiveAdditive, new GuiItem(exclusiveAdditiveItem, (event) -> {
@@ -224,9 +239,9 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         FileConfiguration config = configHolder.getConfig();
 
         partEnum.forEach((key, value) -> {
-            String partPath =  key.getPath();
+            String partPath = key.getPath();
 
-            if (key.getDefaultPenalty().equals(value)) {
+            if(key.getDefaultPenalty().equals(value)) {
                 config.set(partPath, null);
                 return;
             }
@@ -242,8 +257,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean hadChange() {
-        for (AnvilUseType type : items.keySet()) {
-            if (!currentType.getPenaltyInfo(type).equals(items.get(type))) {
+        for(AnvilUseType type : items.keySet()) {
+            if(!currentType.getPenaltyInfo(type).equals(items.get(type))) {
                 return true;
             }
         }

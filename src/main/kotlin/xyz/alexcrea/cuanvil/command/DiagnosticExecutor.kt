@@ -219,8 +219,8 @@ class DiagnosticExecutor : CASubCommand {
     }
 
     private fun pluginListDiag(sender: CommandSender, stb: StringBuilder) {
-        val enabledPlugins: MutableList<Plugin?> = ArrayList<Plugin?>()
-        val disabledPlugins: MutableList<Plugin?> = ArrayList<Plugin?>()
+        val enabledPlugins: MutableList<Plugin?> = ArrayList()
+        val disabledPlugins: MutableList<Plugin?> = ArrayList()
         for (plugin in Bukkit.getPluginManager().plugins) {
             if (plugin.isEnabled) {
                 enabledPlugins.add(plugin)

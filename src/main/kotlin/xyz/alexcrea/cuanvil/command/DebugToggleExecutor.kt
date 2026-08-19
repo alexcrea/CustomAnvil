@@ -109,7 +109,7 @@ class DebugToggleExecutor: CASubCommand {
                 Text(MsgCommand.SHARED_HOVER_COPY.legacy())
             )
 
-            sender.spigot().sendMessage(message);
+            sender.spigot().sendMessage(message)
         } else {
             sender.sendMessage(stb.toString())
         }
@@ -137,7 +137,14 @@ class DebugToggleExecutor: CASubCommand {
             if(Lang.has(message.key)) validCount++
 
         val valid = (100.0 * validCount) / registeredKeys.size
-        sender.sendMessage("Translated (${Lang.currentLang()}): ${"%.1f".format(Locale.ROOT, valid)}% ($validCount/${registeredKeys.size})")
+        sender.sendMessage(
+            "Translated (${Lang.currentLang()}): ${
+                "%.1f".format(
+                    Locale.ROOT,
+                    valid
+                )
+            }% ($validCount/${registeredKeys.size})"
+        )
     }
 
     private fun detailedLangDebug(sender: CommandSender) {
@@ -179,7 +186,7 @@ class DebugToggleExecutor: CASubCommand {
                 Text(MsgCommand.SHARED_HOVER_COPY.legacy())
             )
 
-            sender.spigot().sendMessage(message);
+            sender.spigot().sendMessage(message)
         } else {
             sender.sendMessage("No additional issue found")
         }
@@ -190,7 +197,7 @@ class DebugToggleExecutor: CASubCommand {
         val texts = if(section == null)
             listOf(Lang.getTranslated(message.key))
         else
-            section.getValues(false).map { it.value.toString() }
+            section.getValues(false).map {it.value.toString()}
 
         val textParams = ArrayList<String>()
 
@@ -198,8 +205,7 @@ class DebugToggleExecutor: CASubCommand {
             var index = 0
             while(true) {
                 index = text.indexOf('%', index)
-                //TODO add \% to "ignore" % as param inside param finder
-                if(index > 0 && text[index-1] == '\\') {
+                if(index > 0 && text[index - 1] == '\\') {
                     index++
                     continue
                 }
@@ -218,23 +224,29 @@ class DebugToggleExecutor: CASubCommand {
         for(textParam in textParams) {
             var found = false
             for(param in message.params) {
-                if(param.isEmpty()) continue
+                if(param == null) continue
                 if(textParam.startsWith(param)) {
                     found = true
                     usedParam.add(param)
                     break
                 }
             }
+            if(found) break
 
-            if(!found) {
-                hadIssue = true
-                stb.append("Did not found param %$textParam in register list for ${message.key}\n")
-            }
+            hadIssue = true
+            stb.append("Did not found param %$textParam in register list for ${message.key}\n")
         }
 
         for(param in message.params) {
-            if(usedParam.contains(param)) continue
-            if("unused".contentEquals(param)) continue
+            if(param == null) continue
+            var found = false
+            for(used in usedParam) {
+                if(!used.startsWith(param)) continue
+                found = true
+                break
+            }
+
+            if(found) continue
             hadIssue = true
             stb.append("Param %$param is not used for key ${message.key}\n")
         }

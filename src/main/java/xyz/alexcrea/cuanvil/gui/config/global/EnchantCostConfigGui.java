@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,9 +12,12 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,13 +63,10 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         String key = enchant.getKey().toString().toLowerCase(Locale.ENGLISH);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
-        //TODO MESSAGE
-        return new EnchantCostSettingsGui.EnchantCostSettingFactory(prettyKey + " Cost", parent,
+        return new EnchantCostSettingsGui.EnchantCostSettingFactory(
+                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_TITLE(), parent,
                 ENCHANT_VALUES_ROOT + '.' + key, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7How many level should " + prettyKey,
-                        "§7cost when applied by book or by another item."
-                ),
+                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_DESCRIPTION(), prettyKey,
                 enchant, 0, 255,
                 1, 10, 50);
     }
@@ -75,26 +76,26 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         // Get item properties
         int itemCost = factory.getConfiguredValue();
         int bookCost = factory.getConfiguredBookValue();
-        String itemName = "§a" + factory.getTitle();
+        Message itemName = factory.getTitle();
         // Create item
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = item.getItemMeta();
         assert itemMeta != null;
 
         // Prepare lore
-        List<String> lore = new ArrayList<>();
-        lore.add("§7Item  Cost: §e" + itemCost);
-        lore.add("§7Book Cost: §e" + bookCost);
+        List<Component> lore = new ArrayList<>();
+        lore.addAll(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_ITEM_COST().formatted(itemCost));
+        lore.addAll(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_BOOK_COST().formatted(bookCost));
 
-        List<String> displayLore = factory.getDisplayLore();
-        if (!displayLore.isEmpty()) {
-            lore.add("");
-            lore.addAll(displayLore);
+        List<Message> displayLore = factory.getDisplayLore();
+        if (displayLore != null) {
+            lore.add(Component.empty());
+            lore.addAll(ComponentUtil.INSTANCE.asComponents(displayLore, factory.getParam()));
         }
 
         // Edit name and lore
-        itemMeta.setDisplayName(itemName);
-        itemMeta.setLore(lore);
+        ComponentUtil.INSTANCE.setMessageName(itemMeta, itemName, factory.getParam());
+        ComponentUtil.INSTANCE.applyLore(lore, itemMeta);
 
         item.setItemMeta(itemMeta);
 
