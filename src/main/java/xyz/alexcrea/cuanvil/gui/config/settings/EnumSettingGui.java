@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -34,7 +35,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
      * @param now    The defined value of this setting.
      */
     protected EnumSettingGui(EnumSettingFactory<T> holder, T now) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param);
         this.holder = holder;
         this.before = now;
         this.now = now;
@@ -139,6 +140,8 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
     public abstract static class EnumSettingFactory<T extends Enum<T> & ConfigurableEnum> extends SettingGuiFactory {
         @NotNull
         Message title;
+        @Nullable
+        Object param;
         @NotNull
         ValueUpdatableGui parent;
 
@@ -151,12 +154,14 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @param config     Configuration holder of this setting.
          */
         protected EnumSettingFactory(
-                @NotNull Message title, @NotNull ValueUpdatableGui parent,
+                @NotNull Message title, @Nullable Object param,
+                @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config) {
             super(configPath, config);
             this.title = title;
-            this.parent = parent;
+            this.param = param;
 
+            this.parent = parent;
         }
         /**
          * @return Get setting's gui title.

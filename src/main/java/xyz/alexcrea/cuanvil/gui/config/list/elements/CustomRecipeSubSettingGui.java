@@ -112,7 +112,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_COST_LEVEL_XP(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                null,
+                null, null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG, 1, 5, 10
         );
 
@@ -120,7 +120,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_COST_LINEAR_XP(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LINEAR_XP_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
-                null,
+                null, null,
                 0, Integer.MAX_VALUE, AnvilCustomRecipe.DEFAULT_LINEAR_XP_COST_CONFIG, 1, 10, 100, 1000, 10000
         );
 
@@ -131,7 +131,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_LEFT_DESCRIPTION()
+                null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_LEFT_DESCRIPTION()
         );
 
         this.rightItemFactory = new ItemSettingGui.ItemSettingFactory(
@@ -139,7 +139,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_DESCRIPTION()
+                null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_DESCRIPTION()
         );
 
         this.resultItemFactory = new ItemSettingGui.ItemSettingFactory(
@@ -147,7 +147,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE_HOLDER,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RESULT_DESCRIPTION()
+                null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RESULT_DESCRIPTION()
         );
 
         // Now we update the items

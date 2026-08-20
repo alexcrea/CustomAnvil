@@ -43,7 +43,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
      * @param now    The defined value of this setting.
      */
     protected BoolSettingsGui(BoolSettingFactory holder, boolean now) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param);
         this.holder = holder;
         this.before = now;
         this.now = now;
@@ -112,7 +112,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         // create & set Value item
         ArrayList<Component> valueLore = new ArrayList<>();
         if(holder.displayLore != null){
-            valueLore.addAll(ComponentUtil.INSTANCE.asComponents(holder.displayLore));
+            valueLore.addAll(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param));
             valueLore.add(Component.empty());
         }
         valueLore.addAll(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted());

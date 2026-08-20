@@ -43,7 +43,7 @@ public class ItemSettingGui extends AbstractSettingGui {
      * @param now    The defined value of this setting.
      */
     protected ItemSettingGui(ItemSettingFactory holder, ItemStack now) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param);
         this.holder = holder;
         this.before = now;
         this.now = now;
@@ -178,6 +178,8 @@ public class ItemSettingGui extends AbstractSettingGui {
         ItemStack defaultVal;
         @NotNull
         List<Message> displayLore;
+        @Nullable
+        Object param;
 
         /**
          * Constructor for an item setting gui factory.
@@ -193,13 +195,14 @@ public class ItemSettingGui extends AbstractSettingGui {
                 @NotNull Message title, @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
                 @Nullable ItemStack defaultVal,
-                Message... displayLore) {
+                @Nullable Object param, Message... displayLore) {
             super(configPath, config);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
             this.displayLore = Arrays.asList(displayLore);
+            this.param = param;
         }
 
         /**
@@ -250,7 +253,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
             //TODO MESSAGE name ?
             meta.setDisplayName("§a" + name);
-            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(getDisplayLore()), meta);
+            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(getDisplayLore(), param), meta);
             meta.addItemFlags(ItemFlag.values());
 
             item.setItemMeta(meta);

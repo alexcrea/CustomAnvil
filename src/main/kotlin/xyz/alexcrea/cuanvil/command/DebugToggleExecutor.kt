@@ -231,7 +231,7 @@ class DebugToggleExecutor: CASubCommand {
                     break
                 }
             }
-            if(found) break
+            if(found) continue
 
             hadIssue = true
             stb.append("Did not found param %$textParam in register list for ${message.key}\n")

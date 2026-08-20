@@ -52,7 +52,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     protected DoubleSettingGui(DoubleSettingFactory holder, @NotNull BigDecimal now,
                                boolean asPercentage, boolean nullOnZero) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param, holder.param2);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
         this.asPercentage = asPercentage;

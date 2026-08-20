@@ -53,13 +53,13 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
             }
 
             val replacement = value.toString()
-            if(replacement.isEmpty()) continue //May not be good but can be changed if cause an issue //TODO REPLACE WITH NULL
 
             var current = 0
             while(true) {
                 current = stb.indexOf('%', current)
                 if(current > 0 && stb[current - 1] == '\\') {
                     foundBackslashPercent = true
+                    current++
                     continue
                 }
                 if(++current <= 0 || current + key.length > stb.length) break // may be able to be removed if bound checked in startsWith ?
@@ -178,7 +178,7 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
     }
 }
 
-class WarningMessage(key: String, vararg params: String): Message("warning.$key", *params) {
+class WarningMessage(key: String, vararg params: String?): Message("warning.$key", *params) {
 
     override fun log(vararg params: Any?) {
         val texts = formatted(*params)
@@ -189,7 +189,7 @@ class WarningMessage(key: String, vararg params: String): Message("warning.$key"
     }
 }
 
-class ErrorMessage(key: String, vararg params: String): Message("error.$key", *params) {
+class ErrorMessage(key: String, vararg params: String?): Message("error.$key", *params) {
 
     override fun log(vararg params: Any?) {
         val texts = formatted(*params)
@@ -208,5 +208,5 @@ class ErrorMessage(key: String, vararg params: String): Message("error.$key", *p
     }
 }
 
-class CommandMessage(key: String, vararg params: String): Message("command.$key", *params)
-class UIMessage(key: String, vararg params: String): Message("config-ui.$key", *params)
+class CommandMessage(key: String, vararg params: String?): Message("command.$key", *params)
+class UIMessage(key: String, vararg params: String?): Message("config-ui.$key", *params)

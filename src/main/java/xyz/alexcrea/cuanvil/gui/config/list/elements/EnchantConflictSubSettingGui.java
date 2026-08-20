@@ -100,7 +100,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.minBeforeActiveSettingFactory = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_TITLE(),
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT_HOLDER,
-                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION(),
+                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION(), null,
                 0, 255, 0, 1
         );
 

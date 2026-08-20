@@ -356,12 +356,12 @@ config-ui.basic-config.color-cost:
       description:
         1: "<gray>XP level cost when using color code or hexadecimal color using the anvil."
         2: "<gray>conflict With one of the left item enchantment"
-        disabled:
-          title: "<red>Cost Of Using Color"
-          description:
-            1: "<gray>This config can do something only if one of the following config is enabled:"
-            2: "<gray>- <green>Allow Use Of Color Code"
-            3: "<gray>- <green>Allow Use Of Hexadecimal Color"
+      disabled:
+        title: "<red>Cost Of Using Color"
+        description:
+          1: "<gray>This config can do something only if one of the following config is enabled:"
+          2: "<gray>- <green>Allow Use Of Color Code"
+          3: "<gray>- <green>Allow Use Of Hexadecimal Color"
 
 config-ui.basic-config.work-penalty:
       title: "<dark_gray>Work Penalty Type"

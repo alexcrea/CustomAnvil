@@ -45,7 +45,7 @@ public class IntSettingsGui extends AbstractSettingGui {
      * @param now    The defined value of this setting.
      */
     protected IntSettingsGui(IntSettingFactory holder, int now) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
         this.before = now;

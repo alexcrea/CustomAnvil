@@ -125,7 +125,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.maxAnvilCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_TITLE(), this,
                 ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DESCRIPTION(),
+                MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_MAX_ANVIL_COST,
                 1, 5, 10
@@ -166,7 +166,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.itemRepairCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_TITLE(), this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_DESCRIPTION(),
+                MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
                 1, 5, 10, 50, 100
@@ -176,7 +176,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.unitRepairCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_TITLE(), this,
                 ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_DESCRIPTION(),
+                MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
                 1, 5, 10, 50, 100
@@ -187,7 +187,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.itemRenameCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_TITLE(), this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_DESCRIPTION(),
+                MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
                 1, 5, 10, 50, 100
@@ -198,7 +198,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.sacrificeIllegalEnchantCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_TITLE(), this,
                 ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_DESCRIPTION(),
+                MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
                 1, 5, 10, 50, 100
@@ -247,7 +247,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.useOfColorCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOR_COST_TITLE(), this,
                 ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_COLOR_COST_DESCRIPTION(),
+                MsgUI.INSTANCE.getBASIC_COLOR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_USE_OF_COLOR_COST,
                 1, 5, 10, 50, 100

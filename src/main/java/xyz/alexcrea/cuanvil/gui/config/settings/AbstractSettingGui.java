@@ -8,6 +8,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -39,8 +40,13 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    protected AbstractSettingGui(int rows, @NotNull Message title, ValueUpdatableGui parent) {
-        this(rows, title.textHolder(), parent);
+    protected AbstractSettingGui(
+            int rows,
+            @NotNull Message title,
+            ValueUpdatableGui parent,
+            @Nullable Object... params
+    ) {
+        this(rows, title.textHolder(params), parent);
     }
 
     protected GuiItem saveItem;
