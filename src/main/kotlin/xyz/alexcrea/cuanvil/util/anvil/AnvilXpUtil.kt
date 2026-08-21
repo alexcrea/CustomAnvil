@@ -269,7 +269,7 @@ object AnvilXpUtil {
             // We know "enchantment.key in resultEnchs" true
             val resultLevel = resultEnchs[enchantment.key]!!
 
-            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isFromBook, isToBook)
+            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isToBook, isFromBook)
             val value = resultLevel * enchantmentMultiplier
             CustomAnvil.log("Value for sacrifice item ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
             rightValue += value
@@ -283,7 +283,7 @@ object AnvilXpUtil {
 
                 val resultLevel = resultEnchs.getOrDefault(enchantment.key, 0)
 
-                val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isFromBook, isToBook)
+                val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isToBook, isFromBook)
                 val value = resultLevel * enchantmentMultiplier
                 CustomAnvil.log("Value for left item ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
                 leftValue += value
