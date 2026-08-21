@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 
@@ -108,6 +107,6 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
 
     protected abstract Consumer<String> prepareCreateItemConsumer(HumanEntity player);
 
-    protected abstract String genericDisplayedName();
+    protected abstract Message genericDisplayedName();
 
 }

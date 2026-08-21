@@ -14,10 +14,11 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup,
@@ -53,7 +54,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         // Create new empty conflict and display it to the admin
         EnchantConflictGroup conflict = new EnchantConflictGroup(
                 name,
-                new IncludeGroup("new_group"),
+                new IncludeGroup(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_DEFAULT_NEW().unformatted()),
                 0);
 
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
@@ -81,12 +82,14 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " §fConflict"); //TODO MESSAGE
-        meta.setLore(Arrays.asList(//TODO MESSAGE
-                "§7Enchantment count:       §e" + conflict.getEnchants().size(),
-                "§7Group count:               §e" + conflict.getCantConflictGroup().getGroups().size(),
-                "§7Min enchantments count: §e" + conflict.getMinBeforeBlock()
-        ));
+        var name = CasedStringUtil.snakeToUpperSpacedCase(conflict.toString());
+
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_NAME(), name);
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_LORE().formatted(
+                conflict.getEnchants().size(),
+                conflict.getCantConflictGroup().getGroups().size(),
+                conflict.getMinBeforeBlock()
+        ), meta);
 
         item.setItemMeta(meta);
         return item;
@@ -98,8 +101,8 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     }
 
     @Override
-    protected String genericDisplayedName() {
-        return "conflict";//TODO MESSAGE
+    protected Message genericDisplayedName() {
+        return MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_GENERIC_NAME();
     }
 
     @Override

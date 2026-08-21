@@ -15,12 +15,12 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
-import xyz.alexcrea.cuanvil.util.LazyValue;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
@@ -56,12 +56,19 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " §fGroup");
-        meta.setLore(Arrays.asList(
-                "§7Number of selected groups : " + group.getGroups().size(),
-                "§7Number of included material : " + group.getNonGroupInheritedMaterials().size(),
-                "",
-                "§7Total number of included material "+group.getMaterials().size()));
+        ComponentUtil.INSTANCE.setMessageName(
+                meta,
+                MsgUI.INSTANCE.getMATERIAL_GROUP_NAME(),
+                CasedStringUtil.snakeToUpperSpacedCase(group.getName())
+        );
+        ComponentUtil.INSTANCE.applyLore(
+                MsgUI.INSTANCE.getMATERIAL_GROUP_LORE().formatted(
+                        group.getGroups().size(),
+                        group.getNonGroupInheritedMaterials().size(),
+                        group.getMaterials().size()
+                ),
+                meta
+        );
 
         item.setItemMeta(meta);
         return item;
@@ -85,8 +92,8 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected String genericDisplayedName() {
-        return "material group";
+    protected Message genericDisplayedName() {
+        return MsgUI.INSTANCE.getMATERIAL_GROUP_GENERIC_NAME();
     }
 
     @Override

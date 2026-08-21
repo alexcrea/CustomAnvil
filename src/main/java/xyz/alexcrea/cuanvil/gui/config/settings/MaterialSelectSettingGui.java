@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
@@ -42,7 +41,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             @NotNull Message title,
             @NotNull String param,
             @NotNull Gui backGui) {
-        super(title, param);//TODO MESSAGE make param go down
+        super(title, param);
         this.selector = selector;
         this.backGui = backGui;
         this.instantRemove = false;
@@ -306,7 +305,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     @Override
-    protected String genericDisplayedName() {// Not Used
+    protected Message genericDisplayedName() {// Not Used
         return null;
     }
 }

@@ -3,7 +3,6 @@ package xyz.alexcrea.cuanvil.lang
 import io.delilaheve.CustomAnvil
 import org.bukkit.configuration.ConfigurationSection
 import xyz.alexcrea.cuanvil.config.ConfigHolder
-import java.util.stream.Stream
 
 object Lang {
 
@@ -17,11 +16,13 @@ object Lang {
     }
 
     fun reload(): Boolean {
+        val previousLang = lang
         try {
             unsafeReload()
             return true
         } catch(e: Exception) {
-            CustomAnvil.logError("Error loading language $langID", e, false)
+            CustomAnvil.logError("Error loading language $langID. going back to ${lang.name}", e, false)
+            lang = previousLang
             return false
         }
     }

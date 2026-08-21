@@ -123,7 +123,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
     protected abstract S newInstanceOfGui(T generic, GuiItem item);
 
-    protected abstract String genericDisplayedName();
+    protected abstract Message genericDisplayedName();
 
     protected abstract T createAndSaveNewEmptyGeneric(String name);
 

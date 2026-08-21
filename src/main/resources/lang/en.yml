@@ -103,13 +103,16 @@ command.reload:
     fail: "<red>Config was not able to be reloaded..."
     hard-fail: "<red>Hard fail, plugin disabled"
 
-
 config-ui.shared:
     no-permission: "<red>You do not have permission to edit the config"
     typed-config-title: "<yellow>%type <white>Config"
     click-to-change: "<gray>Click Here to change the value"
     green-get-item: "<green>%name"
     yellow-get-item: "<yellow>%name"
+    formated-yes: "<green>Yes"
+    formated-no: "<red>No"
+    default: "Default"
+    valued-default: "Default (%value)"
 
 config-ui.global-item:
   item-lore-prefix: "<gray>value: %value"
@@ -154,6 +157,15 @@ config-ui.unit-repair:
 
 config-ui.custom-recipe:
     title: "Custom Recipe Config <reset>(%page/%max_page)"
+    generic-name: "custom recipe"
+    name: "<yellow>%name <white>Custom recipe"
+    lore:
+      default:
+        1: "<gray>Is valid:    %should_work"
+        2: "<gray>Exact count:    %exact_count"
+        3: "<gray>Recipe Level Cost: <yellow>%per_craft_lv_cost"
+        4: "<gray>Recipe Linear Xp Cost: <yellow>%per_craft_xp_cost"
+      linear: "<gray>Exact Linear xp remove:    %exact_linear"
     element:
       exact-count: "<dark_gray>Exact count ?"
       linear-xp:
@@ -218,6 +230,13 @@ config-ui.enchant-merge-limit:
 
 config-ui.enchant-conflict:
     title: "Conflict Config <reset>(%page/%max_page)"
+    name: "<yellow>%name <white>Conflict"
+    lore:
+      1: "<gray>Enchantment count:       <yellow>%enchantment_count"
+      2: "<gray>Group count:               <yellow>%group_count"
+      3: "<gray>Min enchantments count: <yellow>%min_count"
+    generic-name: "conflict"
+    default-new: "new_group"
     element:
       selected-enchantments: "<yellow>%group<dark_purple>" # likely need page and max page
       selected-sub-groups: "<yellow>%group <red>Groups"
@@ -236,6 +255,13 @@ config-ui.enchant-conflict:
 
 config-ui.material-group:
     title: "Group Config <reset>(%page/%max_page)"
+    generic-name: "material group"
+    name: "<yellow>%name <white>Group"
+    lore:
+      1: "<gray>Number of selected groups : %groups"
+      2: "<gray>Number of included material : %materials"
+      3: ""
+      4: "<gray>Total number of included material %size"
     element:
       selected-materials: "<yellow>%group <red>Materials"
       selected-sub-groups: "<yellow>%group <red>Groups"
@@ -251,6 +277,15 @@ config-ui.material-select:
       confirm:
         title: "Remove %name"
         description: "<dark_gray>Confirm Remove %name from this list."
+
+config-ui.enchant-config:
+  title: "Configuring %name"
+  name: "<green>Configuring %name:"
+  multiples-name: "Enchantments"
+
+config-ui.item-config:
+  title: "%name Config"
+  name: "<green>Configuring %name"
 
 config-ui.basic-config:
     title: "<dark_gray>Basic Config"

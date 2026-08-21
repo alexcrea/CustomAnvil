@@ -10,6 +10,15 @@ object MsgUI {
     val SHARED_GREEN_GET_ITEM = Message("shared.green-get-item", "name")
     val SHARED_YELLOW_GET_ITEM = Message("shared.yellow-get-item", "name")
 
+    val SHARED_FORMATED_YES = Message("shared.formated-yes")
+    val SHARED_FORMATED_NO = Message("shared.formated-no")
+    val SHARED_DEFAULT = Message("shared.default")
+    val SHARED_VALUED_DEFAULT = Message("shared.valued-default", "value")
+
+    fun booleanMessage(bool: Boolean): Message {
+        return if(bool) SHARED_FORMATED_YES else SHARED_FORMATED_NO
+    }
+
     val GLOBAL_ITEM_ITEM_LORE_PREFIX = Message("global-item.item-lore-prefix", "value")
     val GLOBAL_ITEM_ITEM_LORE_PREFIX_ALONE = Message("global-item.item-lore-prefix-alone", "value")
 
@@ -37,6 +46,11 @@ object MsgUI {
     val UNIT_REPAIR_NEW_ELEMENT_SAME_TYPE = Message("unit-repair.element.new.same-type")
 
     val CUSTOM_RECIPE_TITLE = Message("custom-recipe.title", null, "page", "max_page")
+    val CUSTOM_RECIPE_NAME = Message("custom-recipe.name", "name")
+    val CUSTOM_RECIPE_GENERIC_NAME = Message("custom-recipe.generic-name")
+    val CUSTOM_RECIPE_LORE_DEFAULT = Message("custom-recipe.lore.default",
+        "should_work", "exact_count", "per_craft_lv_cost", "per_craft_xp_cost")
+    val CUSTOM_RECIPE_LORE_LINEAR = Message("custom-recipe.lore.linear", "exact_linear")
 
     val CUSTOM_RECIPE_ELEMENT_EXACT_COUNT_TITLE = Message("custom-recipe.element.exact-count", null)
     val CUSTOM_RECIPE_ELEMENT_LINEAR_XP_TITLE = Message("custom-recipe.element.linear-xp.title", null)
@@ -72,6 +86,10 @@ object MsgUI {
     val ENCHANTMENT_MERGE_LIMIT_ELEMENT_DESCRIPTION = Message("enchant-merge-limit.element.description", "name")
 
     val ENCHANTMENT_CONFLICT_TITLE = Message("enchant-conflict.title", null, "page", "max_page")
+    val ENCHANTMENT_CONFLICT_GENERIC_NAME = Message("enchant-conflict.generic-name")
+    val ENCHANTMENT_CONFLICT_NAME = Message("enchant-conflict.name", "name")
+    val ENCHANTMENT_CONFLICT_LORE = Message("enchant-conflict.lore", "enchantment_count", "group_count", "min_count")
+    val ENCHANTMENT_CONFLICT_DEFAULT_NEW = Message("enchant-conflict.default-new")
     val ENCHANTMENT_CONFLICT_ELEMENT_ENCHANTMENTS = Message("enchant-conflict.element.selected-enchantments", "group")
     val ENCHANTMENT_CONFLICT_ELEMENT_SUB_GROUPS = Message("enchant-conflict.element.selected-sub-groups", "group")
 
@@ -84,7 +102,10 @@ object MsgUI {
     val ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM = Message("enchant-conflict.element.min-before-count.item")
 
     val MATERIAL_GROUP_TITLE = Message("material-group.title", null, "page", "max_page")
-    val MATERIAL_GROUP_ELEMENT_SELECTED_MATERIALS = Message("material-group.element.selected-materials", "group")
+    val MATERIAL_GROUP_GENERIC_NAME = Message("material-group.generic-name")
+    val MATERIAL_GROUP_NAME = Message("material-group.name", "name")
+    val MATERIAL_GROUP_LORE = Message("material-group.lore", "groups", "materials", "size")
+    val MATERIAL_GROUP_ELEMENT_SELECTED_MATERIALS = Message("material-group.element.selected-materials", "group", null, null)
     val MATERIAL_GROUP_ELEMENT_SELECTED_SUB_GROUPS = Message("material-group.element.selected-sub-groups", "group")
 
     val MATERIAL_GROUP_ELEMENT_DELETE_TITLE = Message("material-group.element.delete.title", "type")
@@ -94,6 +115,13 @@ object MsgUI {
 
     val MATERIAL_SELECT_CONFIRM_TITLE = Message("material-select.new.confirm.title", "name")
     val MATERIAL_SELECT_CONFIRM_DESCRIPTION = Message("material-select.new.confirm.description", "name")
+
+    val ENCHANT_CONFIG_TITLE = Message("enchant-config.title", "name")
+    val ENCHANT_CONFIG_NAME = Message("enchant-config.name", "name")
+    val ENCHANT_CONFIG_MULTIPLES_NAME = Message("enchant-config.multiples-name")
+
+    val ITEM_CONFIG_TITLE = Message("item-config.title", "name")
+    val ITEM_CONFIG_NAME = Message("item-config.name", "name")
 
     /*
      * ------------------
@@ -160,7 +188,5 @@ object MsgUI {
     val BASIC_WORK_PENALTY_EXPLAIN_ADDITIVE = Message("basic-config.work-penalty.explanation.additive")
     val BASIC_WORK_PENALTY_EXPLAIN_SHARED = Message("basic-config.work-penalty.explanation.shared")
     val BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE = Message("basic-config.work-penalty.explanation.exclusive")
-
-
 
 }

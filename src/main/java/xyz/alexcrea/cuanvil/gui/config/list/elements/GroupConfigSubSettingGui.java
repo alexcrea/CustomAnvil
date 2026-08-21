@@ -83,13 +83,13 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectItemMeta = selectItem.getItemMeta();
         assert selectItemMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName, name);
+        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName, name, null, null);
 
         selectItem.setItemMeta(selectItemMeta);
         this.materialSelection = new GuiItem(selectItem, (event) -> {
             event.setCancelled(true);
             MaterialSelectSettingGui selectGui = new MaterialSelectSettingGui(this,
-                    materialSelectionName, name
+                    materialSelectionName, name//TODO MESSAGE maybe need (%page/%max_page)
                     , this);
             selectGui.show(event.getWhoClicked());
 

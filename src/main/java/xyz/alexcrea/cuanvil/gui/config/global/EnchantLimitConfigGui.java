@@ -12,7 +12,6 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -53,6 +52,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
         var defaultValue = enchant.defaultMaxLevel();
+        var defaultValueStr = String.valueOf(enchant.defaultMaxLevel());
 
         return new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_TITLE(), parent,
@@ -69,12 +69,11 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
 
             @Override
             public String valueDisplayName(IntSettingsGui.ValueDisplayType type, int value) {
-
                 if(value < 0) {
                     return switch (type) {
-                        case CURRENT -> "Default (" + defaultValue + ")";
-                        case RESET -> String.valueOf(defaultValue);
-                        default -> "Default";
+                        case CURRENT -> MsgUI.INSTANCE.getSHARED_VALUED_DEFAULT().unformatted(defaultValueStr);
+                        case RESET -> defaultValueStr;
+                        default -> MsgUI.INSTANCE.getSHARED_DEFAULT().unformatted();
                     };
 
                 }
