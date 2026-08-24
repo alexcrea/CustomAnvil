@@ -225,6 +225,12 @@ object AnvilColorUtil {
                 startIndex += 1 // Avoid infinite loop
                 continue
             }
+            if(startIndex > 0 && builder[startIndex - 1] == '§') {
+                builder.replace(startIndex - 1, startIndex + 1, "#")
+                // Voluntarily do not update startindex
+                // if we had &|#123456 (| being start index) then we get #1|23456 so won't trigger matcher again !
+                continue
+            }
 
             builder.replace(startIndex, startIndex + 1, "§x")
             startIndex += 2
