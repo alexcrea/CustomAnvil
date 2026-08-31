@@ -19,6 +19,9 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -150,7 +153,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             assert meta != null;
 
             meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§c-" + (nowBook - planned) + "§r)");
-            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
+            ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -167,8 +170,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§a+" + (planned - nowBook) + "§r)");
-            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
+            meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§a+" + (planned - nowBook) + "§r)");//TODO MESSAGE
+            ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -182,9 +185,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta nowMeta = nowPaper.getItemMeta();
         assert nowMeta != null;
 
-        nowMeta.setDisplayName("§fValue: §e" + nowBook);
-        if (!holder.displayLore.isEmpty()) {
-            nowMeta.setLore(holder.displayLore);
+        nowMeta.setDisplayName("<white>Value: <yellow>" + nowBook);//TODO MESSAGE
+        if (holder.displayLore != null) {
+            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), nowMeta);
         }
 
         nowPaper.setItemMeta(nowMeta);
@@ -263,15 +266,15 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          *                    If step only contain 1 value, no step item should be displayed.
          */
         public EnchantCostSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
+                @NotNull Message title, ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
-                @Nullable List<String> displayLore,
+                @Nullable Message displayLore, @Nullable Object param,
                 @NotNull CAEnchantment enchantment,
                 int min, int max, int... steps) {
 
             super(title, parent,
                     configPath, config,
-                    displayLore,
+                    displayLore, param,
                     min, max, enchantment.defaultRarity().getItemValue(),
                     steps);
 
@@ -302,7 +305,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             return new EnchantCostSettingsGui(this, nowItem);
         }
 
-        public List<String> getDisplayLore() {
+        @Nullable
+        public List<Message> getDisplayLore() {
             return this.displayLore;
         }
     }

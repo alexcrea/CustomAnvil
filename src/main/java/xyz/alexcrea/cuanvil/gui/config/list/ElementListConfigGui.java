@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,16 +33,18 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     public static final int LIST_FILLER_LENGTH = 7;
     public static final int LIST_FILLER_HEIGHT = 4;
 
-    private final String namePrefix;
+    private final Message rawTitle;
+    private final String param;
 
     protected PatternPane backgroundPane;
 
     private Predicate<T> filter = (t) -> true;
     private boolean hasDefaultFilter = true;
 
-    protected ElementListConfigGui(@NotNull String title, Gui parent) {
-        super(6, title, CustomAnvil.instance);
-        this.namePrefix = title;
+    protected ElementListConfigGui(@NotNull Message title, String param, Gui parent) {
+        super(6, title.textHolder(param, "", ""), CustomAnvil.instance);
+        this.rawTitle = title;
+        this.param = param;
 
         // Back item panel
         Pattern pattern = getBackgroundPattern();
@@ -259,13 +262,10 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         // and add actual page
         addPane(page);
 
-        // set title
-        StringBuilder title = new StringBuilder(this.namePrefix);
+        // intended parameter: (page/max_page) //TODO MESSAGE CHECK CHILDS
         int pagesSize = this.pages.size();
-        if (pagesSize > 1) {
-            title.append(" (").append(pageID + 1).append('/').append(pagesSize).append(')');
-        }
-        setTitle(title.toString());
+        var title = this.rawTitle.textHolder(param, pageID + 1, pagesSize);
+        setTitle(title);
 
         super.show(humanEntity);
 

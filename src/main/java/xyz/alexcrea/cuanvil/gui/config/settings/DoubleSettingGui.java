@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,7 +18,10 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -48,7 +52,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     protected DoubleSettingGui(DoubleSettingFactory holder, @NotNull BigDecimal now,
                                boolean asPercentage, boolean nullOnZero) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param, holder.param2);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
         this.asPercentage = asPercentage;
@@ -166,7 +170,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("§fValue: §e" + displayValue(now));
+        resultMeta.setDisplayName("<white>Value: <yellow>" + displayValue(now));
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -185,12 +189,12 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     private GuiItem getSetValueItem(Material mat, BigDecimal planned, String numberPrefix){
         // Create set item lore
-        ArrayList<String> setLoreItem = new ArrayList<>();
-        if(!holder.displayLore.isEmpty()){
-            setLoreItem.addAll(holder.displayLore);
-            setLoreItem.add("");
+        ArrayList<Component> setLoreItem = new ArrayList<>();
+        if(holder.displayLore != null){
+            setLoreItem.addAll(holder.displayLore.formatted(holder.param, holder.param2));
+            setLoreItem.add(Component.empty());
         }
-        setLoreItem.add(AbstractSettingGui.CLICK_LORE);
+        setLoreItem.addAll(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted());
 
         // Create & return set value item
         ItemStack item = new ItemStack(mat);
@@ -199,7 +203,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
         meta.setDisplayName("§e" + displayValue(now) + " §f-> §e" + displayValue(planned)
                 + " §r(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "§r)"));
-        meta.setLore(setLoreItem);
+        ComponentUtil.INSTANCE.applyLore(setLoreItem, meta);
         item.setItemMeta(meta);
 
         return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
@@ -357,7 +361,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     public static class DoubleSettingFactory extends SettingGuiFactory {
         @NotNull
-        String title;
+        Message title;
         @NotNull
         ValueUpdatableGui parent;
 
@@ -369,8 +373,12 @@ public class DoubleSettingGui extends AbstractSettingGui {
         BigDecimal defaultVal;
         BigDecimal[] steps;
 
-        @NotNull
-        List<String> displayLore;
+        @Nullable
+        Message displayLore;
+        @Nullable
+        Object param;
+        @Nullable
+        Object param2;
 
         /**
          * Constructor for a double setting gui factory.
@@ -392,10 +400,11 @@ public class DoubleSettingGui extends AbstractSettingGui {
          *                     If step only contain 1 value, no step item should be displayed.
          */
         public DoubleSettingFactory(
-                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull Message title, @NotNull ValueUpdatableGui parent,
                 @NotNull ConfigHolder config,
                 @NotNull String configPath,
-                @Nullable List<String> displayLore,
+                @Nullable Message displayLore,
+                @Nullable Object param, @Nullable Object param2,
                 int scale, boolean asPercentage, boolean nullOnZero,
                 double min, double max, double defaultVal, double... steps) {
             super(configPath, config);
@@ -413,18 +422,16 @@ public class DoubleSettingGui extends AbstractSettingGui {
                 this.steps[i] = BigDecimal.valueOf(steps[i]).setScale(scale, RoundingMode.HALF_UP);
             }
 
-            if(displayLore == null){
-                this.displayLore = Collections.emptyList();
-            }else {
-                this.displayLore = displayLore;
-            }
+            this.displayLore = displayLore;
+            this.param = param;
+            this.param2 = param2;
         }
 
         /**
          * @return Get setting's gui title
          */
         @NotNull
-        public String getTitle() {
+        public Message getTitle() {
             return title;
         }
 
@@ -448,21 +455,29 @@ public class DoubleSettingGui extends AbstractSettingGui {
         }
 
 
-        public GuiItem getItem(Material itemMat, String name){
+        public GuiItem getItem(
+                @NotNull Material itemMat,
+                @NotNull Message name,
+                Object... params
+        ){
             // Get item properties
             BigDecimal value = getConfiguredValue();
-            StringBuilder itemName = new StringBuilder("§a").append(name);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
-                    "§e" + displayValue(value, this.asPercentage),
-                    this.displayLore, true);
+            var itemName = name.formattedConcatenated(params);
+
+            return GuiGlobalItems.createGuiItemFromProperties(
+                    this, itemMat, itemName,
+                    "<yellow>" + displayValue(value, this.asPercentage), //TODO MESSAGE ? maybe ?
+                    Collections.singletonList(this.displayLore), true,
+                    this.param, this.param2
+            );
         }
 
         public GuiItem getItem(Material itemMat){
             // Get item properties
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
 
-            return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(itemMat, MsgUI.INSTANCE.getSHARED_GREEN_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

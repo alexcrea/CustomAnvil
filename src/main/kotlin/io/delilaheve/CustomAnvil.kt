@@ -1,14 +1,13 @@
 package io.delilaheve
 
 import io.delilaheve.util.ConfigOptions
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.api.event.CAEnchantRegistryReadyEvent
 import xyz.alexcrea.cuanvil.command.CustomAnvilCommand
-import xyz.alexcrea.cuanvil.command.EditConfigExecutor
-import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
@@ -17,6 +16,9 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
+import xyz.alexcrea.cuanvil.lang.Lang
+import xyz.alexcrea.cuanvil.lang.MsgError
+import xyz.alexcrea.cuanvil.lang.MsgWarning
 import xyz.alexcrea.cuanvil.listener.AnvilCloseListener
 import xyz.alexcrea.cuanvil.listener.AnvilResultListener
 import xyz.alexcrea.cuanvil.listener.ChatEventListener
@@ -75,7 +77,7 @@ open class CustomAnvil : JavaPlugin() {
         var latestVer: String? = null
 
         // Debug
-        val debugStorageQueue = ArrayDeque<String>()
+        val debugStorageQueue = ArrayDeque<Component>()
 
         private fun addToLogQueue(message: String) {
             if(debugStorageQueue.size >= 200) {
@@ -83,7 +85,7 @@ open class CustomAnvil : JavaPlugin() {
                 debugStorageQueue.removeFirst()
             }
 
-            debugStorageQueue.addLast(message)
+            debugStorageQueue.addLast(Component.text(message))
         }
 
         /**
@@ -108,11 +110,23 @@ open class CustomAnvil : JavaPlugin() {
             }
         }
 
+        /**
+         * Error Logging handler
+         */
+        @JvmStatic fun logError(message: String, throwable: Throwable? = null, track: Boolean = true, level: Level = Level.SEVERE) {
+            instance.logger.log(level, message, throwable)
+            addToLogQueue("Error: $message")
+
+            if(track) {
+                MetricsUtil.trackError(message, throwable)
+            }
+        }
     }
 
     // stop plugin if we do not force a dirty start (true by default)
     // Return true if start was stopped
     private fun tryDirtyStart(): Boolean {
+        if(ConfigHolder.DEFAULT_CONFIG == null) return false
         if(!ConfigHolder.DEFAULT_CONFIG.config.getBoolean("dirty_start", false)) {
             Bukkit.getPluginManager().disablePlugin(this)
             return true
@@ -123,6 +137,7 @@ open class CustomAnvil : JavaPlugin() {
     // stop plugin if we force a safe start (false by default)
     // Return true if start was stopped
     private fun trySafeStart(): Boolean {
+        if(ConfigHolder.DEFAULT_CONFIG == null) return false
         if(ConfigHolder.DEFAULT_CONFIG.config.getBoolean("safe_start", false)) {
             Bukkit.getPluginManager().disablePlugin(this)
             return true
@@ -135,39 +150,45 @@ open class CustomAnvil : JavaPlugin() {
      */
     override fun onEnable() {
         instance = this
-        try {
-            legacyCheck()
-        } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error trying to check for legacy system", e)
-            MetricsUtil.trackError(e)
-            if(trySafeStart()) return
-        }
-
-        // Add commands
-        try {
-            CustomAnvilCommand(this)
-        } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error trying to register commands", e)
-            MetricsUtil.trackError(e)
-            if(trySafeStart()) return
-        }
-
         // Load default configuration
         try {
             if(!ConfigHolder.loadDefaultConfig())
                 throw RuntimeException("Error loading configuration file")
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error occurred loading default configuration", e)
-            MetricsUtil.trackError(e)
+            logError("error occurred loading default configuration", e)
             if(tryDirtyStart()) return
         }
+
+        // Load language
+        try {
+            Lang.loadDefault()
+        } catch (e: Exception) {
+            logError("error occurred loading language file", e)
+            if(tryDirtyStart()) return
+        }
+
+        try {
+            legacyCheck()
+        } catch (e: Exception) {
+            MsgError.LOAD_LEGACY_FAILED.log(e)
+            if(trySafeStart()) return
+        }
+
+
+        // Add commands
+        try {
+            CustomAnvilCommand(this)
+        } catch (e: Exception) {
+            MsgError.LOAD_COMMAND_REGISTER.log(e)
+            if(trySafeStart()) return
+        }
+
 
         // Load dependency
         try {
             DependencyManager.loadDependency()
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error loading dependency compatibility", e)
-            MetricsUtil.trackError(e)
+            MsgError.LOAD_COMPATIBILITY.log(e)
             if(tryDirtyStart()) return
         }
 
@@ -175,8 +196,7 @@ open class CustomAnvil : JavaPlugin() {
         try {
             registerListeners()
         } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error registering listeners", e)
-            MetricsUtil.trackError(e)
+            MsgError.LOAD_LISTENERS.log(e)
             if(tryDirtyStart()) return
         }
 
@@ -192,33 +212,20 @@ open class CustomAnvil : JavaPlugin() {
         MetricsUtil.shutdownMetrics()
     }
 
-    private fun loadEnchantmentSystemDirty() {
-        try {
-            loadEnchantmentSystem()
-        } catch (e: Exception) {
-            logger.log(Level.SEVERE, "error initializing enchantment system", e)
-            MetricsUtil.trackError(e)
-            tryDirtyStart()
-        }
-    }
-
     private fun legacyCheck() {
         // Disable old plugin name if exist
         val potentialPlugin = Bukkit.getPluginManager().getPlugin("UnsafeEnchantsPlus")
         if (potentialPlugin != null) {
             Bukkit.getPluginManager().disablePlugin(potentialPlugin)
-            logger.warning("An old version of this plugin was detected")
-            logger.warning("Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus")
+            MsgWarning.LOAD_LEGACY_OLD_NAME.log()
         }
 
         val isPaper = PlatformUtil.isPaper
         if(!isPaper) {
-            logger.warning("It seems you are using spigot")
-            logger.warning("Please take notice that spigot is less supported than paper and derivatives")
-            if(MinecraftVersionUtil.isTooNewForSpigot) {
-                logger.warning("If replace too expensive is not working this is likely because of spigot")
-                logger.warning("As native nms is not supported for spigot starting 26.1")
-            }
+            MsgWarning.LOAD_LEGACY_SPIGOT.log()
+            if(MinecraftVersionUtil.isTooNewForSpigot)
+                MsgWarning.LOAD_LEGACY_SPIGOT_OLD.log()
+
         }
 
         val loader = if(isPaper) "paper" else "spigot"
@@ -230,13 +237,13 @@ open class CustomAnvil : JavaPlugin() {
             UpdateUtils.currentMinecraftVersion().toString())
             .setFeatured(featured)
             .setOnError {
-                logger.log(Level.WARNING, "error trying to fetch latest update", it)
+                MsgError.LOAD_UPDATE_CHECK_FAIL.log(it, level = Level.WARNING, track = false)
             }
             .checkVersion { latestVer: String? ->
                 CustomAnvil.latestVer = latestVer
                 if(latestVer == null || version.contains(latestVer)) return@checkVersion
 
-                logger.warning("An update may be available: $latestVer")
+                MsgWarning.LOAD_UPDATE_AVAILABLE.log(latestVer)
             }
     }
 
@@ -251,6 +258,15 @@ open class CustomAnvil : JavaPlugin() {
         server.pluginManager.registerEvents(AnvilCloseListener(DependencyManager.packetManager), this)
     }
 
+    private fun loadEnchantmentSystemDirty() {
+        try {
+            loadEnchantmentSystem()
+        } catch (e: Exception) {
+            MsgError.LOAD_ENCHANT_SYSTEM.log(e)
+            tryDirtyStart()
+        }
+    }
+
     private fun loadEnchantmentSystem(){
         // Register enchantments
         CAEnchantmentRegistry.getInstance().registerBukkit()
@@ -261,7 +277,7 @@ open class CustomAnvil : JavaPlugin() {
 
         // Load config
         if (!ConfigHolder.loadNonDefaultConfig()) {
-            logger.log(Level.SEVERE,"Plugin has an issue while trying to load non default config... exiting...")
+            MsgError.LOAD_NON_DEFAULT_CONFIG.log()
             server.pluginManager.disablePlugin(this)
             return
         }
@@ -315,16 +331,15 @@ open class CustomAnvil : JavaPlugin() {
         try {
             val configReader = FileReader(resourceFile)
             yamlConfig.load(configReader)
-        } catch (test: Exception) {
+        } catch (e: Exception) {
+            MsgError.RELOAD_FAIL.log(e, resourceFile.path)
             if (hardFailSafe) {
                 // This is important and may impact gameplay if it does not load.
                 // Failsafe is to stop the plugin
-                logger.severe("Resource ${resourceFile.path} Could not be load or reload.")
-                logger.severe("Disabling plugin.")
+                MsgError.RELOAD_HARD_FAIL.log()
                 Bukkit.getPluginManager().disablePlugin(this)
-            } else {
-                logger.warning("Resource ${resourceFile.path} Could not be load or reload.")
             }
+
             return null
         }
         return yamlConfig

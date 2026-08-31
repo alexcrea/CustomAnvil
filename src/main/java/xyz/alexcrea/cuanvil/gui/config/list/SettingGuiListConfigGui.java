@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,14 +21,24 @@ public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGui
     protected HashMap<T, GuiItem> guiItemMap;
     protected HashMap<T, S> factoryMap;
 
-    protected SettingGuiListConfigGui(@NotNull String title, Gui parent) {
-        super(title, parent);
+    protected SettingGuiListConfigGui(@NotNull Message title, Gui parent) {
+        super(title, "", parent);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
     }
 
-    protected SettingGuiListConfigGui(@NotNull String title) {
+    protected SettingGuiListConfigGui(@NotNull Message title) {
         this(title, MainConfigGui.getInstance());
+    }
+
+    protected SettingGuiListConfigGui(@NotNull Message title, @NotNull String param, Gui parent) {
+        super(title, param, parent);
+        this.guiItemMap = new HashMap<>();
+        this.factoryMap = new HashMap<>();
+    }
+
+    protected SettingGuiListConfigGui(@NotNull Message title, @NotNull String param) {
+        this(title, param, MainConfigGui.getInstance());
     }
 
     @Override

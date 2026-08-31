@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -16,8 +17,6 @@ import java.util.function.Consumer;
  * A utility class to store function that create generic GUI actions.
  */
 public class GuiGlobalActions {
-
-    public static final String NO_EDIT_PERM = "§cYou do not have permission to edit the config";
 
     /**
      * A Consumer that should be used if the item goal is to do nothing on click.
@@ -44,7 +43,7 @@ public class GuiGlobalActions {
             // Do not allow to open inventory if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             try {
@@ -102,7 +101,7 @@ public class GuiGlobalActions {
             // Do not allow to open inventory if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             goal.show(player);
@@ -127,7 +126,7 @@ public class GuiGlobalActions {
             // Do not allow to save configuration if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
 

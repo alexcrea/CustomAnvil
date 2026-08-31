@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.*;
@@ -35,8 +36,10 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
 
     private boolean displayUnselected;
 
-    public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer) {
-        super(title, parent instanceof Gui parentGui ? parentGui : MainConfigGui.getInstance()) ;
+    public EnchantSelectSettingGui(
+            @NotNull Message title, @NotNull String param,
+            ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer) {
+        super(title, param, parent instanceof Gui parentGui ? parentGui : MainConfigGui.getInstance()) ;
         this.enchantContainer = enchantContainer;
 
         this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());

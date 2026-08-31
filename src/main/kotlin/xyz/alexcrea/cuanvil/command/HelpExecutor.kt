@@ -1,10 +1,18 @@
 package xyz.alexcrea.cuanvil.command
 
 import com.google.common.collect.ImmutableMap
+import net.kyori.adventure.text.Component
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import xyz.alexcrea.cuanvil.lang.Message
+import xyz.alexcrea.cuanvil.lang.MsgCommand
+import xyz.alexcrea.cuanvil.util.ComponentUtil.send
 
 class HelpExecutor : CASubCommand {
+
+    override fun description(): Message {
+        return MsgCommand.HELP_DESCRIPTION
+    }
 
     lateinit var commands: ImmutableMap<String, CASubCommand>
 
@@ -12,18 +20,18 @@ class HelpExecutor : CASubCommand {
         sender: CommandSender,
         cmd: Command,
         cmdstr: String,
-        args: Array<out String>
+        args: Array<out String>,
     ): Boolean {
+        var text = MsgCommand.HELP_HEADER.formatted().first()
+        for((key, cmd) in commands) {
+            if(!cmd.allowed(sender)) continue
 
-        val stb = StringBuilder("List of available commands:")
-        for ((key, cmd) in commands) {
-            if (!cmd.allowed(sender)) continue
-
-            stb.append("\n- $key: ").append(cmd.description())
+            text = text.appendNewline()
+                .append(Component.text("- $key: "))
+                .append(cmd.description().formatted())
         }
 
-        sender.sendMessage(stb.toString())
-
+        text.send(sender)
         return true
     }
 
@@ -34,12 +42,8 @@ class HelpExecutor : CASubCommand {
     override fun tabCompleter(
         sender: CommandSender,
         args: Array<out String>,
-        list: MutableList<String>
+        list: MutableList<String>,
     ) {
-    }
-
-    override fun description(): String {
-        return "Help command"
     }
 
 }

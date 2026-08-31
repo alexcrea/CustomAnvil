@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -24,10 +23,11 @@ import xyz.alexcrea.cuanvil.gui.config.settings.WorkPenaltyTypeSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Global config to edit basic basic settings.
@@ -42,11 +42,12 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     }
 
     private final PacketManager packetManager;
+
     /**
      * Constructor of this Global gui for basic settings.
      */
     public BasicConfigGui(PacketManager packetManager) {
-        super(4, "§8Basic Config", CustomAnvil.instance);
+        super(4, MsgUI.INSTANCE.getBASIC_TITLE().textHolder(), CustomAnvil.instance);
         if(INSTANCE == null) INSTANCE = this;
 
         this.packetManager = packetManager;
@@ -101,61 +102,60 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
      */
     protected void prepareValues() {
         // cap anvil cost
-        this.capAnvilCost = new BoolSettingsGui.BoolSettingFactory("§8Cap Anvil Cost ?", this,
+        this.capAnvilCost = new BoolSettingsGui.BoolSettingFactory(
+                MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.CAP_ANVIL_COST, ConfigOptions.DEFAULT_CAP_ANVIL_COST,
-                "§7All anvil cost will be capped to §aMax Anvil Cost§7 if enabled.",
-                "§7In other words:",
-                "§7For any anvil cost greater than §aMax Anvil Cost§7, Cost will be set to §aMax Anvil Cost§7.");
+                null, MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DESCRIPTION()
+        );
         // cap anvil cost not needed
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cCap Anvil Cost ?");
-        meta.setLore(Collections.singletonList("§7This config only work if §cLimit Repair Cost§7 is disabled."));
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DISABLED_TITLE());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DISABLED_DESCRIPTION().formatted(), meta);
+
         item.setItemMeta(meta);
         this.noCapRepairItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
 
         // repair cost item
         IntRange range = ConfigOptions.MAX_ANVIL_COST_RANGE;
-        this.maxAnvilCost = new IntSettingsGui.IntSettingFactory("§8Max Anvil Cost", this,
+        this.maxAnvilCost = new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_TITLE(), this,
                 ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7Max cost the Anvil can get to.",
-                        "§7Valid values include §e0 §7to §e1000§7.",
-                        "§7Cost will be displayed as §cToo Expensive§7:",
-                        "§7- If Cost is above §e39",
-                        "§7- And §eReplace Too Expensive§7 is disabled"
-                ),
+                MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_MAX_ANVIL_COST,
-                1, 5, 10);
+                1, 5, 10
+        );
         // max anvil cost not needed
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cMax Anvil Cost");
-        meta.setLore(Collections.singletonList("§7This config only work if §cLimit Repair Cost§7 is disabled."));
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DISABLED_TITLE());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DISABLED_DESCRIPTION().formatted(), meta);
         item.setItemMeta(meta);
         this.noMaxCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
 
         // remove repair limit item
-        this.removeAnvilCostLimit = new BoolSettingsGui.BoolSettingFactory("§8Remove Anvil Cost Limit ?", this,
+        this.removeAnvilCostLimit = new BoolSettingsGui.BoolSettingFactory(
+                MsgUI.INSTANCE.getBASIC_REMOVE_COST_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.REMOVE_ANVIL_COST_LIMIT, ConfigOptions.DEFAULT_REMOVE_ANVIL_COST_LIMIT,
-                "§7Whether the anvil's cost limit should be removed entirely.",
-                "§7The anvil will still visually display §cToo Expensive§7 if §eReplace Too Expensive§7 is disabled.",
-                "§7However, the action will be completable if xp requirement is meet.");
+                null, MsgUI.INSTANCE.getBASIC_REMOVE_COST_LIMIT_DESCRIPTION()
+        );
 
         // replace too expensive item
-        this.replaceTooExpensive = new BoolSettingsGui.BoolSettingFactory("§8Replace Too Expensive ?", this,
+        this.replaceTooExpensive = new BoolSettingsGui.BoolSettingFactory(
+                MsgUI.INSTANCE.getBASIC_REPLACE_TOO_EXPENSIVE_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.REPLACE_TOO_EXPENSIVE, ConfigOptions.DEFAULT_REPLACE_TOO_EXPENSIVE,
-                getReplaceToExpensiveLore());
+                null, getReplaceToExpensiveLore()
+        );
 
         // ------------
         // Cost config
@@ -163,132 +163,118 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // item repair cost
         range = ConfigOptions.REPAIR_COST_RANGE;
-        this.itemRepairCost = new IntSettingsGui.IntSettingFactory("§8Item Repair Cost", this,
+        this.itemRepairCost = new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_TITLE(), this,
                 ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7XP Level amount added to the anvil when the item",
-                        "§7is repaired by another item of the same type."
-                ),
+                MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
-                1, 5, 10, 50, 100);
+                1, 5, 10, 50, 100
+        );
 
         // unit repair cost
-        this.unitRepairCost = new IntSettingsGui.IntSettingFactory("§8Unit Repair Cost", this,
+        this.unitRepairCost = new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_TITLE(), this,
                 ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7XP Level amount added to the anvil when the item is repaired by an §eunit§7.",
-                        "§7For example: a Diamond on a Diamond Sword.",
-                        "§7What's considered unit for what can be edited on the unit repair configuration."
-                ),
+                MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
-                1, 5, 10, 50, 100);
+                1, 5, 10, 50, 100
+        );
 
         // item rename cost
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
-        this.itemRenameCost = new IntSettingsGui.IntSettingFactory("§8Rename Cost", this,
+        this.itemRenameCost = new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_TITLE(), this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7XP Level amount added to the anvil when the item is renamed."
-                ),
+                MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
-                1, 5, 10, 50, 100);
+                1, 5, 10, 50, 100
+        );
 
         // sacrifice illegal enchant cost
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
-        this.sacrificeIllegalEnchantCost = new IntSettingsGui.IntSettingFactory("§8Sacrifice Illegal Enchant Cost", this,
+        this.sacrificeIllegalEnchantCost = new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_TITLE(), this,
                 ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7XP Level amount added to the anvil when a sacrifice enchantment",
-                        "§7conflict With one of the left item enchantment"
-                ),
+                MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
-                1, 5, 10, 50, 100);
+                1, 5, 10, 50, 100
+        );
 
         // -------------
         // Color config
         // -------------
 
         // Allow us of color code
-        this.allowColorCode = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Color Code ?", this,
+        this.allowColorCode = new BoolSettingsGui.BoolSettingFactory(
+                MsgUI.INSTANCE.getBASIC_COLOR_CODE_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE,
-                "§7Whether players can use color code.",
-                "§7Color code a formatted like §a&a§7 and is used in the rename field of the anvil.",
-                "§7Player may need permission to use color code if §ePlayer need permission to use color§7 is enabled.");
+                null, MsgUI.INSTANCE.getBASIC_COLOR_CODE_LIMIT_DESCRIPTION()
+        );
 
         // Allow us of hexadecimal color
-        this.allowHexColor = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Hexadecimal Color ?", this,
+        this.allowHexColor = new BoolSettingsGui.BoolSettingFactory(
+                MsgUI.INSTANCE.getBASIC_COLOR_HEX_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR,
-                "§7Whether players can use hexadecimal color.",
-                "§7Color code a formatted like §2#012345 §7and is used in the rename field of the anvil.",
-                "§7Player may need permission to use color code if §ePermission Needed For Color§7 is enabled.");
+                null, MsgUI.INSTANCE.getBASIC_COLOR_HEX_LIMIT_DESCRIPTION()
+        );
 
         // Permission needed for color
-        this.permissionNeededForColor = new BoolSettingsGui.BoolSettingFactory("§8Need Permission To Use Color ?", this,
+        this.permissionNeededForColor = new BoolSettingsGui.BoolSettingFactory(
+                MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR,
-                "§7Whether players should have permission to be able to use colors.",
-                "§7Give player §eca.color.code§7 Permission to allow use of color code.",
-                "§7Give player §eca.color.hex§7  Permission to allow use of hexadecimal color.");
+                null, MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DESCRIPTION()
+        );
 
         // Permission needed for color not necessary
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cNeed Permission To Use Color ?");
-        meta.setLore(Arrays.asList("§7This config can do something only if one of the following config is enabled:",
-                "§7- §aAllow Use Of Color Code",
-                "§7- §aAllow Use Of Hexadecimal Color"));
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DISABLED_TITLE());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DISABLED_DESCRIPTION().formatted(), meta);
         item.setItemMeta(meta);
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // Cost of using color
         range = ConfigOptions.USE_OF_COLOR_COST_RANGE;
-        this.useOfColorCost = new IntSettingsGui.IntSettingFactory("§8Cost Of Using Color", this,
+        this.useOfColorCost = new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getBASIC_COLOR_COST_TITLE(), this,
                 ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
-                        "§7XP level cost when using color code or hexadecimal color using the anvil.",
-                        "§7conflict With one of the left item enchantment"
-                ),
+                MsgUI.INSTANCE.getBASIC_COLOR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_USE_OF_COLOR_COST,
-                1, 5, 10, 50, 100);
+                1, 5, 10, 50, 100
+        );
 
         // Permission needed for color not necessary
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cCost Of Using Color");
-        meta.setLore(Arrays.asList("§7This config can do something only if one of the following config is enabled:",
-                "§7- §aAllow Use Of Color Code",
-                "§7- §aAllow Use Of Hexadecimal Color"));
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOR_COST_DISABLED_TITLE());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOR_COST_DISABLED_DESCRIPTION().formatted(), meta);
+
         item.setItemMeta(meta);
         this.noColorCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
     }
 
     @NotNull
-    private String[] getReplaceToExpensiveLore() {
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7Whenever anvil cost is above §e39§7 should display the true price and not §cToo Expensive§7.");
-        lore.add("§7However, when bypassing §cToo Expensive§7, anvil price will be displayed as §aGreen§7.");
-        lore.add("§7Even if cost is displayed as §aGreen§7:");
-        lore.add("§7If the player do not have the required xp level, the action will not be completable.");
+    private Message[] getReplaceToExpensiveLore() {
+        ArrayList<Message> lore = new ArrayList<>();
+        lore.add(MsgUI.INSTANCE.getBASIC_REPLACE_TOO_EXPENSIVE_DESCRIPTION());
 
-        if(!this.packetManager.getCanSetInstantBuild()){
-            lore.add("");
-            lore.add("§4/!\\§cCaution§4/!\\ §cYou need ProtocoLib installed and working or a paper server.");
-            lore.add("§cCurrently ProtocoLib is not detected.");
-        }
+        if(!this.packetManager.getCanSetInstantBuild())
+            lore.add(MsgUI.INSTANCE.getBASIC_REPLACE_TOO_EXPENSIVE_DESCRIPTION_NO_NMS());
 
-        String[] loreAsArray = new String[lore.size()];
+        Message[] loreAsArray = new Message[lore.size()];
         return lore.toArray(loreAsArray);
     }
 
@@ -297,9 +283,14 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // limit and cap anvil cost item
         GuiItem capAnvilCostItem;
         GuiItem maxAnvilCostItem;
-        if (!this.removeAnvilCostLimit.getConfiguredValue()) {
-            capAnvilCostItem = this.capAnvilCost.getItem("Cap Anvil Cost");
-            maxAnvilCostItem = this.maxAnvilCost.getItem(Material.EXPERIENCE_BOTTLE, "Max Anvil Cost");
+        if(!this.removeAnvilCostLimit.getConfiguredValue()) {
+            capAnvilCostItem = this.capAnvilCost.getItem(
+                    MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_ITEM()
+            );
+            maxAnvilCostItem = this.maxAnvilCost.getItem(
+                    Material.EXPERIENCE_BOTTLE,
+                    MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_ITEM()
+            );
         } else {
             capAnvilCostItem = this.noCapRepairItem;
             maxAnvilCostItem = this.noMaxCostItem;
@@ -309,7 +300,9 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('C', maxAnvilCostItem);
 
         // remove repair limit item
-        GuiItem removeRepairLimitItem = this.removeAnvilCostLimit.getItem("Remove Anvil Cost Limit");
+        GuiItem removeRepairLimitItem = this.removeAnvilCostLimit.getItem(
+                MsgUI.INSTANCE.getBASIC_REMOVE_COST_LIMIT_ITEM()
+        );
         pane.bindItem('R', removeRepairLimitItem);
 
         // replace too expensive item
@@ -334,7 +327,11 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('S', illegalCostItem);
 
         // work penalty type
-        GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(this, Material.DAMAGED_ANVIL, "§aWork Penalty Type");
+        GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(
+                this,
+                Material.DAMAGED_ANVIL,
+                MsgUI.INSTANCE.getBASIC_WORK_PENALTY_ITEM()
+        );
         pane.bindItem('W', workPenaltyType);
 
         // allow color code
@@ -346,19 +343,21 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('h', allowHexColorItem);
 
         // True if player could place color
-        if(ConfigOptions.INSTANCE.getRenameColorPossible()){
+        if(ConfigOptions.INSTANCE.getRenameColorPossible()) {
             // use permission for color
             GuiItem permissionNeededItem = this.permissionNeededForColor.getItem();
             pane.bindItem('p', permissionNeededItem);
 
             // using color cost
-            GuiItem useColorCostItem = this.useOfColorCost.getItem(Material.EXPERIENCE_BOTTLE, "Use color");
+            GuiItem useColorCostItem = this.useOfColorCost.getItem(
+                    Material.EXPERIENCE_BOTTLE,
+                    MsgUI.INSTANCE.getBASIC_COLOR_COST_ITEM()
+            );
             pane.bindItem('P', useColorCostItem);
-        }else{
+        } else {
             pane.bindItem('p', this.noPermissionNeededItem);
             pane.bindItem('P', this.noColorCostItem);
         }
-
 
         update();
     }

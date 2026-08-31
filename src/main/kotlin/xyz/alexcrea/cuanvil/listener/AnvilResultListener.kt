@@ -30,9 +30,9 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_LEFT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_INPUT_RIGHT
 import xyz.alexcrea.cuanvil.listener.PrepareAnvilListener.Companion.ANVIL_OUTPUT_SLOT
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
-import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil
@@ -541,7 +541,7 @@ class AnvilResultListener : Listener {
                 if (bookPage.isNotEmpty()) bookPage.append('\n')
                 if (it == null) return@forEach
 
-                bookPage.append(MiniMessageUtil.plain_text_mm.serialize(it))
+                bookPage.append(it.serializePlain())
             }
 
             val resultPage = bookPage.toString()

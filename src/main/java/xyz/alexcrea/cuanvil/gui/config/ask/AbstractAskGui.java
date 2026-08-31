@@ -10,13 +10,18 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 public abstract class AbstractAskGui extends ChestGui {
 
     protected PatternPane pane;
-    AbstractAskGui(int rows, @NotNull String name,
-                   Gui backOnCancel){
-        super(rows, name, CustomAnvil.instance);
+
+    AbstractAskGui(
+            int rows,
+            @NotNull Message name, @NotNull String param,
+            Gui backOnCancel
+    ) {
+        super(rows, name.textHolder(param), CustomAnvil.instance);
 
         Pattern pattern = getGuiPattern();
         this.pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);

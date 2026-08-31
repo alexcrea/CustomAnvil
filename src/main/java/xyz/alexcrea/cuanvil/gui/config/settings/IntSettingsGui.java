@@ -5,6 +5,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +19,10 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +45,7 @@ public class IntSettingsGui extends AbstractSettingGui {
      * @param now    The defined value of this setting.
      */
     protected IntSettingsGui(IntSettingFactory holder, int now) {
-        super(3, holder.getTitle(), holder.parent);
+        super(3, holder.getTitle(), holder.parent, holder.param);
         assert holder.steps.length > 0 && holder.steps.length <= 9;
         this.holder = holder;
         this.before = now;
@@ -71,8 +77,8 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");
-        meta.setLore(Collections.singletonList("§7Default value is §e" +
+        meta.setDisplayName("§eReset to default value");//TODO MESSAGE
+        meta.setLore(Collections.singletonList("§7Default value is §e" +//TODO MESSAGE
                 holder.valueDisplayName(ValueDisplayType.RESET, holder.defaultVal)));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
@@ -91,7 +97,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         // minus item
         GuiItem minusItem;
-        if (now > holder.min) {
+        if(now > holder.min) {
             int planned = Math.max(holder.min, now - step);
             minusItem = valueEditItem(Material.RED_TERRACOTTA, ValueDisplayType.REMOVE, planned);
         } else {
@@ -101,7 +107,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         //plus item
         GuiItem plusItem;
-        if (now < holder.max) {
+        if(now < holder.max) {
             int planned = Math.min(holder.max, now + step);
             plusItem = valueEditItem(Material.GREEN_TERRACOTTA, ValueDisplayType.ADD, planned);
         } else {
@@ -114,8 +120,9 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("§fValue: §e" + holder.valueDisplayName(ValueDisplayType.CURRENT, now));
-        resultMeta.setLore(holder.displayLore);
+        resultMeta.setDisplayName("<white>Value: <yellow>" + holder.valueDisplayName(ValueDisplayType.CURRENT, now));//TODO MESSAGE
+        if(holder.displayLore != null)
+            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), resultMeta);
 
         resultPaper.setItemMeta(resultMeta);
 
@@ -125,7 +132,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if (now != holder.defaultVal) {
+        if(now != holder.defaultVal) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -142,9 +149,9 @@ public class IntSettingsGui extends AbstractSettingGui {
         var nowDisplay = holder.valueDisplayName(type, now);
         var plannedDisplay = holder.valueDisplayName(type, planned);
         var deltaDisplay = holder.deltaDisplay(type, now, planned);
-        meta.setDisplayName("§e" + nowDisplay + " §f-> §e" + plannedDisplay + " §r(§c" + deltaDisplay + "§r)");
+        meta.setDisplayName("§e" + nowDisplay + " §f-> §e" + plannedDisplay + " §r(§c" + deltaDisplay + "§r)");//TODO MESSAGE
 
-        meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
         item.setItemMeta(meta);
         return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
     }
@@ -170,7 +177,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         GuiItem background = GuiGlobalItems.backgroundItem();
         PatternPane pane = getPane();
 
-        for (char i = 'a'; i < (getMidStepChar() - 'a') * 2 + 1; i++) {
+        for(char i = 'a'; i < (getMidStepChar() - 'a') * 2 + 1; i++) {
             pane.bindItem(i, background);
         }
         // Then update legit step values
@@ -181,7 +188,7 @@ public class IntSettingsGui extends AbstractSettingGui {
      * Update steps items value.
      */
     protected void updateStepValue() {
-        if (holder.steps.length <= 1) return;
+        if(holder.steps.length <= 1) return;
         // We assume steps have a length of 2k+1 cause its more pretty
         char val = getMidStepChar();
         // Offset to start (not the best way to do it)
@@ -189,7 +196,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         // Then place items
         PatternPane pane = getPane();
-        for (int i = 0; i < holder.steps.length; i++) {
+        for(int i = 0; i < holder.steps.length; i++) {
             pane.bindItem(val + i, stepGuiItem(i));
         }
 
@@ -218,7 +225,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         StringBuilder stepName = new StringBuilder("§");
         List<String> stepLore;
         Consumer<InventoryClickEvent> clickEvent;
-        if (stepValue == step) {
+        if(stepValue == step) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
             stepLore = Collections.singletonList("§7Value is changing by " + stepValue);
@@ -261,7 +268,7 @@ public class IntSettingsGui extends AbstractSettingGui {
     public boolean onSave() {
         holder.config.getConfig().set(holder.configPath, now);
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
@@ -278,7 +285,7 @@ public class IntSettingsGui extends AbstractSettingGui {
     public static class IntSettingFactory extends SettingGuiFactory {
 
         @NotNull
-        String title;
+        Message title;
         @NotNull
         ValueUpdatableGui parent;
         int min;
@@ -286,8 +293,11 @@ public class IntSettingsGui extends AbstractSettingGui {
         int defaultVal;
         int[] steps;
 
-        @NotNull
-        List<String> displayLore;
+        @Nullable
+        List<Message> displayLore;
+
+        @Nullable
+        Object param;
 
         /**
          * Constructor for an int setting gui factory.
@@ -306,9 +316,9 @@ public class IntSettingsGui extends AbstractSettingGui {
          *                    If step only contain 1 value, no step item should be displayed.
          */
         public IntSettingFactory(
-                @NotNull String title, @NotNull ValueUpdatableGui parent,
+                @NotNull Message title, @NotNull ValueUpdatableGui parent,
                 @NotNull String configPath, @NotNull ConfigHolder config,
-                @Nullable List<String> displayLore,
+                @Nullable Message displayLore, @Nullable Object param,
                 int min, int max, int defaultVal, int... steps) {
             super(configPath, config);
             this.title = title;
@@ -317,19 +327,15 @@ public class IntSettingsGui extends AbstractSettingGui {
             this.max = max;
             this.defaultVal = defaultVal;
             this.steps = steps;
-
-            if (displayLore == null) {
-                this.displayLore = Collections.emptyList();
-            } else {
-                this.displayLore = displayLore;
-            }
+            this.displayLore = displayLore == null ? null : Collections.singletonList(displayLore);
+            this.param = param;
         }
 
         /**
          * @return Get setting's gui title
          */
         @NotNull
-        public String getTitle() {
+        public Message getTitle() {
             return title;
         }
 
@@ -355,19 +361,24 @@ public class IntSettingsGui extends AbstractSettingGui {
          *
          * @param itemMat Displayed material of the item.
          * @param name    Name of the item.
+         * @param params  parameters for the given name.
          * @return A formatted GuiItem that will create and open a GUI for the int setting.
          */
         public GuiItem getItem(
                 @NotNull Material itemMat,
-                @NotNull String name
+                @NotNull Message name,
+                Object... params
         ) {
             // Get item properties
             int value = getConfiguredValue();
-            StringBuilder itemName = new StringBuilder("§a").append(name);
+            var itemName = name.formattedConcatenated(params);
 
-            return GuiGlobalItems.createGuiItemFromProperties(this, itemMat, itemName,
-                    "§e" + value,
-                    this.displayLore, true);
+            return GuiGlobalItems.createGuiItemFromProperties(
+                    this, itemMat, itemName,
+                    "<yellow>" + value, //TODO MESSAGE ? maybe ?
+                    this.displayLore, true,
+                    this.param
+            );
         }
 
         /**
@@ -383,7 +394,7 @@ public class IntSettingsGui extends AbstractSettingGui {
                 @NotNull Material itemMat
         ) {
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
-            return getItem(itemMat, CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(itemMat, MsgUI.INSTANCE.getSHARED_GREEN_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
         protected String valueDisplayName(ValueDisplayType type, int value) {
@@ -392,10 +403,13 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         protected String deltaDisplay(ValueDisplayType type, int now, int planned) {
             var delta = planned - now;
-            if (delta < 0) return "§c" + delta;
+            if(delta < 0) return "§c" + delta;
             else return "§a+" + delta;
         }
 
+        public @Nullable Object getParam() {
+            return param;
+        }
     }
 
     public enum ValueDisplayType {

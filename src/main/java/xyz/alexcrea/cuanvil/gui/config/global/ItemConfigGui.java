@@ -15,7 +15,9 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 
@@ -27,10 +29,10 @@ public class ItemConfigGui extends ChestGui {
     private CustomRecipeConfigGui customRecipeConfigGui;
 
     public ItemConfigGui(@NotNull Material display, @NotNull NamespacedKey material) {
-        super(3,
+        super(3, MsgUI.INSTANCE.getITEM_CONFIG_TITLE().textHolder(
                 CasedStringUtil.snakeToUpperSpacedCase(
                         material.getKey().toLowerCase()
-                ) + " Config",
+                )),
                 CustomAnvil.instance);
 
         Pattern pattern = new Pattern(
@@ -47,7 +49,7 @@ public class ItemConfigGui extends ChestGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        displayMeta.setDisplayName("§aConfiguring " + material);
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getITEM_CONFIG_TITLE().formatted(material), displayMeta);
         displayItemstack.setItemMeta(displayMeta);
         pane.bindItem('D', new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
 

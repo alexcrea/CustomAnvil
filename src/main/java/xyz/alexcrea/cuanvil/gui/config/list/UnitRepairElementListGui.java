@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
@@ -32,12 +33,16 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     private boolean shouldWork = true;
 
+    private static String prettifiedName(NamespacedKey parentMaterial) {
+        return CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
+    }
+
     public UnitRepairElementListGui(@NotNull NamespacedKey parentMaterial,
                                     @NotNull UnitRepairConfigGui parentGui) {
-        super("§e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase()) + " §rUnit repair");
+        super(MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_TITLE(), prettifiedName(parentMaterial));
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
-        this.materialName = CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
+        this.materialName = prettifiedName(parentMaterial);
 
         GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
     }
@@ -45,7 +50,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     // SettingGuiListConfigGui methods
     @Override
     protected List<String> getCreateItemLore() {
-        return Arrays.asList(
+        return Arrays.asList(//TODO MESSAGE
                 "§7Select a new item to be repairable.",
                 "§7You will be asked the material to use."
         );
@@ -55,26 +60,25 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
         return event -> {
             event.setCancelled(true);
-            if (!this.shouldWork) {
+            if(!this.shouldWork) {
                 return;
             }
             event.setCancelled(true);
 
             new SelectItemTypeGui(
-                    "Select item to be repaired.",
-                    "§7Click here with an item to set the item\n" +
-                            "§7You like to be repaired by " + this.materialName,
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_TITLE(), this.materialName,
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_DESCRIPTION(), this.materialName,
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
                         NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
 
-                        if (!(meta instanceof Damageable)) {
-                            player.sendMessage("§cThis item can't be damaged, so it can't be repaired.");
+                        if(!(meta instanceof Damageable)) {
+                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR().send(player);
                             return;
                         }
-                        if (type.equals(this.parentMaterial)) {
-                            player.sendMessage("§cItem can't repair something of the same type.");
+                        if(type.equals(this.parentMaterial)) {
+                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_SAME_TYPE().send(player);
                             return;
                         }
 
@@ -83,7 +87,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
                         // Add new material
                         ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.toString().toLowerCase() + "." + materialName, 0.25);
 
-                        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
                             ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
                         }
 
@@ -103,7 +107,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     @Override
     protected String createItemName() {
-        return "§aAdd a new item reparable by " + this.materialName;
+        return "§aAdd a new item reparable by " + this.materialName; //TODO MESSAGE ?
     }
 
     @Override
@@ -111,14 +115,12 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
         String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey());
 
         return new DoubleSettingGui.DoubleSettingFactory(
-                "§0%§8" + materialDisplayName + " Repair",
+                MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_TITLE(),
                 this,
                 ConfigHolder.UNIT_REPAIR_HOLDER,
                 this.parentMaterial.toString().toLowerCase() + "." + materialName,
-                Arrays.asList(
-                        "§7Click here to change how many §e% §7of §a" + materialDisplayName,
-                        "§7Should get repaired by §e" + this.materialName
-                ),
+                MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_DESCRIPTION(),
+                materialDisplayName, this.materialName,
                 2,
                 true, true,
                 0,
@@ -130,14 +132,18 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     @Override
     protected GuiItem itemFromFactory(NamespacedKey materialName, DoubleSettingGui.DoubleSettingFactory factory) {
-        return factory.getItem(materialFromName(materialName),
-                "§7%§a" + CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey()) + " §erepaired by §a" + this.materialName);
+        return factory.getItem(
+                materialFromName(materialName),
+                MsgUI.INSTANCE.getUNIT_REPAIR_ITEM(),
+                CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey()),
+                this.materialName
+        );
     }
 
     @Override
     protected Collection<NamespacedKey> getEveryInstanceOfGeneric() {
         Set<NamespacedKey> keys = new HashSet<>();
-        if (!this.shouldWork) {
+        if(!this.shouldWork) {
             return keys;
         }
 
@@ -151,10 +157,10 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     }
 
     private void addAllKeys(@Nullable ConfigurationSection section, @NotNull Set<NamespacedKey> keys) {
-        if (section == null) return;
-        for (var key : section.getKeys(false)) {
+        if(section == null) return;
+        for(var key : section.getKeys(false)) {
             var material = NamespacedKey.fromString(key);
-            if (material == null) continue;
+            if(material == null) continue;
 
             keys.add(material);
         }
@@ -162,7 +168,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     private Material materialFromName(NamespacedKey material) {
         Material mat = MaterialUtil.INSTANCE.getMatFromKey(material);
-        if (mat == null || mat.isAir()) return Material.BARRIER;
+        if(mat == null || mat.isAir()) return Material.BARRIER;
         return mat;
     }
 
@@ -185,7 +191,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
         this.backgroundPane.bindItem('L', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
         this.backgroundPane.bindItem('R', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
 
-        for (HumanEntity viewer : getViewers()) {
+        for(HumanEntity viewer : getViewers()) {
             viewer.sendMessage("This config do not exist anymore");
             this.parentGui.show(viewer);
         }
@@ -198,7 +204,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     @Override
     public void show(@NotNull HumanEntity humanEntity) {
-        if (!this.shouldWork) {
+        if(!this.shouldWork) {
             humanEntity.closeInventory();
             return;
         }

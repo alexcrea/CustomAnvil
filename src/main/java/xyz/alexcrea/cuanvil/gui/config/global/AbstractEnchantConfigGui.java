@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,18 +21,18 @@ import java.util.function.Consumer;
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
-public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T>{
+public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T> {
 
     /**
      * Constructor for a gui displaying available enchantment to edit a enchantment setting.
      *
      * @param title Title of the gui.
      */
-    protected AbstractEnchantConfigGui(String title) {
+    protected AbstractEnchantConfigGui(Message title) {
         super(title);
     }
 
-    protected AbstractEnchantConfigGui(String title, Gui parent) {
+    protected AbstractEnchantConfigGui(Message title, Gui parent) {
         super(title, parent);
     }
 
@@ -46,7 +47,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     }
 
     @Override
-    protected Pattern getBackgroundPattern(){
+    protected Pattern getBackgroundPattern() {
         return new Pattern(
                 GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
                 GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
@@ -68,7 +69,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
             return;
         }
 
-        if(!this.factoryMap.containsKey(generic)){
+        if(!this.factoryMap.containsKey(generic)) {
             // We need to sort elements again
             super.updateValueForGeneric(generic, false);
 
@@ -77,12 +78,12 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
             this.pages.clear();
             this.pages.add(this.firstPage);
 
-            for (CAEnchantment enchantment : getDisplayableInstanceOfGeneric()) {
+            for(CAEnchantment enchantment : getDisplayableInstanceOfGeneric()) {
                 GuiItem item = this.guiItemMap.get(enchantment);
 
                 if(item == null) {
                     updateValueForGeneric(enchantment, false, false);
-                }else {
+                } else {
                     addToPage(item);
                 }
 
@@ -90,7 +91,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
 
             if(shouldUpdate) update();
 
-        }else{
+        } else {
             super.updateValueForGeneric(generic, shouldUpdate);
 
         }
@@ -108,6 +109,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     protected List<String> getCreateItemLore() {
         return Collections.emptyList();
     }
+
     @Override
     protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
         return null;
