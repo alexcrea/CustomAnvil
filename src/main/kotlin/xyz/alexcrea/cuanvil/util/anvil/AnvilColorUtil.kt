@@ -11,6 +11,8 @@ object AnvilColorUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
     private val TRANSFORMED_HEX_PATTERN = Pattern.compile("§x(§[0-9a-fA-F]){6}") // pattern to find minecraft hex string
 
+    private val COLOR_CODE_PATTERN = Pattern.compile("§[0-9a-f]")
+
     class ColorPermissions(
         val canUseColorCode: Boolean,
         val canUseHexColor: Boolean,
@@ -91,6 +93,9 @@ object AnvilColorUtil {
                 if (ConfigOptions.usePerColorCodePermission)
                     filterPermissibleColorCode(textToColor, permission.permissible)
             }
+            if(ConfigOptions.shouldResetOnColorCode) {
+                prefixColorCodes(textToColor)
+            }
         }
 
         if (permission.canUseHexColor) {
@@ -100,7 +105,7 @@ object AnvilColorUtil {
         }
 
         val previousStr = textToColor.toString()
-        var result: Component = MiniMessageUtil.legacy_mm.deserialize(previousStr)
+        var result: Component = MiniMessageUtil.fromLegacyWithCorrectReset(previousStr)
         if (permission.canUseMinimessage) {
             // we dance with formats here
             val toMinimessage = MiniMessageUtil.mm.serialize(result)
@@ -116,6 +121,19 @@ object AnvilColorUtil {
 
         return if (useColor) result
         else null
+    }
+
+    private fun prefixColorCodes(builder: StringBuilder) {
+        val matcher: Matcher = COLOR_CODE_PATTERN.matcher(builder)
+
+        var startIndex = 0
+
+        while(matcher.find(startIndex)) {
+            startIndex = matcher.start()
+
+            builder.insert(startIndex, "§r")
+            startIndex+=4
+        }
     }
 
     private fun filterPermissibleColorCode(textToColor: StringBuilder, player: Permissible) {
@@ -232,9 +250,11 @@ object AnvilColorUtil {
                 continue
             }
 
-            builder.replace(startIndex, startIndex + 1, "§x")
-            startIndex += 2
-            for (i in 0..5) {
+            val replacement = "${if(ConfigOptions.shouldResetOnColorCode)"§r" else ""}§x"
+
+            builder.replace(startIndex, startIndex + 1, replacement)
+            startIndex += replacement.length
+            repeat(6) {
                 builder.insert(startIndex, '§')
                 startIndex += 2
             }

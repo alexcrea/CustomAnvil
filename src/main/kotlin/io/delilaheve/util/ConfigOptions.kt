@@ -49,6 +49,7 @@ object ConfigOptions {
     const val USE_OF_COLOR_COST = "use_of_color_cost"
 
     const val PER_COLOR_CODE_PERMISSION = "per_color_code_permission"
+    const val APPEND_RESET_COLOR_CODE = "append_reset_before_codes"
 
     // Work penalty config
     const val WORK_PENALTY_ROOT = "work_penalty"
@@ -75,7 +76,7 @@ object ConfigOptions {
     const val DISABLE_MERGE_OVER_ROOT = "disable-merge-over"
 
     const val IMMUTABLE_ENCHANTMENT_LIST = "immutable_enchantments"
-    
+
     const val INCLUDE_LEFT_ENCHANTMENT_FOR_COST = "include_left_enchantment_for_cost"
 
     // Monetary configs
@@ -124,6 +125,7 @@ object ConfigOptions {
     const val DEFAULT_USE_OF_COLOR_COST = 0
 
     const val DEFAULT_PER_COLOR_CODE_PERMISSION = false
+    const val DEFAULT_APPEND_RESET_COLOR_CODE = true
 
     // Monetary configs
     const val DEFAULT_SHOULD_USE_MONEY = false
@@ -355,6 +357,15 @@ object ConfigOptions {
                 .getBoolean(PER_COLOR_CODE_PERMISSION, DEFAULT_PER_COLOR_CODE_PERMISSION)
         }
 
+    /**
+     * Should sufix color and hex code a reset tag (§r or <reset> for minimessage)
+     */
+    val shouldResetOnColorCode: Boolean
+        get() {
+            return ConfigHolder.DEFAULT_CONFIG
+                .config
+                .getBoolean(APPEND_RESET_COLOR_CODE, DEFAULT_APPEND_RESET_COLOR_CODE)
+        }
     /**
      * How many xp should use of color should cost
      */

@@ -79,6 +79,10 @@ allow_color_code: false
 allow_hexadecimal_color: false
 allow_minimessage: false
 
+# Add a <reset>, aka &r, tag before hex and color code
+# This reset format on color, for example remove the default italic behavior of renaming
+append_reset_before_codes: true
+
 # This enables restricting color code for player having specific permission
 # It requires allow_color_code enabled for... obvious reasons
 #
