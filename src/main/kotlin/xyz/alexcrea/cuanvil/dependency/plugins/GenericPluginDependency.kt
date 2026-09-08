@@ -7,8 +7,8 @@ import org.bukkit.plugin.RegisteredListener
 
 open class GenericPluginDependency(protected open val plugin: Plugin, private val testPrepare: Boolean = true) {
 
-    private val preAnvil = ArrayList<RegisteredListener>()
-    private val postAnvil = ArrayList<RegisteredListener>()
+    protected val preAnvil = ArrayList<RegisteredListener>()
+    protected val postAnvil = ArrayList<RegisteredListener>()
 
     open fun redirectListeners() {
         fillPreAnvil(preAnvil)
