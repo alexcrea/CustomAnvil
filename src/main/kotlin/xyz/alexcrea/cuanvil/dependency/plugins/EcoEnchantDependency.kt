@@ -36,7 +36,10 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
     }
 
     fun getEcoLevelLimit(): Int {
-        return UtilKt.infiniteIfNegative((ecoEnchantPlugin as EcoPlugin).configYml.getInt("anvil.enchant-limit"))
+        val level = (ecoEnchantPlugin as EcoPlugin).configYml.getInt("anvil.enchant-limit")
+        if(level < 1) return Int.MAX_VALUE
+
+        return level
     }
 
     fun disableAnvilListener() {
