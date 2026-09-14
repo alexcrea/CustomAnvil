@@ -33,9 +33,6 @@ repositories {
     // EcoEnchants
     maven(url = "https://repo.auxilor.io/repository/maven-public/")
 
-    // ItemsAdder
-    maven(url = "https://maven.devs.beer/")
-
     // For fast stats
     maven {
         name = "thenextlvlReleases"
@@ -101,7 +98,7 @@ dependencies {
     compileOnly(files("libs/SuperEnchants-4.6.2-all.jar"))
 
     // ItemsAdder API
-    compileOnly("dev.lone:api-itemsadder:4.0.10")
+    compileOnly("beer.devs:itemsadder-api:4.0.17")
 
     // Vault api
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
