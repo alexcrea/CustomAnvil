@@ -2,7 +2,8 @@ package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.gui.config.global.CustomRecipeConfigGui;
@@ -15,11 +16,12 @@ import java.util.List;
  * Custom Anvil api for custom anvil recipes.
  */
 @SuppressWarnings("unused")
+@NotNullByDefault
 public class CustomAnvilRecipeApi {
 
     private CustomAnvilRecipeApi(){}
 
-    private static Object saveChangeTask = null;
+    private static @Nullable Object saveChangeTask = null;
 
     /**
      * Write and add a custom anvil recipe.
@@ -28,7 +30,7 @@ public class CustomAnvilRecipeApi {
      * @param builder The recipe builder to be based on
      * @return True if successful.
      */
-    public static boolean addRecipe(@NotNull AnvilRecipeBuilder builder){
+    public static boolean addRecipe(AnvilRecipeBuilder builder){
         return addRecipe(builder, false);
     }
 
@@ -40,7 +42,7 @@ public class CustomAnvilRecipeApi {
      * @param overrideDeleted If we should write even if the recipe was previously deleted.
      * @return True if successful.
      */
-    public static boolean addRecipe(@NotNull AnvilRecipeBuilder builder, boolean overrideDeleted){
+    public static boolean addRecipe(AnvilRecipeBuilder builder, boolean overrideDeleted){
         FileConfiguration config = ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig();
         String name = builder.getName();
 
@@ -85,7 +87,7 @@ public class CustomAnvilRecipeApi {
      * @param recipe The recipe to remove
      * @return True if successful.
      */
-    public static boolean removeRecipe(@NotNull AnvilCustomRecipe recipe){
+    public static boolean removeRecipe(AnvilCustomRecipe recipe){
         // Remove from registry
         boolean result = ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
         if(!result) return false;
@@ -117,7 +119,6 @@ public class CustomAnvilRecipeApi {
      * Get every registered recipes.
      * @return An immutable collection of recipes.
      */
-    @NotNull
     public static List<AnvilCustomRecipe> getRegisteredRecipes(){
         List<AnvilCustomRecipe> mutableList = ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().getRecipeList();
         return Collections.unmodifiableList(mutableList);

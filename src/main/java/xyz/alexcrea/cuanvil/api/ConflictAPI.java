@@ -3,7 +3,8 @@ package xyz.alexcrea.cuanvil.api;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
@@ -16,14 +17,15 @@ import java.util.List;
 /**
  * Custom Anvil api for conflict registry.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+@NotNullByDefault
 public class ConflictAPI {
 
     private ConflictAPI() {
     }
 
-    private static Object saveChangeTask = null;
-    private static Object reloadChangeTask = null;
+    private static @Nullable Object saveChangeTask = null;
+    private static @Nullable Object reloadChangeTask = null;
 
     /**
      * Write and add a conflict.
@@ -33,7 +35,7 @@ public class ConflictAPI {
      * @param builder The conflict builder to be based on
      * @return True if successful.
      */
-    public static boolean addConflict(@NotNull ConflictBuilder builder) {
+    public static boolean addConflict(ConflictBuilder builder) {
         return addConflict(builder, false);
     }
 
@@ -46,8 +48,8 @@ public class ConflictAPI {
      * @param overrideDeleted If we should write even if the conflict was previously deleted.
      * @return True if successful.
      */
-    public static boolean addConflict(@NotNull ConflictBuilder builder, boolean overrideDeleted) {
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+    public static boolean addConflict(ConflictBuilder builder, boolean overrideDeleted) {
+        var config = ConfigHolder.CONFLICT_HOLDER.getConfig();
 
         // Test if conflict can be added
         if (!overrideDeleted && ConfigHolder.CONFLICT_HOLDER.isDeleted(builder.getName())) return false;
@@ -74,7 +76,7 @@ public class ConflictAPI {
      * @param builder the builder
      * @return true if was written successfully.
      */
-    public static boolean writeConflict(@NotNull ConflictBuilder builder) {
+    public static boolean writeConflict(ConflictBuilder builder) {
         return writeConflict(builder, true);
     }
 
@@ -87,7 +89,7 @@ public class ConflictAPI {
      * @param updatePlanned If we should plan a global update for conflicts
      * @return true if was written successfully.
      */
-    public static boolean writeConflict(@NotNull ConflictBuilder builder, boolean updatePlanned) {
+    public static boolean writeConflict(ConflictBuilder builder, boolean updatePlanned) {
         FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
 
         String name = builder.getName();
@@ -120,9 +122,8 @@ public class ConflictAPI {
      * @param builder The builder storing the enchantments
      * @return Builder's stored enchantment.
      */
-    @NotNull
-    private static List<String> extractEnchantments(@NotNull ConflictBuilder builder) {
-        List<String> result = new ArrayList<>(builder.getEnchantmentNames());
+    private static List<String> extractEnchantments(ConflictBuilder builder) {
+        var result = new ArrayList<>(builder.getEnchantmentNames());
         for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
             result.add(enchantmentKey.toString());
         }
@@ -136,7 +137,7 @@ public class ConflictAPI {
      * @param conflict The conflict to remove
      * @return True if successful.
      */
-    public static boolean removeConflict(@NotNull EnchantConflictGroup conflict) {
+    public static boolean removeConflict(EnchantConflictGroup conflict) {
         // Remove from registry
         ConfigHolder.CONFLICT_HOLDER.getConflictManager().removeConflict(conflict);
 
@@ -178,7 +179,7 @@ public class ConflictAPI {
         });
     }
 
-    static void logConflictOrigin(@NotNull ConflictBuilder builder) {
+    static void logConflictOrigin(ConflictBuilder builder) {
         CustomAnvil.instance.getLogger().warning("Conflict " + builder.getName() + " came from " + builder.getSourceName() + ".");
     }
 
@@ -187,7 +188,6 @@ public class ConflictAPI {
      *
      * @return An immutable collection of conflict.
      */
-    @NotNull
     public static List<EnchantConflictGroup> getRegisteredConflict() {
         List<EnchantConflictGroup> mutableList = ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
         return Collections.unmodifiableList(mutableList);

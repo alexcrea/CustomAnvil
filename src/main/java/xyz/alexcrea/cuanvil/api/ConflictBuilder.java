@@ -3,7 +3,8 @@ package xyz.alexcrea.cuanvil.api;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -18,15 +19,16 @@ import java.util.Set;
  * A Builder for material conflict.
  */
 @SuppressWarnings("unused")
+@NotNullByDefault
 public class ConflictBuilder {
 
     private final @Nullable Plugin source;
-    private @NotNull String name;
+    private String name;
 
-    private final @NotNull Set<String> enchantmentNames;
-    private final @NotNull Set<NamespacedKey> enchantmentKeys;
+    private final Set<String> enchantmentNames;
+    private final Set<NamespacedKey> enchantmentKeys;
 
-    private final @NotNull Set<String> excludedGroupNames;
+    private final Set<String> excludedGroupNames;
 
     private int maxBeforeConflict;
 
@@ -37,7 +39,7 @@ public class ConflictBuilder {
      * @param maxBeforeConflict Maximum number of conflicting enchantment before conflict is active
      * @param source            The conflict source
      */
-    public ConflictBuilder(@NotNull String name, int maxBeforeConflict, @Nullable Plugin source) {
+    public ConflictBuilder(String name, int maxBeforeConflict, @Nullable Plugin source) {
         this.source = source;
         this.name = name;
 
@@ -55,7 +57,7 @@ public class ConflictBuilder {
      * @param name   The conflict name
      * @param source The conflict source
      */
-    public ConflictBuilder(@NotNull String name, @Nullable Plugin source) {
+    public ConflictBuilder(String name, @Nullable Plugin source) {
         this(name, 0, source);
     }
 
@@ -64,7 +66,7 @@ public class ConflictBuilder {
      *
      * @param name The conflict name
      */
-    public ConflictBuilder(@NotNull String name) {
+    public ConflictBuilder(String name) {
         this(name, null);
     }
 
@@ -83,7 +85,6 @@ public class ConflictBuilder {
      *
      * @return The conflict source name.
      */
-    @NotNull
     public String getSourceName() {
         if (source == null) return "an unknown source";
 
@@ -95,7 +96,6 @@ public class ConflictBuilder {
      *
      * @return The conflict name.
      */
-    @NotNull
     public String getName() {
         return name;
     }
@@ -105,7 +105,6 @@ public class ConflictBuilder {
      *
      * @return The stored enchantment names.
      */
-    @NotNull
     public Set<String> getEnchantmentNames() {
         return enchantmentNames;
     }
@@ -115,7 +114,6 @@ public class ConflictBuilder {
      *
      * @return The stored enchantment keys.
      */
-    @NotNull
     public Set<NamespacedKey> getEnchantmentKeys() {
         return enchantmentKeys;
     }
@@ -125,7 +123,6 @@ public class ConflictBuilder {
      *
      * @return The stored group names.
      */
-    @NotNull
     public Set<String> getExcludedGroupNames() {
         return excludedGroupNames;
     }
@@ -150,6 +147,7 @@ public class ConflictBuilder {
      * @param name The name
      * @return This conflict builder instance.
      */
+    @Contract("_ -> this")
     public ConflictBuilder setName(String name) {
         this.name = name;
         return this;
@@ -166,6 +164,7 @@ public class ConflictBuilder {
      * @param maxBeforeConflict The max before conflict
      * @return This conflict builder instance.
      */
+    @Contract("_ -> this")
     public ConflictBuilder setMaxBeforeConflict(int maxBeforeConflict) {
         this.maxBeforeConflict = maxBeforeConflict;
         return this;
@@ -177,8 +176,8 @@ public class ConflictBuilder {
      * @param enchantmentName The enchantment name
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder addEnchantment(@NotNull String enchantmentName) {
+    @Contract("_ -> this")
+    public ConflictBuilder addEnchantment(String enchantmentName) {
         enchantmentNames.add(enchantmentName);
         return this;
     }
@@ -189,8 +188,8 @@ public class ConflictBuilder {
      * @param enchantmentKey The enchantment key
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder addEnchantment(@NotNull NamespacedKey enchantmentKey) {
+    @Contract("_ -> this")
+    public ConflictBuilder addEnchantment(NamespacedKey enchantmentKey) {
         enchantmentKeys.add(enchantmentKey);
         return this;
     }
@@ -201,8 +200,8 @@ public class ConflictBuilder {
      * @param enchantment The enchantment
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder addEnchantment(@NotNull CAEnchantment enchantment) {
+    @Contract("_ -> this")
+    public ConflictBuilder addEnchantment(CAEnchantment enchantment) {
         addEnchantment(enchantment.getKey());
         return this;
     }
@@ -213,8 +212,8 @@ public class ConflictBuilder {
      * @param enchantmentName The enchantment name
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder removeEnchantment(@NotNull String enchantmentName) {
+    @Contract("_ -> this")
+    public ConflictBuilder removeEnchantment(String enchantmentName) {
         enchantmentNames.remove(enchantmentName);
         return this;
     }
@@ -225,8 +224,8 @@ public class ConflictBuilder {
      * @param enchantmentKey The enchantment key
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder removeEnchantment(@NotNull NamespacedKey enchantmentKey) {
+    @Contract("_ -> this")
+    public ConflictBuilder removeEnchantment(NamespacedKey enchantmentKey) {
         enchantmentKeys.remove(enchantmentKey);
         return removeEnchantment(enchantmentKey.getKey());
     }
@@ -237,8 +236,8 @@ public class ConflictBuilder {
      * @param enchantment The enchantment
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder removeEnchantment(@NotNull CAEnchantment enchantment) {
+    @Contract("_ -> this")
+    public ConflictBuilder removeEnchantment(CAEnchantment enchantment) {
         return removeEnchantment(enchantment.getKey());
     }
 
@@ -256,8 +255,8 @@ public class ConflictBuilder {
      * @param groupName The group name
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder addExcludedGroup(@NotNull String groupName) {
+    @Contract("_ -> this")
+    public ConflictBuilder addExcludedGroup(String groupName) {
         excludedGroupNames.add(groupName);
         return this;
     }
@@ -276,8 +275,8 @@ public class ConflictBuilder {
      * @param group The group
      * @return this conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder addExcludedGroup(@NotNull AbstractMaterialGroup group) {
+    @Contract("_ -> this")
+    public ConflictBuilder addExcludedGroup(AbstractMaterialGroup group) {
         return addExcludedGroup(group.getName());
     }
 
@@ -295,8 +294,8 @@ public class ConflictBuilder {
      * @param groupName The group name
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder removeExcludedGroup(@NotNull String groupName) {
+    @Contract("_ -> this")
+    public ConflictBuilder removeExcludedGroup(String groupName) {
         excludedGroupNames.remove(groupName);
         return this;
     }
@@ -315,8 +314,8 @@ public class ConflictBuilder {
      * @param group The group
      * @return This conflict builder instance.
      */
-    @NotNull
-    public ConflictBuilder removeExcludedGroup(@NotNull AbstractMaterialGroup group) {
+    @Contract("_ -> this")
+    public ConflictBuilder removeExcludedGroup(AbstractMaterialGroup group) {
         return removeExcludedGroup(group.getName());
     }
 
@@ -325,7 +324,6 @@ public class ConflictBuilder {
      *
      * @return A copy of this conflict builder.
      */
-    @NotNull
     public ConflictBuilder copy() {
         ConflictBuilder copy = new ConflictBuilder(this.name, this.source);
 
@@ -385,7 +383,7 @@ public class ConflictBuilder {
      *
      * @param conflict The conflict target
      */
-    protected void appendEnchantments(@NotNull EnchantConflictGroup conflict) {
+    protected void appendEnchantments(EnchantConflictGroup conflict) {
         for (String enchantmentName : getEnchantmentNames()) {
             if (appendEnchantments(conflict, EnchantmentApi.getByName(enchantmentName)) == 0) {
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + getName());
@@ -407,7 +405,7 @@ public class ConflictBuilder {
      * @param enchantment The enchantment
      * @return True if successful.
      */
-    protected static boolean appendEnchantment(@NotNull EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment) {
+    protected static boolean appendEnchantment(EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment) {
         if (enchantment == null)
             return false;
         conflict.addEnchantment(enchantment);
@@ -421,7 +419,7 @@ public class ConflictBuilder {
      * @param enchantments List of enchantment to add
      * @return Number of enchantment added
      */
-    protected static int appendEnchantments(@NotNull EnchantConflictGroup conflict, @NotNull List<CAEnchantment> enchantments) {
+    protected static int appendEnchantments(EnchantConflictGroup conflict, List<CAEnchantment> enchantments) {
         int numberValid = 0;
         for (CAEnchantment enchantment : enchantments) {
             if (appendEnchantment(conflict, enchantment)) {

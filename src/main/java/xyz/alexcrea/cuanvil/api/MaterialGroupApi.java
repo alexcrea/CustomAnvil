@@ -2,10 +2,9 @@ package xyz.alexcrea.cuanvil.api;
 
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
@@ -20,14 +19,15 @@ import java.util.*;
 /**
  * Custom Anvil api for material group registry.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameParameterValue"})
+@NotNullByDefault
 public class MaterialGroupApi {
 
     private MaterialGroupApi() {
     }
 
-    private static Object saveChangeTask = null;
-    private static Object reloadChangeTask = null;
+    private static @Nullable Object saveChangeTask = null;
+    private static @Nullable Object reloadChangeTask = null;
 
     /**
      * Write and add a group.
@@ -37,7 +37,7 @@ public class MaterialGroupApi {
      * @param group The group to add
      * @return true if successful.
      */
-    public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group) {
+    public static boolean addMaterialGroup(AbstractMaterialGroup group) {
         return addMaterialGroup(group, false);
     }
 
@@ -50,7 +50,7 @@ public class MaterialGroupApi {
      * @param overrideDeleted If we should write even if the group was previously deleted.
      * @return true if successful.
      */
-    public static boolean addMaterialGroup(@NotNull AbstractMaterialGroup group, boolean overrideDeleted) {
+    public static boolean addMaterialGroup(AbstractMaterialGroup group, boolean overrideDeleted) {
         ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
 
         // Test if it exists/existed
@@ -82,7 +82,7 @@ public class MaterialGroupApi {
      * @param group the group to write
      * @return true if was written successfully.
      */
-    public static boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group) {
+    public static boolean writeMaterialGroup(AbstractMaterialGroup group) {
         return writeMaterialGroup(group, true);
     }
 
@@ -95,7 +95,7 @@ public class MaterialGroupApi {
      * @param updatePlanned if we should plan a global update for material groups
      * @return true if was written successfully.
      */
-    public static boolean writeMaterialGroup(@NotNull AbstractMaterialGroup group, boolean updatePlanned) {
+    public static boolean writeMaterialGroup(AbstractMaterialGroup group, boolean updatePlanned) {
         String name = group.getName();
         if (name.contains(".")) {
             CustomAnvil.instance.getLogger().warning("Group " + name + " contain . in its name but should not. this material group is ignored.");
@@ -120,7 +120,7 @@ public class MaterialGroupApi {
         return true;
     }
 
-    private static boolean writeKnownGroup(@NotNull String groupType, @NotNull AbstractMaterialGroup group) {
+    private static boolean writeKnownGroup(String groupType, AbstractMaterialGroup group) {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
@@ -150,7 +150,7 @@ public class MaterialGroupApi {
         return true;
     }
 
-    private static boolean writeUnknownGroup(@NotNull AbstractMaterialGroup group) {
+    private static boolean writeUnknownGroup(AbstractMaterialGroup group) {
         FileConfiguration config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
 
         String basePath = group.getName() + ".";
@@ -164,23 +164,23 @@ public class MaterialGroupApi {
         return true;
     }
 
-    public static List<String> materialSetToStringList(@NotNull Set<NamespacedKey> materials) {
+    public static List<String> materialSetToStringList(Set<NamespacedKey> materials) {
         return materials.stream().map(NamespacedKey::toString).toList();
     }
 
-    public static List<String> materialGroupSetToStringList(@NotNull Set<AbstractMaterialGroup> groups) {
+    public static List<String> materialGroupSetToStringList(Set<AbstractMaterialGroup> groups) {
         return groups.stream().map(AbstractMaterialGroup::getName).toList();
     }
 
     /**
      * Remove a material group.
-     * Caution ! It will not be removed from depending conflict or other material group at runtime.
+     * Caution ! It will not be removed from depending on conflict or other material group at runtime.
      * For that reason, it is not recommended to use this function.
      *
      * @param group The recipe to remove
      * @return True if the group was present.
      */
-    public static boolean removeGroup(@NotNull AbstractMaterialGroup group) {
+    public static boolean removeGroup(AbstractMaterialGroup group) {
         // Remove from registry
         AbstractMaterialGroup removed = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().groupMap.remove(group.getName());
         if (removed == null) return false;
@@ -234,7 +234,7 @@ public class MaterialGroupApi {
      * @return the abstract group of this name. null if not found.
      */
     @Nullable
-    public static AbstractMaterialGroup getGroup(@NotNull String groupName) {
+    public static AbstractMaterialGroup getGroup(String groupName) {
         return ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().get(groupName);
     }
 
@@ -243,7 +243,6 @@ public class MaterialGroupApi {
      *
      * @return An immutable map of group name as its key and group as mapped value.
      */
-    @NotNull
     public static Map<String, AbstractMaterialGroup> getRegisteredGroups() {
         return Collections.unmodifiableMap(ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap());
     }
