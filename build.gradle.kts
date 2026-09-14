@@ -47,6 +47,8 @@ val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
     .get().split(",")
 
 dependencies {
+    compileOnly("org.jetbrains:annotations:26.1.0")
+
     // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 
