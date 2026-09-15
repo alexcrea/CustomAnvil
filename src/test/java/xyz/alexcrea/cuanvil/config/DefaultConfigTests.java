@@ -54,8 +54,8 @@ public class DefaultConfigTests extends SharedCustomAnvilTest {
 
         EnchantmentRarity rarity = enchantment.defaultRarity();
 
-        Assertions.assertEquals(rarity.getItemValue(), itemValue,"Default enchantment item value is not the same as expected value");
-        Assertions.assertEquals(rarity.getBookValue(), bookValue,"Default enchantment book value is not the same as expected value");
+        Assertions.assertEquals(rarity.itemValue(), itemValue,"Default enchantment item value is not the same as expected value");
+        Assertions.assertEquals(rarity.bookValue(), bookValue,"Default enchantment book value is not the same as expected value");
     }
 
 

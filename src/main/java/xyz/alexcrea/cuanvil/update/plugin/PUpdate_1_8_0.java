@@ -23,7 +23,7 @@ public class PUpdate_1_8_0 {
         if (penaltyTypeValue == null) return;
 
         EnumMap<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> partEnum;
-        partEnum = new EnumMap<>(ConfigOptions.INSTANCE.getWorkPenaltyType().getPartMap());
+        partEnum = new EnumMap<>(ConfigOptions.INSTANCE.getWorkPenaltyType().partMap());
 
         boolean keepIncrease;
         boolean keepAdditive;

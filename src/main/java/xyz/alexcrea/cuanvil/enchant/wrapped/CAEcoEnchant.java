@@ -6,7 +6,7 @@ import com.willfp.ecoenchants.type.EnchantmentType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
@@ -15,11 +15,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@NotNullByDefault
 public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
-    private final @NotNull String enchantID;
+    private final String enchantID;
 
-    public CAEcoEnchant(@NotNull EcoEnchant enchant) {
+    public CAEcoEnchant(EcoEnchant enchant) {
         super(enchant.getEnchantment(), EnchantmentRarity.COMMON);
         this.enchantID = enchant.getID();
     }
@@ -29,32 +30,33 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
-        if (enchantments.isEmpty()) return false;
+    public boolean isEnchantConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType) {
+        if(enchantments.isEmpty()) return false;
 
         // Check if there is only self
-        if (enchantments.size() == 1 && enchantments.containsKey(this))
+        var result = enchantments.keySet().stream().findFirst();
+        if(result.isPresent() && this.equals(result.get()))
             return false;
 
         var ecoEnchant = fromKey();
-        if (ecoEnchant.getConflictsWithEverything()) {
+        if(ecoEnchant.getConflictsWithEverything()) {
             return true;
         }
 
         HashMap<EnchantmentType, Integer> typeAmountMap = new HashMap<>();
 
-        for (CAEnchantment other : enchantments.keySet()) {
-            if (other instanceof CABukkitEnchantment otherVanilla
+        for(CAEnchantment other : enchantments.keySet()) {
+            if(other instanceof CABukkitEnchantment otherVanilla
                     && ecoEnchant.conflictsWith(otherVanilla.getEnchant())) {
                 return true;
             }
 
-            if (other instanceof CAEcoEnchant ecoOther) {
+            if(other instanceof CAEcoEnchant ecoOther) {
                 EnchantmentType type = ecoOther.fromKey().getType();
                 typeAmountMap.putIfAbsent(type, 0);
 
                 int amount = typeAmountMap.get(type) + 1;
-                if (amount > type.getLimit()) {
+                if(amount > type.getLimit()) {
                     return true;
                 }
 
@@ -67,10 +69,12 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments,
-                                  @NotNull NamespacedKey itemType,
-                                  @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item
+    ) {
+        if(Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
             return false;
         }
 

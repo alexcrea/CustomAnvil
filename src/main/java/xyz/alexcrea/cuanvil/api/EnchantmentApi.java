@@ -187,11 +187,11 @@ public class EnchantmentApi {
         String itemPath = basePath + ".item";
         String bookPath = basePath + ".book";
         if (override || !defaultConfig.isSet(itemPath)) {
-            defaultConfig.set(itemPath, rarity.getItemValue());
+            defaultConfig.set(itemPath, rarity.itemValue());
             hasChange = true;
         }
         if (override || !defaultConfig.isSet(bookPath)) {
-            defaultConfig.set(bookPath, rarity.getBookValue());
+            defaultConfig.set(bookPath, rarity.bookValue());
             hasChange = true;
         }
 

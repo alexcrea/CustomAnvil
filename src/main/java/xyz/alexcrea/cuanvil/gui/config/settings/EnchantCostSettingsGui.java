@@ -272,10 +272,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             super(title, parent,
                     configPath, config,
                     displayLore,
-                    min, max, enchantment.defaultRarity().getItemValue(),
+                    min, max, enchantment.defaultRarity().itemValue(),
                     steps);
 
-            this.defaultBookVal = enchantment.defaultRarity().getBookValue();
+            this.defaultBookVal = enchantment.defaultRarity().bookValue();
             this.enchantment = enchantment;
         }
 

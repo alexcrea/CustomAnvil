@@ -37,7 +37,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         super(4, "§8Work Penalty Type", parent);
 
         this.currentType = ConfigOptions.INSTANCE.getWorkPenaltyType();
-        this.items = new EnumMap<>(this.currentType.getPartMap());
+        this.items = new EnumMap<>(this.currentType.partMap());
 
         for (AnvilUseType type : useTypes.keySet()) {
             updateGuiForType(type);
