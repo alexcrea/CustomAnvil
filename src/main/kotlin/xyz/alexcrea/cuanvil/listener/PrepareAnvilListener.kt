@@ -134,7 +134,7 @@ class PrepareAnvilListener : Listener {
         player: HumanEntity,
         event: PrepareAnvilEvent
     ) {
-        if (!ConfigOptions.canUseDialogRename(player)) return
+        if (!ConfigOptions.canUseDialogueRename(player)) return
 
         AnvilRenameDialogUtil.anvilRenameDialog.tryShowDialog(player, event)
     }

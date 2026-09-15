@@ -1,5 +1,6 @@
 package xyz.alexcrea.cuanvil.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -53,7 +54,7 @@ public class LockedObjectProvider<T> {
 
         @Override
         public void close() {
-            parent.lock.readLock().unlock();
+            parent.lock.writeLock().unlock();
         }
     }
 

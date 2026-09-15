@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -215,7 +214,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // Allow us of color code
         this.allowColorCode = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Color Code ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE,
+                ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE,
                 "§7Whether players can use color code.",
                 "§7Color code a formatted like §a&a§7 and is used in the rename field of the anvil.",
                 "§7Player may need permission to use color code if §ePlayer need permission to use color§7 is enabled.");
@@ -223,7 +222,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // Allow us of hexadecimal color
         this.allowHexColor = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Hexadecimal Color ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR,
+                ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR,
                 "§7Whether players can use hexadecimal color.",
                 "§7Color code a formatted like §2#012345 §7and is used in the rename field of the anvil.",
                 "§7Player may need permission to use color code if §ePermission Needed For Color§7 is enabled.");
@@ -231,7 +230,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // Permission needed for color
         this.permissionNeededForColor = new BoolSettingsGui.BoolSettingFactory("§8Need Permission To Use Color ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR,
+                ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR,
                 "§7Whether players should have permission to be able to use colors.",
                 "§7Give player §eca.color.code§7 Permission to allow use of color code.",
                 "§7Give player §eca.color.hex§7  Permission to allow use of hexadecimal color.");
@@ -249,15 +248,15 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // Cost of using color
-        range = ConfigOptions.USE_OF_COLOR_COST_RANGE;
+        range = ConfigOptions.USE_OF_COLOUR_COST_RANGE;
         this.useOfColorCost = new IntSettingsGui.IntSettingFactory("§8Cost Of Using Color", this,
-                ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.USE_OF_COLOUR_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
                         "§7XP level cost when using color code or hexadecimal color using the anvil.",
                         "§7conflict With one of the left item enchantment"
                 ),
                 range.getFirst(), range.getLast(),
-                ConfigOptions.DEFAULT_USE_OF_COLOR_COST,
+                ConfigOptions.DEFAULT_USE_OF_COLOUR_COST,
                 1, 5, 10, 50, 100);
 
         // Permission needed for color not necessary
@@ -346,7 +345,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane.bindItem('h', allowHexColorItem);
 
         // True if player could place color
-        if(ConfigOptions.INSTANCE.getRenameColorPossible()){
+        if(ConfigOptions.INSTANCE.getRenameColourPossible()){
             // use permission for color
             GuiItem permissionNeededItem = this.permissionNeededForColor.getItem();
             pane.bindItem('p', permissionNeededItem);

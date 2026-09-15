@@ -72,10 +72,10 @@ public class DefaultConfigTests extends SharedCustomAnvilTest {
                 Arguments.of(ConfigOptions.ITEM_RENAME_COST, ConfigOptions.DEFAULT_ITEM_RENAME_COST),
                 Arguments.of(ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST),
                 // Color options
-                Arguments.of(ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE),
-                Arguments.of(ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR),
-                Arguments.of(ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR),
-                Arguments.of(ConfigOptions.USE_OF_COLOR_COST, ConfigOptions.DEFAULT_USE_OF_COLOR_COST)
+                Arguments.of(ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE),
+                Arguments.of(ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR),
+                Arguments.of(ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR),
+                Arguments.of(ConfigOptions.USE_OF_COLOUR_COST, ConfigOptions.DEFAULT_USE_OF_COLOUR_COST)
 
         );
     }

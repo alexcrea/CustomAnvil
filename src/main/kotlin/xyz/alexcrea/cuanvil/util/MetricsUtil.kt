@@ -20,8 +20,9 @@ object MetricsUtil {
     fun loadMetrics(plugin: CustomAnvil) {
         if(DependencyManager.externGuiTester.isInTest()) return
 
-        val config = ConfigHolder.DEFAULT_CONFIG.config
-        val metricString = config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
+        val metricString = ConfigHolder.DEFAULT.read.use { lock ->
+            lock.get().config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
+        }
         val metricType = MetricType.from(metricString)
 
         val nmsType = DiagnosticExecutor.fetchNMSType()
@@ -45,8 +46,10 @@ object MetricsUtil {
     }
 
     private fun faststatTelemetry(plugin: CustomAnvil, nmsType: String, isAlpha: Boolean) {
-        val config = ConfigHolder.DEFAULT_CONFIG.config
-        val reportErrors = config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
+        val reportErrors = ConfigHolder.DEFAULT.read.use { lock ->
+            lock.get().config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
+        }
+
         if(reportErrors)
             ERROR_TRACKER = ErrorTracker.contextAware()
 

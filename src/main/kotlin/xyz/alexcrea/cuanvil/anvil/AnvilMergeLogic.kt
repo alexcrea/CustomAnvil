@@ -125,7 +125,7 @@ object AnvilMergeLogic {
     }
 
     fun processPCD(meta: ItemMeta, player: HumanEntity, text: String?) {
-        val keepDialog = ConfigOptions.canUseDialogRename(player) && ConfigOptions.shouldKeepRenameText
+        val keepDialog = ConfigOptions.canUseDialogueRename(player) && ConfigOptions.shouldKeepRenameText
 
         val pdc = meta.persistentDataContainer
         if (!keepDialog)
@@ -144,7 +144,7 @@ object AnvilMergeLogic {
 
         var sumCost = 0
         var useColor = false
-        if (ConfigOptions.renameColorPossible && renameText != null) {
+        if (ConfigOptions.renameColourPossible && renameText != null) {
             component = AnvilColorUtil.handleColor(
                 renameText,
                 AnvilColorUtil.renamePermission(player)
@@ -153,7 +153,7 @@ object AnvilMergeLogic {
             if (component != null) {
                 renameText = MiniMessageUtil.legacy_mm.serialize(component)
 
-                sumCost += ConfigOptions.useOfColorCost
+                sumCost += ConfigOptions.useOfColourCost
                 useColor = true
             }
         }

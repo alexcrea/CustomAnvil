@@ -24,7 +24,7 @@ object AnvilRenameDialogUtil {
                 component, AnvilColorUtil.renamePermission(player)
             ) },
                 { ConfigOptions.shouldKeepRenameText },
-                { ConfigOptions.renameDialogMaxSize },
+                { ConfigOptions.renameDialogueMaxSize },
                 CustomAnvil.instance,
                 )
         })

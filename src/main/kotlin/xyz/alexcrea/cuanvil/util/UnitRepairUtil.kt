@@ -20,18 +20,22 @@ object UnitRepairUtil {
      * null if can't unit repaired by [other]
      */
     fun ItemStack.getRepair(
-        other: ItemStack?
+        other: ItemStack?,
     ): Double? {
-        if (other == null) return null
-        val config = ConfigHolder.UNIT_REPAIR_HOLDER.config
+        if(other == null) return null
 
-        val result = findRawRepairValue(this, other, config) ?: return null
+        val userDefault = ConfigHolder.UNIT_REPAIR.read.use {lock ->
+            val config = lock.get().config
 
-        if(result > 0) return result
+            val result = findRawRepairValue(this, other, config) ?: return null
 
-        // Get default
-        val userDefault = config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)
-        if (userDefault <= 0)
+            if(result > 0) return result
+
+            // Get default
+            config.getDouble(UNIT_REPAIR_DEFAULT_PATH, DEFAULT_DEFAULT_UNIT_REPAIR)
+        }
+
+        if(userDefault <= 0)
             return DEFAULT_DEFAULT_UNIT_REPAIR
         return userDefault
     }
@@ -39,13 +43,13 @@ object UnitRepairUtil {
     private fun findRawRepairValue(
         self: ItemStack,
         other: ItemStack,
-        config: FileConfiguration
+        config: FileConfiguration,
     ): Double? {
         val material = other.customType
         val selfType = self.customType
 
         val result = checkSection(config, material.toString(), selfType)
-        if (result != null) return result
+        if(result != null) return result
 
         return checkSection(config, material.key, selfType)
     }
@@ -53,10 +57,10 @@ object UnitRepairUtil {
     fun findRawRepairValue(
         self: NamespacedKey,
         other: NamespacedKey,
-        config: FileConfiguration
+        config: FileConfiguration,
     ): Double? {
         val result = checkSection(config, other.toString(), self)
-        if (result != null) return result
+        if(result != null) return result
 
         return checkSection(config, other.key, self)
     }
@@ -64,13 +68,13 @@ object UnitRepairUtil {
     fun checkSection(
         config: FileConfiguration,
         path: String,
-        material: NamespacedKey
+        material: NamespacedKey,
     ): Double? {
         val section = config.getConfigurationSection(path) ?: return null
 
-        if (section.isDouble(material.toString()))
+        if(section.isDouble(material.toString()))
             return section.getDouble(material.toString())
-        if (section.isDouble(material.key))
+        if(section.isDouble(material.key))
             return section.getDouble(material.key)
 
         return null

@@ -24,7 +24,6 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
         super(enchantment.getBukkitEnchantment(), EnchantmentRarity.getRarity(getAnvilCost(enchantment)));
         this.eeenchantment = enchantment;
         this.definition = getDefinition(enchantment);
-
     }
 
     @Override

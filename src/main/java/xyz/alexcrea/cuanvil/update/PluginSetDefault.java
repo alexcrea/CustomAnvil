@@ -30,11 +30,11 @@ public class PluginSetDefault {
         nbSet += trySetDefault(config, UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST);
         nbSet += trySetDefault(config, ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST);
         nbSet += trySetDefault(config, SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST);
-        nbSet += trySetDefault(config, ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE);
-        nbSet += trySetDefault(config, ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR);
-        nbSet += trySetDefault(config, PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR);
-        nbSet += trySetDefault(config, USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST);
-        nbSet += trySetDefault(config, PER_COLOR_CODE_PERMISSION, DEFAULT_PER_COLOR_CODE_PERMISSION);
+        nbSet += trySetDefault(config, ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE);
+        nbSet += trySetDefault(config, ALLOW_HEXADECIMAL_COLOUR, DEFAULT_ALLOW_HEXADECIMAL_COLOUR);
+        nbSet += trySetDefault(config, PERMISSION_NEEDED_FOR_COLOUR, DEFAULT_PERMISSION_NEEDED_FOR_COLOUR);
+        nbSet += trySetDefault(config, USE_OF_COLOUR_COST, DEFAULT_USE_OF_COLOUR_COST);
+        nbSet += trySetDefault(config, PER_COLOUR_CODE_PERMISSION, DEFAULT_PER_COLOUR_CODE_PERMISSION);
 
         // Lore Edit defaults
         for (@NotNull LoreEditType value : LoreEditType.values()) {
@@ -48,11 +48,11 @@ public class PluginSetDefault {
                 nbSet += trySetDefault(config, path + PER_LINE_COST, DEFAULT_PER_LINE_COST);
             }
             if (value.isAppend()) {
-                nbSet += trySetDefault(config, path + LoreEditConfigUtil.ALLOW_COLOR_CODE, LoreEditConfigUtil.DEFAULT_ALLOW_COLOR_CODE);
-                nbSet += trySetDefault(config, path + ALLOW_HEX_COLOR, DEFAULT_ALLOW_HEX_COLOR);
-                nbSet += trySetDefault(config, path + USE_COLOR_COST, DEFAULT_USE_COLOR_COST);
+                nbSet += trySetDefault(config, path + LoreEditConfigUtil.ALLOW_COLOUR_CODE, LoreEditConfigUtil.DEFAULT_ALLOW_COLOUR_CODE);
+                nbSet += trySetDefault(config, path + ALLOW_HEX_COLOUR, DEFAULT_ALLOW_HEX_COLOUR);
+                nbSet += trySetDefault(config, path + USE_COLOUR_COST, DEFAULT_USE_COLOUR_COST);
             } else {
-                nbSet += trySetDefault(config, path + REMOVE_COLOR_COST, DEFAULT_REMOVE_COLOR_COST);
+                nbSet += trySetDefault(config, path + REMOVE_COLOUR_COST, DEFAULT_REMOVE_COLOUR_COST);
             }
         }
 

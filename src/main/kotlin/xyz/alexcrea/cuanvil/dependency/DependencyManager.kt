@@ -65,7 +65,9 @@ object DependencyManager {
         } else BukkitScheduler()
 
         // Packet Manager
-        val forceProtocolib = ConfigHolder.DEFAULT_CONFIG.config.getBoolean("force_protocolib", false)
+        val forceProtocolib = ConfigHolder.DEFAULT.read.use {lock ->
+            lock.get().config.getBoolean("force_protocolib", false)
+        }
         packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
 
         // Enchantment Squared dependency

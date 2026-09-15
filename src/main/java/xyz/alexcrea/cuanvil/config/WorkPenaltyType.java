@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.config;
 
 import com.google.common.collect.ImmutableMap;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
 
@@ -17,12 +18,15 @@ public class WorkPenaltyType {
 
         @Override
         public boolean equals(Object obj) {
-            if(!(obj instanceof WorkPenaltyPart other)) return false;
+            if(!(obj instanceof WorkPenaltyPart(
+                    boolean increase, boolean additive, boolean exclusivePenaltyIncrease1,
+                    boolean exclusivePenaltyAdditive1
+            ))) return false;
 
-            return other.penaltyIncrease == this.penaltyIncrease &&
-                    other.penaltyAdditive == this.penaltyAdditive &&
-                    other.exclusivePenaltyIncrease == this.exclusivePenaltyIncrease &&
-                    other.exclusivePenaltyAdditive == this.exclusivePenaltyAdditive;
+            return increase == this.penaltyIncrease &&
+                    additive == this.penaltyAdditive &&
+                    exclusivePenaltyIncrease1 == this.exclusivePenaltyIncrease &&
+                    exclusivePenaltyAdditive1 == this.exclusivePenaltyAdditive;
         }
 
         public WorkPenaltyPart(boolean penaltyIncrease, boolean penaltyAdditive) {

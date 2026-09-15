@@ -64,8 +64,8 @@ object AnvilColorUtil {
 
     fun renamePermission(player: Permissible): ColorPermissions {
         return calculatePermissions(player,
-            ConfigOptions.permissionNeededForColor,
-            ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
+            ConfigOptions.permissionNeededForColour,
+            ConfigOptions.allowColourCode, ConfigOptions.allowHexadecimalColour, ConfigOptions.allowMinimessage,
             ColorUseType.RENAME)
     }
 
@@ -90,10 +90,10 @@ object AnvilColorUtil {
             if (nbReplacement > 0) {
                 useColor = true
 
-                if (ConfigOptions.usePerColorCodePermission)
+                if (ConfigOptions.usePerColourCodePermission)
                     filterPermissibleColorCode(textToColor, permission.permissible)
             }
-            if(ConfigOptions.shouldResetOnColorCode) {
+            if(ConfigOptions.shouldResetOnColourCode) {
                 prefixColorCodes(textToColor)
             }
         }
@@ -250,7 +250,7 @@ object AnvilColorUtil {
                 continue
             }
 
-            val replacement = "${if(ConfigOptions.shouldResetOnColorCode)"§r" else ""}§x"
+            val replacement = "${if(ConfigOptions.shouldResetOnColourCode)"§r" else ""}§x"
 
             builder.replace(startIndex, startIndex + 1, replacement)
             startIndex += replacement.length

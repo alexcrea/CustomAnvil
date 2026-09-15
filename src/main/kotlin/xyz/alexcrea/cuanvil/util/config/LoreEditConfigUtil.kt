@@ -1,6 +1,6 @@
 package xyz.alexcrea.cuanvil.util.config
 
-import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT_CONFIG as CONFIG
+import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT as CONFIG
 
 object LoreEditConfigUtil {
 
@@ -14,13 +14,13 @@ object LoreEditConfigUtil {
     const val BOOK_PERMISSION_NEEDED = "lore_edit.book_and_quil.use_permission"
     const val PAPER_PERMISSION_NEEDED = "lore_edit.paper.use_permission"
 
-    // Color configs path
-    const val ALLOW_COLOR_CODE = "allow_color_code"
-    const val ALLOW_HEX_COLOR = "allow_hexadecimal_color"
+    // Colour configs path
+    const val ALLOW_COLOUR_CODE = "allow_color_code"
+    const val ALLOW_HEX_COLOUR = "allow_hexadecimal_color"
     const val ALLOW_MINIMESSAGE = "allow_minimessage"
-    const val USE_COLOR_COST = "use_cost"
+    const val USE_COLOUR_COST = "use_cost"
 
-    const val REMOVE_COLOR_COST = "remove_color_cost"
+    const val REMOVE_COLOUR_COST = "remove_color_cost"
 
     // Lore order config path
     const val PAPER_EDIT_ORDER = "lore_edit.paper.order"
@@ -39,13 +39,13 @@ object LoreEditConfigUtil {
     const val DEFAULT_BOOK_PERMISSION_NEEDED = true
     const val DEFAULT_PAPER_PERMISSION_NEEDED = true
 
-    // Color configs defaults
-    const val DEFAULT_ALLOW_COLOR_CODE = true
-    const val DEFAULT_ALLOW_HEX_COLOR = true
+    // Colour configs defaults
+    const val DEFAULT_ALLOW_COLOUR_CODE = true
+    const val DEFAULT_ALLOW_HEX_COLOUR = true
     const val DEFAULT_ALLOW_MINIMESSAGE = true
-    const val DEFAULT_USE_COLOR_COST = 0
+    const val DEFAULT_USE_COLOUR_COST = 0
 
-    const val DEFAULT_REMOVE_COLOR_COST = 0
+    const val DEFAULT_REMOVE_COLOUR_COST = 0
 
     // Lore order config default
     const val DEFAULT_PAPER_EDIT_ORDER = "end"
@@ -57,8 +57,8 @@ object LoreEditConfigUtil {
     val FIXED_COST_RANGE = 0..1000
     val PER_LINE_COST_RANGE = 0..1000
 
-    val USE_COLOR_COST_RANGE = 0..1000
-    val REMOVE_COLOR_COST_RANGE = 0..1000
+    val USE_COLOUR_COST_RANGE = 0..1000
+    val REMOVE_COLOUR_COST_RANGE = 0..1000
 
     // -------------------
     // Generic Get methods
@@ -70,10 +70,11 @@ object LoreEditConfigUtil {
      */
     val paperLoreOrderIsEnd: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getString(PAPER_EDIT_ORDER, DEFAULT_PAPER_EDIT_ORDER)
                 .equals(DEFAULT_PAPER_EDIT_ORDER, ignoreCase = true)
+            }
         }
 
     /**
@@ -81,9 +82,10 @@ object LoreEditConfigUtil {
      */
     val bookLoreEditNeedPermission: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getBoolean(BOOK_PERMISSION_NEEDED, DEFAULT_BOOK_PERMISSION_NEEDED)
+            }
         }
 
     /**
@@ -91,13 +93,14 @@ object LoreEditConfigUtil {
      */
     val paperLoreEditNeedPermission: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getBoolean(PAPER_PERMISSION_NEEDED, DEFAULT_PAPER_PERMISSION_NEEDED)
+            }
         }
 
     // -----------------
-    // Color Get methods
+    // Colour Get methods
     // -----------------
 
 }

@@ -16,7 +16,7 @@ plugins {
     signing
     id("cn.lalaki.central").version("2.0.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.23" apply false
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
@@ -57,6 +57,8 @@ dependencies {
 
     // minimessage
     implementation("net.kyori:adventure-text-minimessage:4.25.0")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.25.0")
+    implementation("net.kyori:adventure-text-serializer-plain:4.25.0")
 
     // Gui library
     val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"

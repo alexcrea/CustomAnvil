@@ -7,8 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.api.event.CAEnchantRegistryReadyEvent
 import xyz.alexcrea.cuanvil.command.CustomAnvilCommand
-import xyz.alexcrea.cuanvil.command.EditConfigExecutor
-import xyz.alexcrea.cuanvil.command.ReloadExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil
@@ -113,19 +111,28 @@ open class CustomAnvil : JavaPlugin() {
     // stop plugin if we do not force a dirty start (true by default)
     // Return true if start was stopped
     private fun tryDirtyStart(): Boolean {
-        if(!ConfigHolder.DEFAULT_CONFIG.config.getBoolean("dirty_start", false)) {
-            Bukkit.getPluginManager().disablePlugin(this)
-            return true
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get()
+
+            if(!config.config.getBoolean("dirty_start", false)) {
+                Bukkit.getPluginManager().disablePlugin(this)
+                return true
+            }
         }
+
         return false
     }
 
     // stop plugin if we force a safe start (false by default)
     // Return true if start was stopped
     private fun trySafeStart(): Boolean {
-        if(ConfigHolder.DEFAULT_CONFIG.config.getBoolean("safe_start", false)) {
-            Bukkit.getPluginManager().disablePlugin(this)
-            return true
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get()
+
+            if(config.config.getBoolean("safe_start", false)) {
+                Bukkit.getPluginManager().disablePlugin(this)
+                return true
+            }
         }
         return false
     }
@@ -289,7 +296,7 @@ open class CustomAnvil : JavaPlugin() {
 
     fun reloadResource(
         resourceName: String,
-        hardFailSafe: Boolean = true
+        hardFailSafe: Boolean = true,
     ): YamlConfiguration? {
         // Save default resource
         val file = File(dataFolder, resourceName)
@@ -303,7 +310,7 @@ open class CustomAnvil : JavaPlugin() {
     // Unlike above function. this function will not clone default from jar.
     fun reloadResource(
         resourceFile: File,
-        hardFailSafe: Boolean = true
+        hardFailSafe: Boolean = true,
     ): YamlConfiguration? {
         // Test if file exist
         if (!resourceFile.exists()) {
