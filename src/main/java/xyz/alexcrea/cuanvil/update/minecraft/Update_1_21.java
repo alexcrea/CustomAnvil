@@ -1,11 +1,14 @@
 package xyz.alexcrea.cuanvil.update.minecraft;
 
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.update.UpdateHandler;
 import xyz.alexcrea.cuanvil.update.UpdateUtils;
 import xyz.alexcrea.cuanvil.update.Version;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
+@NotNullByDefault
 public class Update_1_21 extends MCUpdate {
 
     public Update_1_21() {
@@ -13,11 +16,11 @@ public class Update_1_21 extends MCUpdate {
     }
 
     @Override
-    protected void doUpdate() {
-        var baseConfig = ConfigHolder.DEFAULT_CONFIG.getConfig();
-        var groupConfig = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
-        var conflictConfig = ConfigHolder.CONFLICT_HOLDER.getConfig();
-        var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+    protected void doUpdate(UpdateHandler.UpdatedConfigList toSave) {
+        var baseConfig = toSave.use(ConfigHolder.DEFAULT).getConfig();
+        var groupConfig = toSave.use(ConfigHolder.ITEM_GROUP).getConfig();
+        var conflictConfig = toSave.use(ConfigHolder.CONFLICT).getConfig();
+        var unitConfig = toSave.use(ConfigHolder.UNIT_REPAIR).getConfig();
 
         // Add mace to groups
         groupConfig.set("mace.type", "include");
@@ -63,16 +66,6 @@ public class Update_1_21 extends MCUpdate {
 
         // Set version string as current
         baseConfig.set(UpdateUtils.MINECRAFT_VERSION_PATH, version.toString());
-
-        // Save
-        ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
-        ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(true);
-        ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
-        ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
-
-        // imply reload of CONFLICT_HOLDER
-        // We also do not need to reload base config as there is no object related to it.
-        ConfigHolder.ITEM_GROUP_HOLDER.reload();
     }
 
 }

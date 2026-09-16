@@ -1,14 +1,15 @@
 package xyz.alexcrea.cuanvil.util;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@NotNullByDefault
 public class LazyValue<T> {
 
     private final Supplier<T> valueSupplier;
-    private T storedValue;
+    private @Nullable T storedValue;
 
     public LazyValue(Supplier<T> valueSupplier) {
         this.valueSupplier = valueSupplier;
@@ -20,7 +21,6 @@ public class LazyValue<T> {
         return storedValue;
     }
 
-    @NotNull
     public T get(){
         if (storedValue != null) return storedValue;
 

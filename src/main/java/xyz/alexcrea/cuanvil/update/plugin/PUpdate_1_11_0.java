@@ -4,21 +4,22 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.api.MaterialGroupApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.update.UpdateHandler;
+import xyz.alexcrea.cuanvil.update.Version;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
-public class PUpdate_1_11_0 {
+@NotNullByDefault
+public class PUpdate_1_11_0 extends PluginUpdate {
 
     private static final List<String> mace_expected = List.of(
             "density",
@@ -50,7 +51,13 @@ public class PUpdate_1_11_0 {
             Material.GOLDEN_HOE, Material.NETHERITE_HOE
     };
 
-    public static void handleUpdate(@Nonnull Set<ConfigHolder> toSave) {
+    public PUpdate_1_11_0() {
+        super(new Version(1, 11, 0));
+    }
+
+    @Override
+    public void handleUpdate(UpdateHandler.UpdatedConfigList toSave) {
+        toSave.use(ConfigHolder.ITEM_GROUP);
         handleToolsMigration();
         handleMaceMigration(toSave);
     }
@@ -66,13 +73,13 @@ public class PUpdate_1_11_0 {
 
     private static void migrateTools(
             @Nullable AbstractMaterialGroup tools,
-            @NotNull String toolset,
-            @NotNull Material[] toolMats) {
+            String toolset,
+            Material[] toolMats) {
 
         // Create new group
         IncludeGroup group = new IncludeGroup(toolset);
         NamespacedKey[] keys = new NamespacedKey[toolMats.length];
-        for (int i = 0; i < toolMats.length; i++) {
+        for(int i = 0; i < toolMats.length; i++) {
             keys[i] = toolMats[i].getKey();
         }
 
@@ -81,49 +88,49 @@ public class PUpdate_1_11_0 {
         MaterialGroupApi.addMaterialGroup(group, true);
 
         // Try to see if all the materials was in the tools group. and if so, replace it with the new group
-        if (tools == null) return;
-        if (!(tools instanceof IncludeGroup include)) return;
+        if(tools == null) return;
+        if(!(tools instanceof IncludeGroup include)) return;
 
         List<NamespacedKey> mats = List.of(keys);
         Set<NamespacedKey> matSet = include.getNonGroupInheritedMaterials();
-        if (!matSet.containsAll(mats)) return;
+        if(!matSet.containsAll(mats)) return;
 
         mats.forEach(matSet::remove);
         tools.addToPolicy(group);
         MaterialGroupApi.writeMaterialGroup(tools);
     }
 
-    private static void handleMaceMigration(@Nonnull Set<ConfigHolder> toSave) {
+    private static void handleMaceMigration(UpdateHandler.UpdatedConfigList toSave) {
         // We migrate the mace conflict if exist and unmodified
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        FileConfiguration config = toSave.use(ConfigHolder.CONFLICT).getConfig();
 
-        if (!config.isConfigurationSection("sword_enchant_conflict")) return;
-        if (!config.isConfigurationSection("mace_enchant_conflict")) return;
-
+        ConfigurationSection sword_conflict = config.getConfigurationSection("sword_enchant_conflict");
         ConfigurationSection mace_conflict = config.getConfigurationSection("mace_enchant_conflict");
-        // Test mace conflict if default
-        if (mace_conflict == null) return;
-        if (mace_conflict.getInt("maxEnchantmentBeforeConflict", 0) != 1) return;
+        if(sword_conflict == null) return;
+        if(mace_conflict == null) return;
 
-        if (mace_conflict.isList("notAffectedGroups") && !mace_conflict.getList("notAffectedGroups").isEmpty()) return;
+        // Test mace conflict if default
+        if(mace_conflict.getInt("maxEnchantmentBeforeConflict", 0) != 1) return;
+
+        var notAffectedGroups = mace_conflict.getList("notAffectedGroups");
+        if(notAffectedGroups != null && !notAffectedGroups.isEmpty()) return;
 
         List<String> enchantments = mace_conflict.getStringList("enchantments");
-        if (enchantments.size() != 4) return;
-        for (String ench : mace_expected) {
-            if (!enchantments.contains(ench) && !enchantments.contains("minecraft:" + ench)) return;
+        if(enchantments.size() != 4) return;
+        for(String ench : mace_expected) {
+            if(!enchantments.contains(ench) && !enchantments.contains("minecraft:" + ench)) return;
         }
 
         // Test sword_enchant_conflict is default
-        ConfigurationSection sword_conflict = config.getConfigurationSection("sword_enchant_conflict");
-        if (sword_conflict.getInt("maxEnchantmentBeforeConflict", 0) != 1) return;
+        if(sword_conflict.getInt("maxEnchantmentBeforeConflict", 0) != 1) return;
 
-        if (sword_conflict.isList("notAffectedGroups") && !sword_conflict.getList("notAffectedGroups").isEmpty())
-            return;
+        notAffectedGroups = sword_conflict.getList("notAffectedGroups");
+        if(notAffectedGroups != null && !notAffectedGroups.isEmpty()) return;
 
         enchantments = sword_conflict.getStringList("enchantments");
-        if (enchantments.size() != 3) return;
-        for (String ench : sword_expected) {
-            if (!enchantments.contains(ench) && !enchantments.contains("minecraft:" + ench)) return;
+        if(enchantments.size() != 3) return;
+        for(String ench : sword_expected) {
+            if(!enchantments.contains(ench) && !enchantments.contains("minecraft:" + ench)) return;
         }
 
         // Finally we know both conflict are default. so we fix
@@ -131,7 +138,6 @@ public class PUpdate_1_11_0 {
                 "minecraft:density", "minecraft:breach");
 
         config.set("mace_enchant_conflict", null);
-        toSave.add(ConfigHolder.CONFLICT_HOLDER);
     }
 
 }

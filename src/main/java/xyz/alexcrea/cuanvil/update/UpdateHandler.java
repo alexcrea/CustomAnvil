@@ -1,39 +1,48 @@
 package xyz.alexcrea.cuanvil.update;
 
 import io.delilaheve.CustomAnvil;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.update.minecraft.*;
 import xyz.alexcrea.cuanvil.update.plugin.*;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider.LockedWrite;
 
-import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
+@NotNullByDefault
 public class UpdateHandler {
 
     private static final String CONFIG_VERSION_PATH = "configVersion";
 
     // Handle mc version update then plugin version update
     public static void handleUpdates() {
-        handleMCVersionUpdate();
-        handlePluginUpdate();
+        var toSave = new UpdatedConfigList();
+        boolean updatedMC = handleMCVersionUpdate(toSave);
+        Version latest = handlePluginUpdate(toSave);
+
+        // Finally, re add default we may be missing
+        updatedMC |= PluginSetDefault.reAddMissingDefault(toSave);
+
+        if(updatedMC || latest != null)
+            toSave.cleanup(latest);
     }
 
-    private static final Map<Version, Consumer<Set<ConfigHolder>>> pUpdateMap = Map.of(
-            new Version(1, 6, 2), PUpdate_1_6_2::handleUpdate,
-            new Version(1, 6, 7), PUpdate_1_6_7::handleUpdate,
-            new Version(1, 8, 0), PUpdate_1_8_0::handleUpdate,
-            new Version(1, 11, 0), PUpdate_1_11_0::handleUpdate,
-            new Version(1, 15, 5), PUpdate_1_15_5::handleUpdate,
-            new Version(1, 15, 6), PUpdate_1_15_6::handleUpdate,
-            new Version(1, 18, 0), PUpdate_1_18::handleUpdate
+    private static final List<PluginUpdate> pluginUpdateList = List.of(
+            new PUpdate_1_6_2(),
+            new PUpdate_1_6_7(),
+            new PUpdate_1_8_0(),
+            new PUpdate_1_11_0(),
+            new PUpdate_1_15_5(),
+            new PUpdate_1_15_6(),
+            new PUpdate_1_18()
     );
 
-    private static final List<MCUpdate> mcUpdateMap = List.of(
+    private static final List<MCUpdate> mcUpdateList = List.of(
             new Update_1_19(),
             new Update_1_20_5(),
             new Update_1_21(),
@@ -42,64 +51,82 @@ public class UpdateHandler {
     );
 
     // Handle only plugin update
-    private static void handlePluginUpdate() {
-        String versionString = ConfigHolder.DEFAULT_CONFIG.getConfig().getString(CONFIG_VERSION_PATH);
+    @Nullable
+    private static Version handlePluginUpdate(UpdatedConfigList toSave) {
+        String versionString;
+        try(var lock = ConfigHolder.DEFAULT.read) {
+            versionString = lock.get().getConfig().getString(CONFIG_VERSION_PATH);
+        }
+
         Version current = versionString == null ? new Version(0) : Version.fromString(versionString);
 
-        Set<ConfigHolder> toSave = new HashSet<>();
-
-        AtomicReference<Version> latest = new AtomicReference<>(null);
+        @Nullable Version latest = null;
 
         // Hopefully, should iterate in the "insertion" order
-        pUpdateMap.forEach((ver, consumer) -> {
-            if (ver.greaterThan(current)) {
-                CustomAnvil.log("handling plugin update to " + ver);
-                consumer.accept(toSave);
+        for(PluginUpdate update : pluginUpdateList) {
+            var version = update.version;
+            if(version.greaterThan(current)) {
+                CustomAnvil.log("handling plugin update to " + version);
+                update.handleUpdate(toSave);
 
-                latest.set(ver);
+                latest = version;
             }
-        });
-
-        if (latest.get() != null) {
-            finishConfiguration(latest.get().toString(), toSave);
         }
+
+        return latest;
     }
 
     // Handle minecraft version update (not plugin version update)
-    public static void handleMCVersionUpdate() {
+    private static boolean handleMCVersionUpdate(UpdatedConfigList toSave) {
         Version current = UpdateUtils.currentMinecraftVersion();
 
         boolean hadUpdate = false;
-        for (MCUpdate mcUpdate : mcUpdateMap) {
-            hadUpdate |= mcUpdate.handleUpdate(current, hadUpdate);
+        for(MCUpdate mcUpdate : mcUpdateList) {
+            hadUpdate |= mcUpdate.handleUpdate(toSave, current, hadUpdate);
         }
 
-        if (hadUpdate) {
-            CustomAnvil.instance.getLogger().info("Updating Done !");
+        if(hadUpdate) {
+            CustomAnvil.instance.getLogger().info("Minecraft updating Done !");
         }
-
-        if(current.major() == 1 && current.minor() < 21) {
-            var logger = CustomAnvil.instance.getLogger();
-            logger.warning("Your are running an old version of minecraft (lower than 1.21)");
-            logger.warning("Custom Anvil will stop supporting this version on the first of july 2026");
-        }
+        return hadUpdate;
     }
 
-    private static void finishConfiguration(@Nonnull String newVersion, @Nonnull Set<ConfigHolder> toSave) {
-        CustomAnvil.instance.getLogger().info("Configuration file updated to " + newVersion);
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(CONFIG_VERSION_PATH, newVersion);
+    public static class UpdatedConfigList {
+        private final List<LockedWrite<? extends ConfigHolder>> used = new ArrayList<>();
+        private final Set<ConfigHolder> toSave = new HashSet<>();
 
-        toSave.add(ConfigHolder.DEFAULT_CONFIG);
-        // save
-        for (ConfigHolder configHolder : toSave) {
-            configHolder.saveToDisk(true);
+        public <T extends ConfigHolder> T use(LockedObjectProvider<T> config) {
+            var lock = config.write;
+            used.add(lock);
+            T holder = lock.get();
+            toSave.add(holder);
+
+            return holder;
         }
 
-        // then reload
-        for (ConfigHolder configHolder : toSave) {
-            configHolder.reload();
-        }
+        public void cleanup(@Nullable Version newVersion) {
+            CustomAnvil.instance.getLogger().info("Configuration file updated !");
 
+            if(newVersion != null) {
+                var def = use(ConfigHolder.DEFAULT);
+                def.getConfig().set(CONFIG_VERSION_PATH, newVersion.toString());
+            }
+
+            // save
+            for(ConfigHolder configHolder : toSave) {
+                configHolder.saveToDisk(true);
+            }
+
+            // then reload
+            for(ConfigHolder configHolder : toSave) {
+                configHolder.reload();
+            }
+
+            // then unlock
+            for(LockedWrite<? extends ConfigHolder> lock : used) {
+                lock.close();
+            }
+        }
     }
 
 }

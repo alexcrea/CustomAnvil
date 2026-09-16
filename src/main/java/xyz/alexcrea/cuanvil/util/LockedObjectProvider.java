@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.util;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;

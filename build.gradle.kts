@@ -55,6 +55,9 @@ dependencies {
     // fast stats
     implementation("dev.faststats.metrics:bukkit:0.30.1")
 
+    // bstats
+    implementation("org.bstats:bstats-bukkit:3.2.1")
+
     // minimessage
     implementation("net.kyori:adventure-text-minimessage:4.25.0")
     implementation("net.kyori:adventure-text-serializer-legacy:4.25.0")
@@ -186,8 +189,10 @@ tasks {
         archiveFileName.set(name)
 
         // Shadow necessary dependency
-        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.cuanvil.inventoryframework")
-        relocate("dev.faststats", "xyz.alexcrea.cuanvil.faststats")
+        val basePackage = "${project.group}.cuanvi"
+        relocate("com.github.stefvanschie.inventoryframework", "$basePackage.inventoryframework")
+        relocate("dev.faststats", "$basePackage.faststats")
+        relocate("org.bstats",  "$basePackage.bstats")
 
         filesMatching("plugin.yml") {
             expand(
@@ -370,7 +375,7 @@ fun changelog(isOnline: Boolean): Provider<String> {
     else providers.environmentVariable("RELEASE_CHANGELOG")
 
     return changelog
-        .filter{!it.isEmpty()}
+        .filter{it.isNotEmpty()}
         .map {
         if(!isOnline)
             return@map "This is an offline version of the plugin. \\\n" +

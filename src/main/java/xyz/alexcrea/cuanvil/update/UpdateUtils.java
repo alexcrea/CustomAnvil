@@ -3,19 +3,24 @@ package xyz.alexcrea.cuanvil.update;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@NotNullByDefault
 public class UpdateUtils {
     public static final String MINECRAFT_VERSION_PATH = "lowMinecraftVersion";
+
+    private UpdateUtils() {}
 
     public static Version currentMinecraftVersion() {
         String versionString = Bukkit.getServer().getBukkitVersion().split("-")[0];
         return Version.fromString(versionString);
     }
 
+    @SuppressWarnings("unused")
     public static void addToStringList(FileConfiguration config, String path, String... toAdd) {
         List<String> groups = new ArrayList<>(config.getStringList(path));
         groups.addAll(Arrays.asList(toAdd));

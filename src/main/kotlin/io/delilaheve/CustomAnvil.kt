@@ -289,9 +289,6 @@ open class CustomAnvil : JavaPlugin() {
 
         // Prepare economy if possible
         EconomyManager.setupEconomy(this)
-
-        // Finally, re add default we may be missing
-        PluginSetDefault.reAddMissingDefault()
     }
 
     fun reloadResource(
