@@ -37,7 +37,7 @@ permissions:
   ca.config.edit:
     default: op
     description: Allow administrator to edit the plugin's config in game
-  # color permissions
+  # colour permissions
   ca.color.code:
     default: op
     description: Allow player to use color code if enabled (toggleable)
@@ -54,7 +54,7 @@ permissions:
   ca.lore_edit.paper:
     default: op
     description: Allow player to edit lore via paper if enabled (toggleable)
-  # dialog menu permission
+  # dialogue menu permission
   ca.rename.dialog:
     default: op
     description: Allow player to use the dialog rename menu (toggleable)

@@ -30,6 +30,7 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil
 import java.util.*
 import java.util.stream.Collectors
 
+@Suppress("UnstableApiUsage")
 class DiagnosticExecutor : CASubCommand {
 
     companion object {
@@ -219,8 +220,8 @@ class DiagnosticExecutor : CASubCommand {
     }
 
     private fun pluginListDiag(sender: CommandSender, stb: StringBuilder) {
-        val enabledPlugins: MutableList<Plugin?> = ArrayList<Plugin?>()
-        val disabledPlugins: MutableList<Plugin?> = ArrayList<Plugin?>()
+        val enabledPlugins: MutableList<Plugin?> = ArrayList()
+        val disabledPlugins: MutableList<Plugin?> = ArrayList()
         for (plugin in Bukkit.getPluginManager().plugins) {
             if (plugin.isEnabled) {
                 enabledPlugins.add(plugin)
@@ -287,7 +288,7 @@ class DiagnosticExecutor : CASubCommand {
         val xp = invView.repairCost
         val maxXp = invView.maximumRepairCost
         val mergeResult = invView.getItem(2)
-        stb.append("\n${if (result == mergeResult) "E" else "Une"}xpected Result")
+        stb.append("\n${if (result == mergeResult) "E" else "Une"} Result")
 
         PrepareAnvilListener().anvilCombineCheck(event)
         // Now we check if item and xp same

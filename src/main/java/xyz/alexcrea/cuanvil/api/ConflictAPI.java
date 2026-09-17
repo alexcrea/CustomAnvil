@@ -17,15 +17,15 @@ import java.util.List;
 /**
  * Custom Anvil api for conflict registry.
  */
-@SuppressWarnings({"unused", "UnusedReturnValue"})
+@SuppressWarnings({"unused", "UnusedReturnValue", "SameReturnValue"})
 @NotNullByDefault
 public class ConflictAPI {
 
     private ConflictAPI() {
     }
 
-    private static @Nullable Object saveChangeTask = null;
-    private static @Nullable Object reloadChangeTask = null;
+    private static volatile @Nullable Object saveChangeTask = null;
+    private static volatile @Nullable Object reloadChangeTask = null;
 
     /**
      * Write and add a conflict.
@@ -49,21 +49,25 @@ public class ConflictAPI {
      * @return True if successful.
      */
     public static boolean addConflict(ConflictBuilder builder, boolean overrideDeleted) {
-        var config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var holder = lock.get();
+            var config = holder.getConfig();
 
-        // Test if conflict can be added
-        if (!overrideDeleted && ConfigHolder.CONFLICT_HOLDER.isDeleted(builder.getName())) return false;
-        if (config.contains(builder.getName())) return false;
+            // Test if conflict can be added
+            if(!overrideDeleted && holder.isDeleted(builder.getName())) return false;
+            if(config.contains(builder.getName())) return false;
 
-        if (!writeConflict(builder, false)) return false;
 
-        EnchantConflictGroup conflict = builder.build();
-        // Register conflict
-        ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
+            if(!writeConflict(builder, false)) return false;
 
-        // Add conflict to gui
-        EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
-        if (conflictGui != null) conflictGui.updateValueForGeneric(conflict, true);
+            EnchantConflictGroup conflict = builder.build();
+            // Register conflict
+            holder.getConflictManager().addConflict(conflict);
+
+            // Add conflict to gui
+            EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+            if(conflictGui != null) conflictGui.updateValueForGeneric(conflict, true);
+        }
 
         return true;
     }
@@ -80,6 +84,7 @@ public class ConflictAPI {
         return writeConflict(builder, true);
     }
 
+
     /**
      * Write a conflict to the config file.
      * <p>
@@ -90,10 +95,15 @@ public class ConflictAPI {
      * @return true if was written successfully.
      */
     public static boolean writeConflict(ConflictBuilder builder, boolean updatePlanned) {
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var config = lock.get().getConfig();
+            return writeConflict(config, builder, updatePlanned);
+        }
+    }
 
+    public static boolean writeConflict(FileConfiguration config, ConflictBuilder builder, boolean updatePlanned) {
         String name = builder.getName();
-        if (name.contains(".")) {
+        if(name.contains(".")) {
             CustomAnvil.instance.getLogger().warning("Conflict " + name + " contain \".\" in its name but should not. this conflict is ignored.");
             logConflictOrigin(builder);
             return false;
@@ -103,15 +113,15 @@ public class ConflictAPI {
 
         List<String> enchantments = extractEnchantments(builder);
         List<String> excludedGroups = new ArrayList<>(builder.getExcludedGroupNames());
-        if (!enchantments.isEmpty()) config.set(basePath + "enchantments", enchantments);
-        if (!excludedGroups.isEmpty()) config.set(basePath + "notAffectedGroups", excludedGroups);
-        if (builder.getMaxBeforeConflict() > 0)
+        if(!enchantments.isEmpty()) config.set(basePath + "enchantments", enchantments);
+        if(!excludedGroups.isEmpty()) config.set(basePath + "notAffectedGroups", excludedGroups);
+        if(builder.getMaxBeforeConflict() > 0)
             config.set(basePath + "maxEnchantmentBeforeConflict", builder.getMaxBeforeConflict());
 
-        if (!config.isConfigurationSection(name)) return false;
+        if(!config.isConfigurationSection(name)) return false;
 
         prepareSaveTask();
-        if (updatePlanned) prepareUpdateTask();
+        if(updatePlanned) prepareUpdateTask();
 
         return true;
     }
@@ -124,7 +134,7 @@ public class ConflictAPI {
      */
     private static List<String> extractEnchantments(ConflictBuilder builder) {
         var result = new ArrayList<>(builder.getEnchantmentNames());
-        for (NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
+        for(NamespacedKey enchantmentKey : builder.getEnchantmentKeys()) {
             result.add(enchantmentKey.toString());
         }
 
@@ -138,16 +148,21 @@ public class ConflictAPI {
      * @return True if successful.
      */
     public static boolean removeConflict(EnchantConflictGroup conflict) {
-        // Remove from registry
-        ConfigHolder.CONFLICT_HOLDER.getConflictManager().removeConflict(conflict);
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var holder = lock.get();
 
-        // Delete and save to file
-        ConfigHolder.CONFLICT_HOLDER.delete(conflict.getName());
+            // Remove from registry
+            holder.getConflictManager().removeConflict(conflict);
+
+            // Delete and save to file
+            holder.delete(conflict.getName());
+        }
+
         prepareSaveTask();
 
         // Remove from gui
         EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
-        if (conflictGui != null) conflictGui.removeGeneric(conflict);
+        if(conflictGui != null) conflictGui.removeGeneric(conflict);
 
         return true;
     }
@@ -156,27 +171,38 @@ public class ConflictAPI {
      * Prepare a task to save conflict configuration.
      */
     private static void prepareSaveTask() {
-        if (saveChangeTask != null) return;
+        //noinspection DuplicatedCode
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
-            ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
-            saveChangeTask = null;
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+            try(var lock = ConfigHolder.CONFLICT.write) {
+                lock.get().saveToDisk(true);
+                saveChangeTask = null;
+            }
         });
+
+        saveChangeTask = task;
     }
 
     /**
      * Prepare a task to reload every conflict.
      */
     private static void prepareUpdateTask() {
-        if (reloadChangeTask != null) return;
+        if(reloadChangeTask != null) return;
 
-        reloadChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
-            ConfigHolder.CONFLICT_HOLDER.reload();
-            EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
-            if (conflictGui != null) conflictGui.reloadValues();
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+            try(var lock = ConfigHolder.CONFLICT.write) {
+                lock.get().reload();
+                EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
+                if(conflictGui != null) conflictGui.reloadValues();
 
-            reloadChangeTask = null;
+                reloadChangeTask = null;
+            }
         });
+
+        reloadChangeTask = task;
     }
 
     static void logConflictOrigin(ConflictBuilder builder) {
@@ -189,8 +215,10 @@ public class ConflictAPI {
      * @return An immutable collection of conflict.
      */
     public static List<EnchantConflictGroup> getRegisteredConflict() {
-        List<EnchantConflictGroup> mutableList = ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
-        return Collections.unmodifiableList(mutableList);
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            var mutableList = lock.get().getConflictManager().getConflictList();
+            return Collections.unmodifiableList(mutableList);
+        }
     }
 
 }

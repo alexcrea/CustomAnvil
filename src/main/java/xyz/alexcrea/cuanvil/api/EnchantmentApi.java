@@ -26,13 +26,14 @@ import java.util.Map;
 /**
  * Custom Anvil api for enchantment registry.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue", "BooleanMethodIsAlwaysInverted"})
 @NotNullByDefault
 public class EnchantmentApi {
 
-    private static @Nullable Object saveChangeTask = null;
+    private static volatile @Nullable Object saveChangeTask = null;
 
-    private EnchantmentApi() {}
+    private EnchantmentApi() {
+    }
 
     /**
      * Register an enchantment.
@@ -41,13 +42,13 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean registerEnchantment(CAEnchantment enchantment) {
-        if (!CAEnchantmentRegistry.getInstance().register(enchantment)) return false;
+        if(!CAEnchantmentRegistry.getInstance().register(enchantment)) return false;
 
         // Add enchantment to gui.
-        if (EnchantCostConfigGui.getInstance() != null) {
+        if(EnchantCostConfigGui.getInstance() != null) {
             EnchantCostConfigGui.getInstance().updateValueForGeneric(enchantment, true);
         }
-        if (EnchantLimitConfigGui.getInstance() != null) {
+        if(EnchantLimitConfigGui.getInstance() != null) {
             EnchantLimitConfigGui.getInstance().updateValueForGeneric(enchantment, true);
         }
 
@@ -65,7 +66,7 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean registerEnchantment(Enchantment enchantment, @Nullable EnchantmentRarity defaultRarity) {
-        if (defaultRarity == null)
+        if(defaultRarity == null)
             return registerEnchantment(new CABukkitEnchantment(enchantment));
 
         return registerEnchantment(new CABukkitEnchantment(enchantment, defaultRarity));
@@ -91,10 +92,10 @@ public class EnchantmentApi {
      */
     public static boolean unregisterEnchantment(@Nullable CAEnchantment enchantment) {
         // Remove from gui
-        if (EnchantCostConfigGui.getInstance() != null) {
+        if(EnchantCostConfigGui.getInstance() != null) {
             EnchantCostConfigGui.getInstance().removeGeneric(enchantment);
         }
-        if (EnchantLimitConfigGui.getInstance() != null) {
+        if(EnchantLimitConfigGui.getInstance() != null) {
             EnchantLimitConfigGui.getInstance().removeGeneric(enchantment);
         }
 
@@ -160,10 +161,12 @@ public class EnchantmentApi {
      * @return Return false if override is false and a configuration exist. true otherwise.
      */
     public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override) {
-        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
+        try (var lock = ConfigHolder.DEFAULT.write) {
+            FileConfiguration config = lock.get().getConfig();
 
-        if (tryWriteDefaultConfig(config, enchantment, override)) {
-            prepareSaveTask();
+            if(tryWriteDefaultConfig(config, enchantment, override)) {
+                prepareSaveTask();
+            }
         }
         return true;
     }
@@ -176,7 +179,7 @@ public class EnchantmentApi {
         boolean hasChange = false;
 
         String levelPath = ConfigOptions.ENCHANT_LIMIT_ROOT + "." + enchantment.getKey();
-        if (override || !defaultConfig.isSet(levelPath)) {
+        if(override || !defaultConfig.isSet(levelPath)) {
             defaultConfig.set(levelPath, enchantment.defaultMaxLevel());
             hasChange = true;
         }
@@ -186,11 +189,11 @@ public class EnchantmentApi {
 
         String itemPath = basePath + ".item";
         String bookPath = basePath + ".book";
-        if (override || !defaultConfig.isSet(itemPath)) {
+        if(override || !defaultConfig.isSet(itemPath)) {
             defaultConfig.set(itemPath, rarity.itemValue());
             hasChange = true;
         }
-        if (override || !defaultConfig.isSet(bookPath)) {
+        if(override || !defaultConfig.isSet(bookPath)) {
             defaultConfig.set(bookPath, rarity.bookValue());
             hasChange = true;
         }
@@ -202,12 +205,17 @@ public class EnchantmentApi {
      * Prepare a task to save custom recipe configuration.
      */
     private static void prepareSaveTask() {
-        if (saveChangeTask != null) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
-            ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
-            saveChangeTask = null;
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+            try(var lock = ConfigHolder.DEFAULT.write) {
+                lock.get().saveToDisk(true);
+                saveChangeTask = null;
+            }
         });
+
+        saveChangeTask = task;
     }
 
     /**

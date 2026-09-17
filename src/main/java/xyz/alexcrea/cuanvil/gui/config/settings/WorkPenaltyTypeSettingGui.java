@@ -127,9 +127,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         meta.setLore(displayLore);
         displayItem.setItemMeta(meta);
 
-        pane.bindItem(display, new GuiItem(displayItem, (event) -> {
-            event.setCancelled(true);
-        }));
+        pane.bindItem(display, new GuiItem(displayItem, (event) -> event.setCancelled(true)));
 
         // Can probably put this in a function but this works so
         // "Increment" item

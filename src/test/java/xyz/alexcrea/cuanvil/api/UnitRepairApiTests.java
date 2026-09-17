@@ -14,7 +14,6 @@ import org.mockbukkit.mockbukkit.inventory.ItemStackMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.tests.ConfigResetCustomAnvilTest;
 import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 

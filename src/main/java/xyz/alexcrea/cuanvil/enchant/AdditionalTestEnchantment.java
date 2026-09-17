@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNullByDefault;
 import java.util.Map;
 
 @NotNullByDefault
+@SuppressWarnings("unused")
 public interface AdditionalTestEnchantment {
 
     /**
@@ -17,7 +18,8 @@ public interface AdditionalTestEnchantment {
      */
     boolean isEnchantConflict(
             Map<CAEnchantment, Integer> enchantments,
-            NamespacedKey itemType);
+            NamespacedKey itemType
+    );
 
     /**
      * Test if the provided item can be compatible with this enchantment. only non-Custom Anvil conflict.
@@ -29,6 +31,7 @@ public interface AdditionalTestEnchantment {
     boolean isItemConflict(
             Map<CAEnchantment, Integer> enchantments,
             NamespacedKey itemType,
-            ItemStack item);
+            ItemStack item
+    );
 
 }

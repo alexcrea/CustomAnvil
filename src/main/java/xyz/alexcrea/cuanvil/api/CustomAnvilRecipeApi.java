@@ -19,9 +19,10 @@ import java.util.List;
 @NotNullByDefault
 public class CustomAnvilRecipeApi {
 
-    private CustomAnvilRecipeApi(){}
+    private CustomAnvilRecipeApi() {
+    }
 
-    private static @Nullable Object saveChangeTask = null;
+    private static volatile @Nullable Object saveChangeTask = null;
 
     /**
      * Write and add a custom anvil recipe.
@@ -30,7 +31,7 @@ public class CustomAnvilRecipeApi {
      * @param builder The recipe builder to be based on
      * @return True if successful.
      */
-    public static boolean addRecipe(AnvilRecipeBuilder builder){
+    public static boolean addRecipe(AnvilRecipeBuilder builder) {
         return addRecipe(builder, false);
     }
 
@@ -38,15 +39,21 @@ public class CustomAnvilRecipeApi {
      * Write and add a custom anvil recipe.
      * Will not write the recipe if it already exists.
      *
-     * @param builder The recipe builder to be based on
+     * @param builder         The recipe builder to be based on
      * @param overrideDeleted If we should write even if the recipe was previously deleted.
      * @return True if successful.
      */
-    public static boolean addRecipe(AnvilRecipeBuilder builder, boolean overrideDeleted){
-        FileConfiguration config = ConfigHolder.CUSTOM_RECIPE_HOLDER.getConfig();
+    public static boolean addRecipe(AnvilRecipeBuilder builder, boolean overrideDeleted) {
+        try(var lock = ConfigHolder.CUSTOM_RECIPE.write) {
+            return addRecipe(lock.get(), builder, overrideDeleted);
+        }
+    }
+
+    private static boolean addRecipe(ConfigHolder.CustomAnvilCraftHolder holder, AnvilRecipeBuilder builder, boolean overrideDeleted) {
+        FileConfiguration config = holder.getConfig();
         String name = builder.getName();
 
-        if(!overrideDeleted && ConfigHolder.CUSTOM_RECIPE_HOLDER.isDeleted(builder.getName())) return false;
+        if(!overrideDeleted && holder.isDeleted(builder.getName())) return false;
         if(config.contains(builder.getName())) return false;
 
         if(builder.getName().contains(".")) {
@@ -55,19 +62,19 @@ public class CustomAnvilRecipeApi {
         }
 
         AnvilCustomRecipe recipe = builder.build();
-        if(recipe == null){
+        if(recipe == null) {
             CustomAnvil.instance.getLogger().warning("Custom anvil recipe " + name + " could not be parsed.");
-            if(builder.getLeftItem() == null){
+            if(builder.getLeftItem() == null) {
                 CustomAnvil.instance.getLogger().warning("It look like left item of the recipe is null.");
             }
-            if(builder.getResultItem() == null){
+            if(builder.getResultItem() == null) {
                 CustomAnvil.instance.getLogger().warning("It look like result item of the recipe is null.");
             }
             return false;
         }
 
         // Add to registry
-        ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanAddNew(recipe);
+        holder.getRecipeManager().cleanAddNew(recipe);
 
         // Save to file
         recipe.saveToFile(false, false);
@@ -80,20 +87,24 @@ public class CustomAnvilRecipeApi {
         return true;
     }
 
-    // TODO remove by name and/or by builder (as name is keept) (and maybe create a get by name)
+    // TODO remove by name and/or by builder (as name is kept) (and maybe create a get by name)
+
     /**
      * Remove a custom anvil recipe.
      *
      * @param recipe The recipe to remove
      * @return True if successful.
      */
-    public static boolean removeRecipe(AnvilCustomRecipe recipe){
+    public static boolean removeRecipe(AnvilCustomRecipe recipe) {
         // Remove from registry
-        boolean result = ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanRemove(recipe);
-        if(!result) return false;
+        try(var lock = ConfigHolder.CUSTOM_RECIPE.write) {
+            var config = lock.get();
+            boolean result = config.getRecipeManager().cleanRemove(recipe);
+            if(!result) return false;
 
-        // Delete and save to file
-        ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(recipe.getName());
+            // Delete and save to file
+            config.delete(recipe.getName());
+        }
         prepareSaveTask();
 
         // Remove from gui
@@ -107,21 +118,30 @@ public class CustomAnvilRecipeApi {
      * Prepare a task to save custom recipe configuration.
      */
     private static void prepareSaveTask() {
+        //noinspection DuplicatedCode
         if(saveChangeTask != null) return;
 
-        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, ()->{
-            ConfigHolder.CONFLICT_HOLDER.saveToDisk(true);
-            saveChangeTask = null;
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+            try(var lock = ConfigHolder.CONFLICT.write) {
+                lock.get().saveToDisk(true);
+                saveChangeTask = null;
+            }
         });
+
+        saveChangeTask = task;
     }
 
     /**
      * Get every registered recipes.
+     *
      * @return An immutable collection of recipes.
      */
-    public static List<AnvilCustomRecipe> getRegisteredRecipes(){
-        List<AnvilCustomRecipe> mutableList = ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().getRecipeList();
-        return Collections.unmodifiableList(mutableList);
+    public static List<AnvilCustomRecipe> getRegisteredRecipes() {
+        try(var lock = ConfigHolder.CUSTOM_RECIPE.read) {
+            var mutableList = lock.get().getRecipeManager().getRecipeList();
+            return Collections.unmodifiableList(mutableList);
+        }
     }
 
 }

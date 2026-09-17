@@ -243,8 +243,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      */
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
-        int defaultBookVal;
-        @NotNull CAEnchantment enchantment;
+        final int defaultBookVal;
+        @NotNull
+        final CAEnchantment enchantment;
 
         /**
          * Constructor for an enchantment cost setting gui factory.

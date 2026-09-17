@@ -1,16 +1,19 @@
 package xyz.alexcrea.cuanvil.util;
 
-import io.delilaheve.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import xyz.alexcrea.cuanvil.api.EnchantmentApi;
@@ -25,25 +28,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
+@NotNullByDefault
 public class AnvilFuseTestUtil {
 
-    private static PrepareAnvilListener PREPARE_LISTENER = new PrepareAnvilListener();
-    private static AnvilResultListener RESULT_LISTENER = new AnvilResultListener();
+    private static final PrepareAnvilListener PREPARE_LISTENER = new PrepareAnvilListener();
+    private static final AnvilResultListener RESULT_LISTENER = new AnvilResultListener();
 
-    public static ItemStack prepareItem(@NotNull Material material,
-                                        @NotNull List<CAEnchantment> enchantments,
-                                        @NotNull List<Integer> level) {
+    public static ItemStack prepareItem(
+            Material material,
+            List<CAEnchantment> enchantments,
+            List<Integer> level
+    ) {
         return prepareItem(material, 0, enchantments, level);
     }
 
-    public static ItemStack prepareItem(@NotNull Material material,
-                                        int repairCost,
-                                        @NotNull List<CAEnchantment> enchantments,
-                                        @NotNull List<Integer> level) {
+    public static ItemStack prepareItem(
+            Material material,
+            int repairCost,
+            List<CAEnchantment> enchantments,
+            List<Integer> level
+    ) {
         Assertions.assertEquals(enchantments.size(), level.size());
 
         HashMap<CAEnchantment, Integer> enchantmentMap = new HashMap<>();
-        for (int i = 0; i < enchantments.size(); i++) {
+        for(int i = 0; i < enchantments.size(); i++) {
             enchantmentMap.put(enchantments.get(i), level.get(i));
         }
 
@@ -58,19 +67,23 @@ public class AnvilFuseTestUtil {
     }
 
 
-    public static ItemStack prepareItem(@NotNull Material material,
-                                        @NotNull List<String> enchantmentNames,
-                                        Integer... levels) {
+    public static ItemStack prepareItem(
+            Material material,
+            List<String> enchantmentNames,
+            Integer... levels
+    ) {
         return prepareItem(material, 0, enchantmentNames, levels);
     }
 
-    public static ItemStack prepareItem(@NotNull Material material,
-                                        int repairCost,
-                                        @NotNull List<String> enchantmentNames,
-                                        Integer... levels) {
+    public static ItemStack prepareItem(
+            Material material,
+            int repairCost,
+            List<String> enchantmentNames,
+            Integer... levels
+    ) {
         List<CAEnchantment> enchantments = new ArrayList<>();
 
-        for (String enchantmentName : enchantmentNames) {
+        for(String enchantmentName : enchantmentNames) {
             List<CAEnchantment> enchantmentList = CAEnchantment.getByName(enchantmentName);
             Assertions.assertNotEquals(0, enchantmentList.size(),
                     "Could not find enchantment \"" + enchantmentName + "\"");
@@ -88,9 +101,9 @@ public class AnvilFuseTestUtil {
      * Not the best for non-custom anvil plugins but work in the context of CA
      */
     public static void imitateAnvilUpdate(
-            @NotNull HumanEntity player,
-            @NotNull AnvilInventory anvil) {
-
+            HumanEntity player,
+            AnvilInventory anvil
+    ) {
         AnvilViewMock view = new AnvilViewMock(player, anvil);
         try {
             PrepareAnvilEvent event = new PrepareAnvilEvent(view, anvil.getItem(2));
@@ -98,18 +111,18 @@ public class AnvilFuseTestUtil {
             // Not ideal but possible and the easiest so why not
             PREPARE_LISTENER.anvilCombineCheck(event);
             anvil.setResult(event.getResult());
-        } catch (Exception e) {
+        } catch(Exception e) {
             Assertions.fail(e);
         }
     }
 
     public static void executeAnvilFuseTest(
-            @NotNull AnvilInventory anvil,
-            @NotNull HumanEntity player,
-            @NotNull AnvilFuseTestData data
+            AnvilInventory anvil,
+            HumanEntity player,
+            AnvilFuseTestData data
     ) {
         Assertions.assertEquals(player.getOpenInventory().getTopInventory(), anvil,
-                "Openned inventory is not anvil");
+                "Opened inventory is not anvil");
 
         ItemStack afterLeft = data.expectedAfterLeftPlaced();
         ItemStack afterRight = data.expectedAfterRightPlaced();
@@ -117,7 +130,7 @@ public class AnvilFuseTestUtil {
         // Fist, test null result(s)
 
         // Test with only the left item
-        if(afterLeft == null){
+        if(afterLeft == null) {
             anvil.setItem(1, null); // We clear the right slot in case something was there
             testPlacingItem(anvil, player,
                     0, data.expectedPriceAfterLeftPlaced(),
@@ -125,7 +138,7 @@ public class AnvilFuseTestUtil {
         }
 
         // Test with only the right item
-        if(afterRight == null){
+        if(afterRight == null) {
             anvil.setItem(0, null); // We only want the right item. so we remove the left one
             testPlacingItem(anvil, player,
                     1, data.expectedPriceAfterRightPlaced(),
@@ -133,17 +146,17 @@ public class AnvilFuseTestUtil {
         }
 
         // Test with both placed
-        if(afterBoth == null){
+        if(afterBoth == null) {
             anvil.setItem(0, data.leftItem());
             testPlacingItem(anvil, player,
                     1, data.expectedPriceAfterBothPlaced(),
-                    data.rightItem(), data.expectedResult());
+                    data.rightItem(), null);
         }
 
         // Then, test non null result(s)
 
         // Test with only the left item
-        if(afterLeft != null){
+        if(afterLeft != null) {
             anvil.setItem(1, null); // We clear the right slot in case something was there
             testPlacingItem(anvil, player,
                     0, data.expectedPriceAfterLeftPlaced(),
@@ -151,7 +164,7 @@ public class AnvilFuseTestUtil {
         }
 
         // Test with only the right item
-        if(afterRight != null){
+        if(afterRight != null) {
             anvil.setItem(0, null); // We only want the right item. so we remove the left one
             testPlacingItem(anvil, player,
                     1, data.expectedPriceAfterRightPlaced(),
@@ -159,7 +172,7 @@ public class AnvilFuseTestUtil {
         }
 
         // Test with both placed
-        if(afterBoth != null){
+        if(afterBoth != null) {
             anvil.setItem(0, data.leftItem());
             testPlacingItem(anvil, player,
                     1, data.expectedPriceAfterBothPlaced(),
@@ -168,11 +181,11 @@ public class AnvilFuseTestUtil {
     }
 
     public static void executeAnvilClickTest(
-            @NotNull AnvilInventory anvil,
-            @NotNull Player player,
-            @NotNull AnvilClickTestData data
+            AnvilInventory anvil,
+            Player player,
+            AnvilClickTestData data
     ) {
-        if (data.testNoLevelNoChange()) {
+        if(data.testNoLevelNoChange()) {
             ItemStack left = anvil.getFirstItem();
             ItemStack right = anvil.getSecondItem();
             ItemStack result = anvil.getResult();
@@ -207,8 +220,8 @@ public class AnvilFuseTestUtil {
     }
 
     private static void simulateClick(
-            @NotNull AnvilInventory anvil,
-            @NotNull Player player,
+            AnvilInventory anvil,
+            Player player,
             @Nullable Event.Result expectedResult
     ) {
         AnvilViewMock view = new AnvilViewMock(player, anvil);
@@ -220,22 +233,23 @@ public class AnvilFuseTestUtil {
                     InventoryAction.PICKUP_ALL);
 
             RESULT_LISTENER.anvilExtractionCheck(event);
-            if (expectedResult != null) {
+            if(expectedResult != null) {
                 Assertions.assertEquals(expectedResult, event.getResult());
             }
-        } catch (Exception e) {
+        } catch(Exception e) {
             Assertions.fail(e);
         }
     }
 
     @SuppressWarnings({"removal"})
     private static void testPlacingItem(
-            @NotNull AnvilInventory anvil,
-            @NotNull HumanEntity player,
+            AnvilInventory anvil,
+            HumanEntity player,
             int slot,
-            Integer expectedPrice,
+            @Nullable Integer expectedPrice,
             @Nullable ItemStack toPlace,
-            @Nullable ItemStack expectedResult) {
+            @Nullable ItemStack expectedResult
+    ) {
         anvil.setItem(slot, toPlace);
         anvil.setItem(2, null);
         AnvilFuseTestUtil.imitateAnvilUpdate(player, anvil);
@@ -248,7 +262,7 @@ public class AnvilFuseTestUtil {
 
     public static void assertEqual(@Nullable ItemStack expected, @Nullable ItemStack other) {
         boolean secondIsAir = isAir(other);
-        if (isAir(expected))
+        if(isAir(expected))
             Assertions.assertTrue(secondIsAir, "Item " + other + " was not air but was expected to be.");
         else {
             Assertions.assertFalse(secondIsAir, "Item " + other + " is air but was expected to be " + expected);
@@ -264,8 +278,8 @@ public class AnvilFuseTestUtil {
         return item == null || item.isEmpty() || item.getAmount() == 0;
     }
 
-    public static void assertPriceEqual(Integer expectedPrice, int price) {
-        if (expectedPrice == null) return;
+    public static void assertPriceEqual(@Nullable Integer expectedPrice, int price) {
+        if(expectedPrice == null) return;
         Assertions.assertEquals(expectedPrice, price, "Price of anvil fuse was wrong");
     }
 

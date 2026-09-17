@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNullByDefault;
  * <p>
  * There is also {@link CATreatAnvilResultEvent} that may be better for some use case.
  */
+@SuppressWarnings("unused")
 @NotNullByDefault
 public class CAClickResultBypassEvent extends Event implements Cancellable {
 

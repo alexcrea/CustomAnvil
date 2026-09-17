@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNullByDefault;
  * and {@link xyz.alexcrea.cuanvil.api.UnitRepairApi UnitRepairApi}
  * to add/remove/edit configurations
  */
+@SuppressWarnings("unused")
 @NotNullByDefault
 public class CAConfigReadyEvent extends Event {
 

@@ -8,13 +8,18 @@ import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
-import xyz.alexcrea.cuanvil.group.*;
+import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
+import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
+import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 //TODO add conflict after level
+
 /**
  * A Builder for material conflict.
  */
@@ -86,7 +91,7 @@ public class ConflictBuilder {
      * @return The conflict source name.
      */
     public String getSourceName() {
-        if (source == null) return "an unknown source";
+        if(source == null) return "an unknown source";
 
         return source.getName();
     }
@@ -330,15 +335,15 @@ public class ConflictBuilder {
         copy.setMaxBeforeConflict(this.maxBeforeConflict);
 
         // Set Enchantments
-        for (NamespacedKey key : this.enchantmentKeys) {
+        for(NamespacedKey key : this.enchantmentKeys) {
             copy.addEnchantment(key);
         }
-        for (String enchantName : this.enchantmentNames) {
+        for(String enchantName : this.enchantmentNames) {
             copy.addEnchantment(enchantName);
         }
 
         // Set Groups
-        for (String groupName : this.excludedGroupNames) {
+        for(String groupName : this.excludedGroupNames) {
             copy.addExcludedGroup(groupName);
         }
 
@@ -384,14 +389,14 @@ public class ConflictBuilder {
      * @param conflict The conflict target
      */
     protected void appendEnchantments(EnchantConflictGroup conflict) {
-        for (String enchantmentName : getEnchantmentNames()) {
-            if (appendEnchantments(conflict, EnchantmentApi.getByName(enchantmentName)) == 0) {
+        for(String enchantmentName : getEnchantmentNames()) {
+            if(appendEnchantments(conflict, EnchantmentApi.getByName(enchantmentName)) == 0) {
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentName + " for conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
             }
         }
-        for (NamespacedKey enchantmentKey : getEnchantmentKeys()) {
-            if (!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))) {
+        for(NamespacedKey enchantmentKey : getEnchantmentKeys()) {
+            if(!appendEnchantment(conflict, EnchantmentApi.getByKey(enchantmentKey))) {
                 CustomAnvil.instance.getLogger().warning("Could not find enchantment " + enchantmentKey + " for conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
             }
@@ -406,7 +411,7 @@ public class ConflictBuilder {
      * @return True if successful.
      */
     protected static boolean appendEnchantment(EnchantConflictGroup conflict, @Nullable CAEnchantment enchantment) {
-        if (enchantment == null)
+        if(enchantment == null)
             return false;
         conflict.addEnchantment(enchantment);
         return true;
@@ -421,8 +426,8 @@ public class ConflictBuilder {
      */
     protected static int appendEnchantments(EnchantConflictGroup conflict, List<CAEnchantment> enchantments) {
         int numberValid = 0;
-        for (CAEnchantment enchantment : enchantments) {
-            if (appendEnchantment(conflict, enchantment)) {
+        for(CAEnchantment enchantment : enchantments) {
+            if(appendEnchantment(conflict, enchantment)) {
                 numberValid++;
             }
         }
@@ -436,13 +441,18 @@ public class ConflictBuilder {
      * @return The abstract material group from the builder.
      */
     protected AbstractMaterialGroup extractGroups() {
-        ItemGroupManager itemGroupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            return extractGroups(lock.get().getItemGroupsManager());
+        }
+    }
+
+    private AbstractMaterialGroup extractGroups(ItemGroupManager itemGroupManager) {
         IncludeGroup group = new IncludeGroup(EnchantConflictManager.DEFAULT_GROUP_NAME);
 
-        for (String groupName : getExcludedGroupNames()) {
+        for(String groupName : getExcludedGroupNames()) {
             AbstractMaterialGroup materialGroup = itemGroupManager.get(groupName);
 
-            if (materialGroup == null) {
+            if(materialGroup == null) {
                 CustomAnvil.instance.getLogger().warning("Material group " + groupName + " do not exist but is ask by conflict " + getName());
                 ConflictAPI.logConflictOrigin(this);
                 continue;

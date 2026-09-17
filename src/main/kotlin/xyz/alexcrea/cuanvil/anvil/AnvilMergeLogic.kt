@@ -26,7 +26,7 @@ import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
-import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilColourUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
@@ -145,9 +145,9 @@ object AnvilMergeLogic {
         var sumCost = 0
         var useColor = false
         if (ConfigOptions.renameColourPossible && renameText != null) {
-            component = AnvilColorUtil.handleColor(
+            component = AnvilColourUtil.handleColour(
                 renameText,
-                AnvilColorUtil.renamePermission(player)
+                AnvilColourUtil.renamePermission(player)
             )
 
             if (component != null) {

@@ -23,7 +23,7 @@ interface EconomyManager {
 
     fun initialized(): Boolean
 
-    // We assume "initialized" got checked before these function get called
+    // We assume "initialised" got checked before these function get called
     fun has(player: Player, money: BigDecimal): Boolean
     fun remove(player: Player, money: BigDecimal): Boolean
 

@@ -50,15 +50,15 @@ public abstract class ConfigHolder {
         );
     }
 
-    public static LockedObjectProvider<DefaultConfigHolder> DEFAULT =
+    public static final LockedObjectProvider<DefaultConfigHolder> DEFAULT =
             createLocked(() -> DEFAULT_CONFIG, DEFAULT_CONFIG_LOCK);
-    public static LockedObjectProvider<ItemGroupConfigHolder> ITEM_GROUP =
+    public static final LockedObjectProvider<ItemGroupConfigHolder> ITEM_GROUP =
             createLocked(() -> ITEM_GROUP_HOLDER, ITEM_GROUP_LOCK);
-    public static LockedObjectProvider<ConflictConfigHolder> CONFLICT =
+    public static final LockedObjectProvider<ConflictConfigHolder> CONFLICT =
             createLocked(() -> CONFLICT_HOLDER, CONFLICT_LOCK);
-    public static LockedObjectProvider<UnitRepairHolder> UNIT_REPAIR =
+    public static final LockedObjectProvider<UnitRepairHolder> UNIT_REPAIR =
             createLocked(() -> UNIT_REPAIR_HOLDER, UNIT_REPAIR_LOCK);
-    public static LockedObjectProvider<CustomAnvilCraftHolder> CUSTOM_RECIPE =
+    public static final LockedObjectProvider<CustomAnvilCraftHolder> CUSTOM_RECIPE =
             createLocked(() -> CUSTOM_RECIPE_HOLDER, CUSTOM_RECIPE_LOCK);
 
     /**
@@ -254,7 +254,7 @@ public abstract class ConfigHolder {
     // Abstract class for non default config
     public abstract static class ResourceConfigHolder extends ConfigHolder {
 
-        String resourceName;
+        final String resourceName;
 
         private ResourceConfigHolder(String resourceName) {
             this.resourceName = resourceName;

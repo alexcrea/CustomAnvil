@@ -13,7 +13,16 @@ import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 @NotNullByDefault

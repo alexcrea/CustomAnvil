@@ -137,8 +137,10 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
      */
     public abstract static class EnumSettingFactory<T extends Enum<T> & ConfigurableEnum> extends SettingGuiFactory {
         @NotNull
+        final
         String title;
         @NotNull
+        final
         ValueUpdatableGui parent;
 
         /**

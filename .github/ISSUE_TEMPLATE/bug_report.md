@@ -10,10 +10,10 @@ assignees: alexcrea
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**Expected behavior**
+**Expected behaviour**
 A clear and concise description of what you expected to happen.
 
-**Technical informations**
+**Technical information**
 Server version & framework. (/version)
 Plugin version if applicable (/version CustomAnvil)
 List of plugin that may interact with CustomAnvil if applicable

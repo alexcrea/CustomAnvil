@@ -21,10 +21,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DoubleSettingGui extends AbstractSettingGui {
@@ -357,19 +354,22 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     public static class DoubleSettingFactory extends SettingGuiFactory {
         @NotNull
+        final
         String title;
         @NotNull
+        final
         ValueUpdatableGui parent;
 
-        int scale;
-        boolean asPercentage;
-        boolean nullOnZero;
-        BigDecimal min;
-        BigDecimal max;
-        BigDecimal defaultVal;
-        BigDecimal[] steps;
+        final int scale;
+        final boolean asPercentage;
+        final boolean nullOnZero;
+        final BigDecimal min;
+        final BigDecimal max;
+        final BigDecimal defaultVal;
+        final BigDecimal[] steps;
 
         @NotNull
+        final
         List<String> displayLore;
 
         /**
@@ -413,11 +413,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
                 this.steps[i] = BigDecimal.valueOf(steps[i]).setScale(scale, RoundingMode.HALF_UP);
             }
 
-            if(displayLore == null){
-                this.displayLore = Collections.emptyList();
-            }else {
-                this.displayLore = displayLore;
-            }
+            this.displayLore = Objects.requireNonNullElse(displayLore, Collections.emptyList());
         }
 
         /**

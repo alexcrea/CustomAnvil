@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNullByDefault;
  * <p>
  * use {@link xyz.alexcrea.cuanvil.api.EnchantmentApi EnchantmentApi} to register and unregister your custom enchantments
  */
+@SuppressWarnings("unused")
 @NotNullByDefault
 public class CAEnchantRegistryReadyEvent extends Event {
 

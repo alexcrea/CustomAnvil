@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNullByDefault;
  * It is also recommended that you read about {@link CAPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
  * as your use case may be more prone to use theses.
  */
+@SuppressWarnings("unused")
 @NotNullByDefault
 public class CAEarlyPreAnvilBypassEvent extends Event implements Cancellable {
 

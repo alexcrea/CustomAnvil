@@ -86,9 +86,9 @@ enum class LoreEditType(
         }
 
     /**
-     * Allow usage or removal of color code
+     * Allow usage or removal of colour code
      */
-    val allowColorCode: Boolean
+    val allowColourCode: Boolean
         get() {
             return CONFIG.read.use { lock -> lock.get()
                 .config
@@ -97,9 +97,9 @@ enum class LoreEditType(
         }
 
     /**
-     * Allow usage or removal of hexadecimal color
+     * Allow usage or removal of hexadecimal colour
      */
-    val allowHexColor: Boolean
+    val allowHexColour: Boolean
         get() {
             return CONFIG.read.use { lock -> lock.get()
                 .config
@@ -119,9 +119,9 @@ enum class LoreEditType(
         }
 
     /**
-     * Cost when using either color code and hex color on lore add
+     * Cost when using either colour code and hex colour on lore add
      */
-    val useColorCost: Int
+    val useColourCost: Int
         get() {
             if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
             return CONFIG.read.use { lock -> lock.get()
@@ -133,9 +133,9 @@ enum class LoreEditType(
         }
 
     /**
-     * Cost when using either color code and hex color on lore remove
+     * Cost when using either colour code and hex colour on lore remove
      */
-    val removeColorCost: Int
+    val removeColourCost: Int
         get() {
             if (isAppend) throw IllegalStateException("Can only call with a remove edit type")
             return CONFIG.read.use { lock -> lock.get()
