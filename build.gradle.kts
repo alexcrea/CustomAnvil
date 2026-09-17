@@ -65,13 +65,14 @@ dependencies {
     compileOnly(files("libs/EnchantsSquared.jar"))
 
     // EcoEnchants & item
-    compileOnly("com.willfp:libreforge:2026.32:all")
-    compileOnly("com.willfp:eco:2026.32")
+    compileOnly("com.willfp:libreforge:2026.37:all")
+    compileOnly("com.willfp:libreforge-loader:2026.37:all")
+    compileOnly("com.willfp:eco:2026.37")
 
-    compileOnly("com.willfp:EcoEnchants:2026.32:all")
+    compileOnly("com.willfp:EcoEnchants:2026.37")
     compileOnly(project(":impl:LegacyEcoEnchant"))
 
-    compileOnly("com.willfp:EcoItems:5.66.0")
+    compileOnly("com.willfp:EcoItems:2026.37")
 
     // ExcellentEnchants
     implementation(project(":impl:ExcellentEnchant5_4"))

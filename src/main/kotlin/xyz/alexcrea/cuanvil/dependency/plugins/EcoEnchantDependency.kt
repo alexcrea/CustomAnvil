@@ -53,7 +53,8 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
             return
         }
 
-        val enchantments = EcoEnchants.INSTANCE.values()
+        val enchantments = EcoEnchants.values()
+
         for (ecoEnchant in enchantments) {
             EnchantmentApi.unregisterEnchantment(ecoEnchant.enchantment) // As eco enchants is loaded before custom anvil and register enchantment to registry, we need to unregister old "vanilla" enchant.
             EnchantmentApi.registerEnchantment(CAEcoEnchant(ecoEnchant))
@@ -73,7 +74,7 @@ class EcoEnchantDependency(private val ecoEnchantPlugin: Plugin) {
         // Should not happen in known case.
         if (this.ecoEnchantOldEnchantments == null) return
 
-        val newEnchantments = EcoEnchants.INSTANCE.values()
+        val newEnchantments = EcoEnchants.values();
 
         // Add new enchantments
         for (ecoEnchant in newEnchantments)
