@@ -2,8 +2,9 @@ package xyz.alexcrea.cuanvil.enchant;
 
 import io.delilaheve.CustomAnvil;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.bulk.BukkitEnchantBulkOperation;
@@ -12,9 +13,19 @@ import xyz.alexcrea.cuanvil.enchant.bulk.BulkGetEnchantOperation;
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
+@NotNullByDefault
 public class CAEnchantmentRegistry {
 
     private static final CAEnchantmentRegistry instance = new CAEnchantmentRegistry();
@@ -54,7 +65,7 @@ public class CAEnchantmentRegistry {
      */
     public void registerBukkit() {
         // Register enchantment
-        for (Enchantment enchantment : Enchantment.values()) {
+        for(Enchantment enchantment : Registry.ENCHANTMENT) {
             register(new CABukkitEnchantment(enchantment));
         }
 
@@ -75,15 +86,17 @@ public class CAEnchantmentRegistry {
      * @param enchantment The enchantment to be registered.
      * @return If the operation was successful.
      */
-    public boolean register(@NotNull CAEnchantment enchantment) {
-        if (byKeyMap.containsKey(enchantment.getKey())) {
-            if (Objects.equals(enchantment, byKeyMap.get(enchantment.getKey()))) {
+    public boolean register(CAEnchantment enchantment) {
+        if(byKeyMap.containsKey(enchantment.getKey())) {
+            if(Objects.equals(enchantment, byKeyMap.get(enchantment.getKey()))) {
                 // We are trying to register the exact same enchantment. so we just skip it.
                 return false;
             }
 
-            if (ConfigHolder.DEFAULT_CONFIG.getConfig().getBoolean("caution_secret_do_not_log_duplicated_registered_key", false)) {
-                return false;
+            try(var lock = ConfigHolder.DEFAULT.read) {
+                if(lock.get().getConfig()
+                        .getBoolean("caution_secret_do_not_log_duplicated_registered_key", false))
+                    return false;
             }
 
             var error = new IllegalStateException("enchantment " + enchantment.getKey() + " was already registered");
@@ -96,7 +109,7 @@ public class CAEnchantmentRegistry {
             return false;
         }
 
-        if ((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())) {
+        if((!hasWarnedRegistering) && byNameMap.containsKey(enchantment.getName())) {
             hasWarnedRegistering = true;
 
             CustomAnvil.Companion.log("Duplicate registered enchantment name. Please check that configuration is using namespace.");
@@ -109,10 +122,10 @@ public class CAEnchantmentRegistry {
 
         nameSortedEnchantments.add(enchantment);
 
-        if (!enchantment.isGetOptimised()) {
+        if(!enchantment.isGetOptimised()) {
             unoptimisedGetValues.add(enchantment);
         }
-        if (!enchantment.isCleanOptimised()) {
+        if(!enchantment.isCleanOptimised()) {
             unoptimisedCleanValues.add(enchantment);
         }
 
@@ -132,7 +145,7 @@ public class CAEnchantmentRegistry {
      */
 
     public boolean unregister(@Nullable CAEnchantment enchantment) {
-        if (enchantment == null) return false;
+        if(enchantment == null) return false;
         byKeyMap.remove(enchantment.getKey());
         byNameMap.get(enchantment.getName()).remove(enchantment);
 
@@ -160,8 +173,7 @@ public class CAEnchantmentRegistry {
      * @param name Name to fetch.
      * @return List of registered enchantment.
      */
-    @NotNull
-    public List<CAEnchantment> getByName(@NotNull String name) {
+    public List<CAEnchantment> getByName(String name) {
         return byNameMap.getOrDefault(name, Collections.emptyList());
     }
 
@@ -170,7 +182,6 @@ public class CAEnchantmentRegistry {
      *
      * @return Array of enchantments.
      */
-    @NotNull
     public Collection<CAEnchantment> values() {
         return byKeyMap.values();
     }
@@ -189,7 +200,6 @@ public class CAEnchantmentRegistry {
      *
      * @return List of unoptimised enchantments.
      */
-    @NotNull
     public List<CAEnchantment> unoptimisedGetValues() {
         return unoptimisedGetValues;
     }
@@ -199,7 +209,6 @@ public class CAEnchantmentRegistry {
      *
      * @return List of unoptimised enchantments.
      */
-    @NotNull
     public List<CAEnchantment> unoptimisedCleanValues() {
         return unoptimisedCleanValues;
     }

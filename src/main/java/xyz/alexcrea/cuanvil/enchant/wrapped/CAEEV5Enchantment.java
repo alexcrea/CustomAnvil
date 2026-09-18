@@ -15,16 +15,16 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("RedundantIfStatement")
 public class CAEEV5Enchantment extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
-    @NotNull CustomEnchantment eeenchantment;
-    @NotNull Object definition;
+    private final CustomEnchantment eeenchantment;
+    private final Object definition;
 
     public CAEEV5Enchantment(@NotNull CustomEnchantment enchantment) {
-        super(enchantment.getBukkitEnchantment(), EnchantmentRarity.getRarity(getAnvilCost(enchantment)));
+        super(enchantment.getBukkitEnchantment(), new EnchantmentRarity(getAnvilCost(enchantment)));
         this.eeenchantment = enchantment;
         this.definition = getDefinition(enchantment);
-
     }
 
     @Override
@@ -116,6 +116,7 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
     }
 
 
+    @SuppressWarnings("unchecked")
     private Set<String> getExclusiveSet() {
         try {
             return (Set<String>) getExclusiveSetMethod.invoke(definition);

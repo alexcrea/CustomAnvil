@@ -10,7 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentBase;
@@ -18,41 +18,46 @@ import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+@NotNullByDefault
 public class CASuperEnchantEnchantment extends CAEnchantmentBase implements AdditionalTestEnchantment {
 
-    private @NotNull CustomEnchant enchant;
-    private @NotNull EnchantManager enchantManager;
+    private final CustomEnchant enchant;
+    private final EnchantManager enchantManager;
 
-    public CASuperEnchantEnchantment(@NotNull CustomEnchant enchant, @NotNull Plugin plugin, @NotNull EnchantManager enchantManager) {
-        super(NamespacedKey.fromString(enchant.getId(), plugin), EnchantmentRarity.COMMON, enchant.getMaxLevel());
+    public CASuperEnchantEnchantment(CustomEnchant enchant, Plugin plugin, EnchantManager enchantManager) {
+        super(Objects.requireNonNull(NamespacedKey.fromString(enchant.getId(), plugin)),
+                EnchantmentRarity.COMMON,
+                enchant.getMaxLevel()
+        );
 
         this.enchant = enchant;
         this.enchantManager = enchantManager;
     }
 
     @Override
-    public int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public int getLevel(ItemStack item, ItemMeta meta) {
         return EnchantReader.INSTANCE.getEnchantLevel(item, enchant.getId());
     }
 
     @Override
-    public boolean isEnchantmentPresent(@NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public boolean isEnchantmentPresent(ItemStack item, ItemMeta meta) {
         return EnchantReader.INSTANCE.hasEnchant(item, enchant.getId());
     }
 
     @Override
-    public void addEnchantmentUnsafe(@NotNull ItemStack item, int level) {
+    public void addEnchantmentUnsafe(ItemStack item, int level) {
         EnchantApplicator.INSTANCE.applyEnchant(item, enchant.getId(), level);
     }
 
     @Override
-    public void removeFrom(@NotNull ItemStack item) {
+    public void removeFrom(ItemStack item) {
         EnchantApplicator.INSTANCE.removeEnchant(item, enchant.getId());
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
+    public boolean isEnchantConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType) {
         var idMap = new HashMap<String, Integer>();
 
         enchantments.forEach((enchant, level) -> {
@@ -68,7 +73,7 @@ public class CASuperEnchantEnchantment extends CAEnchantmentBase implements Addi
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType, @NotNull ItemStack item) {
+    public boolean isItemConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType, ItemStack item) {
         if(Material.ENCHANTED_BOOK.equals(item.getType())) return false;
 
         return !enchant.canApplyTo(item.getType());

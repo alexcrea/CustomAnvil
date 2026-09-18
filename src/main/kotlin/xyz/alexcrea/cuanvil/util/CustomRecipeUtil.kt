@@ -11,17 +11,18 @@ object CustomRecipeUtil {
 
     fun getCustomRecipe (
         leftItem: ItemStack,
-        rightItem: ItemStack?) : AnvilCustomRecipe? {
+        rightItem: ItemStack?
+    ) : AnvilCustomRecipe? {
+        ConfigHolder.CUSTOM_RECIPE.read.use { lock ->
+            val recipeList = lock.get().recipeManager.recipeByMat[leftItem.type] ?: return null
 
-        val recipeList = ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.recipeByMat[leftItem.type] ?: return null
-
-        CustomAnvil.verboseLog("Testing " + recipeList.size + " recipe...")
-        for (recipe in recipeList) {
-            if(recipe.testItem(leftItem, rightItem)){
-                return recipe
+            CustomAnvil.verboseLog("Testing " + recipeList.size + " recipe...")
+            for (recipe in recipeList) {
+                if(recipe.testItem(leftItem, rightItem)){
+                    return recipe
+                }
             }
         }
-
         return null
     }
 

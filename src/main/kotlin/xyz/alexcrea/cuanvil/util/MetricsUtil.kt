@@ -5,10 +5,13 @@ import dev.faststats.bukkit.BukkitContext
 import dev.faststats.data.Metric
 import io.delilaheve.CustomAnvil
 import io.delilaheve.util.ConfigOptions
+import org.bstats.bukkit.Metrics
+import org.bstats.charts.SimplePie
 import xyz.alexcrea.cuanvil.command.DiagnosticExecutor
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 
+@Suppress("unused")
 object MetricsUtil {
 
     private const val BSTATS_PLUGIN_ID = 20923
@@ -20,8 +23,9 @@ object MetricsUtil {
     fun loadMetrics(plugin: CustomAnvil) {
         if(DependencyManager.externGuiTester.isInTest()) return
 
-        val config = ConfigHolder.DEFAULT_CONFIG.config
-        val metricString = config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
+        val metricString = ConfigHolder.DEFAULT.read.use { lock ->
+            lock.get().config.getString(ConfigOptions.METRIC_TYPE, MetricType.AUTO.value)!!
+        }
         val metricType = MetricType.from(metricString)
 
         val nmsType = DiagnosticExecutor.fetchNMSType()
@@ -29,8 +33,8 @@ object MetricsUtil {
         if(metricType.allowBStats) {
             try {
                 val metric = Metrics(plugin, BSTATS_PLUGIN_ID)
-                metric.addCustomChart(Metrics.SimplePie("nms_type") { nmsType })
-                metric.addCustomChart(Metrics.SimplePie("using_alpha") { isAlpha.toString() })
+                metric.addCustomChart(SimplePie("nms_type") { nmsType })
+                metric.addCustomChart(SimplePie("using_alpha") { isAlpha.toString() })
             } catch (_: Exception) {}
         }
 
@@ -45,8 +49,10 @@ object MetricsUtil {
     }
 
     private fun faststatTelemetry(plugin: CustomAnvil, nmsType: String, isAlpha: Boolean) {
-        val config = ConfigHolder.DEFAULT_CONFIG.config
-        val reportErrors = config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
+        val reportErrors = ConfigHolder.DEFAULT.read.use { lock ->
+            lock.get().config.getBoolean(ConfigOptions.METRIC_COLLECT_ERROR, true)
+        }
+
         if(reportErrors)
             ERROR_TRACKER = ErrorTracker.contextAware()
 

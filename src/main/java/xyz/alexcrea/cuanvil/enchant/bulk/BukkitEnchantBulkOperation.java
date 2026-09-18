@@ -8,33 +8,34 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.api.EnchantmentApi;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 
 import java.util.Map;
 
+@NotNullByDefault
 public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, BulkCleanEnchantOperation {
 
     @Override
-    public void bulkGet(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public void bulkGet(Map<CAEnchantment, Integer> enchantmentMap, ItemStack item, ItemMeta meta) {
         boolean isBook = ItemUtil.INSTANCE.isEnchantedBook(item);
 
-        if (isBook) {
+        if(isBook) {
             ((EnchantmentStorageMeta) meta).getStoredEnchants().forEach((enchantment, level) ->
                     addEnchantment(enchantmentMap, enchantment, level)
             );
         }
-        if(!isBook || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()){
+        if(!isBook || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
             item.getEnchantments().forEach((enchantment, level) ->
                     addEnchantment(enchantmentMap, enchantment, level)
             );
         }
     }
 
-    public void addEnchantment(@NotNull Map<CAEnchantment, Integer> enchantmentMap, @NotNull Enchantment enchantment, int level) {
+    public void addEnchantment(Map<CAEnchantment, Integer> enchantmentMap, Enchantment enchantment, int level) {
         CAEnchantment enchant = EnchantmentApi.getByKey(enchantment.getKey());
-        if (enchant == null) {
+        if(enchant == null) {
             CustomAnvil.instance.getLogger().warning("Enchantment of key " + enchantment.getKey() +
                     " somehow not found in CustomAnvil ?");
             return;
@@ -44,8 +45,8 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
     }
 
     @Override
-    public void bulkClear(@NotNull ItemStack item) {
-        if (item.getType() != Material.ENCHANTED_BOOK || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
+    public void bulkClear(ItemStack item) {
+        if(item.getType() != Material.ENCHANTED_BOOK || ConfigOptions.INSTANCE.getAddBookEnchantmentAsStoredEnchantment()) {
 
             item.getEnchantments().forEach((enchantment, level) ->
                     item.removeEnchantment(enchantment)
@@ -54,8 +55,8 @@ public class BukkitEnchantBulkOperation implements BulkGetEnchantOperation, Bulk
     }
 
     @Override
-    public void bulkClear(@NotNull ItemStack item, @NotNull ItemMeta meta) {
-        if (item.getType() == Material.ENCHANTED_BOOK) {
+    public void bulkClear(ItemStack item, ItemMeta meta) {
+        if(item.getType() == Material.ENCHANTED_BOOK) {
             EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) meta;
             bookMeta.getStoredEnchants().forEach((enchantment, leve) ->
                     bookMeta.removeStoredEnchant(enchantment)

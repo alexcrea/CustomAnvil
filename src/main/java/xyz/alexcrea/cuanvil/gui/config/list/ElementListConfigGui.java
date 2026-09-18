@@ -34,7 +34,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
 
     private final String namePrefix;
 
-    protected PatternPane backgroundPane;
+    protected final PatternPane backgroundPane;
 
     private Predicate<T> filter = (t) -> true;
     private boolean hasDefaultFilter = true;
@@ -164,7 +164,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
 
     protected void addToPage(GuiItem guiItem) {
         // Get first available page or create one
-        OutlinePane page = this.pages.get(this.pages.size() - 1);
+        OutlinePane page = this.pages.getLast();
         if (page.getItems().size() >= LIST_FILLER_LENGTH * LIST_FILLER_HEIGHT) {
             page = createEmptyPage();
             this.pages.add(page);
@@ -198,7 +198,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         // There is now a slot available, let fill it if possible
         if (pageID < (this.pages.size() - 1)) {
             OutlinePane newPage = this.pages.get(pageID + 1);
-            GuiItem nextPageItem = newPage.getItems().get(0);
+            GuiItem nextPageItem = newPage.getItems().getFirst();
 
             removeFromPage(newPage, pageID + 1, nextPageItem);
 

@@ -6,7 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
@@ -26,12 +26,14 @@ import java.util.Map;
 /**
  * Custom Anvil api for enchantment registry.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue", "BooleanMethodIsAlwaysInverted"})
+@NotNullByDefault
 public class EnchantmentApi {
 
-    private static Object saveChangeTask = null;
+    private static volatile @Nullable Object saveChangeTask = null;
 
-    private EnchantmentApi() {}
+    private EnchantmentApi() {
+    }
 
     /**
      * Register an enchantment.
@@ -39,18 +41,18 @@ public class EnchantmentApi {
      * @param enchantment The enchantment to register
      * @return True if successful.
      */
-    public static boolean registerEnchantment(@NotNull CAEnchantment enchantment) {
-        if (!CAEnchantmentRegistry.getInstance().register(enchantment)) return false;
+    public static boolean registerEnchantment(CAEnchantment enchantment) {
+        if(!CAEnchantmentRegistry.getInstance().register(enchantment)) return false;
 
         // Add enchantment to gui.
-        if (EnchantCostConfigGui.getInstance() != null) {
+        if(EnchantCostConfigGui.getInstance() != null) {
             EnchantCostConfigGui.getInstance().updateValueForGeneric(enchantment, true);
         }
-        if (EnchantLimitConfigGui.getInstance() != null) {
+        if(EnchantLimitConfigGui.getInstance() != null) {
             EnchantLimitConfigGui.getInstance().updateValueForGeneric(enchantment, true);
         }
 
-        // Write default if do not exist
+        // Write default if it does not exist
         writeDefaultConfig(enchantment, false);
 
         return true;
@@ -63,8 +65,8 @@ public class EnchantmentApi {
      * @param defaultRarity The default rarity of the provided enchantment
      * @return True if successful.
      */
-    public static boolean registerEnchantment(@NotNull Enchantment enchantment, @Nullable EnchantmentRarity defaultRarity) {
-        if (defaultRarity == null)
+    public static boolean registerEnchantment(Enchantment enchantment, @Nullable EnchantmentRarity defaultRarity) {
+        if(defaultRarity == null)
             return registerEnchantment(new CABukkitEnchantment(enchantment));
 
         return registerEnchantment(new CABukkitEnchantment(enchantment, defaultRarity));
@@ -78,7 +80,7 @@ public class EnchantmentApi {
      * @param enchantment The enchantment to register
      * @return True if successful.
      */
-    public static boolean registerEnchantment(@NotNull Enchantment enchantment) {
+    public static boolean registerEnchantment(Enchantment enchantment) {
         return registerEnchantment(new CABukkitEnchantment(enchantment));
     }
 
@@ -90,10 +92,10 @@ public class EnchantmentApi {
      */
     public static boolean unregisterEnchantment(@Nullable CAEnchantment enchantment) {
         // Remove from gui
-        if (EnchantCostConfigGui.getInstance() != null) {
+        if(EnchantCostConfigGui.getInstance() != null) {
             EnchantCostConfigGui.getInstance().removeGeneric(enchantment);
         }
-        if (EnchantLimitConfigGui.getInstance() != null) {
+        if(EnchantLimitConfigGui.getInstance() != null) {
             EnchantLimitConfigGui.getInstance().removeGeneric(enchantment);
         }
 
@@ -106,7 +108,7 @@ public class EnchantmentApi {
      * @param key The enchantment key to unregister
      * @return True if successful.
      */
-    public static boolean unregisterEnchantment(@NotNull NamespacedKey key) {
+    public static boolean unregisterEnchantment(NamespacedKey key) {
         CAEnchantment enchantment = CAEnchantment.getByKey(key);
         return unregisterEnchantment(enchantment);
     }
@@ -117,7 +119,7 @@ public class EnchantmentApi {
      * @param enchantment The enchantment to unregister
      * @return True if successful.
      */
-    public static boolean unregisterEnchantment(@NotNull Enchantment enchantment) {
+    public static boolean unregisterEnchantment(Enchantment enchantment) {
         return unregisterEnchantment(enchantment.getKey());
     }
 
@@ -138,7 +140,7 @@ public class EnchantmentApi {
      * @param name The name used to fetch
      * @return List of custom anvil enchantments of this name. May be empty if not found.
      */
-    public static List<CAEnchantment> getByName(@NotNull String name) {
+    public static List<CAEnchantment> getByName(String name) {
         return CAEnchantment.getByName(name);
     }
 
@@ -147,7 +149,6 @@ public class EnchantmentApi {
      *
      * @return An immutable map of enchantment key as map key and custom anvil enchantment as value.
      */
-    @NotNull
     public static Map<NamespacedKey, CAEnchantment> getRegisteredEnchantments() {
         return Collections.unmodifiableMap(CAEnchantmentRegistry.getInstance().registeredEnchantments());
     }
@@ -160,19 +161,25 @@ public class EnchantmentApi {
      * @return Return false if override is false and a configuration exist. true otherwise.
      */
     public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override) {
-        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
+        try (var lock = ConfigHolder.DEFAULT.write) {
+            FileConfiguration config = lock.get().getConfig();
 
-        if (tryWriteDefaultConfig(config, enchantment, override)) {
-            prepareSaveTask();
+            if(tryWriteDefaultConfig(config, enchantment, override)) {
+                prepareSaveTask();
+            }
         }
         return true;
     }
 
-    private static boolean tryWriteDefaultConfig(FileConfiguration defaultConfig, CAEnchantment enchantment, boolean override) {
+    private static boolean tryWriteDefaultConfig(
+            FileConfiguration defaultConfig,
+            CAEnchantment enchantment,
+            boolean override
+    ) {
         boolean hasChange = false;
 
         String levelPath = ConfigOptions.ENCHANT_LIMIT_ROOT + "." + enchantment.getKey();
-        if (override || !defaultConfig.isSet(levelPath)) {
+        if(override || !defaultConfig.isSet(levelPath)) {
             defaultConfig.set(levelPath, enchantment.defaultMaxLevel());
             hasChange = true;
         }
@@ -182,12 +189,12 @@ public class EnchantmentApi {
 
         String itemPath = basePath + ".item";
         String bookPath = basePath + ".book";
-        if (override || !defaultConfig.isSet(itemPath)) {
-            defaultConfig.set(itemPath, rarity.getItemValue());
+        if(override || !defaultConfig.isSet(itemPath)) {
+            defaultConfig.set(itemPath, rarity.itemValue());
             hasChange = true;
         }
-        if (override || !defaultConfig.isSet(bookPath)) {
-            defaultConfig.set(bookPath, rarity.getBookValue());
+        if(override || !defaultConfig.isSet(bookPath)) {
+            defaultConfig.set(bookPath, rarity.bookValue());
             hasChange = true;
         }
 
@@ -198,12 +205,17 @@ public class EnchantmentApi {
      * Prepare a task to save custom recipe configuration.
      */
     private static void prepareSaveTask() {
-        if (saveChangeTask != null) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
-            ConfigHolder.DEFAULT_CONFIG.saveToDisk(true);
-            saveChangeTask = null;
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+            try(var lock = ConfigHolder.DEFAULT.write) {
+                lock.get().saveToDisk(true);
+                saveChangeTask = null;
+            }
         });
+
+        saveChangeTask = task;
     }
 
     /**
@@ -213,7 +225,7 @@ public class EnchantmentApi {
      *
      * @param operation An optimised get enchantments operation
      */
-    public static void addBulkGet(@NotNull BulkGetEnchantOperation operation) {
+    public static void addBulkGet(BulkGetEnchantOperation operation) {
         CAEnchantmentRegistry.getInstance().getOptimisedGetOperators().add(operation);
     }
 
@@ -224,7 +236,7 @@ public class EnchantmentApi {
      *                  <p>
      *                  Do not forget to mark your enchantments as {@link CAEnchantment#isCleanOptimised() Clean Optimized}
      */
-    public static void addBulkClean(@NotNull BulkCleanEnchantOperation operation) {
+    public static void addBulkClean(BulkCleanEnchantOperation operation) {
         CAEnchantmentRegistry.getInstance().getOptimisedCleanOperators().add(operation);
     }
 
@@ -235,7 +247,7 @@ public class EnchantmentApi {
      * @return A map of key of enchantment, value the level of all the enchantments of the item
      * @since 1.17.6
      */
-    public static Map<CAEnchantment, Integer> getEnchantments(@NotNull ItemStack item) {
+    public static Map<CAEnchantment, Integer> getEnchantments(ItemStack item) {
         return CAEnchantment.getEnchants(item);
     }
 
@@ -246,7 +258,7 @@ public class EnchantmentApi {
      * @param enchants A map of key of enchantment, value the level of all the enchantments
      * @since 1.17.6
      */
-    public static void setEnchantments(@NotNull ItemStack item, @NotNull Map<CAEnchantment, Integer> enchants) {
+    public static void setEnchantments(ItemStack item, Map<CAEnchantment, Integer> enchants) {
         clearEnchantments(item);
         addEnchantments(item, enchants);
     }
@@ -259,7 +271,7 @@ public class EnchantmentApi {
      * @param enchants A map of key of enchantment, value the level of the new enchantments
      * @since 1.17.6
      */
-    public static void addEnchantments(@NotNull ItemStack item, @NotNull Map<CAEnchantment, Integer> enchants) {
+    public static void addEnchantments(ItemStack item, Map<CAEnchantment, Integer> enchants) {
         enchants.forEach((enchantment, level) ->
                 enchantment.addEnchantmentUnsafe(item, level)
         );
@@ -271,7 +283,7 @@ public class EnchantmentApi {
      * @param item The item to clear the enchantments from
      * @since 1.17.6
      */
-    public static void clearEnchantments(@NotNull ItemStack item) {
+    public static void clearEnchantments(ItemStack item) {
         CAEnchantment.clearEnchants(item);
     }
 

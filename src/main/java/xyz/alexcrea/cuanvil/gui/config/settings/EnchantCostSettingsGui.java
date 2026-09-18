@@ -243,8 +243,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      */
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
-        int defaultBookVal;
-        @NotNull CAEnchantment enchantment;
+        final int defaultBookVal;
+        @NotNull
+        final CAEnchantment enchantment;
 
         /**
          * Constructor for an enchantment cost setting gui factory.
@@ -272,10 +273,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             super(title, parent,
                     configPath, config,
                     displayLore,
-                    min, max, enchantment.defaultRarity().getItemValue(),
+                    min, max, enchantment.defaultRarity().itemValue(),
                     steps);
 
-            this.defaultBookVal = enchantment.defaultRarity().getBookValue();
+            this.defaultBookVal = enchantment.defaultRarity().bookValue();
             this.enchantment = enchantment;
         }
 

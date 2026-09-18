@@ -11,12 +11,16 @@ import xyz.alexcrea.cuanvil.api.MaterialGroupApi
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.enchant.wrapped.CABukkitEnchantment
 import xyz.alexcrea.cuanvil.enchant.wrapped.CAIncompatibleAllEnchant
+import xyz.alexcrea.cuanvil.group.EnchantConflictManager
 import xyz.alexcrea.cuanvil.group.IncludeGroup
 import xyz.alexcrea.cuanvil.update.UpdateUtils
 import xyz.alexcrea.cuanvil.update.Version
 import java.io.InputStreamReader
 
-object DataPackDependency {
+interface IDataPackDependency
+
+@Suppress("FoldInitializerAndIfToElvis")
+object DataPackDependency: IDataPackDependency {
     private val START_DETECT_VERSION = Version(1, 20, 5)
 
     /**
@@ -70,25 +74,28 @@ object DataPackDependency {
     }
 
     private fun handlePackInitialConfig(pack: String) {
-        val defConfig = ConfigHolder.DEFAULT_CONFIG
-        val version = LASTEST_VERSION[pack]
-        if(version == null) {
-            throw RuntimeException("The pack $pack has no latest version hard coded in the plugin")
+        ConfigHolder.DEFAULT.read.use { lock ->
+            val defConfig = lock.get()
+
+            val version = LASTEST_VERSION[pack]
+            if(version == null) {
+                throw RuntimeException("The pack $pack has no latest version hard coded in the plugin")
+            }
+
+            val currentVersion = Version.fromString(defConfig.config.getString("datapack.$pack"))
+            if (currentVersion.greaterEqual(version)) {
+                handleEnchantAllConflict(pack)
+                return
+            }
+
+            // Add pack value or do update from previous version
+            // note: update thingy is not yet implemented
+            configureDatapack(pack)
+
+            // Finally, set current pack version to config
+            defConfig.config.set("datapack.$pack", version.toString())
+            defConfig.saveToDisk(true)
         }
-
-        val currentVersion = Version.fromString(defConfig.config.getString("datapack.$pack"))
-        if (currentVersion.greaterEqual(version)) {
-            handleEnchantAllConflict(pack)
-            return
-        }
-
-        // Add pack value or do update from previous version
-        // note: update thingy is not yet implemented
-        configureDatapack(pack)
-
-        // Finally, set current pack version to config
-        defConfig.config.set("datapack.$pack", version.toString())
-        defConfig.saveToDisk(true)
     }
 
     private fun configureDatapack(pack: String) {
@@ -124,7 +131,7 @@ object DataPackDependency {
         }
 
         if (needSave) {
-            ConfigHolder.CONFLICT_HOLDER.saveToDisk(true)
+            ConfigHolder.CONFLICT.write.use { lock -> lock.get().saveToDisk(true) }
         }
     }
 
@@ -239,46 +246,57 @@ object DataPackDependency {
             setEnchantAsAll(ench)
             return false
         } else {
-            val config = ConfigHolder.CONFLICT_HOLDER.config
-
-            // If conflict do not yet exist
-            if (!config.isConfigurationSection(group)) {
-                val conflict = conflicts.getOrPut(group) {
-                    val conflict = ConflictBuilder(group, CustomAnvil.instance)
-                    conflict.setMaxBeforeConflict(1)
-                    conflict
+            ConfigHolder.CONFLICT.write.use { lock ->
+                ConfigHolder.CONFLICT.write.use { lock2 ->
+                    return joinGroupNormal(lock.get().config, lock2.get().conflictManager, group, conflicts, ench)
                 }
-
-                conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
-                return false
             }
-            // Find current conflict
-            val manager = ConfigHolder.CONFLICT_HOLDER.conflictManager
-
-            // This assumes that:
-            // - the conflict existing in the config exist in the runtime config (as configuration section exist)
-            // - the enchantment exist and is provided correctly
-            val conflict = manager.conflictList.find {
-                it.name.equals(group, ignoreCase = true)
-            }
-            if(conflict == null) {
-                // This should not happen as configuration section
-                CustomAnvil.instance.logger.severe("Could not find  $group while its configuration section exist... this should NOT happen")
-                return false
-            }
-
-            val key = NamespacedKey.fromString(ench)!!
-            val enchant = EnchantmentApi.getByKey(key)
-            if (enchant == null){
-                CustomAnvil.instance.logger.severe("Could not find enchantment $ench while configuring pack a datapack")
-                return false
-            }
-
-            conflict.addEnchantment(enchant)
-
-            UpdateUtils.addAbsentToList(config, "$group.enchantments", ench)
-            return true
         }
+    }
+
+    private fun joinGroupNormal(
+        config: FileConfiguration,
+        manager: EnchantConflictManager,
+        group: String,
+        conflicts: HashMap<String, ConflictBuilder>,
+        ench: String,
+    ): Boolean {
+        // If conflict do not yet exist
+        if(!config.isConfigurationSection(group)) {
+            val conflict = conflicts.getOrPut(group) {
+                val conflict = ConflictBuilder(group, CustomAnvil.instance)
+                conflict.setMaxBeforeConflict(1)
+                conflict
+            }
+
+            conflict.addEnchantment(NamespacedKey.fromString(ench)!!)
+            return false
+        }
+        // Find current conflict
+        val conflict = manager.conflictList.find {
+            it.name.equals(group, ignoreCase = true)
+        }
+
+        // This assumes that:
+        // - the conflict existing in the config exist in the runtime config (as configuration section exist)
+        // - the enchantment exist and is provided correctly
+        if(conflict == null) {
+            // This should not happen as configuration section
+            CustomAnvil.instance.logger.severe("Could not find  $group while its configuration section exist... this should NOT happen")
+            return false
+        }
+
+        val key = NamespacedKey.fromString(ench)!!
+        val enchant = EnchantmentApi.getByKey(key)
+        if(enchant == null) {
+            CustomAnvil.instance.logger.severe("Could not find enchantment $ench while configuring pack a datapack")
+            return false
+        }
+
+        conflict.addEnchantment(enchant)
+
+        UpdateUtils.addAbsentToList(config, "$group.enchantments", ench)
+        return true
     }
 
     private fun handleEnchantAllConflict(pack: String) {

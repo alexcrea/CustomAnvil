@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T>{
 
     /**
-     * Constructor for a gui displaying available enchantment to edit a enchantment setting.
+     * Constructor for a gui displaying available enchantment to edit an enchantment setting.
      *
      * @param title Title of the gui.
      */

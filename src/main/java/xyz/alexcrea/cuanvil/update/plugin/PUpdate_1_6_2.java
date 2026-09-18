@@ -1,19 +1,26 @@
 package xyz.alexcrea.cuanvil.update.plugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-
-import javax.annotation.Nonnull;
-import java.util.Set;
+import xyz.alexcrea.cuanvil.update.UpdateHandler;
+import xyz.alexcrea.cuanvil.update.Version;
 
 import static xyz.alexcrea.cuanvil.update.UpdateUtils.addAbsentToList;
 
-public class PUpdate_1_6_2 {
+@NotNullByDefault
+public class PUpdate_1_6_2 extends PluginUpdate {
 
     private static final String[] toUpdate = new String[] {"restriction_density", "restriction_breach", "restriction_wind_burst"};
 
-    public static void handleUpdate(@Nonnull Set<ConfigHolder> toSave) {
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
+    public PUpdate_1_6_2() {
+        super(new Version(1, 6, 2));
+    }
+
+    @Override
+    public void handleUpdate(UpdateHandler.UpdatedConfigList toSave) {
+        var conflict = toSave.use(ConfigHolder.CONFLICT);
+        FileConfiguration config = conflict.getConfig();
 
         boolean conflictUpdated = false;
         for (String restriction : toUpdate) {
@@ -35,21 +42,16 @@ public class PUpdate_1_6_2 {
         }
 
         if(conflictUpdated){
-            toSave.add(ConfigHolder.CONFLICT_HOLDER);
-
             // May not be the most efficient for later revision, maybe move to PluginUpdates
-            ConfigHolder.CONFLICT_HOLDER.reload();
+            conflict.reload();
         }
 
         // Then we add the unit repair
-        config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        config = toSave.use(ConfigHolder.UNIT_REPAIR).getConfig();
         String unitRepairPath = "breeze_rod.mace";
         if(!config.isConfigurationSection(unitRepairPath)){
             config.set(unitRepairPath, 0.25);
-
-            toSave.add(ConfigHolder.UNIT_REPAIR_HOLDER);
         }
-
     }
 
 }

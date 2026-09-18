@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.api.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * Called when custom anvil is ready to accept registration on custom enchantment.
@@ -14,6 +15,8 @@ import org.bukkit.event.HandlerList;
  * <p>
  * use {@link xyz.alexcrea.cuanvil.api.EnchantmentApi EnchantmentApi} to register and unregister your custom enchantments
  */
+@SuppressWarnings("unused")
+@NotNullByDefault
 public class CAEnchantRegistryReadyEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();

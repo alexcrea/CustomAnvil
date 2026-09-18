@@ -166,12 +166,15 @@ public class BoolSettingsGui extends AbstractSettingGui {
      */
     public static class BoolSettingFactory extends SettingGuiFactory {
         @NotNull
+        final
         String title;
         @NotNull
+        final
         ValueUpdatableGui parent;
-        boolean defaultVal;
+        final boolean defaultVal;
 
         @NotNull
+        final
         List<String> displayLore;
 
         /**

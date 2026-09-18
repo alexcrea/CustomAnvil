@@ -1,8 +1,11 @@
 package xyz.alexcrea.cuanvil.util;
 
+import org.jetbrains.annotations.NotNullByDefault;
+
 /**
  * An incomplete cased string util
  */
+@NotNullByDefault
 public class CasedStringUtil {
 
     /**

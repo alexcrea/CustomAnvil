@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -278,15 +279,18 @@ public class IntSettingsGui extends AbstractSettingGui {
     public static class IntSettingFactory extends SettingGuiFactory {
 
         @NotNull
+        final
         String title;
         @NotNull
+        final
         ValueUpdatableGui parent;
-        int min;
-        int max;
-        int defaultVal;
-        int[] steps;
+        final int min;
+        final int max;
+        final int defaultVal;
+        final int[] steps;
 
         @NotNull
+        final
         List<String> displayLore;
 
         /**
@@ -318,11 +322,7 @@ public class IntSettingsGui extends AbstractSettingGui {
             this.defaultVal = defaultVal;
             this.steps = steps;
 
-            if (displayLore == null) {
-                this.displayLore = Collections.emptyList();
-            } else {
-                this.displayLore = displayLore;
-            }
+            this.displayLore = Objects.requireNonNullElse(displayLore, Collections.emptyList());
         }
 
         /**

@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.api.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * Called when the configuration of CustomAnvil is ready.
@@ -20,6 +21,8 @@ import org.bukkit.event.HandlerList;
  * and {@link xyz.alexcrea.cuanvil.api.UnitRepairApi UnitRepairApi}
  * to add/remove/edit configurations
  */
+@SuppressWarnings("unused")
+@NotNullByDefault
 public class CAConfigReadyEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();

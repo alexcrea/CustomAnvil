@@ -4,7 +4,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * Called before custom anvil process the click on the result on the anvil inventory.
@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * There is also {@link CATreatAnvilResultEvent} that may be better for some use case.
  */
+@SuppressWarnings("unused")
+@NotNullByDefault
 public class CAClickResultBypassEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -28,7 +30,7 @@ public class CAClickResultBypassEvent extends Event implements Cancellable {
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 
@@ -44,7 +46,6 @@ public class CAClickResultBypassEvent extends Event implements Cancellable {
         this.cancelled = cancel;
     }
 
-    @NotNull
     private final InventoryClickEvent event;
 
     /**
@@ -52,12 +53,11 @@ public class CAClickResultBypassEvent extends Event implements Cancellable {
      *
      * @return The click event causing to this event
      */
-    @NotNull
     public InventoryClickEvent getEvent() {
         return event;
     }
 
-    public CAClickResultBypassEvent(@NotNull InventoryClickEvent event) {
+    public CAClickResultBypassEvent(InventoryClickEvent event) {
         this.event = event;
     }
 }

@@ -41,15 +41,15 @@ object ConfigOptions {
     const val SACRIFICE_ILLEGAL_COST = "sacrifice_illegal_enchant_cost"
     const val ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT = "add_book_enchantment_as_stored_enchantment"
 
-    // Color related config
-    const val ALLOW_COLOR_CODE = "allow_color_code"
-    const val ALLOW_HEXADECIMAL_COLOR = "allow_hexadecimal_color"
+    // Colour related config
+    const val ALLOW_COLOUR_CODE = "allow_color_code"
+    const val ALLOW_HEXADECIMAL_COLOUR = "allow_hexadecimal_color"
     const val ALLOW_MINIMESSAGE = "allow_minimessage"
-    const val PERMISSION_NEEDED_FOR_COLOR = "permission_needed_for_color"
-    const val USE_OF_COLOR_COST = "use_of_color_cost"
+    const val PERMISSION_NEEDED_FOR_COLOUR = "permission_needed_for_color"
+    const val USE_OF_COLOUR_COST = "use_of_color_cost"
 
-    const val PER_COLOR_CODE_PERMISSION = "per_color_code_permission"
-    const val APPEND_RESET_COLOR_CODE = "append_reset_before_codes"
+    const val PER_COLOUR_CODE_PERMISSION = "per_color_code_permission"
+    const val APPEND_RESET_COLOUR_CODE = "append_reset_before_codes"
 
     // Work penalty config
     const val WORK_PENALTY_ROOT = "work_penalty"
@@ -117,15 +117,15 @@ object ConfigOptions {
 
     const val DEFAULT_INCLUDE_LEFT_ENCHANTMENT_FOR_COST = false
 
-    // Color related config
-    const val DEFAULT_ALLOW_COLOR_CODE = false
-    const val DEFAULT_ALLOW_HEXADECIMAL_COLOR = false
+    // Colour related config
+    const val DEFAULT_ALLOW_COLOUR_CODE = false
+    const val DEFAULT_ALLOW_HEXADECIMAL_COLOUR = false
     const val DEFAULT_ALLOW_MINIMESSAGE = false
-    const val DEFAULT_PERMISSION_NEEDED_FOR_COLOR = true
-    const val DEFAULT_USE_OF_COLOR_COST = 0
+    const val DEFAULT_PERMISSION_NEEDED_FOR_COLOUR = true
+    const val DEFAULT_USE_OF_COLOUR_COST = 0
 
-    const val DEFAULT_PER_COLOR_CODE_PERMISSION = false
-    const val DEFAULT_APPEND_RESET_COLOR_CODE = true
+    const val DEFAULT_PER_COLOUR_CODE_PERMISSION = false
+    const val DEFAULT_APPEND_RESET_COLOUR_CODE = true
 
     // Monetary configs
     const val DEFAULT_SHOULD_USE_MONEY = false
@@ -166,9 +166,9 @@ object ConfigOptions {
     @JvmField
     val SACRIFICE_ILLEGAL_COST_RANGE = 0..1000
 
-    // Valid range for color use cost
+    // Valid range for colour use cost
     @JvmField
-    val USE_OF_COLOR_COST_RANGE = 0..1000
+    val USE_OF_COLOUR_COST_RANGE = 0..1000
 
     @JvmField
     val DIALOG_MAX_SIZE_RANGE = 0..Int.MAX_VALUE
@@ -204,9 +204,10 @@ object ConfigOptions {
      */
     val doCapCost: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(CAP_ANVIL_COST, DEFAULT_CAP_ANVIL_COST)
+            }
         }
 
     /**
@@ -214,11 +215,12 @@ object ConfigOptions {
      */
     val maxAnvilCost: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(MAX_ANVIL_COST, DEFAULT_MAX_ANVIL_COST)
                 .takeIf { it in MAX_ANVIL_COST_RANGE }
                 ?: DEFAULT_MAX_ANVIL_COST
+            }
         }
 
     /**
@@ -226,9 +228,10 @@ object ConfigOptions {
      */
     val doRemoveCostLimit: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use {lock -> lock.get()
                 .config
                 .getBoolean(REMOVE_ANVIL_COST_LIMIT, DEFAULT_REMOVE_ANVIL_COST_LIMIT)
+            }
         }
 
     /**
@@ -236,9 +239,10 @@ object ConfigOptions {
      */
     val doReplaceTooExpensive: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use {lock -> lock.get()
                 .config
                 .getBoolean(REPLACE_TOO_EXPENSIVE, DEFAULT_REPLACE_TOO_EXPENSIVE)
+            }
         }
 
     /**
@@ -246,11 +250,12 @@ object ConfigOptions {
      */
     val itemRepairCost: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(ITEM_REPAIR_COST, DEFAULT_ITEM_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
                 ?: DEFAULT_ITEM_REPAIR_COST
+            }
         }
 
     /**
@@ -258,11 +263,12 @@ object ConfigOptions {
      */
     val unitRepairCost: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(UNIT_REPAIR_COST, DEFAULT_UNIT_REPAIR_COST)
                 .takeIf { it in REPAIR_COST_RANGE }
                 ?: DEFAULT_UNIT_REPAIR_COST
+            }
         }
 
     /**
@@ -270,11 +276,12 @@ object ConfigOptions {
      */
     val itemRenameCost: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(ITEM_RENAME_COST, DEFAULT_ITEM_RENAME_COST)
                 .takeIf { it in ITEM_RENAME_COST_RANGE }
                 ?: DEFAULT_ITEM_RENAME_COST
+            }
         }
 
     /**
@@ -282,11 +289,12 @@ object ConfigOptions {
      */
     val sacrificeIllegalCost: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(SACRIFICE_ILLEGAL_COST, DEFAULT_SACRIFICE_ILLEGAL_COST)
                 .takeIf { it in SACRIFICE_ILLEGAL_COST_RANGE }
                 ?: DEFAULT_SACRIFICE_ILLEGAL_COST
+            }
         }
 
     /**
@@ -294,29 +302,32 @@ object ConfigOptions {
      */
     val addBookEnchantmentAsStoredEnchantment : Boolean
         get(){
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT, DEFAULT_ADD_BOOK_ENCHANTMENT_AS_STORED_ENCHANTMENT)
+            }
         }
 
     /**
-     * Allow usage of color code
+     * Allow usage of colour code
      */
-    val allowColorCode: Boolean
+    val allowColourCode: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
-                .getBoolean(ALLOW_COLOR_CODE, DEFAULT_ALLOW_COLOR_CODE)
+                .getBoolean(ALLOW_COLOUR_CODE, DEFAULT_ALLOW_COLOUR_CODE)
+            }
         }
 
     /**
-     * Allow usage of hexadecimal color
+     * Allow usage of hexadecimal colour
      */
-    val allowHexadecimalColor: Boolean
+    val allowHexadecimalColour: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
-                .getBoolean(ALLOW_HEXADECIMAL_COLOR, DEFAULT_ALLOW_HEXADECIMAL_COLOR)
+                .getBoolean(ALLOW_HEXADECIMAL_COLOUR, DEFAULT_ALLOW_HEXADECIMAL_COLOUR)
+            }
         }
 
     /**
@@ -324,58 +335,63 @@ object ConfigOptions {
      */
     val allowMinimessage: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(ALLOW_MINIMESSAGE, DEFAULT_ALLOW_MINIMESSAGE)
+            }
         }
 
     /**
-     * If one of the color component is enabled
+     * If one of the colour component is enabled
      */
-    val renameColorPossible: Boolean
+    val renameColourPossible: Boolean
         get() {
-            return allowColorCode || allowHexadecimalColor || allowMinimessage
+            return allowColourCode || allowHexadecimalColour || allowMinimessage
         }
 
     /**
-     * If players need a permission to use color
+     * If players need a permission to use colour
      */
-    val permissionNeededForColor: Boolean
+    val permissionNeededForColour: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
-                .getBoolean(PERMISSION_NEEDED_FOR_COLOR, DEFAULT_PERMISSION_NEEDED_FOR_COLOR)
+                .getBoolean(PERMISSION_NEEDED_FOR_COLOUR, DEFAULT_PERMISSION_NEEDED_FOR_COLOUR)
+            }
         }
 
     /**
-     * Should each color code require a permission
+     * Should each colour code require a permission
      */
-    val usePerColorCodePermission: Boolean
+    val usePerColourCodePermission: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
-                .getBoolean(PER_COLOR_CODE_PERMISSION, DEFAULT_PER_COLOR_CODE_PERMISSION)
+                .getBoolean(PER_COLOUR_CODE_PERMISSION, DEFAULT_PER_COLOUR_CODE_PERMISSION)
+            }
         }
 
     /**
-     * Should sufix color and hex code a reset tag (§r or <reset> for minimessage)
+     * Should suffix colour and hex code a reset tag (§r or <reset> for minimessage)
      */
-    val shouldResetOnColorCode: Boolean
+    val shouldResetOnColourCode: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
-                .getBoolean(APPEND_RESET_COLOR_CODE, DEFAULT_APPEND_RESET_COLOR_CODE)
+                .getBoolean(APPEND_RESET_COLOUR_CODE, DEFAULT_APPEND_RESET_COLOUR_CODE)
+            }
         }
     /**
-     * How many xp should use of color should cost
+     * How many xp should use of colour should cost
      */
-    val useOfColorCost: Int
+    val useOfColourCost: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
-                .getInt(USE_OF_COLOR_COST, DEFAULT_USE_OF_COLOR_COST)
-                .takeIf { it in USE_OF_COLOR_COST_RANGE }
-                ?: DEFAULT_USE_OF_COLOR_COST
+                .getInt(USE_OF_COLOUR_COST, DEFAULT_USE_OF_COLOUR_COST)
+                .takeIf { it in USE_OF_COLOUR_COST_RANGE }
+                ?: DEFAULT_USE_OF_COLOUR_COST
+            }
         }
 
     /**
@@ -396,20 +412,22 @@ object ConfigOptions {
      * How work penalty should work
      */
     fun workPenaltyPart(type: AnvilUseType): WorkPenaltyPart {
-        val config = ConfigHolder.DEFAULT_CONFIG.config
+        ConfigHolder.DEFAULT.read.use { lock ->
+            val config = lock.get().config
 
-        // Find values
-        val defaultPenalty = type.defaultPenalty
-        val section = config.getConfigurationSection(type.path) ?: return defaultPenalty
+            // Find values
+            val defaultPenalty = type.defaultPenalty
+            val section = config.getConfigurationSection(type.path) ?: return defaultPenalty
 
-        val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
-        val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)
-        val exclusivePenaltyIncrease =
-            section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
-        val exclusivePenaltyAdditive =
-            section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
+            val penaltyIncrease = section.getBoolean(WORK_PENALTY_INCREASE, defaultPenalty.penaltyIncrease)
+            val penaltyAdditive = section.getBoolean(WORK_PENALTY_ADDITIVE, defaultPenalty.penaltyAdditive)
+            val exclusivePenaltyIncrease =
+                section.getBoolean(EXCLUSIVE_WORK_PENALTY_INCREASE, defaultPenalty.exclusivePenaltyIncrease)
+            val exclusivePenaltyAdditive =
+                section.getBoolean(EXCLUSIVE_WORK_PENALTY_ADDITIVE, defaultPenalty.exclusivePenaltyAdditive)
 
-        return WorkPenaltyPart(penaltyIncrease, penaltyAdditive, exclusivePenaltyIncrease, exclusivePenaltyAdditive)
+            return WorkPenaltyPart(penaltyIncrease, penaltyAdditive, exclusivePenaltyIncrease, exclusivePenaltyAdditive)
+        }
     }
 
     /**
@@ -433,30 +451,35 @@ object ConfigOptions {
      */
     private fun materialEnchantCountLimit(type: NamespacedKey): Int? {
         val path = "$ENCHANT_COUNT_LIMIT_ITEMS.${type.key.lowercase()}"
-        if(!ConfigHolder.DEFAULT_CONFIG.config.isInt(path))
-            return null
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get().config
 
-        return ConfigHolder.DEFAULT_CONFIG.config
-            .getInt(path)
-            .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
+            if(!config.isInt(path))
+                return null
+
+            return config.getInt(path)
+                .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
+        }
     }
     /**
      * User configured default enchantment count limit
      */
     val defaultEnchantCountLimit: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(ENCHANT_COUNT_LIMIT_DEFAULT, DEFAULT_ENCHANT_COUNT_LIMIT)
                 .takeIf { it in ENCHANT_COUNT_LIMIT_RANGE }
                 ?: DEFAULT_ENCHANT_COUNT_LIMIT
+            }
         }
 
     val includeLeftEnchantmentForCost: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(INCLUDE_LEFT_ENCHANTMENT_FOR_COST, DEFAULT_INCLUDE_LEFT_ENCHANTMENT_FOR_COST)
+            }
         }
 
     /**
@@ -467,9 +490,10 @@ object ConfigOptions {
             val overrider = OVERRIDE_DEBUG_LOG
             if(overrider != null) return overrider
 
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(DEBUG_LOGGING, DEFAULT_DEBUG_LOG)
+            }
         }
 
     /**
@@ -480,9 +504,10 @@ object ConfigOptions {
             val overrider = OVERRIDE_VERBOSE_DEBUG_LOG
             if(overrider != null) return overrider
 
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(VERBOSE_DEBUG_LOGGING, DEFAULT_VERBOSE_DEBUG_LOG)
+            }
         }
 
     /**
@@ -493,48 +518,52 @@ object ConfigOptions {
             val overrider = OVERRIDE_VERBOSE_DEBUG_LOG
             if(overrider != null) return overrider
 
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(SHOW_CONSOLE_DEBUG_LOGGING, DEFAULT_SHOW_CONSOLE_DEBUG_LOGGING)
+            }
         }
 
     /**
-     * Is the dialog menu for rename enabled
+     * Is the dialogue menu for rename enabled
      */
-    val doRenameDialog: Boolean
+    val doRenameDialogue: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(DIALOG_RENAME_ENABLED, DEFAULT_DIALOG_RENAME_ENABLED)
+            }
         }
 
     /**
-     * Do the dialog menu require permission
+     * Do the dialogue menu require permission
      */
-    val doRenameDialogUsePermission: Boolean
+    val doRenameDialogueUsePermission: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(DIALOG_RENAME_USE_PERMISSION, DEFAULT_DIALOG_RENAME_USE_PERMISSION)
+            }
         }
 
-    fun canUseDialogRename(player: HumanEntity): Boolean {
-        if(!doRenameDialog || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return false
-        if(doRenameDialogUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return false
+    fun canUseDialogueRename(player: HumanEntity): Boolean {
+        if(!doRenameDialogue || !AnvilRenameDialogUtil.anvilRenameDialog.canSendDialog()) return false
+        if(doRenameDialogueUsePermission && !player.hasPermission(RENAME_DIALOG_PERMISSION)) return false
 
         return true
     }
 
     /**
-     * Do the dialog menu require permission
+     * Do the dialogue menu require permission
      */
-    val renameDialogMaxSize: Int
+    val renameDialogueMaxSize: Int
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getInt(DIALOG_MAX_SIZE, DEFAULT_DIALOG_MAX_SIZE)
                 .takeIf { it in DIALOG_MAX_SIZE_RANGE }
                 ?: Int.MAX_VALUE
+            }
         }
 
     /**
@@ -542,9 +571,10 @@ object ConfigOptions {
      */
     val shouldKeepRenameText: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getBoolean(DIALOG_KEEP_USER_TEXT, DEFAULT_DIALOG_KEEP_USER_TEXT)
+            }
         }
 
     /**
@@ -618,17 +648,19 @@ object ConfigOptions {
         val typeKey = if (isFromBook) KEY_BOOK else KEY_ITEM
         val path = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$typeKey"
 
-        val config = ConfigHolder.DEFAULT_CONFIG.config
-        if(isFromBook && isToBook) {
-            val specialPath = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$KEY_BOOK_ON_BOOK"
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get().config
+            if(isFromBook && isToBook) {
+                val specialPath = "${ENCHANT_VALUES_ROOT}.${enchantmentName}.$KEY_BOOK_ON_BOOK"
 
-            if(config.isInt(specialPath))
-                return config.getInt(specialPath)
-                    .takeIf { it >= DEFAULT_ENCHANT_VALUE }
+                if(config.isInt(specialPath))
+                    return config.getInt(specialPath)
+                        .takeIf {it >= DEFAULT_ENCHANT_VALUE}
+            }
+
+            return config.getInt(path, DEFAULT_ENCHANT_VALUE - 1)
+                .takeIf {it >= DEFAULT_ENCHANT_VALUE}
         }
-
-        return config.getInt(path, DEFAULT_ENCHANT_VALUE - 1)
-            .takeIf { it >= DEFAULT_ENCHANT_VALUE }
     }
 
     /**
@@ -636,7 +668,7 @@ object ConfigOptions {
      */
     private fun getDefaultValue(
         enchantment: CAEnchantment,
-        isFromBook: Boolean
+        isFromBook: Boolean,
     ): Int {
         val rarity = enchantment.defaultRarity()
         return if (isFromBook)
@@ -676,41 +708,49 @@ object ConfigOptions {
     }
 
     fun isImmutable(key: NamespacedKey): Boolean {
-        val immutables = ConfigHolder.DEFAULT_CONFIG.config.getStringList(IMMUTABLE_ENCHANTMENT_LIST)
+        val immutables: List<String>
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get().config
+            immutables = config.getStringList(IMMUTABLE_ENCHANTMENT_LIST)
+        }
 
         // We need to ignore case so can't just check "contain"
         for (ench in immutables) {
             if (ench.equals(key.toString(), ignoreCase = true) ||
                 ench.equals(key.key, ignoreCase = true)
-            )
-                return true
+            ) return true
         }
         return false
     }
 
     /*
      * Monetary configs (only for 1.21.6+)
-     * Also require dialog rename
+     * Also require dialogue rename
      */
     fun shouldUseMoney(player: HumanEntity): Boolean {
             return EconomyManager.economy?.initialized() == true &&
-                    canUseDialogRename(player) &&
-                    ConfigHolder.DEFAULT_CONFIG
-                        .config
-                        .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
+                   canUseDialogueRename(player) &&
+                   ConfigHolder.DEFAULT.read.use {lock -> lock.get()
+                       .config
+                       .getBoolean(SHOULD_USE_MONEY, DEFAULT_SHOULD_USE_MONEY)
+                   }
     }
 
     val usedCurrency: String
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getString(MONEY_CURRENCY, DEFAULT_MONEY_CURRENCY)!!
+            }
         }
 
     fun getMonetaryMultiplier(type: String): BigDecimal {
-        return BigDecimal(ConfigHolder.DEFAULT_CONFIG
-                .config
-            .getDouble("$MONETARY_MULTIPLIER_ROOT.$type", DEFAULT_MONEY_MULTIPLIER))
+        return ConfigHolder.DEFAULT.read.use {lock ->
+            BigDecimal(
+                lock.get().config
+                    .getDouble("$MONETARY_MULTIPLIER_ROOT.$type", DEFAULT_MONEY_MULTIPLIER)
+            )
+        }
     }
 
 }

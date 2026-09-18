@@ -57,7 +57,7 @@ class EnchantmentSquaredDependency(private val enchantmentSquaredPlugin: Plugin)
 
         // Register enchantments
         for (enchant in CustomEnchantManager.getInstance().allEnchants.values) {
-            EnchantmentApi.registerEnchantment(CAEnchantSquaredEnchantment(enchant))
+            EnchantmentApi.registerEnchantment(CAEnchantSquaredEnchantment(this, enchant))
         }
 
         // Register bulk operation

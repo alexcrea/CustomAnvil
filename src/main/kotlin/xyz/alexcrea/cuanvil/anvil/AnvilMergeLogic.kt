@@ -26,7 +26,7 @@ import xyz.alexcrea.cuanvil.util.CustomRecipeUtil
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil.getRepair
-import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilColourUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilLoreEditUtil
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 import xyz.alexcrea.cuanvil.util.config.LoreEditType
@@ -125,7 +125,7 @@ object AnvilMergeLogic {
     }
 
     fun processPCD(meta: ItemMeta, player: HumanEntity, text: String?) {
-        val keepDialog = ConfigOptions.canUseDialogRename(player) && ConfigOptions.shouldKeepRenameText
+        val keepDialog = ConfigOptions.canUseDialogueRename(player) && ConfigOptions.shouldKeepRenameText
 
         val pdc = meta.persistentDataContainer
         if (!keepDialog)
@@ -144,16 +144,16 @@ object AnvilMergeLogic {
 
         var sumCost = 0
         var useColor = false
-        if (ConfigOptions.renameColorPossible && renameText != null) {
-            component = AnvilColorUtil.handleColor(
+        if (ConfigOptions.renameColourPossible && renameText != null) {
+            component = AnvilColourUtil.handleColour(
                 renameText,
-                AnvilColorUtil.renamePermission(player)
+                AnvilColourUtil.renamePermission(player)
             )
 
             if (component != null) {
                 renameText = MiniMessageUtil.legacy_mm.serialize(component)
 
-                sumCost += ConfigOptions.useOfColorCost
+                sumCost += ConfigOptions.useOfColourCost
                 useColor = true
             }
         }

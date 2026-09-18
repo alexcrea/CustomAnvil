@@ -1,10 +1,9 @@
 package xyz.alexcrea.cuanvil.update;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+@NotNullByDefault
 public record Version(int major, int minor, int patch) {
 
     public Version(int major, int minor){
@@ -30,31 +29,30 @@ public record Version(int major, int minor, int patch) {
         return new Version(versionParts[0], versionParts[1], versionParts[2]);
     }
 
-    public boolean greaterThan(@Nonnull Version other){
+    public boolean greaterThan(Version other){
         return this.major > other.major || (this.major == other.major &&
                 (this.minor > other.minor || (this.minor == other.minor &&
                         this.patch > other.patch)));
     }
 
-    public boolean greaterEqual(@Nonnull Version other){
+    public boolean greaterEqual(Version other){
         return this.major > other.major || (this.major == other.major &&
                 (this.minor > other.minor || (this.minor == other.minor &&
                         this.patch >= other.patch)));
     }
 
-    public boolean lesserThan(@Nonnull Version other){
+    public boolean lesserThan(Version other){
         return this.major < other.major || (this.major == other.major &&
                 (this.minor < other.minor || (this.minor == other.minor &&
                         this.patch < other.patch)));
     }
 
-    public boolean lesserEqual(@Nonnull Version other){
+    public boolean lesserEqual(Version other){
         return this.major < other.major || (this.major == other.major &&
                 (this.minor < other.minor || (this.minor == other.minor &&
                         this.patch <= other.patch)));
     }
 
-    @NotNull
     @Override
     public String toString() {
         return major + "." + minor + "." + patch;

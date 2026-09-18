@@ -1,3 +1,5 @@
+@file:Suppress("FoldInitializerAndIfToElvis")
+
 package xyz.alexcrea.cuanvil.config
 
 import io.delilaheve.CustomAnvil
@@ -52,9 +54,11 @@ object AnvilFinishOptions {
     // Fetch
     val sound_enabled: Boolean
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getBoolean(SOUND_ENABLED, DEFAULT_SOUND_ENABLED)
+            return ConfigHolder.DEFAULT.read.use {lock ->
+                lock.get()
+                    .config
+                    .getBoolean(SOUND_ENABLED, DEFAULT_SOUND_ENABLED)
+            }
         }
 
     fun getAnvilSound(wasDestroyed: Boolean): ConfiguredSound {
@@ -65,9 +69,11 @@ object AnvilFinishOptions {
 
     val degradation_chance: Double
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
-                .config
-                .getDouble(ANVIL_DEGRADATION_PATH, DEFAULT_ANVIL_DEGRADATION_PATH)
+            return ConfigHolder.DEFAULT.read.use {lock ->
+                lock.get()
+                    .config
+                    .getDouble(ANVIL_DEGRADATION_PATH, DEFAULT_ANVIL_DEGRADATION_PATH)
+            }
         }
 
     // Utils
@@ -80,17 +86,19 @@ object AnvilFinishOptions {
     }
 
     private fun fromListing(path: String, default: ConfiguredSound): ConfiguredSound {
-        val section = ConfigHolder.DEFAULT_CONFIG
-            .config.getConfigurationSection(path) ?: return default
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val section = lock.get().config.getConfigurationSection(path)
+            if(section == null) return default
 
-        val list = readSounds(section)
-        return weightedRandom(list, default)
+            val list = readSounds(section)
+            return weightedRandom(list, default)
+        }
     }
 
     private fun readSounds(section: ConfigurationSection): List<ConfiguredSound> {
         val sounds = ArrayList<ConfiguredSound>()
 
-        for (key in section.getKeys(false)) {
+        for(key in section.getKeys(false)) {
             if(!section.isConfigurationSection(key)) continue
 
             val result = readSound(section.getConfigurationSection(key)!!)
@@ -105,14 +113,14 @@ object AnvilFinishOptions {
     }
 
     private fun readSound(section: ConfigurationSection): ConfiguredSound? {
-        val name = section.getString("sound", null)?: return null
-        val key = NamespacedKey.fromString(name)?: return null
-        val sound = Registry.SOUNDS.get(key)?: return null
+        val name = section.getString("sound", null) ?: return null
+        val key = NamespacedKey.fromString(name) ?: return null
+        val sound = Registry.SOUNDS.get(key) ?: return null
 
-        val categoryName = section.getString("category", null)?: return null
+        val categoryName = section.getString("category", null) ?: return null
         val category = try {
             SoundCategory.valueOf(categoryName.uppercase())
-        } catch (_: IllegalArgumentException) {
+        } catch(_: IllegalArgumentException) {
             return null
         }
 
@@ -127,7 +135,7 @@ object AnvilFinishOptions {
     private fun weightedRandom(sounds: List<ConfiguredSound>, default: ConfiguredSound): ConfiguredSound {
         if(sounds.isEmpty()) return default
 
-        val weightSum = sounds.sumOf { it.weight }
+        val weightSum = sounds.sumOf {it.weight}
         if(weightSum == .0) return sounds.first()
 
         val selectedWeight = RANDOM.nextDouble(weightSum)
@@ -139,7 +147,10 @@ object AnvilFinishOptions {
         }
 
         // What ? how
-        CustomAnvil.instance.logger.log(Level.SEVERE, "Something very... very wrong happen on sound handling. please report this to the developer")
+        CustomAnvil.instance.logger.log(
+            Level.SEVERE,
+            "Something very... very wrong happen on sound handling. please report this to the developer"
+        )
         return default
     }
 

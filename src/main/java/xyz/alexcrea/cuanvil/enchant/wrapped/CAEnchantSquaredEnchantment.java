@@ -5,28 +5,28 @@ import me.athlaeos.enchantssquared.managers.CustomEnchantManager;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import xyz.alexcrea.cuanvil.dependency.DependencyManager;
+import org.jetbrains.annotations.NotNullByDefault;
+import xyz.alexcrea.cuanvil.dependency.plugins.EnchantmentSquaredDependency;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentBase;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
 import java.util.Map;
 import java.util.Objects;
 
+@NotNullByDefault
 public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
 
-    public final @NotNull CustomEnchant enchant;
+    public final CustomEnchant enchant;
 
-    public CAEnchantSquaredEnchantment(@NotNull CustomEnchant enchant) {
-        super(Objects.requireNonNull(
-                        Objects.requireNonNull(DependencyManager.INSTANCE.getEnchantmentSquaredCompatibility()).getKeyFromEnchant(enchant)),
+    public CAEnchantSquaredEnchantment(EnchantmentSquaredDependency compat, CustomEnchant enchant) {
+        super(Objects.requireNonNull(compat.getKeyFromEnchant(enchant)),
                 EnchantmentRarity.COMMON,
-                enchant.getMaxLevel());
+                enchant.getMaxLevel()
+        );
         this.enchant = enchant;
-
     }
 
-    public @NotNull CustomEnchant getEnchant() {
+    public CustomEnchant getEnchant() {
         return enchant;
     }
 
@@ -41,35 +41,35 @@ public class CAEnchantSquaredEnchantment extends CAEnchantmentBase {
     }
 
     @Override
-    public boolean isAllowed(@NotNull HumanEntity human) {
+    public boolean isAllowed(HumanEntity human) {
         return this.enchant.hasPermission(human);
     }
 
     @Override
-    public int getLevel(@NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public int getLevel(ItemStack item, ItemMeta meta) {
         return CustomEnchantManager.getInstance().getEnchantStrength(item, this.enchant.getType());
     }
 
     @Override
-    public boolean isEnchantmentPresent(@NotNull ItemStack item, @NotNull ItemMeta meta) {
+    public boolean isEnchantmentPresent(ItemStack item, ItemMeta meta) {
         Map<CustomEnchant, Integer> enchants = CustomEnchantManager.getInstance().getItemsEnchantsFromPDC(item);
         return enchants.containsKey(this.enchant);
     }
 
     @Override
-    public void addEnchantmentUnsafe(@NotNull ItemStack item, int level) {
+    public void addEnchantmentUnsafe(ItemStack item, int level) {
         CustomEnchantManager.getInstance().addEnchant(item, this.enchant.getType(), level);
     }
 
     @Override
-    public void removeFrom(@NotNull ItemStack item) {
+    public void removeFrom(ItemStack item) {
         CustomEnchantManager.getInstance().removeEnchant(item, this.enchant.getType());
     }
 
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof CAEnchantSquaredEnchantment other)) {
+        if(!(obj instanceof CAEnchantSquaredEnchantment other)) {
             return false;
         }
 

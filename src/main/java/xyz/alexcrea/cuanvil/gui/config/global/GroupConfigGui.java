@@ -16,7 +16,6 @@ import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
-import xyz.alexcrea.cuanvil.util.LazyValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;

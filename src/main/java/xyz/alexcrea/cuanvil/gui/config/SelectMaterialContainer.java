@@ -1,6 +1,5 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 

@@ -16,7 +16,7 @@ plugins {
     signing
     id("cn.lalaki.central").version("2.0.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.23" apply false
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
@@ -47,14 +47,21 @@ val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
     .get().split(",")
 
 dependencies {
+    compileOnly("org.jetbrains:annotations:26.1.0")
+
     // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 
     // fast stats
     implementation("dev.faststats.metrics:bukkit:0.30.1")
 
+    // bstats
+    implementation("org.bstats:bstats-bukkit:3.2.1")
+
     // minimessage
     implementation("net.kyori:adventure-text-minimessage:4.25.0")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.25.0")
+    implementation("net.kyori:adventure-text-serializer-plain:4.25.0")
 
     // Gui library
     val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"
@@ -182,8 +189,10 @@ tasks {
         archiveFileName.set(name)
 
         // Shadow necessary dependency
-        relocate("com.github.stefvanschie.inventoryframework", "xyz.alexcrea.cuanvil.inventoryframework")
-        relocate("dev.faststats", "xyz.alexcrea.cuanvil.faststats")
+        val basePackage = "${project.group}.cuanvi"
+        relocate("com.github.stefvanschie.inventoryframework", "$basePackage.inventoryframework")
+        relocate("dev.faststats", "$basePackage.faststats")
+        relocate("org.bstats",  "$basePackage.bstats")
 
         filesMatching("plugin.yml") {
             expand(
@@ -366,7 +375,7 @@ fun changelog(isOnline: Boolean): Provider<String> {
     else providers.environmentVariable("RELEASE_CHANGELOG")
 
     return changelog
-        .filter{!it.isEmpty()}
+        .filter{it.isNotEmpty()}
         .map {
         if(!isOnline)
             return@map "This is an offline version of the plugin. \\\n" +

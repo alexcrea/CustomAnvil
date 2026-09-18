@@ -17,7 +17,6 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
 import xyz.alexcrea.cuanvil.data.AnvilFuseTestData;
-import xyz.alexcrea.cuanvil.util.AnvilFuseTestUtil;
 import xyz.alexcrea.cuanvil.util.CommonItemUtil;
 
 public class AnvilFuseTests extends SharedCustomAnvilTest {
@@ -37,7 +36,7 @@ public class AnvilFuseTests extends SharedCustomAnvilTest {
 
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.DEBUG_LOGGING, true);
         ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.VERBOSE_DEBUG_LOGGING, true);
-        ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.ALLOW_COLOR_CODE, true); // For rename test
+        ConfigHolder.DEFAULT_CONFIG.getConfig().set(ConfigOptions.ALLOW_COLOUR_CODE, true); // For rename test
     }
 
     @BeforeEach

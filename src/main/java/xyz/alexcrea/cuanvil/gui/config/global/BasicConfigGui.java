@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.dependency.MinecraftVersionUtil;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -28,9 +27,10 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
- * Global config to edit basic basic settings.
+ * Global config to edit basic settings.
  */
 public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
@@ -88,13 +88,13 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
-    private BoolSettingsGui.BoolSettingFactory allowColorCode; // c character
-    private BoolSettingsGui.BoolSettingFactory allowHexColor; // h character
+    private BoolSettingsGui.BoolSettingFactory allowColourCode; // c character
+    private BoolSettingsGui.BoolSettingFactory allowHexColour; // h character
 
-    private BoolSettingsGui.BoolSettingFactory permissionNeededForColor; // p character
+    private BoolSettingsGui.BoolSettingFactory permissionNeededForColour; // p character
     private GuiItem noPermissionNeededItem;
-    private IntSettingsGui.IntSettingFactory useOfColorCost; // P character
-    private GuiItem noColorCostItem;
+    private IntSettingsGui.IntSettingFactory useOfColourCost; // P character
+    private GuiItem noColourCostItem;
 
     /**
      * Prepare basic gui displayed items factory and static items..
@@ -189,7 +189,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
         this.itemRenameCost = new IntSettingsGui.IntSettingFactory("§8Rename Cost", this,
                 ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
-                Arrays.asList(
+                List.of(
                         "§7XP Level amount added to the anvil when the item is renamed."
                 ),
                 range.getFirst(), range.getLast(),
@@ -209,68 +209,68 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 1, 5, 10, 50, 100);
 
         // -------------
-        // Color config
+        // Colour config
         // -------------
 
-        // Allow us of color code
-        this.allowColorCode = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Color Code ?", this,
+        // Allow us of colour code
+        this.allowColourCode = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Colour Code ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE,
-                "§7Whether players can use color code.",
-                "§7Color code a formatted like §a&a§7 and is used in the rename field of the anvil.",
-                "§7Player may need permission to use color code if §ePlayer need permission to use color§7 is enabled.");
+                ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE,
+                "§7Whether players can use colour code.",
+                "§7Colour code a formatted like §a&a§7 and is used in the rename field of the anvil.",
+                "§7Player may need permission to use colour code if §ePlayer need permission to use colour§7 is enabled.");
 
-        // Allow us of hexadecimal color
-        this.allowHexColor = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Hexadecimal Color ?", this,
+        // Allow us of hexadecimal colour
+        this.allowHexColour = new BoolSettingsGui.BoolSettingFactory("§8Allow Use Of Hexadecimal Colour ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR,
-                "§7Whether players can use hexadecimal color.",
-                "§7Color code a formatted like §2#012345 §7and is used in the rename field of the anvil.",
-                "§7Player may need permission to use color code if §ePermission Needed For Color§7 is enabled.");
+                ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR,
+                "§7Whether players can use hexadecimal colour.",
+                "§7Colour code a formatted like §2#012345 §7and is used in the rename field of the anvil.",
+                "§7Player may need permission to use colour code if §ePermission Needed For Colour§7 is enabled.");
 
-        // Permission needed for color
-        this.permissionNeededForColor = new BoolSettingsGui.BoolSettingFactory("§8Need Permission To Use Color ?", this,
+        // Permission needed for colour
+        this.permissionNeededForColour = new BoolSettingsGui.BoolSettingFactory("§8Need Permission To Use Colour ?", this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR,
-                "§7Whether players should have permission to be able to use colors.",
-                "§7Give player §eca.color.code§7 Permission to allow use of color code.",
-                "§7Give player §eca.color.hex§7  Permission to allow use of hexadecimal color.");
+                ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR,
+                "§7Whether players should have permission to be able to use colours.",
+                "§7Give player §eca.color.code§7 Permission to allow use of colour code.",
+                "§7Give player §eca.color.hex§7  Permission to allow use of hexadecimal colour.");
 
-        // Permission needed for color not necessary
+        // Permission needed for colour not necessary
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cNeed Permission To Use Color ?");
+        meta.setDisplayName("§cNeed Permission To Use Colour ?");
         meta.setLore(Arrays.asList("§7This config can do something only if one of the following config is enabled:",
-                "§7- §aAllow Use Of Color Code",
-                "§7- §aAllow Use Of Hexadecimal Color"));
+                "§7- §aAllow Use Of Colour Code",
+                "§7- §aAllow Use Of Hexadecimal Colour"));
         item.setItemMeta(meta);
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        // Cost of using color
-        range = ConfigOptions.USE_OF_COLOR_COST_RANGE;
-        this.useOfColorCost = new IntSettingsGui.IntSettingFactory("§8Cost Of Using Color", this,
-                ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
+        // Cost of using colour
+        range = ConfigOptions.USE_OF_COLOUR_COST_RANGE;
+        this.useOfColourCost = new IntSettingsGui.IntSettingFactory("§8Cost Of Using Colour", this,
+                ConfigOptions.USE_OF_COLOUR_COST, ConfigHolder.DEFAULT_CONFIG,
                 Arrays.asList(
-                        "§7XP level cost when using color code or hexadecimal color using the anvil.",
+                        "§7XP level cost when using colour code or hexadecimal colour using the anvil.",
                         "§7conflict With one of the left item enchantment"
                 ),
                 range.getFirst(), range.getLast(),
-                ConfigOptions.DEFAULT_USE_OF_COLOR_COST,
+                ConfigOptions.DEFAULT_USE_OF_COLOUR_COST,
                 1, 5, 10, 50, 100);
 
-        // Permission needed for color not necessary
+        // Permission needed for colour not necessary
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cCost Of Using Color");
+        meta.setDisplayName("§cCost Of Using Colour");
         meta.setLore(Arrays.asList("§7This config can do something only if one of the following config is enabled:",
-                "§7- §aAllow Use Of Color Code",
-                "§7- §aAllow Use Of Hexadecimal Color"));
+                "§7- §aAllow Use Of Colour Code",
+                "§7- §aAllow Use Of Hexadecimal Colour"));
         item.setItemMeta(meta);
-        this.noColorCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        this.noColourCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
     }
 
@@ -337,26 +337,26 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         GuiItem workPenaltyType = WorkPenaltyTypeSettingGui.getDisplayItem(this, Material.DAMAGED_ANVIL, "§aWork Penalty Type");
         pane.bindItem('W', workPenaltyType);
 
-        // allow color code
-        GuiItem allowColorCodeItem = this.allowColorCode.getItem();
-        pane.bindItem('c', allowColorCodeItem);
+        // allow colour code
+        GuiItem allowColourCodeItem = this.allowColourCode.getItem();
+        pane.bindItem('c', allowColourCodeItem);
 
-        // allow hex color
-        GuiItem allowHexColorItem = this.allowHexColor.getItem();
-        pane.bindItem('h', allowHexColorItem);
+        // allow hex colour
+        GuiItem allowHexColourItem = this.allowHexColour.getItem();
+        pane.bindItem('h', allowHexColourItem);
 
-        // True if player could place color
-        if(ConfigOptions.INSTANCE.getRenameColorPossible()){
-            // use permission for color
-            GuiItem permissionNeededItem = this.permissionNeededForColor.getItem();
+        // True if player could place colour
+        if(ConfigOptions.INSTANCE.getRenameColourPossible()){
+            // use permission for colour
+            GuiItem permissionNeededItem = this.permissionNeededForColour.getItem();
             pane.bindItem('p', permissionNeededItem);
 
-            // using color cost
-            GuiItem useColorCostItem = this.useOfColorCost.getItem(Material.EXPERIENCE_BOTTLE, "Use color");
-            pane.bindItem('P', useColorCostItem);
+            // using colour cost
+            GuiItem useColourCostItem = this.useOfColourCost.getItem(Material.EXPERIENCE_BOTTLE, "Use colour");
+            pane.bindItem('P', useColourCostItem);
         }else{
             pane.bindItem('p', this.noPermissionNeededItem);
-            pane.bindItem('P', this.noColorCostItem);
+            pane.bindItem('P', this.noColourCostItem);
         }
 
 

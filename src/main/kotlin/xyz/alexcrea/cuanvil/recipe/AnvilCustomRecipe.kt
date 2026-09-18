@@ -55,7 +55,7 @@ class AnvilCustomRecipe(
         val XP_COST_CONFIG_RANGE = 0..255
 
         fun getFromConfig(name: String, configSection: ConfigurationSection?): AnvilCustomRecipe? {
-            if (configSection == null) return null
+            if(configSection == null) return null
             return AnvilCustomRecipe(
                 name,
                 configSection.getBoolean(EXACT_COUNT_CONFIG, DEFAULT_EXACT_COUNT_CONFIG),
@@ -76,18 +76,21 @@ class AnvilCustomRecipe(
         }
 
         fun getFromConfig(name: String): AnvilCustomRecipe? {
-            return getFromConfig(name, ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getConfigurationSection(name))
+            ConfigHolder.CUSTOM_RECIPE.read.use {lock ->
+                val section = lock.get().config.getConfigurationSection(name)
+                return getFromConfig(name, section)
+            }
         }
     }
 
     fun validate(): Boolean {
         return !leftItem.isAir &&
-                (rightItem == null || !resultItem.isAir) &&
-                !resultItem.isAir
+               (rightItem == null || !resultItem.isAir) &&
+               !resultItem.isAir
     }
 
-    fun saveToFile(writeFile: Boolean, doBackup: Boolean) {
-        val fileConfig = ConfigHolder.CUSTOM_RECIPE_HOLDER.config
+    private fun saveToFile(config: ConfigHolder.CustomAnvilCraftHolder, writeFile: Boolean, doBackup: Boolean) {
+        val fileConfig = config.config
 
         fileConfig["$name.$EXACT_COUNT_CONFIG"] = exactCount
         //fileConfig.set("$name.$EXACT_LEFT_CONFIG", exactLeft)
@@ -101,9 +104,14 @@ class AnvilCustomRecipe(
         fileConfig["$name.$RIGHT_ITEM_CONFIG"] = rightItem
         fileConfig["$name.$RESULT_ITEM_CONFIG"] = resultItem
 
+        if(writeFile) {
+            config.saveToDisk(doBackup)
+        }
+    }
 
-        if (writeFile) {
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.saveToDisk(doBackup)
+    fun saveToFile(writeFile: Boolean, doBackup: Boolean) {
+        ConfigHolder.CUSTOM_RECIPE.write.use {lock ->
+            saveToFile(lock.get(), writeFile, doBackup)
         }
     }
 
@@ -115,46 +123,46 @@ class AnvilCustomRecipe(
         )
     }
 
-    fun updateFromFile() {
-        this.exactCount = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getBoolean(
+    private fun updateFromFile(recipes: ConfigHolder.CustomAnvilCraftHolder) {
+        val config = recipes.config
+
+        config.getBoolean(
             "$name.$EXACT_COUNT_CONFIG",
             DEFAULT_EXACT_COUNT_CONFIG
         )
-
-        this.levelCostPerCraft = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getInt(
+        config.getInt(
             "$name.$XP_LEVEL_COST_CONFIG",
             DEFAULT_XP_LEVEL_COST_CONFIG
         )
-
-        this.XpCostPerCraft = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getInt(
+        config.getInt(
             "$name.$LINEAR_XP_COST_CONFIG",
             DEFAULT_LINEAR_XP_COST_CONFIG
         )
-
-        this.removeExactLinearXp = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getBoolean(
+        config.getBoolean(
             "$name.$REMOVE_EXACT_XP_CONFIG",
             DEFAULT_REMOVE_EXACT_XP_CONFIG
         )
-
-        // Update items
-        val leftItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        config.getItemStack(
             "$name.$LEFT_ITEM_CONFIG",
             DEFAULT_LEFT_ITEM_CONFIG
         )
-
-        this.rightItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        config.getItemStack(
             "$name.$RIGHT_ITEM_CONFIG",
             DEFAULT_RIGHT_ITEM_CONFIG
         )
-
-        this.resultItem = ConfigHolder.CUSTOM_RECIPE_HOLDER.config.getItemStack(
+        config.getItemStack(
             "$name.$RESULT_ITEM_CONFIG",
             DEFAULT_RESULT_ITEM_CONFIG
         )
 
         // Update material map
-        ConfigHolder.CUSTOM_RECIPE_HOLDER.recipeManager.cleanSetLeftItem(this, leftItem)
+        recipes.recipeManager.cleanSetLeftItem(this, leftItem)
+    }
 
+    fun updateFromFile() {
+        ConfigHolder.CUSTOM_RECIPE.read.use {lock ->
+            updateFromFile(lock.get())
+        }
     }
 
     fun testItem(item1: ItemStack, item2: ItemStack?): Boolean {
@@ -162,30 +170,30 @@ class AnvilCustomRecipe(
         // We assume this function can be call only if leftItem != null
 
         // Test if valid
-        if (!validate()) return false
+        if(!validate()) return false
 
         val leftSimilar = leftItem!!.isSimilar(item1)
         CustomAnvil.verboseLog("Validated test !")
 
         // test of left item
-        if (!leftSimilar) return false // Test similar
-        if (exactCount) {
-            if ((leftItem!!.amount != item1.amount)) return false // test exact amount
-        } else if (item1.amount < leftItem!!.amount) return false // test if it has at least the amount we ask
+        if(!leftSimilar) return false // Test similar
+        if(exactCount) {
+            if((leftItem!!.amount != item1.amount)) return false // test exact amount
+        } else if(item1.amount < leftItem!!.amount) return false // test if it has at least the amount we ask
 
         CustomAnvil.verboseLog("Left item passed !")
 
         // we don't know if right item can be
-        if (rightItem.isAir) { // null test
-            if (!item2.isAir) return false
+        if(rightItem.isAir) { // null test
+            if(!item2.isAir) return false
         } else {
             val rightSimilar = rightItem!!.isSimilar(item2)
             CustomAnvil.verboseLog("Right similar: $rightSimilar")
-            if (!rightSimilar) return false // test if similar when not null
+            if(!rightSimilar) return false // test if similar when not null
 
-            if (exactCount) {
-                if (rightItem!!.amount != item2!!.amount) return false // test exact amount
-            } else if (item2!!.amount < rightItem!!.amount) return false // test if it has at least the amount we ask
+            if(exactCount) {
+                if(rightItem!!.amount != item2!!.amount) return false // test exact amount
+            } else if(item2!!.amount < rightItem!!.amount) return false // test if it has at least the amount we ask
         }
 
         CustomAnvil.verboseLog("Right item passed !")
@@ -198,7 +206,7 @@ class AnvilCustomRecipe(
     }
 
     fun determineCost(amount: Int, first: ItemStack, resultItem: ItemStack): Int {
-        // First we determine the non linear level cost
+        // First we determine the non-linear level cost
         var levelCost = levelCostPerCraft * amount
         // TODO Maybe add an option per custom craft to ignore/not ignore penalty ??
         levelCost += AnvilXpUtil.calculatePenalty(first, null, resultItem, AnvilUseType.CUSTOM_CRAFT)

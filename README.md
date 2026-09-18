@@ -21,10 +21,10 @@ the plugin can be downloaded on
 - Display XP cost instead of "too expensive" when above level 40. (see below for more information)
 - Can handle some custom enchantment plugins (see below for more information)
 - Gui to configure the plugin in game.
-- Support use of color code, hexadecimal color and minimessage for color/decoration
+- Support use of colour code, hexadecimal colour and minimessage for colour/decoration
 - (Experimental) Folia support (gui do not work)
-- (Experimental) Dialog rename (allows longer rename)
-- (Experimental) Anvil with monetary cost (using vault) (require dialog rename)
+- (Experimental) Dialogue rename (allows longer rename)
+- (Experimental) Anvil with monetary cost (using vault) (require dialogue rename)
   
 And more !
 

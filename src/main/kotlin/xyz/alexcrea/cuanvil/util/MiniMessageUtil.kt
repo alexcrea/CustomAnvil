@@ -14,7 +14,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 
 object MiniMessageUtil {
 
-    val color_only_mm = MiniMessage.builder()
+    val colour_only_mm = MiniMessage.builder()
         .tags(
             TagResolver.resolver(
                 StandardTags.color(),
@@ -24,7 +24,7 @@ object MiniMessageUtil {
         .build()
 
     val mm = if (PlatformUtil.isPaper) MiniMessage.miniMessage()
-    else color_only_mm
+    else colour_only_mm
 
     val legacy_mm = LegacyComponentSerializer.legacySection()
     val plain_text_mm = PlainTextComponentSerializer.plainText()
