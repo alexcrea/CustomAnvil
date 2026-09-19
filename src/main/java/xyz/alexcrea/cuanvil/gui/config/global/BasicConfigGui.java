@@ -101,13 +101,13 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private @Nullable GuiItem noColourCostItem;
 
     /**
-     * Prepare basic gui displayed items factory and static items..
+     * Prepare basic gui displayed items factory and static items...
      */
     protected void prepareValues() {
         // cap anvil cost
         this.capAnvilCost = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_TITLE(), this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT,
                 ConfigOptions.CAP_ANVIL_COST, ConfigOptions.DEFAULT_CAP_ANVIL_COST,
                 null, MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DESCRIPTION()
         );
@@ -127,7 +127,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         IntRange range = ConfigOptions.MAX_ANVIL_COST_RANGE;
         this.maxAnvilCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_TITLE(), this,
-                ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.MAX_ANVIL_COST, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_MAX_ANVIL_COST,
@@ -147,7 +147,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // remove repair limit item
         this.removeAnvilCostLimit = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_REMOVE_COST_LIMIT_TITLE(), this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT,
                 ConfigOptions.REMOVE_ANVIL_COST_LIMIT, ConfigOptions.DEFAULT_REMOVE_ANVIL_COST_LIMIT,
                 null, MsgUI.INSTANCE.getBASIC_REMOVE_COST_LIMIT_DESCRIPTION()
         );
@@ -155,7 +155,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // replace too expensive item
         this.replaceTooExpensive = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_REPLACE_TOO_EXPENSIVE_TITLE(), this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT,
                 ConfigOptions.REPLACE_TOO_EXPENSIVE, ConfigOptions.DEFAULT_REPLACE_TOO_EXPENSIVE,
                 null, getReplaceToExpensiveLore()
         );
@@ -168,7 +168,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         range = ConfigOptions.REPAIR_COST_RANGE;
         this.itemRepairCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_TITLE(), this,
-                ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.ITEM_REPAIR_COST, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getBASIC_ITEM_REPAIR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_REPAIR_COST,
@@ -178,7 +178,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // unit repair cost
         this.unitRepairCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_TITLE(), this,
-                ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.UNIT_REPAIR_COST, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getBASIC_UNIT_REPAIR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_UNIT_REPAIR_COST,
@@ -189,7 +189,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         range = ConfigOptions.ITEM_RENAME_COST_RANGE;
         this.itemRenameCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_TITLE(), this,
-                ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.ITEM_RENAME_COST, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getBASIC_ITEM_RENAME_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_ITEM_RENAME_COST,
@@ -200,7 +200,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         range = ConfigOptions.SACRIFICE_ILLEGAL_COST_RANGE;
         this.sacrificeIllegalEnchantCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_TITLE(), this,
-                ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getBASIC_SACRIFICE_ILLEGAL_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST,
@@ -211,10 +211,10 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // Colour config
         // -------------
 
-        // Allow us of color code
+        // Allow us of colour code
         this.allowColourCode = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOUR_CODE_LIMIT_TITLE(), this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT,
                 ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE,
                 null, MsgUI.INSTANCE.getBASIC_COLOUR_CODE_LIMIT_DESCRIPTION()
         );
@@ -222,7 +222,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // Allow us of hexadecimal colour
         this.allowHexColour = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOUR_HEX_LIMIT_TITLE(), this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT,
                 ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR,
                 null, MsgUI.INSTANCE.getBASIC_COLOUR_HEX_LIMIT_DESCRIPTION()
         );
@@ -230,7 +230,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // Permission needed for colour
         this.permissionNeededForColour = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_TITLE(), this,
-                ConfigHolder.DEFAULT_CONFIG,
+                ConfigHolder.DEFAULT,
                 ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR,
                 null, MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DESCRIPTION()
         );
@@ -245,11 +245,11 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         item.setItemMeta(meta);
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
-        // Cost of using color
+        // Cost of using colour
         range = ConfigOptions.USE_OF_COLOUR_COST_RANGE;
         this.useOfColourCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOUR_COST_TITLE(), this,
-                ConfigOptions.USE_OF_COLOUR_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.USE_OF_COLOUR_COST, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getBASIC_COLOUR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_USE_OF_COLOUR_COST,

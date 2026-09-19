@@ -22,6 +22,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -199,8 +200,8 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
 
     // Unused methods and class
     public static class DummyFactory extends AbstractSettingGui.SettingGuiFactory {
-        protected DummyFactory(String configPath, ConfigHolder config) {
-            super(configPath, config);
+        protected DummyFactory(String configPath, LockedObjectProvider<? extends ConfigHolder> holder) {
+            super(configPath, holder);
         }
 
         @Override

@@ -87,14 +87,14 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_EXACT_COUNT_TITLE(), this,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG,
                 null
         );
 
         this.removeExactLinearXpFactory = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_TITLE(), this,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 this.anvilRecipe + "." + AnvilCustomRecipe.REMOVE_EXACT_XP_CONFIG, AnvilCustomRecipe.DEFAULT_REMOVE_EXACT_XP_CONFIG,
                 null
         );
@@ -112,7 +112,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         this.levelCostFactory = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_COST_LEVEL_XP(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 null, null,
                 costRange.getFirst(), costRange.getLast(), AnvilCustomRecipe.DEFAULT_XP_LEVEL_COST_CONFIG, 1, 5, 10
         );
@@ -120,7 +120,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         this.linearXpCostFactory = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_COST_LINEAR_XP(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LINEAR_XP_COST_CONFIG,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 null, null,
                 0, Integer.MAX_VALUE, AnvilCustomRecipe.DEFAULT_LINEAR_XP_COST_CONFIG, 1, 10, 100, 1000, 10000
         );
@@ -130,7 +130,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         this.leftItemFactory = new ItemSettingGui.ItemSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_LEFT_TITLE(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_LEFT_DESCRIPTION()
         );
@@ -138,7 +138,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         this.rightItemFactory = new ItemSettingGui.ItemSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_TITLE(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
                 null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_DESCRIPTION()
         );
@@ -146,7 +146,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         this.resultItemFactory = new ItemSettingGui.ItemSettingFactory(
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RESULT_TITLE(), this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG,
-                ConfigHolder.CUSTOM_RECIPE_HOLDER,
+                ConfigHolder.CUSTOM_RECIPE,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
                 null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RESULT_DESCRIPTION()
         );

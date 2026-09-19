@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -264,10 +265,13 @@ public class IntSettingsGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, now);
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
+            config.getConfig().set(holder.configPath, now);
 
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -302,7 +306,7 @@ public class IntSettingsGui extends AbstractSettingGui {
          * @param title       The title of the gui.
          * @param parent      Parent gui to go back when completed.
          * @param configPath  Configuration path of this setting.
-         * @param config      Configuration holder of this setting.
+         * @param holder      Configuration holder of this setting.
          * @param displayLore Gui display item lore.
          * @param min         Minimum value of this setting.
          * @param max         Maximum value of this setting.
@@ -314,10 +318,11 @@ public class IntSettingsGui extends AbstractSettingGui {
          */
         public IntSettingFactory(
                 Message title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
+                String configPath,
+                LockedObjectProvider<? extends ConfigHolder> holder,
                 @Nullable Message displayLore, @Nullable Object param,
                 int min, int max, int defaultVal, int... steps) {
-            super(configPath, config);
+            super(configPath, holder);
             this.title = title;
             this.parent = parent;
             this.min = min;
@@ -339,7 +344,9 @@ public class IntSettingsGui extends AbstractSettingGui {
          * @return The configured value for the associated setting.
          */
         public int getConfiguredValue() {
-            return this.config.getConfig().getInt(this.configPath, this.defaultVal);
+            try(var lock = getHolder().read) {
+                return lock.get().getConfig().getInt(this.configPath, this.defaultVal);
+            }
         }
 
         @Override
@@ -363,7 +370,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         public GuiItem getItem(
                 Material itemMat,
                 Message name,
-                Object... params
+                @Nullable Object... params
         ) {
             // Get item properties
             int value = getConfiguredValue();

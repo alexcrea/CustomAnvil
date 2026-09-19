@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -122,10 +123,14 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, this.now.configName());
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
 
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            config.getConfig().set(holder.configPath, this.now.configName());
+
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -151,13 +156,15 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @param title      The title of the gui.
          * @param parent     Parent gui to go back when completed.
          * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
+         * @param holder     Configuration holder of this setting.
          */
         protected EnumSettingFactory(
                 Message title, @Nullable Object param,
                 ValueUpdatableGui parent,
-                String configPath, ConfigHolder config) {
-            super(configPath, config);
+                String configPath,
+                LockedObjectProvider<? extends ConfigHolder> holder
+        ) {
+            super(configPath, holder);
             this.title = title;
             this.param = param;
 

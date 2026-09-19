@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 /**
  * An instance gui used to edit a setting.
@@ -40,12 +41,7 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    protected AbstractSettingGui(
-            int rows,
-            Message title,
-            ValueUpdatableGui parent,
-            @Nullable Object... params
-    ) {
+    protected AbstractSettingGui(int rows, Message title, ValueUpdatableGui parent, @Nullable Object... params) {
         this(rows, title.textHolder(params), parent);
     }
 
@@ -106,17 +102,17 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      */
     public abstract static class SettingGuiFactory implements SettingGui.SettingGuiFactory {
         protected final String configPath;
-        protected final ConfigHolder config;
+        private final LockedObjectProvider<? extends ConfigHolder> holder;
 
         /**
          * Constructor for settings gui factory
          *
          * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
+         * @param holder     Configuration holder of this setting.
          */
-        protected SettingGuiFactory(String configPath, ConfigHolder config) {
+        protected SettingGuiFactory(String configPath, LockedObjectProvider<? extends ConfigHolder> holder) {
             this.configPath = configPath;
-            this.config = config;
+            this.holder = holder;
         }
 
         /**
@@ -129,9 +125,8 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
         /**
          * @return Configuration holder of this setting.
          */
-        //TODO #130 part 1
-        public ConfigHolder getConfigHolder() {
-            return config;
+        public LockedObjectProvider<? extends ConfigHolder> getHolder() {
+            return holder;
         }
 
     }

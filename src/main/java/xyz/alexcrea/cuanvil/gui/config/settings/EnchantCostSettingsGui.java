@@ -22,6 +22,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -227,11 +228,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath + ITEM_PATH, now);
-        holder.config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
+            config.getConfig().set(holder.configPath + ITEM_PATH, now);
+            config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
 
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -255,7 +259,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          * @param title       The title of the gui.
          * @param parent      Parent gui to go back when completed.
          * @param configPath  Configuration path of this setting.
-         * @param config      Configuration holder of this setting.
+         * @param holder      Configuration holder of this setting.
          * @param displayLore Gui display item lore.
          * @param min         Minimum value of this setting.
          * @param max         Maximum value of this setting.
@@ -267,13 +271,13 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          */
         public EnchantCostSettingFactory(
                 Message title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
+                String configPath, LockedObjectProvider<? extends ConfigHolder> holder,
                 @Nullable Message displayLore, @Nullable Object param,
                 CAEnchantment enchantment,
                 int min, int max, int... steps) {
 
             super(title, parent,
-                    configPath, config,
+                    configPath, holder,
                     displayLore, param,
                     min, max, enchantment.defaultRarity().itemValue(),
                     steps);

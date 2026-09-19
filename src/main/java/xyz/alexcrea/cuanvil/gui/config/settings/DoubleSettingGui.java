@@ -23,6 +23,7 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -324,18 +325,24 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
+        try(var lock = holder.getHolder().write) {
+            return onSave(lock.get());
+        }
+    }
+
+    public boolean onSave(ConfigHolder holder) {
         if(isNull()) {
-            if(this.holder.config instanceof ConfigHolder.DeletableResource deletableResource) {
+            if(holder instanceof ConfigHolder.DeletableResource deletableResource) {
                 deletableResource.delete(this.holder.configPath);
             } else {
-                this.holder.config.getConfig().set(this.holder.configPath, null);
+                holder.getConfig().set(this.holder.configPath, null);
             }
         } else {
-            this.holder.config.getConfig().set(this.holder.configPath, now.doubleValue());
+            holder.getConfig().set(this.holder.configPath, now.doubleValue());
         }
 
         if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            return holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
     }
@@ -390,7 +397,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
          *
          * @param title        The title of the gui.
          * @param parent       Parent gui to go back when completed.
-         * @param config       Configuration holder of this setting.
+         * @param holder       Configuration holder of this setting.
          * @param configPath   Configuration path of this setting.
          * @param displayLore  Gui display item lore.
          * @param scale        The scale of the decimal.
@@ -406,13 +413,13 @@ public class DoubleSettingGui extends AbstractSettingGui {
          */
         public DoubleSettingFactory(
                 Message title, ValueUpdatableGui parent,
-                ConfigHolder config,
+                LockedObjectProvider<? extends ConfigHolder> holder,
                 String configPath,
                 @Nullable Message displayLore,
                 @Nullable Object param, @Nullable Object param2,
                 int scale, boolean asPercentage, boolean nullOnZero,
                 double min, double max, double defaultVal, double... steps) {
-            super(configPath, config);
+            super(configPath, holder);
             this.title = title;
             this.parent = parent;
             this.scale = scale;
@@ -443,11 +450,13 @@ public class DoubleSettingGui extends AbstractSettingGui {
          * @return The configured value for the associated setting.
          */
         public BigDecimal getConfiguredValue() {
-            ConfigurationSection section = this.config.getConfig();
-            if(section.isDouble(this.configPath)) {
-                return BigDecimal.valueOf(section.getDouble(this.configPath)).setScale(2, RoundingMode.HALF_UP);
+            try(var lock = getHolder().read) {
+                ConfigurationSection section = lock.get().getConfig();
+                if(section.isDouble(this.configPath)) {
+                    return BigDecimal.valueOf(section.getDouble(this.configPath)).setScale(2, RoundingMode.HALF_UP);
+                }
+                return this.defaultVal;
             }
-            return this.defaultVal;
         }
 
         @Override

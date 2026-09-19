@@ -21,6 +21,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     }
 
 
-    public void prepareStaticItems(){
+    public void prepareStaticItems() {
         prepareReturnToDefault();
 
         GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
@@ -102,9 +103,9 @@ public class ItemSettingGui extends AbstractSettingGui {
 
         // Get displayed value for this config.
         ItemStack displayedItem;
-        if(this.now != null){
+        if(this.now != null) {
             displayedItem = this.now.clone();
-        }else{
+        } else {
             displayedItem = new ItemStack(Material.BARRIER);
             ItemMeta valueMeta = displayedItem.getItemMeta();
             assert valueMeta != null;
@@ -120,7 +121,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if (now != holder.defaultVal) {
+        if(now != holder.defaultVal) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -150,10 +151,13 @@ public class ItemSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, this.now);
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
+            config.getConfig().set(holder.configPath, this.now);
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -185,16 +189,17 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param title       The title of the gui.
          * @param parent      Parent gui to go back when completed.
          * @param configPath  Configuration path of this setting.
-         * @param config      Configuration holder of this setting.
+         * @param holder      Configuration holder of this setting.
          * @param defaultVal  Default value if not found on the config.
          * @param displayLore Gui display item lore.
          */
         public ItemSettingFactory(
                 Message title, ValueUpdatableGui parent,
-                String configPath, ConfigHolder config,
+                String configPath,
+                LockedObjectProvider<? extends ConfigHolder> holder,
                 @Nullable ItemStack defaultVal,
                 @Nullable Object param, Message... displayLore) {
-            super(configPath, config);
+            super(configPath, holder);
             this.title = title;
             this.parent = parent;
 
@@ -215,7 +220,9 @@ public class ItemSettingGui extends AbstractSettingGui {
          */
         @Nullable
         public ItemStack getConfiguredValue() {
-            return this.config.getConfig().getItemStack(this.configPath, this.defaultVal);
+            try(var lock = getHolder().read) {
+                return lock.get().getConfig().getItemStack(this.configPath, this.defaultVal);
+            }
         }
 
         public List<Message> getDisplayLore() {
@@ -240,9 +247,9 @@ public class ItemSettingGui extends AbstractSettingGui {
          */
         public GuiItem getItem(String name) {
             ItemStack item = getConfiguredValue();
-            if(item == null || item.getType().isAir()){
+            if(item == null || item.getType().isAir()) {
                 item = new ItemStack(Material.BARRIER);
-            }else{
+            } else {
                 item = item.clone();
             }
             ItemMeta meta = item.getItemMeta();

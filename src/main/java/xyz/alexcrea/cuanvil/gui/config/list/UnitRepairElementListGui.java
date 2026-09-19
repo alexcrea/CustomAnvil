@@ -126,7 +126,7 @@ public class UnitRepairElementListGui
         return new DoubleSettingGui.DoubleSettingFactory(
                 MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_TITLE(),
                 this,
-                ConfigHolder.UNIT_REPAIR_HOLDER,
+                ConfigHolder.UNIT_REPAIR,
                 this.parentMaterial.toString().toLowerCase() + "." + materialName,
                 MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_DESCRIPTION(),
                 materialDisplayName, this.materialName,

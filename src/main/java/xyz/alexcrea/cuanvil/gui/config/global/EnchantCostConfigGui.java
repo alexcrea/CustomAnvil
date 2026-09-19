@@ -66,7 +66,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
 
         return new EnchantCostSettingsGui.EnchantCostSettingFactory(
                 MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_TITLE(), parent,
-                ENCHANT_VALUES_ROOT + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+                ENCHANT_VALUES_ROOT + '.' + key, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_DESCRIPTION(), prettyKey,
                 enchant, 0, 255,
                 1, 10, 50);

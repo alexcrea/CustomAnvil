@@ -57,7 +57,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
 
         return new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_ELEMENT_TITLE(), parent,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT,
                 MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_ELEMENT_DESCRIPTION(), prettyKey,
                 -1, 255, -1,
                 1, 5, 10, 50, 100) {

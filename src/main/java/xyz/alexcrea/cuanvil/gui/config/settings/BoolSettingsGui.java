@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,10 +156,13 @@ public class BoolSettingsGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, now);
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
+            config.getConfig().set(holder.configPath, now);
 
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -187,18 +191,18 @@ public class BoolSettingsGui extends AbstractSettingGui {
          *
          * @param title       The title of the gui.
          * @param parent      Parent gui to go back when completed.
-         * @param config      Configuration holder of this setting.
+         * @param holder      Configuration holder of this setting.
          * @param configPath  Configuration path of this setting.
          * @param defaultVal  Default value if not found on the config.
          * @param displayLore Gui display item lore.
          */
         public BoolSettingFactory(
                 Message title, ValueUpdatableGui parent,
-                ConfigHolder config, String configPath,
+                LockedObjectProvider<? extends ConfigHolder> holder, String configPath,
                 boolean defaultVal,
                 @Nullable Object param, Message @Nullable ... displayLore
         ) {
-            super(configPath, config);
+            super(configPath, holder);
             this.title = title;
             this.parent = parent;
 
@@ -219,7 +223,9 @@ public class BoolSettingsGui extends AbstractSettingGui {
          * @return The configured value for the associated setting.
          */
         public boolean getConfiguredValue() {
-            return this.config.getConfig().getBoolean(this.configPath, this.defaultVal);
+            try(var lock = getHolder().read) {
+                return lock.get().getConfig().getBoolean(this.configPath, this.defaultVal);
+            }
         }
 
         @Override
