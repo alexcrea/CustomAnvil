@@ -163,22 +163,22 @@ object MsgUI {
     val BASIC_SACRIFICE_ILLEGAL_COST_DESCRIPTION = Message("basic-config.sacrifice-illegal-cost.description", null)
 
 
-    val BASIC_COLOR_CODE_LIMIT_TITLE = Message("basic-config.color-code.title", null)
-    val BASIC_COLOR_CODE_LIMIT_DESCRIPTION = Message("basic-config.color-code.description", null)
+    val BASIC_COLOUR_CODE_LIMIT_TITLE = Message("basic-config.colour-code.title", null)
+    val BASIC_COLOUR_CODE_LIMIT_DESCRIPTION = Message("basic-config.colour-code.description", null)
 
-    val BASIC_COLOR_HEX_LIMIT_TITLE = Message("basic-config.color-hex.title", null)
-    val BASIC_COLOR_HEX_LIMIT_DESCRIPTION = Message("basic-config.color-hex.description", null)
+    val BASIC_COLOUR_HEX_LIMIT_TITLE = Message("basic-config.colour-hex.title", null)
+    val BASIC_COLOUR_HEX_LIMIT_DESCRIPTION = Message("basic-config.colour-hex.description", null)
 
-    val BASIC_COLOR_PERMISSION_TITLE = Message("basic-config.color-permission.title", null)
-    val BASIC_COLOR_PERMISSION_DESCRIPTION = Message("basic-config.color-permission.description", null)
-    val BASIC_COLOR_PERMISSION_DISABLED_TITLE = Message("basic-config.color-permission.disabled.title")
-    val BASIC_COLOR_PERMISSION_DISABLED_DESCRIPTION = Message("basic-config.color-permission.disabled.description")
+    val BASIC_COLOUR_PERMISSION_TITLE = Message("basic-config.colour-permission.title", null)
+    val BASIC_COLOUR_PERMISSION_DESCRIPTION = Message("basic-config.colour-permission.description", null)
+    val BASIC_COLOUR_PERMISSION_DISABLED_TITLE = Message("basic-config.colour-permission.disabled.title")
+    val BASIC_COLOUR_PERMISSION_DISABLED_DESCRIPTION = Message("basic-config.colour-permission.disabled.description")
 
-    val BASIC_COLOR_COST_TITLE = Message("basic-config.color-cost.title", null)
-    val BASIC_COLOR_COST_DESCRIPTION = Message("basic-config.color-cost.description", null)
-    val BASIC_COLOR_COST_ITEM = Message("basic-config.color-cost.item")
-    val BASIC_COLOR_COST_DISABLED_TITLE = Message("basic-config.color-cost.disabled.title")
-    val BASIC_COLOR_COST_DISABLED_DESCRIPTION = Message("basic-config.color-cost.disabled.description")
+    val BASIC_COLOUR_COST_TITLE = Message("basic-config.colour-cost.title", null)
+    val BASIC_COLOUR_COST_DESCRIPTION = Message("basic-config.colour-cost.description", null)
+    val BASIC_COLOUR_COST_ITEM = Message("basic-config.colour-cost.item")
+    val BASIC_COLOUR_COST_DISABLED_TITLE = Message("basic-config.colour-cost.disabled.title")
+    val BASIC_COLOUR_COST_DISABLED_DESCRIPTION = Message("basic-config.colour-cost.disabled.description")
 
     val BASIC_WORK_PENALTY_TITLE = Message("basic-config.work-penalty.title")
     val BASIC_WORK_PENALTY_ITEM = Message("basic-config.work-penalty.item")

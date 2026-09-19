@@ -210,26 +210,26 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
         // Allow us of color code
         this.allowColourCode = new BoolSettingsGui.BoolSettingFactory(
-                MsgUI.INSTANCE.getBASIC_COLOR_CODE_LIMIT_TITLE(), this,
+                MsgUI.INSTANCE.getBASIC_COLOUR_CODE_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE,
-                null, MsgUI.INSTANCE.getBASIC_COLOR_CODE_LIMIT_DESCRIPTION()
+                null, MsgUI.INSTANCE.getBASIC_COLOUR_CODE_LIMIT_DESCRIPTION()
         );
 
         // Allow us of hexadecimal colour
         this.allowHexColour = new BoolSettingsGui.BoolSettingFactory(
-                MsgUI.INSTANCE.getBASIC_COLOR_HEX_LIMIT_TITLE(), this,
+                MsgUI.INSTANCE.getBASIC_COLOUR_HEX_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR,
-                null, MsgUI.INSTANCE.getBASIC_COLOR_HEX_LIMIT_DESCRIPTION()
+                null, MsgUI.INSTANCE.getBASIC_COLOUR_HEX_LIMIT_DESCRIPTION()
         );
 
         // Permission needed for colour
         this.permissionNeededForColour = new BoolSettingsGui.BoolSettingFactory(
-                MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_TITLE(), this,
+                MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
                 ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR,
-                null, MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DESCRIPTION()
+                null, MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DESCRIPTION()
         );
 
         // Permission needed for colour not necessary
@@ -237,17 +237,17 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DISABLED_TITLE());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DISABLED_DESCRIPTION().formatted(), meta);
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DISABLED_TITLE());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DISABLED_DESCRIPTION().formatted(), meta);
         item.setItemMeta(meta);
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // Cost of using color
         range = ConfigOptions.USE_OF_COLOUR_COST_RANGE;
         this.useOfColourCost = new IntSettingsGui.IntSettingFactory(
-                MsgUI.INSTANCE.getBASIC_COLOR_COST_TITLE(), this,
+                MsgUI.INSTANCE.getBASIC_COLOUR_COST_TITLE(), this,
                 ConfigOptions.USE_OF_COLOUR_COST, ConfigHolder.DEFAULT_CONFIG,
-                MsgUI.INSTANCE.getBASIC_COLOR_COST_DESCRIPTION(), null,
+                MsgUI.INSTANCE.getBASIC_COLOUR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
                 ConfigOptions.DEFAULT_USE_OF_COLOUR_COST,
                 1, 5, 10, 50, 100
@@ -258,8 +258,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOR_COST_DISABLED_TITLE());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOR_COST_DISABLED_DESCRIPTION().formatted(), meta);
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOUR_COST_DISABLED_TITLE());
+        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOUR_COST_DISABLED_DESCRIPTION().formatted(), meta);
 
         item.setItemMeta(meta);
         this.noColourCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -351,7 +351,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
             // using colour cost
             GuiItem useColorCostItem = this.useOfColourCost.getItem(
                     Material.EXPERIENCE_BOTTLE,
-                    MsgUI.INSTANCE.getBASIC_COLOR_COST_ITEM()
+                    MsgUI.INSTANCE.getBASIC_COLOUR_COST_ITEM()
             );
             pane.bindItem('P', useColorCostItem);
         } else {

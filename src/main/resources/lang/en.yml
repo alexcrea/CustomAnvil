@@ -358,45 +358,45 @@ config-ui.basic-config.sacrifice-illegal-cost:
         1: "<gray>XP Level amount added to the anvil when a sacrifice enchantment"
         2: "<gray>conflict With one of the left item enchantment"
 
-config-ui.basic-config.color-code:
-      title: "<dark_gray>Allow Use Of Color Code ?"
+config-ui.basic-config.colour-code:
+      title: "<dark_gray>Allow Use Of Colour Code ?"
       description:
-        1: "<gray>Whether players can use color code."
-        2: "<gray>Color code a formatted like <green>&a<gray> and is used in the rename field of the anvil."
-        3: "<gray>Player may need permission to use color code if <yellow>Player need permission to use color<gray> is enabled."
+        1: "<gray>Whether players can use colour code."
+        2: "<gray>Colour code a formatted like <green>&a<gray> and is used in the rename field of the anvil."
+        3: "<gray>Player may need permission to use colour code if <yellow>Player need permission to use colour<gray> is enabled."
 
-config-ui.basic-config.color-hex:
-      title: "<dark_gray>Allow Use Of Hexadecimal Color ?"
+config-ui.basic-config.colour-hex:
+      title: "<dark_gray>Allow Use Of Hexadecimal Colour ?"
       description:
-        1: "<gray>Whether players can use hexadecimal color."
-        2: "<gray>Color code a formatted like <gray>#012345 <gray>and is used in the rename field of the anvil."
-        3: "<gray>Player may need permission to use color code if <yellow>Permission Needed For Color<gray> is enabled."
+        1: "<gray>Whether players can use hexadecimal colour."
+        2: "<gray>Colour code a formatted like <gray>#012345 <gray>and is used in the rename field of the anvil."
+        3: "<gray>Player may need permission to use colour code if <yellow>Permission Needed For Colour<gray> is enabled."
 
-config-ui.basic-config.color-permission:
-      title: "<dark_gray>Need Permission To Use Color ?"
+config-ui.basic-config.colour-permission:
+      title: "<dark_gray>Need Permission To Use Colour ?"
       description:
-        1: "<gray>Whether players should have permission to be able to use colors."
-        2: "<gray>Give player <yellow>ca.color.code <gray>Permission to allow use of color code."
-        3: "<gray>Give player <yellow>ca.color.hex  <gray>Permission to allow use of hexadecimal color."
+        1: "<gray>Whether players should have permission to be able to use colours."
+        2: "<gray>Give player <yellow>ca.colour.code <gray>Permission to allow use of colour code."
+        3: "<gray>Give player <yellow>ca.colour.hex  <gray>Permission to allow use of hexadecimal colour."
       disabled:
-        title: "<red>Need Permission To Use Color ?"
+        title: "<red>Need Permission To Use Colour ?"
         description:
           1: "<gray>This config can do something only if one of the following config is enabled:"
-          2: "<gray>- <green>Allow Use Of Color Code"
-          3: "<gray>- <green>Allow Use Of Hexadecimal Color"
+          2: "<gray>- <green>Allow Use Of Colour Code"
+          3: "<gray>- <green>Allow Use Of Hexadecimal Colour"
 
-config-ui.basic-config.color-cost:
-      item: "<green>Cost Of Using Color"
-      title: "<dark_gray>Cost Of Using Color"
+config-ui.basic-config.colour-cost:
+      item: "<green>Cost Of Using Colour"
+      title: "<dark_gray>Cost Of Using Colour"
       description:
-        1: "<gray>XP level cost when using color code or hexadecimal color using the anvil."
+        1: "<gray>XP level cost when using colour code or hexadecimal colour using the anvil."
         2: "<gray>conflict With one of the left item enchantment"
       disabled:
-        title: "<red>Cost Of Using Color"
+        title: "<red>Cost Of Using Colour"
         description:
           1: "<gray>This config can do something only if one of the following config is enabled:"
-          2: "<gray>- <green>Allow Use Of Color Code"
-          3: "<gray>- <green>Allow Use Of Hexadecimal Color"
+          2: "<gray>- <green>Allow Use Of Colour Code"
+          3: "<gray>- <green>Allow Use Of Hexadecimal Colour"
 
 config-ui.basic-config.work-penalty:
       title: "<dark_gray>Work Penalty Type"
