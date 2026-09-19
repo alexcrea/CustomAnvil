@@ -5,14 +5,11 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
@@ -26,12 +23,12 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
  * An instance of a gui used to edit an int setting.
  */
+@NotNullByDefault
 public class IntSettingsGui extends AbstractSettingGui {
 
     protected final IntSettingFactory holder;
@@ -285,11 +282,8 @@ public class IntSettingsGui extends AbstractSettingGui {
      */
     public static class IntSettingFactory extends SettingGuiFactory {
 
-        @NotNull
         final Message title;
-        @NotNull
-        final
-        ValueUpdatableGui parent;
+        final ValueUpdatableGui parent;
         final int min;
         final int max;
         final int defaultVal;
@@ -300,7 +294,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         List<Message> displayLore;
 
         @Nullable
-        Object param;
+        final Object param;
 
         /**
          * Constructor for an int setting gui factory.
@@ -319,8 +313,8 @@ public class IntSettingsGui extends AbstractSettingGui {
          *                    If step only contain 1 value, no step item should be displayed.
          */
         public IntSettingFactory(
-                @NotNull Message title, @NotNull ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config,
+                Message title, ValueUpdatableGui parent,
+                String configPath, ConfigHolder config,
                 @Nullable Message displayLore, @Nullable Object param,
                 int min, int max, int defaultVal, int... steps) {
             super(configPath, config);
@@ -337,7 +331,6 @@ public class IntSettingsGui extends AbstractSettingGui {
         /**
          * @return Get setting's gui title
          */
-        @NotNull
         public Message getTitle() {
             return title;
         }
@@ -368,8 +361,8 @@ public class IntSettingsGui extends AbstractSettingGui {
          * @return A formatted GuiItem that will create and open a GUI for the int setting.
          */
         public GuiItem getItem(
-                @NotNull Material itemMat,
-                @NotNull Message name,
+                Material itemMat,
+                Message name,
                 Object... params
         ) {
             // Get item properties
@@ -394,7 +387,7 @@ public class IntSettingsGui extends AbstractSettingGui {
          * @return A formatted GuiItem that will create and open a GUI for the int setting.
          */
         public GuiItem getItem(
-                @NotNull Material itemMat
+                Material itemMat
         ) {
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
             return getItem(itemMat, MsgUI.INSTANCE.getSHARED_GREEN_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));

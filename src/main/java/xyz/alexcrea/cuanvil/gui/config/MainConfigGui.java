@@ -9,15 +9,25 @@ import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
-import xyz.alexcrea.cuanvil.gui.config.global.*;
+import xyz.alexcrea.cuanvil.gui.config.global.BasicConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.CustomRecipeConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantCostConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantLimitConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.EnchantMergeLimitConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 
 import java.util.Collections;
 
+@NotNullByDefault
 public class MainConfigGui extends ChestGui {
 
+    //TODO #130 part 3
     private static final MainConfigGui INSTANCE = new MainConfigGui();
 
     public static MainConfigGui getInstance() {

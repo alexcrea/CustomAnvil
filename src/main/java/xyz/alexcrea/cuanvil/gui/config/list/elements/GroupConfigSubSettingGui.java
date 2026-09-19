@@ -11,9 +11,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
-import xyz.alexcrea.cuanvil.group.*;
+import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
+import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
+import xyz.alexcrea.cuanvil.group.EnchantConflictManager;
+import xyz.alexcrea.cuanvil.group.IncludeGroup;
+import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
@@ -26,10 +30,15 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@NotNullByDefault
 public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implements SelectGroupContainer, SelectMaterialContainer {
 
     private final GroupConfigGui parent;
@@ -38,8 +47,9 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     private boolean usable = true;
 
     public GroupConfigSubSettingGui(
-            @NotNull GroupConfigGui parent,
-            @NotNull IncludeGroup group) {
+            GroupConfigGui parent,
+            IncludeGroup group
+    ) {
         super(3, CasedStringUtil.snakeToUpperSpacedCase(group.getName()));
         this.parent = parent;
         this.group = group;
@@ -115,7 +125,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.pane.bindItem('2', this.groupSelection);
     }
 
-    private @NotNull Consumer<InventoryClickEvent> openGuiAndCheckAction() {
+    private Consumer<InventoryClickEvent> openGuiAndCheckAction() {
         ConfirmActionGui deleteGui = createDeleteGui();
         return event -> {
             event.setCancelled(true);
@@ -133,7 +143,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         };
     }
 
-    private @NotNull ConfirmActionGui createDeleteGui() {
+    private ConfirmActionGui createDeleteGui() {
         Supplier<Boolean> deleteSupplier = () -> {
             // test if group is used & cancel if so
             if(!getUsedLocations(this.group).isEmpty()) return false;
@@ -268,7 +278,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     @Override
-    public void show(@NotNull HumanEntity player) {
+    public void show(HumanEntity player) {
         if(!this.usable) {
             this.parent.show(player);
             return;
@@ -298,7 +308,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         return true;
     }
 
-    private void updateGroup(@NotNull AbstractMaterialGroup group, Set<AbstractMaterialGroup> groups){
+    private void updateGroup(AbstractMaterialGroup group, Set<AbstractMaterialGroup> groups){
         // Set live configuration
         group.setGroups(groups);
 

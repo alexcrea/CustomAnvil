@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType;
@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
+@NotNullByDefault
 public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
-    private final @NotNull WorkPenaltyType currentType;
-    private final @NotNull Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> items;
+    private final WorkPenaltyType currentType;
+    private final Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> items;
 
-    public WorkPenaltyTypeSettingGui(@NotNull BasicConfigGui parent) {
+    public WorkPenaltyTypeSettingGui(BasicConfigGui parent) {
         super(4, MsgUI.INSTANCE.getBASIC_WORK_PENALTY_TITLE(), parent);
 
         this.currentType = ConfigOptions.INSTANCE.getWorkPenaltyType();
@@ -39,9 +40,11 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         }
     }
 
-    public static GuiItem getDisplayItem(@NotNull BasicConfigGui parent,
-                                         @NotNull Material itemMat,
-                                         @NotNull Message name) {
+    public static GuiItem getDisplayItem(
+            BasicConfigGui parent,
+            Material itemMat,
+            Message name
+    ) {
         var item = new ItemStack(itemMat);
 
         var meta = item.getItemMeta();

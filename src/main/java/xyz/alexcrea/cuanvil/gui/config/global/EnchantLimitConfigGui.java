@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -17,11 +18,13 @@ import java.util.Locale;
 /**
  * Global Config gui for enchantment level limit settings.
  */
+@NotNullByDefault
 public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
+    //TODO #130 part 3
     private static final String SECTION_NAME = ConfigOptions.ENCHANT_LIMIT_ROOT;
 
-    private static EnchantLimitConfigGui INSTANCE = null;
+    private static @Nullable EnchantLimitConfigGui INSTANCE = null;
 
     @Nullable
     public static EnchantLimitConfigGui getInstance() {
@@ -59,7 +62,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
                 MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_DESCRIPTION(), prettyKey,
                 -1, 255, -1,
-                1, 5, 10, 50, 100){
+                1, 5, 10, 50, 100) {
 
             @Override
             public int getConfiguredValue() {
@@ -70,14 +73,13 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
             @Override
             public String valueDisplayName(IntSettingsGui.ValueDisplayType type, int value) {
                 if(value < 0) {
-                    return switch (type) {
+                    return switch(type) {
                         case CURRENT -> MsgUI.INSTANCE.getSHARED_VALUED_DEFAULT().unformatted(defaultValueStr);
                         case RESET -> defaultValueStr;
                         default -> MsgUI.INSTANCE.getSHARED_DEFAULT().unformatted();
                     };
 
-                }
-                else return super.valueDisplayName(type, value);
+                } else return super.valueDisplayName(type, value);
             }
         };
     }

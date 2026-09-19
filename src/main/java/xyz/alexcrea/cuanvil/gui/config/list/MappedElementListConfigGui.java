@@ -7,7 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
@@ -16,21 +17,23 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public abstract class MappedElementListConfigGui<T, S> extends ElementListConfigGui<T> {
 
     protected final HashMap<T, S> elementGuiMap;
 
-    protected MappedElementListConfigGui(@NotNull Message title, @NotNull String param, @NotNull Gui parent) {
+    protected MappedElementListConfigGui(Message title, String param, Gui parent) {
         super(title, param, parent);
         this.elementGuiMap = new HashMap<>();
 
     }
 
-    protected MappedElementListConfigGui(@NotNull Message title, @NotNull String param) {
+    protected MappedElementListConfigGui(Message title, String param) {
         this(title, param, MainConfigGui.getInstance());
     }
 
     @Override
+    @Nullable
     protected GuiItem prepareCreateNewItem() {
         // Create new conflict item
         ItemStack createItem = new ItemStack(Material.PAPER);
@@ -95,6 +98,7 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
     protected abstract GuiItem findItemFromElement(T generic, S element);
 
     @Override
+    @Nullable
     protected GuiItem findGuiItemForRemoval(T generic) {
         S element = this.elementGuiMap.get(generic);
         if (element == null) return null;

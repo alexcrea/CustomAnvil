@@ -11,7 +11,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
@@ -22,9 +24,17 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public class MaterialSelectSettingGui extends MappedElementListConfigGui<NamespacedKey, GuiItem> {
 
     private final SelectMaterialContainer selector;
@@ -37,10 +47,11 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     private int nowMaterialHash;
 
     public MaterialSelectSettingGui(
-            @NotNull SelectMaterialContainer selector,
-            @NotNull Message title,
-            @NotNull String param,
-            @NotNull Gui backGui) {
+            SelectMaterialContainer selector,
+            Message title,
+            String param,
+            Gui backGui
+    ) {
         super(title, param);
         this.selector = selector;
         this.backGui = backGui;
@@ -70,11 +81,11 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         );
     }
 
-    private GuiItem saveItem;
-    private GuiItem noChangeItem;
+    private @UnknownNullability GuiItem saveItem;
+    private @UnknownNullability GuiItem noChangeItem;
 
-    private GuiItem instantRemoveOn;
-    private GuiItem instantRemoveOff;
+    private @UnknownNullability GuiItem instantRemoveOn;
+    private @UnknownNullability GuiItem instantRemoveOff;
 
     @Override
     protected void prepareStaticValues() {
@@ -296,16 +307,17 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
     // Unused functions.
     @Override
+    @Nullable
     protected GuiItem prepareCreateNewItem() {// Not used
         return null;
     }
     @Override
     protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {// Not used
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
     @Override
     protected Message genericDisplayedName() {// Not Used
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 }

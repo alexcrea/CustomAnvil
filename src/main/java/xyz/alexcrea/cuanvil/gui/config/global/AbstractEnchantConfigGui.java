@@ -4,6 +4,8 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
@@ -12,7 +14,6 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,6 +22,7 @@ import java.util.function.Consumer;
  *
  * @param <T> Type of the factory of the type of setting the gui should edit.
  */
+@NotNullByDefault
 public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFactory> extends SettingGuiListConfigGui<CAEnchantment, T> {
 
     /**
@@ -69,55 +71,53 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
             return;
         }
 
-        if(!this.factoryMap.containsKey(generic)) {
-            // We need to sort elements again
-            super.updateValueForGeneric(generic, false);
-
-            // Clear page then refill all of them
-            this.firstPage.clear();
-            this.pages.clear();
-            this.pages.add(this.firstPage);
-
-            for(CAEnchantment enchantment : getDisplayableInstanceOfGeneric()) {
-                GuiItem item = this.guiItemMap.get(enchantment);
-
-                if(item == null) {
-                    updateValueForGeneric(enchantment, false, false);
-                } else {
-                    addToPage(item);
-                }
-
-            }
-
-            if(shouldUpdate) update();
-
-        } else {
+        if(this.factoryMap.containsKey(generic)) {
             super.updateValueForGeneric(generic, shouldUpdate);
+            return;
+        }
+        // We need to sort elements again
+        super.updateValueForGeneric(generic, false);
+
+        // Clear page then refill all of them
+        this.firstPage.clear();
+        this.pages.clear();
+        this.pages.add(this.firstPage);
+
+        for(CAEnchantment enchantment : getDisplayableInstanceOfGeneric()) {
+            GuiItem item = this.guiItemMap.get(enchantment);
+
+            if(item == null) {
+                updateValueForGeneric(enchantment, false, false);
+            } else {
+                addToPage(item);
+            }
 
         }
 
+        if(shouldUpdate) update();
     }
 
 
     // Unused methods
     @Override
+    @Nullable
     protected GuiItem prepareCreateNewItem() {
         return null;
     }
 
     @Override
     protected List<String> getCreateItemLore() {
-        return Collections.emptyList();
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
     @Override
     protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
     @Override
     protected String createItemName() {
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
 }

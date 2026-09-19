@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public class GroupSelectSettingGui extends AbstractSettingGui {
 
     final SelectGroupContainer groupContainer;
@@ -36,8 +37,9 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     final Set<AbstractMaterialGroup> selectedGroups;
 
     public GroupSelectSettingGui(
-            @NotNull Message title, @NotNull String param,
-            ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
+            Message title, String param,
+            ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page
+    ) {
         super(6, title.textHolder(param), parent);
         this.groupContainer = groupContainer;
         //Not used but planned

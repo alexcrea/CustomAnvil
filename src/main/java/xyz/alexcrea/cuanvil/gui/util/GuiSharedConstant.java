@@ -7,11 +7,13 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 
 import java.util.Arrays;
 import java.util.Collections;
 
+@NotNullByDefault
 public class GuiSharedConstant {
 
     private GuiSharedConstant(){}

@@ -1,10 +1,15 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
 import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+@NotNullByDefault
 public interface SelectMaterialContainer {
 
     Set<NamespacedKey> getSelectedMaterials();
@@ -13,26 +18,26 @@ public interface SelectMaterialContainer {
 
     Set<NamespacedKey> illegalMaterials();
 
-    static List<String> getMaterialLore(SelectMaterialContainer container, String containerType, String action){
+    static List<String> getMaterialLore(SelectMaterialContainer container, String containerType, String action) {
         // Prepare material lore
         ArrayList<String> groupLore = new ArrayList<>();
         groupLore.add("§7Allow you to select a list of §ematerials §7that this " + containerType + " should " + action);
         Set<NamespacedKey> materialSet = container.getSelectedMaterials();
-        if (materialSet.isEmpty()) {
-            groupLore.add("§7There is no "+action+"d material for this "+containerType+".");
+        if(materialSet.isEmpty()) {
+            groupLore.add("§7There is no " + action + "d material for this " + containerType + ".");
         } else {
-            groupLore.add("§7List of "+action+"d materials for this "+containerType+":");
+            groupLore.add("§7List of " + action + "d materials for this " + containerType + ":");
             Iterator<NamespacedKey> materialIterator = materialSet.iterator();
 
             boolean greaterThanMax = materialSet.size() > 5;
-            int maxindex = (greaterThanMax ? 4 : materialSet.size());
-            for (int i = 0; i < maxindex; i++) {
+            int maxIndex = (greaterThanMax ? 4 : materialSet.size());
+            for(int i = 0; i < maxIndex; i++) {
                 // format string like "- Stone Sword"
                 String formattedName = CasedStringUtil.snakeToUpperSpacedCase(materialIterator.next().getKey().toLowerCase());
                 groupLore.add("§7- §e" + formattedName);
 
             }
-            if (greaterThanMax) {
+            if(greaterThanMax) {
                 groupLore.add("§7And " + (materialSet.size() - 4) + " more...");
             }
         }

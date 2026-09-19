@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -12,14 +13,15 @@ import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Arrays;
 import java.util.Locale;
 
+@NotNullByDefault
 public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
     private static final String SECTION_NAME = "disable-merge-over";
 
-    private static EnchantMergeLimitConfigGui INSTANCE = null;
+    //TODO #130 part 3
+    private static @Nullable EnchantMergeLimitConfigGui INSTANCE = null;
 
     @Nullable
     public static EnchantMergeLimitConfigGui getInstance() {

@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
@@ -23,16 +23,17 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@NotNullByDefault
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
 
-    private static GroupConfigGui INSTANCE;
+    //TODO #130 part 3
+    private static @Nullable GroupConfigGui INSTANCE;
 
     @Nullable
     public static GroupConfigGui getCurrentInstance(){
         return INSTANCE;
     }
 
-    @NotNull
     public static GroupConfigGui getInstance(){
         if(INSTANCE == null) INSTANCE = new GroupConfigGui();
 
@@ -97,6 +98,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
+    @Nullable
     protected IncludeGroup createAndSaveNewEmptyGeneric(String name) {
         ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
         if(manager.getGroupMap().containsKey(name)) return null;

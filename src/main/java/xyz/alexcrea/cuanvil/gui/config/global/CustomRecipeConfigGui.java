@@ -7,8 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
@@ -22,19 +21,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@NotNullByDefault
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
         MappedGuiListConfigGui.LazyElement<CustomRecipeSubSettingGui>> {
 
-    private static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
+    //TODO #130 part 3
+    private static final CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
 
-    @Nullable
+    //@Nullable
     public static CustomRecipeConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    @NotNull
     public static CustomRecipeConfigGui getInstance() {
-        if(INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
+        //if(INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
 
         return INSTANCE;
     }
@@ -72,7 +72,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         return displayedItem;
     }
 
-    private static @NotNull List<Component> getRecipeLore(AnvilCustomRecipe recipe) {
+    private static List<Component> getRecipeLore(AnvilCustomRecipe recipe) {
         boolean shouldWork = recipe.validate();
 
         var shouldWorkMsg = MsgUI.INSTANCE.booleanMessage(shouldWork);

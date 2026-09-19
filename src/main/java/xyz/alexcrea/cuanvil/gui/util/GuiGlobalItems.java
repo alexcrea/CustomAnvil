@@ -10,7 +10,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
@@ -19,13 +19,13 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * A utility class to store function that create generic GUI item.
  */
+@NotNullByDefault
 public class GuiGlobalItems {
 
     // statically create default back itemstack
@@ -47,7 +47,7 @@ public class GuiGlobalItems {
      * @param goal The GUI to open on click.
      * @return An GuiItem that open goal on click.
      */
-    public static GuiItem goToGuiItem(@NotNull ItemStack item, @NotNull Gui goal) {
+    public static GuiItem goToGuiItem(ItemStack item, Gui goal) {
         return new GuiItem(item, GuiGlobalActions.openGuiAction(goal), CustomAnvil.instance);
     }
 
@@ -58,7 +58,7 @@ public class GuiGlobalItems {
      * @param goal The GUI to go back to.
      * @return An GuiItem that go back to goal on click.
      */
-    public static GuiItem backItem(@NotNull Gui goal) {
+    public static GuiItem backItem(Gui goal) {
         return goToGuiItem(BACK_ITEM, goal);
     }
 
@@ -69,8 +69,10 @@ public class GuiGlobalItems {
      * @param target The pattern to add the back item.
      * @param goal   The GUI to go back to.
      */
-    public static void addBackItem(@NotNull PatternPane target,
-                                   @NotNull Gui goal) {
+    public static void addBackItem(
+            PatternPane target,
+            Gui goal
+    ) {
         target.bindItem('B', backItem(goal));
     }
 
@@ -110,8 +112,10 @@ public class GuiGlobalItems {
      * @param target        The pattern to add the background item.
      * @param backgroundMat The material of the background item.
      */
-    public static void addBackgroundItem(@NotNull PatternPane target,
-                                         @NotNull Material backgroundMat) {
+    public static void addBackgroundItem(
+            PatternPane target,
+            Material backgroundMat
+    ) {
         target.bindItem('0', backgroundItem(backgroundMat));
     }
 
@@ -121,7 +125,7 @@ public class GuiGlobalItems {
      *
      * @param target The pattern to add the background item.
      */
-    public static void addBackgroundItem(@NotNull PatternPane target) {
+    public static void addBackgroundItem(PatternPane target) {
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
     }
 
@@ -138,9 +142,9 @@ public class GuiGlobalItems {
      * @return A save setting item.
      */
     public static GuiItem saveItem(
-            @NotNull SettingGui setting,
-            @NotNull ValueUpdatableGui goal) {
-
+            SettingGui setting,
+            ValueUpdatableGui goal
+    ) {
         ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
@@ -184,8 +188,8 @@ public class GuiGlobalItems {
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem openSettingGuiItem(
-            @NotNull ItemStack item,
-            @NotNull SettingGui.SettingGuiFactory factory
+            ItemStack item,
+            SettingGui.SettingGuiFactory factory
     ) {
         return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
@@ -202,10 +206,10 @@ public class GuiGlobalItems {
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem createGuiItemFromProperties(
-            @NotNull SettingGui.SettingGuiFactory factory,
-            @NotNull Material itemMat,
-            @NotNull Component itemName,
-            @NotNull Object value,//TODO ????
+            SettingGui.SettingGuiFactory factory,
+            Material itemMat,
+            Component itemName,
+            Object value,//TODO ????
             @Nullable List<Message> displayLore,
             boolean displayValuePrefix,
             @Nullable Object... params
@@ -216,7 +220,7 @@ public class GuiGlobalItems {
                 MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX_ALONE());
 
         List<Component> lore = loreHeader.formatted(value);
-        if(displayLore != null){
+        if(displayLore != null) {
             lore.add(Component.empty());
             for(Message message : displayLore) {
                 lore.addAll(message.formatted(params));
@@ -251,7 +255,7 @@ public class GuiGlobalItems {
         return path.substring(indexOfDot + 1);
     }
 
-    public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack){
+    public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack) {
         ItemStack item = new ItemStack(itemMaterial);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
@@ -265,7 +269,7 @@ public class GuiGlobalItems {
 
             HumanEntity player = event.getWhoClicked();
 
-            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
+            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) -> {
 
                 if(message == null) return;
                 openBack.show(player);

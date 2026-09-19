@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 import xyz.alexcrea.cuanvil.util.anvil.AnvilXpUtil
 
+//TODO use equivalent of record #130 part 1.4
 class AnvilCustomRecipe(
     val name: String,
     var exactCount: Boolean,

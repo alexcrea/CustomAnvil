@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
@@ -22,17 +22,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+@NotNullByDefault
 public class UnitRepairConfigGui extends
         MappedGuiListConfigGui<NamespacedKey, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
 
-    private static UnitRepairConfigGui INSTANCE;
+    //TODO #130 part 3
+    private static @Nullable UnitRepairConfigGui INSTANCE;
 
     @Nullable
     public static UnitRepairConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    @NotNull
     public static UnitRepairConfigGui getInstance() {
         if (INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
 
@@ -59,7 +60,7 @@ public class UnitRepairConfigGui extends
     }
 
     @Override
-    protected ItemStack createItemForGeneric(@NotNull NamespacedKey material) {
+    protected ItemStack createItemForGeneric(NamespacedKey material) {
         var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
         var section = unitConfig.getConfigurationSection(material.toString().toLowerCase());
         var legacySection = unitConfig.getConfigurationSection(material.getKey().toLowerCase());
@@ -146,7 +147,6 @@ public class UnitRepairConfigGui extends
         }, CustomAnvil.instance);
     }
 
-    @NotNull
     public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(NamespacedKey mat) {
         LazyElement<UnitRepairElementListGui> element = this.elementGuiMap.get(mat);
         if (element == null) {
@@ -160,12 +160,12 @@ public class UnitRepairConfigGui extends
 
     @Override
     protected Message genericDisplayedName() {
-        throw new RuntimeException("SHOULD NOT BE USED IN THIS IMPLEMENTATION");
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
     @Override
     protected NamespacedKey createAndSaveNewEmptyGeneric(String name) {
-        throw new RuntimeException("SHOULD NOT BE USED IN THIS IMPLEMENTATION");
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
 }

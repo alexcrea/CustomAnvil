@@ -7,7 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.lang.Message;
@@ -16,32 +17,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui<T> {
 
     protected final HashMap<T, GuiItem> guiItemMap;
     protected final HashMap<T, S> factoryMap;
 
-    protected SettingGuiListConfigGui(@NotNull Message title, Gui parent) {
+    protected SettingGuiListConfigGui(Message title, Gui parent) {
         super(title, "", parent);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
     }
 
-    protected SettingGuiListConfigGui(@NotNull Message title) {
+    protected SettingGuiListConfigGui(Message title) {
         this(title, MainConfigGui.getInstance());
     }
 
-    protected SettingGuiListConfigGui(@NotNull Message title, @NotNull String param, Gui parent) {
+    protected SettingGuiListConfigGui(Message title, String param, Gui parent) {
         super(title, param, parent);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
     }
 
-    protected SettingGuiListConfigGui(@NotNull Message title, @NotNull String param) {
+    protected SettingGuiListConfigGui(Message title, String param) {
         this(title, param, MainConfigGui.getInstance());
     }
 
     @Override
+    @Nullable
     protected GuiItem prepareCreateNewItem() {
         ItemStack createItem = new ItemStack(Material.PAPER);
         ItemMeta createMeta = createItem.getItemMeta();
@@ -102,6 +105,7 @@ public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGui
     }
 
     @Override // Not used
+    @Nullable
     protected ItemStack createItemForGeneric(T generic) {
         return null;
     }

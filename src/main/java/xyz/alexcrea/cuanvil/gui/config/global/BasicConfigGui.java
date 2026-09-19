@@ -11,7 +11,7 @@ import kotlin.ranges.IntRange;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
@@ -32,9 +32,11 @@ import java.util.ArrayList;
 /**
  * Global config to edit basic settings.
  */
+@NotNullByDefault
 public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
-    private static BasicConfigGui INSTANCE = null;
+    //TODO #130 part 3
+    private static @Nullable BasicConfigGui INSTANCE = null;
 
     @Nullable
     public static BasicConfigGui getInstance() {
@@ -76,26 +78,27 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         updateGuiValues();
     }
 
-    private BoolSettingsGui.BoolSettingFactory capAnvilCost; // L character
-    private GuiItem noCapRepairItem;
-    private IntSettingsGui.IntSettingFactory maxAnvilCost; // C character
-    private GuiItem noMaxCostItem;
+    //TODO #130 part 3
+    private @Nullable BoolSettingsGui.BoolSettingFactory capAnvilCost; // L character
+    private @Nullable GuiItem noCapRepairItem;
+    private @Nullable IntSettingsGui.IntSettingFactory maxAnvilCost; // C character
+    private @Nullable GuiItem noMaxCostItem;
 
-    private BoolSettingsGui.BoolSettingFactory removeAnvilCostLimit; // R character
-    private BoolSettingsGui.BoolSettingFactory replaceTooExpensive; // T character
+    private @Nullable BoolSettingsGui.BoolSettingFactory removeAnvilCostLimit; // R character
+    private @Nullable BoolSettingsGui.BoolSettingFactory replaceTooExpensive; // T character
 
-    private IntSettingsGui.IntSettingFactory itemRepairCost; // I character
-    private IntSettingsGui.IntSettingFactory unitRepairCost; // U character
-    private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
-    private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
+    private @Nullable IntSettingsGui.IntSettingFactory itemRepairCost; // I character
+    private @Nullable IntSettingsGui.IntSettingFactory unitRepairCost; // U character
+    private @Nullable IntSettingsGui.IntSettingFactory itemRenameCost; // r character
+    private @Nullable IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
-    private BoolSettingsGui.BoolSettingFactory allowColourCode; // c character
-    private BoolSettingsGui.BoolSettingFactory allowHexColour; // h character
+    private @Nullable BoolSettingsGui.BoolSettingFactory allowColourCode; // c character
+    private @Nullable BoolSettingsGui.BoolSettingFactory allowHexColour; // h character
 
-    private BoolSettingsGui.BoolSettingFactory permissionNeededForColour; // p character
-    private GuiItem noPermissionNeededItem;
-    private IntSettingsGui.IntSettingFactory useOfColourCost; // P character
-    private GuiItem noColourCostItem;
+    private @Nullable BoolSettingsGui.BoolSettingFactory permissionNeededForColour; // p character
+    private @Nullable GuiItem noPermissionNeededItem;
+    private @Nullable IntSettingsGui.IntSettingFactory useOfColourCost; // P character
+    private @Nullable GuiItem noColourCostItem;
 
     /**
      * Prepare basic gui displayed items factory and static items..
@@ -266,7 +269,6 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
     }
 
-    @NotNull
     private Message[] getReplaceToExpensiveLore() {
         ArrayList<Message> lore = new ArrayList<>();
         lore.add(MsgUI.INSTANCE.getBASIC_REPLACE_TOO_EXPENSIVE_DESCRIPTION());
@@ -283,6 +285,25 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         // limit and cap anvil cost item
         GuiItem capAnvilCostItem;
         GuiItem maxAnvilCostItem;
+
+        //TODO #130 part 3
+        assert this.removeAnvilCostLimit != null;
+        assert this.capAnvilCost != null;
+        assert this.maxAnvilCost != null;
+        assert this.noCapRepairItem != null;
+        assert this.noMaxCostItem != null;
+        assert this.replaceTooExpensive != null;
+        assert this.itemRepairCost != null;
+        assert this.unitRepairCost != null;
+        assert this.itemRenameCost != null;
+        assert this.sacrificeIllegalEnchantCost != null;
+        assert this.allowColourCode != null;
+        assert this.allowHexColour != null;
+        assert this.permissionNeededForColour != null;
+        assert this.useOfColourCost != null;
+        assert this.noPermissionNeededItem != null;
+        assert this.noColourCostItem != null;
+
         if(!this.removeAnvilCostLimit.getConfiguredValue()) {
             capAnvilCostItem = this.capAnvilCost.getItem(
                     MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_ITEM()

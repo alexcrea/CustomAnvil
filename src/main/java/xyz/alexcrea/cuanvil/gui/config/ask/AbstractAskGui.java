@@ -6,19 +6,20 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 
+@NotNullByDefault
 public abstract class AbstractAskGui extends ChestGui {
 
     protected final PatternPane pane;
 
     AbstractAskGui(
             int rows,
-            @NotNull Message name, @NotNull String param,
+            Message name, String param,
             Gui backOnCancel
     ) {
         super(rows, name.textHolder(param), CustomAnvil.instance);

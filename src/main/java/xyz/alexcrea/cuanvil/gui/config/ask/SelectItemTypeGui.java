@@ -6,9 +6,10 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
@@ -16,64 +17,48 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
+@NotNullByDefault
 public class SelectItemTypeGui extends AbstractAskGui {
 
-    private ItemStack selectedItem;
+    private final Message actionDescription;
+    private final String descriptionParam;
 
-    public SelectItemTypeGui(@NotNull Message title,
-                             @NotNull String titleParam,
-                             @NotNull Message actionDescription,
-                             @NotNull String descriptionParam,
-                             @NotNull Gui backOnCancel,
-                             @NotNull BiConsumer<ItemStack, HumanEntity> onSave,
-                             boolean materialOnly) {
+    private final BiConsumer<ItemStack, HumanEntity> onSave;
+
+    private final boolean materialOnly;
+
+    private final GuiItem selectItem;
+
+    public SelectItemTypeGui(
+            Message title,
+            String titleParam,
+            Message actionDescription,
+            String descriptionParam,
+            Gui backOnCancel,
+            BiConsumer<ItemStack, HumanEntity> onSave,
+            boolean materialOnly
+    ) {
         super(3, title, titleParam, backOnCancel);
-        this.selectedItem = null;
+        this.actionDescription = actionDescription;
+        this.descriptionParam = descriptionParam;
+
+        this.onSave = onSave;
+
+        this.materialOnly = materialOnly;
 
         // Save item
-        GuiItem confirmItem = new GuiItem(GuiSharedConstant.CONFIRM_ITEM, event -> {
-            event.setCancelled(true);
-            HumanEntity player = event.getWhoClicked();
-
-            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
-                player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
-                return;
-            }
-
-            onSave.accept(this.selectedItem, player);
-
-        }, CustomAnvil.instance);
         this.pane.bindItem('S', GuiGlobalItems.backgroundItem());
 
         // Select item
-        ItemStack selectItem = setDisplayMeta(new ItemStack(Material.BARRIER), actionDescription, descriptionParam);
+        ItemStack selectItemStack = setDisplayMeta(new ItemStack(Material.BARRIER), actionDescription, descriptionParam);
 
-        AtomicReference<GuiItem> selectGuiItem = new AtomicReference<>();
-        selectGuiItem.set(new GuiItem(selectItem, event -> {
-            event.setCancelled(true);
+        selectItem = new GuiItem(selectItemStack, this::selectHandler,
+                CustomAnvil.instance
+        );
 
-            ItemStack cursor = event.getWhoClicked().getItemOnCursor();
-            if(MaterialUtil.INSTANCE.isAir(cursor)) return;
-
-            ItemStack finalItem;
-            if(materialOnly) {
-                finalItem = setDisplayMeta(new ItemStack(cursor.getType()), actionDescription, descriptionParam);
-            } else {
-                finalItem = cursor.clone();
-            }
-            this.selectedItem = finalItem.clone();
-
-            selectGuiItem.get().setItem(finalItem);
-            this.pane.bindItem('S', confirmItem);
-
-            update();
-        }, CustomAnvil.instance));
-
-        this.pane.bindItem('V', selectGuiItem.get());
+        this.pane.bindItem('V', selectItem);
 
         // Temporary leave item
         GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
@@ -81,11 +66,57 @@ public class SelectItemTypeGui extends AbstractAskGui {
         this.pane.bindItem('s', temporaryLeave);
     }
 
-    @NotNull
+    private void selectHandler(
+            InventoryClickEvent event
+    ) {
+        event.setCancelled(true);
+
+        ItemStack cursor = event.getWhoClicked().getItemOnCursor();
+        if(MaterialUtil.INSTANCE.isAir(cursor)) return;
+
+        ItemStack finalItem;
+        if(this.materialOnly) {
+            finalItem = setDisplayMeta(
+                    new ItemStack(cursor.getType()),
+                    this.actionDescription,
+                    this.descriptionParam
+            );
+        } else {
+            finalItem = cursor.clone();
+        }
+        this.selectItem.setItem(finalItem);
+
+        var selectedItem = finalItem.clone();
+        // Save item
+        var confirmItem = new GuiItem(
+                GuiSharedConstant.CONFIRM_ITEM, confirmEvent ->
+                confirmHandler(confirmEvent, selectedItem)
+        );
+        this.pane.bindItem('S', confirmItem);
+
+        update();
+    }
+
+    private void confirmHandler(
+            InventoryClickEvent event,
+            ItemStack selected
+    ) {
+        event.setCancelled(true);
+        HumanEntity player = event.getWhoClicked();
+
+        if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            player.closeInventory();
+            MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+            return;
+        }
+
+        this.onSave.accept(selected, player);
+    }
+
     private ItemStack setDisplayMeta(
-            @NotNull ItemStack item,
-            @NotNull Message actionDescription,
-            @NotNull String param
+            ItemStack item,
+            Message actionDescription,
+            String param
     ) {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;

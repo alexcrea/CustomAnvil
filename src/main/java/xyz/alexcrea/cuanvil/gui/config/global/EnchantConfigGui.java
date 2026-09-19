@@ -10,7 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.api.EnchantmentApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -27,19 +28,21 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@NotNullByDefault
 public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private final Set<CAEnchantment> enchantments;
     private final PatternPane pane;
 
-    private EnchantLimitConfigGui enchantLimitConfigGui;
-    private EnchantMergeLimitConfigGui enchantMergeLimitConfigGui;
-    private EnchantCostConfigGui enchantCostConfigGui;
+    //TODO #130 part 3
+    private @Nullable EnchantLimitConfigGui enchantLimitConfigGui;
+    private @Nullable EnchantMergeLimitConfigGui enchantMergeLimitConfigGui;
+    private @Nullable EnchantCostConfigGui enchantCostConfigGui;
 
-    private EnchantConflictGui enchantConflictGui;
-    private GroupConfigGui groupConfigGui;
+    private @Nullable EnchantConflictGui enchantConflictGui;
+    private @Nullable GroupConfigGui groupConfigGui;
 
-    private static String selectName(@NotNull Set<CAEnchantment> enchantments) {
+    private static String selectName(Set<CAEnchantment> enchantments) {
         if(enchantments.size() == 1) {
             return enchantments.stream().findFirst().get().getPrettyName();
         }
@@ -47,7 +50,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         return MsgUI.INSTANCE.getENCHANT_CONFIG_MULTIPLES_NAME().unformatted();
     }
 
-    public EnchantConfigGui(@NotNull Set<CAEnchantment> enchantments) {
+    public EnchantConfigGui(Set<CAEnchantment> enchantments) {
         super(3,
                 MsgUI.INSTANCE.getENCHANT_CONFIG_TITLE().textHolder(selectName(enchantments)),
                 CustomAnvil.instance);
@@ -147,7 +150,6 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         return MainConfigGui.enchantCostItem(enchantCostConfigGui);
     }
 
-    @NotNull
     @Contract(pure = true)
     private Predicate<EnchantConflictGroup> getGroupFilter() {
         return group -> group.getEnchants()

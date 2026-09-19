@@ -14,7 +14,9 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
@@ -26,6 +28,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@NotNullByDefault
 public abstract class ElementListConfigGui<T> extends ChestGui implements ValueUpdatableGui {
 
     public static final int LIST_FILLER_START_X = 1;
@@ -41,7 +44,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     private Predicate<T> filter = (t) -> true;
     private boolean hasDefaultFilter = true;
 
-    protected ElementListConfigGui(@NotNull Message title, String param, Gui parent) {
+    protected ElementListConfigGui(Message title, String param, Gui parent) {
         super(6, title.textHolder(param, "", ""), CustomAnvil.instance);
         this.rawTitle = title;
         this.param = param;
@@ -69,9 +72,10 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         );
     }
 
-    protected OutlinePane firstPage;
-    protected ArrayList<OutlinePane> pages;
-    protected HashMap<UUID, Integer> pageMap;
+    //TODO #130 part 3
+    protected @UnknownNullability OutlinePane firstPage;
+    protected @UnknownNullability ArrayList<OutlinePane> pages;
+    protected @UnknownNullability HashMap<UUID, Integer> pageMap;
 
     public void init() {
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
@@ -90,8 +94,8 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         reloadValues();
     }
 
-    protected GuiItem goLeftItem;
-    protected GuiItem goRightItem;
+    protected @UnknownNullability GuiItem goLeftItem;
+    protected @UnknownNullability GuiItem goRightItem;
 
     protected void prepareStaticValues() {
         // Left item creation for consumer & bind
@@ -147,6 +151,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         update();
     }
 
+    @Nullable
     protected abstract GuiItem prepareCreateNewItem();
 
     protected OutlinePane createEmptyPage() {
@@ -221,6 +226,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
                 ItemStack leftItem = this.goLeftItem.getItem();
                 ItemMeta leftMeta = leftItem.getItemMeta();
 
+                assert leftMeta != null;
                 leftMeta.setDisplayName("§eReturn to page " + (page));
 
                 leftItem.setItemMeta(leftMeta);
@@ -251,7 +257,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     }
 
     @Override // assume will not be called in multiple thread
-    public void show(@NotNull HumanEntity humanEntity) {
+    public void show(HumanEntity humanEntity) {
         int pageID = getPlayerPageID(humanEntity.getUniqueId());
         OutlinePane page = this.pages.get(pageID);
 
@@ -271,8 +277,8 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
 
     }
 
-    @Override // assume will not be called in multiple thread
-    public void click(@NotNull InventoryClickEvent event) {
+    @Override // assume will not be called in multiple thread TODO will this hold true ? #130 part 2
+    public void click(InventoryClickEvent event) {
         int pageID = getPlayerPageID(event.getWhoClicked().getUniqueId());
         OutlinePane page = this.pages.get(pageID);
 
@@ -309,8 +315,10 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         update();
     }
 
+    @Nullable
     protected abstract GuiItem findGuiItemForRemoval(T generic);
 
+    @Nullable
     protected abstract ItemStack createItemForGeneric(T generic);
 
     protected abstract void updateGeneric(T generic, ItemStack usedItem);

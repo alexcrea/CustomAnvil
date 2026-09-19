@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.global.CustomRecipeConfigGui;
@@ -25,10 +25,9 @@ import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.awt.*;
-import java.util.Collections;
 import java.util.function.Supplier;
 
+@NotNullByDefault
 public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
     private final CustomRecipeConfigGui parent;
@@ -37,8 +36,9 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     private boolean shouldWork = true;
 
     public CustomRecipeSubSettingGui(
-            @NotNull CustomRecipeConfigGui parent,
-            @NotNull AnvilCustomRecipe anvilRecipe) {
+            CustomRecipeConfigGui parent,
+            AnvilCustomRecipe anvilRecipe
+    ) {
         super(4, CasedStringUtil.snakeToUpperSpacedCase(anvilRecipe.toString()));
         this.parent = parent;
         this.anvilRecipe = anvilRecipe;
@@ -66,6 +66,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     private ItemSettingGui.ItemSettingFactory rightItemFactory;
     private ItemSettingGui.ItemSettingFactory resultItemFactory;
 
+    //TODO #130 part 3
     private void prepareStaticValues() {
 
         GuiGlobalItems.addBackItem(this.pane, this.parent);
@@ -244,13 +245,12 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     }
 
     @Override
-    public void show(@NotNull HumanEntity humanEntity) {
+    public void show(HumanEntity humanEntity) {
         if (this.shouldWork) {
             super.show(humanEntity);
         } else {
             this.parent.show(humanEntity);
         }
     }
-
 
 }

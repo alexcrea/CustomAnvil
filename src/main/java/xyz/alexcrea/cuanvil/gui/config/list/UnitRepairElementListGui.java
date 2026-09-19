@@ -9,7 +9,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
@@ -22,10 +22,17 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
-public class UnitRepairElementListGui extends SettingGuiListConfigGui<NamespacedKey, DoubleSettingGui.DoubleSettingFactory> implements ElementMappedToListGui {
+@NotNullByDefault
+public class UnitRepairElementListGui
+        extends SettingGuiListConfigGui<NamespacedKey, DoubleSettingGui.DoubleSettingFactory>
+        implements ElementMappedToListGui {
 
     private final NamespacedKey parentMaterial;
     private final UnitRepairConfigGui parentGui;
@@ -37,8 +44,10 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
         return CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
     }
 
-    public UnitRepairElementListGui(@NotNull NamespacedKey parentMaterial,
-                                    @NotNull UnitRepairConfigGui parentGui) {
+    public UnitRepairElementListGui(
+            NamespacedKey parentMaterial,
+            UnitRepairConfigGui parentGui
+    ) {
         super(MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_TITLE(), prettifiedName(parentMaterial));
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
@@ -156,7 +165,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
         return keys;
     }
 
-    private void addAllKeys(@Nullable ConfigurationSection section, @NotNull Set<NamespacedKey> keys) {
+    private void addAllKeys(@Nullable ConfigurationSection section, Set<NamespacedKey> keys) {
         if(section == null) return;
         for(var key : section.getKeys(false)) {
             var material = NamespacedKey.fromString(key);
@@ -203,7 +212,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     }
 
     @Override
-    public void show(@NotNull HumanEntity humanEntity) {
+    public void show(HumanEntity humanEntity) {
         if(!this.shouldWork) {
             humanEntity.closeInventory();
             return;

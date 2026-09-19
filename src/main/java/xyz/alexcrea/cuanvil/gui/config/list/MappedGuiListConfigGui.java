@@ -5,7 +5,8 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.lang.Message;
@@ -17,22 +18,23 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@NotNullByDefault
 public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui.LazyElement<?>>
         extends MappedElementListConfigGui<T, S> {
 
-    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull String param) {
+    protected MappedGuiListConfigGui(Message title, String param) {
         super(title, param);
     }
 
-    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull String param, @NotNull Gui parent) {
+    protected MappedGuiListConfigGui(Message title, String param, Gui parent) {
         super(title, param, parent);
     }
 
-    protected MappedGuiListConfigGui(@NotNull Message title) {
+    protected MappedGuiListConfigGui(Message title) {
         super(title, "");
     }
 
-    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull Gui parent) {
+    protected MappedGuiListConfigGui(Message title, Gui parent) {
         super(title, "", parent);
     }
 
@@ -73,10 +75,9 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
     @Override
     protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {
+        @SuppressWarnings("NullableProblems") // Will be set just after that
         AtomicReference<Consumer<String>> selfRef = new AtomicReference<>();
         Consumer<String> selfCallback = (message) -> {
-            if (message == null) return;
-
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
@@ -125,6 +126,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
     protected abstract Message genericDisplayedName();
 
+    @Nullable
     protected abstract T createAndSaveNewEmptyGeneric(String name);
 
     public static class LazyElement<T extends ElementMappedToListGui> extends LazyValue<T> {
@@ -145,11 +147,9 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
             return parentItem;
         }
 
-        @NotNull
         public Consumer<InventoryClickEvent> openAction() {
             return event -> lazyOpenConsumer.get().accept(event);
         }
-
     }
 
 }

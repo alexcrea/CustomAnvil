@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
@@ -21,19 +21,20 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Collection;
 
+@NotNullByDefault
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup,
         MappedGuiListConfigGui.LazyElement<EnchantConflictSubSettingGui>> {
 
-    private static EnchantConflictGui INSTANCE;
+    //TODO #130 part 3
+    private static @Nullable EnchantConflictGui INSTANCE;
 
     @Nullable
     public static EnchantConflictGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    @NotNull
     public static EnchantConflictGui getInstance() {
-        if (INSTANCE == null) INSTANCE = new EnchantConflictGui();
+        if(INSTANCE == null) INSTANCE = new EnchantConflictGui();
 
         return INSTANCE;
     }
@@ -67,7 +68,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         config.set(name + ".notAffectedGroups", emptyStringArray);
         config.set(name + ".maxEnchantmentBeforeConflict", 0);
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
 

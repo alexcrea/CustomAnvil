@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -31,6 +31,7 @@ import java.util.function.Consumer;
  * An instance of a gui used to edit an enchantment cost setting.
  * May be considered as a 2 int setting.
  */
+@NotNullByDefault
 public class EnchantCostSettingsGui extends IntSettingsGui {
 
     protected final static String ITEM_PATH = ".item";
@@ -145,7 +146,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         // minus item
         GuiItem minusItem;
-        if (nowBook > holder.min) {
+        if(nowBook > holder.min) {
             int planned = Math.max(holder.min, nowBook - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
@@ -163,7 +164,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         //plus item
         GuiItem plusItem;
-        if (nowBook < holder.max) {
+        if(nowBook < holder.max) {
             int planned = Math.min(holder.max, nowBook + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
@@ -185,7 +186,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         assert nowMeta != null;
 
         nowMeta.setDisplayName("<white>Value: <yellow>" + nowBook);//TODO MESSAGE
-        if (holder.displayLore != null) {
+        if(holder.displayLore != null) {
             ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), nowMeta);
         }
 
@@ -197,7 +198,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if (now != holder.defaultVal || nowBook != holder.defaultBookVal) {
+        if(now != holder.defaultVal || nowBook != holder.defaultBookVal) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -229,7 +230,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         holder.config.getConfig().set(holder.configPath + ITEM_PATH, now);
         holder.config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
@@ -246,7 +247,6 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
         final int defaultBookVal;
-        @NotNull
         final CAEnchantment enchantment;
 
         /**
@@ -266,10 +266,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          *                    If step only contain 1 value, no step item should be displayed.
          */
         public EnchantCostSettingFactory(
-                @NotNull Message title, ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config,
+                Message title, ValueUpdatableGui parent,
+                String configPath, ConfigHolder config,
                 @Nullable Message displayLore, @Nullable Object param,
-                @NotNull CAEnchantment enchantment,
+                CAEnchantment enchantment,
                 int min, int max, int... steps) {
 
             super(title, parent,

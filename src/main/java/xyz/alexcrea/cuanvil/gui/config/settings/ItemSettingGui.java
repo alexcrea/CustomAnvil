@@ -11,8 +11,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -21,7 +22,6 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,11 +30,12 @@ import java.util.function.Consumer;
 /**
  * An instance of a gui used to edit an item setting.
  */
+@NotNullByDefault
 public class ItemSettingGui extends AbstractSettingGui {
 
     private final ItemSettingFactory holder;
-    private final ItemStack before;
-    private ItemStack now;
+    private final @Nullable ItemStack before;
+    private @Nullable ItemStack now;
 
     /**
      * Create an item setting config gui.
@@ -42,7 +43,7 @@ public class ItemSettingGui extends AbstractSettingGui {
      * @param holder Configuration factory of this setting.
      * @param now    The defined value of this setting.
      */
-    protected ItemSettingGui(ItemSettingFactory holder, ItemStack now) {
+    protected ItemSettingGui(ItemSettingFactory holder, @Nullable ItemStack now) {
         super(3, holder.getTitle(), holder.parent, holder.param);
         this.holder = holder;
         this.before = now;
@@ -70,7 +71,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     }
 
 
-    protected GuiItem returnToDefault;
+    protected @UnknownNullability GuiItem returnToDefault;
 
     /**
      * Prepare "return to default value" gui item.
@@ -170,19 +171,13 @@ public class ItemSettingGui extends AbstractSettingGui {
      * A factory for an item setting gui that hold setting's information.
      */
     public static class ItemSettingFactory extends SettingGuiFactory {
-        @NotNull
         final Message title;
-        @NotNull
-        final
-        ValueUpdatableGui parent;
+        final ValueUpdatableGui parent;
         @Nullable
-        final
-        ItemStack defaultVal;
-        @NotNull
-        final
-        List<Message> displayLore;
+        final ItemStack defaultVal;
+        final List<Message> displayLore;
         @Nullable
-        Object param;
+        final Object param;
 
         /**
          * Constructor for an item setting gui factory.
@@ -195,8 +190,8 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param displayLore Gui display item lore.
          */
         public ItemSettingFactory(
-                @NotNull Message title, @NotNull ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config,
+                Message title, ValueUpdatableGui parent,
+                String configPath, ConfigHolder config,
                 @Nullable ItemStack defaultVal,
                 @Nullable Object param, Message... displayLore) {
             super(configPath, config);
@@ -211,7 +206,6 @@ public class ItemSettingGui extends AbstractSettingGui {
         /**
          * @return Get setting's gui title.
          */
-        @NotNull
         public Message getTitle() {
             return title;
         }
@@ -219,11 +213,11 @@ public class ItemSettingGui extends AbstractSettingGui {
         /**
          * @return The configured value for the associated setting.
          */
+        @Nullable
         public ItemStack getConfiguredValue() {
             return this.config.getConfig().getItemStack(this.configPath, this.defaultVal);
         }
 
-        @NotNull
         public List<Message> getDisplayLore() {
             return this.displayLore;
         }
@@ -244,7 +238,7 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param name Name of the item.
          * @return A formatted GuiItem that will create and open a GUI for the item setting.
          */
-        public GuiItem getItem(@NotNull String name) {
+        public GuiItem getItem(String name) {
             ItemStack item = getConfiguredValue();
             if(item == null || item.getType().isAir()){
                 item = new ItemStack(Material.BARRIER);

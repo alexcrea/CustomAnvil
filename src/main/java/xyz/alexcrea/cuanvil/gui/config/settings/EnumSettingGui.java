@@ -10,8 +10,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum> extends AbstractSettingGui {
 
     private final EnumSettingFactory<T> holder;
@@ -54,12 +56,12 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
     }
 
 
-    public void prepareStaticItems(){
+    public void prepareStaticItems() {
         prepareReturnToDefault();
     }
 
 
-    protected GuiItem returnToDefault;
+    protected @UnknownNullability GuiItem returnToDefault;
 
     /**
      * Prepare "return to default value" gui item.
@@ -94,7 +96,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
 
         // reset to default
         GuiItem returnToDefault;
-        if (now != holder.getDefault()) {
+        if(now != holder.getDefault()) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -122,7 +124,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
     public boolean onSave() {
         holder.config.getConfig().set(holder.configPath, this.now.configName());
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
             return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
@@ -138,13 +140,10 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
      * A factory for an enum setting gui that hold setting's information.
      */
     public abstract static class EnumSettingFactory<T extends Enum<T> & ConfigurableEnum> extends SettingGuiFactory {
-        @NotNull
         final Message title;
         @Nullable
-        Object param;
-        @NotNull
-        final
-        ValueUpdatableGui parent;
+        final Object param;
+        final ValueUpdatableGui parent;
 
         /**
          * Constructor for an enum settings gui factory
@@ -155,19 +154,19 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @param config     Configuration holder of this setting.
          */
         protected EnumSettingFactory(
-                @NotNull Message title, @Nullable Object param,
-                @NotNull ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config) {
+                Message title, @Nullable Object param,
+                ValueUpdatableGui parent,
+                String configPath, ConfigHolder config) {
             super(configPath, config);
             this.title = title;
             this.param = param;
 
             this.parent = parent;
         }
+
         /**
          * @return Get setting's gui title.
          */
-        @NotNull
         public Message getTitle() {
             return title;
         }
@@ -175,17 +174,14 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
         /**
          * @return The configured value for the associated setting.
          */
-        @NotNull
         public abstract T getConfiguredValue();
 
-        @NotNull
         public abstract List<String> getDisplayLore(T value);
 
         /**
          * @return Next value for a given enum
          */
-        @NotNull
-        public T next(@NotNull T now){
+        public T next(T now) {
             Class<T> clazz = now.getDeclaringClass();
             T[] values = clazz.getEnumConstants();
 
@@ -197,10 +193,10 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
         }
 
         /**
-         * Get default value value
+         * Get default value
+         *
          * @return default value
          */
-        @NotNull
         public abstract T getDefault();
 
         @Override
@@ -219,7 +215,7 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
          * @param name Name of the display.
          * @return A formatted GuiItem that will create and open a GUI for the enum setting.
          */
-        public GuiItem getItem(@NotNull Material material, @NotNull String name) {
+        public GuiItem getItem(Material material, String name) {
             T value = getConfiguredValue();
 
             ItemStack item = new ItemStack(material);
@@ -241,9 +237,8 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
         String configName();
 
         ItemStack configurationGuiItem();
+
         String configurationGuiName();
-
-
     }
 
 }
