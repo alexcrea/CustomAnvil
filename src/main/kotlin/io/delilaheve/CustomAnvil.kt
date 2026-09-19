@@ -126,8 +126,6 @@ open class CustomAnvil : JavaPlugin() {
     // stop plugin if we do not force a dirty start (true by default)
     // Return true if start was stopped
     private fun tryDirtyStart(): Boolean {
-        //TODO check as usable in locked not check null
-        if(ConfigHolder.DEFAULT_CONFIG == null) return false
         ConfigHolder.DEFAULT.read.use {lock ->
             val config = lock.get()
 
@@ -143,7 +141,6 @@ open class CustomAnvil : JavaPlugin() {
     // stop plugin if we force a safe start (false by default)
     // Return true if start was stopped
     private fun trySafeStart(): Boolean {
-        if(ConfigHolder.DEFAULT_CONFIG == null) return false
         ConfigHolder.DEFAULT.read.use {lock ->
             val config = lock.get()
 

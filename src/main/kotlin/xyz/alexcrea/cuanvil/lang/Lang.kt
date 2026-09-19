@@ -76,9 +76,10 @@ object Lang {
      */
     private val langID: String
         get() {
-            return ConfigHolder.DEFAULT_CONFIG
+            return ConfigHolder.DEFAULT.read.use { lock -> lock.get()
                 .config
                 .getString(LANG_PATH, DEFAULT_LANG)!!
+            }
         }
 
 }

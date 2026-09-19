@@ -3,11 +3,14 @@ package xyz.alexcrea.cuanvil.util
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.inventory.meta.ItemMeta
+import org.jetbrains.annotations.NotNullByDefault
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.sendPaperMessage
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setComponentDisplayName
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil.setPaperLore
 import xyz.alexcrea.cuanvil.lang.Message
 
+@Suppress("unused")
+@NotNullByDefault
 object ComponentUtil {
 
     fun Component.serializeMM(): String {
@@ -15,7 +18,7 @@ object ComponentUtil {
     }
 
     fun Component.serializeMMColor(): String {
-        return MiniMessageUtil.color_only_mm.serialize(this)
+        return MiniMessageUtil.colour_only_mm.serialize(this)
     }
 
     fun Component.serializeLegacy(): String {
