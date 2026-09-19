@@ -26,6 +26,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -285,15 +286,17 @@ public class IntSettingsGui extends AbstractSettingGui {
     public static class IntSettingFactory extends SettingGuiFactory {
 
         @NotNull
-        Message title;
+        final Message title;
         @NotNull
+        final
         ValueUpdatableGui parent;
-        int min;
-        int max;
-        int defaultVal;
-        int[] steps;
+        final int min;
+        final int max;
+        final int defaultVal;
+        final int[] steps;
 
         @Nullable
+        final
         List<Message> displayLore;
 
         @Nullable

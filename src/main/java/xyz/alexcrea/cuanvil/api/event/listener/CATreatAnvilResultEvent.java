@@ -4,7 +4,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.view.AnvilView;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.anvil.AnvilCost;
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.anvil.AnvilUseType;
  * A null result will cancel this event
  */
 @SuppressWarnings({"unused", "UnstableApiUsage"})
+@NotNullByDefault
 public class CATreatAnvilResultEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -29,11 +30,10 @@ public class CATreatAnvilResultEvent extends Event {
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 
-    @NotNull
     private final AnvilView view;
 
     private final AnvilUseType useType;
@@ -49,7 +49,7 @@ public class CATreatAnvilResultEvent extends Event {
     private final AnvilCost cost;
 
     public CATreatAnvilResultEvent(
-            @NotNull AnvilView view,
+            AnvilView view,
             AnvilUseType useType,
             @Nullable ItemStack result,
             AnvilCost cost) {
@@ -67,7 +67,7 @@ public class CATreatAnvilResultEvent extends Event {
      *
      * @return The inventory view of this event.
      */
-    public @NotNull AnvilView getView() {
+    public AnvilView getView() {
         return view;
     }
 

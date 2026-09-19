@@ -1,54 +1,62 @@
 package xyz.alexcrea.cuanvil.enchant.wrapped;
 
 import com.willfp.ecoenchants.enchant.EcoEnchant;
-import com.willfp.ecoenchants.target.EnchantmentTarget;
+import com.willfp.ecoenchants.enchant.EcoEnchants;
 import com.willfp.ecoenchants.type.EnchantmentType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.EnchantmentRarity;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@NotNullByDefault
 public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
-    private final @NotNull EcoEnchant ecoEnchant;
+    private final String enchantID;
 
-    public CAEcoEnchant(@NotNull EcoEnchant enchant) {
+    public CAEcoEnchant(EcoEnchant enchant) {
         super(enchant.getEnchantment(), EnchantmentRarity.COMMON);
-        this.ecoEnchant = enchant;
+        this.enchantID = enchant.getID();
+    }
+
+    public EcoEnchant fromKey() {
+        return EcoEnchants.INSTANCE.getByID(enchantID);
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
-        if (enchantments.isEmpty()) return false;
+    public boolean isEnchantConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType) {
+        if(enchantments.isEmpty()) return false;
 
         // Check if there is only self
-        if (enchantments.size() == 1 && this.equals(enchantments.keySet().stream().findFirst().get()))
+        var result = enchantments.keySet().stream().findFirst();
+        if(result.isPresent() && this.equals(result.get()))
             return false;
 
-        if (this.ecoEnchant.getConflictsWithEverything()) {
+        var ecoEnchant = fromKey();
+        if(ecoEnchant.getConflictsWithEverything()) {
             return true;
         }
 
         HashMap<EnchantmentType, Integer> typeAmountMap = new HashMap<>();
 
-        for (CAEnchantment other : enchantments.keySet()) {
-            if (other instanceof CABukkitEnchantment otherVanilla
-                    && this.ecoEnchant.conflictsWith(otherVanilla.getEnchant())) {
+        for(CAEnchantment other : enchantments.keySet()) {
+            if(other instanceof CABukkitEnchantment otherVanilla
+                    && ecoEnchant.conflictsWith(otherVanilla.getEnchant())) {
                 return true;
             }
 
-            if (other instanceof CAEcoEnchant ecoOther) {
-                EnchantmentType type = ecoOther.ecoEnchant.getType();
+            if(other instanceof CAEcoEnchant ecoOther) {
+                EnchantmentType type = ecoOther.fromKey().getType();
                 typeAmountMap.putIfAbsent(type, 0);
 
                 int amount = typeAmountMap.get(type) + 1;
-                if (amount > type.getLimit()) {
+                if(amount > type.getLimit()) {
                     return true;
                 }
 
@@ -61,19 +69,16 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments,
-                                  @NotNull NamespacedKey itemType,
-                                  @NotNull ItemStack item) {
-        if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item
+    ) {
+        if(Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
             return false;
         }
 
-        for (EnchantmentTarget target : this.ecoEnchant.getTargets()) {
-            if (target.matches(item)) {
-                return false;
-            }
-        }
-
-        return true;
+        var canEnchant = fromKey().canEnchantItem(item, Collections.emptyList());
+        return !canEnchant;
     }
 }

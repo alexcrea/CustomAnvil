@@ -8,7 +8,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialog
 import xyz.alexcrea.cuanvil.dialog.AnvilRenameDialogImpl
 import xyz.alexcrea.cuanvil.update.UpdateUtils
-import xyz.alexcrea.cuanvil.util.anvil.AnvilColorUtil
+import xyz.alexcrea.cuanvil.util.anvil.AnvilColourUtil
 
 object AnvilRenameDialogUtil {
 
@@ -20,11 +20,11 @@ object AnvilRenameDialogUtil {
             (version.major <= 1 && version.minor <= 21 && version.patch <= 6)) {
             NoImplAnvilRenameDialog()
         } else {
-            AnvilRenameDialogImpl({ player, component -> AnvilColorUtil.revertColorSmallest(
-                component, AnvilColorUtil.renamePermission(player)
+            AnvilRenameDialogImpl({ player, component -> AnvilColourUtil.revertColourSmallest(
+                component, AnvilColourUtil.renamePermission(player)
             ) },
                 { ConfigOptions.shouldKeepRenameText },
-                { ConfigOptions.renameDialogMaxSize },
+                { ConfigOptions.renameDialogueMaxSize },
                 CustomAnvil.instance,
                 )
         })

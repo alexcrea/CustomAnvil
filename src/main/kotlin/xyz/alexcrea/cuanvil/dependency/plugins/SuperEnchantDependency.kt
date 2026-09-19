@@ -25,6 +25,11 @@ class SuperEnchantDependency : GenericPluginDependency {
         this.plugin = plugin as SuperEnchants
     }
 
+    override fun redirectListeners() {
+        super.redirectListeners()
+        preAnvil.clear()
+    }
+
     fun registerEnchantments(): Boolean {
         CustomAnvil.instance.logger.info("Preparing Super Enchant compatibility...")
 

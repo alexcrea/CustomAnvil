@@ -287,7 +287,7 @@ class DiagnosticExecutor : CASubCommand {
         val xp = invView.repairCost
         val maxXp = invView.maximumRepairCost
         val mergeResult = invView.getItem(2)
-        stb.append("\n${if (result == mergeResult) "E" else "Une"}xpected Result")
+        stb.append("\n${if (result == mergeResult) "E" else "Une"} Result")
 
         PrepareAnvilListener().anvilCombineCheck(event)
         // Now we check if item and xp same

@@ -1,12 +1,13 @@
 package xyz.alexcrea.cuanvil.enchant;
 
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Map;
 
+@NotNullByDefault
+@SuppressWarnings("unused")
 public interface AdditionalTestEnchantment {
 
     /**
@@ -16,8 +17,9 @@ public interface AdditionalTestEnchantment {
      * @return If there is a conflict with the enchantments.
      */
     boolean isEnchantConflict(
-            @NotNull Map<CAEnchantment, Integer> enchantments,
-            @NotNull NamespacedKey itemType);
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType
+    );
 
     /**
      * Test if the provided item can be compatible with this enchantment. only non-Custom Anvil conflict.
@@ -27,8 +29,9 @@ public interface AdditionalTestEnchantment {
      * @return If there is a conflict with the enchantment and the item.
      */
     boolean isItemConflict(
-            @NotNull Map<CAEnchantment, Integer> enchantments,
-            @NotNull NamespacedKey itemType,
-            @NotNull ItemStack item);
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item
+    );
 
 }

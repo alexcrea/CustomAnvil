@@ -34,18 +34,18 @@ object AnvilLoreEditUtil {
         player: Permissible,
         first: ItemStack,
         book: BookMeta,
-        cost: AnvilCost
+        cost: AnvilCost,
     ): ItemStack? {
-        if (!hasLoreEditByBookPermission(player)) return null
+        if(!hasLoreEditByBookPermission(player)) return null
 
         val result = first.clone()
         val meta = result.itemMeta ?: return null
         val lore = meta.componentLore()
 
         val page = book.pages[0]
-        val lines = ArrayList<String>(page.split("\n"))
+        val lines = ArrayList(page.split("\n"))
         val outLines = ArrayList<Component>(lines.size)
-        val colorCost = colorLines(
+        val colourCost = colourLines(
             player, LoreEditType.APPEND_BOOK,
             lines, outLines
         )
@@ -55,10 +55,10 @@ object AnvilLoreEditUtil {
         meta.setComponentLore(lore)
         result.itemMeta = meta
 
-        if (result == first) return null
+        if(result == first) return null
 
         // Handle xp
-        cost.lore = colorCost // Cost of using color
+        cost.lore = colourCost // Cost of using colour
         cost.lore += outLines.size * LoreEditType.APPEND_BOOK.perLineCost // per line cost
         baseEditLoreXpCost(cost, first, result, LoreEditType.APPEND_BOOK) // Fixed cost and work penalty
 
@@ -66,24 +66,24 @@ object AnvilLoreEditUtil {
     }
 
     fun handleLoreRemoveByBook(player: Permissible, first: ItemStack, cost: AnvilCost): ItemStack? {
-        if (!hasLoreEditByBookPermission(player)) return null
+        if(!hasLoreEditByBookPermission(player)) return null
 
         // remove lore
         val result = first.clone()
         val leftMeta = result.itemMeta ?: return null
         val currentLore = DependencyManager.stripLore(result)
-        if (currentLore.isEmpty()) return null
+        if(currentLore.isEmpty()) return null
 
-        val uncolorCost = uncolorLines(player, currentLore, LoreEditType.REMOVE_BOOK)
+        val uncolourCost = uncolourLines(player, currentLore, LoreEditType.REMOVE_BOOK)
 
         leftMeta.lore = null
         result.itemMeta = leftMeta
 
         DependencyManager.updateLore(result)
-        if (result == first) return null
+        if(result == first) return null
 
         // Handle xp
-        cost.lore = uncolorCost
+        cost.lore = uncolourCost
         cost.lore += currentLore.size * LoreEditType.REMOVE_BOOK.perLineCost
         baseEditLoreXpCost(cost, first, result, LoreEditType.REMOVE_BOOK)
 
@@ -92,14 +92,14 @@ object AnvilLoreEditUtil {
 
     // Return true if appended, false if removed, null if neither
     fun bookLoreEditIsAppend(first: ItemStack, second: ItemStack): Boolean? {
-        // Test if the book & quil contain content
-        val meta = second.itemMeta as BookMeta? ?: return false
+        // Test if the book & quill contain content
+        val meta = second.itemMeta as? BookMeta ?: return false
 
         var hasContent = false
-        if (meta.hasPages() && meta.pageCount >= 1) {
+        if(meta.hasPages() && meta.pageCount >= 1) {
             // Test if the pages is ok
-            for (page in meta.pages) {
-                if (page.isNotBlank()) {
+            for(page in meta.pages) {
+                if(page.isNotBlank()) {
                     hasContent = true
                     break
                 }
@@ -107,15 +107,15 @@ object AnvilLoreEditUtil {
         }
 
         // We don't want to "add" the first page is there is content and the first page is empty
-        if (hasContent) {
-            if (meta.pages[0].isEmpty()) return null
-            if (LoreEditType.APPEND_BOOK.enabled)
+        if(hasContent) {
+            if(meta.pages[0].isEmpty()) return null
+            if(LoreEditType.APPEND_BOOK.enabled)
                 return true
-        } else if (LoreEditType.REMOVE_BOOK.enabled) {
-            if (!first.hasItemMeta()) return null
+        } else if(LoreEditType.REMOVE_BOOK.enabled) {
+            if(!first.hasItemMeta()) return null
 
             val leftMeta = first.itemMeta!!
-            return if (leftMeta.hasLore()) false
+            return if(leftMeta.hasLore()) false
             else null
         }
         return null
@@ -123,11 +123,11 @@ object AnvilLoreEditUtil {
 
     fun tryLoreEditByBook(player: HumanEntity, first: ItemStack, second: ItemStack): LoreEditResult {
         val isAppend = bookLoreEditIsAppend(first, second) ?: return LoreEditResult.EMPTY
-        val type = if (isAppend) LoreEditType.APPEND_BOOK else LoreEditType.REMOVE_BOOK
+        val type = if(isAppend) LoreEditType.APPEND_BOOK else LoreEditType.REMOVE_BOOK
 
         val meta = second.itemMeta as BookMeta
         val cost = AnvilCost()
-        val item = if (isAppend)
+        val item = if(isAppend)
             handleLoreAppendByBook(player, first, meta, cost)
         else handleLoreRemoveByBook(player, first, cost)
 
@@ -140,14 +140,14 @@ object AnvilLoreEditUtil {
         val meta = second.itemMeta ?: return false
 
         val hasContent = meta.hasDisplayName()
-        if (hasContent) {
-            if (LoreEditType.APPEND_PAPER.enabled)
+        if(hasContent) {
+            if(LoreEditType.APPEND_PAPER.enabled)
                 return true
-        } else if (LoreEditType.REMOVE_PAPER.enabled) {
-            if (!first.hasItemMeta()) return null
+        } else if(LoreEditType.REMOVE_PAPER.enabled) {
+            if(!first.hasItemMeta()) return null
 
             val leftMeta = first.itemMeta!!
-            return if (leftMeta.hasLore() && leftMeta.lore!!.isNotEmpty()) false
+            return if(leftMeta.hasLore() && leftMeta.lore!!.isNotEmpty()) false
             else null
         }
         return null
@@ -157,9 +157,9 @@ object AnvilLoreEditUtil {
         player: Permissible,
         first: ItemStack,
         second: ItemStack,
-        cost: AnvilCost
+        cost: AnvilCost,
     ): ItemStack? {
-        if (!hasLoreEditByPaperPermission(player)) return null
+        if(!hasLoreEditByPaperPermission(player)) return null
 
         val result = first.clone()
         val meta = result.itemMeta ?: return null
@@ -167,16 +167,16 @@ object AnvilLoreEditUtil {
 
         val appendEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
 
-        // A bit overdone to color 1 line but hey
+        // A bit overdone to colour 1 line but hey
         val outList = ArrayList<Component>(1)
-        val colorCost = colorLines(
+        val colourCost = colourLines(
             player, LoreEditType.APPEND_PAPER,
             Collections.singletonList(second.itemMeta!!.displayName),
             outList
         )
 
         val line = outList[0]
-        if (appendEnd)
+        if(appendEnd)
             lore.add(line)
         else
             lore.add(0, line)
@@ -184,17 +184,17 @@ object AnvilLoreEditUtil {
         meta.setComponentLore(lore)
         result.itemMeta = meta
 
-        if (result == first) return null
+        if(result == first) return null
 
         // Handle xp
-        cost.lore = colorCost
+        cost.lore = colourCost
         baseEditLoreXpCost(cost, first, result, LoreEditType.APPEND_PAPER)
 
         return result
     }
 
     fun handleLoreRemoveByPaper(player: Permissible, first: ItemStack, cost: AnvilCost): ItemStack? {
-        if (!hasLoreEditByPaperPermission(player)) return null
+        if(!hasLoreEditByPaperPermission(player)) return null
 
         // remove lore line
         val result = first.clone()
@@ -202,9 +202,9 @@ object AnvilLoreEditUtil {
 
         val removeEnd = LoreEditConfigUtil.paperLoreOrderIsEnd
         val lore = DependencyManager.stripLore(result)
-        if (lore.isEmpty()) return null
+        if(lore.isEmpty()) return null
 
-        val line = if (removeEnd) lore.removeAt(lore.size - 1)
+        val line = if(removeEnd) lore.removeAt(lore.size - 1)
         else lore.removeAt(0)
 
         meta.lore = null
@@ -219,13 +219,13 @@ object AnvilLoreEditUtil {
 
         meta.setComponentLore(finalLore)
         result.itemMeta = meta
-        if (result == first) return null
+        if(result == first) return null
 
-        // Get color cost to uncolor this line
-        val uncolorCost = uncolorLine(player, line, LoreEditType.REMOVE_PAPER)
+        // Get colour cost to uncolour this line
+        val uncolourCost = uncolourLine(player, line, LoreEditType.REMOVE_PAPER)
 
         // Handle other xp
-        cost.lore = uncolorCost
+        cost.lore = uncolourCost
         baseEditLoreXpCost(cost, first, result, LoreEditType.REMOVE_PAPER)
 
         return result
@@ -234,13 +234,13 @@ object AnvilLoreEditUtil {
     fun tryLoreEditByPaper(
         player: HumanEntity,
         first: ItemStack,
-        second: ItemStack
+        second: ItemStack,
     ): LoreEditResult {
         val isAppend = paperLoreEditIsAppend(first, second) ?: return LoreEditResult.EMPTY
-        val type = if (isAppend) LoreEditType.APPEND_BOOK else LoreEditType.REMOVE_BOOK
+        val type = if(isAppend) LoreEditType.APPEND_BOOK else LoreEditType.REMOVE_BOOK
 
         val cost = AnvilCost()
-        val item = if (isAppend)
+        val item = if(isAppend)
             handleLoreAppendByPaper(player, first, second, cost)
         else handleLoreRemoveByPaper(player, first, cost)
 
@@ -251,74 +251,74 @@ object AnvilLoreEditUtil {
         cost: AnvilCost,
         first: ItemStack,
         result: ItemStack,
-        editType: LoreEditType
+        editType: LoreEditType,
     ) {
         cost.lore += editType.fixedCost
 
         cost.workPenalty = AnvilXpUtil.calculatePenalty(first, null, result, editType.useType)
     }
 
-    fun colorPermission(player: Permissible, editType: LoreEditType): AnvilColorUtil.ColorPermissions {
-        return AnvilColorUtil.calculatePermissions(
+    fun colourPermission(player: Permissible, editType: LoreEditType): AnvilColourUtil.ColourPermissions {
+        return AnvilColourUtil.calculatePermissions(
             player,
             false,
-            editType.allowColorCode,
-            editType.allowHexColor,
+            editType.allowColourCode,
+            editType.allowHexColour,
             editType.allowMinimessage,
-            AnvilColorUtil.ColorUseType.LORE_EDIT
+            AnvilColourUtil.ColourUseType.LORE_EDIT
         )
     }
 
-    private fun colorLine(line: String, permission: AnvilColorUtil.ColorPermissions): Component? {
-        return AnvilColorUtil.handleColor(
+    private fun colourLine(line: String, permission: AnvilColourUtil.ColourPermissions): Component? {
+        return AnvilColourUtil.handleColour(
             line,
             permission
         )
     }
 
-    private fun colorLines(
+    private fun colourLines(
         player: Permissible, editType: LoreEditType,
-        lines: List<String>, outLines: MutableList<Component>
+        lines: List<String>, outLines: MutableList<Component>,
     ): Int {
-        val permission = colorPermission(player, editType)
-        val colorCost = editType.useColorCost
+        val permission = colourPermission(player, editType)
+        val colourCost = editType.useColourCost
 
-        // Handle color and minimessage of each lines
-        var hasUsedColor = false
-        for (line in lines) {
-            val component = colorLine(line, permission)
+        // Handle colour and minimessage of each lines
+        var hasUsedColour = false
+        for(line in lines) {
+            val component = colourLine(line, permission)
 
-            if (component != null) {
-                hasUsedColor = true
+            if(component != null) {
+                hasUsedColour = true
                 outLines.add(component)
             } else {
                 outLines.add(Component.text(line))
             }
         }
 
-        return if (hasUsedColor) colorCost
+        return if(hasUsedColour) colourCost
         else 0
     }
 
-    fun uncolorLines(player: Permissible, lines: MutableList<Component?>, editType: LoreEditType): Int {
-        val permission = colorPermission(player, editType)
+    fun uncolourLines(player: Permissible, lines: MutableList<Component?>, editType: LoreEditType): Int {
+        val permission = colourPermission(player, editType)
 
-        // Now handle color of each lines
-        var hasUndidColor = false
-        for ((index, line) in lines.withIndex()) {
-            if (line == null) {
+        // Now handle colour of each lines
+        var hasUndidColour = false
+        for((index, line) in lines.withIndex()) {
+            if(line == null) {
                 lines[index] = null
                 continue
             }
 
-            val clearedLine = AnvilColorUtil.revertColorSmallest(
+            val clearedLine = AnvilColourUtil.revertColourSmallest(
                 line,
                 permission
             )
 
             val result: String
-            if (clearedLine != null) {
-                hasUndidColor = true
+            if(clearedLine != null) {
+                hasUndidColour = true
                 result = clearedLine
             } else {
                 result = line.serializePlain()
@@ -327,40 +327,40 @@ object AnvilLoreEditUtil {
             lines[index] = MiniMessageUtil.plain_text_mm.deserialize(result)
         }
 
-        return if (hasUndidColor) {
-            editType.removeColorCost
+        return if(hasUndidColour) {
+            editType.removeColourCost
         } else {
             0
         }
     }
 
-    // do not output the uncolored line...
-    fun uncolorLine(player: Permissible, line: Component?, editType: LoreEditType): Int {
-        return uncolorLine(player, AtomicReference(line), editType)
+    // do not output the uncoloured line...
+    fun uncolourLine(player: Permissible, line: Component?, editType: LoreEditType): Int {
+        return uncolourLine(player, AtomicReference(line), editType)
     }
 
-    fun uncolorLine(player: Permissible, line: AtomicReference<Component?>, editType: LoreEditType): Int {
-        val coloredComponent = line.get() ?: return 0
-        val permission = colorPermission(player, editType)
+    fun uncolourLine(player: Permissible, line: AtomicReference<Component?>, editType: LoreEditType): Int {
+        val colouredComponent = line.get() ?: return 0
+        val permission = colourPermission(player, editType)
 
-        val clearedLine = AnvilColorUtil.revertColorSmallest(
-            coloredComponent,
+        val clearedLine = AnvilColourUtil.revertColourSmallest(
+            colouredComponent,
             permission
         )
 
-        var hasUndidColor = false
+        var hasUndidColour = false
         val result: String
-        if (clearedLine != null) {
-            hasUndidColor = true
+        if(clearedLine != null) {
+            hasUndidColour = true
             result = clearedLine
         } else {
             // Remove extra tags
-            result = coloredComponent.serializePlain()
+            result = colouredComponent.serializePlain()
         }
         line.set(MiniMessageUtil.plain_text_mm.deserialize(result))
 
-        return if (hasUndidColor) {
-            editType.removeColorCost
+        return if(hasUndidColour) {
+            editType.removeColourCost
         } else {
             0
         }

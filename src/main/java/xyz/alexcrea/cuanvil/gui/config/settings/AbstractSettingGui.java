@@ -94,7 +94,7 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * <li><b>0</b>: default background item.</li>
      * </ul>
      *
-     * @return The gui's pattern.
+     * @return The GUI's pattern.
      */
     protected abstract Pattern getGuiPattern();
 
@@ -106,9 +106,9 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      */
     public abstract static class SettingGuiFactory implements SettingGui.SettingGuiFactory {
         @NotNull
-        protected String configPath;
+        protected final String configPath;
         @NotNull
-        protected ConfigHolder config;
+        protected final ConfigHolder config;
 
         /**
          * Constructor for settings gui factory

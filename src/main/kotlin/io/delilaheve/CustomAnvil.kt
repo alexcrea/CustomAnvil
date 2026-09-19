@@ -126,11 +126,17 @@ open class CustomAnvil : JavaPlugin() {
     // stop plugin if we do not force a dirty start (true by default)
     // Return true if start was stopped
     private fun tryDirtyStart(): Boolean {
+        //TODO check as usable in locked not check null
         if(ConfigHolder.DEFAULT_CONFIG == null) return false
-        if(!ConfigHolder.DEFAULT_CONFIG.config.getBoolean("dirty_start", false)) {
-            Bukkit.getPluginManager().disablePlugin(this)
-            return true
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get()
+
+            if(!config.config.getBoolean("dirty_start", false)) {
+                Bukkit.getPluginManager().disablePlugin(this)
+                return true
+            }
         }
+
         return false
     }
 
@@ -138,9 +144,13 @@ open class CustomAnvil : JavaPlugin() {
     // Return true if start was stopped
     private fun trySafeStart(): Boolean {
         if(ConfigHolder.DEFAULT_CONFIG == null) return false
-        if(ConfigHolder.DEFAULT_CONFIG.config.getBoolean("safe_start", false)) {
-            Bukkit.getPluginManager().disablePlugin(this)
-            return true
+        ConfigHolder.DEFAULT.read.use {lock ->
+            val config = lock.get()
+
+            if(config.config.getBoolean("safe_start", false)) {
+                Bukkit.getPluginManager().disablePlugin(this)
+                return true
+            }
         }
         return false
     }
@@ -298,14 +308,11 @@ open class CustomAnvil : JavaPlugin() {
 
         // Prepare economy if possible
         EconomyManager.setupEconomy(this)
-
-        // Finally, re add default we may be missing
-        PluginSetDefault.reAddMissingDefault()
     }
 
     fun reloadResource(
         resourceName: String,
-        hardFailSafe: Boolean = true
+        hardFailSafe: Boolean = true,
     ): YamlConfiguration? {
         // Save default resource
         val file = File(dataFolder, resourceName)
@@ -319,7 +326,7 @@ open class CustomAnvil : JavaPlugin() {
     // Unlike above function. this function will not clone default from jar.
     fun reloadResource(
         resourceFile: File,
-        hardFailSafe: Boolean = true
+        hardFailSafe: Boolean = true,
     ): YamlConfiguration? {
         // Test if file exist
         if (!resourceFile.exists()) {

@@ -10,44 +10,46 @@ import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-object AnvilColorUtil {
+object AnvilColourUtil {
     private val HEX_PATTERN: Pattern = Pattern.compile("#[A-Fa-f0-9]{6}") // pattern to find hexadecimal string
     private val TRANSFORMED_HEX_PATTERN = Pattern.compile("§x(§[0-9a-fA-F]){6}") // pattern to find minecraft hex string
 
-    class ColorPermissions(
-        val canUseColorCode: Boolean,
-        val canUseHexColor: Boolean,
+    private val COLOUR_CODE_PATTERN = Pattern.compile("§[0-9a-f]")
+
+    class ColourPermissions(
+        val canUseColourCode: Boolean,
+        val canUseHexColour: Boolean,
         val canUseMinimessage: Boolean,
         val permissible: Permissible, // source of the permission. tried to avoid needing it but meh
     ) {
         fun allowed(): Boolean {
-            return canUseColorCode || canUseHexColor || canUseMinimessage
+            return canUseColourCode || canUseHexColour || canUseMinimessage
         }
 
         fun onlyMinimessage(): Boolean {
-            return canUseMinimessage && !canUseColorCode && !canUseHexColor
+            return canUseMinimessage && !canUseColourCode && !canUseHexColour
         }
     }
 
     fun calculatePermissions(
         player: Permissible,
         usePermission: Boolean,
-        allowColorCode: Boolean,
-        allowHexadecimalColor: Boolean,
+        allowColourCode: Boolean,
+        allowHexadecimalColour: Boolean,
         allowMinimessage: Boolean,
-        useType: ColorUseType
-    ): ColorPermissions {
-        if (!allowColorCode && !allowHexadecimalColor && !allowMinimessage)
-            return ColorPermissions(
-                canUseColorCode = false,
-                canUseHexColor = false,
+        useType: ColourUseType
+    ): ColourPermissions {
+        if (!allowColourCode && !allowHexadecimalColour && !allowMinimessage)
+            return ColourPermissions(
+                canUseColourCode = false,
+                canUseHexColour = false,
                 canUseMinimessage = false,
                 player,
             )
 
-        val canUseColorCode =
-            allowColorCode && (!usePermission || useType.colorCodePerm == null || player.hasPermission(
-                useType.colorCodePerm
+        val canUseColourCode =
+            allowColourCode && (!usePermission || useType.colourCodePerm == null || player.hasPermission(
+                useType.colourCodePerm
             ))
 
         val canUseMinimessage =
@@ -55,55 +57,58 @@ object AnvilColorUtil {
                 useType.minimessagePerm
             ))
 
-        val canUseHexColor =
-            allowHexadecimalColor && (!usePermission || useType.hexColorPerm == null || player.hasPermission(
-                useType.hexColorPerm
+        val canUseHexColour =
+            allowHexadecimalColour && (!usePermission || useType.hexColourPerm == null || player.hasPermission(
+                useType.hexColourPerm
             ))
 
-        return ColorPermissions(canUseColorCode, canUseHexColor, canUseMinimessage, player)
+        return ColourPermissions(canUseColourCode, canUseHexColour, canUseMinimessage, player)
     }
 
-    fun renamePermission(player: Permissible): ColorPermissions {
+    fun renamePermission(player: Permissible): ColourPermissions {
         return calculatePermissions(player,
-            ConfigOptions.permissionNeededForColor,
-            ConfigOptions.allowColorCode, ConfigOptions.allowHexadecimalColor, ConfigOptions.allowMinimessage,
-            ColorUseType.RENAME)
+            ConfigOptions.permissionNeededForColour,
+            ConfigOptions.allowColourCode, ConfigOptions.allowHexadecimalColour, ConfigOptions.allowMinimessage,
+            ColourUseType.RENAME)
     }
 
     /**
-     * Color a string depending on permitted use
-     * @return colored component or null if nothing has been colored
+     * Colour a string depending on permitted use
+     * @return coloured component or null if nothing has been coloured
      */
-    fun handleColor(
-        textToColorText: String,
-        permission: ColorPermissions,
+    fun handleColour(
+        textToColourText: String,
+        permission: ColourPermissions,
 
         ): Component? {
         if (!permission.allowed()) return null
 
-        val textToColor = StringBuilder(textToColorText)
-        var useColor = false
-        // Handle color code
-        if (permission.canUseColorCode) { // maybe should use LegacyComponentSerializer ?
-            var nbReplacement = replaceAll(textToColor, "&", "§", 2)
-            nbReplacement -= 2 * replaceAll(textToColor, "§§", "&", 2)
+        val textToColour = StringBuilder(textToColourText)
+        var useColour = false
+        // Handle colour code
+        if (permission.canUseColourCode) { // maybe should use LegacyComponentSerializer ?
+            var nbReplacement = replaceAll(textToColour, "&", "§", 2)
+            nbReplacement -= 2 * replaceAll(textToColour, "§§", "&", 2)
 
             if (nbReplacement > 0) {
-                useColor = true
+                useColour = true
 
-                if (ConfigOptions.usePerColorCodePermission)
-                    filterPermissibleColorCode(textToColor, permission.permissible)
+                if (ConfigOptions.usePerColourCodePermission)
+                    filterPermissibleColourCode(textToColour, permission.permissible)
+            }
+            if(ConfigOptions.shouldResetOnColourCode) {
+                prefixColourCodes(textToColour)
             }
         }
 
-        if (permission.canUseHexColor) {
-            val nbReplacement = replaceHexToColor(textToColor, 7, permission.canUseMinimessage)
+        if (permission.canUseHexColour) {
+            val nbReplacement = replaceHexToColour(textToColour, 7, permission.canUseMinimessage)
 
-            if (nbReplacement > 0) useColor = true
+            if (nbReplacement > 0) useColour = true
         }
 
-        val previousStr = textToColor.toString()
-        var result: Component = MiniMessageUtil.legacy_mm.deserialize(previousStr)
+        val previousStr = textToColour.toString()
+        var result: Component = MiniMessageUtil.fromLegacyWithCorrectReset(previousStr)
         if (permission.canUseMinimessage) {
             // we dance with formats here
             val toMinimessage = result.serializeMM()
@@ -112,25 +117,38 @@ object AnvilColorUtil {
             val asPlain = fromMinimessage.serializePlain()
 
             if (previousStr != asPlain) {
-                useColor = true
+                useColour = true
                 result = fromMinimessage
             }
         }
 
-        return if (useColor) result
+        return if (useColour) result
         else null
     }
 
-    private fun filterPermissibleColorCode(textToColor: StringBuilder, player: Permissible) {
+    private fun prefixColourCodes(builder: StringBuilder) {
+        val matcher: Matcher = COLOUR_CODE_PATTERN.matcher(builder)
+
+        var startIndex = 0
+
+        while(matcher.find(startIndex)) {
+            startIndex = matcher.start()
+
+            builder.insert(startIndex, "§r")
+            startIndex+=4
+        }
+    }
+
+    private fun filterPermissibleColourCode(textToColour: StringBuilder, player: Permissible) {
         var index = 0
         while (true) {
-            index = textToColor.indexOf('§', index)
-            if (index == -1 || index == textToColor.length - 1) return
+            index = textToColour.indexOf('§', index)
+            if (index == -1 || index == textToColour.length - 1) return
 
-            val next = textToColor[index + 1]
-            // check permission for this color
+            val next = textToColour[index + 1]
+            // check permission for this colour
             if(!player.hasPermission("ca.color.code.$next"))
-                textToColor.replace(index, index + 1, "&")
+                textToColour.replace(index, index + 1, "&")
 
             index++
         }
@@ -138,13 +156,13 @@ object AnvilColorUtil {
 
     /**
      * Best effort to revert a component to the smallest allowed string
-     * that would result in it getting closest as possible to handleColor
+     * that would result in it getting closest as possible to handleColour
      * with current set of permitted use
      * @return a new component if had any change. null otherwise
      */
-    fun revertColorSmallest(
+    fun revertColourSmallest(
         component: Component?,
-        permission: ColorPermissions
+        permission: ColourPermissions
     ): String? {
         if (!permission.allowed() || component == null) return null
 
@@ -155,17 +173,17 @@ object AnvilColorUtil {
             return transformed
         }
 
-        // smol dance so we transform the component that may contain other tag into only decoration & color for legacy
-        val coloredMessage = MiniMessageUtil.color_only_mm.deserialize(transformed)
-        val legacyMessage = StringBuilder(coloredMessage.serializeLegacy())
+        // smol dance so we transform the component that may contain other tag into only decoration & colour for legacy
+        val colouredMessage = MiniMessageUtil.colour_only_mm.deserialize(transformed)
+        val legacyMessage = StringBuilder(colouredMessage.serializeLegacy())
 
         // Reverse hex pattern
-        if (permission.canUseHexColor) {
-            replaceColorToHex(legacyMessage, 14)
+        if (permission.canUseHexColour) {
+            replaceColourToHex(legacyMessage, 14)
         }
 
-        // Reverse color pattern
-        if (permission.canUseColorCode) {
+        // Reverse colour pattern
+        if (permission.canUseColourCode) {
             replaceAll(legacyMessage, "&", "&&", 1)
             replaceAll(legacyMessage, "§", "&", 2)
         }
@@ -210,12 +228,12 @@ object AnvilColorUtil {
     }
 
     /**
-     * Replace every hex color formatted like #000000 to the minecraft format
-     * @param builder The builder to replace the hex color from.
+     * Replace every hex colour formatted like #000000 to the minecraft format
+     * @param builder The builder to replace the hex colour from.
      * @param endOffset Amount of character that should be ignored at the end.
      * @return The number of replacement was that was done.
      */
-    private fun replaceHexToColor(builder: StringBuilder, endOffset: Int, checkTag: Boolean): Int {
+    private fun replaceHexToColour(builder: StringBuilder, endOffset: Int, checkTag: Boolean): Int {
         val matcher: Matcher = HEX_PATTERN.matcher(builder)
 
         var numberOfChanges = 0
@@ -228,10 +246,18 @@ object AnvilColorUtil {
                 startIndex += 1 // Avoid infinite loop
                 continue
             }
+            if(startIndex > 0 && builder[startIndex - 1] == '§') {
+                builder.replace(startIndex - 1, startIndex + 1, "#")
+                // Voluntarily do not update startindex
+                // if we had &|#123456 (| being start index) then we get #1|23456 so won't trigger matcher again !
+                continue
+            }
 
-            builder.replace(startIndex, startIndex + 1, "§x")
-            startIndex += 2
-            for (i in 0..5) {
+            val replacement = "${if(ConfigOptions.shouldResetOnColourCode)"§r" else ""}§x"
+
+            builder.replace(startIndex, startIndex + 1, replacement)
+            startIndex += replacement.length
+            repeat(6) {
                 builder.insert(startIndex, '§')
                 startIndex += 2
             }
@@ -269,12 +295,12 @@ object AnvilColorUtil {
     }
 
     /**
-     * Replace every hex color from the minecraft format to a format like #000000
-     * @param builder The builder to replace the minecraft hex color from.
+     * Replace every hex colour from the minecraft format to a format like #000000
+     * @param builder The builder to replace the minecraft hex colour from.
      * @param endOffset Amount of character that should be ignored at the end.
      * @return The number of replacement was that was done.
      */
-    private fun replaceColorToHex(builder: StringBuilder, endOffset: Int): Int {
+    private fun replaceColourToHex(builder: StringBuilder, endOffset: Int): Int {
         val matcher: Matcher = TRANSFORMED_HEX_PATTERN.matcher(builder)
 
         var numberOfChanges = 0
@@ -297,9 +323,9 @@ object AnvilColorUtil {
         return numberOfChanges
     }
 
-    enum class ColorUseType(
-        val colorCodePerm: String?,
-        val hexColorPerm: String?,
+    enum class ColourUseType(
+        val colourCodePerm: String?,
+        val hexColourPerm: String?,
         val minimessagePerm: String?
     ) {
         RENAME("ca.color.code", "ca.color.hex", "ca.rename.minimessage"),

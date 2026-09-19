@@ -1,15 +1,21 @@
 package xyz.alexcrea.cuanvil.update.plugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.update.UpdateHandler;
+import xyz.alexcrea.cuanvil.update.Version;
 
-import javax.annotation.Nonnull;
-import java.util.Set;
+@NotNullByDefault
+public class PUpdate_1_6_7 extends PluginUpdate {
 
-public class PUpdate_1_6_7 {
+    public PUpdate_1_6_7() {
+        super(new Version(1, 6, 7));
+    }
 
-    public static void handleUpdate(@Nonnull Set<ConfigHolder> toSave) {
-        FileConfiguration config = ConfigHolder.DEFAULT_CONFIG.getConfig();
+    @Override
+    public void handleUpdate(UpdateHandler.UpdatedConfigList toSave) {
+        FileConfiguration config = toSave.use(ConfigHolder.DEFAULT).getConfig();
 
         // We fix the density enchantment
         String value = config.getString("enchant_values.minecraft:density.item");
@@ -17,8 +23,6 @@ public class PUpdate_1_6_7 {
 
         if(value == null || "1".equalsIgnoreCase(value)){
             config.set("enchant_values.minecraft:density.item", 2);
-
-            toSave.add(ConfigHolder.DEFAULT_CONFIG);
         }
     }
 

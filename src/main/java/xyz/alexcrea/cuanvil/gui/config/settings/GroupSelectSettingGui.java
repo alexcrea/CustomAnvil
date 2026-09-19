@@ -30,10 +30,10 @@ import java.util.function.Consumer;
 
 public class GroupSelectSettingGui extends AbstractSettingGui {
 
-    SelectGroupContainer groupContainer;
-    int page;
+    final SelectGroupContainer groupContainer;
+    final int page;
 
-    Set<AbstractMaterialGroup> selectedGroups;
+    final Set<AbstractMaterialGroup> selectedGroups;
 
     public GroupSelectSettingGui(
             @NotNull Message title, @NotNull String param,

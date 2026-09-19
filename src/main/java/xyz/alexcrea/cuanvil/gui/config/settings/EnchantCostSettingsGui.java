@@ -24,7 +24,6 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -246,8 +245,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
      */
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
-        int defaultBookVal;
-        @NotNull CAEnchantment enchantment;
+        final int defaultBookVal;
+        @NotNull
+        final CAEnchantment enchantment;
 
         /**
          * Constructor for an enchantment cost setting gui factory.
@@ -275,10 +275,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             super(title, parent,
                     configPath, config,
                     displayLore, param,
-                    min, max, enchantment.defaultRarity().getItemValue(),
+                    min, max, enchantment.defaultRarity().itemValue(),
                     steps);
 
-            this.defaultBookVal = enchantment.defaultRarity().getBookValue();
+            this.defaultBookVal = enchantment.defaultRarity().bookValue();
             this.enchantment = enchantment;
         }
 

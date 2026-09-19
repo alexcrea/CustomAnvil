@@ -171,12 +171,15 @@ public class ItemSettingGui extends AbstractSettingGui {
      */
     public static class ItemSettingFactory extends SettingGuiFactory {
         @NotNull
-        Message title;
+        final Message title;
         @NotNull
+        final
         ValueUpdatableGui parent;
         @Nullable
+        final
         ItemStack defaultVal;
         @NotNull
+        final
         List<Message> displayLore;
         @Nullable
         Object param;

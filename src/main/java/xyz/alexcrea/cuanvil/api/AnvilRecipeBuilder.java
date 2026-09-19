@@ -1,17 +1,19 @@
 package xyz.alexcrea.cuanvil.api;
 
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 
 /**
  * A Builder for custom craft using anvil.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+@NotNullByDefault
 public class AnvilRecipeBuilder {
 
-    private @NotNull String name;
+    private String name;
     private boolean exactCount;
 
     private int levelCostPerCraft;
@@ -30,7 +32,7 @@ public class AnvilRecipeBuilder {
      *
      * @param name The recipe name
      */
-    public AnvilRecipeBuilder(@NotNull String name) {
+    public AnvilRecipeBuilder(String name) {
         this.name = name;
 
         this.exactCount = true;
@@ -48,7 +50,6 @@ public class AnvilRecipeBuilder {
      *
      * @return This recipe builder instance.
      */
-    @NotNull
     public String getName() {
         return name;
     }
@@ -59,6 +60,7 @@ public class AnvilRecipeBuilder {
      * @param name The recipe name
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setName(String name) {
         this.name = name;
         return this;
@@ -85,6 +87,7 @@ public class AnvilRecipeBuilder {
      * @param exactCount If the recipe is exact count
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setExactCount(boolean exactCount) {
         this.exactCount = exactCount;
         return this;
@@ -105,6 +108,7 @@ public class AnvilRecipeBuilder {
      * @param levelCostPerCraft The xp level cost per craft
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setLevelCostPerCraft(int levelCostPerCraft) {
         this.levelCostPerCraft = levelCostPerCraft;
         return this;
@@ -125,6 +129,7 @@ public class AnvilRecipeBuilder {
      * @param linearXpCostPerCraft The linear xp cost per craft
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setLinearXpCostPerCraft(int linearXpCostPerCraft) {
         this.linearXpCostPerCraft = linearXpCostPerCraft;
         return this;
@@ -153,6 +158,7 @@ public class AnvilRecipeBuilder {
      * @param removeExactLinearXp if we should remove the exact amount of linear xp
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setRemoveExactLinearXp(boolean removeExactLinearXp) {
         this.removeExactLinearXp = removeExactLinearXp;
         return this;
@@ -176,6 +182,7 @@ public class AnvilRecipeBuilder {
      * @param leftItem the left item
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setLeftItem(ItemStack leftItem) {
         this.leftItem = leftItem;
         return this;
@@ -199,6 +206,7 @@ public class AnvilRecipeBuilder {
      * @param rightItem the right item
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setRightItem(ItemStack rightItem) {
         this.rightItem = rightItem;
         return this;
@@ -222,6 +230,7 @@ public class AnvilRecipeBuilder {
      * @param resultItem The result item
      * @return This recipe builder instance.
      */
+    @Contract("_ -> this")
     public AnvilRecipeBuilder setResultItem(ItemStack resultItem) {
         this.resultItem = resultItem;
         return this;

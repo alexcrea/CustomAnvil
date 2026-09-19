@@ -75,7 +75,7 @@ class ReloadExecutor : CASubCommand {
             CustomRecipeConfigGui.getCurrentInstance()?.reloadValues()
 
             // handle minecraft version update
-            UpdateHandler.handleMCVersionUpdate()
+            UpdateHandler.handleUpdates()
 
             // Handle dependency reload
             DependencyManager.handleConfigReload()

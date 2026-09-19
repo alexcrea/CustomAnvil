@@ -14,7 +14,7 @@ import xyz.alexcrea.cuanvil.lang.Message;
 
 public abstract class AbstractAskGui extends ChestGui {
 
-    protected PatternPane pane;
+    protected final PatternPane pane;
 
     AbstractAskGui(
             int rows,
@@ -29,7 +29,6 @@ public abstract class AbstractAskGui extends ChestGui {
 
         this.pane.bindItem('0', GuiGlobalItems.backgroundItem());
         this.pane.bindItem('B', new GuiItem(GuiSharedConstant.CANCEL_ITEM, GuiGlobalActions.openGuiAction(backOnCancel), CustomAnvil.instance));
-
     }
 
     /**
@@ -40,7 +39,7 @@ public abstract class AbstractAskGui extends ChestGui {
      * <li><b>0</b>: default background item.</li>
      * </ul>
      *
-     * @return The gui's pattern.
+     * @return The GUI's pattern.
      */
     protected abstract Pattern getGuiPattern();
 

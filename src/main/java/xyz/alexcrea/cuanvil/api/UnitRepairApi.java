@@ -6,24 +6,30 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Custom Anvil api for unit repair.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
+@NotNullByDefault
 public class UnitRepairApi {
 
     private UnitRepairApi() {
     }
 
-    private static Object saveChangeTask = null;
+    private static volatile @Nullable Object saveChangeTask = null;
 
     /**
      * Write and add a custom anvil unit repair recipe.
@@ -34,7 +40,7 @@ public class UnitRepairApi {
      * @param repairable The item to be repaired.
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable) {
+    public static boolean addUnitRepair(Material unit, Material repairable) {
         return addUnitRepair(unit, repairable, 0.25, false);
     }
 
@@ -47,7 +53,7 @@ public class UnitRepairApi {
      * @param repairable The item to be repaired.
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull NamespacedKey unit, @NotNull NamespacedKey repairable) {
+    public static boolean addUnitRepair(NamespacedKey unit, NamespacedKey repairable) {
         return addUnitRepair(unit, repairable, 0.25, false);
     }
 
@@ -60,7 +66,7 @@ public class UnitRepairApi {
      * @param value      The amount to be repaired by every unit. (1% = 0.01)
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value) {
+    public static boolean addUnitRepair(Material unit, Material repairable, double value) {
         return addUnitRepair(unit, repairable, value, false);
     }
 
@@ -74,7 +80,12 @@ public class UnitRepairApi {
      * @param overrideDeleted If we should write even if the recipe was previously deleted.
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value, boolean overrideDeleted) {
+    public static boolean addUnitRepair(
+            Material unit,
+            Material repairable,
+            double value,
+            boolean overrideDeleted
+    ) {
         return addUnitRepair(unit.getKey(), repairable.getKey(), value, overrideDeleted);
     }
 
@@ -88,12 +99,29 @@ public class UnitRepairApi {
      * @param overrideDeleted If we should write even if the recipe was previously deleted.
      * @return true if successful.
      */
-    public static boolean addUnitRepair(@NotNull NamespacedKey unit, @NotNull NamespacedKey repairable, double value, boolean overrideDeleted) {
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+    public static boolean addUnitRepair(
+            NamespacedKey unit,
+            NamespacedKey repairable,
+            double value,
+            boolean overrideDeleted
+    ) {
+        try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+            return addUnitRepair(lock.get(), unit, repairable, value, overrideDeleted);
+        }
+    }
+
+    private static boolean addUnitRepair(
+            ConfigHolder.UnitRepairHolder holder,
+            NamespacedKey unit,
+            NamespacedKey repairable,
+            double value,
+            boolean overrideDeleted
+    ) {
+        FileConfiguration config = holder.getConfig();
         String path = unit.toString().toLowerCase() + "." + repairable.toString().toLowerCase();
 
-        if (!overrideDeleted && ConfigHolder.UNIT_REPAIR_HOLDER.isDeleted(path)) return false;
-        if (config.contains(path)) return false;
+        if(!overrideDeleted && holder.isDeleted(path)) return false;
+        if(config.contains(path)) return false;
 
         // Set unit repair
         return setUnitRepair(unit, repairable, value);
@@ -108,7 +136,11 @@ public class UnitRepairApi {
      * @param value      The amount to be repaired by every unit. (1% = 0.01)
      * @return true if successful.
      */
-    public static boolean setUnitRepair(@NotNull Material unit, @NotNull Material repairable, double value) {
+    public static boolean setUnitRepair(
+            Material unit,
+            Material repairable,
+            double value
+    ) {
         return setUnitRepair(unit.getKey(), repairable.getKey(), value);
     }
 
@@ -121,8 +153,23 @@ public class UnitRepairApi {
      * @param value      The amount to be repaired by every unit. (1% = 0.01)
      * @return true if successful.
      */
-    public static boolean setUnitRepair(@NotNull NamespacedKey unit, @NotNull NamespacedKey repairable, double value) {
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+    public static boolean setUnitRepair(
+            NamespacedKey unit,
+            NamespacedKey repairable,
+            double value
+    ) {
+        try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+            return setUnitRepair(lock.get(), unit, repairable, value);
+        }
+    }
+
+    private static boolean setUnitRepair(
+            ConfigHolder.UnitRepairHolder holder,
+            NamespacedKey unit,
+            NamespacedKey repairable,
+            double value
+    ) {
+        FileConfiguration config = holder.getConfig();
 
         String repairableName = repairable.toString().toLowerCase();
         String path = unit.toString().toLowerCase() + "." + repairableName;
@@ -133,10 +180,10 @@ public class UnitRepairApi {
 
         // Add to gui
         UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
-        if (repairConfigGui != null) {
+        if(repairConfigGui != null) {
             UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
-            if (elementGui != null) elementGui.updateValueForGeneric(repairable, true);
+            if(elementGui != null) elementGui.updateValueForGeneric(repairable, true);
             repairConfigGui.updateValueForGeneric(unit, true);
         }
 
@@ -150,7 +197,10 @@ public class UnitRepairApi {
      * @param repairable The item used to be repaired.
      * @return true if successful.
      */
-    public static boolean removeUnitRepair(@NotNull Material unit, @NotNull Material repairable) {
+    public static boolean removeUnitRepair(
+            Material unit,
+            Material repairable
+    ) {
         return removeUnitRepair(unit.getKey(), repairable.getKey());
     }
 
@@ -161,10 +211,23 @@ public class UnitRepairApi {
      * @param repairable The item used to be repaired.
      * @return true if successful.
      */
-    public static boolean removeUnitRepair(@NotNull NamespacedKey unit, @NotNull NamespacedKey repairable) {
+    public static boolean removeUnitRepair(
+            NamespacedKey unit,
+            NamespacedKey repairable
+    ) {
+        try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+            return removeUnitRepair(lock.get(), unit, repairable);
+        }
+    }
+
+    public static boolean removeUnitRepair(
+            ConfigHolder.UnitRepairHolder holder,
+            NamespacedKey unit,
+            NamespacedKey repairable
+    ) {
         // Delete every possible variation and save to file
 
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration config = holder.getConfig();
         config.set(unit.getKey() + "." + repairable.getKey(), null);
         config.set(unit.getKey() + "." + repairable, null);
         config.set(unit + "." + repairable.getKey(), null);
@@ -172,17 +235,17 @@ public class UnitRepairApi {
 
         // Test if it was the last value of this section
         boolean lastValue = false;
-        if (config.isConfigurationSection(unit.toString())) {
+        if(config.isConfigurationSection(unit.toString())) {
             ConfigurationSection section = config.getConfigurationSection(unit.toString());
 
-            if (section != null && section.getKeys(false).isEmpty()) {
+            if(section != null && section.getKeys(false).isEmpty()) {
                 lastValue = true;
                 config.set(unit.toString(), null);
             }
 
-        } else if (config.isConfigurationSection(unit.getKey())) {
+        } else if(config.isConfigurationSection(unit.getKey())) {
             ConfigurationSection section = config.getConfigurationSection(unit.getKey());
-            if (section != null && section.getKeys(false).isEmpty()) {
+            if(section != null && section.getKeys(false).isEmpty()) {
                 lastValue = true;
                 config.set(unit.getKey(), null);
             }
@@ -190,16 +253,16 @@ public class UnitRepairApi {
         } else lastValue = true;
 
 
-        ConfigHolder.UNIT_REPAIR_HOLDER.delete(unit.toString().toLowerCase() + "." + repairable.toString().toLowerCase());
+        holder.delete(unit.toString().toLowerCase() + "." + repairable.toString().toLowerCase());
         prepareSaveTask();
 
         // Remove from gui
         UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
-        if (repairConfigGui != null) {
+        if(repairConfigGui != null) {
             UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
-            if (elementGui != null) elementGui.removeGeneric(repairable);
-            if (lastValue) {
+            if(elementGui != null) elementGui.removeGeneric(repairable);
+            if(lastValue) {
                 repairConfigGui.removeGeneric(unit);
             }
         }
@@ -211,12 +274,17 @@ public class UnitRepairApi {
      * Prepare a task to save custom unit repair recipe configuration.
      */
     private static void prepareSaveTask() {
-        if (saveChangeTask != null) return;
+        if(saveChangeTask != null) return;
 
-        saveChangeTask = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
-            ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(true);
-            saveChangeTask = null;
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
+            try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+                lock.get().saveToDisk(true);
+                saveChangeTask = null;
+            }
         });
+
+        saveChangeTask = task;
     }
 
     /**
@@ -234,28 +302,35 @@ public class UnitRepairApi {
      *
      */
     @Deprecated
-    @NotNull
     public static List<Triple<Material, Material, Double>> getUnitRepairs() {
+        try(var lock = ConfigHolder.UNIT_REPAIR.read) {
+            return getUnitRepairs(lock.get());
+        }
+    }
+
+    @Deprecated
+    private static List<Triple<Material, Material, Double>> getUnitRepairs(ConfigHolder.UnitRepairHolder holder) {
         List<Triple<Material, Material, Double>> mutableList = new ArrayList<>();
 
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
-        for (String unitKey : config.getKeys(false)) {
+        FileConfiguration config = holder.getConfig();
+        for(String unitKey : config.getKeys(false)) {
             // Test if config section exist
-            if (!config.isConfigurationSection(unitKey)) continue;
+            if(!config.isConfigurationSection(unitKey)) continue;
 
             // Test if unit is a material
             Material unit = Material.getMaterial(unitKey.toUpperCase());
-            if (unit == null) continue;
+            if(unit == null) continue;
 
             // Iterate over reparable items
             ConfigurationSection section = config.getConfigurationSection(unitKey);
-            for (String repairableKey : section.getKeys(false)) {
+            if(section == null) continue;
+            for(String repairableKey : section.getKeys(false)) {
                 // Test if value section exist
-                if (!section.isDouble(repairableKey)) continue;
+                if(!section.isDouble(repairableKey)) continue;
 
                 // Test if repairable is valid a material
                 Material repairable = Material.getMaterial(repairableKey.toUpperCase());
-                if (repairable == null) continue;
+                if(repairable == null) continue;
 
                 // Add the values
                 mutableList.add(new Triple<>(unit, repairable, section.getDouble(repairableKey)));
@@ -264,6 +339,53 @@ public class UnitRepairApi {
         }
 
         return Collections.unmodifiableList(mutableList);
+    }
+
+    private static void addAllRepairedByUnit(
+            FileConfiguration config,
+            String unitKey,
+            Map<NamespacedKey, Double> result
+    ) {
+        ConfigurationSection section = config.getConfigurationSection(unitKey);
+        if(section == null) {
+            CustomAnvil.Companion.getInstance().getLogger().severe("Could not find config section for unit repair " + unitKey);
+            return;
+        }
+
+        for(String repairableKey : section.getKeys(false)) {
+            // Test if value section exist
+            if(!section.isDouble(repairableKey)) continue;
+
+            // Test if repairable is valid a material
+            NamespacedKey repairable = NamespacedKey.fromString(repairableKey.toLowerCase());
+            if(repairable == null) continue;
+
+            // Add the values
+            result.put(repairable, section.getDouble(repairableKey));
+        }
+    }
+
+    private static void testAndAddAllRepairedByUnit(
+            FileConfiguration config,
+            String unitKey,
+            Map<NamespacedKey, Map<NamespacedKey, Double>> result
+    ) {
+        // Test if config section exist
+        if(!config.isConfigurationSection(unitKey)) return;
+
+        // Test if unit is a material
+        NamespacedKey unit = NamespacedKey.fromString(unitKey.toLowerCase());
+        if(unit == null) return;
+
+        Map<NamespacedKey, Double> map;
+        if(!result.containsKey(unit)) {
+            map = new HashMap<>();
+            result.put(unit, map);
+        } else {
+            map = result.get(unit);
+        }
+
+        addAllRepairedByUnit(config, unitKey, map);
     }
 
     /**
@@ -275,44 +397,16 @@ public class UnitRepairApi {
      * <li>Second map contain as key the item to be repaired and as value the amount to be repaired by every unit. (1% = 0.01)
      * </ul>
      */
-    @NotNull
     public static Map<NamespacedKey, Map<NamespacedKey, Double>> getModernUnitRepairs() {
-        Map<NamespacedKey, Map<NamespacedKey, Double>> mutableList = new HashMap<>();
+        Map<NamespacedKey, Map<NamespacedKey, Double>> result = new HashMap<>();
 
-        FileConfiguration config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
-        for (String unitKey : config.getKeys(false)) {
-            // Test if config section exist
-            if (!config.isConfigurationSection(unitKey)) continue;
-
-            // Test if unit is a material
-            NamespacedKey unit = NamespacedKey.fromString(unitKey.toLowerCase());
-            if (unit == null) continue;
-
-            Map<NamespacedKey, Double> map;
-            if (!mutableList.containsKey(unit)) {
-                map = new HashMap<>();
-                mutableList.put(unit, map);
-            } else {
-                map = mutableList.get(unit);
-            }
-
-            // Iterate over reparable items
-            ConfigurationSection section = config.getConfigurationSection(unitKey);
-            for (String repairableKey : section.getKeys(false)) {
-                // Test if value section exist
-                if (!section.isDouble(repairableKey)) continue;
-
-                // Test if repairable is valid a material
-                NamespacedKey repairable = NamespacedKey.fromString(repairableKey.toLowerCase());
-                if (repairable == null) continue;
-
-                // Add the values
-                map.put(repairable, section.getDouble(repairableKey));
-
-            }
+        try(var lock = ConfigHolder.UNIT_REPAIR.read) {
+            FileConfiguration config = lock.get().getConfig();
+            for(String unitKey : config.getKeys(false))
+                testAndAddAllRepairedByUnit(config, unitKey, result);
         }
 
-        return mutableList;
+        return result;
     }
 
 }

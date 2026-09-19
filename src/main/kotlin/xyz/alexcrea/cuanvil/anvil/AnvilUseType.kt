@@ -1,9 +1,11 @@
 package xyz.alexcrea.cuanvil.anvil
 
 import org.bukkit.Material
+import org.jetbrains.annotations.NotNullByDefault
 import xyz.alexcrea.cuanvil.config.WorkPenaltyType
 import xyz.alexcrea.cuanvil.util.anvil.AnvilUseTypeUtil
 
+@NotNullByDefault
 enum class AnvilUseType(
     val typeName: String, val path: String,
     val defaultPenalty: WorkPenaltyType.WorkPenaltyPart,

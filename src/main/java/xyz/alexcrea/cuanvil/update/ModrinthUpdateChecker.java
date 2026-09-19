@@ -24,7 +24,10 @@
 
 package xyz.alexcrea.cuanvil.update;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -39,7 +42,10 @@ import java.util.function.Function;
 
 /**
  * Utility class to check for newer versions of a project hosted on Modrinth.
+ * From <a href="https://github.com/Clickism/ModrinthUpdateChecker">ModrinthUpdateChecker</a>
  */
+@NotNullByDefault
+@SuppressWarnings("unused")
 public class ModrinthUpdateChecker {
 
     private static final String API_URL = "https://api.modrinth.com/v2/project/{id}/version";
@@ -89,30 +95,29 @@ public class ModrinthUpdateChecker {
      * @param consumer the consumer
      */
     public void checkVersion(Consumer<String> consumer) {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
+        try(HttpClient client = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(prepareURI())
-                    .GET()
-                    .build();
+                .uri(prepareURI())
+                .GET()
+                .build();
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenAcceptAsync(response -> {
-                        if (response.statusCode() != 200) {
-                            if(onError != null)
-                                onError.accept(new RuntimeException("wrong response status code: " + response.statusCode()));
-                            return;
-                        }
-                        JsonArray versionsArray = JsonParser.parseString(response.body()).getAsJsonArray();
-                        String latestVersion = getLatestVersion(versionsArray);
-                        if (latestVersion == null) {
-                            if(onError != null)
-                                onError.accept(new RuntimeException("latest version is null"));
-                            return;
-                        }
-                        consumer.accept(latestVersion);
-                    });
-        } catch (Exception e) {
+                .thenAcceptAsync(response -> {
+                    if(response.statusCode() != 200) {
+                        if(onError != null)
+                            onError.accept(new RuntimeException("wrong response status code: " + response.statusCode()));
+                        return;
+                    }
+                    JsonArray versionsArray = JsonParser.parseString(response.body()).getAsJsonArray();
+                    String latestVersion = getLatestVersion(versionsArray);
+                    if(latestVersion == null) {
+                        if(onError != null) onError.accept(new RuntimeException("latest version is null"));
+                        return;
+                    }
+                    consumer.accept(latestVersion);
+                }
+                );
+        } catch(Exception e) {
             if(onError != null) onError.accept(e);
         }
     }
@@ -140,7 +145,7 @@ public class ModrinthUpdateChecker {
      * @return the raw version string
      */
     public static String getRawVersion(String version) {
-        if (version.isEmpty()) return version;
+        if(version.isEmpty()) return version;
         version = version.replaceAll("^\\D+", "");
         String[] split = version.split("\\+");
         return split[0];
@@ -148,6 +153,7 @@ public class ModrinthUpdateChecker {
 
     /**
      * Prepare this request uri based on current parameters.
+     *
      * @return the request uri
      */
     private URI prepareURI() {
@@ -156,7 +162,7 @@ public class ModrinthUpdateChecker {
         var parameters = prepareParameters();
         String[] paramArray = new String[parameters.size()];
         int i = 0;
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+        for(Map.Entry<String, String> entry : parameters.entrySet()) {
             paramArray[i++] = entry.getKey() + '=' + entry.getValue();
         }
         url.append('?').append(String.join("&", paramArray));
@@ -169,7 +175,7 @@ public class ModrinthUpdateChecker {
      *
      * @return a map of key-value map of the request parameters
      */
-    private Map<String, String> prepareParameters(){
+    private Map<String, String> prepareParameters() {
         var parameters = new HashMap<String, String>();
 
         parameters.put("loaders", List.of(loader).toString());
@@ -183,6 +189,7 @@ public class ModrinthUpdateChecker {
     /**
      * Only get featured or non-featured versions.
      * Null represent no filter.
+     *
      * @param featured should be restricted to featured version ? default null if not called
      * @return this
      */
@@ -193,6 +200,7 @@ public class ModrinthUpdateChecker {
 
     /**
      * Function called on error calling the api.
+     *
      * @param onError What should happen on error
      * @return this
      */
@@ -204,6 +212,7 @@ public class ModrinthUpdateChecker {
     /**
      * Set the function to get raw version from the modrinth version.
      * If null provided raw version will act as in the identity function.
+     *
      * @param getRawVersion The function transforming modrinth version to raw version
      * @return this
      */

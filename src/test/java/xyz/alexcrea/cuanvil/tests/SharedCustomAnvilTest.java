@@ -22,7 +22,7 @@ public abstract class SharedCustomAnvilTest {
         server = MockBukkit.mock();
         // Load your plugin
         plugin = MockBukkit.load(CustomAnvil.class);
-        // Continue initialization of the plugin
+        // Continue initialisation of the plugin
         server.getScheduler().performOneTick();
     }
 

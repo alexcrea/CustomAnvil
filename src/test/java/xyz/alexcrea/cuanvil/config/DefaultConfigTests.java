@@ -54,8 +54,8 @@ public class DefaultConfigTests extends SharedCustomAnvilTest {
 
         EnchantmentRarity rarity = enchantment.defaultRarity();
 
-        Assertions.assertEquals(rarity.getItemValue(), itemValue,"Default enchantment item value is not the same as expected value");
-        Assertions.assertEquals(rarity.getBookValue(), bookValue,"Default enchantment book value is not the same as expected value");
+        Assertions.assertEquals(rarity.itemValue(), itemValue,"Default enchantment item value is not the same as expected value");
+        Assertions.assertEquals(rarity.bookValue(), bookValue,"Default enchantment book value is not the same as expected value");
     }
 
 
@@ -71,11 +71,11 @@ public class DefaultConfigTests extends SharedCustomAnvilTest {
                 Arguments.of(ConfigOptions.UNIT_REPAIR_COST, ConfigOptions.DEFAULT_UNIT_REPAIR_COST),
                 Arguments.of(ConfigOptions.ITEM_RENAME_COST, ConfigOptions.DEFAULT_ITEM_RENAME_COST),
                 Arguments.of(ConfigOptions.SACRIFICE_ILLEGAL_COST, ConfigOptions.DEFAULT_SACRIFICE_ILLEGAL_COST),
-                // Color options
-                Arguments.of(ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE),
-                Arguments.of(ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR),
-                Arguments.of(ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR),
-                Arguments.of(ConfigOptions.USE_OF_COLOR_COST, ConfigOptions.DEFAULT_USE_OF_COLOR_COST)
+                // Colour options
+                Arguments.of(ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE),
+                Arguments.of(ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR),
+                Arguments.of(ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR),
+                Arguments.of(ConfigOptions.USE_OF_COLOUR_COST, ConfigOptions.DEFAULT_USE_OF_COLOUR_COST)
 
         );
     }

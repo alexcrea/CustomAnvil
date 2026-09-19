@@ -1,27 +1,30 @@
 package xyz.alexcrea.cuanvil.update.plugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
+import xyz.alexcrea.cuanvil.update.UpdateHandler;
 import xyz.alexcrea.cuanvil.update.UpdateUtils;
 import xyz.alexcrea.cuanvil.update.Version;
 import xyz.alexcrea.cuanvil.update.minecraft.Update_1_21_9;
 
-import javax.annotation.Nonnull;
-import java.util.Set;
+@NotNullByDefault
+public class PUpdate_1_15_6 extends PluginUpdate {
 
-public class PUpdate_1_15_6 {
+    public PUpdate_1_15_6() {
+        super(new Version(1, 15, 6));
+    }
 
-    public static void handleUpdate(@Nonnull Set<ConfigHolder> toSave) {
+    @Override
+    public void handleUpdate(UpdateHandler.UpdatedConfigList toSave) {
         // fix only needed for 1.21.9 and above
         Version current = UpdateUtils.currentMinecraftVersion();
-        if (new Version(1, 21, 9).greaterThan(current)) return;
+        if(new Version(1, 21, 9).greaterThan(current)) return;
 
-        FileConfiguration unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        FileConfiguration unitConfig = toSave.use(ConfigHolder.UNIT_REPAIR).getConfig();
 
         // Add unit repair
         Update_1_21_9.addCopperUnitRepair(unitConfig);
-
-        toSave.add(ConfigHolder.UNIT_REPAIR_HOLDER);
     }
 
 }

@@ -30,7 +30,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import java.util.ArrayList;
 
 /**
- * Global config to edit basic basic settings.
+ * Global config to edit basic settings.
  */
 public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
@@ -89,13 +89,13 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
     private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
-    private BoolSettingsGui.BoolSettingFactory allowColorCode; // c character
-    private BoolSettingsGui.BoolSettingFactory allowHexColor; // h character
+    private BoolSettingsGui.BoolSettingFactory allowColourCode; // c character
+    private BoolSettingsGui.BoolSettingFactory allowHexColour; // h character
 
-    private BoolSettingsGui.BoolSettingFactory permissionNeededForColor; // p character
+    private BoolSettingsGui.BoolSettingFactory permissionNeededForColour; // p character
     private GuiItem noPermissionNeededItem;
-    private IntSettingsGui.IntSettingFactory useOfColorCost; // P character
-    private GuiItem noColorCostItem;
+    private IntSettingsGui.IntSettingFactory useOfColourCost; // P character
+    private GuiItem noColourCostItem;
 
     /**
      * Prepare basic gui displayed items factory and static items..
@@ -205,34 +205,34 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         );
 
         // -------------
-        // Color config
+        // Colour config
         // -------------
 
         // Allow us of color code
-        this.allowColorCode = new BoolSettingsGui.BoolSettingFactory(
+        this.allowColourCode = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOR_CODE_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.ALLOW_COLOR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOR_CODE,
+                ConfigOptions.ALLOW_COLOUR_CODE, ConfigOptions.DEFAULT_ALLOW_COLOUR_CODE,
                 null, MsgUI.INSTANCE.getBASIC_COLOR_CODE_LIMIT_DESCRIPTION()
         );
 
-        // Allow us of hexadecimal color
-        this.allowHexColor = new BoolSettingsGui.BoolSettingFactory(
+        // Allow us of hexadecimal colour
+        this.allowHexColour = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOR_HEX_LIMIT_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.ALLOW_HEXADECIMAL_COLOR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOR,
+                ConfigOptions.ALLOW_HEXADECIMAL_COLOUR, ConfigOptions.DEFAULT_ALLOW_HEXADECIMAL_COLOUR,
                 null, MsgUI.INSTANCE.getBASIC_COLOR_HEX_LIMIT_DESCRIPTION()
         );
 
-        // Permission needed for color
-        this.permissionNeededForColor = new BoolSettingsGui.BoolSettingFactory(
+        // Permission needed for colour
+        this.permissionNeededForColour = new BoolSettingsGui.BoolSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_TITLE(), this,
                 ConfigHolder.DEFAULT_CONFIG,
-                ConfigOptions.PERMISSION_NEEDED_FOR_COLOR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOR,
+                ConfigOptions.PERMISSION_NEEDED_FOR_COLOUR, ConfigOptions.DEFAULT_PERMISSION_NEEDED_FOR_COLOUR,
                 null, MsgUI.INSTANCE.getBASIC_COLOR_PERMISSION_DESCRIPTION()
         );
 
-        // Permission needed for color not necessary
+        // Permission needed for colour not necessary
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
@@ -243,17 +243,17 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         // Cost of using color
-        range = ConfigOptions.USE_OF_COLOR_COST_RANGE;
-        this.useOfColorCost = new IntSettingsGui.IntSettingFactory(
+        range = ConfigOptions.USE_OF_COLOUR_COST_RANGE;
+        this.useOfColourCost = new IntSettingsGui.IntSettingFactory(
                 MsgUI.INSTANCE.getBASIC_COLOR_COST_TITLE(), this,
-                ConfigOptions.USE_OF_COLOR_COST, ConfigHolder.DEFAULT_CONFIG,
+                ConfigOptions.USE_OF_COLOUR_COST, ConfigHolder.DEFAULT_CONFIG,
                 MsgUI.INSTANCE.getBASIC_COLOR_COST_DESCRIPTION(), null,
                 range.getFirst(), range.getLast(),
-                ConfigOptions.DEFAULT_USE_OF_COLOR_COST,
+                ConfigOptions.DEFAULT_USE_OF_COLOUR_COST,
                 1, 5, 10, 50, 100
         );
 
-        // Permission needed for color not necessary
+        // Permission needed for colour not necessary
         item = new ItemStack(Material.BARRIER);
         meta = item.getItemMeta();
         assert meta != null;
@@ -262,7 +262,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOR_COST_DISABLED_DESCRIPTION().formatted(), meta);
 
         item.setItemMeta(meta);
-        this.noColorCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
+        this.noColourCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
     }
 
@@ -334,29 +334,29 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         );
         pane.bindItem('W', workPenaltyType);
 
-        // allow color code
-        GuiItem allowColorCodeItem = this.allowColorCode.getItem();
-        pane.bindItem('c', allowColorCodeItem);
+        // allow colour code
+        GuiItem allowColourCodeItem = this.allowColourCode.getItem();
+        pane.bindItem('c', allowColourCodeItem);
 
-        // allow hex color
-        GuiItem allowHexColorItem = this.allowHexColor.getItem();
-        pane.bindItem('h', allowHexColorItem);
+        // allow hex colour
+        GuiItem allowHexColourItem = this.allowHexColour.getItem();
+        pane.bindItem('h', allowHexColourItem);
 
-        // True if player could place color
-        if(ConfigOptions.INSTANCE.getRenameColorPossible()) {
-            // use permission for color
-            GuiItem permissionNeededItem = this.permissionNeededForColor.getItem();
+        // True if player could place colour
+        if(ConfigOptions.INSTANCE.getRenameColourPossible()) {
+            // use permission for colour
+            GuiItem permissionNeededItem = this.permissionNeededForColour.getItem();
             pane.bindItem('p', permissionNeededItem);
 
-            // using color cost
-            GuiItem useColorCostItem = this.useOfColorCost.getItem(
+            // using colour cost
+            GuiItem useColorCostItem = this.useOfColourCost.getItem(
                     Material.EXPERIENCE_BOTTLE,
                     MsgUI.INSTANCE.getBASIC_COLOR_COST_ITEM()
             );
             pane.bindItem('P', useColorCostItem);
         } else {
             pane.bindItem('p', this.noPermissionNeededItem);
-            pane.bindItem('P', this.noColorCostItem);
+            pane.bindItem('P', this.noColourCostItem);
         }
 
         update();

@@ -27,7 +27,7 @@ public abstract class DefaultCustomAnvilTest {
     public void setUp() {
         // Load your plugin
         plugin = MockBukkit.load(CustomAnvil.class);
-        // Continue initialization of the plugin
+        // Continue initialisation of the plugin
         server.getScheduler().performOneTick();
     }
 

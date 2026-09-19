@@ -1,19 +1,19 @@
 package xyz.alexcrea.cuanvil.util.config
 
 import xyz.alexcrea.cuanvil.anvil.AnvilUseType
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_COLOR_CODE
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_COLOUR_CODE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_HEX_COLOUR
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.ALLOW_MINIMESSAGE
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_COLOR_CODE
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_HEX_COLOR
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_COLOUR_CODE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_HEX_COLOUR
 import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_ALLOW_MINIMESSAGE
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOR_COST
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_USE_COLOR_COST
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_COST
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOR_COST_RANGE
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOR_COST
-import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOR_COST_RANGE
-import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT_CONFIG as CONFIG
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_REMOVE_COLOUR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.DEFAULT_USE_COLOUR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOUR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.REMOVE_COLOUR_COST_RANGE
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOUR_COST
+import xyz.alexcrea.cuanvil.util.config.LoreEditConfigUtil.USE_COLOUR_COST_RANGE
+import xyz.alexcrea.cuanvil.config.ConfigHolder.DEFAULT as CONFIG
 
 enum class LoreEditType(
     val rootPath: String,
@@ -41,9 +41,10 @@ enum class LoreEditType(
      */
     val enabled: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getBoolean("${rootPath}.${LoreEditConfigUtil.IS_ENABLED}", LoreEditConfigUtil.DEFAULT_IS_ENABLED)
+            }
         }
 
     /**
@@ -51,11 +52,12 @@ enum class LoreEditType(
      */
     val fixedCost: Int
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getInt("${rootPath}.${LoreEditConfigUtil.FIXED_COST}", LoreEditConfigUtil.DEFAULT_FIXED_COST)
                 .takeIf { it in LoreEditConfigUtil.FIXED_COST_RANGE }
                 ?: LoreEditConfigUtil.DEFAULT_FIXED_COST
+            }
         }
 
     /**
@@ -64,11 +66,12 @@ enum class LoreEditType(
     val perLineCost: Int
         get() {
             if (!isMultiLine) throw IllegalStateException("Per line cost get on single line edit type")
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getInt("${rootPath}.${LoreEditConfigUtil.PER_LINE_COST}", LoreEditConfigUtil.DEFAULT_PER_LINE_COST)
                 .takeIf { it in LoreEditConfigUtil.PER_LINE_COST_RANGE }
                 ?: LoreEditConfigUtil.DEFAULT_PER_LINE_COST
+            }
         }
 
     /**
@@ -76,29 +79,32 @@ enum class LoreEditType(
      */
     val doConsume: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getBoolean("${rootPath}.${LoreEditConfigUtil.DO_CONSUME}", LoreEditConfigUtil.DEFAULT_DO_CONSUME)
+            }
         }
 
     /**
-     * Allow usage or removal of color code
+     * Allow usage or removal of colour code
      */
-    val allowColorCode: Boolean
+    val allowColourCode: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
-                .getBoolean("$rootPath.$ALLOW_COLOR_CODE", DEFAULT_ALLOW_COLOR_CODE)
+                .getBoolean("$rootPath.$ALLOW_COLOUR_CODE", DEFAULT_ALLOW_COLOUR_CODE)
+            }
         }
 
     /**
-     * Allow usage or removal of hexadecimal color
+     * Allow usage or removal of hexadecimal colour
      */
-    val allowHexColor: Boolean
+    val allowHexColour: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
-                .getBoolean("${rootPath}.$ALLOW_HEX_COLOR", DEFAULT_ALLOW_HEX_COLOR)
+                .getBoolean("${rootPath}.$ALLOW_HEX_COLOUR", DEFAULT_ALLOW_HEX_COLOUR)
+            }
         }
 
     /**
@@ -106,37 +112,38 @@ enum class LoreEditType(
      */
     val allowMinimessage: Boolean
         get() {
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
                 .getBoolean("${rootPath}.$ALLOW_MINIMESSAGE", DEFAULT_ALLOW_MINIMESSAGE)
+            }
         }
 
     /**
-     * Cost when using either color code and hex color on lore add
+     * Cost when using either colour code and hex colour on lore add
      */
-    val useColorCost: Int
+    val useColourCost: Int
         get() {
             if (!isAppend) throw IllegalStateException("Can only call with an append edit type")
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
-                .getInt("${rootPath}.$USE_COLOR_COST", DEFAULT_USE_COLOR_COST)
-                .takeIf { it in USE_COLOR_COST_RANGE }
-                ?: DEFAULT_USE_COLOR_COST
-
+                .getInt("${rootPath}.$USE_COLOUR_COST", DEFAULT_USE_COLOUR_COST)
+                .takeIf { it in USE_COLOUR_COST_RANGE }
+                   ?: DEFAULT_USE_COLOUR_COST
+            }
         }
 
     /**
-     * Cost when using either color code and hex color on lore remove
+     * Cost when using either colour code and hex colour on lore remove
      */
-    val removeColorCost: Int
+    val removeColourCost: Int
         get() {
             if (isAppend) throw IllegalStateException("Can only call with a remove edit type")
-            return CONFIG
+            return CONFIG.read.use { lock -> lock.get()
                 .config
-                .getInt("${rootPath}.$REMOVE_COLOR_COST", DEFAULT_REMOVE_COLOR_COST)
-                .takeIf { it in REMOVE_COLOR_COST_RANGE }
-                ?: DEFAULT_REMOVE_COLOR_COST
-
+                .getInt("${rootPath}.$REMOVE_COLOUR_COST", DEFAULT_REMOVE_COLOUR_COST)
+                .takeIf { it in REMOVE_COLOUR_COST_RANGE }
+                   ?: DEFAULT_REMOVE_COLOUR_COST
+            }
         }
 
 }

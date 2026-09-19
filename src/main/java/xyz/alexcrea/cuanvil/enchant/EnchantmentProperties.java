@@ -1,6 +1,9 @@
 package xyz.alexcrea.cuanvil.enchant;
 
+import org.jetbrains.annotations.NotNullByDefault;
+
 // to bind EnchantmentRarity to an enchantment...
+@NotNullByDefault
 public enum EnchantmentProperties {
 
     AQUA_AFFINITY(EnchantmentRarity.RARE),

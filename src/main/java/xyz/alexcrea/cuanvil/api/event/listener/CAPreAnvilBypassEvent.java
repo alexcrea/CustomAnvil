@@ -4,7 +4,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * Called before custom anvil process the prepare anvil event.
@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
  * It is also recommended that you read about {@link CAEarlyPreAnvilBypassEvent} and {@link CATreatAnvilResultEvent}
  * as your use case may be more prone to use theses.
  */
+@SuppressWarnings("unused")
+@NotNullByDefault
 public class CAPreAnvilBypassEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -30,7 +32,7 @@ public class CAPreAnvilBypassEvent extends Event implements Cancellable {
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 
@@ -46,7 +48,6 @@ public class CAPreAnvilBypassEvent extends Event implements Cancellable {
         this.cancelled = cancel;
     }
 
-    @NotNull
     private final PrepareAnvilEvent event;
 
     /**
@@ -54,12 +55,11 @@ public class CAPreAnvilBypassEvent extends Event implements Cancellable {
      *
      * @return The pre anvil event causing this event
      */
-    @NotNull
     public PrepareAnvilEvent getEvent() {
         return event;
     }
 
-    public CAPreAnvilBypassEvent(@NotNull PrepareAnvilEvent event) {
+    public CAPreAnvilBypassEvent(PrepareAnvilEvent event) {
         this.event = event;
     }
 

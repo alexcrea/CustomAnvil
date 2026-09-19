@@ -18,8 +18,8 @@ import java.util.function.Consumer;
 
 public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui<T> {
 
-    protected HashMap<T, GuiItem> guiItemMap;
-    protected HashMap<T, S> factoryMap;
+    protected final HashMap<T, GuiItem> guiItemMap;
+    protected final HashMap<T, S> factoryMap;
 
     protected SettingGuiListConfigGui(@NotNull Message title, Gui parent) {
         super(title, "", parent);

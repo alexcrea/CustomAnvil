@@ -25,10 +25,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DoubleSettingGui extends AbstractSettingGui {
@@ -361,20 +358,21 @@ public class DoubleSettingGui extends AbstractSettingGui {
      */
     public static class DoubleSettingFactory extends SettingGuiFactory {
         @NotNull
-        Message title;
+        final Message title;
         @NotNull
+        final
         ValueUpdatableGui parent;
 
-        int scale;
-        boolean asPercentage;
-        boolean nullOnZero;
-        BigDecimal min;
-        BigDecimal max;
-        BigDecimal defaultVal;
-        BigDecimal[] steps;
+        final int scale;
+        final boolean asPercentage;
+        final boolean nullOnZero;
+        final BigDecimal min;
+        final BigDecimal max;
+        final BigDecimal defaultVal;
+        final BigDecimal[] steps;
 
         @Nullable
-        Message displayLore;
+        final Message displayLore;
         @Nullable
         Object param;
         @Nullable

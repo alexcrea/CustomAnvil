@@ -32,7 +32,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         super(4, MsgUI.INSTANCE.getBASIC_WORK_PENALTY_TITLE(), parent);
 
         this.currentType = ConfigOptions.INSTANCE.getWorkPenaltyType();
-        this.items = new EnumMap<>(this.currentType.getPartMap());
+        this.items = new EnumMap<>(this.currentType.partMap());
 
         for(AnvilUseType type : useTypes.keySet()) {
             updateGuiForType(type);
@@ -123,9 +123,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         meta.setLore(displayLore);
         displayItem.setItemMeta(meta);
 
-        pane.bindItem(display, new GuiItem(displayItem, (event) -> {
-            event.setCancelled(true);
-        }));
+        pane.bindItem(display, new GuiItem(displayItem, (event) -> event.setCancelled(true)));
 
         // Can probably put this in a function but this works so
         // "Increment" item

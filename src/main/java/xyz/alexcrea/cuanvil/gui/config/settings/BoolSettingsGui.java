@@ -172,12 +172,14 @@ public class BoolSettingsGui extends AbstractSettingGui {
      */
     public static class BoolSettingFactory extends SettingGuiFactory {
         @NotNull
-        Message title;
+        final Message title;
         @NotNull
+        final
         ValueUpdatableGui parent;
-        boolean defaultVal;
+        final boolean defaultVal;
 
         @Nullable
+        final
         List<Message> displayLore;
         @Nullable
         Object param;

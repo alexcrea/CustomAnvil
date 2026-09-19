@@ -230,7 +230,7 @@ object AnvilXpUtil {
         val key = exclusivePenaltyKey(useType)
 
         val meta = item.itemMeta!!
-        return meta.persistentDataContainer.get(key, PersistentDataType.INTEGER) ?: return 0
+        return meta.persistentDataContainer.get(key, PersistentDataType.INTEGER) ?: 0
     }
 
     /**
@@ -249,16 +249,18 @@ object AnvilXpUtil {
         var rightValue = 0
         var leftValue = 0
 
-        for (enchantment in rightEnchs) {
+        for ((enchant, level) in rightEnchs) {
             // count enchant as illegal enchant if it conflicts with another enchant or not in result
-            if ((enchantment.key !in resultEnchsKeys)) {
-                resultEnchsKeys[enchantment.key] = enchantment.value
-                val conflictType = ConfigHolder.CONFLICT_HOLDER.conflictManager.isConflicting(
-                    resultEnchsKeys,
-                    result,
-                    enchantment.key
-                )
-                resultEnchsKeys.remove(enchantment.key)
+            if ((enchant !in resultEnchsKeys)) {
+                resultEnchsKeys[enchant] = level
+                val conflictType = ConfigHolder.CONFLICT.read.use { lock ->
+                    lock.get().conflictManager.isConflicting(
+                        resultEnchsKeys,
+                        result,
+                        enchant
+                    )
+                }
+                resultEnchsKeys.remove(enchant)
 
                 if (ConflictType.ENCHANTMENT_CONFLICT == conflictType) {
                     cost.illegalPenalty += ConfigOptions.sacrificeIllegalCost
@@ -267,25 +269,25 @@ object AnvilXpUtil {
                 continue
             }
             // We know "enchantment.key in resultEnchs" true
-            val resultLevel = resultEnchs[enchantment.key]!!
+            val resultLevel = resultEnchs[enchant]!!
 
-            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isFromBook, isToBook)
+            val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchant, isToBook, isFromBook)
             val value = resultLevel * enchantmentMultiplier
-            CustomAnvil.log("Value for sacrifice item ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
+            CustomAnvil.log("Value for sacrifice item ${enchant.enchantmentName} level $level is $value ($resultLevel * $enchantmentMultiplier)")
             rightValue += value
 
         }
         if (ConfigOptions.includeLeftEnchantmentForCost) {
             val leftEnchs = EnchantmentApi.getEnchantments(left)
-            for (enchantment in leftEnchs) {
+            for ((enchant, level) in leftEnchs) {
                 // Do not process enchantment that are present on the sacrifice
-                if (rightEnchs.contains(enchantment.key)) continue
+                if (rightEnchs.contains(enchant)) continue
 
-                val resultLevel = resultEnchs.getOrDefault(enchantment.key, 0)
+                val resultLevel = resultEnchs.getOrDefault(enchant, 0)
 
-                val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchantment.key, isFromBook, isToBook)
+                val enchantmentMultiplier = ConfigOptions.enchantmentValue(enchant, isToBook, isFromBook)
                 val value = resultLevel * enchantmentMultiplier
-                CustomAnvil.log("Value for left item ${enchantment.key.enchantmentName} level ${enchantment.value} is $value ($resultLevel * $enchantmentMultiplier)")
+                CustomAnvil.log("Value for left item ${enchant.enchantmentName} level $level is $value ($resultLevel * $enchantmentMultiplier)")
                 leftValue += value
             }
         }

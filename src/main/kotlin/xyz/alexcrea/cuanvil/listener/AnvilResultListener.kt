@@ -534,7 +534,7 @@ class AnvilResultListener : Listener {
             rightCopy = null
         } else {
             // Uncolor the page
-            AnvilLoreEditUtil.uncolorLines(player, lore, LoreEditType.REMOVE_BOOK)
+            AnvilLoreEditUtil.uncolourLines(player, lore, LoreEditType.REMOVE_BOOK)
 
             val bookPage = StringBuilder()
             lore.forEach {
@@ -641,7 +641,7 @@ class AnvilResultListener : Listener {
 
             // uncolor the line
             val ref = AtomicReference(line)
-            AnvilLoreEditUtil.uncolorLine(player, ref, LoreEditType.REMOVE_PAPER)
+            AnvilLoreEditUtil.uncolourLine(player, ref, LoreEditType.REMOVE_PAPER)
 
             rightClone = rightItem.clone()
             rightClone.amount = 1

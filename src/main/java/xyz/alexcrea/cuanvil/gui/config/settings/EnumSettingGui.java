@@ -139,10 +139,11 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
      */
     public abstract static class EnumSettingFactory<T extends Enum<T> & ConfigurableEnum> extends SettingGuiFactory {
         @NotNull
-        Message title;
+        final Message title;
         @Nullable
         Object param;
         @NotNull
+        final
         ValueUpdatableGui parent;
 
         /**
