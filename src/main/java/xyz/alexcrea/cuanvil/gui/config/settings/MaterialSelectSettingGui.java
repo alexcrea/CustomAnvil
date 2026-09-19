@@ -15,9 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
@@ -37,9 +38,10 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
     public MaterialSelectSettingGui(
             @NotNull SelectMaterialContainer selector,
-            @NotNull String title,
+            @NotNull Message title,
+            @NotNull String param,
             @NotNull Gui backGui) {
-        super(title);
+        super(title, param);
         this.selector = selector;
         this.backGui = backGui;
         this.instantRemove = false;
@@ -156,7 +158,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             // Do not allow to save configuration if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             if(testCantSave()) return;
@@ -236,8 +238,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
-                        "Remove " + materialName,
-                        "§7Confirm Remove " + materialName.toLowerCase() + " from this list.",
+                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_TITLE(), materialName,
+                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_DESCRIPTION(), materialName.toLowerCase(),
                         this, this,
                         () -> {
                             removeMaterial(material);
@@ -303,7 +305,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     @Override
-    protected String genericDisplayedName() {// Not Used
+    protected Message genericDisplayedName() {// Not Used
         return null;
     }
 }

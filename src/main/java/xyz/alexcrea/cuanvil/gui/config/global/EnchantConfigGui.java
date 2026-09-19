@@ -19,6 +19,8 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -37,9 +39,17 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
     private EnchantConflictGui enchantConflictGui;
     private GroupConfigGui groupConfigGui;
 
+    private static String selectName(@NotNull Set<CAEnchantment> enchantments) {
+        if(enchantments.size() == 1) {
+            return enchantments.stream().findFirst().get().getPrettyName();
+        }
+
+        return MsgUI.INSTANCE.getENCHANT_CONFIG_MULTIPLES_NAME().unformatted();
+    }
+
     public EnchantConfigGui(@NotNull Set<CAEnchantment> enchantments) {
         super(3,
-                "Configuring Enchantments",
+                MsgUI.INSTANCE.getENCHANT_CONFIG_TITLE().textHolder(selectName(enchantments)),
                 CustomAnvil.instance);
         this.enchantments = enchantments;
 
@@ -57,7 +67,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        displayMeta.setDisplayName("§aConfiguring Enchantments:");
+        ComponentUtil.INSTANCE.setMessageName(displayMeta, MsgUI.INSTANCE.getENCHANT_CONFIG_NAME(), selectName(enchantments));
         displayItemstack.setItemMeta(displayMeta);
 
         // Set enchantments

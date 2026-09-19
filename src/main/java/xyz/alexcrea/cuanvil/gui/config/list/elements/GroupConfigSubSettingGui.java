@@ -20,10 +20,11 @@ import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.GroupSelectSettingGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.MaterialSelectSettingGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -39,8 +40,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     public GroupConfigSubSettingGui(
             @NotNull GroupConfigGui parent,
             @NotNull IncludeGroup group) {
-        super(3,
-                "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rConfig");
+        super(3, CasedStringUtil.snakeToUpperSpacedCase(group.getName()));
         this.parent = parent;
         this.group = group;
 
@@ -64,39 +64,49 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         // Delete item
         ItemStack deleteItem = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta deleteMeta = deleteItem.getItemMeta();
+        assert deleteMeta != null;
 
-        deleteMeta.setDisplayName("§4DELETE GROUP");
-        deleteMeta.setLore(Collections.singletonList("§cCaution with this button !"));
+        ComponentUtil.INSTANCE.setMessageName(deleteMeta, MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME());
+        ComponentUtil.INSTANCE.applyLore(
+                MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_LORE().formatted(),
+                deleteMeta
+        );
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, openGuiAndCheckAction(), CustomAnvil.instance));
 
         // Displayed item will be updated later
-        String materialSelectionName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName()) + " §rMaterials";
+        var materialSelectionName = MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_SELECTED_MATERIALS();
+        var name = CasedStringUtil.snakeToUpperSpacedCase(group.getName());
+
         ItemStack selectItem = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta selectItemMeta = selectItem.getItemMeta();
-        selectItemMeta.setDisplayName(materialSelectionName);
+        assert selectItemMeta != null;
+
+        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName, name, null, null);
 
         selectItem.setItemMeta(selectItemMeta);
         this.materialSelection = new GuiItem(selectItem, (event) -> {
             event.setCancelled(true);
             MaterialSelectSettingGui selectGui = new MaterialSelectSettingGui(this,
-                    materialSelectionName
+                    materialSelectionName, name//TODO MESSAGE maybe need (%page/%max_page)
                     , this);
             selectGui.show(event.getWhoClicked());
 
         }, CustomAnvil.instance);
 
-        String selectGroupName = "§e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.getName()) + " §rGroups";
+        var selectGroupName = MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_SELECTED_SUB_GROUPS();
         ItemStack selectGroup = new ItemStack(Material.CHEST);
         ItemMeta selectGroupMeta = selectGroup.getItemMeta();
-        selectGroupMeta.setDisplayName(selectGroupName);
+        assert selectGroupMeta != null;
+
+        ComponentUtil.INSTANCE.setMessageName(selectGroupMeta, selectGroupName, name);
 
         selectGroup.setItemMeta(selectGroupMeta);
         this.groupSelection = new GuiItem(selectGroup, (event) -> {
             event.setCancelled(true);
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
-                    selectGroupName,
+                    selectGroupName, name,
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
@@ -113,7 +123,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             // Do not allow to open inventory if player do not have edit configuration permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             // test if group is used & cancel & warn user if so
@@ -151,8 +161,9 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             return success;
         };
 
-        return new ConfirmActionGui("§cDelete §e" + CasedStringUtil.snakeToUpperSpacedCase(this.group.toString()) + "§c?",
-                "§7Confirm that you want to delete this group.",
+        var type = CasedStringUtil.snakeToUpperSpacedCase(this.group.toString());
+        return new ConfirmActionGui(MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_TITLE(), type,
+                MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_DESCRIPTION(), type,
                 this, this.parent, deleteSupplier
         );
     }
@@ -225,7 +236,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemStack matSelectItem = this.materialSelection.getItem();
         ItemMeta matSelectMeta = matSelectItem.getItemMeta();
 
-        matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");
+        assert matSelectMeta != null;
+        matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");//TODO MESSAGE
         matSelectMeta.setLore(matLore);
         matSelectMeta.addItemFlags(ItemFlag.values());
 
@@ -237,7 +249,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemStack groupSelectItem = this.groupSelection.getItem();
         ItemMeta groupSelectMeta = groupSelectItem.getItemMeta();
 
-        groupSelectMeta.setDisplayName("§aSelect included §3Groups §aSettings");
+        assert groupSelectMeta != null;
+        groupSelectMeta.setDisplayName("§aSelect included §3Groups §aSettings");//TODO MESSAGE
         groupSelectMeta.setLore(groupLore);
 
         groupSelectItem.setItemMeta(groupSelectMeta);

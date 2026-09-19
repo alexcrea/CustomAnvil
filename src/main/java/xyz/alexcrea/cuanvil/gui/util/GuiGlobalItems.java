@@ -4,14 +4,20 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -184,9 +190,6 @@ public class GuiGlobalItems {
         return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
 
-    // Prefix of the one line lore that will be added to setting's item.
-    public static final String SETTING_ITEM_LORE_PREFIX = "§7value: ";
-
     /**
      * Create an arbitrary GuiItem from a unique setting and item's property.
      *
@@ -201,17 +204,23 @@ public class GuiGlobalItems {
     public static GuiItem createGuiItemFromProperties(
             @NotNull SettingGui.SettingGuiFactory factory,
             @NotNull Material itemMat,
-            @NotNull StringBuilder itemName,
-            @NotNull Object value,
-            @NotNull List<String> displayLore,
-            boolean displayValuePrefix
+            @NotNull Component itemName,
+            @NotNull Object value,//TODO ????
+            @Nullable List<Message> displayLore,
+            boolean displayValuePrefix,
+            @Nullable Object... params
     ) {
         // Prepare lore
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add((displayValuePrefix ? SETTING_ITEM_LORE_PREFIX  : "") + value);
-        if(!displayLore.isEmpty()){
-            lore.add("");
-            lore.addAll(displayLore);
+        var loreHeader = (displayValuePrefix ?
+                MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX() :
+                MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX_ALONE());
+
+        List<Component> lore = loreHeader.formatted(value);
+        if(displayLore != null){
+            lore.add(Component.empty());
+            for(Message message : displayLore) {
+                lore.addAll(message.formatted(params));
+            }
         }
 
         // Create & initialise item
@@ -219,8 +228,8 @@ public class GuiGlobalItems {
         ItemMeta itemMeta = item.getItemMeta();
         assert itemMeta != null;
 
-        itemMeta.setDisplayName(itemName.toString());
-        itemMeta.setLore(lore);
+        PlatformUtil.INSTANCE.setComponentDisplayName(itemMeta, itemName, null);
+        ComponentUtil.INSTANCE.applyLore(lore, itemMeta);
         itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);

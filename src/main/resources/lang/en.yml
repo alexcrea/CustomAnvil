@@ -1,0 +1,414 @@
+name: English
+last-updated: 2.1.0
+
+warning.load:
+    legacy:
+      old-name:
+        1: "An old version of this plugin was detected"
+        2: "Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus"
+      spigot:
+        1: "It seems you are using spigot"
+        2: "Please take notice that spigot is less supported than paper and derivatives"
+      spigot-old:
+        1: "If replace too expensive is not working this is likely because of spigot"
+        2: "As native nms is not supported for spigot starting 26.1"
+    update.available: "An update may be available: %version"
+
+warning.anvil:
+    generic: "<white>[<yellow>CustomAnvil<white>] <red>Error while handling the anvil."
+
+error.load:
+    legacy.failed: "error trying to check for legacy system"
+    update.check-fail: "error trying to fetch latest update"
+    command-register: "error trying to register commands"
+    compatibility: "error loading dependency compatibility"
+    listeners: "error registering listeners"
+    enchant-system: "error initializing enchantment system"
+    non-default-config: "Plugin has an issue while trying to load non default config... exiting..."
+
+error.reload:
+    resource:
+      fail: "Resource %path Could not be loaded or reloaded."
+      hard-fail: "Disabling plugin."
+
+error.confirm-action:
+    generic: "Could not process confirmation supplier."
+
+command.shared:
+    no-diag-permission: "<red>You do not have permission to diagnostic this server"
+    hover-copy: "<gray>Click to copy"
+    unknown-subcmd: "Unknown subcommand %command"
+    no-permission: "No permission to execute this command"
+    warning:
+      missing-subcmd: "Need to specify a subcommand. for example %example1 or %example2"
+
+command.root:
+    warning:
+      unknown-sub: "<red>Invalid subcommand. run <yellow>`%command help` <red>to see available commands"
+    error:
+      generic: "<red>Error running this command"
+
+command.debug:
+    description: "Used to toggle debug logs and retrieve them"
+    log-cleared: "Log Cleared"
+    toggled: "Debug toggled to %type"
+    copy: "<green>Click to copy log data"
+    copy-lang: "<green>Click to copy detailed lang issues"
+    data:
+      header: "Debug Log data:"
+      line-count: "Found %count lines"
+    warning:
+      unspecified-type: "Need to specify which type of debug to toggle: \"default\" or \"verbose\""
+      invalid-type: "Invalid debug type \"%type\""
+      no-log: "No log to show ? make sure you tried with debug log toggled (%command)"
+
+command.diagnostic:
+    description: "Basic diagnostic of this plugin"
+    had-error: "<red>There was an error running the diagnostic"
+    copy: "<green>Click to copy diagnostic data"
+
+command.config:
+    description: "Used to edit the configuration of the plugin"
+    folia-issue:
+      1: "<red>It look like you are using Folia. Sadly Custom Anvil do not support Config gui for Folia."
+      2: "<yellow>It is may come in a future version."
+      3: ""
+      4: "<yellow>Currently you need to edit manually the config or copy from another server (spigot or better)"
+      5: "<yellow>Then /ca reload after config file is edited"
+    enchantment:
+      no_hand: "No enchantment found in the item you are holding"
+      no_name: "No enchantment found with the name %name"
+    warning:
+      legacy-name: "<red>/ca gui has been moved to /ca config"
+      cannot_configure: "Cannot configure the item in hand"
+
+command.enchant:
+    description: "Allows to set enchantment to holden item"
+    warning:
+      missing_parameter: "Missing enchantment parameter"
+      not_found: "Enchantment not found: %path"
+      malformed_number: "Invalid number: %num"
+      cannot_enchant: "Cannot enchant this item"
+    removed: "%name removed"
+    set: "%name set to level %level"
+
+command.help:
+    description: "Help command"
+    header: "List of available commands:"
+
+command.reload:
+    description: "Reload the configuration of this plugin"
+    start: "<yellow>Reloading config..."
+    success: "<green>Config reloaded !"
+    fail: "<red>Config was not able to be reloaded..."
+    hard-fail: "<red>Hard fail, plugin disabled"
+
+config-ui.shared:
+    no-permission: "<red>You do not have permission to edit the config"
+    typed-config-title: "<yellow>%type <white>Config"
+    click-to-change: "<gray>Click Here to change the value"
+    green-get-item: "<green>%name"
+    yellow-get-item: "<yellow>%name"
+    formated-yes: "<green>Yes"
+    formated-no: "<red>No"
+    default: "Default"
+    valued-default: "Default (%value)"
+
+config-ui.global-item:
+  item-lore-prefix: "<gray>value: %value"
+  item-lore-prefix-alone: "%value"
+
+config-ui.confirm-action:
+    fail: "<red>Action could not be completed."
+    is-user-sure: "<yellow>Are you sure ?"
+
+config-ui.select-item-type:
+    place-here: "<yellow>Place an item here"
+
+config-ui.element-list:
+    instruction-new:
+      1: "<yellow>Write the %type name you want to create in the chat."
+      2: "<yellow>Or write <red>cancel <yellow>to go back to %type config menu"
+    cancelled-new: "%type creation cancelled..."
+    duplicated-new: "<red>Please enter a %type name that do not already exist..."
+
+config-ui.unit-repair:
+    title: "Unit Repair Config <reset>(%page/%max_page)"
+    item: "<gray>\\%<green>%name <yellow>repaired by <green>%unit"
+    new:
+      title: "Select unit repair item."
+      description:
+        1: "<gray>Click here with an item to set the item"
+        2: "<gray>You like to be an unit repair item"
+    element:
+      title: "<yellow>%type <red>Unit repair <reset>(%page/%max_page)"
+      value:
+        title: "<black>\\%<dark_gray>%name Repair"
+        description:
+          1: "<gray>Click here to change how many <yellow>\\% <gray>of <green>%name"
+          2: "<gray>Should get repaired by <yellow>%unit"
+      new:
+        title: "Select item to be repaired."
+        description:
+          1: "<gray>Click here with an item to set the item"
+          2: "<gray>You like to be repaired by %name"
+        cannot-damage: "<red>This item can't be damaged, so it can't be repaired."
+        same-type: "<red>Item can't repair something of the same type."
+
+config-ui.custom-recipe:
+    title: "Custom Recipe Config <reset>(%page/%max_page)"
+    generic-name: "custom recipe"
+    name: "<yellow>%name <white>Custom recipe"
+    lore:
+      default:
+        1: "<gray>Is valid:    %should_work"
+        2: "<gray>Exact count:    %exact_count"
+        3: "<gray>Recipe Level Cost: <yellow>%per_craft_lv_cost"
+        4: "<gray>Recipe Linear Xp Cost: <yellow>%per_craft_xp_cost"
+      linear: "<gray>Exact Linear xp remove:    %exact_linear"
+    element:
+      exact-count: "<dark_gray>Exact count ?"
+      linear-xp:
+        title: "<dark_gray>Remove exact linear xp ?"
+        name: "<red>Remove exact linear xp ?"
+        lore: "<gray>Not usable if linear cost is 0"
+      recipe-cost:
+        level: "<dark_gray>recipe Level Cost"
+        xp: "<dark_gray>Recipe Linear Xp Cost"
+      item:
+        left:
+          title: "<yellow>Recipe Left <dark_gray>Item"
+          description:
+            1: "<gray>Set the left item of the custom craft"
+            2: "<gray>■ + □ = □"
+        right:
+          title: "<yellow>Recipe Right <dark_gray>Item"
+          description:
+            1: "<gray>Set the right item of the custom craft"
+            2: "<gray>□ + ■ = □"
+        result:
+          title: "<green>Recipe Result <dark_gray>Item"
+          description:
+            1: "<gray>Set the result item of the custom craft"
+            2: "<gray>□ + □ = ■"
+      delete:
+        title: "<red>Delete <yellow>%type<red>?"
+        description: "<gray>Confirm that you want to delete this recipe."
+        button:
+          name: "<dark_red>DELETE RECIPE"
+          lore: "<red>Caution with this button !"
+
+config-ui.enchant-level-cost:
+    title: "<dark_gray>Enchantment Level Limit <reset>(%page/%max_page)"
+    element:
+      title: "<green>%name Cost"
+      description:
+        1: "<gray>How many level should %name"
+        2: "<gray>cost when applied by book or by another item."
+
+      item-cost: "<gray>Item  Cost: <yellow>%cost"
+      book-cost: "<gray>Book Cost: <yellow>%cost"
+
+config-ui.enchant-level-limit:
+    title: "<dark_gray>Enchantment Level Limit <reset>(%page/%max_page)"
+    element:
+      title: "<green>%name Limit"
+      description:
+        1: "<gray>Maximum applied level of %name"
+
+config-ui.enchant-merge-limit:
+    title: "<dark_gray>Enchantment Maximum Merge Level <reset>(%page/%max_page)"
+    element:
+      title: "<green>%name Merge Limit"
+      description:
+        1: "<gray>Maximum merge level for for %name"
+        2: ""
+        3: "<gray>For example, if set to <yellow>2<gray>, <green>lvl1 <gray>+ <green>lvl1 <gray>of will give a <green>lvl2"
+        4: "<gray>But <green>lvl2 <gray>+ <green>lvl2 <gray>will not give a <red>lv3<gray>."
+        5: "<gray>Will still not merge above max enchantment level"
+        6: "<yellow>-1 <gray>(default) will set the merge limit to enchantment's maximum level"
+
+config-ui.enchant-conflict:
+    title: "Conflict Config <reset>(%page/%max_page)"
+    name: "<yellow>%name <white>Conflict"
+    lore:
+      1: "<gray>Enchantment count:       <yellow>%enchantment_count"
+      2: "<gray>Group count:               <yellow>%group_count"
+      3: "<gray>Min enchantments count: <yellow>%min_count"
+    generic-name: "conflict"
+    default-new: "new_group"
+    element:
+      selected-enchantments: "<yellow>%group<dark_purple>" # likely need page and max page
+      selected-sub-groups: "<yellow>%group <red>Groups"
+      delete:
+        title: "<red>Delete <yellow>%type<red>?"
+        description: "<gray>Confirm that you want to delete this conflict."
+        button:
+          name: "<dark_red>DELETE CONFLICT"
+          lore: "<red>Caution with this button !"
+      min-before-count:
+        item: "<green>Minimum Enchantment Count"
+        title: "<dark_gray>Minimum enchantment count"
+        description:
+          1: "<gray>Minimum enchantment count set to X mean only X enchantment can be put"
+          2: "<gray>on an item before the conflict is active."
+
+config-ui.material-group:
+    title: "Group Config <reset>(%page/%max_page)"
+    generic-name: "material group"
+    name: "<yellow>%name <white>Group"
+    lore:
+      1: "<gray>Number of selected groups : %groups"
+      2: "<gray>Number of included material : %materials"
+      3: ""
+      4: "<gray>Total number of included material %size"
+    element:
+      selected-materials: "<yellow>%group <red>Materials"
+      selected-sub-groups: "<yellow>%group <red>Groups"
+      delete:
+        title: "<red>Delete <yellow>%type<red>?"
+        description: "<gray>Confirm that you want to delete this group."
+        button:
+          name: "<dark_red>DELETE GROUP"
+          lore: "<red>Caution with this button !"
+
+config-ui.material-select:
+    new:
+      confirm:
+        title: "Remove %name"
+        description: "<dark_gray>Confirm Remove %name from this list."
+
+config-ui.enchant-config:
+  title: "Configuring %name"
+  name: "<green>Configuring %name:"
+  multiples-name: "Enchantments"
+
+config-ui.item-config:
+  title: "%name Config"
+  name: "<green>Configuring %name"
+
+config-ui.basic-config:
+    title: "<dark_gray>Basic Config"
+
+config-ui.basic-config.cap-anvil-cost:
+      item: "<yellow>Cap Anvil Cost"
+      title: "<dark_gray>Cap Anvil Cost ?"
+      description:
+        1: "<gray>All anvil cost will be capped to <green>Max Anvil Cost<gray> if enabled."
+        2: "<gray>In other words:"
+        3: "<gray>For any anvil cost greater than <green>Max Anvil Cost<gray>, Cost will be set to <green>Max Anvil Cost<gray>."
+      disabled:
+        title: "<red>Cap Anvil Cost ?"
+        description: "<gray>This config only work if <red>Limit Repair Cost<gray> is disabled."
+
+config-ui.basic-config.max-anvil-cost:
+      item: "<green>Max Anvil Cost"
+      title: "<dark_gray>Max Anvil Cost"
+      description:
+        1: "<gray>Max cost the Anvil can get to."
+        2: "<gray>Valid values include <yellow>0 <gray>to <yellow>1000<gray>."
+        3: "<gray>Cost will be displayed as <red>Too Expensive<gray>:"
+        4: "<gray>- If Cost is above <yellow>39"
+        5: "<gray>- And <yellow>Replace Too Expensive<gray> is disabled"
+      disabled:
+        title: "<red>Max Anvil Cost"
+        description: "<gray>This config only work if <red>Limit Repair Cost<gray> is disabled."
+
+config-ui.basic-config.remove-cost-limit:
+      item: "<yellow>Remove Anvil Cost Limit"
+      title: "<dark_gray>Remove Anvil Cost Limit ?"
+      description:
+        1: "<gray>Whether the anvil's cost limit should be removed entirely."
+        2: "<gray>The anvil will still visually display <red>Too Expensive<gray> if <yellow>Replace Too Expensive<gray> is disabled."
+        3: "<gray>However, the action will be completable if xp requirement is meet."
+
+config-ui.basic-config.remove-too-expensive:
+      title: "<dark_gray>Replace Too Expensive ?"
+      description:
+        1: "<gray>Whenever anvil cost is above <yellow>39<gray> should display the true price and not <red>Too Expensive<gray>."
+        2: "<gray>However, when bypassing <red>Too Expensive<gray>, anvil price will be displayed as <green>Green<gray>."
+        3: "<gray>Even if cost is displayed as <green>Green<gray>:"
+        4: "<gray>If the player do not have the required xp level, the action will not be completable."
+      description-no-nms:
+        1: ""
+        2: "<dark_red>/!\\<red>Caution<dark_red>/!\\ <red>You need ProtocoLib installed and working, or a paper server."
+        3: "<red>Currently ProtocoLib is not detected."
+
+config-ui.basic-config.item-repair-cost:
+      title: "<dark_gray>Item Repair Cost"
+      description:
+        1: "<gray>XP Level amount added to the anvil when the item"
+        2: "<gray>is repaired by another item of the same type."
+
+config-ui.basic-config.item-rename-cost:
+      title: "<dark_gray>Rename Cost"
+      description:
+        1: "<gray>XP Level amount added to the anvil when the item is renamed."
+
+config-ui.basic-config.unit-repair-cost:
+      title: "<dark_gray>Unit Repair Cost"
+      description:
+        1: "<gray>XP Level amount added to the anvil when the item is repaired by an <yello<>unit<gray>."
+        2: "<gray>For example: a Diamond on a Diamond Sword."
+        3: "<gray>What's considered unit for what can be edited on the unit repair configuration."
+
+config-ui.basic-config.sacrifice-illegal-cost:
+      title: "<dark_gray>Sacrifice Illegal Enchant Cost"
+      description:
+        1: "<gray>XP Level amount added to the anvil when a sacrifice enchantment"
+        2: "<gray>conflict With one of the left item enchantment"
+
+config-ui.basic-config.color-code:
+      title: "<dark_gray>Allow Use Of Color Code ?"
+      description:
+        1: "<gray>Whether players can use color code."
+        2: "<gray>Color code a formatted like <green>&a<gray> and is used in the rename field of the anvil."
+        3: "<gray>Player may need permission to use color code if <yellow>Player need permission to use color<gray> is enabled."
+
+config-ui.basic-config.color-hex:
+      title: "<dark_gray>Allow Use Of Hexadecimal Color ?"
+      description:
+        1: "<gray>Whether players can use hexadecimal color."
+        2: "<gray>Color code a formatted like <gray>#012345 <gray>and is used in the rename field of the anvil."
+        3: "<gray>Player may need permission to use color code if <yellow>Permission Needed For Color<gray> is enabled."
+
+config-ui.basic-config.color-permission:
+      title: "<dark_gray>Need Permission To Use Color ?"
+      description:
+        1: "<gray>Whether players should have permission to be able to use colors."
+        2: "<gray>Give player <yellow>ca.color.code <gray>Permission to allow use of color code."
+        3: "<gray>Give player <yellow>ca.color.hex  <gray>Permission to allow use of hexadecimal color."
+      disabled:
+        title: "<red>Need Permission To Use Color ?"
+        description:
+          1: "<gray>This config can do something only if one of the following config is enabled:"
+          2: "<gray>- <green>Allow Use Of Color Code"
+          3: "<gray>- <green>Allow Use Of Hexadecimal Color"
+
+config-ui.basic-config.color-cost:
+      item: "<green>Cost Of Using Color"
+      title: "<dark_gray>Cost Of Using Color"
+      description:
+        1: "<gray>XP level cost when using color code or hexadecimal color using the anvil."
+        2: "<gray>conflict With one of the left item enchantment"
+      disabled:
+        title: "<red>Cost Of Using Color"
+        description:
+          1: "<gray>This config can do something only if one of the following config is enabled:"
+          2: "<gray>- <green>Allow Use Of Color Code"
+          3: "<gray>- <green>Allow Use Of Hexadecimal Color"
+
+config-ui.basic-config.work-penalty:
+      title: "<dark_gray>Work Penalty Type"
+      item: "<green>Work Penalty Type"
+      lore:
+        1: "<gray>Work penalty increase the price for every anvil use."
+        2: "<gray>This config allow you to choose the comportment of work penalty."
+      lore-break:
+        1: ""
+        2: "<gray>About shared/exclusive penalty:"
+      explanation:
+        increasing: "<yellow>Increasing<gray>: will penalty be increased (in item)"
+        additive: "<yellow>Additive<gray>: will penalty be added to the cost"
+        shared: "<yellow>Shared<gray>: Vanilla, shared penalty. it will be kept from before the plugin installation."
+        exclusive: "<yellow>Exclusive<gray>: Custom, per anvil use type penalty. it will be lost after plugin uninstallation"

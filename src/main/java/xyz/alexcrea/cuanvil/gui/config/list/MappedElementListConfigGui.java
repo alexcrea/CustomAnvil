@@ -9,7 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,14 +20,14 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
 
     protected final HashMap<T, S> elementGuiMap;
 
-    protected MappedElementListConfigGui(@NotNull String title, @NotNull Gui parent) {
-        super(title, parent);
+    protected MappedElementListConfigGui(@NotNull Message title, @NotNull String param, @NotNull Gui parent) {
+        super(title, param, parent);
         this.elementGuiMap = new HashMap<>();
 
     }
 
-    protected MappedElementListConfigGui(@NotNull String title) {
-        this(title, MainConfigGui.getInstance());
+    protected MappedElementListConfigGui(@NotNull Message title, @NotNull String param) {
+        this(title, param, MainConfigGui.getInstance());
     }
 
     @Override
@@ -52,13 +53,12 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             player.closeInventory();
 
-            player.sendMessage("§eWrite the " + genericDisplayedName() + " name you want to create in the chat.\n" +
-                    "§eOr write §ccancel §eto go back to " + genericDisplayedName() + " config menu");
+            MsgUI.INSTANCE.getELEMENT_LIST_INSTRUCTION_NEW().send(player, genericDisplayedName());
 
             CustomAnvil.Companion.getChatListener().setListenedCallback(player, prepareCreateItemConsumer(player));
 
@@ -107,6 +107,6 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
 
     protected abstract Consumer<String> prepareCreateItemConsumer(HumanEntity player);
 
-    protected abstract String genericDisplayedName();
+    protected abstract Message genericDisplayedName();
 
 }

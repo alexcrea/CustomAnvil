@@ -8,6 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.LazyValue;
 
 import java.util.Locale;
@@ -18,12 +20,20 @@ import java.util.function.Supplier;
 public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui.LazyElement<?>>
         extends MappedElementListConfigGui<T, S> {
 
-    protected MappedGuiListConfigGui(@NotNull String title) {
-        super(title);
+    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull String param) {
+        super(title, param);
     }
 
-    protected MappedGuiListConfigGui(@NotNull String title, @NotNull Gui parent) {
-        super(title, parent);
+    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull String param, @NotNull Gui parent) {
+        super(title, param, parent);
+    }
+
+    protected MappedGuiListConfigGui(@NotNull Message title) {
+        super(title, "");
+    }
+
+    protected MappedGuiListConfigGui(@NotNull Message title, @NotNull Gui parent) {
+        super(title, "", parent);
     }
 
     @Override
@@ -69,13 +79,13 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
 
             message = message.toLowerCase(Locale.ROOT);
             if ("cancel".equalsIgnoreCase(message)) {
-                player.sendMessage(genericDisplayedName() + " creation cancelled...");
+                MsgUI.INSTANCE.getELEMENT_LIST_CANCELLED_NEW().send(player, genericDisplayedName());
                 show(player);
                 return;
             }
@@ -86,7 +96,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
             // Not the most efficient on large number of conflict, but it should not run often.
             for (T generic : getDisplayableInstanceOfGeneric()) {
                 if (generic.toString().equalsIgnoreCase(message)) {
-                    player.sendMessage("§cPlease enter a " + genericDisplayedName() + " name that do not already exist...");
+                    MsgUI.INSTANCE.getELEMENT_LIST_DUPLICATED_NEW().send(player, genericDisplayedName());
                     // wait next message.
                     CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
                     return;
@@ -113,7 +123,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
     protected abstract S newInstanceOfGui(T generic, GuiItem item);
 
-    protected abstract String genericDisplayedName();
+    protected abstract Message genericDisplayedName();
 
     protected abstract T createAndSaveNewEmptyGeneric(String name);
 
