@@ -678,7 +678,7 @@ class AnvilResultListener : Listener {
             if (firstEmpty == -1) {
                 return NO_SLOT
             }
-            //check hotbare full
+            // check hotbar full
             var slotIndex = 8
             while (slotIndex >= 0 && ((inventory.getItem(slotIndex)?.type ?: Material.AIR) != Material.AIR)) {
                 slotIndex--

@@ -105,9 +105,8 @@ public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGui
     }
 
     @Override // Not used
-    @Nullable
     protected ItemStack createItemForGeneric(T generic) {
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
     protected abstract List<String> getCreateItemLore();

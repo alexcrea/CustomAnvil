@@ -10,7 +10,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil.send
 import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
 import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
-import java.util.Collections
+import java.util.*
 import java.util.logging.Level
 import kotlin.math.max
 import kotlin.math.min
@@ -44,6 +44,7 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
         }
 
         var foundBackslashPercent = false
+        val replacements = arrayOfNulls<String>(values.size)
         for(i in 0 until min(params.size, values.size)) {
             val key = params[i] ?: continue
             val value = values[i]
@@ -52,7 +53,11 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
                 continue
             }
 
-            val replacement = value.toString()
+            var replacement = replacements[i]
+            if(replacement == null){
+                replacement = findReplacement(value)
+                replacements[i] = replacement
+            }
 
             var current = 0
             while(true) {
@@ -83,6 +88,18 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
         }
     }
 
+    protected fun findReplacement(value: Any): String {
+        if(value is Component) {
+            return MiniMessageUtil.mm.serialize(value)
+        }
+
+        if(value is Message) {
+            return MiniMessageUtil.mm.serialize(value.formattedConcatenated())
+        }
+
+        return value.toString()
+    }
+
     private fun unformattedMonoline(vararg params: Any?): String {
         val translated = Lang.getTranslated(key)
         if(params.isEmpty() && this.params.isEmpty()) return translated
@@ -97,7 +114,7 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
 
         for(key in section.getKeys(false)) {
             if(!section.isString(key)) continue
-            if(!stb.isEmpty()) stb.append('\n')
+            if(stb.isNotEmpty()) stb.append('\n')
 
             stb.append(section.getString(key))
         }
@@ -176,6 +193,12 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
     open fun send(destination: CommandSender, vararg params: Any?) {
         formatted(*params).send(destination)
     }
+
+    override fun toString(): String {
+        CustomAnvil.logError("Invalid string concatenation with $key")
+        return key
+    }
+
 }
 
 class WarningMessage(key: String, vararg params: String?): Message("warning.$key", *params) {

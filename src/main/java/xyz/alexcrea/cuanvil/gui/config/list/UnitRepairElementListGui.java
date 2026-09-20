@@ -94,10 +94,13 @@ public class UnitRepairElementListGui
                         String materialName = type.toString();
 
                         // Add new material
-                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.toString().toLowerCase() + "." + materialName, 0.25);
+                        try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+                            var holder = lock.get();
+                            holder.getConfig().set(parentMaterial.toString().toLowerCase() + "." + materialName, 0.25);
 
-                        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-                            ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+                            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                                holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+                            }
                         }
 
                         // Update gui
@@ -156,11 +159,14 @@ public class UnitRepairElementListGui
             return keys;
         }
 
-        ConfigurationSection legacySection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(parentMaterial.getKey().toLowerCase());
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(parentMaterial.toString().toLowerCase());
+        try(var lock = ConfigHolder.UNIT_REPAIR.read) {
+            var config = lock.get().getConfig();
+            var legacySection = config.getConfigurationSection(parentMaterial.getKey().toLowerCase());
+            var materialSection = config.getConfigurationSection(parentMaterial.toString().toLowerCase());
 
-        addAllKeys(legacySection, keys);
-        addAllKeys(materialSection, keys);
+            addAllKeys(legacySection, keys);
+            addAllKeys(materialSection, keys);
+        }
 
         return keys;
     }

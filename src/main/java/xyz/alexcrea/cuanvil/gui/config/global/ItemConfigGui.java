@@ -104,7 +104,7 @@ public class ItemConfigGui extends ChestGui {
             unitRepairConfigGui = new UnitRepairConfigGui(this);
             unitRepairConfigGui.setFilter(otherMat ->
                     otherMat.equals(material) || UnitRepairUtil.INSTANCE.findRawRepairValue(
-                            material, otherMat, ConfigHolder.UNIT_REPAIR_HOLDER.getConfig()) != null
+                            material, otherMat, ConfigHolder.UNIT_REPAIR) != null
             );
             unitRepairConfigGui.init();
         }

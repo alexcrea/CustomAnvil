@@ -243,6 +243,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
             if (customise) {
                 ItemStack rightItem = this.goRightItem.getItem();
                 ItemMeta rightMeta = rightItem.getItemMeta();
+                assert rightMeta != null;
 
                 rightMeta.setDisplayName("§eGo to page " + (page + 2));
 
@@ -318,10 +319,9 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     @Nullable
     protected abstract GuiItem findGuiItemForRemoval(T generic);
 
-    @Nullable
     protected abstract ItemStack createItemForGeneric(T generic);
 
-    protected abstract void updateGeneric(T generic, ItemStack usedItem);
+    protected abstract void updateGeneric(T generic,  ItemStack usedItem);
 
     protected abstract Collection<T> getEveryInstanceOfGeneric();
 

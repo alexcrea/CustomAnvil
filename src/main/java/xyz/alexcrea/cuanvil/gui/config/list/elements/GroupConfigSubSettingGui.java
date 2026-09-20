@@ -12,6 +12,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
+import xyz.alexcrea.cuanvil.api.ConflictAPI;
+import xyz.alexcrea.cuanvil.api.MaterialGroupApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
@@ -67,6 +69,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     private GuiItem materialSelection;
     private GuiItem groupSelection;
+
     private void prepareStaticValues() {
         GuiGlobalItems.addBackItem(this.pane, this.parent);
         GuiGlobalItems.addBackgroundItem(this.pane);
@@ -131,7 +134,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to open inventory if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
@@ -144,11 +147,17 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     private ConfirmActionGui createDeleteGui() {
+        try(var lock = ConfigHolder.ITEM_GROUP.write) {
+            return createDeleteGui(lock.get());
+        }
+    }
+
+    private ConfirmActionGui createDeleteGui(ConfigHolder.ItemGroupConfigHolder holder) {
         Supplier<Boolean> deleteSupplier = () -> {
             // test if group is used & cancel if so
             if(!getUsedLocations(this.group).isEmpty()) return false;
 
-            ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
+            ItemGroupManager manager = holder.getItemGroupsManager();
 
             // Remove from manager
             manager.getGroupMap().remove(this.group.getName());
@@ -160,12 +169,12 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             cleanAndBeUnusable();
 
             // Update config file storage
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(this.group.getName());
+            holder.delete(this.group.getName());
 
             // Save
             boolean success = true;
-            if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-                success = ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                success = holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
             }
 
             return success;
@@ -178,23 +187,23 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         );
     }
 
-    public boolean testAndWarnIfUsed(HumanEntity player){
+    public boolean testAndWarnIfUsed(HumanEntity player) {
         List<String> usedLoc = getUsedLocations(this.group);
-        if(usedLoc.isEmpty()){
+        if(usedLoc.isEmpty()) {
             return false;
         }
-        StringBuilder stb = new StringBuilder("§cCan't delete group " +this.group.getName()+
+        StringBuilder stb = new StringBuilder("§cCan't delete group " + this.group.getName() +
                 "\n§eUsed by:");
         int maxIndex = usedLoc.size();
         int nbMore = 0;
-        if(maxIndex > 10){
+        if(maxIndex > 10) {
             nbMore = maxIndex - 9;
             maxIndex = 9;
         }
-        for (int i = 0; i < maxIndex; i++) {
+        for(int i = 0; i < maxIndex; i++) {
             stb.append("\n§r-§e ").append(usedLoc.get(i));
         }
-        if(nbMore > 0){
+        if(nbMore > 0) {
             stb.append("§cAnd ").append(nbMore).append(" More...");
         }
 
@@ -203,22 +212,26 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     // return a string containing every instance of where this group is used
-    public static List<String> getUsedLocations(AbstractMaterialGroup group){
+    public static List<String> getUsedLocations(AbstractMaterialGroup group) {
         ArrayList<String> usageList = new ArrayList<>();
 
         // Test used by another group
-        ItemGroupManager groupManager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        for (AbstractMaterialGroup otherGroup : groupManager.getGroupMap().values()) {
-            if(otherGroup.getGroups().contains(group)) {
-                usageList.add("group " + otherGroup.getName());
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            ItemGroupManager groupManager = lock.get().getItemGroupsManager();
+            for(AbstractMaterialGroup otherGroup : groupManager.getGroupMap().values()) {
+                if(otherGroup.getGroups().contains(group)) {
+                    usageList.add("group " + otherGroup.getName());
+                }
             }
         }
 
         // Test if used for conflict
-        EnchantConflictManager conflictManager = ConfigHolder.CONFLICT_HOLDER.getConflictManager();
-        for (EnchantConflictGroup conflict : conflictManager.getConflictList()) {
-            if(conflict.getCantConflictGroup().getGroups().contains(group)) {
-                usageList.add("conflict " + conflict);
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            EnchantConflictManager conflictManager = lock.get().getConflictManager();
+            for(EnchantConflictGroup conflict : conflictManager.getConflictList()) {
+                if(conflict.getCantConflictGroup().getGroups().contains(group)) {
+                    usageList.add("conflict " + conflict);
+                }
             }
         }
 
@@ -297,18 +310,22 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
-        // update group and referencing groups
-        updateGroup(this.group, groups);
+        try(var lock = ConfigHolder.ITEM_GROUP.write) {
+            var holder = lock.get();
 
-        // Save file configuration to disk
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            // update group and referencing groups
+            updateGroup(holder, this.group, groups);
+
+            // Save file configuration to disk
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
 
         return true;
     }
 
-    private void updateGroup(AbstractMaterialGroup group, Set<AbstractMaterialGroup> groups){
+    private void updateGroup(ConfigHolder.ItemGroupConfigHolder holder, AbstractMaterialGroup group, Set<AbstractMaterialGroup> groups) {
         // Set live configuration
         group.setGroups(groups);
 
@@ -316,11 +333,11 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         groups = group.getGroups(); // Maybe some group may have been rejected
         String[] groupNames = new String[groups.size()];
         int index = 0;
-        for (AbstractMaterialGroup otherGroup : groups) {
+        for(AbstractMaterialGroup otherGroup : groups) {
             groupNames[index++] = otherGroup.getName();
         }
 
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(group.getName()+"."+ItemGroupManager.GROUP_LIST_PATH, groupNames);
+        holder.getConfig().set(group.getName() + "." + ItemGroupManager.GROUP_LIST_PATH, groupNames);
 
         // Try to update referencing group. kind of expensive operation in some case.
         updateDirectReferencingGroups(group);
@@ -332,8 +349,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     public Set<AbstractMaterialGroup> illegalGroups() {
         Set<AbstractMaterialGroup> illegal = new HashSet<>();
 
-        for (AbstractMaterialGroup otherGroup : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if(otherGroup.isReferencing(this.group)){
+        for(AbstractMaterialGroup otherGroup : MaterialGroupApi.getRegisteredGroupCollection()) {
+            if(otherGroup.isReferencing(this.group)) {
                 illegal.add(otherGroup);
             }
         }
@@ -355,23 +372,29 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
     @Override
     public boolean setSelectedMaterials(Set<NamespacedKey> materials) {
+        try(var lock = ConfigHolder.ITEM_GROUP.write) {
+            return setSelectedMaterials(lock.get(), materials);
+        }
+    }
+
+    private boolean setSelectedMaterials(ConfigHolder.ItemGroupConfigHolder holder, Set<NamespacedKey> materials) {
         this.group.setNonGroupInheritedMaterials(materials);
 
         // Write to file configuration
         String[] groupNames = new String[materials.size()];
         int index = 0;
-        for (NamespacedKey otherGroup : materials) {
+        for(NamespacedKey otherGroup : materials) {
             groupNames[index++] = otherGroup.getKey().toLowerCase();
         }
 
-        ConfigHolder.ITEM_GROUP_HOLDER.getConfig().set(this.group.getName()+"."+ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
+        holder.getConfig().set(this.group.getName() + "." + ItemGroupManager.MATERIAL_LIST_PATH, groupNames);
 
         // update referencing groups
         updateDirectReferencingGroups(this.group);
 
         // Save file configuration to disk
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return ConfigHolder.ITEM_GROUP_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+            return holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
         return true;
     }
@@ -385,40 +408,40 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     // End of SelectMaterialContainer related methods
     // ----------------------------
 
-    private void updateDirectReferencingGroups(AbstractMaterialGroup referenceTo){
-        Collection<AbstractMaterialGroup> everyStoredGroups = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values();
-        List<EnchantConflictGroup> everyConflicts = ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
+    private void updateDirectReferencingGroups(AbstractMaterialGroup referenceTo) {
+        var everyStoredGroups = MaterialGroupApi.getRegisteredGroupCollection();
+        var everyConflicts = ConflictAPI.getRegisteredConflict();
 
         HashSet<AbstractMaterialGroup> toUpdate = new HashSet<>();
         HashSet<AbstractMaterialGroup> updateFuture = new HashSet<>();
         HashSet<AbstractMaterialGroup> conflictGroupPlanned = new HashSet<>();
 
         updateFuture.add(referenceTo);
-        while (!updateFuture.isEmpty()){
+        while(!updateFuture.isEmpty()) {
             HashSet<AbstractMaterialGroup> temp = updateFuture;
             updateFuture = toUpdate;
             updateFuture.clear();
             toUpdate = temp;
 
-            for (AbstractMaterialGroup testGroup : toUpdate) {
+            for(AbstractMaterialGroup testGroup : toUpdate) {
                 // Update other stored group
-                for (AbstractMaterialGroup otherGroup : everyStoredGroups) {
-                    if(otherGroup.getGroups().contains(testGroup)){
+                for(AbstractMaterialGroup otherGroup : everyStoredGroups) {
+                    if(otherGroup.getGroups().contains(testGroup)) {
                         otherGroup.updateMaterials();
                         updateFuture.add(otherGroup);
                     }
                 }
 
                 // plan update for conflict groups
-                for (EnchantConflictGroup everyConflict : everyConflicts) {
+                for(EnchantConflictGroup everyConflict : everyConflicts) {
                     AbstractMaterialGroup conflictGroup = everyConflict.getCantConflictGroup();
-                    if(conflictGroup.getGroups().contains(testGroup)){
+                    if(conflictGroup.getGroups().contains(testGroup)) {
                         conflictGroupPlanned.add(conflictGroup);
                     }
                 }
 
                 // Update parent & local by extension
-                if(testGroup instanceof IncludeGroup){
+                if(testGroup instanceof IncludeGroup) {
                     this.parent.updateValueForGeneric((IncludeGroup) testGroup, false);
                 }
             }
@@ -426,7 +449,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.parent.update();
 
         // Update conflict group
-        for (AbstractMaterialGroup conflictGroup : conflictGroupPlanned) {
+        //TODO #130 part 3 should make this outdated
+        for(AbstractMaterialGroup conflictGroup : conflictGroupPlanned) {
             conflictGroup.updateMaterials();
         }
 

@@ -58,18 +58,22 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
                 new IncludeGroup(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_DEFAULT_NEW().unformatted()),
                 0);
 
-        ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var holder = lock.get();
 
-        // save empty conflict in config
-        String[] emptyStringArray = new String[0];
+            holder.getConflictManager().addConflict(conflict);
 
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
-        config.set(name + ".enchantments", emptyStringArray);
-        config.set(name + ".notAffectedGroups", emptyStringArray);
-        config.set(name + ".maxEnchantmentBeforeConflict", 0);
+            // save empty conflict in config
+            String[] emptyStringArray = new String[0];
 
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            FileConfiguration config = holder.getConfig();
+            config.set(name + ".enchantments", emptyStringArray);
+            config.set(name + ".notAffectedGroups", emptyStringArray);
+            config.set(name + ".maxEnchantmentBeforeConflict", 0);
+
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
 
         return conflict;
@@ -108,7 +112,9 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     @Override
     protected Collection<EnchantConflictGroup> getEveryInstanceOfGeneric() {
-        return ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            return lock.get().getConflictManager().getConflictList();
+        }
     }
 
 }

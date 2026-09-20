@@ -248,7 +248,7 @@ object AnvilColourUtil {
             }
             if(startIndex > 0 && builder[startIndex - 1] == '§') {
                 builder.replace(startIndex - 1, startIndex + 1, "#")
-                // Voluntarily do not update startindex
+                // Voluntarily do not update startIndex
                 // if we had &|#123456 (| being start index) then we get #1|23456 so won't trigger matcher again !
                 continue
             }
@@ -281,17 +281,17 @@ object AnvilColourUtil {
         if (leftIndex == -1 || rightIndex > leftIndex) return false
 
         val right = builder.slice(index..<builder.length)
-        val newleftIndex = right.indexOf("<")
+        val newLeftIndex = right.indexOf("<")
         rightIndex = right.indexOf(">")
 
         // first > do not exist or is after first < (if exist)
-        if (rightIndex == -1 || (newleftIndex != -1 && newleftIndex < rightIndex)) return false
+        if (rightIndex == -1 || (newLeftIndex != -1 && newLeftIndex < rightIndex)) return false
 
         // Then finally we use minimessage to check for tag
-        val expectedTag = builder.substring(leftIndex, newleftIndex + index + 1)
-        val notag = MiniMessageUtil.mm.stripTags(expectedTag)
+        val expectedTag = builder.substring(leftIndex, newLeftIndex + index + 1)
+        val noTag = MiniMessageUtil.mm.stripTags(expectedTag)
 
-        return notag != expectedTag
+        return noTag != expectedTag
     }
 
     /**

@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 @NotNullByDefault
@@ -119,8 +118,17 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
     }
 
     private ConfirmActionGui createDeleteGui() {
-        Supplier<Boolean> deleteSupplier = () -> {
-            EnchantConflictManager manager = ConfigHolder.CONFLICT_HOLDER.getConflictManager();
+        var type = CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString());
+        return new ConfirmActionGui(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_TITLE(), type,
+                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_DESCRIPTION(), type,
+                this, this.parent, this::deleteHandler
+        );
+    }
+
+    private boolean deleteHandler() {
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var holder = lock.get();
+            var manager = holder.getConflictManager();
 
             // Remove from enchantment
             manager.removeConflict(this.enchantConflict);
@@ -132,29 +140,27 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             cleanAndBeUnusable();
 
             // Update config file storage
-            ConfigHolder.CONFLICT_HOLDER.delete(this.enchantConflict.toString());
+            holder.delete(this.enchantConflict.toString());
 
             // Save
             boolean success = true;
             if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-                success = ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+                success = holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
             }
 
             return success;
-        };
+        }
 
-        var type = CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString());
-        return new ConfirmActionGui(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_TITLE(), type,
-                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_DESCRIPTION(), type,
-                this, this.parent, deleteSupplier
-        );
     }
 
     @Override
     public void updateGuiValues() {
         // update value from config to conflict
-        int minBeforeBlock = ConfigHolder.CONFLICT_HOLDER.getConfig().getInt(this.enchantConflict.toString() + '.' + EnchantConflictManager.ENCH_MAX_PATH, 0);
-        this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            var holder = lock.get();
+            int minBeforeBlock = holder.getConfig().getInt(this.enchantConflict.toString() + '.' + EnchantConflictManager.ENCH_MAX_PATH, 0);
+            this.enchantConflict.setMinBeforeBlock(minBeforeBlock);
+        }
 
         // Parent should call updateLocal with this call
         this.parent.updateValueForGeneric(this.enchantConflict, true);
@@ -175,8 +181,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             Iterator<CAEnchantment> enchantIterator = enchants.iterator();
 
             boolean greaterThanMax = enchants.size() > 5;
-            int maxindex = (greaterThanMax ? 4 : enchants.size());
-            for(int i = 0; i < maxindex; i++) {
+            int maxIndex = (greaterThanMax ? 4 : enchants.size());
+            for(int i = 0; i < maxIndex; i++) {
                 // format string like "- Fire Protection"
                 String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
                 enchantLore.add("§7- §5" + formattedName);
@@ -254,6 +260,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
     @Override
     public boolean setSelectedEnchantments(Set<CAEnchantment> enchantments) {
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            return setSelectedEnchantments(lock.get(), enchantments);
+        }
+    }
+
+    private boolean setSelectedEnchantments(ConfigHolder.ConflictConfigHolder holder, Set<CAEnchantment> enchantments) {
         if(!this.shouldWork) {
             CustomAnvil.instance.getLogger().info("Trying to save " + enchantConflict + " enchants but sub config is destroyed");//TODO MESSAGE
             return false;
@@ -268,7 +280,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         for(CAEnchantment enchantment : enchantments) {
             enchantKeys[index++] = enchantment.getKey().toString();
         }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(enchantConflict + ".enchantments", enchantKeys);
+        holder.getConfig().set(enchantConflict + ".enchantments", enchantKeys);
 
         try {
             updateGuiValues();
@@ -279,7 +291,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
         // Save file configuration to disk
         if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            return holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
         }
 
         return true;
@@ -297,6 +309,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         return this.enchantConflict.getCantConflictGroup().getGroups();
     }
 
+    // TODO hell for #130 part 3
     @Override
     public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
         if(!this.shouldWork) {
@@ -305,26 +318,29 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         }
 
         // Set live configuration
-        this.enchantConflict.getCantConflictGroup().setGroups(groups);
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var holder = lock.get();
+            this.enchantConflict.getCantConflictGroup().setGroups(groups);
 
-        // Save on file configuration
-        String[] groupsNames = new String[groups.size()];
-        int index = 0;
-        for(AbstractMaterialGroup group : groups) {
-            groupsNames[index++] = group.getName();
-        }
-        ConfigHolder.CONFLICT_HOLDER.getConfig().set(this.enchantConflict + ".notAffectedGroups", groupsNames);
+            // Save on file configuration
+            String[] groupsNames = new String[groups.size()];
+            int index = 0;
+            for(AbstractMaterialGroup group : groups) {
+                groupsNames[index++] = group.getName();
+            }
+            holder.getConfig().set(this.enchantConflict + ".notAffectedGroups", groupsNames);
 
-        try {
-            updateGuiValues();
-        } catch(Exception e) {
-            CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for " + this.enchantConflict, e);//TODO MESSAGE
-            MetricsUtil.INSTANCE.trackError(e);
-        }
+            try {
+                updateGuiValues();
+            } catch(Exception e) {
+                CustomAnvil.instance.getLogger().log(Level.WARNING, "An error occurred while updating group for " + this.enchantConflict, e);//TODO MESSAGE
+                MetricsUtil.INSTANCE.trackError(e);
+            }
 
-        // Save file configuration to disk
-        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            // Save file configuration to disk
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
 
         return true;

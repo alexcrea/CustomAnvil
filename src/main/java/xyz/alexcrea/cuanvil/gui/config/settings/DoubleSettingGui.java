@@ -114,6 +114,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
     @Override
     public Pattern getGuiPattern() {
+        //noinspection SpellCheckingInspection
         return new Pattern(
                 "abcdefghi",
                 "D0-0v0+00",

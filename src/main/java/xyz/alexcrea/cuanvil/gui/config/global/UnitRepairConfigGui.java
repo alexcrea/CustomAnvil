@@ -21,6 +21,7 @@ import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 @NotNullByDefault
 public class UnitRepairConfigGui extends
@@ -35,7 +36,7 @@ public class UnitRepairConfigGui extends
     }
 
     public static UnitRepairConfigGui getInstance() {
-        if (INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
+        if(INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
 
         return INSTANCE;
     }
@@ -61,24 +62,18 @@ public class UnitRepairConfigGui extends
 
     @Override
     protected ItemStack createItemForGeneric(NamespacedKey material) {
-        var unitConfig = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
-        var section = unitConfig.getConfigurationSection(material.toString().toLowerCase());
-        var legacySection = unitConfig.getConfigurationSection(material.getKey().toLowerCase());
-
-        String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
+        Set<String> reparable;
+        try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+            reparable = getConfiguredValues(lock.get(), material);
+        }
 
         var display = MaterialUtil.INSTANCE.getMatFromKey(material);
 
-        if (display == null || display.isAir()) {
+        if(display == null || display.isAir()) {
             display = Material.BARRIER;
         }
 
-        var reparable = new HashSet<String>();
-        if (section != null)
-            reparable.addAll(section.getKeys(false));
-        if (legacySection != null)
-            reparable.addAll(legacySection.getKeys(false));
-
+        String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
         var reparableItemCount = reparable.size();
 
         ItemStack item = new ItemStack(display);
@@ -96,19 +91,37 @@ public class UnitRepairConfigGui extends
         return item;
     }
 
+    private HashSet<String> getConfiguredValues(ConfigHolder.UnitRepairHolder holder, NamespacedKey material) {
+        var result = new HashSet<String>();
+        var unitConfig = holder.getConfig();
+        var section = unitConfig.getConfigurationSection(material.toString().toLowerCase());
+        var legacySection = unitConfig.getConfigurationSection(material.getKey().toLowerCase());
+
+        if(section != null)
+            result.addAll(section.getKeys(false));
+        if(legacySection != null)
+            result.addAll(legacySection.getKeys(false));
+
+        return result;
+    }
+
     @Override
     protected Collection<NamespacedKey> getEveryInstanceOfGeneric() {
         var materials = new HashSet<NamespacedKey>();
-        var config = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig();
+        try(var lock = ConfigHolder.UNIT_REPAIR.read) {
+            var holder = lock.get();
+            var config = holder.getConfig();
 
-        for (String matName : config.getKeys(false)) {
-            if(!config.isConfigurationSection(matName)) continue;
+            for(String matName : config.getKeys(false)) {
+                if(!config.isConfigurationSection(matName)) continue;
 
-            NamespacedKey material = NamespacedKey.fromString(matName.toLowerCase());
-            if (material != null) {
-                materials.add(material);
+                NamespacedKey material = NamespacedKey.fromString(matName.toLowerCase());
+                if(material != null) {
+                    materials.add(material);
+                }
             }
         }
+
         return materials;
     }
 
@@ -149,7 +162,7 @@ public class UnitRepairConfigGui extends
 
     public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(NamespacedKey mat) {
         LazyElement<UnitRepairElementListGui> element = this.elementGuiMap.get(mat);
-        if (element == null) {
+        if(element == null) {
             updateValueForGeneric(mat, false);
 
             element = this.elementGuiMap.get(mat);

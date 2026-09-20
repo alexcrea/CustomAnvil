@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.api.EnchantmentApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
@@ -23,10 +24,10 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @NotNullByDefault
 public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
@@ -172,13 +173,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
             groupConfigGui = new GroupConfigGui(this);
 
             // Get all the conflict related to this enchantment
-            var groups = ConfigHolder.CONFLICT_HOLDER
-                    .getConflictManager()
-                    .getConflictList()
-                    .stream()
-                    .filter(getGroupFilter())
-                    .map(EnchantConflictGroup::getCantConflictGroup)
-                    .collect(Collectors.toSet());
+            var groups = getGroups();
 
             groupConfigGui.setFilter(group ->
                 groups.stream().anyMatch(other -> other.isReferencing(group))
@@ -187,6 +182,18 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         }
 
         return groupConfigGui;
+    }
+
+    private Collection<AbstractMaterialGroup> getGroups() {
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            return lock.get()
+                    .getConflictManager()
+                    .getConflictList()
+                    .stream()
+                    .filter(getGroupFilter())
+                    .map(EnchantConflictGroup::getCantConflictGroup)
+                    .toList();
+        }
     }
 
     @Override

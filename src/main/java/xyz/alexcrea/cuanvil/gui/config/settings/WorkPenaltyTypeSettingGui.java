@@ -6,7 +6,6 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -236,24 +235,26 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
     }
 
     public static boolean saveWorkPenalty(Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> partEnum) {
-        ConfigHolder configHolder = ConfigHolder.DEFAULT_CONFIG;
-        FileConfiguration config = configHolder.getConfig();
+        try(var lock = ConfigHolder.DEFAULT.write) {
+            var holder = lock.get();
+            var config = holder.getConfig();
 
-        partEnum.forEach((key, value) -> {
-            String partPath = key.getPath();
+            partEnum.forEach((key, value) -> {
+                String partPath = key.getPath();
 
-            if(key.getDefaultPenalty().equals(value)) {
-                config.set(partPath, null);
-                return;
-            }
+                if(key.getDefaultPenalty().equals(value)) {
+                    config.set(partPath, null);
+                    return;
+                }
 
-            config.set(partPath + '.' + ConfigOptions.WORK_PENALTY_INCREASE, value.penaltyIncrease());
-            config.set(partPath + '.' + ConfigOptions.WORK_PENALTY_ADDITIVE, value.penaltyAdditive());
-            config.set(partPath + '.' + ConfigOptions.EXCLUSIVE_WORK_PENALTY_INCREASE, value.exclusivePenaltyIncrease());
-            config.set(partPath + '.' + ConfigOptions.EXCLUSIVE_WORK_PENALTY_ADDITIVE, value.exclusivePenaltyAdditive());
-        });
+                config.set(partPath + '.' + ConfigOptions.WORK_PENALTY_INCREASE, value.penaltyIncrease());
+                config.set(partPath + '.' + ConfigOptions.WORK_PENALTY_ADDITIVE, value.penaltyAdditive());
+                config.set(partPath + '.' + ConfigOptions.EXCLUSIVE_WORK_PENALTY_INCREASE, value.exclusivePenaltyIncrease());
+                config.set(partPath + '.' + ConfigOptions.EXCLUSIVE_WORK_PENALTY_ADDITIVE, value.exclusivePenaltyAdditive());
+            });
 
-        return configHolder.saveToDisk(true);
+            return holder.saveToDisk(true);
+        }
     }
 
     @Override

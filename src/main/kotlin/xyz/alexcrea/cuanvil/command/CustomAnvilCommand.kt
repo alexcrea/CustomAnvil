@@ -45,15 +45,15 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         val subcmd: CASubCommand?
         val subcmdStr: String
 
-        val newargs: Array<out String>
+        val newArgs: Array<out String>
         if (args.isEmpty()) {
             subcmdStr = "config"
             subcmd = editConfigCommand
-            newargs = args
+            newArgs = args
         } else {
             subcmdStr = args[0].lowercase()
             subcmd = commands[subcmdStr]
-            newargs = args.copyOfRange(1, args.size)
+            newArgs = args.copyOfRange(1, args.size)
         }
 
         if (subcmd == null || !subcmd.allowed(sender)) {
@@ -62,7 +62,7 @@ class CustomAnvilCommand(plugin: CustomAnvil) : CommandExecutor, TabCompleter {
         }
 
         try {
-            return subcmd.executeCommand(sender, cmd, subcmdStr, newargs)
+            return subcmd.executeCommand(sender, cmd, subcmdStr, newArgs)
         } catch (e: Throwable) {
             CustomAnvil.logError("Error running /$cmdstr ${args.joinToString(" ")}", e)
             MsgCommand.ROOT_ERROR_SUBCOMMAND.send(sender)

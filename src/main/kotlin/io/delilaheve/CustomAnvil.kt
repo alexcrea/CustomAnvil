@@ -62,12 +62,6 @@ open class CustomAnvil : JavaPlugin() {
         // Permission string required to edit the plugin's config
         const val giveEnchantmentPermission = "ca.command.enchantment"
 
-        // Command Name to reload the config
-        const val commandReloadName = "anvilconfigreload"
-
-        // Config command name
-        const val commandConfigName = "customanvilconfig"
-
         // Current plugin instance
         lateinit var instance: CustomAnvil
 
@@ -100,7 +94,7 @@ open class CustomAnvil : JavaPlugin() {
         }
 
         /**
-         * Vebose Logging handler
+         * Verbose Logging handler
          */
         @JvmStatic fun verboseLog(message: String) {
             if (ConfigOptions.verboseDebugLog) {

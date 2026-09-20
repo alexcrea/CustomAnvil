@@ -30,11 +30,11 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     private static @Nullable GroupConfigGui INSTANCE;
 
     @Nullable
-    public static GroupConfigGui getCurrentInstance(){
+    public static GroupConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    public static GroupConfigGui getInstance(){
+    public static GroupConfigGui getInstance() {
         if(INSTANCE == null) INSTANCE = new GroupConfigGui();
 
         return INSTANCE;
@@ -79,9 +79,12 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     protected Collection<IncludeGroup> getEveryInstanceOfGeneric() {
         ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
 
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if(group instanceof IncludeGroup){
-                includeGroups.add((IncludeGroup) group);
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            var holder = lock.get();
+            for(AbstractMaterialGroup group : holder.getItemGroupsManager().getGroupMap().values()) {
+                if(group instanceof IncludeGroup) {
+                    includeGroups.add((IncludeGroup) group);
+                }
             }
         }
         return includeGroups;
@@ -100,13 +103,16 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     @Override
     @Nullable
     protected IncludeGroup createAndSaveNewEmptyGeneric(String name) {
-        ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        if(manager.getGroupMap().containsKey(name)) return null;
+        try(var lock = ConfigHolder.ITEM_GROUP.write) {
+            var holder = lock.get();
+            ItemGroupManager manager = holder.getItemGroupsManager();
+            if(manager.getGroupMap().containsKey(name)) return null;
 
-        ConfigurationSection config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
-        config.set(name+"."+ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
+            ConfigurationSection config = holder.getConfig();
+            config.set(name + "." + ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
 
-        return (IncludeGroup) manager.createGroup(config, name);
+            return (IncludeGroup) manager.createGroup(config, name);
+        }
     }
 
 }

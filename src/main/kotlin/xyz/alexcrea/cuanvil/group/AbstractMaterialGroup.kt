@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import xyz.alexcrea.cuanvil.util.MaterialUtil
 
+//TODO #130 part 3 rework design of it ?
 abstract class AbstractMaterialGroup(private val name: String) {
     protected val includedMaterial by lazy { createDefaultSet() }
 

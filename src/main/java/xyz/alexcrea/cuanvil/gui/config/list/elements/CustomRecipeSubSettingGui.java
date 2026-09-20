@@ -25,8 +25,6 @@ import xyz.alexcrea.cuanvil.recipe.CustomAnvilRecipeManager;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.function.Supplier;
-
 @NotNullByDefault
 public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
@@ -156,35 +154,41 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     }
 
     private ConfirmActionGui createDeleteGui() {
-        Supplier<Boolean> deleteSupplier = () -> {
-            CustomAnvilRecipeManager manager = ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager();
-
-            // Remove from manager
-            manager.cleanRemove(this.anvilRecipe);
-
-            // Remove from parent
-            this.parent.removeGeneric(this.anvilRecipe);
-
-            // Remove self
-            cleanAndBeUnusable();
-
-            // Update config file storage
-            ConfigHolder.CUSTOM_RECIPE_HOLDER.delete(this.anvilRecipe.toString());
-
-            // Save
-            boolean success = true;
-            if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-                success = ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
-            }
-
-            return success;
-        };
-
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString());
         return new ConfirmActionGui(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_TITLE(), type,
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_DESCRIPTION(), type,
-                this, this.parent, deleteSupplier
+                this, this.parent, this::deleteRecipe
         );
+    }
+
+    private boolean deleteRecipe() {
+        try(var lock = ConfigHolder.CUSTOM_RECIPE.write) {
+            return deleteRecipe(lock.get());
+        }
+    }
+
+    private boolean deleteRecipe(ConfigHolder.CustomAnvilCraftHolder holder) {
+        CustomAnvilRecipeManager manager = holder.getRecipeManager();
+
+        // Remove from manager
+        manager.cleanRemove(this.anvilRecipe);
+
+        // Remove from parent
+        this.parent.removeGeneric(this.anvilRecipe);
+
+        // Remove self
+        cleanAndBeUnusable();
+
+        // Update config file storage
+        holder.delete(this.anvilRecipe.toString());
+
+        // Save
+        boolean success = true;
+        if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+            success = holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        }
+
+        return success;
     }
 
     @Override
@@ -197,12 +201,12 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     }
 
     public void updateLocal() {
-        if (!this.shouldWork) return;
+        if(!this.shouldWork) return;
 
         GuiItem exactCountItem = this.exactCountFactory.getItem();
         this.pane.bindItem('1', exactCountItem);
 
-        if (anvilRecipe.getXpCostPerCraft() == 0) {
+        if(anvilRecipe.getXpCostPerCraft() == 0) {
             this.pane.bindItem('a', noRemoveExactLinearXp);
         } else {
             this.pane.bindItem('a', removeExactLinearXpFactory.getItem());
@@ -228,7 +232,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     }
 
     public void cleanAndBeUnusable() {
-        for (HumanEntity viewer : getViewers()) {
+        for(HumanEntity viewer : getViewers()) {
             this.parent.show(viewer);
         }
         this.shouldWork = false;
@@ -246,7 +250,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
     @Override
     public void show(HumanEntity humanEntity) {
-        if (this.shouldWork) {
+        if(this.shouldWork) {
             super.show(humanEntity);
         } else {
             this.parent.show(humanEntity);

@@ -77,11 +77,14 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
         Set<AbstractMaterialGroup> illegalGroup = this.groupContainer.illegalGroups();
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if (illegalGroup.contains(group)) {
-                continue;
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            var holder = lock.get();
+            for(AbstractMaterialGroup group : holder.getItemGroupsManager().getGroupMap().values()) {
+                if(illegalGroup.contains(group))
+                    continue;
+
+                filledEnchant.addItem(getGuiItemFromGroup(group));
             }
-            filledEnchant.addItem(getGuiItemFromGroup(group));
         }
 
         addPane(filledEnchant);
@@ -107,7 +110,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     public void setGroupItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
 
-        if (meta == null) {
+        if(meta == null) {
             CustomAnvil.instance.getLogger().warning("Could not create item for group: " + name + ":\n" +
                     "Item do not gave item meta: " + item + ". Using placeholder instead");
             item.setType(Material.PAPER);
@@ -116,7 +119,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         }
 
         meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
-        if (isIn) {
+        if(isIn) {
             meta.addEnchant(Enchantment.SHARPNESS, 1, true);
             meta.setLore(TRUE_LORE);
         } else {
@@ -133,7 +136,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             event.setCancelled(true);
 
             boolean isIn = this.selectedGroups.contains(group);
-            if (isIn) {
+            if(isIn) {
                 this.selectedGroups.remove(group);
             } else {
                 this.selectedGroups.add(group);

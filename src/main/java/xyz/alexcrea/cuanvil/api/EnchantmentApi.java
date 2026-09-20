@@ -91,6 +91,9 @@ public class EnchantmentApi {
      * @return True if successful.
      */
     public static boolean unregisterEnchantment(@Nullable CAEnchantment enchantment) {
+        // Nothing to unregister
+        if(enchantment == null) return false;
+
         // Remove from gui
         if(EnchantCostConfigGui.getInstance() != null) {
             EnchantCostConfigGui.getInstance().removeGeneric(enchantment);
@@ -161,7 +164,7 @@ public class EnchantmentApi {
      * @return Return false if override is false and a configuration exist. true otherwise.
      */
     public static boolean writeDefaultConfig(CAEnchantment enchantment, boolean override) {
-        try (var lock = ConfigHolder.DEFAULT.write) {
+        try(var lock = ConfigHolder.DEFAULT.write) {
             FileConfiguration config = lock.get().getConfig();
 
             if(tryWriteDefaultConfig(config, enchantment, override)) {
