@@ -123,34 +123,35 @@ class AnvilCustomRecipe(
         )
     }
 
+    //TODO something better for #130
     private fun updateFromFile(recipes: ConfigHolder.CustomAnvilCraftHolder) {
         val config = recipes.config
 
-        config.getBoolean(
+        this.exactCount = config.getBoolean(
             "$name.$EXACT_COUNT_CONFIG",
             DEFAULT_EXACT_COUNT_CONFIG
         )
-        config.getInt(
+        this.levelCostPerCraft = config.getInt(
             "$name.$XP_LEVEL_COST_CONFIG",
             DEFAULT_XP_LEVEL_COST_CONFIG
         )
-        config.getInt(
+        this.XpCostPerCraft = config.getInt(
             "$name.$LINEAR_XP_COST_CONFIG",
             DEFAULT_LINEAR_XP_COST_CONFIG
         )
-        config.getBoolean(
+        this.removeExactLinearXp = config.getBoolean(
             "$name.$REMOVE_EXACT_XP_CONFIG",
             DEFAULT_REMOVE_EXACT_XP_CONFIG
         )
-        config.getItemStack(
+        val leftItem = config.getItemStack(
             "$name.$LEFT_ITEM_CONFIG",
             DEFAULT_LEFT_ITEM_CONFIG
         )
-        config.getItemStack(
+        this.rightItem = config.getItemStack(
             "$name.$RIGHT_ITEM_CONFIG",
             DEFAULT_RIGHT_ITEM_CONFIG
         )
-        config.getItemStack(
+        this.resultItem = config.getItemStack(
             "$name.$RESULT_ITEM_CONFIG",
             DEFAULT_RESULT_ITEM_CONFIG
         )
