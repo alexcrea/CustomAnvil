@@ -122,7 +122,8 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Test dependency
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.48.0")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v26.2:4.116.1")
+    testImplementation("io.papermc.paper:paper-api:26.2.build.121-stable") // When updating mockbukkit update this
     testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
@@ -156,7 +157,7 @@ allprojects {
     // Configure used version of kotlin and java
     java {
         disableAutoTargetJvm()
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 
     // Set target version
@@ -176,7 +177,6 @@ allprojects {
     }
 
 }
-
 
 tasks {
 
