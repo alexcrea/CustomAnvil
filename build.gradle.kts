@@ -244,7 +244,7 @@ val javadocJar = tasks.register<Jar>("javadocJar", fun Jar.() {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Javadoc JAR"
     archiveClassifier.set("javadoc")
-    from(tasks.named("dokkaHtml"))
+    from(tasks.named("dokkaGenerateHtml"))
 })
 
 signing {
