@@ -180,7 +180,7 @@ public class EnchantmentApi {
 
         String levelPath = ConfigOptions.ENCHANT_LIMIT_ROOT + "." + enchantment.getKey();
         if(override || !defaultConfig.isSet(levelPath)) {
-            defaultConfig.set(levelPath, enchantment.defaultMaxLevel());
+            defaultConfig.set(levelPath, -1);
             hasChange = true;
         }
 
@@ -190,11 +190,11 @@ public class EnchantmentApi {
         String itemPath = basePath + ".item";
         String bookPath = basePath + ".book";
         if(override || !defaultConfig.isSet(itemPath)) {
-            defaultConfig.set(itemPath, rarity.itemValue());
+            defaultConfig.set(itemPath, -1);
             hasChange = true;
         }
         if(override || !defaultConfig.isSet(bookPath)) {
-            defaultConfig.set(bookPath, rarity.bookValue());
+            defaultConfig.set(bookPath, -1);
             hasChange = true;
         }
 
