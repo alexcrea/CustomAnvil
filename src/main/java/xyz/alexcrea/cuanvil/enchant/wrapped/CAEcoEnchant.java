@@ -78,7 +78,17 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
             return false;
         }
 
-        var canEnchant = fromKey().canEnchantItem(item, Collections.emptyList());
+        // The item we receive is the partial result built by EnchantConflictManager:
+        // it already carries every enchantment of the result map, including this one.
+        // EcoEnchantLike#canEnchantItem inspects the enchantments present on the item,
+        // so leaving this enchantment on it makes the check fail against itself:
+        //  - the per-type limit counts it (a "special" enchant, limit 1, is already at 1)
+        //  - the conflict scan sees it (an enchantment is never "compatible" with itself)
+        // Strip it before asking EcoEnchants whether the item may receive it.
+        ItemStack testItem = item.clone();
+        this.removeFrom(testItem);
+
+        var canEnchant = fromKey().canEnchantItem(testItem, Collections.emptyList());
         return !canEnchant;
     }
 }
