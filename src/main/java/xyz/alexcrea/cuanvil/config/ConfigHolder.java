@@ -15,6 +15,7 @@ import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -38,7 +39,7 @@ public abstract class ConfigHolder {
     public static @Nullable UnitRepairHolder UNIT_REPAIR_HOLDER;
     public static @Nullable CustomAnvilCraftHolder CUSTOM_RECIPE_HOLDER;
 
-    public static <T> LockedObjectProvider<T> createLocked(Supplier<@Nullable T> config, ReentrantReadWriteLock lock){
+    public static <T> LockedObjectProvider<T> createLocked(Supplier<@Nullable T> config, ReentrantReadWriteLock lock) {
         return new LockedObjectProvider<>(() -> {
             var value = config.get();
             if(value == null) {
@@ -46,7 +47,7 @@ public abstract class ConfigHolder {
                 throw new IllegalStateException("Configuration is not in a proper state... stoping...");
             }
             return value;
-            }, lock
+        }, lock
         );
     }
 
@@ -63,6 +64,7 @@ public abstract class ConfigHolder {
 
     /**
      * Load default configuration.
+     *
      * @return True if successful.
      */
     public static boolean loadDefaultConfig() {
@@ -73,6 +75,7 @@ public abstract class ConfigHolder {
 
     /**
      * Load non default configuration.
+     *
      * @return True if successful.
      */
     public static boolean loadNonDefaultConfig() {
@@ -97,7 +100,7 @@ public abstract class ConfigHolder {
         return removeNonDefaultFromDisk(hardfail);
     }
 
-    private static boolean removeNonDefaultFromDisk(boolean hardfail){
+    private static boolean removeNonDefaultFromDisk(boolean hardfail) {
         if(!reloadFromLocked(ITEM_GROUP, hardfail)) return false;
         if(!reloadFromLocked(CONFLICT, hardfail)) return false;
         if(!reloadFromLocked(UNIT_REPAIR, hardfail)) return false;
@@ -143,65 +146,65 @@ public abstract class ConfigHolder {
         return new File(BACKUP_FOLDER, getConfigFileName() + "-latest" + getConfigFileExtension());
     }
 
-    public abstract ReentrantReadWriteLock getKey();
+    public abstract LockedObjectProvider.LockedWrite<? extends ConfigHolder> getWriteLock();
 
     // Save logic
     public boolean saveToDisk(boolean doBackup) {
-        getKey().writeLock().lock();
-        var result = saveToDiskUnsafe(doBackup);
-        getKey().writeLock().unlock();
+        try(var lock = getWriteLock()) {
+            lock.lock();
 
-        return result;
+            return saveToDiskUnsafe(doBackup);
+        }
     }
 
     public boolean saveToDiskUnsafe(boolean doBackup) {
-        CustomAnvil.Companion.log("Saving "+getConfigFileName());
-        if (doBackup) {
-            if (!saveBackup()) {
+        CustomAnvil.Companion.log("Saving " + getConfigFileName());
+        if(doBackup) {
+            if(!saveBackup()) {
                 CustomAnvil.instance.getLogger().severe("Could not save backup. see above.");
                 return false;
             }
         }
         File base = getConfigFile();
         // if file exist and can't be deleted the file, then we gave up.
-        if (base.exists() && !base.delete()) {
+        if(base.exists() && !base.delete()) {
             CustomAnvil.instance.getLogger().severe("Could not save config: can't delete existing file.");
             return false;
         }
         FileConfiguration config = getConfig();
         try {
             config.save(base);
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
             CustomAnvil.instance.getLogger().severe("Could not save config...");
             return false;
         }
 
-        CustomAnvil.Companion.log(getConfigFileName()+" saved successfully");
+        CustomAnvil.Companion.log(getConfigFileName() + " saved successfully");
         return true;
     }
 
     protected final boolean saveBackup() {
-        getKey().writeLock().lock();
-        var result = saveBackupUnsafe();
-        getKey().writeLock().unlock();
+        try(var lock = getWriteLock()) {
+            lock.lock();
 
-        return result;
+            return saveBackupUnsafe();
+        }
     }
 
     private boolean saveBackupUnsafe() {
         File base = getConfigFile();
-        if (!base.exists()) return true; // We did back up everything we had to (nothing in this case)
+        if(!base.exists()) return true; // We did back up everything we had to (nothing in this case)
         boolean sufficientSuccess = false;
 
         BACKUP_FOLDER.mkdirs();
         // save first backup if it does not exist
         File firstBackup = getFirstBackup();
-        if (!firstBackup.exists()) {
+        if(!firstBackup.exists()) {
             try {
                 Files.copy(base, firstBackup);
                 sufficientSuccess = true;
-            } catch (IOException e) {
+            } catch(IOException e) {
                 CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not copy backup saving config " + base.getName(), e);
                 MetricsUtil.INSTANCE.trackError(e);
             }
@@ -209,14 +212,14 @@ public abstract class ConfigHolder {
         // save last backup
         File lastBackup = getLastBackup();
         // if file exist and can't be deleted the file, then we gave up.
-        if (lastBackup.exists() && !lastBackup.delete()) {
+        if(lastBackup.exists() && !lastBackup.delete()) {
             return sufficientSuccess;
         }
 
         try {
             Files.move(base, lastBackup);
             sufficientSuccess = true;
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
 
@@ -232,17 +235,19 @@ public abstract class ConfigHolder {
 
         @Override
         public boolean reloadFromDisk(boolean hardFail) {
-            getKey().writeLock().lock();
-            CustomAnvil.instance.saveDefaultConfig();
-            CustomAnvil.instance.reloadConfig();
-            this.configuration = CustomAnvil.instance.getConfig();
-            getKey().writeLock().unlock();
+            try(var lock = getWriteLock()) {
+                lock.lock();
+
+                CustomAnvil.instance.saveDefaultConfig();
+                CustomAnvil.instance.reloadConfig();
+                this.configuration = CustomAnvil.instance.getConfig();
+            }
             return true;
         }
 
         @Override
-        public ReentrantReadWriteLock getKey() {
-            return DEFAULT_CONFIG_LOCK;
+        public LockedObjectProvider.LockedWrite<DefaultConfigHolder> getWriteLock() {
+            return DEFAULT.write;
         }
 
         @Override
@@ -267,24 +272,23 @@ public abstract class ConfigHolder {
 
         @Override
         public boolean reloadFromDisk(boolean hardFail) {
-            getKey().writeLock().lock();
-            YamlConfiguration configuration = CustomAnvil.instance.reloadResource(
-                    getConfigFileName() + getConfigFileExtension(), hardFail);
-            if (configuration == null) {
-                getKey().writeLock().unlock();
-                return false;
-            }
+            try(var lock = getWriteLock()) {
+                lock.lock();
 
-            this.configuration = configuration;
-            reload();
-            getKey().writeLock().unlock();
+                YamlConfiguration configuration = CustomAnvil.instance.reloadResource(
+                        getConfigFileName() + getConfigFileExtension(), hardFail);
+                if(configuration == null)
+                    return false;
+
+                this.configuration = configuration;
+                reload();
+            }
 
             return true;
         }
-
     }
 
-    public abstract static class DeletableResource extends ResourceConfigHolder{
+    public abstract static class DeletableResource extends ResourceConfigHolder {
 
         private static final String DELETED_FOLDER_PATH = "deleted";
 
@@ -292,6 +296,7 @@ public abstract class ConfigHolder {
         private final File deletedConfigFile;
 
         private @Nullable YamlConfiguration deletedListConfig;
+
         private DeletableResource(String resourceName) {
             super(resourceName);
             this.parent = new File(CustomAnvil.instance.getDataFolder(), DELETED_FOLDER_PATH);
@@ -300,28 +305,30 @@ public abstract class ConfigHolder {
 
         @Override
         public boolean reloadFromDisk(boolean hardFail) {
-            getKey().writeLock().lock();
-            if(!super.reloadFromDisk(hardFail)) {
-                getKey().writeLock().unlock();
-                return false;
+            try(var lock = getWriteLock()) {
+                lock.lock();
+
+                if(!super.reloadFromDisk(hardFail))
+                    return false;
+
+                loadDeletedListFile(hardFail);
             }
-            loadDeletedListFile(hardFail);
-            getKey().writeLock().unlock();
 
             return true;
         }
 
-        private void loadDeletedListFile(boolean hardFail){
+        private void loadDeletedListFile(boolean hardFail) {
             this.deletedListConfig = CustomAnvil.instance.reloadResource(this.deletedConfigFile, hardFail);
 
         }
 
         /**
          * Test if the provided element was deleted.
+         *
          * @param objectPath The object path to delete.
          * @return True if successful.
          */
-        public boolean isDeleted(String objectPath){
+        public boolean isDeleted(String objectPath) {
             if(this.deletedListConfig == null) return false;
 
             return this.deletedListConfig.getBoolean(objectPath, false);
@@ -329,29 +336,36 @@ public abstract class ConfigHolder {
 
         /**
          * Delete a certain object by its path. do not save the config.
+         *
          * @param objectPath The object path to delete.
          * @return True if successful.
          */
-        public boolean delete(String objectPath){
+        public boolean delete(String objectPath) {
             return delete(objectPath, false, false);
         }
 
         /**
          * Delete a certain object by its path.
+         *
          * @param objectPath The object path to delete.
-         * @param doSave If we should save the config after deleting.
-         * @param doBackup If we should create a backup.
+         * @param doSave     If we should save the config after deleting.
+         * @param doBackup   If we should create a backup.
          * @return True if successful.
          */
-        public boolean delete(String objectPath, boolean doSave, boolean doBackup){
+        public boolean delete(String objectPath, boolean doSave, boolean doBackup) {
+            try(var lock = getWriteLock()) {
+                lock.lock();
+                return deleteUnsafe(objectPath, doSave, doBackup);
+            }
+        }
 
-            getKey().writeLock().lock();
+        private boolean deleteUnsafe(String objectPath, boolean doSave, boolean doBackup) {
             // Create deleted list if it does not yet exist
-            if(this.deletedListConfig == null){
+            if(this.deletedListConfig == null) {
                 this.parent.mkdirs();
                 try {
                     this.deletedConfigFile.createNewFile();
-                } catch (IOException e) {
+                } catch(IOException e) {
                     CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not create " + this.deletedConfigFile.getPath(), e);
                     MetricsUtil.INSTANCE.trackError(e);
                 }
@@ -359,7 +373,6 @@ public abstract class ConfigHolder {
 
                 // Something was wrong somehow
                 if(this.deletedListConfig == null) {
-                    getKey().writeLock().unlock();
                     return false;
                 }
             }
@@ -369,48 +382,49 @@ public abstract class ConfigHolder {
             this.getConfig().set(objectPath, null);
 
             // Save the deleted config (may not be the most efficient, but I will handle it later)
-            if(doSave){
-                var saveResult = saveToDisk(doBackup);
-                getKey().writeLock().unlock();
-                return saveResult;
-            }
+            if(doSave)
+                return saveToDisk(doBackup);
 
-            getKey().writeLock().unlock();
             return true;
         }
 
         @Override
         public boolean saveToDisk(boolean doBackup) {
-            getKey().writeLock().lock();
-            boolean deletedSaveSuccess = saveDeletedList();
+            try(var lock = getWriteLock()) {
+                lock.lock();
 
-            var result = super.saveToDisk(doBackup) && deletedSaveSuccess;
-            getKey().writeLock().unlock();
+                boolean deletedSaveSuccess = saveDeletedList();
 
-            return result;
+                return super.saveToDisk(doBackup) && deletedSaveSuccess;
+            }
         }
 
         /**
          * Save list of deleted elements.
+         *
          * @return true if successful.
          */
         public boolean saveDeletedList() {
-            getKey().writeLock().lock();
+            try(var lock = getWriteLock()) {
+                lock.lock();
+
+                return saveDeletedListUnsafe();
+            }
+        }
+
+        public boolean saveDeletedListUnsafe() {
             if(this.deletedListConfig == null) {
-                getKey().writeLock().unlock();
                 return true;
             }
 
             try {
                 this.deletedListConfig.save(this.deletedConfigFile);
-            } catch (IOException e) {
+            } catch(IOException e) {
                 CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not save " + this.deletedConfigFile.getPath(), e);
                 MetricsUtil.INSTANCE.trackError(e);
-                getKey().writeLock().unlock();
                 return false;
             }
 
-            getKey().writeLock().unlock();
             return true;
         }
     }
@@ -433,23 +447,29 @@ public abstract class ConfigHolder {
 
         @Override
         public void reload() {
-            getKey().writeLock().lock();
+            try(var lock = getWriteLock()) {
+                lock.lock();
+
+                reloadUnsafe();
+            }
+        }
+
+        public void reloadUnsafe() {
             // not the most efficient way for in game reload TODO optimise
             this.itemGroupsManager = new ItemGroupManager();
             this.itemGroupsManager.prepareGroups(getConfig());
 
-            try (var lock = CONFLICT.write) {
+            try(var lock = CONFLICT.write) {
                 var conflict = lock.get();
 
-                if (conflict.configuration != null)
+                if(conflict.configuration != null)
                     conflict.reload();
             }
-            getKey().writeLock().unlock();
         }
 
         @Override
-        public ReentrantReadWriteLock getKey() {
-            return ITEM_GROUP_LOCK;
+        public LockedObjectProvider.LockedWrite<ItemGroupConfigHolder> getWriteLock() {
+            return ITEM_GROUP.write;
         }
     }
 
@@ -471,20 +491,26 @@ public abstract class ConfigHolder {
         // We assume this is called after item group manager reload
         @Override
         public void reload() {
-            getKey().writeLock().lock();
-            try (var lock = ITEM_GROUP.read) {
+            try(var lock = getWriteLock()) {
+                lock.lock();
+
+                reloadUnsafe();
+            }
+        }
+
+        public void reloadUnsafe() {
+            try(var lock = ITEM_GROUP.write) {
                 var item_group = lock.get();
 
                 // not the most efficient way for in game reload TODO optimise
                 this.conflictManager = new EnchantConflictManager();
                 this.conflictManager.prepareConflicts(getConfig(), item_group.getItemGroupsManager());
             }
-            getKey().writeLock().unlock();
         }
 
         @Override
-        public ReentrantReadWriteLock getKey() {
-            return CONFLICT_LOCK;
+        public LockedObjectProvider.LockedWrite<ConflictConfigHolder> getWriteLock() {
+            return CONFLICT.write;
         }
     }
 
@@ -501,8 +527,8 @@ public abstract class ConfigHolder {
         } // Do nothing
 
         @Override
-        public ReentrantReadWriteLock getKey() {
-            return UNIT_REPAIR_LOCK;
+        public LockedObjectProvider.LockedWrite<UnitRepairHolder> getWriteLock() {
+            return UNIT_REPAIR.write;
         }
     }
 
@@ -522,15 +548,17 @@ public abstract class ConfigHolder {
 
         @Override
         public void reload() {
-            getKey().writeLock().lock();
-            this.recipeManager = new CustomAnvilRecipeManager();
-            this.recipeManager.prepareRecipes(getConfig());
-            getKey().writeLock().unlock();
+            try(var lock = getWriteLock()) {
+                lock.lock();
+
+                this.recipeManager = new CustomAnvilRecipeManager();
+                this.recipeManager.prepareRecipes(getConfig());
+            }
         }
 
         @Override
-        public ReentrantReadWriteLock getKey() {
-            return CUSTOM_RECIPE_LOCK;
+        public LockedObjectProvider.LockedWrite<CustomAnvilCraftHolder> getWriteLock() {
+            return CUSTOM_RECIPE.write;
         }
     }
 

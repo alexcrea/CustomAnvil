@@ -1,6 +1,7 @@
 package xyz.alexcrea.cuanvil.util;
 
 import org.jetbrains.annotations.NotNullByDefault;
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
@@ -19,6 +20,17 @@ public class LockedObjectProvider<T> {
         this.lock = lock;
     }
 
+    private static boolean APPLY_LOCK() {
+        var status = System.getenv("CUSTOMANVIL_LOCK_STATUS");
+        if("false".equalsIgnoreCase(status))
+            return false;
+
+        if("true".equalsIgnoreCase(status))
+            return true;
+
+        return PlatformUtil.INSTANCE.isFolia();
+    }
+
     public static class LockedRead<T> implements AutoCloseable {
 
         private final LockedObjectProvider<T> parent;
@@ -28,13 +40,17 @@ public class LockedObjectProvider<T> {
         }
 
         public T get() {
-            this.parent.lock.readLock().lock();
+            lock();
             return parent.unsafe();
+        }
+
+        public void lock() {
+            if(APPLY_LOCK()) this.parent.lock.readLock().lock();
         }
 
         @Override
         public void close() {
-            parent.lock.readLock().unlock();
+            if(APPLY_LOCK()) parent.lock.readLock().unlock();
         }
     }
 
@@ -47,13 +63,17 @@ public class LockedObjectProvider<T> {
         }
 
         public T get() {
-            this.parent.lock.writeLock().lock();
+            lock();
             return parent.unsafe();
+        }
+
+        public void lock() {
+            if(APPLY_LOCK()) this.parent.lock.writeLock().lock();
         }
 
         @Override
         public void close() {
-            parent.lock.writeLock().unlock();
+            if(APPLY_LOCK()) parent.lock.writeLock().unlock();
         }
     }
 
