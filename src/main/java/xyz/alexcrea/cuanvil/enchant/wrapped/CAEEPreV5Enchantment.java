@@ -53,7 +53,12 @@ public class CAEEPreV5Enchantment extends CABukkitEnchantment implements Additio
     }
 
     @Override
-    public boolean isItemConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType, ItemStack item) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item,
+            ItemStack original
+    ) {
         if(Material.ENCHANTED_BOOK.getKey().equals(itemType)) return false;
 
         return !definition.getSupportedItems().is(item);

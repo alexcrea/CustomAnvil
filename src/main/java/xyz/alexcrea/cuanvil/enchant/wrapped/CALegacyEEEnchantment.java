@@ -36,7 +36,13 @@ public class CALegacyEEEnchantment extends CABukkitEnchantment implements Additi
     }
 
     @Override
-    public boolean isItemConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType, ItemStack item) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item,
+            ItemStack original
+
+    ) {
         if(Material.ENCHANTED_BOOK.getKey().equals(itemType)) return false;
 
         return !eeenchantment.getSupportedItems().is(item);

@@ -26,7 +26,10 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     }
 
     public EcoEnchant fromKey() {
-        return EcoEnchants.INSTANCE.getByID(enchantID);
+        var enchant = EcoEnchants.INSTANCE.getByID(enchantID);
+        assert enchant != null;
+
+        return enchant;
     }
 
     @Override
@@ -72,13 +75,18 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
     public boolean isItemConflict(
             Map<CAEnchantment, Integer> enchantments,
             NamespacedKey itemType,
-            ItemStack item
+            ItemStack item,
+            ItemStack original
     ) {
         if(Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
             return false;
         }
 
-        var canEnchant = fromKey().canEnchantItem(item, Collections.emptyList());
+        var meta = original.getItemMeta();
+        assert meta != null;
+        if(this.isEnchantmentPresent(original, meta)) return false;
+
+        var canEnchant = fromKey().canEnchantItem(original, Collections.emptyList());
         return !canEnchant;
     }
 }

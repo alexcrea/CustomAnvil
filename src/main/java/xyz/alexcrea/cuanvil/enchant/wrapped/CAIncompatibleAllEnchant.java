@@ -31,7 +31,12 @@ public class CAIncompatibleAllEnchant extends CABukkitEnchantment implements Add
     }
 
     @Override
-    public boolean isItemConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType, ItemStack item) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item,
+            ItemStack original
+    ) {
         return false;
     }
 }

@@ -240,7 +240,7 @@ class EnchantConflictManager {
             val partialItem = item.clone()
             EnchantmentApi.setEnchantments(partialItem, immutableEnchants)
 
-            if (newEnchant.isItemConflict(immutableEnchants, type, partialItem)) {
+            if (newEnchant.isItemConflict(immutableEnchants, type, partialItem, item)) {
                 return ConflictType.ITEM_CONFLICT
             }
 

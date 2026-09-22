@@ -53,7 +53,8 @@ public class CALegacyEcoEnchant extends CABukkitEnchantment implements Additiona
     public boolean isItemConflict(
             Map<CAEnchantment, Integer> enchantments,
             NamespacedKey itemType,
-            ItemStack item
+            ItemStack item,
+            ItemStack original
     ) {
         if(Material.ENCHANTED_BOOK.getKey().equals(itemType)) {
             return false;
