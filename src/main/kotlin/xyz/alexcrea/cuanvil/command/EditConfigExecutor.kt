@@ -1,9 +1,11 @@
 package xyz.alexcrea.cuanvil.command
 
 import io.delilaheve.CustomAnvil
+import org.bukkit.NamespacedKey
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
+import org.jetbrains.annotations.NotNullByDefault
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
@@ -14,7 +16,8 @@ import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
-class EditConfigExecutor : CASubCommand {
+@NotNullByDefault
+class EditConfigExecutor: CASubCommand {
 
     override fun allowed(sender: CommandSender): Boolean {
         return sender.hasPermission(CustomAnvil.editConfigPermission)
@@ -28,15 +31,15 @@ class EditConfigExecutor : CASubCommand {
         sender: CommandSender,
         cmd: Command,
         cmdstr: String,
-        args: Array<out String>
+        args: Array<out String>,
     ): Boolean {
-        if (sender !is HumanEntity) return false
+        if(sender !is HumanEntity) return false
 
-        if (!allowed(sender)) {
+        if(!allowed(sender)) {
             sender.sendMessage(GuiGlobalActions.NO_EDIT_PERM)
             return false
         }
-        if (PlatformUtil.isFolia) {
+        if(PlatformUtil.isFolia) {
             sender.sendMessage("§cIt look like you are using Folia. Sadly Custom Anvil do not support Config gui for Folia.")
             sender.sendMessage("§eIt is may come in a future version.")
             sender.sendMessage("")
@@ -45,13 +48,13 @@ class EditConfigExecutor : CASubCommand {
             return false
         }
 
-        if ("gui".equals(cmdstr, ignoreCase = true)) {
+        if("gui".equals(cmdstr, ignoreCase = true)) {
             sender.sendMessage("§c/ca gui has been moved to /ca config")
         }
 
-        if (args.isEmpty())
+        if(args.isEmpty())
             processOpen(sender)
-        else when (args[0].lowercase()) {
+        else when(args[0].lowercase()) {
             "open" -> processOpen(sender)
             "enchant" -> processEnchant(sender, args)
             "item" -> processItem(sender)
@@ -63,18 +66,25 @@ class EditConfigExecutor : CASubCommand {
 
     private fun processEnchant(sender: HumanEntity, args: Array<out String>) {
         val enchantToFilter: Set<CAEnchantment>
-        if (args.size <= 1) {
+        if(args.size <= 1) {
             val item = sender.inventory.itemInMainHand
 
             enchantToFilter = EnchantmentApi.getEnchantments(item).keys
-            if (enchantToFilter.isEmpty()) {
+            if(enchantToFilter.isEmpty()) {
                 sender.sendMessage("No enchantment found in the item you are holding")
                 return
             }
         } else {
-            enchantToFilter = HashSet(EnchantmentApi.getByName(args[1].lowercase()))
+            enchantToFilter = HashSet()
 
-            if (enchantToFilter.isEmpty()) {
+            val name = args[1].lowercase()
+            val enchant = EnchantmentApi.getByKey(NamespacedKey.fromString(name))
+            if(enchant != null)
+                enchantToFilter.add(enchant)
+
+            enchantToFilter.addAll(EnchantmentApi.getByName(name))
+
+            if(enchantToFilter.isEmpty()) {
                 sender.sendMessage("No enchantment found with the name \"${args[1]}\"")
                 return
             }
@@ -86,7 +96,7 @@ class EditConfigExecutor : CASubCommand {
 
     private fun processItem(sender: HumanEntity) {
         val item = sender.inventory.itemInMainHand
-        if (item.isAir) {
+        if(item.isAir) {
             sender.sendMessage("Cannot configure the item in hand")
             return
         }
@@ -104,10 +114,10 @@ class EditConfigExecutor : CASubCommand {
 
     override fun tabCompleter(sender: CommandSender, args: Array<out String>, list: MutableList<String>) {
         list.addAll(
-            when (args.size) {
+            when(args.size) {
                 1 -> listOf("item", "enchant", "open")
                 2 -> {
-                    when (args[0].lowercase()) {
+                    when(args[0].lowercase()) {
                         "enchant" -> allEnchantmentsByName()
                         else -> listOf()
                     }
