@@ -41,6 +41,18 @@ repositories {
 
     // For vault unlocked
     maven { url = uri("https://repo.codemc.io/repository/creatorfromhell/") }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
@@ -110,6 +122,9 @@ dependencies {
 
     // Vault api
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
+
+    // UberEnchant
+    compileOnly("maven.modrinth:PoPWpJ4U:Vca0yOJP")
 
     // Include nms
     implementation(project(":nms:nms-common"))
