@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -77,8 +78,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(deleteMeta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_NAME());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
+        ComponentUtil.setMessageName(deleteMeta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_NAME());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -194,7 +195,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         }
 
         // Prepare group lore
-        List<String> groupLore = SelectGroupContainer.getGroupLore(this, "conflict", "exclude");
+        List<Component> groupLore = SelectGroupContainer.getGroupLore(this, "conflict", "exclude");
 
         // Configure enchant setting item
         ItemStack enchantItem = this.enchantSettingItem.getItem();
@@ -214,7 +215,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         assert groupMeta != null;
 
         groupMeta.setDisplayName("§aSelect Excluded §3Groups §aSettings");//TODO MESSAGE
-        groupMeta.setLore(groupLore);
+        ComponentUtil.applyLore(groupLore, groupMeta);
 
         groupItem.setItemMeta(groupMeta);
 

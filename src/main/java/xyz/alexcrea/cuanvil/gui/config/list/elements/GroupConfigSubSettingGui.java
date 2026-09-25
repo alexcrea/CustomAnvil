@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
@@ -33,7 +34,6 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,8 +79,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(deleteMeta, MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME());
-        ComponentUtil.INSTANCE.applyLore(
+        ComponentUtil.setMessageName(deleteMeta, MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME());
+        ComponentUtil.applyLore(
                 MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_LORE().formatted(),
                 deleteMeta
         );
@@ -96,7 +96,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectItemMeta = selectItem.getItemMeta();
         assert selectItemMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(selectItemMeta, materialSelectionName, name, null, null);
+        ComponentUtil.setMessageName(selectItemMeta, materialSelectionName, name, null, null);
 
         selectItem.setItemMeta(selectItemMeta);
         this.materialSelection = new GuiItem(selectItem, (event) -> {
@@ -113,7 +113,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta selectGroupMeta = selectGroup.getItemMeta();
         assert selectGroupMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(selectGroupMeta, selectGroupName, name);
+        ComponentUtil.setMessageName(selectGroupMeta, selectGroupName, name);
 
         selectGroup.setItemMeta(selectGroupMeta);
         this.groupSelection = new GuiItem(selectGroup, (event) -> {
@@ -250,10 +250,10 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     public void updateLocal() {
         if(!this.usable) return;
         // Prepare material lore
-        List<String> matLore = SelectMaterialContainer.getMaterialLore(this, "group", "include");
+        List<Component> matLore = SelectMaterialContainer.getMaterialLore(this, "group", "include");
 
         // Prepare group lore
-        List<String> groupLore = SelectGroupContainer.getGroupLore(this, "group", "include");
+        List<Component> groupLore = SelectGroupContainer.getGroupLore(this, "group", "include");
 
         // Configure included material setting item
         ItemStack matSelectItem = this.materialSelection.getItem();
@@ -261,7 +261,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         assert matSelectMeta != null;
         matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");//TODO MESSAGE
-        matSelectMeta.setLore(matLore);
+        ComponentUtil.applyLore(matLore, matSelectMeta);
         matSelectMeta.addItemFlags(ItemFlag.values());
 
         matSelectItem.setItemMeta(matSelectMeta);
@@ -274,7 +274,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         assert groupSelectMeta != null;
         groupSelectMeta.setDisplayName("§aSelect included §3Groups §aSettings");//TODO MESSAGE
-        groupSelectMeta.setLore(groupLore);
+        ComponentUtil.applyLore(groupLore, groupSelectMeta);
 
         groupSelectItem.setItemMeta(groupSelectMeta);
 

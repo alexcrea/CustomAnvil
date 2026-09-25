@@ -431,3 +431,17 @@ config-ui.basic-config.work-penalty:
         additive: "<yellow>Additive<gray>: will penalty be added to the cost"
         shared: "<yellow>Shared<gray>: Vanilla, shared penalty. it will be kept from before the plugin installation."
         exclusive: "<yellow>Exclusive<gray>: Custom, per anvil use type penalty. it will be lost after plugin uninstallation"
+
+config-ui.select-material:
+    header: "<gray>Allow you to select a list of <yellow>materials <gray>that this %type should %action"
+    empty: "<gray>There is no %actiond material for this %type." # %action followed by a d
+    not-empty: "<gray>List of %actiond materials for this %type:" # %action followed by a d
+    item: "<gray>- <yellow>%name"
+    and-more: "<gray>And %count more..."
+
+config-ui.select-group:
+    header: "<gray>Allow you to select a list of <dark_aqua>Groups <gray>that this %type should %action"
+    empty: "<gray>There is no %actiond group for this %type." # %action followed by a d
+    not-empty: "<gray>List of %actiond groups for this %type:" # %action followed by a d
+    item: "<gray>- <dark_aqua>%name"
+    and-more: "<gray>And %count more..."

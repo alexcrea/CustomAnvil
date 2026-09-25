@@ -204,4 +204,16 @@ object MsgUI {
     val BASIC_WORK_PENALTY_EXPLAIN_SHARED = Message("basic-config.work-penalty.explanation.shared")
     val BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE = Message("basic-config.work-penalty.explanation.exclusive")
 
+    @JvmField val SELECT_MATERIAL_HEADER = Message("select-material.header", "type", "action")
+    @JvmField val SELECT_MATERIAL_EMPTY = Message("select-material.empty", "type", "action")
+    @JvmField val SELECT_MATERIAL_NOT_EMPTY = Message("select-material.not-item", "type", "action")
+    @JvmField val SELECT_MATERIAL_ITEM = Message("select-material.item", "name")
+    @JvmField val SELECT_MATERIAL_AND_MORE = Message("select-material.and-more", "count")
+
+    @JvmField val SELECT_GROUP_HEADER = Message("select-group.header", "type", "action")
+    @JvmField val SELECT_GROUP_EMPTY = Message("select-group.empty", "type", "action")
+    @JvmField val SELECT_GROUP_NOT_EMPTY = Message("select-group.not-item", "type", "action")
+    @JvmField val SELECT_GROUP_ITEM = Message("select-group.item", "name")
+    @JvmField val SELECT_GROUP_AND_MORE = Message("select-group.and-more", "count")
+
 }
