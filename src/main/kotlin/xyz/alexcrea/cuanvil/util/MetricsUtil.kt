@@ -78,6 +78,7 @@ object MetricsUtil {
     fun trackError(e: Throwable) {
         ERROR_TRACKER?.trackError(e)
         lastError = e
+        e.printStackTrace()//TODO something better ?
     }
 
     fun trackError(message: String) {

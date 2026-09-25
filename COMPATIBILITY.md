@@ -25,7 +25,11 @@ These plugins have compatibility handled by custom anvil. seek help on custom an
 
 - [SuperEnchants](https://modrinth.com/plugin/superenchants) by Aznos:
   Use SuperEnchant restrictions system but new restriction can be added in custom anvil
-  
+
+- [UberEnchant](https://modrinth.com/plugin/uberenchant)  by coltonj96
+  Anvil handling as they are doing something similar to CustomAnvil. please check them out !
+  other than that if you wish to use both CustomAnvil and UberEnchant you likely need to disable anvil mechanic in uber enchant.
+  the plugin is only supported in this configuration.
 
 #### Custom Items Plugins
 Custom Items support is considered unstable. If you find issue please report it !
@@ -52,9 +56,6 @@ Custom Items support is considered unstable. If you find issue please report it 
   For token application using anvil
 
 ### Known Partially Incompatible
-- [UberEnchant](https://modrinth.com/plugin/uberenchant)  by coltonj96
-  Anvil handling as they are doing something similar to CustomAnvil.
-It is by no mean there faults and I recommend checking them out especially if custom anvil do not work for your use case !
 
 - [AdvencedEnchantments](https://ae.advancedplugins.net/) by Advanced Plugins
   Paid plugin I do not own as I did not get commissioned for support.
