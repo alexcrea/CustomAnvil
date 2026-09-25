@@ -12,13 +12,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.ElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public class GroupSelectSettingGui extends AbstractSettingGui {
 
     final SelectGroupContainer groupContainer;
@@ -34,8 +36,11 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
 
     final Set<AbstractMaterialGroup> selectedGroups;
 
-    public GroupSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page) {
-        super(6, title, parent);
+    public GroupSelectSettingGui(
+            Message title, String param,
+            ValueUpdatableGui parent, SelectGroupContainer groupContainer, int page
+    ) {
+        super(6, title.textHolder(param), parent);
         this.groupContainer = groupContainer;
         //Not used but planned
         this.page = page;
@@ -72,11 +77,14 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         filledEnchant.setOrientation(Orientable.Orientation.HORIZONTAL);
 
         Set<AbstractMaterialGroup> illegalGroup = this.groupContainer.illegalGroups();
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if (illegalGroup.contains(group)) {
-                continue;
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            var holder = lock.get();
+            for(AbstractMaterialGroup group : holder.getItemGroupsManager().getGroupMap().values()) {
+                if(illegalGroup.contains(group))
+                    continue;
+
+                filledEnchant.addItem(getGuiItemFromGroup(group));
             }
-            filledEnchant.addItem(getGuiItemFromGroup(group));
         }
 
         addPane(filledEnchant);
@@ -96,13 +104,13 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         return guiItem;
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
+    private static final List<String> TRUE_LORE = Collections.singletonList("<gray>Value: <green>Selected");
+    private static final List<String> FALSE_LORE = Collections.singletonList("<gray>Value: <red>Not Selected");
 
     public void setGroupItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
 
-        if (meta == null) {
+        if(meta == null) {
             CustomAnvil.instance.getLogger().warning("Could not create item for group: " + name + ":\n" +
                     "Item do not gave item meta: " + item + ". Using placeholder instead");
             item.setType(Material.PAPER);
@@ -111,7 +119,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         }
 
         meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
-        if (isIn) {
+        if(isIn) {
             meta.addEnchant(Enchantment.SHARPNESS, 1, true);
             meta.setLore(TRUE_LORE);
         } else {
@@ -128,7 +136,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             event.setCancelled(true);
 
             boolean isIn = this.selectedGroups.contains(group);
-            if (isIn) {
+            if(isIn) {
                 this.selectedGroups.remove(group);
             } else {
                 this.selectedGroups.add(group);

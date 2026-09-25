@@ -4,35 +4,38 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.MiniMessageUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A utility class to store function that create generic GUI item.
  */
+@NotNullByDefault
 public class GuiGlobalItems {
 
-    // statically create default back itemstack
-    private static final ItemStack BACK_ITEM;
+    private static final Component EMPTY_NAME_COMPONENT = MiniMessageUtil.mm.deserialize("<red>");
 
-    static {
-        BACK_ITEM = new ItemStack(Material.BARRIER);
-        ItemMeta meta = BACK_ITEM.getItemMeta();
-        assert meta != null;
+    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
+    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
 
-        meta.setDisplayName("§cBack");
-        BACK_ITEM.setItemMeta(meta);
-    }
+    private static final Material DEFAULT_BACKGROUND_MAT = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
 
     /**
      * Create a GuiItem that open the given GUi.
@@ -41,8 +44,19 @@ public class GuiGlobalItems {
      * @param goal The GUI to open on click.
      * @return An GuiItem that open goal on click.
      */
-    public static GuiItem goToGuiItem(@NotNull ItemStack item, @NotNull Gui goal) {
+    public static GuiItem goToGuiItem(ItemStack item, Gui goal) {
         return new GuiItem(item, GuiGlobalActions.openGuiAction(goal), CustomAnvil.instance);
+    }
+
+    private static ItemStack getBackItemStack() {
+        ItemStack back = new ItemStack(Material.BARRIER);
+        ItemMeta meta = back.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_BACK_ITEM_TITLE);
+        back.setItemMeta(meta);
+
+        return back;
     }
 
     /**
@@ -52,8 +66,8 @@ public class GuiGlobalItems {
      * @param goal The GUI to go back to.
      * @return An GuiItem that go back to goal on click.
      */
-    public static GuiItem backItem(@NotNull Gui goal) {
-        return goToGuiItem(BACK_ITEM, goal);
+    public static GuiItem backItem(Gui goal) {
+        return goToGuiItem(getBackItemStack(), goal);
     }
 
     /**
@@ -63,12 +77,12 @@ public class GuiGlobalItems {
      * @param target The pattern to add the back item.
      * @param goal   The GUI to go back to.
      */
-    public static void addBackItem(@NotNull PatternPane target,
-                                   @NotNull Gui goal) {
+    public static void addBackItem(
+            PatternPane target,
+            Gui goal
+    ) {
         target.bindItem('B', backItem(goal));
     }
-
-    private static final Material DEFAULT_BACKGROUND_MAT = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
 
     /**
      * Get a background item with backgroundMat as the displayed material.
@@ -82,7 +96,7 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§c");
+        PlatformUtil.INSTANCE.setComponentDisplayName(meta, EMPTY_NAME_COMPONENT, null);
         item.setItemMeta(meta);
         return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
@@ -104,8 +118,10 @@ public class GuiGlobalItems {
      * @param target        The pattern to add the background item.
      * @param backgroundMat The material of the background item.
      */
-    public static void addBackgroundItem(@NotNull PatternPane target,
-                                         @NotNull Material backgroundMat) {
+    public static void addBackgroundItem(
+            PatternPane target,
+            Material backgroundMat
+    ) {
         target.bindItem('0', backgroundItem(backgroundMat));
     }
 
@@ -115,12 +131,9 @@ public class GuiGlobalItems {
      *
      * @param target The pattern to add the background item.
      */
-    public static void addBackgroundItem(@NotNull PatternPane target) {
+    public static void addBackgroundItem(PatternPane target) {
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
     }
-
-    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
-    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
 
     /**
      * Create a new save setting GuiItem.
@@ -132,31 +145,18 @@ public class GuiGlobalItems {
      * @return A save setting item.
      */
     public static GuiItem saveItem(
-            @NotNull SettingGui setting,
-            @NotNull ValueUpdatableGui goal) {
-
+            SettingGui setting,
+            ValueUpdatableGui goal
+    ) {
         ItemStack item = new ItemStack(DEFAULT_SAVE_ITEM);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aSave");
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_SAVE_ITEM_TITLE);
         item.setItemMeta(meta);
         return new GuiItem(item,
                 GuiGlobalActions.saveSettingAction(setting, goal),
                 CustomAnvil.instance);
-    }
-
-    // Create static non change item
-    private static final GuiItem NO_CHANGE_ITEM;
-
-    static {
-        ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
-        ItemMeta meta = item.getItemMeta();
-        assert meta != null;
-
-        meta.setDisplayName("§7No change. can't save.");
-        item.setItemMeta(meta);
-        NO_CHANGE_ITEM = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
 
     /**
@@ -166,7 +166,13 @@ public class GuiGlobalItems {
      * @return The global "no change" item.
      */
     public static GuiItem noChangeItem() {
-        return NO_CHANGE_ITEM;
+        ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_NO_CHANGE_ITEM_TITLE);
+        item.setItemMeta(meta);
+        return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
 
     /**
@@ -178,14 +184,11 @@ public class GuiGlobalItems {
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem openSettingGuiItem(
-            @NotNull ItemStack item,
-            @NotNull SettingGui.SettingGuiFactory factory
+            ItemStack item,
+            SettingGui.SettingGuiFactory factory
     ) {
         return new GuiItem(item, GuiGlobalActions.openSettingGuiAction(factory), CustomAnvil.instance);
     }
-
-    // Prefix of the one line lore that will be added to setting's item.
-    public static final String SETTING_ITEM_LORE_PREFIX = "§7value: ";
 
     /**
      * Create an arbitrary GuiItem from a unique setting and item's property.
@@ -199,19 +202,25 @@ public class GuiGlobalItems {
      * @return A formatted GuiItem that will create and open a GUI for the setting.
      */
     public static GuiItem createGuiItemFromProperties(
-            @NotNull SettingGui.SettingGuiFactory factory,
-            @NotNull Material itemMat,
-            @NotNull StringBuilder itemName,
-            @NotNull Object value,
-            @NotNull List<String> displayLore,
-            boolean displayValuePrefix
+            SettingGui.SettingGuiFactory factory,
+            Material itemMat,
+            Component itemName,
+            Object value,//TODO ????
+            @Nullable List<Message> displayLore,
+            boolean displayValuePrefix,
+            @Nullable Object... params
     ) {
         // Prepare lore
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add((displayValuePrefix ? SETTING_ITEM_LORE_PREFIX  : "") + value);
-        if(!displayLore.isEmpty()){
-            lore.add("");
-            lore.addAll(displayLore);
+        var loreHeader = (displayValuePrefix ?
+                MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX() :
+                MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX_ALONE());
+
+        List<Component> lore = loreHeader.formatted(value);
+        if(displayLore != null) {
+            lore.add(Component.empty());
+            for(Message message : displayLore) {
+                lore.addAll(message.formatted(params));
+            }
         }
 
         // Create & initialise item
@@ -219,8 +228,8 @@ public class GuiGlobalItems {
         ItemMeta itemMeta = item.getItemMeta();
         assert itemMeta != null;
 
-        itemMeta.setDisplayName(itemName.toString());
-        itemMeta.setLore(lore);
+        PlatformUtil.INSTANCE.setComponentDisplayName(itemMeta, itemName, null);
+        ComponentUtil.applyLore(lore, itemMeta);
         itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);
@@ -242,13 +251,13 @@ public class GuiGlobalItems {
         return path.substring(indexOfDot + 1);
     }
 
-    public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack){
+    public static GuiItem temporaryCloseGuiToSelectItem(Material itemMaterial, Gui openBack) {
         ItemStack item = new ItemStack(itemMaterial);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eTemporary close this menu");
-        meta.setLore(Collections.singletonList("§7Allow you to chose other item then return here."));
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_TEMPORARY_CLOSE_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_TEMPORARY_CLOSE_LORE);
         item.setItemMeta(meta);
 
         return new GuiItem(item, event -> {
@@ -256,16 +265,47 @@ public class GuiGlobalItems {
 
             HumanEntity player = event.getWhoClicked();
 
-            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) ->{
+            CustomAnvil.Companion.getChatListener().setListenedCallback(player, (message) -> {
 
                 if(message == null) return;
                 openBack.show(player);
 
             });
 
-            player.sendMessage("§eWrite something in chat to return to the item config menu.");
+            MsgUI.SHARED_TEMPORARY_CLOSE_RETURN.send(player);
             player.closeInventory();
         }, CustomAnvil.instance);
+    }
+
+    public static GuiItem cancelAndGoBackItem(Gui backOnCancel) {
+        var item = new ItemStack(Material.RED_TERRACOTTA);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_CANCEL_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_CANCEL_LORE);
+        item.setItemMeta(meta);
+
+        return new GuiItem(item, GuiGlobalActions.openGuiAction(backOnCancel), CustomAnvil.instance);
+    }
+
+    public static GuiItem confirmItem(Consumer<InventoryClickEvent> action) {
+        return confirmItem(false, action);
+    }
+
+    public static GuiItem confirmItem(boolean permanent, Consumer<InventoryClickEvent> action) {
+        var item = new ItemStack(Material.GREEN_TERRACOTTA);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_CONFIRM_TITLE);
+        var lore = MsgUI.SHARED_CONFIRM_LORE.formatted();
+        if(permanent) {
+            lore.addAll(MsgUI.SHARED_CONFIRM_PERMANENT_LORE.formatted());
+        }
+
+        item.setItemMeta(meta);
+        return new GuiItem(item, action, CustomAnvil.instance);
     }
 
 }

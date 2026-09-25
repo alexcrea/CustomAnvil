@@ -2,47 +2,52 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+@NotNullByDefault
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
         MappedGuiListConfigGui.LazyElement<CustomRecipeSubSettingGui>> {
 
-    private static CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
+    //TODO #130 part 3
+    private static final CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
 
-    @Nullable
+    //@Nullable
     public static CustomRecipeConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    @NotNull
     public static CustomRecipeConfigGui getInstance() {
-        if (INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
+        //if(INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
 
         return INSTANCE;
     }
 
     private CustomRecipeConfigGui() {
-        super("Custom Recipe Config");
+        super(MsgUI.INSTANCE.getCUSTOM_RECIPE_TITLE());
 
         init();
     }
 
     public CustomRecipeConfigGui(Gui parent) {
-        super("Custom Recipe Config", parent);
+        super(MsgUI.INSTANCE.getCUSTOM_RECIPE_TITLE(), parent);
     }
 
     @Override
@@ -50,7 +55,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         // Get base item to display
         ItemStack craftResultItem = recipe.getResultItem();
         ItemStack displayedItem;
-        if (craftResultItem == null) {
+        if(craftResultItem == null) {
             displayedItem = new ItemStack(Material.BARRIER);
         } else {
             displayedItem = craftResultItem.clone();
@@ -60,25 +65,34 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         ItemMeta meta = displayedItem.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(recipe.toString()) + " §fCustom recipe");
         meta.addItemFlags(ItemFlag.values());
-
-        meta.setLore(getRecipeLore(recipe));
+        ComponentUtil.setMessageName(meta,
+                MsgUI.INSTANCE.getCUSTOM_RECIPE_NAME(),
+                CasedStringUtil.snakeToUpperSpacedCase(recipe.toString())
+        );
+        ComponentUtil.applyLore(getRecipeLore(recipe), meta);
 
         displayedItem.setItemMeta(meta);
         return displayedItem;
     }
 
-    private static @NotNull ArrayList<String> getRecipeLore(AnvilCustomRecipe recipe) {
+    private static List<Component> getRecipeLore(AnvilCustomRecipe recipe) {
         boolean shouldWork = recipe.validate();
 
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7Is valid:    §" + (shouldWork ? "aYes" : "cNo"));
-        lore.add("§7Exact count:    §" + (recipe.getExactCount() ? "aYes" : "cNo"));
-        lore.add("§7Recipe Level Cost: §e" + recipe.getLevelCostPerCraft());
-        lore.add("§7Recipe Linear Xp Cost: §e" + recipe.getXpCostPerCraft());
-        if (recipe.getXpCostPerCraft() != 0) {
-            lore.add("§7Exact Linear xp remove:    §" + (recipe.getRemoveExactLinearXp() ? "aYes" : "cNo"));
+        var shouldWorkMsg = MsgUI.INSTANCE.booleanMessage(shouldWork);
+        var exactCount = MsgUI.INSTANCE.booleanMessage(recipe.getExactCount());
+
+        ArrayList<Component> lore = new ArrayList<>(MsgUI.INSTANCE.getCUSTOM_RECIPE_LORE_DEFAULT()
+                .formatted(
+                        shouldWorkMsg.formattedConcatenated(),
+                        exactCount,
+                        recipe.getLevelCostPerCraft(),
+                        recipe.getXpCostPerCraft()
+                ));
+
+        if(recipe.getXpCostPerCraft() != 0) {
+            var removeExact = MsgUI.INSTANCE.booleanMessage(recipe.getRemoveExactLinearXp());
+            lore.addAll(MsgUI.INSTANCE.getCUSTOM_RECIPE_LORE_LINEAR().formatted(removeExact));
         }
         return lore;
     }
@@ -89,8 +103,8 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
     }
 
     @Override
-    protected String genericDisplayedName() {
-        return "custom recipe";
+    protected Message genericDisplayedName() {
+        return MsgUI.INSTANCE.getCUSTOM_RECIPE_GENERIC_NAME();
     }
 
     @Override
@@ -106,12 +120,17 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
-                AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG());
+                AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG()
+        );
 
-        ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().cleanAddNew(recipe);
+        try(var lock = ConfigHolder.CUSTOM_RECIPE.write) {
+            var config = lock.get();
 
-        // Save recipe to file
-        recipe.saveToFile(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE, GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            config.getRecipeManager().cleanAddNew(recipe);
+
+            // Save recipe to file
+            recipe.saveToFile(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE, GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+        }
 
         return recipe;
     }
@@ -119,6 +138,8 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
     @Override
     protected Collection<AnvilCustomRecipe> getEveryInstanceOfGeneric() {
-        return ConfigHolder.CUSTOM_RECIPE_HOLDER.getRecipeManager().getRecipeList();
+        try(var lock = ConfigHolder.CUSTOM_RECIPE.read) {
+            return lock.get().getRecipeManager().getRecipeList();
+        }
     }
 }

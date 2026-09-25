@@ -27,7 +27,7 @@ public class CAEcoEnchant extends CABukkitEnchantment implements AdditionalTestE
 
     public EcoEnchant fromKey() {
         var enchant = EcoEnchants.INSTANCE.getByID(enchantID);
-        assert enchant != null;
+        if(enchant == null) throw new IllegalStateException("Cannot find eco enchant of id " + enchantID);
 
         return enchant;
     }

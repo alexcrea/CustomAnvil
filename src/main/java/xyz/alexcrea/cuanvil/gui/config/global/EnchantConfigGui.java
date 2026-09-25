@@ -10,36 +10,50 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.api.EnchantmentApi;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
+import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
+@NotNullByDefault
 public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private final Set<CAEnchantment> enchantments;
     private final PatternPane pane;
 
-    private EnchantLimitConfigGui enchantLimitConfigGui;
-    private EnchantMergeLimitConfigGui enchantMergeLimitConfigGui;
-    private EnchantCostConfigGui enchantCostConfigGui;
+    //TODO #130 part 3
+    private @Nullable EnchantLimitConfigGui enchantLimitConfigGui;
+    private @Nullable EnchantMergeLimitConfigGui enchantMergeLimitConfigGui;
+    private @Nullable EnchantCostConfigGui enchantCostConfigGui;
 
-    private EnchantConflictGui enchantConflictGui;
-    private GroupConfigGui groupConfigGui;
+    private @Nullable EnchantConflictGui enchantConflictGui;
+    private @Nullable GroupConfigGui groupConfigGui;
 
-    public EnchantConfigGui(@NotNull Set<CAEnchantment> enchantments) {
+    private static String selectName(Set<CAEnchantment> enchantments) {
+        if(enchantments.size() == 1) {
+            return enchantments.stream().findFirst().get().getPrettyName();
+        }
+
+        return MsgUI.INSTANCE.getENCHANT_CONFIG_MULTIPLES_NAME().unformatted();
+    }
+
+    public EnchantConfigGui(Set<CAEnchantment> enchantments) {
         super(3,
-                "Configuring Enchantments",
+                MsgUI.INSTANCE.getENCHANT_CONFIG_TITLE().textHolder(selectName(enchantments)),
                 CustomAnvil.instance);
         this.enchantments = enchantments;
 
@@ -57,7 +71,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        displayMeta.setDisplayName("§aConfiguring Enchantments:");
+        ComponentUtil.setMessageName(displayMeta, MsgUI.INSTANCE.getENCHANT_CONFIG_NAME(), selectName(enchantments));
         displayItemstack.setItemMeta(displayMeta);
 
         // Set enchantments
@@ -137,7 +151,6 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         return MainConfigGui.enchantCostItem(enchantCostConfigGui);
     }
 
-    @NotNull
     @Contract(pure = true)
     private Predicate<EnchantConflictGroup> getGroupFilter() {
         return group -> group.getEnchants()
@@ -160,13 +173,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
             groupConfigGui = new GroupConfigGui(this);
 
             // Get all the conflict related to this enchantment
-            var groups = ConfigHolder.CONFLICT_HOLDER
-                    .getConflictManager()
-                    .getConflictList()
-                    .stream()
-                    .filter(getGroupFilter())
-                    .map(EnchantConflictGroup::getCantConflictGroup)
-                    .collect(Collectors.toSet());
+            var groups = getGroups();
 
             groupConfigGui.setFilter(group ->
                 groups.stream().anyMatch(other -> other.isReferencing(group))
@@ -175,6 +182,18 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         }
 
         return groupConfigGui;
+    }
+
+    private Collection<AbstractMaterialGroup> getGroups() {
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            return lock.get()
+                    .getConflictManager()
+                    .getConflictList()
+                    .stream()
+                    .filter(getGroupFilter())
+                    .map(EnchantConflictGroup::getCantConflictGroup)
+                    .toList();
+        }
     }
 
     @Override

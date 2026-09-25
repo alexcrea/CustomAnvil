@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.AbstractMaterialGroup;
@@ -15,36 +15,39 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
+@NotNullByDefault
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
 
-    private static GroupConfigGui INSTANCE;
+    //TODO #130 part 3
+    private static @Nullable GroupConfigGui INSTANCE;
 
     @Nullable
-    public static GroupConfigGui getCurrentInstance(){
+    public static GroupConfigGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    @NotNull
-    public static GroupConfigGui getInstance(){
+    public static GroupConfigGui getInstance() {
         if(INSTANCE == null) INSTANCE = new GroupConfigGui();
 
         return INSTANCE;
     }
 
     public GroupConfigGui() {
-        super("Group Config");
+        super(MsgUI.INSTANCE.getMATERIAL_GROUP_TITLE());
 
         init();
     }
 
     public GroupConfigGui(Gui parent) {
-        super("Group Config", parent);
+        super(MsgUI.INSTANCE.getMATERIAL_GROUP_TITLE(), parent);
     }
 
     @Override
@@ -54,12 +57,19 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(group.getName())+ " §fGroup");
-        meta.setLore(Arrays.asList(
-                "§7Number of selected groups : " + group.getGroups().size(),
-                "§7Number of included material : " + group.getNonGroupInheritedMaterials().size(),
-                "",
-                "§7Total number of included material "+group.getMaterials().size()));
+        ComponentUtil.setMessageName(
+                meta,
+                MsgUI.INSTANCE.getMATERIAL_GROUP_NAME(),
+                CasedStringUtil.snakeToUpperSpacedCase(group.getName())
+        );
+        ComponentUtil.applyLore(
+                MsgUI.INSTANCE.getMATERIAL_GROUP_LORE().formatted(
+                        group.getGroups().size(),
+                        group.getNonGroupInheritedMaterials().size(),
+                        group.getMaterials().size()
+                ),
+                meta
+        );
 
         item.setItemMeta(meta);
         return item;
@@ -69,9 +79,12 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     protected Collection<IncludeGroup> getEveryInstanceOfGeneric() {
         ArrayList<IncludeGroup> includeGroups = new ArrayList<>();
 
-        for (AbstractMaterialGroup group : ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager().getGroupMap().values()) {
-            if(group instanceof IncludeGroup){
-                includeGroups.add((IncludeGroup) group);
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            var holder = lock.get();
+            for(AbstractMaterialGroup group : holder.getItemGroupsManager().getGroupMap().values()) {
+                if(group instanceof IncludeGroup) {
+                    includeGroups.add((IncludeGroup) group);
+                }
             }
         }
         return includeGroups;
@@ -83,19 +96,23 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     @Override
-    protected String genericDisplayedName() {
-        return "material group";
+    protected Message genericDisplayedName() {
+        return MsgUI.INSTANCE.getMATERIAL_GROUP_GENERIC_NAME();
     }
 
     @Override
+    @Nullable
     protected IncludeGroup createAndSaveNewEmptyGeneric(String name) {
-        ItemGroupManager manager = ConfigHolder.ITEM_GROUP_HOLDER.getItemGroupsManager();
-        if(manager.getGroupMap().containsKey(name)) return null;
+        try(var lock = ConfigHolder.ITEM_GROUP.write) {
+            var holder = lock.get();
+            ItemGroupManager manager = holder.getItemGroupsManager();
+            if(manager.getGroupMap().containsKey(name)) return null;
 
-        ConfigurationSection config = ConfigHolder.ITEM_GROUP_HOLDER.getConfig();
-        config.set(name+"."+ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
+            ConfigurationSection config = holder.getConfig();
+            config.set(name + "." + ItemGroupManager.GROUP_TYPE_PATH, GroupType.INCLUDE.getGroupID());
 
-        return (IncludeGroup) manager.createGroup(config, name);
+            return (IncludeGroup) manager.createGroup(config, name);
+        }
     }
 
 }

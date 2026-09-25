@@ -4,24 +4,27 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.Collections;
 import java.util.Locale;
 
 /**
  * Global Config gui for enchantment level limit settings.
  */
+@NotNullByDefault
 public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
+    //TODO #130 part 3
     private static final String SECTION_NAME = ConfigOptions.ENCHANT_LIMIT_ROOT;
 
-    private static EnchantLimitConfigGui INSTANCE = null;
+    private static @Nullable EnchantLimitConfigGui INSTANCE = null;
 
     @Nullable
     public static EnchantLimitConfigGui getInstance() {
@@ -32,14 +35,14 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantLimitConfigGui() {
-        super("§8Enchantment Level Limit");
+        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_TITLE());
         if(INSTANCE == null) INSTANCE = this;
 
         init();
     }
 
     public EnchantLimitConfigGui(Gui parent) {
-        super("§8Enchantment Level Limit", parent);
+        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_TITLE(), parent);
     }
 
     @Override
@@ -51,15 +54,15 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         String key = enchant.getKey().toString().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
-        var defaultValue = enchant.defaultMaxLevel();
+        //var defaultValue = enchant.defaultMaxLevel();
+        var defaultValueStr = String.valueOf(enchant.defaultMaxLevel());
 
-        return new IntSettingsGui.IntSettingFactory(prettyKey + " Limit", parent,
-                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT_CONFIG,
-                Collections.singletonList(
-                        "§7Maximum applied level of " + prettyKey
-                ),
+        return new IntSettingsGui.IntSettingFactory(
+                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_TITLE(), parent,
+                SECTION_NAME + '.' + key, ConfigHolder.DEFAULT,
+                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_DESCRIPTION(), prettyKey,
                 -1, 255, -1,
-                1, 5, 10, 50, 100){
+                1, 5, 10, 50, 100) {
 
             @Override
             public int getConfiguredValue() {
@@ -69,16 +72,14 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
 
             @Override
             public String valueDisplayName(IntSettingsGui.ValueDisplayType type, int value) {
-
                 if(value < 0) {
-                    return switch (type) {
-                        case CURRENT -> "Default (" + defaultValue + ")";
-                        case RESET -> String.valueOf(defaultValue);
-                        default -> "Default";
+                    return switch(type) {
+                        case CURRENT -> MsgUI.INSTANCE.getSHARED_VALUED_DEFAULT().unformatted(defaultValueStr);
+                        case RESET -> defaultValueStr;
+                        default -> MsgUI.INSTANCE.getSHARED_DEFAULT().unformatted();
                     };
 
-                }
-                else return super.valueDisplayName(type, value);
+                } else return super.valueDisplayName(type, value);
             }
         };
     }
@@ -87,7 +88,9 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
     public GuiItem itemFromFactory(CAEnchantment enchantment, IntSettingsGui.IntSettingFactory inventoryFactory) {
         return inventoryFactory.getItem(
                 Material.ENCHANTED_BOOK,
-                inventoryFactory.getTitle());
+                inventoryFactory.getTitle(),
+                inventoryFactory.getParam()
+        );
     }
 
 }

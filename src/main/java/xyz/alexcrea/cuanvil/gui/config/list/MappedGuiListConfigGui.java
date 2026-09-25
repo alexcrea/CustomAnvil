@@ -5,9 +5,12 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.LazyValue;
 
 import java.util.Locale;
@@ -15,15 +18,24 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@NotNullByDefault
 public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui.LazyElement<?>>
         extends MappedElementListConfigGui<T, S> {
 
-    protected MappedGuiListConfigGui(@NotNull String title) {
-        super(title);
+    protected MappedGuiListConfigGui(Message title, String param) {
+        super(title, param);
     }
 
-    protected MappedGuiListConfigGui(@NotNull String title, @NotNull Gui parent) {
-        super(title, parent);
+    protected MappedGuiListConfigGui(Message title, String param, Gui parent) {
+        super(title, param, parent);
+    }
+
+    protected MappedGuiListConfigGui(Message title) {
+        super(title, "");
+    }
+
+    protected MappedGuiListConfigGui(Message title, Gui parent) {
+        super(title, "", parent);
     }
 
     @Override
@@ -63,19 +75,18 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
     @Override
     protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {
+        @SuppressWarnings("NullableProblems") // Will be set just after that
         AtomicReference<Consumer<String>> selfRef = new AtomicReference<>();
         Consumer<String> selfCallback = (message) -> {
-            if (message == null) return;
-
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
 
             message = message.toLowerCase(Locale.ROOT);
             if ("cancel".equalsIgnoreCase(message)) {
-                player.sendMessage(genericDisplayedName() + " creation cancelled...");
+                MsgUI.INSTANCE.getELEMENT_LIST_CANCELLED_NEW().send(player, genericDisplayedName());
                 show(player);
                 return;
             }
@@ -86,7 +97,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
             // Not the most efficient on large number of conflict, but it should not run often.
             for (T generic : getDisplayableInstanceOfGeneric()) {
                 if (generic.toString().equalsIgnoreCase(message)) {
-                    player.sendMessage("§cPlease enter a " + genericDisplayedName() + " name that do not already exist...");
+                    MsgUI.INSTANCE.getELEMENT_LIST_DUPLICATED_NEW().send(player, genericDisplayedName());
                     // wait next message.
                     CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
                     return;
@@ -113,8 +124,9 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
 
     protected abstract S newInstanceOfGui(T generic, GuiItem item);
 
-    protected abstract String genericDisplayedName();
+    protected abstract Message genericDisplayedName();
 
+    @Nullable
     protected abstract T createAndSaveNewEmptyGeneric(String name);
 
     public static class LazyElement<T extends ElementMappedToListGui> extends LazyValue<T> {
@@ -135,11 +147,9 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
             return parentItem;
         }
 
-        @NotNull
         public Consumer<InventoryClickEvent> openAction() {
             return event -> lazyOpenConsumer.get().accept(event);
         }
-
     }
 
 }

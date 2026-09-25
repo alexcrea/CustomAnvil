@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.dependency.util
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
-import org.bukkit.inventory.ItemStack
+import org.bukkit.command.CommandSender
 import org.bukkit.inventory.meta.ItemMeta
 
 // Mostly made for paper, spigot and folia support
@@ -98,6 +98,41 @@ object PlatformUtil {
             val legacy = fallback ?: legacy_mm.serialize(component)
             this.setDisplayName(legacy)
         }
+    }
+
+    /**
+     * Try to send paper component to the player
+     *
+     * @param component The used component
+     * @return true if sent, else otherwise
+     */
+    fun CommandSender.sendPaperMessage(component: Component): Boolean {
+        if(isPaper) {
+            this.sendMessage(component)
+            return true
+        }
+
+        return false
+    }    /**
+     * Try to send paper component to the player
+     *
+     * @param component The used component
+     * @return true if sent, else otherwise
+     */
+
+    /**
+     * Try to set component lore of an item
+     *
+     * @param components The used component lore
+     * @return true if sent, else otherwise
+     */
+    fun ItemMeta.setPaperLore(components: List<Component>): Boolean {
+        if(isPaper) {
+            this.lore(components)
+            return true
+        }
+
+        return false
     }
 
 }

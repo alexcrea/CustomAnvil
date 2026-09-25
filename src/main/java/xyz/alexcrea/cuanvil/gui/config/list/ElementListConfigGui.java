@@ -14,10 +14,13 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +28,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@NotNullByDefault
 public abstract class ElementListConfigGui<T> extends ChestGui implements ValueUpdatableGui {
 
     public static final int LIST_FILLER_START_X = 1;
@@ -32,16 +36,18 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     public static final int LIST_FILLER_LENGTH = 7;
     public static final int LIST_FILLER_HEIGHT = 4;
 
-    private final String namePrefix;
+    private final Message rawTitle;
+    private final String param;
 
     protected final PatternPane backgroundPane;
 
     private Predicate<T> filter = (t) -> true;
     private boolean hasDefaultFilter = true;
 
-    protected ElementListConfigGui(@NotNull String title, Gui parent) {
-        super(6, title, CustomAnvil.instance);
-        this.namePrefix = title;
+    protected ElementListConfigGui(Message title, String param, Gui parent) {
+        super(6, title.textHolder(param, "", ""), CustomAnvil.instance);
+        this.rawTitle = title;
+        this.param = param;
 
         // Back item panel
         Pattern pattern = getBackgroundPattern();
@@ -66,9 +72,10 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         );
     }
 
-    protected OutlinePane firstPage;
-    protected ArrayList<OutlinePane> pages;
-    protected HashMap<UUID, Integer> pageMap;
+    //TODO #130 part 3
+    protected @UnknownNullability OutlinePane firstPage;
+    protected @UnknownNullability ArrayList<OutlinePane> pages;
+    protected @UnknownNullability HashMap<UUID, Integer> pageMap;
 
     public void init() {
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
@@ -87,8 +94,8 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         reloadValues();
     }
 
-    protected GuiItem goLeftItem;
-    protected GuiItem goRightItem;
+    protected @UnknownNullability GuiItem goLeftItem;
+    protected @UnknownNullability GuiItem goRightItem;
 
     protected void prepareStaticValues() {
         // Left item creation for consumer & bind
@@ -144,6 +151,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         update();
     }
 
+    @Nullable
     protected abstract GuiItem prepareCreateNewItem();
 
     protected OutlinePane createEmptyPage() {
@@ -218,7 +226,8 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
                 ItemStack leftItem = this.goLeftItem.getItem();
                 ItemMeta leftMeta = leftItem.getItemMeta();
 
-                leftMeta.setDisplayName("§eReturn to page " + (page));
+                assert leftMeta != null;
+                leftMeta.setDisplayName("<yellow>Return to page " + (page));
 
                 leftItem.setItemMeta(leftMeta);
                 this.goLeftItem.setItem(leftItem);
@@ -234,8 +243,9 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
             if (customise) {
                 ItemStack rightItem = this.goRightItem.getItem();
                 ItemMeta rightMeta = rightItem.getItemMeta();
+                assert rightMeta != null;
 
-                rightMeta.setDisplayName("§eGo to page " + (page + 2));
+                rightMeta.setDisplayName("<yellow>Go to page " + (page + 2));
 
                 rightItem.setItemMeta(rightMeta);
                 this.goRightItem.setItem(rightItem);
@@ -248,7 +258,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     }
 
     @Override // assume will not be called in multiple thread
-    public void show(@NotNull HumanEntity humanEntity) {
+    public void show(HumanEntity humanEntity) {
         int pageID = getPlayerPageID(humanEntity.getUniqueId());
         OutlinePane page = this.pages.get(pageID);
 
@@ -259,20 +269,17 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         // and add actual page
         addPane(page);
 
-        // set title
-        StringBuilder title = new StringBuilder(this.namePrefix);
+        // intended parameter: (page/max_page) //TODO MESSAGE CHECK CHILDS
         int pagesSize = this.pages.size();
-        if (pagesSize > 1) {
-            title.append(" (").append(pageID + 1).append('/').append(pagesSize).append(')');
-        }
-        setTitle(title.toString());
+        var title = this.rawTitle.textHolder(param, pageID + 1, pagesSize);
+        setTitle(title);
 
         super.show(humanEntity);
 
     }
 
-    @Override // assume will not be called in multiple thread
-    public void click(@NotNull InventoryClickEvent event) {
+    @Override // assume will not be called in multiple thread TODO will this hold true ? #130 part 2
+    public void click(InventoryClickEvent event) {
         int pageID = getPlayerPageID(event.getWhoClicked().getUniqueId());
         OutlinePane page = this.pages.get(pageID);
 
@@ -309,11 +316,12 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         update();
     }
 
+    @Nullable
     protected abstract GuiItem findGuiItemForRemoval(T generic);
 
     protected abstract ItemStack createItemForGeneric(T generic);
 
-    protected abstract void updateGeneric(T generic, ItemStack usedItem);
+    protected abstract void updateGeneric(T generic,  ItemStack usedItem);
 
     protected abstract Collection<T> getEveryInstanceOfGeneric();
 

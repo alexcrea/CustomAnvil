@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
@@ -19,9 +19,12 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -29,6 +32,7 @@ import java.util.function.Consumer;
  * An instance of a gui used to edit an enchantment cost setting.
  * May be considered as a 2 int setting.
  */
+@NotNullByDefault
 public class EnchantCostSettingsGui extends IntSettingsGui {
 
     protected final static String ITEM_PATH = ".item";
@@ -85,10 +89,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta bookMeta = bookItemstack.getItemMeta();
         assert bookMeta != null;
 
-        bookMeta.setDisplayName("§aCost of an Enchantment by Book");
+        bookMeta.setDisplayName("<green>Cost of an Enchantment by Book");
         bookMeta.setLore(Arrays.asList(
-                "§7Cost per result item level of an sacrifice enchantment",
-                "§7Only apply if sacrificed item §cis §7a book"));
+                "<gray>Cost per result item level of an sacrifice enchantment",
+                "<gray>Only apply if sacrificed item <red>is <gray>a book"));
         bookItemstack.setItemMeta(bookMeta);
 
         // sword display
@@ -97,10 +101,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         assert swordMeta != null;
 
         swordMeta.addItemFlags(ItemFlag.values());
-        swordMeta.setDisplayName("§aCost of an Enchantment by Item");
+        swordMeta.setDisplayName("<green>Cost of an Enchantment by Item");
         swordMeta.setLore(Arrays.asList(
-                "§7Cost per result item level of an sacrifice enchantment",
-                "§7Only apply if sacrificed item §cis not §7a book"));
+                "<gray>Cost per result item level of an sacrifice enchantment",
+                "<gray>Only apply if sacrificed item <red>is not <gray>a book"));
         swordItemstack.setItemMeta(swordMeta);
 
         pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
@@ -117,10 +121,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // assume holder is an instance of EnchantCostSettingFactory
         EnchantCostSettingFactory holder = (EnchantCostSettingFactory) this.holder;
 
-        meta.setDisplayName("§eReset to default value");
+        meta.setDisplayName("<yellow>Reset to default value");
         meta.setLore(Arrays.asList(
-                "§7Default item  value is: §e" + holder.defaultVal,
-                "§7Default book value is: §e" + holder.defaultBookVal));
+                "<gray>Default item  value is: <yellow>" + holder.defaultVal,
+                "<gray>Default book value is: <yellow>" + holder.defaultBookVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -143,14 +147,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         // minus item
         GuiItem minusItem;
-        if (nowBook > holder.min) {
+        if(nowBook > holder.min) {
             int planned = Math.max(holder.min, nowBook - step);
             ItemStack item = new ItemStack(Material.RED_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§c-" + (nowBook - planned) + "§r)");
-            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
+            meta.setDisplayName("<yellow>" + nowBook + " <white>-> <yellow>" + planned + " <reset>(<red>-" + (nowBook - planned) + "<reset>)");
+            ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -161,14 +165,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         //plus item
         GuiItem plusItem;
-        if (nowBook < holder.max) {
+        if(nowBook < holder.max) {
             int planned = Math.min(holder.max, nowBook + step);
             ItemStack item = new ItemStack(Material.GREEN_TERRACOTTA);
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("§e" + nowBook + " §f-> §e" + planned + " §r(§a+" + (planned - nowBook) + "§r)");
-            meta.setLore(Collections.singletonList(AbstractSettingGui.CLICK_LORE));
+            meta.setDisplayName("<yellow>" + nowBook + " <white>-> <yellow>" + planned + " <reset>(<green>+" + (planned - nowBook) + "<reset>)");//TODO MESSAGE
+            ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -182,9 +186,9 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta nowMeta = nowPaper.getItemMeta();
         assert nowMeta != null;
 
-        nowMeta.setDisplayName("§fValue: §e" + nowBook);
-        if (!holder.displayLore.isEmpty()) {
-            nowMeta.setLore(holder.displayLore);
+        nowMeta.setDisplayName("<white>Value: <yellow>" + nowBook);//TODO MESSAGE
+        if(holder.displayLore != null) {
+            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), nowMeta);
         }
 
         nowPaper.setItemMeta(nowMeta);
@@ -195,7 +199,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if (now != holder.defaultVal || nowBook != holder.defaultBookVal) {
+        if(now != holder.defaultVal || nowBook != holder.defaultBookVal) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -224,11 +228,14 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath + ITEM_PATH, now);
-        holder.config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
+            config.getConfig().set(holder.configPath + ITEM_PATH, now);
+            config.getConfig().set(holder.configPath + BOOK_PATH, nowBook);
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -244,7 +251,6 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
     public static class EnchantCostSettingFactory extends IntSettingsGui.IntSettingFactory {
 
         final int defaultBookVal;
-        @NotNull
         final CAEnchantment enchantment;
 
         /**
@@ -253,7 +259,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          * @param title       The title of the gui.
          * @param parent      Parent gui to go back when completed.
          * @param configPath  Configuration path of this setting.
-         * @param config      Configuration holder of this setting.
+         * @param holder      Configuration holder of this setting.
          * @param displayLore Gui display item lore.
          * @param min         Minimum value of this setting.
          * @param max         Maximum value of this setting.
@@ -264,15 +270,15 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
          *                    If step only contain 1 value, no step item should be displayed.
          */
         public EnchantCostSettingFactory(
-                @NotNull String title, ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config,
-                @Nullable List<String> displayLore,
-                @NotNull CAEnchantment enchantment,
+                Message title, ValueUpdatableGui parent,
+                String configPath, LockedObjectProvider<? extends ConfigHolder> holder,
+                @Nullable Message displayLore, @Nullable Object param,
+                CAEnchantment enchantment,
                 int min, int max, int... steps) {
 
             super(title, parent,
-                    configPath, config,
-                    displayLore,
+                    configPath, holder,
+                    displayLore, param,
                     min, max, enchantment.defaultRarity().itemValue(),
                     steps);
 
@@ -303,7 +309,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             return new EnchantCostSettingsGui(this, nowItem);
         }
 
-        public List<String> getDisplayLore() {
+        @Nullable
+        public List<Message> getDisplayLore() {
             return this.displayLore;
         }
     }

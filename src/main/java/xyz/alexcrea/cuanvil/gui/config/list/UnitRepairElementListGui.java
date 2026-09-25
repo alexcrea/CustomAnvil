@@ -9,7 +9,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
@@ -18,13 +18,21 @@ import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
-public class UnitRepairElementListGui extends SettingGuiListConfigGui<NamespacedKey, DoubleSettingGui.DoubleSettingFactory> implements ElementMappedToListGui {
+@NotNullByDefault
+public class UnitRepairElementListGui
+        extends SettingGuiListConfigGui<NamespacedKey, DoubleSettingGui.DoubleSettingFactory>
+        implements ElementMappedToListGui {
 
     private final NamespacedKey parentMaterial;
     private final UnitRepairConfigGui parentGui;
@@ -32,12 +40,18 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     private boolean shouldWork = true;
 
-    public UnitRepairElementListGui(@NotNull NamespacedKey parentMaterial,
-                                    @NotNull UnitRepairConfigGui parentGui) {
-        super("§e" + CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase()) + " §rUnit repair");
+    private static String prettifiedName(NamespacedKey parentMaterial) {
+        return CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
+    }
+
+    public UnitRepairElementListGui(
+            NamespacedKey parentMaterial,
+            UnitRepairConfigGui parentGui
+    ) {
+        super(MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_TITLE(), prettifiedName(parentMaterial));
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
-        this.materialName = CasedStringUtil.snakeToUpperSpacedCase(parentMaterial.getKey().toLowerCase());
+        this.materialName = prettifiedName(parentMaterial);
 
         GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
     }
@@ -45,9 +59,9 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     // SettingGuiListConfigGui methods
     @Override
     protected List<String> getCreateItemLore() {
-        return Arrays.asList(
-                "§7Select a new item to be repairable.",
-                "§7You will be asked the material to use."
+        return Arrays.asList(//TODO MESSAGE
+                "<gray>Select a new item to be repairable.",
+                "<gray>You will be asked the material to use."
         );
     }
 
@@ -55,36 +69,38 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
         return event -> {
             event.setCancelled(true);
-            if (!this.shouldWork) {
+            if(!this.shouldWork) {
                 return;
             }
             event.setCancelled(true);
 
             new SelectItemTypeGui(
-                    "Select item to be repaired.",
-                    "§7Click here with an item to set the item\n" +
-                            "§7You like to be repaired by " + this.materialName,
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_TITLE(), this.materialName,
+                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_DESCRIPTION(), this.materialName,
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
                         NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
 
-                        if (!(meta instanceof Damageable)) {
-                            player.sendMessage("§cThis item can't be damaged, so it can't be repaired.");
+                        if(!(meta instanceof Damageable)) {
+                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR().send(player);
                             return;
                         }
-                        if (type.equals(this.parentMaterial)) {
-                            player.sendMessage("§cItem can't repair something of the same type.");
+                        if(type.equals(this.parentMaterial)) {
+                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_SAME_TYPE().send(player);
                             return;
                         }
 
                         String materialName = type.toString();
 
                         // Add new material
-                        ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().set(parentMaterial.toString().toLowerCase() + "." + materialName, 0.25);
+                        try(var lock = ConfigHolder.UNIT_REPAIR.write) {
+                            var holder = lock.get();
+                            holder.getConfig().set(parentMaterial.toString().toLowerCase() + "." + materialName, 0.25);
 
-                        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-                            ConfigHolder.UNIT_REPAIR_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+                            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                                holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+                            }
                         }
 
                         // Update gui
@@ -103,7 +119,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     @Override
     protected String createItemName() {
-        return "§aAdd a new item reparable by " + this.materialName;
+        return "<green>Add a new item reparable by " + this.materialName; //TODO MESSAGE ?
     }
 
     @Override
@@ -111,14 +127,12 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
         String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey());
 
         return new DoubleSettingGui.DoubleSettingFactory(
-                "§0%§8" + materialDisplayName + " Repair",
+                MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_TITLE(),
                 this,
-                ConfigHolder.UNIT_REPAIR_HOLDER,
+                ConfigHolder.UNIT_REPAIR,
                 this.parentMaterial.toString().toLowerCase() + "." + materialName,
-                Arrays.asList(
-                        "§7Click here to change how many §e% §7of §a" + materialDisplayName,
-                        "§7Should get repaired by §e" + this.materialName
-                ),
+                MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_DESCRIPTION(),
+                materialDisplayName, this.materialName,
                 2,
                 true, true,
                 0,
@@ -130,31 +144,38 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     @Override
     protected GuiItem itemFromFactory(NamespacedKey materialName, DoubleSettingGui.DoubleSettingFactory factory) {
-        return factory.getItem(materialFromName(materialName),
-                "§7%§a" + CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey()) + " §erepaired by §a" + this.materialName);
+        return factory.getItem(
+                materialFromName(materialName),
+                MsgUI.INSTANCE.getUNIT_REPAIR_ITEM(),
+                CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey()),
+                this.materialName
+        );
     }
 
     @Override
     protected Collection<NamespacedKey> getEveryInstanceOfGeneric() {
         Set<NamespacedKey> keys = new HashSet<>();
-        if (!this.shouldWork) {
+        if(!this.shouldWork) {
             return keys;
         }
 
-        ConfigurationSection legacySection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(parentMaterial.getKey().toLowerCase());
-        ConfigurationSection materialSection = ConfigHolder.UNIT_REPAIR_HOLDER.getConfig().getConfigurationSection(parentMaterial.toString().toLowerCase());
+        try(var lock = ConfigHolder.UNIT_REPAIR.read) {
+            var config = lock.get().getConfig();
+            var legacySection = config.getConfigurationSection(parentMaterial.getKey().toLowerCase());
+            var materialSection = config.getConfigurationSection(parentMaterial.toString().toLowerCase());
 
-        addAllKeys(legacySection, keys);
-        addAllKeys(materialSection, keys);
+            addAllKeys(legacySection, keys);
+            addAllKeys(materialSection, keys);
+        }
 
         return keys;
     }
 
-    private void addAllKeys(@Nullable ConfigurationSection section, @NotNull Set<NamespacedKey> keys) {
-        if (section == null) return;
-        for (var key : section.getKeys(false)) {
+    private void addAllKeys(@Nullable ConfigurationSection section, Set<NamespacedKey> keys) {
+        if(section == null) return;
+        for(var key : section.getKeys(false)) {
             var material = NamespacedKey.fromString(key);
-            if (material == null) continue;
+            if(material == null) continue;
 
             keys.add(material);
         }
@@ -162,7 +183,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
 
     private Material materialFromName(NamespacedKey material) {
         Material mat = MaterialUtil.INSTANCE.getMatFromKey(material);
-        if (mat == null || mat.isAir()) return Material.BARRIER;
+        if(mat == null || mat.isAir()) return Material.BARRIER;
         return mat;
     }
 
@@ -185,7 +206,7 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
         this.backgroundPane.bindItem('L', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
         this.backgroundPane.bindItem('R', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
 
-        for (HumanEntity viewer : getViewers()) {
+        for(HumanEntity viewer : getViewers()) {
             viewer.sendMessage("This config do not exist anymore");
             this.parentGui.show(viewer);
         }
@@ -197,8 +218,8 @@ public class UnitRepairElementListGui extends SettingGuiListConfigGui<Namespaced
     }
 
     @Override
-    public void show(@NotNull HumanEntity humanEntity) {
-        if (!this.shouldWork) {
+    public void show(HumanEntity humanEntity) {
+        if(!this.shouldWork) {
             humanEntity.closeInventory();
             return;
         }

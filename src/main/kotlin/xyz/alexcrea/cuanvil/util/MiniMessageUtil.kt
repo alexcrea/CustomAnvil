@@ -14,7 +14,7 @@ import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 
 object MiniMessageUtil {
 
-    val colour_only_mm = MiniMessage.builder()
+    @JvmField val colour_only_mm = MiniMessage.builder()
         .tags(
             TagResolver.resolver(
                 StandardTags.color(),
@@ -23,16 +23,12 @@ object MiniMessageUtil {
         )
         .build()
 
+    @JvmField
     val mm = if (PlatformUtil.isPaper) MiniMessage.miniMessage()
     else colour_only_mm
 
-    val legacy_mm = LegacyComponentSerializer.legacySection()
-    val plain_text_mm = PlainTextComponentSerializer.plainText()
-
-    // Keeping track of this as most use of this can be replaced later on v2 with pure component alternative
-    fun fromLegacy(legacyText: String): TextComponent {
-        return legacy_mm.deserialize(legacyText)
-    }
+    @JvmField val legacy_mm = LegacyComponentSerializer.legacySection()
+    @JvmField val plain_text_mm = PlainTextComponentSerializer.plainText()
 
     private val RESET_STYLE = Component.empty().style(Style.style(
         TextColor.color(256, 256, 256),
@@ -43,8 +39,9 @@ object MiniMessageUtil {
         TextDecoration.UNDERLINED.withState(false)
     ))
 
+    @JvmStatic
     fun fromLegacyWithCorrectReset(legacyText: String): Component {
-        val parts = legacyText.split("§r")
+        val parts = legacyText.split("<reset>")
         if(parts.isEmpty()) return Component.empty()
 
         var start = legacy_mm.deserialize(parts[0])

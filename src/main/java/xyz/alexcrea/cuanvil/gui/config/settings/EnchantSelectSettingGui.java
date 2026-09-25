@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry;
@@ -20,12 +20,20 @@ import xyz.alexcrea.cuanvil.gui.config.SelectEnchantmentContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.SettingGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+@NotNullByDefault
 public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantment, EnchantSelectSettingGui.DummyFactory> implements SettingGui {
 
     private final SelectEnchantmentContainer enchantContainer;
@@ -35,17 +43,20 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
 
     private boolean displayUnselected;
 
-    public EnchantSelectSettingGui(@NotNull String title, ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer) {
-        super(title, parent instanceof Gui parentGui ? parentGui : MainConfigGui.getInstance()) ;
+    public EnchantSelectSettingGui(
+            Message title, String param,
+            ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer
+    ) {
+        super(title, param, parent instanceof Gui parentGui ? parentGui : MainConfigGui.getInstance());
         this.enchantContainer = enchantContainer;
 
         this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());
 
         this.saveItem = GuiGlobalItems.saveItem(this, parent);
-        this.backgroundPane.bindItem('S',  GuiGlobalItems.noChangeItem());
+        this.backgroundPane.bindItem('S', GuiGlobalItems.noChangeItem());
 
         this.displayUnselected = true;
-        this.backgroundPane.bindItem('b',  createDisplayUnusedItem());
+        this.backgroundPane.bindItem('b', createDisplayUnusedItem());
 
         init();
     }
@@ -65,9 +76,9 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     @Override
     protected Collection<CAEnchantment> getEveryInstanceOfGeneric() {
         Stream<CAEnchantment> toDisplayStream;
-        if(this.displayUnselected){
+        if(this.displayUnselected) {
             toDisplayStream = CAEnchantmentRegistry.getInstance().getNameSortedEnchantments().stream();
-        }else{
+        } else {
             toDisplayStream = this.selectedEnchant.stream().sorted(Comparator.comparing(CAEnchantment::getName));
         }
         Set<CAEnchantment> illegalEnchantments = this.enchantContainer.illegalEnchantments();
@@ -85,11 +96,11 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     }
 
     @Override
-    protected GuiItem itemFromFactory(CAEnchantment enchantment, DummyFactory factory) {
+    protected GuiItem itemFromFactory(CAEnchantment enchantment, DummyFactory ignored) {
         boolean isIn = this.selectedEnchant.contains(enchantment);
 
         Material usedMaterial;
-        if (isIn) {
+        if(isIn) {
             usedMaterial = Material.ENCHANTED_BOOK;
         } else {
             usedMaterial = Material.BOOK;
@@ -108,11 +119,11 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName((this.displayUnselected ? "§aEverything displayed" : "§eOnly selected displayed"));
+        meta.setDisplayName((this.displayUnselected ? "<green>Everything displayed" : "<yellow>Only selected displayed"));
         meta.setLore(Collections.singletonList(
-                        "§7Click here to see " +
+                "<gray>Click here to see " +
                         (this.displayUnselected ? "only selected" : "every") +
-                                " enchantments"));
+                        " enchantments"));
 
         item.setItemMeta(meta);
 
@@ -120,18 +131,18 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
             clickEvent.setCancelled(true);
             this.displayUnselected = !this.displayUnselected;
 
-            this.backgroundPane.bindItem('b',  createDisplayUnusedItem());
+            this.backgroundPane.bindItem('b', createDisplayUnusedItem());
             reloadValues();
         }, CustomAnvil.instance);
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
+    private static final List<String> TRUE_LORE = Collections.singletonList("<gray>Value: <green>Selected");
+    private static final List<String> FALSE_LORE = Collections.singletonList("<gray>Value: <red>Not Selected");
 
     public void setEnchantItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
 
-        if (meta == null) {
+        if(meta == null) {
             CustomAnvil.instance.getLogger().warning("Could not create item for enchantment: " + name + ":\n" +
                     "Item do not gave item meta: " + item + ". Using a placeholder item instead");
             item.setType(Material.PAPER);
@@ -140,7 +151,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         }
 
         meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
-        if (isIn) {
+        if(isIn) {
             meta.addEnchant(Enchantment.SHARPNESS, 1, true);
             meta.setLore(TRUE_LORE);
         } else {
@@ -159,7 +170,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
             ItemStack item = guiItem.getItem();
 
             boolean isIn = this.selectedEnchant.contains(enchant);
-            if (isIn) {
+            if(isIn) {
                 this.selectedEnchant.remove(enchant);
                 item.setType(Material.BOOK);
             } else {
@@ -188,30 +199,35 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
 
 
     // Unused methods and class
-    public static class DummyFactory extends AbstractSettingGui.SettingGuiFactory{
-        protected DummyFactory(@NotNull String configPath, @NotNull ConfigHolder config) {
-            super(configPath, config);
+    public static class DummyFactory extends AbstractSettingGui.SettingGuiFactory {
+        protected DummyFactory(String configPath, LockedObjectProvider<? extends ConfigHolder> holder) {
+            super(configPath, holder);
         }
+
         @Override
         public Gui create() {
-            return null;
+            throw new IllegalStateException("Using a method intended to not be used");
         }
     }
+
     @Override
     protected List<String> getCreateItemLore() {
-        return Collections.emptyList();
+        throw new IllegalStateException("Using a method intended to not be used");
     }
+
     @Override
     protected Consumer<InventoryClickEvent> getCreateClickConsumer() {
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
+
     @Override
     protected String createItemName() {
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
+
     @Override
     protected DummyFactory createFactory(CAEnchantment generic) {
-        return null;
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 
 }

@@ -3,6 +3,9 @@ package xyz.alexcrea.cuanvil.util.anvil
 import io.delilaheve.util.ConfigOptions
 import net.kyori.adventure.text.Component
 import org.bukkit.permissions.Permissible
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeMM
+import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
 import xyz.alexcrea.cuanvil.util.MiniMessageUtil
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -108,10 +111,10 @@ object AnvilColourUtil {
         var result: Component = MiniMessageUtil.fromLegacyWithCorrectReset(previousStr)
         if (permission.canUseMinimessage) {
             // we dance with formats here
-            val toMinimessage = MiniMessageUtil.mm.serialize(result)
+            val toMinimessage = result.serializeMM()
             val hackySolution = toMinimessage.replace("\\<", "<")
             val fromMinimessage = MiniMessageUtil.mm.deserialize(hackySolution)
-            val asPlain = MiniMessageUtil.plain_text_mm.serialize(fromMinimessage)
+            val asPlain = fromMinimessage.serializePlain()
 
             if (previousStr != asPlain) {
                 useColour = true
@@ -131,7 +134,7 @@ object AnvilColourUtil {
         while(matcher.find(startIndex)) {
             startIndex = matcher.start()
 
-            builder.insert(startIndex, "§r")
+            builder.insert(startIndex, "<reset>")
             startIndex+=4
         }
     }
@@ -163,8 +166,8 @@ object AnvilColourUtil {
     ): String? {
         if (!permission.allowed() || component == null) return null
 
-        val transformed = MiniMessageUtil.mm.serialize(component)
-        val plainTransform = MiniMessageUtil.plain_text_mm.serialize(component)
+        val transformed = component.serializeMM()
+        val plainTransform = component.serializePlain()
         if (transformed == plainTransform) return null
         if (permission.onlyMinimessage()) {
             return transformed
@@ -172,7 +175,7 @@ object AnvilColourUtil {
 
         // smol dance so we transform the component that may contain other tag into only decoration & colour for legacy
         val colouredMessage = MiniMessageUtil.colour_only_mm.deserialize(transformed)
-        val legacyMessage = StringBuilder(MiniMessageUtil.legacy_mm.serialize(colouredMessage))
+        val legacyMessage = StringBuilder(colouredMessage.serializeLegacy())
 
         // Reverse hex pattern
         if (permission.canUseHexColour) {
@@ -245,12 +248,12 @@ object AnvilColourUtil {
             }
             if(startIndex > 0 && builder[startIndex - 1] == '§') {
                 builder.replace(startIndex - 1, startIndex + 1, "#")
-                // Voluntarily do not update startindex
+                // Voluntarily do not update startIndex
                 // if we had &|#123456 (| being start index) then we get #1|23456 so won't trigger matcher again !
                 continue
             }
 
-            val replacement = "${if(ConfigOptions.shouldResetOnColourCode)"§r" else ""}§x"
+            val replacement = "${if(ConfigOptions.shouldResetOnColourCode)"<reset>" else ""}§x"
 
             builder.replace(startIndex, startIndex + 1, replacement)
             startIndex += replacement.length
@@ -278,17 +281,17 @@ object AnvilColourUtil {
         if (leftIndex == -1 || rightIndex > leftIndex) return false
 
         val right = builder.slice(index..<builder.length)
-        val newleftIndex = right.indexOf("<")
+        val newLeftIndex = right.indexOf("<")
         rightIndex = right.indexOf(">")
 
         // first > do not exist or is after first < (if exist)
-        if (rightIndex == -1 || (newleftIndex != -1 && newleftIndex < rightIndex)) return false
+        if (rightIndex == -1 || (newLeftIndex != -1 && newLeftIndex < rightIndex)) return false
 
         // Then finally we use minimessage to check for tag
-        val expectedTag = builder.substring(leftIndex, newleftIndex + index + 1)
-        val notag = MiniMessageUtil.mm.stripTags(expectedTag)
+        val expectedTag = builder.substring(leftIndex, newLeftIndex + index + 1)
+        val noTag = MiniMessageUtil.mm.stripTags(expectedTag)
 
-        return notag != expectedTag
+        return noTag != expectedTag
     }
 
     /**

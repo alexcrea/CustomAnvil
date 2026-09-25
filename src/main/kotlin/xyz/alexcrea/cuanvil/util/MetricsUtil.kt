@@ -81,8 +81,8 @@ object MetricsUtil {
         e.printStackTrace()//TODO something better ?
     }
 
-    fun trackError(message: String) {
-        ERROR_TRACKER?.trackError(message)
+    fun trackError(message: String, cause: Throwable? = null) {
+        trackError(RuntimeException(message, cause))
     }
 }
 
