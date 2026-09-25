@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgError;
@@ -32,8 +33,7 @@ public class ConfirmActionGui extends AbstractAskGui {
         super(3, title, titleParam, backOnCancel);
 
         // Save item
-        this.pane.bindItem('S', new GuiItem(
-                (permanent ? GuiSharedConstant.CONFIRM_PERMANENT_ITEM : GuiSharedConstant.CONFIRM_ITEM),
+        var saveItem = GuiGlobalItems.confirmItem(permanent,
                 event -> {
                     event.setCancelled(true);
                     HumanEntity player = event.getWhoClicked();
@@ -56,17 +56,19 @@ public class ConfirmActionGui extends AbstractAskGui {
                         MsgUI.INSTANCE.getCONFIRM_ACTION_FAILED().send(player);
                     }
                     backOnConfirm.show(player);
+                }
+        );
 
-                }, CustomAnvil.instance));
+        this.pane.bindItem('S', saveItem);
 
         // Info item
         ItemStack infoItem = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItem.getItemMeta();
         assert infoMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(infoMeta, MsgUI.INSTANCE.getCONFIRM_ACTION_ARE_YOU_SURE());
+        ComponentUtil.setMessageName(infoMeta, MsgUI.INSTANCE.getCONFIRM_ACTION_ARE_YOU_SURE());
         if(actionDescription != null) {
-            ComponentUtil.INSTANCE.applyLore(actionDescription.formatted(actionParam), infoMeta);
+            ComponentUtil.applyLore(actionDescription.formatted(actionParam), infoMeta);
         }
 
         infoItem.setItemMeta(infoMeta);

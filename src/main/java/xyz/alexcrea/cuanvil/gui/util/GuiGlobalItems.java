@@ -7,6 +7,7 @@ import io.delilaheve.CustomAnvil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,9 +19,10 @@ import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.MiniMessageUtil;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A utility class to store function that create generic GUI item.
@@ -28,17 +30,12 @@ import java.util.List;
 @NotNullByDefault
 public class GuiGlobalItems {
 
-    // statically create default back itemstack
-    private static final ItemStack BACK_ITEM;
+    private static final Component EMPTY_NAME_COMPONENT = MiniMessageUtil.mm.deserialize("<red>");
 
-    static {
-        BACK_ITEM = new ItemStack(Material.BARRIER);
-        ItemMeta meta = BACK_ITEM.getItemMeta();
-        assert meta != null;
+    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
+    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
 
-        meta.setDisplayName("§cBack");
-        BACK_ITEM.setItemMeta(meta);
-    }
+    private static final Material DEFAULT_BACKGROUND_MAT = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
 
     /**
      * Create a GuiItem that open the given GUi.
@@ -51,6 +48,17 @@ public class GuiGlobalItems {
         return new GuiItem(item, GuiGlobalActions.openGuiAction(goal), CustomAnvil.instance);
     }
 
+    private static ItemStack getBackItemStack() {
+        ItemStack back = new ItemStack(Material.BARRIER);
+        ItemMeta meta = back.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_BACK_ITEM_TITLE);
+        back.setItemMeta(meta);
+
+        return back;
+    }
+
     /**
      * Create back button item from default back GuiItem.
      * The back item will open the goal inventory when clicked.
@@ -59,7 +67,7 @@ public class GuiGlobalItems {
      * @return An GuiItem that go back to goal on click.
      */
     public static GuiItem backItem(Gui goal) {
-        return goToGuiItem(BACK_ITEM, goal);
+        return goToGuiItem(getBackItemStack(), goal);
     }
 
     /**
@@ -76,8 +84,6 @@ public class GuiGlobalItems {
         target.bindItem('B', backItem(goal));
     }
 
-    private static final Material DEFAULT_BACKGROUND_MAT = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
-
     /**
      * Get a background item with backgroundMat as the displayed material.
      * A background item is a GuiItem that do nothing when interacted with and have an empty name.
@@ -90,7 +96,7 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§c");
+        PlatformUtil.INSTANCE.setComponentDisplayName(meta, EMPTY_NAME_COMPONENT, null);
         item.setItemMeta(meta);
         return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
@@ -129,9 +135,6 @@ public class GuiGlobalItems {
         addBackgroundItem(target, DEFAULT_BACKGROUND_MAT);
     }
 
-    public static final Material DEFAULT_SAVE_ITEM = Material.LIME_DYE;
-    public static final Material DEFAULT_NO_CHANGE_ITEM = Material.GRAY_DYE;
-
     /**
      * Create a new save setting GuiItem.
      * A save setting item is a GuiItem that save a changed setting when clicked.
@@ -149,24 +152,11 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aSave");
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_SAVE_ITEM_TITLE);
         item.setItemMeta(meta);
         return new GuiItem(item,
                 GuiGlobalActions.saveSettingAction(setting, goal),
                 CustomAnvil.instance);
-    }
-
-    // Create static non change item
-    private static final GuiItem NO_CHANGE_ITEM;
-
-    static {
-        ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
-        ItemMeta meta = item.getItemMeta();
-        assert meta != null;
-
-        meta.setDisplayName("§7No change. can't save.");
-        item.setItemMeta(meta);
-        NO_CHANGE_ITEM = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
 
     /**
@@ -176,7 +166,13 @@ public class GuiGlobalItems {
      * @return The global "no change" item.
      */
     public static GuiItem noChangeItem() {
-        return NO_CHANGE_ITEM;
+        ItemStack item = new ItemStack(DEFAULT_NO_CHANGE_ITEM);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_NO_CHANGE_ITEM_TITLE);
+        item.setItemMeta(meta);
+        return new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
     }
 
     /**
@@ -233,7 +229,7 @@ public class GuiGlobalItems {
         assert itemMeta != null;
 
         PlatformUtil.INSTANCE.setComponentDisplayName(itemMeta, itemName, null);
-        ComponentUtil.INSTANCE.applyLore(lore, itemMeta);
+        ComponentUtil.applyLore(lore, itemMeta);
         itemMeta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(itemMeta);
@@ -260,8 +256,8 @@ public class GuiGlobalItems {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eTemporary close this menu");
-        meta.setLore(Collections.singletonList("§7Allow you to chose other item then return here."));
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_TEMPORARY_CLOSE_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_TEMPORARY_CLOSE_LORE);
         item.setItemMeta(meta);
 
         return new GuiItem(item, event -> {
@@ -276,9 +272,40 @@ public class GuiGlobalItems {
 
             });
 
-            player.sendMessage("§eWrite something in chat to return to the item config menu.");
+            MsgUI.SHARED_TEMPORARY_CLOSE_RETURN.send(player);
             player.closeInventory();
         }, CustomAnvil.instance);
+    }
+
+    public static GuiItem cancelAndGoBackItem(Gui backOnCancel) {
+        var item = new ItemStack(Material.RED_TERRACOTTA);
+        ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_CANCEL_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_CANCEL_LORE);
+        item.setItemMeta(meta);
+
+        return new GuiItem(item, GuiGlobalActions.openGuiAction(backOnCancel), CustomAnvil.instance);
+    }
+
+    public static GuiItem confirmItem(Consumer<InventoryClickEvent> action) {
+        return confirmItem(false, action);
+    }
+
+    public static GuiItem confirmItem(boolean permanent, Consumer<InventoryClickEvent> action) {
+        var item = new ItemStack(Material.GREEN_TERRACOTTA);
+        var meta = item.getItemMeta();
+        assert meta != null;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_CONFIRM_TITLE);
+        var lore = MsgUI.SHARED_CONFIRM_LORE.formatted();
+        if(permanent) {
+            lore.addAll(MsgUI.SHARED_CONFIRM_PERMANENT_LORE.formatted());
+        }
+
+        item.setItemMeta(meta);
+        return new GuiItem(item, action, CustomAnvil.instance);
     }
 
 }

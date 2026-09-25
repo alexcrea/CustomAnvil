@@ -29,7 +29,7 @@ public abstract class AbstractAskGui extends ChestGui {
         addPane(this.pane);
 
         this.pane.bindItem('0', GuiGlobalItems.backgroundItem());
-        this.pane.bindItem('B', new GuiItem(GuiSharedConstant.CANCEL_ITEM, GuiGlobalActions.openGuiAction(backOnCancel), CustomAnvil.instance));
+        this.pane.bindItem('B', GuiGlobalItems.cancelAndGoBackItem(backOnCancel));
     }
 
     /**

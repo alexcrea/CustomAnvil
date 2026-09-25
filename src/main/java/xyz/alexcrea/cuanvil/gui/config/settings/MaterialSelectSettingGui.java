@@ -20,6 +20,7 @@ import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgError;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
@@ -70,7 +71,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     @Override
-    protected Pattern getBackgroundPattern(){
+    protected Pattern getBackgroundPattern() {
         return new Pattern(
                 GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
                 GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
@@ -167,7 +168,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
             HumanEntity player = event.getWhoClicked();
             // Do not allow to save configuration if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
                 MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
@@ -178,14 +179,13 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             // Save setting
             Set<NamespacedKey> result = new HashSet<>(this.elementGuiMap.keySet());
 
-            if(!this.selector.setSelectedMaterials(result)){
-                player.sendMessage("§cSomething went wrong while saving the change of value.");
-            }
+            if(!this.selector.setSelectedMaterials(result))
+                MsgError.UI_SAVE_FAILED.send(player);
 
             // Return to parent
             this.backGui.show(player);
 
-            }, CustomAnvil.instance);
+        }, CustomAnvil.instance);
     }
 
     /**
@@ -204,7 +204,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             if(this.illegalMaterials.contains(cursorMat)) return;
 
             // Update gui only if item did not exist before.
-            if(!this.elementGuiMap.containsKey(cursorMat)){
+            if(!this.elementGuiMap.containsKey(cursorMat)) {
                 updateValueForGeneric(cursorMat, true);
                 this.nowMaterialHash ^= cursorMat.hashCode();
 
@@ -242,9 +242,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     @Override
     protected GuiItem newElementRequested(NamespacedKey material, GuiItem newItem) {
         newItem.setAction(event -> {
-            if(this.instantRemove){
+            if(this.instantRemove) {
                 removeMaterial(material);
-            }else {
+            } else {
                 String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
 
                 // Create and show confirm remove gui.
@@ -265,7 +265,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     private void removeMaterial(NamespacedKey material) {
-        if(this.elementGuiMap.containsKey(material)){
+        if(this.elementGuiMap.containsKey(material)) {
             this.nowMaterialHash ^= material.hashCode();
             setSaveItem();
             removeGeneric(material);
@@ -283,18 +283,18 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         return element;
     }
 
-    private static int hashFromMaterialList(List<NamespacedKey> materialList){
+    private static int hashFromMaterialList(List<NamespacedKey> materialList) {
         int defaultMaterialHash = 0;
-        for (NamespacedKey material : materialList) {
+        for(NamespacedKey material : materialList) {
             defaultMaterialHash ^= material.hashCode();
         }
         return defaultMaterialHash;
     }
 
     private void setSaveItem() {
-        if(testCantSave()){
+        if(testCantSave()) {
             this.backgroundPane.bindItem('S', this.noChangeItem);
-        }else{
+        } else {
             this.backgroundPane.bindItem('S', this.saveItem);
         }
 
@@ -311,6 +311,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     protected GuiItem prepareCreateNewItem() {// Not used
         return null;
     }
+
     @Override
     protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {// Not used
         throw new IllegalStateException("Using a method intended to not be used");

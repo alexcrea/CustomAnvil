@@ -88,8 +88,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
 
         var selectedItem = finalItem.clone();
         // Save item
-        var confirmItem = new GuiItem(
-                GuiSharedConstant.CONFIRM_ITEM, confirmEvent ->
+        var confirmItem = GuiGlobalItems.confirmItem(confirmEvent ->
                 confirmHandler(confirmEvent, selectedItem)
         );
         this.pane.bindItem('S', confirmItem);

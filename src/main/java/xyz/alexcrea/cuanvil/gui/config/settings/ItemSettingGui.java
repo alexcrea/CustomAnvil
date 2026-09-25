@@ -58,7 +58,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     public Pattern getGuiPattern() {
         return new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
-                "D0-0v0+0s",
+                "D000v000s",
                 "B0000000S"
         );
     }

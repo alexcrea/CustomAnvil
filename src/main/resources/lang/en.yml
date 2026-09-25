@@ -32,7 +32,10 @@ error.reload:
       hard-fail: "Disabling plugin."
 
 error.confirm-action:
-    generic: "Could not process confirmation supplier."
+    generic: "Could not process confirmation."
+error.ui:
+    save-failed: "<red>Something went wrong while saving the change of value."
+
 
 command.shared:
     no-diag-permission: "<red>You do not have permission to diagnostic this server"
@@ -113,6 +116,22 @@ config-ui.shared:
     formated-no: "<red>No"
     default: "Default"
     valued-default: "Default (%value)"
+
+    back-item-title: "<red>Back"
+    save-item-title: "<green>Save"
+    no-change-item-title: "<gray>No change. can't save."
+
+    temporary-close:
+      title: "<yellow>Temporary close this menu"
+      lore: "<gray>Allow you to chose other item then return here."
+      return: "<yellow>Write something in chat to return to the item config menu."
+    cancel:
+      title: "<red>Cancel"
+      lore: "<gray>Cancel current action and return to previous menu."
+    confirm:
+      title: "<green>Confirm"
+      lore: "<gray>Confirm current action."
+      permanent-lore: "<dark_red>Caution: This action can't be canceled."
 
 config-ui.global-item:
   item-lore-prefix: "<gray>value: %value"

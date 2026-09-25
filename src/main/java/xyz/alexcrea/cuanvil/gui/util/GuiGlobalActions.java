@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
+import xyz.alexcrea.cuanvil.lang.MsgError;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 
 import java.lang.reflect.Constructor;
@@ -141,9 +142,9 @@ public class GuiGlobalActions {
             }
 
             // Save setting
-            if(!setting.onSave()) {
-                player.sendMessage("§cSomething went wrong while saving the change of value.");
-            }
+            if(!setting.onSave())
+                MsgError.UI_SAVE_FAILED.send(player);
+
             // Update gui for those who have it open.
             goal.updateGuiValues();
             // Then show

@@ -15,6 +15,21 @@ object MsgUI {
     val SHARED_DEFAULT = Message("shared.default")
     val SHARED_VALUED_DEFAULT = Message("shared.valued-default", "value")
 
+    @JvmField val SHARED_BACK_ITEM_TITLE = Message("shared.back-item-title")
+    @JvmField val SHARED_SAVE_ITEM_TITLE = Message("shared.save-item-title")
+    @JvmField val SHARED_NO_CHANGE_ITEM_TITLE = Message("shared.no-change-item-title")
+
+    @JvmField val SHARED_TEMPORARY_CLOSE_TITLE = Message("shared.temporary-close.title")
+    @JvmField val SHARED_TEMPORARY_CLOSE_LORE = Message("shared.temporary-close.lore")
+    @JvmField val SHARED_TEMPORARY_CLOSE_RETURN = Message("shared.temporary-close.return")
+
+    @JvmField val SHARED_CANCEL_TITLE = Message("shared.cancel.title")
+    @JvmField val SHARED_CANCEL_LORE = Message("shared.cancel.lore")
+
+    @JvmField val SHARED_CONFIRM_TITLE = Message("shared.confirm.title")
+    @JvmField val SHARED_CONFIRM_LORE = Message("shared.confirm.lore")
+    @JvmField val SHARED_CONFIRM_PERMANENT_LORE = Message("shared.confirm.permanent-lore")
+
     fun booleanMessage(bool: Boolean): Message {
         return if(bool) SHARED_FORMATED_YES else SHARED_FORMATED_NO
     }
