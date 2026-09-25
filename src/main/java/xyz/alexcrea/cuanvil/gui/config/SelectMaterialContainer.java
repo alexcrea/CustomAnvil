@@ -3,7 +3,10 @@ package xyz.alexcrea.cuanvil.gui.config;
 import org.bukkit.NamespacedKey;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public interface SelectMaterialContainer {
 

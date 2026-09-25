@@ -100,7 +100,7 @@ class EnchantConflictManager {
         // Read and add enchantment to conflict
         val enchantList = section.getStringList(ENCH_LIST_PATH)
         for (enchantName in enchantList) {
-            val enchants = getEnchantByIdentifier(enchantName)
+            val enchants = EnchantmentApi.getByIdentifier(enchantName)
             if (enchants.isEmpty()) {
                 CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conflict $conflictName")
                 continue
@@ -129,7 +129,7 @@ class EnchantConflictManager {
     ) {
         if (section == null) return
         for (enchantName in section.getKeys(false)) {
-            val enchants = getEnchantByIdentifier(enchantName)
+            val enchants = EnchantmentApi.getByIdentifier(enchantName)
             if (enchants.isEmpty()) {
                 CustomAnvil.instance.logger.warning("Enchantment $enchantName do not exist but was asked for conditional restriction for conflict $conflictName")
                 continue
@@ -144,18 +144,6 @@ class EnchantConflictManager {
             }
         }
     }
-
-    private fun getEnchantByIdentifier(enchantName: String): List<CAEnchantment> {
-        val key = NamespacedKey.fromString(enchantName)
-        if (key != null) {
-            val enchantment = CAEnchantment.getByKey(key)
-            if (enchantment != null) return Collections.singletonList(enchantment)
-
-        }
-
-        return CAEnchantment.getByName(enchantName)
-    }
-
 
     private fun createConflictObject(
         section: ConfigurationSection,

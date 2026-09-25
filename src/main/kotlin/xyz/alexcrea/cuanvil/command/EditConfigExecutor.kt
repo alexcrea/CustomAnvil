@@ -75,14 +75,7 @@ class EditConfigExecutor: CASubCommand {
                 return
             }
         } else {
-            enchantToFilter = HashSet()
-
-            val name = args[1].lowercase()
-            val enchant = EnchantmentApi.getByKey(NamespacedKey.fromString(name))
-            if(enchant != null)
-                enchantToFilter.add(enchant)
-
-            enchantToFilter.addAll(EnchantmentApi.getByName(name))
+            enchantToFilter = HashSet(EnchantmentApi.getByIdentifier(args[1].lowercase()))
 
             if(enchantToFilter.isEmpty()) {
                 sender.sendMessage("No enchantment found with the name \"${args[1]}\"")
