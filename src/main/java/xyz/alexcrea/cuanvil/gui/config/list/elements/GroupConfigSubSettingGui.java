@@ -192,8 +192,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         if(usedLoc.isEmpty()) {
             return false;
         }
-        StringBuilder stb = new StringBuilder("§cCan't delete group " + this.group.getName() +
-                "\n§eUsed by:");
+        StringBuilder stb = new StringBuilder("<red>Can't delete group " + this.group.getName() +
+                "\n<yellow>Used by:");
         int maxIndex = usedLoc.size();
         int nbMore = 0;
         if(maxIndex > 10) {
@@ -201,10 +201,10 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             maxIndex = 9;
         }
         for(int i = 0; i < maxIndex; i++) {
-            stb.append("\n§r-§e ").append(usedLoc.get(i));
+            stb.append("\n§r-<yellow> ").append(usedLoc.get(i));
         }
         if(nbMore > 0) {
-            stb.append("§cAnd ").append(nbMore).append(" More...");
+            stb.append("<red>And ").append(nbMore).append(" More...");
         }
 
         player.sendMessage(stb.toString());
@@ -260,7 +260,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta matSelectMeta = matSelectItem.getItemMeta();
 
         assert matSelectMeta != null;
-        matSelectMeta.setDisplayName("§aSelect included §eMaterials §aSettings");//TODO MESSAGE
+        matSelectMeta.setDisplayName("<green>Select included <yellow>Materials <green>Settings");//TODO MESSAGE
         ComponentUtil.applyLore(matLore, matSelectMeta);
         matSelectMeta.addItemFlags(ItemFlag.values());
 
@@ -273,7 +273,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta groupSelectMeta = groupSelectItem.getItemMeta();
 
         assert groupSelectMeta != null;
-        groupSelectMeta.setDisplayName("§aSelect included §3Groups §aSettings");//TODO MESSAGE
+        groupSelectMeta.setDisplayName("<green>Select included §3Groups <green>Settings");//TODO MESSAGE
         ComponentUtil.applyLore(groupLore, groupSelectMeta);
 
         groupSelectItem.setItemMeta(groupSelectMeta);

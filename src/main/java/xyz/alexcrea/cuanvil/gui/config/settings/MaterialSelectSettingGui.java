@@ -101,10 +101,10 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta selectMeta = selectItem.getItemMeta();
         assert selectMeta != null;
 
-        selectMeta.setDisplayName("§aAdd Item");
+        selectMeta.setDisplayName("<green>Add Item");
         selectMeta.setLore(Arrays.asList(
-                "§7Click here with an item to add",
-                "§7it's Material to the list."));
+                "<gray>Click here with an item to add",
+                "<gray>it's Material to the list."));
 
         selectItem.setItemMeta(selectMeta);
 
@@ -121,9 +121,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta instantRemoveOnMeta = instantRemoveOnItem.getItemMeta();
         assert instantRemoveOnMeta != null;
 
-        instantRemoveOnMeta.setDisplayName("§eInstant remove is §aEnabled §e!");
+        instantRemoveOnMeta.setDisplayName("<yellow>Instant remove is <green>Enabled <yellow>!");
         instantRemoveOnMeta.setLore(
-                Collections.singletonList("§7Click here to disable the instant remove"));
+                Collections.singletonList("<gray>Click here to disable the instant remove"));
 
         instantRemoveOnItem.setItemMeta(instantRemoveOnMeta);
 
@@ -132,9 +132,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta instantRemoveOffMeta = instantRemoveOffItem.getItemMeta();
         assert instantRemoveOffMeta != null;
 
-        instantRemoveOffMeta.setDisplayName("§eInstant remove is §cDisabled §e!");
+        instantRemoveOffMeta.setDisplayName("<yellow>Instant remove is <red>Disabled <yellow>!");
         instantRemoveOffMeta.setLore(
-                Collections.singletonList("§7Click here to enable the instant remove"));
+                Collections.singletonList("<gray>Click here to enable the instant remove"));
 
         instantRemoveOffItem.setItemMeta(instantRemoveOffMeta);
 
@@ -159,7 +159,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta saveMeta = saveItemStack.getItemMeta();
         assert saveMeta != null;
 
-        saveMeta.setDisplayName("§aSave");
+        saveMeta.setDisplayName("<green>Save");
 
         saveItemStack.setItemMeta(saveMeta);
 
@@ -220,8 +220,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null) return item;
-        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()));
-        meta.setLore(Collections.singletonList("§7Click here to remove this material from the list"));
+        meta.setDisplayName("<green>" + CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()));
+        meta.setLore(Collections.singletonList("<gray>Click here to remove this material from the list"));
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);

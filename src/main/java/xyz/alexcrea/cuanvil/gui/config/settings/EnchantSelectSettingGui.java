@@ -119,9 +119,9 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName((this.displayUnselected ? "§aEverything displayed" : "§eOnly selected displayed"));
+        meta.setDisplayName((this.displayUnselected ? "<green>Everything displayed" : "<yellow>Only selected displayed"));
         meta.setLore(Collections.singletonList(
-                "§7Click here to see " +
+                "<gray>Click here to see " +
                         (this.displayUnselected ? "only selected" : "every") +
                         " enchantments"));
 
@@ -136,8 +136,8 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
         }, CustomAnvil.instance);
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
+    private static final List<String> TRUE_LORE = Collections.singletonList("<gray>Value: <green>Selected");
+    private static final List<String> FALSE_LORE = Collections.singletonList("<gray>Value: <red>Not Selected");
 
     public void setEnchantItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();

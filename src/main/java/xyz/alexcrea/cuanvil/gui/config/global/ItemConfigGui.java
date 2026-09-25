@@ -51,7 +51,7 @@ public class ItemConfigGui extends ChestGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getITEM_CONFIG_TITLE().formatted(material), displayMeta);
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getITEM_CONFIG_NAME().formatted(material), displayMeta);
         displayItemstack.setItemMeta(displayMeta);
         pane.bindItem('D', new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
 

@@ -227,7 +227,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
                 ItemMeta leftMeta = leftItem.getItemMeta();
 
                 assert leftMeta != null;
-                leftMeta.setDisplayName("§eReturn to page " + (page));
+                leftMeta.setDisplayName("<yellow>Return to page " + (page));
 
                 leftItem.setItemMeta(leftMeta);
                 this.goLeftItem.setItem(leftItem);
@@ -245,7 +245,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
                 ItemMeta rightMeta = rightItem.getItemMeta();
                 assert rightMeta != null;
 
-                rightMeta.setDisplayName("§eGo to page " + (page + 2));
+                rightMeta.setDisplayName("<yellow>Go to page " + (page + 2));
 
                 rightItem.setItemMeta(rightMeta);
                 this.goRightItem.setItem(rightItem);

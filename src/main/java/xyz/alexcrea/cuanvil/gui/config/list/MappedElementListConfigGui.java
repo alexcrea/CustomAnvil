@@ -40,11 +40,11 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("§aCreate new " + genericDisplayedName());
+        createMeta.setDisplayName("<green>Create new " + genericDisplayedName());
         createMeta.setLore(Arrays.asList(
-                "§7Create a new " + genericDisplayedName() + ".",
-                "§7You will be asked to name the " + genericDisplayedName() + " in chat.",
-                "§7Then, you should edit the " + genericDisplayedName() + " config as you need"
+                "<gray>Create a new " + genericDisplayedName() + ".",
+                "<gray>You will be asked to name the " + genericDisplayedName() + " in chat.",
+                "<gray>Then, you should edit the " + genericDisplayedName() + " config as you need"
         ));
 
         createItem.setItemMeta(createMeta);

@@ -76,8 +76,8 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");//TODO MESSAGE
-        meta.setLore(Collections.singletonList("§7Default value is §e" +//TODO MESSAGE
+        meta.setDisplayName("<yellow>Reset to default value");//TODO MESSAGE
+        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" +//TODO MESSAGE
                 holder.valueDisplayName(ValueDisplayType.RESET, holder.defaultVal)));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
@@ -148,7 +148,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         var nowDisplay = holder.valueDisplayName(type, now);
         var plannedDisplay = holder.valueDisplayName(type, planned);
         var deltaDisplay = holder.deltaDisplay(type, now, planned);
-        meta.setDisplayName("§e" + nowDisplay + " §f-> §e" + plannedDisplay + " §r(§c" + deltaDisplay + "§r)");//TODO MESSAGE
+        meta.setDisplayName("<yellow>" + nowDisplay + " §f-> <yellow>" + plannedDisplay + " §r(<red>" + deltaDisplay + "§r)");//TODO MESSAGE
 
         ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
         item.setItemMeta(meta);
@@ -227,15 +227,15 @@ public class IntSettingsGui extends AbstractSettingGui {
         if(stepValue == step) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
-            stepLore = Collections.singletonList("§7Value is changing by " + stepValue);
+            stepLore = Collections.singletonList("<gray>Value is changing by " + stepValue);
             clickEvent = GuiGlobalActions.stayInPlace;
         } else {
             stepMat = Material.RED_STAINED_GLASS_PANE;
             stepName.append('c');
-            stepLore = Collections.singletonList("§7Click here to change the value by " + stepValue);
+            stepLore = Collections.singletonList("<gray>Click here to change the value by " + stepValue);
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of: §e").append(stepValue);
+        stepName.append("Step of: <yellow>").append(stepValue);
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
@@ -406,8 +406,8 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         protected String deltaDisplay(ValueDisplayType type, int now, int planned) {
             var delta = planned - now;
-            if(delta < 0) return "§c" + delta;
-            else return "§a+" + delta;
+            if(delta < 0) return "<red>" + delta;
+            else return "<green>+" + delta;
         }
 
         public @Nullable Object getParam() {

@@ -73,9 +73,9 @@ public class BoolSettingsGui extends AbstractSettingGui {
         // Prepare default Value text
         String defaultValueLore;
         if(holder.defaultVal) {
-            defaultValueLore = "§aYes §7Is the default value";
+            defaultValueLore = "<green>Yes <gray>Is the default value";
         } else {
-            defaultValueLore = "§cNo §7Is the default value";
+            defaultValueLore = "<red>No <gray>Is the default value";
         }
 
         // Create reset to default item
@@ -83,7 +83,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");
+        meta.setDisplayName("<yellow>Reset to default value");
         meta.setLore(Collections.singletonList(defaultValueLore));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
@@ -104,10 +104,10 @@ public class BoolSettingsGui extends AbstractSettingGui {
         String displayedName;
         Material displayedMat;
         if(now) {
-            displayedName = "§aYes";
+            displayedName = "<green>Yes";
             displayedMat = Material.GREEN_TERRACOTTA;
         } else {
-            displayedName = "§cNo";
+            displayedName = "<red>No";
             displayedMat = Material.RED_TERRACOTTA;
         }
 

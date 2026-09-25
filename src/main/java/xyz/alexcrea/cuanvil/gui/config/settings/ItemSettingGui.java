@@ -82,8 +82,8 @@ public class ItemSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");
-        meta.setLore(Collections.singletonList("§7Default value is §e" + holder.defaultVal));
+        meta.setDisplayName("<yellow>Reset to default value");
+        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -93,7 +93,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         }, CustomAnvil.instance);
     }
 
-    protected final static List<String> CLICK_LORE = Collections.singletonList("§7Click Here with an item to change the value");
+    protected final static List<String> CLICK_LORE = Collections.singletonList("<gray>Click Here with an item to change the value");
 
     /**
      * Update item using the setting value to match the new value
@@ -256,7 +256,7 @@ public class ItemSettingGui extends AbstractSettingGui {
             assert meta != null;
 
             //TODO MESSAGE name ?
-            meta.setDisplayName("§a" + name);
+            meta.setDisplayName("<green>" + name);
             ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(getDisplayLore(), param), meta);
             meta.addItemFlags(ItemFlag.values());
 

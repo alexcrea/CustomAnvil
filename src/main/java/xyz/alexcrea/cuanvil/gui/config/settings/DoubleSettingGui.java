@@ -78,8 +78,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = DELETE_ITEM_STACK.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cDisable item being repaired ?");
-        meta.setLore(Arrays.asList("§7Confirm disabling unit repair for this item..",
+        meta.setDisplayName("<red>Disable item being repaired ?");
+        meta.setLore(Arrays.asList("<gray>Confirm disabling unit repair for this item..",
                 "§4Cation: This action can't be canceled."));
 
         DELETE_ITEM_STACK.setItemMeta(meta);
@@ -132,8 +132,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");
-        meta.setLore(Collections.singletonList("§7Default value is §e" + displayValue(holder.defaultVal)));
+        meta.setDisplayName("<yellow>Reset to default value");
+        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" + displayValue(holder.defaultVal)));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -155,7 +155,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         if(now.compareTo(holder.min) > 0) {
             BigDecimal planned = holder.min.max(now.subtract(step));
 
-            minusItem = getSetValueItem(Material.RED_TERRACOTTA, planned, "§c-");
+            minusItem = getSetValueItem(Material.RED_TERRACOTTA, planned, "<red>-");
         } else {
             minusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
@@ -166,7 +166,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         if(now.compareTo(holder.max) < 0) {
             BigDecimal planned = holder.max.min(now.add(step));
 
-            plusItem = getSetValueItem(Material.GREEN_TERRACOTTA, planned, "§a+");
+            plusItem = getSetValueItem(Material.GREEN_TERRACOTTA, planned, "<green>+");
         } else {
             plusItem = GuiGlobalItems.backgroundItem(Material.BARRIER);
         }
@@ -208,7 +208,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§e" + displayValue(now) + " §f-> §e" + displayValue(planned)
+        meta.setDisplayName("<yellow>" + displayValue(now) + " §f-> <yellow>" + displayValue(planned)
                 + " §r(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "§r)"));
         ComponentUtil.INSTANCE.applyLore(setLoreItem, meta);
         item.setItemMeta(meta);
@@ -288,15 +288,15 @@ public class DoubleSettingGui extends AbstractSettingGui {
         if(stepValue.compareTo(step) == 0) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
             stepName.append('a');
-            stepLore = Collections.singletonList("§7Value is changing by " + displayValue(stepValue));
+            stepLore = Collections.singletonList("<gray>Value is changing by " + displayValue(stepValue));
             clickEvent = GuiGlobalActions.stayInPlace;
         } else {
             stepMat = Material.RED_STAINED_GLASS_PANE;
             stepName.append('c');
-            stepLore = Collections.singletonList("§7Click here to change the value by " + displayValue(stepValue));
+            stepLore = Collections.singletonList("<gray>Click here to change the value by " + displayValue(stepValue));
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of §e").append(displayValue(stepValue));
+        stepName.append("Step of <yellow>").append(displayValue(stepValue));
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);

@@ -80,10 +80,10 @@ public class UnitRepairConfigGui extends
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eRepaired by " + materialName);
+        meta.setDisplayName("<yellow>Repaired by " + materialName);
         meta.setLore(Arrays.asList(
-                "§7There is currently §e" + reparableItemCount + " §7reparable item with " + materialName,
-                "§7Click here to open the menu to edit reparable item by " + materialName
+                "<gray>There is currently <yellow>" + reparableItemCount + " <gray>reparable item with " + materialName,
+                "<gray>Click here to open the menu to edit reparable item by " + materialName
         ));
 
         item.setItemMeta(meta);
@@ -132,10 +132,10 @@ public class UnitRepairConfigGui extends
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("§aSelect a new unit material");
+        createMeta.setDisplayName("<green>Select a new unit material");
         createMeta.setLore(Arrays.asList(
-                "§7Select a new unit material to be used.",
-                "§7You will be asked the material to use."
+                "<gray>Select a new unit material to be used.",
+                "<gray>You will be asked the material to use."
         ));
 
         createItem.setItemMeta(createMeta);

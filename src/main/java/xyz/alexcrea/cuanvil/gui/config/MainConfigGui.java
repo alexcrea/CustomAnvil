@@ -21,8 +21,8 @@ import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.global.UnitRepairConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
-
-import java.util.Collections;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 @NotNullByDefault
 public class MainConfigGui extends ChestGui {
@@ -35,7 +35,7 @@ public class MainConfigGui extends ChestGui {
     }
 
     private MainConfigGui() {
-        super(3, "§8Anvil Config", CustomAnvil.instance);
+        super(3, MsgUI.MAIN_TITLE.textHolder(), CustomAnvil.instance);
     }
 
     public void init(PacketManager packetManager) {
@@ -90,8 +90,8 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aBasic Config Menu");
-        meta.setLore(Collections.singletonList("§7Click here to open basic config menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_BASIC_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_BASIC_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -101,8 +101,8 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aEnchantment Level Limit");
-        meta.setLore(Collections.singletonList("§7Click here to open enchantment level limit menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_ENCHANT_LEVEL_LIMIT_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_ENCHANT_LEVEL_LIMIT_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -112,8 +112,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aEnchantment Merge Limit");
-        meta.setLore(Collections.singletonList("§7Click here to open enchantment merge limit menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_ENCHANT_MERGE_LIMIT_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_ENCHANT_MERGE_LIMIT_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -123,8 +123,8 @@ public class MainConfigGui extends ChestGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aEnchantment Cost");
-        meta.setLore(Collections.singletonList("§7Click here to open enchantment costs menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_ENCHANT_COST_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_ENCHANT_COST_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -134,8 +134,8 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aEnchantment Conflict");
-        meta.setLore(Collections.singletonList("§7Click here to open enchantment conflict menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_ENCHANT_CONFLICT_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_ENCHANT_CONFLICT_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -145,8 +145,8 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aItem Groups");
-        meta.setLore(Collections.singletonList("§7Click here to open item group menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_ITEM_GROUP_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_ITEM_GROUP_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -156,8 +156,8 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aUnit Repair");
-        meta.setLore(Collections.singletonList("§7Click here to open anvil unit repair menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_UNIT_REPAIR_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_UNIT_REPAIR_LORE);
         item.setItemMeta(meta);
 
         return GuiGlobalItems.goToGuiItem(item, target);
@@ -168,8 +168,8 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§aCustom recipes");
-        meta.setLore(Collections.singletonList("§7Click here to open anvil custom recipe menu"));
+        ComponentUtil.setMessageName(meta, MsgUI.MAIN_CUSTOM_RECIPE_TITLE);
+        ComponentUtil.applyLore(meta, MsgUI.MAIN_CUSTOM_RECIPE_LORE);
         item.setItemMeta(meta);
         return GuiGlobalItems.goToGuiItem(item, target);
     }
@@ -179,7 +179,7 @@ public class MainConfigGui extends ChestGui {
         var meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§cQuit");
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_QUIT);
         item.setItemMeta(meta);
 
         return new GuiItem(item, event -> {

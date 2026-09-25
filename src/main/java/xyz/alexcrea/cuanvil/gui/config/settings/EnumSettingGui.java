@@ -72,8 +72,8 @@ public class EnumSettingGui<T extends Enum<T> & EnumSettingGui.ConfigurableEnum>
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");
-        meta.setLore(Collections.singletonList("§7Default value is §e" + holder.getDefault().configurationGuiName()));
+        meta.setDisplayName("<yellow>Reset to default value");
+        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" + holder.getDefault().configurationGuiName()));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);

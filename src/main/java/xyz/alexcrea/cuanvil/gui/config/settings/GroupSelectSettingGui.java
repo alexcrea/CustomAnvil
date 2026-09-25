@@ -104,8 +104,8 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         return guiItem;
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("§7Value: §aSelected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("§7Value: §cNot Selected");
+    private static final List<String> TRUE_LORE = Collections.singletonList("<gray>Value: <green>Selected");
+    private static final List<String> FALSE_LORE = Collections.singletonList("<gray>Value: <red>Not Selected");
 
     public void setGroupItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();

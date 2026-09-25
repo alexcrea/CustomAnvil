@@ -30,6 +30,8 @@ object MsgUI {
     @JvmField val SHARED_CONFIRM_LORE = Message("shared.confirm.lore")
     @JvmField val SHARED_CONFIRM_PERMANENT_LORE = Message("shared.confirm.permanent-lore")
 
+    @JvmField val SHARED_QUIT = Message("shared.quit")
+
     fun booleanMessage(bool: Boolean): Message {
         return if(bool) SHARED_FORMATED_YES else SHARED_FORMATED_NO
     }
@@ -143,6 +145,24 @@ object MsgUI {
      *  Basic Config Gui
      * ------------------
      */
+    @JvmField val MAIN_TITLE = Message("main.title")
+    @JvmField val MAIN_BASIC_TITLE = Message("main.basic.title")
+    @JvmField val MAIN_BASIC_LORE = Message("main.basic.lore")
+    @JvmField val MAIN_ENCHANT_LEVEL_LIMIT_TITLE = Message("main.enchant-level-limit.title")
+    @JvmField val MAIN_ENCHANT_LEVEL_LIMIT_LORE = Message("main.enchant-level-limit.lore")
+    @JvmField val MAIN_ENCHANT_MERGE_LIMIT_TITLE = Message("main.enchant-merge-limit.title")
+    @JvmField val MAIN_ENCHANT_MERGE_LIMIT_LORE = Message("main.enchant-merge-limit.lore")
+    @JvmField val MAIN_ENCHANT_COST_TITLE = Message("main.enchant-cost.title")
+    @JvmField val MAIN_ENCHANT_COST_LORE = Message("main.enchant-cost.lore")
+    @JvmField val MAIN_ENCHANT_CONFLICT_TITLE = Message("main.enchant-conflict.title")
+    @JvmField val MAIN_ENCHANT_CONFLICT_LORE = Message("main.enchant-conflict.lore")
+    @JvmField val MAIN_ITEM_GROUP_TITLE = Message("main.item-group.title")
+    @JvmField val MAIN_ITEM_GROUP_LORE = Message("main.item-group.lore")
+    @JvmField val MAIN_UNIT_REPAIR_TITLE = Message("main.unit-repair.title")
+    @JvmField val MAIN_UNIT_REPAIR_LORE = Message("main.unit-repair.lore")
+    @JvmField val MAIN_CUSTOM_RECIPE_TITLE = Message("main.custom-recipe.title")
+    @JvmField val MAIN_CUSTOM_RECIPE_LORE = Message("main.custom-recipe.lore")
+
     val BASIC_TITLE = Message("basic-config.title")
 
     val BASIC_CAP_ANVIL_COST_TITLE = Message("basic-config.cap-anvil-cost.title", null)
@@ -204,16 +224,16 @@ object MsgUI {
     val BASIC_WORK_PENALTY_EXPLAIN_SHARED = Message("basic-config.work-penalty.explanation.shared")
     val BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE = Message("basic-config.work-penalty.explanation.exclusive")
 
-    @JvmField val SELECT_MATERIAL_HEADER = Message("select-material.header", "type", "action")
-    @JvmField val SELECT_MATERIAL_EMPTY = Message("select-material.empty", "type", "action")
-    @JvmField val SELECT_MATERIAL_NOT_EMPTY = Message("select-material.not-item", "type", "action")
-    @JvmField val SELECT_MATERIAL_ITEM = Message("select-material.item", "name")
-    @JvmField val SELECT_MATERIAL_AND_MORE = Message("select-material.and-more", "count")
+    @JvmField val SELECT_MATERIAL_HEADER = Message("material-selector.header", "type", "action")
+    @JvmField val SELECT_MATERIAL_EMPTY = Message("material-selector.empty", "type", "action")
+    @JvmField val SELECT_MATERIAL_NOT_EMPTY = Message("material-selector.not-item", "type", "action")
+    @JvmField val SELECT_MATERIAL_ITEM = Message("material-selector.item", "name")
+    @JvmField val SELECT_MATERIAL_AND_MORE = Message("material-selector.and-more", "count")
 
-    @JvmField val SELECT_GROUP_HEADER = Message("select-group.header", "type", "action")
-    @JvmField val SELECT_GROUP_EMPTY = Message("select-group.empty", "type", "action")
-    @JvmField val SELECT_GROUP_NOT_EMPTY = Message("select-group.not-item", "type", "action")
-    @JvmField val SELECT_GROUP_ITEM = Message("select-group.item", "name")
-    @JvmField val SELECT_GROUP_AND_MORE = Message("select-group.and-more", "count")
+    @JvmField val SELECT_GROUP_HEADER = Message("group-selector.header", "type", "action")
+    @JvmField val SELECT_GROUP_EMPTY = Message("group-selector.empty", "type", "action")
+    @JvmField val SELECT_GROUP_NOT_EMPTY = Message("group-selector.not-item", "type", "action")
+    @JvmField val SELECT_GROUP_ITEM = Message("group-selector.item", "name")
+    @JvmField val SELECT_GROUP_AND_MORE = Message("group-selector.and-more", "count")
 
 }

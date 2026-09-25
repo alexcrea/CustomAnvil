@@ -121,6 +121,8 @@ config-ui.shared:
     save-item-title: "<green>Save"
     no-change-item-title: "<gray>No change. can't save."
 
+    quit: "<red>Quit"
+
     temporary-close:
       title: "<yellow>Temporary close this menu"
       lore: "<gray>Allow you to chose other item then return here."
@@ -150,6 +152,33 @@ config-ui.element-list:
       2: "<yellow>Or write <red>cancel <yellow>to go back to %type config menu"
     cancelled-new: "%type creation cancelled..."
     duplicated-new: "<red>Please enter a %type name that do not already exist..."
+
+config-ui.main:
+  title: "<dark_gray>Anvil Config"
+  basic:
+    title: "<green>Basic Config Menu"
+    lore: "<gray>Click here to open basic config menu"
+  enchant-level-limit:
+    title: "<green>Enchantment Level Limit"
+    lore: "<gray>Click here to open enchantment level limit menu"
+  enchant-merge-limit:
+    title: "<green>Enchantment Merge Limit"
+    lore: "<gray>Click here to open enchantment merge limit menu"
+  enchant-cost:
+    title: "<green>Enchantment Cost"
+    lore: "<gray>Click here to open enchantment costs menu"
+  enchant-conflict:
+    title: "<green>Enchantment Conflict"
+    lore: "<gray>Click here to open enchantment conflict menu"
+  item-group:
+    title: "<green>Item Groups"
+    lore: "<gray>Click here to open item group menu"
+  unit-repair:
+    title: "<green>Unit Repair"
+    lore: "<gray>Click here to open anvil unit repair menu"
+  custom-recipe:
+    title: "<green>Custom recipes"
+    lore: "<gray>Click here to open anvil custom recipe menu"
 
 config-ui.unit-repair:
     title: "Unit Repair Config <reset>(%page/%max_page)"
@@ -432,14 +461,14 @@ config-ui.basic-config.work-penalty:
         shared: "<yellow>Shared<gray>: Vanilla, shared penalty. it will be kept from before the plugin installation."
         exclusive: "<yellow>Exclusive<gray>: Custom, per anvil use type penalty. it will be lost after plugin uninstallation"
 
-config-ui.select-material:
+config-ui.material-selector:
     header: "<gray>Allow you to select a list of <yellow>materials <gray>that this %type should %action"
     empty: "<gray>There is no %actiond material for this %type." # %action followed by a d
     not-empty: "<gray>List of %actiond materials for this %type:" # %action followed by a d
     item: "<gray>- <yellow>%name"
     and-more: "<gray>And %count more..."
 
-config-ui.select-group:
+config-ui.group-selector:
     header: "<gray>Allow you to select a list of <dark_aqua>Groups <gray>that this %type should %action"
     empty: "<gray>There is no %actiond group for this %type." # %action followed by a d
     not-empty: "<gray>List of %actiond groups for this %type:" # %action followed by a d

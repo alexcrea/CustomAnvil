@@ -60,8 +60,8 @@ public class UnitRepairElementListGui
     @Override
     protected List<String> getCreateItemLore() {
         return Arrays.asList(//TODO MESSAGE
-                "§7Select a new item to be repairable.",
-                "§7You will be asked the material to use."
+                "<gray>Select a new item to be repairable.",
+                "<gray>You will be asked the material to use."
         );
     }
 
@@ -119,7 +119,7 @@ public class UnitRepairElementListGui
 
     @Override
     protected String createItemName() {
-        return "§aAdd a new item reparable by " + this.materialName; //TODO MESSAGE ?
+        return "<green>Add a new item reparable by " + this.materialName; //TODO MESSAGE ?
     }
 
     @Override

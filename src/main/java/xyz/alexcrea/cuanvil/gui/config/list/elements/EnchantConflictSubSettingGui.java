@@ -173,12 +173,12 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
         // Prepare enchantment lore
         ArrayList<String> enchantLore = new ArrayList<>();
-        enchantLore.add("§7Allow you to select a list of §5Enchantments §7that this conflict should include");//TODO MESSAGE
+        enchantLore.add("<gray>Allow you to select a list of <dark_purple>Enchantments <gray>that this conflict should include");//TODO MESSAGE
         Set<CAEnchantment> enchants = getSelectedEnchantments();
         if(enchants.isEmpty()) {
-            enchantLore.add("§7There is no included enchantment for this conflict.");//TODO MESSAGE
+            enchantLore.add("<gray>There is no included enchantment for this conflict.");//TODO MESSAGE
         } else {
-            enchantLore.add("§7List of included enchantment for this conflict:");//TODO MESSAGE
+            enchantLore.add("<gray>List of included enchantment for this conflict:");//TODO MESSAGE
             Iterator<CAEnchantment> enchantIterator = enchants.iterator();
 
             boolean greaterThanMax = enchants.size() > 5;
@@ -186,10 +186,10 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             for(int i = 0; i < maxIndex; i++) {
                 // format string like "- Fire Protection"
                 String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
-                enchantLore.add("§7- §5" + formattedName);
+                enchantLore.add("<gray>- <dark_purple>" + formattedName);
             }
             if(greaterThanMax) {
-                enchantLore.add("§7And " + (enchants.size() - 4) + " more...");//TODO MESSAGE
+                enchantLore.add("<gray>And " + (enchants.size() - 4) + " more...");//TODO MESSAGE
             }
 
         }
@@ -202,7 +202,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta enchantMeta = enchantItem.getItemMeta();
         assert enchantMeta != null;
 
-        enchantMeta.setDisplayName("§aSelect included §5Enchantments §aSettings");//TODO MESSAGE
+        enchantMeta.setDisplayName("<green>Select included <dark_purple>Enchantments <green>Settings");//TODO MESSAGE
         enchantMeta.setLore(enchantLore);
 
         enchantItem.setItemMeta(enchantMeta);
@@ -214,7 +214,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta groupMeta = groupItem.getItemMeta();
         assert groupMeta != null;
 
-        groupMeta.setDisplayName("§aSelect Excluded §3Groups §aSettings");//TODO MESSAGE
+        groupMeta.setDisplayName("<green>Select Excluded §3Groups <green>Settings");//TODO MESSAGE
         ComponentUtil.applyLore(groupLore, groupMeta);
 
         groupItem.setItemMeta(groupMeta);

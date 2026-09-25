@@ -107,21 +107,21 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
         WorkPenaltyType.WorkPenaltyPart part = items.get(type);
         //TODO MESSAGE
-        String increasingStr = (part.penaltyIncrease() ? "§a" : "§c") + "Increasing";
-        String additiveStr = (part.penaltyAdditive() ? "§a" : "§c") + "Additive";
-        String exclusiveIncreasingStr = (part.exclusivePenaltyIncrease() ? "§a" : "§c") + "Increasing";
-        String exclusiveAdditiveStr = (part.exclusivePenaltyAdditive() ? "§a" : "§c") + "Additive";
+        String increasingStr = (part.penaltyIncrease() ? "<green>" : "<red>") + "Increasing";
+        String additiveStr = (part.penaltyAdditive() ? "<green>" : "<red>") + "Additive";
+        String exclusiveIncreasingStr = (part.exclusivePenaltyIncrease() ? "<green>" : "<red>") + "Increasing";
+        String exclusiveAdditiveStr = (part.exclusivePenaltyAdditive() ? "<green>" : "<red>") + "Additive";
 
         // Display item
         ItemStack displayItem = new ItemStack(type.getDisplayMat());
 
         ArrayList<String> displayLore = new ArrayList<>();
-        displayLore.add("§eShared§7: " + additiveStr + " §7| " + increasingStr);
-        displayLore.add("§eExclusive§7: " + exclusiveAdditiveStr + " §7| " + exclusiveIncreasingStr);
+        displayLore.add("<yellow>Shared<gray>: " + additiveStr + " <gray>| " + increasingStr);
+        displayLore.add("<yellow>Exclusive<gray>: " + exclusiveAdditiveStr + " <gray>| " + exclusiveIncreasingStr);
 
         ItemMeta meta = displayItem.getItemMeta();
         assert meta != null;
-        meta.setDisplayName("§e" + type.getDisplayName());
+        meta.setDisplayName("<yellow>" + type.getDisplayName());
         meta.setLore(displayLore);
         displayItem.setItemMeta(meta);
 
