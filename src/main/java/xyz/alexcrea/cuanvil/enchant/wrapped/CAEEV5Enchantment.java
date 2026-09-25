@@ -3,7 +3,7 @@ package xyz.alexcrea.cuanvil.enchant.wrapped;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
 import su.nightexpress.excellentenchants.api.item.ItemSet;
 import xyz.alexcrea.cuanvil.enchant.AdditionalTestEnchantment;
@@ -16,19 +16,20 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("RedundantIfStatement")
+@NotNullByDefault
 public class CAEEV5Enchantment extends CABukkitEnchantment implements AdditionalTestEnchantment {
 
     private final CustomEnchantment eeenchantment;
     private final Object definition;
 
-    public CAEEV5Enchantment(@NotNull CustomEnchantment enchantment) {
+    public CAEEV5Enchantment(CustomEnchantment enchantment) {
         super(enchantment.getBukkitEnchantment(), new EnchantmentRarity(getAnvilCost(enchantment)));
         this.eeenchantment = enchantment;
         this.definition = getDefinition(enchantment);
     }
 
     @Override
-    public boolean isEnchantConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType) {
+    public boolean isEnchantConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType) {
         if (!hasConflicts()) return false;
 
         Set<String> conflicts = getExclusiveSet();
@@ -42,7 +43,12 @@ public class CAEEV5Enchantment extends CABukkitEnchantment implements Additional
     }
 
     @Override
-    public boolean isItemConflict(@NotNull Map<CAEnchantment, Integer> enchantments, @NotNull NamespacedKey itemType, @NotNull ItemStack item) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item,
+            ItemStack original
+    ) {
         if (Material.ENCHANTED_BOOK.getKey().equals(itemType)) return false;
 
         String key = itemType.getKey();

@@ -1,9 +1,11 @@
 package xyz.alexcrea.cuanvil.command
 
 import io.delilaheve.CustomAnvil
+import org.bukkit.NamespacedKey
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.HumanEntity
+import org.jetbrains.annotations.NotNullByDefault
 import xyz.alexcrea.cuanvil.api.EnchantmentApi
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment
@@ -16,7 +18,8 @@ import xyz.alexcrea.cuanvil.lang.MsgUI
 import xyz.alexcrea.cuanvil.util.MaterialUtil.customType
 import xyz.alexcrea.cuanvil.util.MaterialUtil.isAir
 
-class EditConfigExecutor : CASubCommand {
+@NotNullByDefault
+class EditConfigExecutor: CASubCommand {
 
     override fun allowed(sender: CommandSender): Boolean {
         return sender.hasPermission(CustomAnvil.editConfigPermission)
@@ -70,7 +73,7 @@ class EditConfigExecutor : CASubCommand {
                 return
             }
         } else {
-            enchantToFilter = HashSet(EnchantmentApi.getByName(args[1].lowercase()))
+            enchantToFilter = HashSet(EnchantmentApi.getByIdentifier(args[1].lowercase()))
 
             if(enchantToFilter.isEmpty()) {
                 MsgCommand.CONFIG_ENCHANTMENT_NO_NAME.send(sender, args[1])

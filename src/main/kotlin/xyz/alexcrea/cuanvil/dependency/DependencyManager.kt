@@ -57,7 +57,7 @@ object DependencyManager {
         val pluginManager = Bukkit.getPluginManager()
 
         // Bukkit or Paper scheduler ?
-        scheduler = if (PlatformUtil.isFolia) {
+        scheduler = if(PlatformUtil.isFolia) {
             CustomAnvil.instance.logger.info("Folia detected... Custom Anvil Folia support is experimental. issues are more likely to happens.")
 
             FoliaScheduler()
@@ -70,69 +70,73 @@ object DependencyManager {
         packetManager = PacketManagerSelector.selectPacketManager(forceProtocolib)
 
         // Enchantment Squared dependency
-        if (pluginManager.isPluginEnabled("EnchantsSquared")) {
+        if(pluginManager.isPluginEnabled("EnchantsSquared")) {
             enchantmentSquaredCompatibility = EnchantmentSquaredDependency(pluginManager.getPlugin("EnchantsSquared")!!)
             enchantmentSquaredCompatibility!!.disableAnvilListener()
         }
 
         // EcoEnchants dependency
-        if (pluginManager.isPluginEnabled("EcoEnchants")) {
+        if(pluginManager.isPluginEnabled("EcoEnchants")) {
             ecoEnchantCompatibility = EcoEnchantDependency(pluginManager.getPlugin("EcoEnchants")!!)
             ecoEnchantCompatibility!!.disableAnvilListener()
         }
         // EcoItem check
-        if (pluginManager.isPluginEnabled("EcoItems")) {
+        if(pluginManager.isPluginEnabled("EcoItems")) {
             hasEcoItem = true
         }
 
         // Excellent Enchants dependency
-        if (pluginManager.isPluginEnabled("ExcellentEnchants")) {
+        if(pluginManager.isPluginEnabled("ExcellentEnchants")) {
             excellentEnchantsCompatibility = ExcellentEnchantsDependency()
             excellentEnchantsCompatibility!!.redirectListeners()
         }
 
         // Disenchantment dependency
-        if (pluginManager.isPluginEnabled("Disenchantment")) {
+        if(pluginManager.isPluginEnabled("Disenchantment")) {
             disenchantmentCompatibility = DisenchantmentDependency()
             disenchantmentCompatibility!!.redirectListeners()
         }
 
         // HavenBags dependency
-        if (pluginManager.isPluginEnabled("HavenBags")) {
+        if(pluginManager.isPluginEnabled("HavenBags")) {
             havenBagsCompatibility = HavenBagsDependency()
             havenBagsCompatibility!!.redirectListeners()
         }
 
         // AxPlayerWarps dependency
-        if (pluginManager.isPluginEnabled("AxPlayerWarps")) {
+        if(pluginManager.isPluginEnabled("AxPlayerWarps")) {
             axPlayerWarpsCompatibility = AxPlayerWarpsDependency()
         }
 
-        if (pluginManager.isPluginEnabled("ItemsAdder")) {
+        if(pluginManager.isPluginEnabled("ItemsAdder")) {
             val dependency = ItemsAdderDependency(pluginManager.getPlugin("ItemsAdder")!!)
             itemsAdderCompatibility = dependency
             genericDependencies.add(dependency)
         }
 
         // "Generic" dependencies
-        if (pluginManager.isPluginEnabled("ToolStats"))
+        if(pluginManager.isPluginEnabled("ToolStats"))
             genericDependencies.add(ToolStatsDependency(pluginManager.getPlugin("ToolStats")!!))
 
-        if (pluginManager.isPluginEnabled("ItemsAdder"))
+        if(pluginManager.isPluginEnabled("ItemsAdder"))
             genericDependencies.add(GenericPluginDependency(pluginManager.getPlugin("ItemsAdder")!!))
 
-        if (pluginManager.isPluginEnabled("SuperEnchants")) {
+        if(pluginManager.isPluginEnabled("SuperEnchants")) {
             val compatibility = SuperEnchantDependency(pluginManager.getPlugin("SuperEnchants")!!)
-            if (compatibility.registerEnchantments())
+            if(compatibility.registerEnchantments())
                 genericDependencies.add(compatibility)
         }
 
-        if (pluginManager.isPluginEnabled("EnchantedBook")) {
+        if(pluginManager.isPluginEnabled("EnchantedBook")) {
             genericDependencies.add(EnchantedBookDependency(pluginManager.getPlugin("EnchantedBook")!!))
         }
 
-        for (dependency in genericDependencies)
-            dependency.redirectListeners()
+        if(pluginManager.isPluginEnabled("UberEnchant")) {
+            UberEnchantDependency.registerAll()
+        }
+
+            for(dependency in genericDependencies)
+                dependency.redirectListeners()
 
     }
 
@@ -181,7 +185,7 @@ object DependencyManager {
     fun earlyTryEventPreAnvilBypass(event: PrepareAnvilEvent, player: HumanEntity): Boolean {
         try {
             return earlyUnsafeTryEventPreAnvilBypass(event, player)
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             logExceptionAndClear(event.view, e)
             return true
         }
@@ -195,10 +199,10 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && externGuiTester.testIfGui(event.view)) bypass = true
+        if(!bypass && externGuiTester.testIfGui(event.view)) bypass = true
 
         // Test if in an ax player warp rating gui
-        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(player) == true)) bypass = true
+        if(!bypass && (axPlayerWarpsCompatibility?.testIfGui(player) == true)) bypass = true
 
         return bypass
     }
@@ -207,7 +211,7 @@ object DependencyManager {
     fun tryEventPreAnvilBypass(event: PrepareAnvilEvent, player: Player): Boolean {
         try {
             return unsafeTryEventPreAnvilBypass(event, player)
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             logExceptionAndClear(event.view, e)
             return true
         }
@@ -221,16 +225,16 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if disenchantment used prepare anvil
-        if (!bypass && (disenchantmentCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
+        if(!bypass && (disenchantmentCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
 
         // Test heaven bags used prepare anvil
-        if (!bypass && (havenBagsCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
+        if(!bypass && (havenBagsCompatibility?.testPrepareAnvil(event, player) == true)) bypass = true
 
         // Test excellent enchantments used prepare anvil
-        if (!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
+        if(!bypass && (excellentEnchantsCompatibility?.testPrepareAnvil(event) == true)) bypass = true
 
-        for (genericDependency in genericDependencies) {
-            if (!bypass && genericDependency.testPrepareAnvil(event)) bypass = true
+        for(genericDependency in genericDependencies) {
+            if(!bypass && genericDependency.testPrepareAnvil(event)) bypass = true
         }
 
         return bypass
@@ -242,13 +246,13 @@ object DependencyManager {
         player: HumanEntity,
         result: ItemStack,
         useType: AnvilUseType,
-        cost: AnvilCost
+        cost: AnvilCost,
     ): ItemStack? {
         val treatEvent = CATreatAnvilResultEvent(view, useType, result, cost)
         try {
             unsafeTryTreatAnvilResult(treatEvent)
             return treatEvent.result
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             logExceptionAndClear(view, e)
             return null
         }
@@ -264,7 +268,7 @@ object DependencyManager {
     fun tryClickAnvilResultBypass(event: InventoryClickEvent, view: AnvilView): Boolean {
         try {
             return unsafeTryClickAnvilResultBypass(event, view)
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             logExceptionAndClear(view, e)
             return true
         }
@@ -278,23 +282,23 @@ object DependencyManager {
         var bypass = bypassEvent.isCancelled
 
         // Test if disenchantment used event click
-        if (!bypass && (disenchantmentCompatibility?.testAnvilResult(event, view) == true)) bypass = true
+        if(!bypass && (disenchantmentCompatibility?.testAnvilResult(event, view) == true)) bypass = true
 
         // Test if haven bag used event click
-        if (!bypass && (havenBagsCompatibility?.testAnvilResult(event, view) == true)) bypass = true
+        if(!bypass && (havenBagsCompatibility?.testAnvilResult(event, view) == true)) bypass = true
 
         // Test if disenchantment used event click
-        if (!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
+        if(!bypass && (excellentEnchantsCompatibility?.testAnvilResult(event) == true)) bypass = true
 
-        for (genericDependency in genericDependencies) {
-            if (!bypass && genericDependency.testAnvilResult(event)) bypass = true
+        for(genericDependency in genericDependencies) {
+            if(!bypass && genericDependency.testAnvilResult(event)) bypass = true
         }
 
         // Test if the inventory is a gui(version specific)
-        if (!bypass && externGuiTester.testIfGui(view)) bypass = true
+        if(!bypass && externGuiTester.testIfGui(view)) bypass = true
 
         // Test if in an ax player warp rating gui
-        if (!bypass && (axPlayerWarpsCompatibility?.testIfGui(view.player) == true)) bypass = true
+        if(!bypass && (axPlayerWarpsCompatibility?.testIfGui(view.player) == true)) bypass = true
 
         return bypass
     }
@@ -303,7 +307,7 @@ object DependencyManager {
     fun cloneItem(player: HumanEntity, item: ItemStack): ItemStack {
         try {
             return unsafeCloneItem(item)
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             logException(player, e)
             return item.clone()
         }
@@ -311,7 +315,7 @@ object DependencyManager {
 
     private fun unsafeCloneItem(item: ItemStack): ItemStack {
         val cloned = itemsAdderCompatibility?.tryClone(item)
-        if (cloned != null) return cloned
+        if(cloned != null) return cloned
 
         return item.clone()
     }

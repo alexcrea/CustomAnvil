@@ -21,7 +21,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "2.1.3"
+version = "2.2.0"
 
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
 val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"
@@ -41,6 +41,18 @@ repositories {
 
     // For vault unlocked
     maven { url = uri("https://repo.codemc.io/repository/creatorfromhell/") }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 val reobfNMS = providers.gradleProperty("subprojects.reobfnms")
@@ -111,6 +123,9 @@ dependencies {
     // Vault api
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
 
+    // UberEnchant
+    compileOnly("maven.modrinth:PoPWpJ4U:Vca0yOJP")
+
     // Include nms
     implementation(project(":nms:nms-common"))
     implementation(project(":nms:nms-paper"))
@@ -122,7 +137,8 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Test dependency
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.48.0")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v26.2:4.116.1")
+    testImplementation("io.papermc.paper:paper-api:26.2.build.121-stable") // When updating mockbukkit update this
     testRuntimeOnly("commons-lang:commons-lang:2.6")
 }
 
@@ -156,7 +172,7 @@ allprojects {
     // Configure used version of kotlin and java
     java {
         disableAutoTargetJvm()
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 
     // Set target version
@@ -176,7 +192,6 @@ allprojects {
     }
 
 }
-
 
 tasks {
 
@@ -244,7 +259,7 @@ val javadocJar = tasks.register<Jar>("javadocJar", fun Jar.() {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Javadoc JAR"
     archiveClassifier.set("javadoc")
-    from(tasks.named("dokkaHtml"))
+    from(tasks.named("dokkaGenerateHtml"))
 })
 
 signing {

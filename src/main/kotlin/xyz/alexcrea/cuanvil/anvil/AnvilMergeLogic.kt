@@ -131,7 +131,7 @@ object AnvilMergeLogic {
         if (!keepDialog)
             pdc.remove(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY)
         else {
-            if (text == null || text.isBlank())
+            if (text.isNullOrBlank())
                 pdc.remove(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY)
             else pdc.set(AnvilRenameDialog.PCD_KEEP_RENAME_TEXT_KEY, PersistentDataType.STRING, text)
         }
@@ -173,7 +173,7 @@ object AnvilMergeLogic {
                         )
             ) {
                 if (component == null)
-                    component = if (renameText == null || renameText.isEmpty()) null
+                    component = if (renameText.isNullOrEmpty()) null
                     else Component.text(renameText)
                 it.setComponentDisplayName(component, renameText)
 
@@ -237,8 +237,8 @@ object AnvilMergeLogic {
         resultEnchants: MutableMap<CAEnchantment, Int>
     ): Boolean {
         if (firstEnchants.size != resultEnchants.size) return false
-        for (entry in resultEnchants) {
-            if (firstEnchants.getOrDefault(entry.key, entry.value - 1) != entry.value) return false
+        for ((enchantment, level) in resultEnchants) {
+            if (firstEnchants.getOrDefault(enchantment, level - 1) != level) return false
         }
 
         return true

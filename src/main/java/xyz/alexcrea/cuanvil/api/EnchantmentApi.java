@@ -140,11 +140,31 @@ public class EnchantmentApi {
     /**
      * Get list of enchantment using the provided name.
      *
+     * @deprecated use {@link #getByIdentifier(String)}
+     *
      * @param name The name used to fetch
      * @return List of custom anvil enchantments of this name. May be empty if not found.
      */
+    @Deprecated
     public static List<CAEnchantment> getByName(String name) {
         return CAEnchantment.getByName(name);
+    }
+
+    /**
+     * Get list of enchantment using the provided name.
+     * It first tries to get by key then by name if not found
+     *
+     * @param identifier The identifier used to fetch
+     * @return List of custom anvil enchantments with this identifier. May be empty if not found.
+     */
+    public static List<CAEnchantment> getByIdentifier(String identifier) {
+        var key = NamespacedKey.fromString(identifier);
+        if (key != null) {
+            var enchantment = CAEnchantment.getByKey(key);
+            if (enchantment != null) return Collections.singletonList(enchantment);
+        }
+
+        return CAEnchantment.getByName(identifier);
     }
 
     /**
@@ -183,7 +203,7 @@ public class EnchantmentApi {
 
         String levelPath = ConfigOptions.ENCHANT_LIMIT_ROOT + "." + enchantment.getKey();
         if(override || !defaultConfig.isSet(levelPath)) {
-            defaultConfig.set(levelPath, enchantment.defaultMaxLevel());
+            defaultConfig.set(levelPath, -1);
             hasChange = true;
         }
 
@@ -193,11 +213,11 @@ public class EnchantmentApi {
         String itemPath = basePath + ".item";
         String bookPath = basePath + ".book";
         if(override || !defaultConfig.isSet(itemPath)) {
-            defaultConfig.set(itemPath, rarity.itemValue());
+            defaultConfig.set(itemPath, -1);
             hasChange = true;
         }
         if(override || !defaultConfig.isSet(bookPath)) {
-            defaultConfig.set(bookPath, rarity.bookValue());
+            defaultConfig.set(bookPath, -1);
             hasChange = true;
         }
 

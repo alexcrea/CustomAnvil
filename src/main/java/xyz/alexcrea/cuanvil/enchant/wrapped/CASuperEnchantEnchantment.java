@@ -73,7 +73,12 @@ public class CASuperEnchantEnchantment extends CAEnchantmentBase implements Addi
     }
 
     @Override
-    public boolean isItemConflict(Map<CAEnchantment, Integer> enchantments, NamespacedKey itemType, ItemStack item) {
+    public boolean isItemConflict(
+            Map<CAEnchantment, Integer> enchantments,
+            NamespacedKey itemType,
+            ItemStack item,
+            ItemStack original
+    ) {
         if(Material.ENCHANTED_BOOK.equals(item.getType())) return false;
 
         return !enchant.canApplyTo(item.getType());

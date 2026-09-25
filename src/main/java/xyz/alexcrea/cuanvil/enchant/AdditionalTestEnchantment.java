@@ -26,12 +26,14 @@ public interface AdditionalTestEnchantment {
      * @param enchantments Immutable map of validated enchantments for the item.
      * @param itemType Material namespaced key of the tested item.
      * @param item Provide a new instance of the used item stack with the partial enchantment applied.
+     * @param original The original item. DO NOT modify it.
      * @return If there is a conflict with the enchantment and the item.
      */
     boolean isItemConflict(
             Map<CAEnchantment, Integer> enchantments,
             NamespacedKey itemType,
-            ItemStack item
+            ItemStack item,
+            ItemStack original
     );
 
 }

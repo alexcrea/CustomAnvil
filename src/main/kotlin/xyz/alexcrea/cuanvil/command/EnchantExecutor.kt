@@ -118,8 +118,8 @@ class EnchantExecutor : CASubCommand {
     }
 
     private fun firstEnchantment(name: String): CAEnchantment? {
-        val enchants = EnchantmentApi.getByName(name.lowercase())
-        if(!enchants.isEmpty())
+        val enchants = EnchantmentApi.getByIdentifier(name.lowercase())
+        if(enchants.isNotEmpty())
             return enchants.iterator().next()
 
         return EnchantmentApi.getByKey(NamespacedKey.fromString(name))

@@ -28,9 +28,9 @@ class EnchantConflictGroup(
         if (conflictsAfterLevel.isEmpty()) return false
 
         // Or we check if any conflict after enchantment is true
-        for (entry in conflictsAfterLevel) {
-            val current = enchants.getOrDefault(entry.key, 0)
-            if (current > entry.value)
+        for ((enchantment, level) in conflictsAfterLevel) {
+            val current = enchants.getOrDefault(enchantment, 0)
+            if (current > level)
                 return false
         }
 
@@ -42,9 +42,9 @@ class EnchantConflictGroup(
         if (conflictsBeforeLevel.isEmpty()) return false
 
         // Or we check if any conflict after enchantment is true
-        for (entry in conflictsBeforeLevel) {
-            val current = enchants.getOrDefault(entry.key, 0)
-            if (current < entry.value)
+        for ((enchantment, level) in conflictsBeforeLevel) {
+            val current = enchants.getOrDefault(enchantment, 0)
+            if (current < level)
                 return false
         }
 
