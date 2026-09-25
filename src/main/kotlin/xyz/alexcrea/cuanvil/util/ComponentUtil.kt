@@ -52,7 +52,7 @@ object ComponentUtil {
 
     @JvmStatic
     fun ItemMeta.applyLore(message: Message, vararg args: Any) {
-        message.formatted(args).applyLore(this)
+        message.formatted(*args).applyLore(this)
     }
 
     @JvmStatic

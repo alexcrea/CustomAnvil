@@ -188,12 +188,12 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     }
 
     public boolean testAndWarnIfUsed(HumanEntity player) {
-        List<String> usedLoc = getUsedLocations(this.group);
+        List<Component> usedLoc = getUsedLocations(this.group);
         if(usedLoc.isEmpty()) {
             return false;
         }
-        StringBuilder stb = new StringBuilder("<red>Can't delete group " + this.group.getName() +
-                "\n<yellow>Used by:");
+
+        List<Component> message = MsgUI.MATERIAL_GROUP_ELEMENT_USED_HEADER.formatted(this.group.getName());
         int maxIndex = usedLoc.size();
         int nbMore = 0;
         if(maxIndex > 10) {
@@ -201,26 +201,27 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             maxIndex = 9;
         }
         for(int i = 0; i < maxIndex; i++) {
-            stb.append("\n§r-<yellow> ").append(usedLoc.get(i));
+            message.addAll(MsgUI.MATERIAL_GROUP_ELEMENT_USED_ITEM.formatted(usedLoc.get(i)));
         }
         if(nbMore > 0) {
-            stb.append("<red>And ").append(nbMore).append(" More...");
+            message.addAll(MsgUI.MATERIAL_GROUP_ELEMENT_USED_AND_MORE.formatted(nbMore));
         }
 
-        player.sendMessage(stb.toString());
+        ComponentUtil.send(message, player);
         return true;
     }
 
     // return a string containing every instance of where this group is used
-    public static List<String> getUsedLocations(AbstractMaterialGroup group) {
-        ArrayList<String> usageList = new ArrayList<>();
+    public static List<Component> getUsedLocations(AbstractMaterialGroup group) {
+        ArrayList<Component> usageList = new ArrayList<>();
 
         // Test used by another group
         try(var lock = ConfigHolder.ITEM_GROUP.read) {
             ItemGroupManager groupManager = lock.get().getItemGroupsManager();
             for(AbstractMaterialGroup otherGroup : groupManager.getGroupMap().values()) {
                 if(otherGroup.getGroups().contains(group)) {
-                    usageList.add("group " + otherGroup.getName());
+                    var groupName = otherGroup.getName();
+                    usageList.addAll(MsgUI.MATERIAL_GROUP_ELEMENT_USED_GROUP.formatted(groupName));
                 }
             }
         }
@@ -230,7 +231,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             EnchantConflictManager conflictManager = lock.get().getConflictManager();
             for(EnchantConflictGroup conflict : conflictManager.getConflictList()) {
                 if(conflict.getCantConflictGroup().getGroups().contains(group)) {
-                    usageList.add("conflict " + conflict);
+                    usageList.addAll(MsgUI.MATERIAL_GROUP_ELEMENT_USED_CONFLICT.formatted(conflict));
                 }
             }
         }
@@ -260,7 +261,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta matSelectMeta = matSelectItem.getItemMeta();
 
         assert matSelectMeta != null;
-        matSelectMeta.setDisplayName("<green>Select included <yellow>Materials <green>Settings");//TODO MESSAGE
+        ComponentUtil.setMessageName(matSelectMeta, MsgUI.MATERIAL_GROUP_ELEMENT_SELECT_MATERIALS);
         ComponentUtil.applyLore(matLore, matSelectMeta);
         matSelectMeta.addItemFlags(ItemFlag.values());
 
@@ -273,7 +274,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta groupSelectMeta = groupSelectItem.getItemMeta();
 
         assert groupSelectMeta != null;
-        groupSelectMeta.setDisplayName("<green>Select included §3Groups <green>Settings");//TODO MESSAGE
+        ComponentUtil.setMessageName(matSelectMeta, MsgUI.MATERIAL_GROUP_ELEMENT_SELECT_GROUPS);
         ComponentUtil.applyLore(groupLore, groupSelectMeta);
 
         groupSelectItem.setItemMeta(groupSelectMeta);

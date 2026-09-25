@@ -153,7 +153,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("<yellow>" + nowBook + " §f-> <yellow>" + planned + " §r(<red>-" + (nowBook - planned) + "§r)");
+            meta.setDisplayName("<yellow>" + nowBook + " <white>-> <yellow>" + planned + " <reset>(<red>-" + (nowBook - planned) + "<reset>)");
             ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
@@ -171,7 +171,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("<yellow>" + nowBook + " §f-> <yellow>" + planned + " §r(<green>+" + (planned - nowBook) + "§r)");//TODO MESSAGE
+            meta.setDisplayName("<yellow>" + nowBook + " <white>-> <yellow>" + planned + " <reset>(<green>+" + (planned - nowBook) + "<reset>)");//TODO MESSAGE
             ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 

@@ -9,16 +9,19 @@ import javax.annotation.Nullable
 
 object MaterialUtil {
 
+    @JvmStatic
     val ItemStack?.isAir: Boolean
         get() {
             return this == null || this.type.isAir || this.amount == 0
         }
 
+    @JvmStatic
     val NamespacedKey?.isAir: Boolean
         get() {
             return Material.AIR.key == this
         }
 
+    @JvmStatic
     val ItemStack.customType: NamespacedKey
         get() {
             if(DependencyManager.hasEcoItem) {

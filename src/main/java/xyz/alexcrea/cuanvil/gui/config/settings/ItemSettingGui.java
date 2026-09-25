@@ -110,7 +110,7 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemMeta valueMeta = displayedItem.getItemMeta();
             assert valueMeta != null;
 
-            valueMeta.setDisplayName("§4NO ITEM SET");
+            valueMeta.setDisplayName("<dark_red*NO ITEM SET");
             valueMeta.setLore(CLICK_LORE);
 
             displayedItem.setItemMeta(valueMeta);

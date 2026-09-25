@@ -51,8 +51,13 @@ object MsgUI {
     val UNIT_REPAIR_TITLE = Message("unit-repair.title", null, "page", "max_page")
     val UNIT_REPAIR_ITEM = Message("unit-repair.item", "name", "unit")
     val UNIT_REPAIR_ELEMENT_TITLE = Message("unit-repair.element.title", "type", "page", "max_page")
-    val UNIT_REPAIR_NEW_TITLE = Message("unit-repair.new.title", null)
-    val UNIT_REPAIR_NEW_DESCRIPTION = Message("unit-repair.new.description", null)
+    @JvmField val UNIT_REPAIR_ELEMENT_NAME = Message("unit-repair.element.name", "name")
+    @JvmField val UNIT_REPAIR_ELEMENT_LORE = Message("unit-repair.element.lore", "name", "count")
+
+    @JvmField val UNIT_REPAIR_NEW_TITLE = Message("unit-repair.new.title", null)
+    @JvmField val UNIT_REPAIR_NEW_NAME = Message("unit-repair.new.name", null)
+    @JvmField val UNIT_REPAIR_NEW_LORE = Message("unit-repair.new.lore", null)
+    @JvmField val UNIT_REPAIR_NEW_DESCRIPTION = Message("unit-repair.new.description", null)
 
     val UNIT_REPAIR_ELEMENT_VALUE_TITLE = Message("unit-repair.element.value.title", "name", null)
     val UNIT_REPAIR_ELEMENT_VALUE_DESCRIPTION = Message("unit-repair.element.value.description", "name", "unit")
@@ -118,6 +123,15 @@ object MsgUI {
     val ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION = Message("enchant-conflict.element.min-before-count.description", null)
     val ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM = Message("enchant-conflict.element.min-before-count.item")
 
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_TITLE = Message("enchant-conflict.element.title")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_HEADER = Message("enchant-conflict.element.lore.header")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_EMPTY = Message("enchant-conflict.element.lore.empty")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_NOT_EMPTY = Message("enchant-conflict.element.lore.not-empty")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_ITEM = Message("enchant-conflict.element.lore.item", "name")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_AND_MORE = Message("enchant-conflict.element.lore.and-more", "count")
+
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_EXCLUDED_GROUPS_TITLE = Message("enchant-conflict.element.excluded-groups.title")
+
     val MATERIAL_GROUP_TITLE = Message("material-group.title", null, "page", "max_page")
     val MATERIAL_GROUP_GENERIC_NAME = Message("material-group.generic-name")
     val MATERIAL_GROUP_NAME = Message("material-group.name", "name")
@@ -129,6 +143,15 @@ object MsgUI {
     val MATERIAL_GROUP_ELEMENT_DELETE_DESCRIPTION = Message("material-group.element.delete.description", null)
     val MATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME = Message("material-group.element.delete.button.name")
     val MATERIAL_GROUP_ELEMENT_DELETE_BUTTON_LORE = Message("material-group.element.delete.button.lore")
+
+    @JvmField val MATERIAL_GROUP_ELEMENT_USED_HEADER = Message("material-group.element.used.header", "group")
+    @JvmField val MATERIAL_GROUP_ELEMENT_USED_ITEM = Message("material-group.element.used.item", "name")
+    @JvmField val MATERIAL_GROUP_ELEMENT_USED_AND_MORE = Message("material-group.element.used.and-more", "count")
+    @JvmField val MATERIAL_GROUP_ELEMENT_USED_GROUP = Message("material-group.element.used.group", "group")
+    @JvmField val MATERIAL_GROUP_ELEMENT_USED_CONFLICT = Message("material-group.element.used.conflict", "conflict")
+
+    @JvmField val MATERIAL_GROUP_ELEMENT_SELECT_MATERIALS = Message("material-group.element.select.materials")
+    @JvmField val MATERIAL_GROUP_ELEMENT_SELECT_GROUPS = Message("material-group.element.select.groups")
 
     val MATERIAL_SELECT_CONFIRM_TITLE = Message("material-select.new.confirm.title", "name")
     val MATERIAL_SELECT_CONFIRM_DESCRIPTION = Message("material-select.new.confirm.description", "name")
@@ -226,13 +249,13 @@ object MsgUI {
 
     @JvmField val SELECT_MATERIAL_HEADER = Message("material-selector.header", "type", "action")
     @JvmField val SELECT_MATERIAL_EMPTY = Message("material-selector.empty", "type", "action")
-    @JvmField val SELECT_MATERIAL_NOT_EMPTY = Message("material-selector.not-item", "type", "action")
+    @JvmField val SELECT_MATERIAL_NOT_EMPTY = Message("material-selector.not-empty", "type", "action")
     @JvmField val SELECT_MATERIAL_ITEM = Message("material-selector.item", "name")
     @JvmField val SELECT_MATERIAL_AND_MORE = Message("material-selector.and-more", "count")
 
     @JvmField val SELECT_GROUP_HEADER = Message("group-selector.header", "type", "action")
     @JvmField val SELECT_GROUP_EMPTY = Message("group-selector.empty", "type", "action")
-    @JvmField val SELECT_GROUP_NOT_EMPTY = Message("group-selector.not-item", "type", "action")
+    @JvmField val SELECT_GROUP_NOT_EMPTY = Message("group-selector.not-empty", "type", "action")
     @JvmField val SELECT_GROUP_ITEM = Message("group-selector.item", "name")
     @JvmField val SELECT_GROUP_AND_MORE = Message("group-selector.and-more", "count")
 

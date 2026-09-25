@@ -71,7 +71,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(displayMeta, MsgUI.INSTANCE.getENCHANT_CONFIG_NAME(), selectName(enchantments));
+        ComponentUtil.setMessageName(displayMeta, MsgUI.INSTANCE.getENCHANT_CONFIG_NAME(), selectName(enchantments));
         displayItemstack.setItemMeta(displayMeta);
 
         // Set enchantments

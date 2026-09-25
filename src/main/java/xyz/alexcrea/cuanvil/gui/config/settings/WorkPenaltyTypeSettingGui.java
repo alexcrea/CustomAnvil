@@ -57,8 +57,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
 
-        ComponentUtil.INSTANCE.setMessageName(meta, name);
-        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
+        ComponentUtil.setMessageName(meta, name);
+        ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
 
         item.setItemMeta(meta);
 
@@ -139,7 +139,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
 
-        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
+        ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         incrementItem.setItemMeta(meta);
 
         pane.bindItem(increment, new GuiItem(incrementItem, (event) -> {
@@ -164,7 +164,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
 
-        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
+        ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         additiveItem.setItemMeta(meta);
 
         pane.bindItem(additive, new GuiItem(additiveItem, (event) -> {
@@ -189,7 +189,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
 
-        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
+        ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         exclusiveIncrementItem.setItemMeta(meta);
 
         pane.bindItem(exclusiveIncrement, new GuiItem(exclusiveIncrementItem, (event) -> {
@@ -214,7 +214,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
 
-        ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(lore), meta);
+        ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         exclusiveAdditiveItem.setItemMeta(meta);
 
         pane.bindItem(exclusiveAdditive, new GuiItem(exclusiveAdditiveItem, (event) -> {

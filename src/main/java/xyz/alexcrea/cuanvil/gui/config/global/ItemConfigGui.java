@@ -130,7 +130,7 @@ public class ItemConfigGui extends ChestGui {
     private boolean isMaterial(@Nullable ItemStack item, NamespacedKey material) {
         if (item == null) return false;
 
-        return material.equals(MaterialUtil.INSTANCE.getCustomType(item));
+        return material.equals(MaterialUtil.getCustomType(item));
     }
 
 }

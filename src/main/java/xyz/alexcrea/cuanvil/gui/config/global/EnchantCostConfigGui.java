@@ -91,12 +91,12 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         List<Message> displayLore = factory.getDisplayLore();
         if (displayLore != null) {
             lore.add(Component.empty());
-            lore.addAll(ComponentUtil.INSTANCE.asComponents(displayLore, factory.getParam()));
+            lore.addAll(ComponentUtil.asComponents(displayLore, factory.getParam()));
         }
 
         // Edit name and lore
-        ComponentUtil.INSTANCE.setMessageName(itemMeta, itemName, factory.getParam());
-        ComponentUtil.INSTANCE.applyLore(lore, itemMeta);
+        ComponentUtil.setMessageName(itemMeta, itemName, factory.getParam());
+        ComponentUtil.applyLore(lore, itemMeta);
 
         item.setItemMeta(itemMeta);
 

@@ -30,7 +30,6 @@ import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MetricsUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -167,32 +166,36 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         this.parent.updateValueForGeneric(this.enchantConflict, true);
     }
 
+    private List<Component> enchantmentsLore() {
+        // Prepare enchantment lore
+        var enchantLore = MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_LORE_HEADER.formatted();
+
+        Set<CAEnchantment> enchants = getSelectedEnchantments();
+        if(enchants.isEmpty()) {
+            enchantLore.addAll(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_LORE_EMPTY.formatted());
+            return enchantLore;
+        }
+
+        enchantLore.addAll(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_LORE_NOT_EMPTY.formatted());
+        Iterator<CAEnchantment> enchantIterator = enchants.iterator();
+
+        boolean greaterThanMax = enchants.size() > 5;
+        int maxIndex = (greaterThanMax ? 4 : enchants.size());
+        for(int i = 0; i < maxIndex; i++) {
+            // format string like "- Fire Protection"
+            String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
+            enchantLore.addAll(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_LORE_ITEM.formatted(formattedName));
+        }
+        if(greaterThanMax) {
+            var count = enchants.size() - 4;
+            enchantLore.addAll(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_LORE_AND_MORE.formatted(count));
+        }
+        return enchantLore;
+    }
+
     @Override
     public void updateLocal() {
         if(!this.shouldWork) return;
-
-        // Prepare enchantment lore
-        ArrayList<String> enchantLore = new ArrayList<>();
-        enchantLore.add("<gray>Allow you to select a list of <dark_purple>Enchantments <gray>that this conflict should include");//TODO MESSAGE
-        Set<CAEnchantment> enchants = getSelectedEnchantments();
-        if(enchants.isEmpty()) {
-            enchantLore.add("<gray>There is no included enchantment for this conflict.");//TODO MESSAGE
-        } else {
-            enchantLore.add("<gray>List of included enchantment for this conflict:");//TODO MESSAGE
-            Iterator<CAEnchantment> enchantIterator = enchants.iterator();
-
-            boolean greaterThanMax = enchants.size() > 5;
-            int maxIndex = (greaterThanMax ? 4 : enchants.size());
-            for(int i = 0; i < maxIndex; i++) {
-                // format string like "- Fire Protection"
-                String formattedName = CasedStringUtil.snakeToUpperSpacedCase(enchantIterator.next().getKey().getKey());
-                enchantLore.add("<gray>- <dark_purple>" + formattedName);
-            }
-            if(greaterThanMax) {
-                enchantLore.add("<gray>And " + (enchants.size() - 4) + " more...");//TODO MESSAGE
-            }
-
-        }
 
         // Prepare group lore
         List<Component> groupLore = SelectGroupContainer.getGroupLore(this, "conflict", "exclude");
@@ -202,8 +205,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta enchantMeta = enchantItem.getItemMeta();
         assert enchantMeta != null;
 
-        enchantMeta.setDisplayName("<green>Select included <dark_purple>Enchantments <green>Settings");//TODO MESSAGE
-        enchantMeta.setLore(enchantLore);
+        ComponentUtil.setMessageName(enchantMeta, MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_TITLE);
+        ComponentUtil.applyLore(enchantmentsLore(), enchantMeta);
 
         enchantItem.setItemMeta(enchantMeta);
 
@@ -214,7 +217,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta groupMeta = groupItem.getItemMeta();
         assert groupMeta != null;
 
-        groupMeta.setDisplayName("<green>Select Excluded §3Groups <green>Settings");//TODO MESSAGE
+        ComponentUtil.setMessageName(groupMeta, MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_EXCLUDED_GROUPS_TITLE);
         ComponentUtil.applyLore(groupLore, groupMeta);
 
         groupItem.setItemMeta(groupMeta);

@@ -75,8 +75,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(deleteMeta, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_NAME());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
+        ComponentUtil.setMessageName(deleteMeta, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_NAME());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -101,8 +101,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_NAME());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_LORE().formatted(), meta);
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_NAME());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_LORE().formatted(), meta);
 
         item.setItemMeta(meta);
         this.noRemoveExactLinearXp = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);

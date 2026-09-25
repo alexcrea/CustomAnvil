@@ -57,12 +57,12 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        ComponentUtil.INSTANCE.setMessageName(
+        ComponentUtil.setMessageName(
                 meta,
                 MsgUI.INSTANCE.getMATERIAL_GROUP_NAME(),
                 CasedStringUtil.snakeToUpperSpacedCase(group.getName())
         );
-        ComponentUtil.INSTANCE.applyLore(
+        ComponentUtil.applyLore(
                 MsgUI.INSTANCE.getMATERIAL_GROUP_LORE().formatted(
                         group.getGroups().size(),
                         group.getNonGroupInheritedMaterials().size(),

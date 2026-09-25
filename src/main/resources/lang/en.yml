@@ -185,11 +185,19 @@ config-ui.unit-repair:
     item: "<gray>\\%<green>%name <yellow>repaired by <green>%unit"
     new:
       title: "Select unit repair item."
+      name: "<green>Select a new unit material"
+      lore:
+        1: "<gray>Select a new unit material to be used."
+        2: "<gray>You will be asked the material to use."
       description:
         1: "<gray>Click here with an item to set the item"
         2: "<gray>You like to be an unit repair item"
     element:
       title: "<yellow>%type <red>Unit repair <reset>(%page/%max_page)"
+      name: "<yellow>Repaired by %name"
+      lore:
+        1: "<gray>There is currently <yellow>%count <gray>reparable item with %name"
+        2: "<gray>Click here to open the menu to edit reparable item by %name"
       value:
         title: "<black>\\%<dark_gray>%name Repair"
         description:
@@ -300,6 +308,16 @@ config-ui.enchant-conflict:
         description:
           1: "<gray>Minimum enchantment count set to X mean only X enchantment can be put"
           2: "<gray>on an item before the conflict is active."
+      enchantments:
+        title: "<green>Select included <dark_purple>Enchantments <green>Settings"
+        lore:
+          header: "<gray>Allow you to select a list of <dark_purple>Enchantments <gray>that this conflict should include"
+          empty: "<gray>There is no included enchantment for this conflict."
+          not-empty: "<gray>List of included enchantment for this conflict:"
+          item: "<gray>- <dark_purple>%name"
+          and-more: "<gray>And %count more..."
+      excluded-groups:
+        title: "<green>Select Excluded <dark_aqua>Groups <green>Settings"
 
 config-ui.material-group:
     title: "Group Config <reset>(%page/%max_page)"
@@ -319,6 +337,17 @@ config-ui.material-group:
         button:
           name: "<dark_red>DELETE GROUP"
           lore: "<red>Caution with this button !"
+      used:
+        header:
+          1: "<red>Can't delete group %group"
+          2: "<yellow>Used by:"
+        item: "<reset>- <yellow>%name"
+        and-more: "<red>And %count More..."
+        group: "group %group"
+        conflict: "conflict %conflict"
+      select:
+        materials: "<green>Select included <yellow>Materials <green>Settings"
+        groups: "<green>Select included <dark_aqua>Groups <green>Settings"
 
 config-ui.material-select:
     new:

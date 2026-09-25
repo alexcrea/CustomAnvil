@@ -54,7 +54,7 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         String key = enchant.getKey().toString().toLowerCase(Locale.ROOT);
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
-        var defaultValue = enchant.defaultMaxLevel();
+        //var defaultValue = enchant.defaultMaxLevel();
         var defaultValueStr = String.valueOf(enchant.defaultMaxLevel());
 
         return new IntSettingsGui.IntSettingFactory(

@@ -116,8 +116,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DISABLED_TITLE());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DISABLED_DESCRIPTION().formatted(), meta);
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DISABLED_TITLE());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getBASIC_CAP_ANVIL_COST_DISABLED_DESCRIPTION().formatted(), meta);
 
         item.setItemMeta(meta);
         this.noCapRepairItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
@@ -138,8 +138,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DISABLED_TITLE());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DISABLED_DESCRIPTION().formatted(), meta);
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DISABLED_TITLE());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getBASIC_MAX_ANVIL_COST_DISABLED_DESCRIPTION().formatted(), meta);
         item.setItemMeta(meta);
         this.noMaxCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -240,8 +240,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DISABLED_TITLE());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DISABLED_DESCRIPTION().formatted(), meta);
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DISABLED_TITLE());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getBASIC_COLOUR_PERMISSION_DISABLED_DESCRIPTION().formatted(), meta);
         item.setItemMeta(meta);
         this.noPermissionNeededItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -261,8 +261,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOUR_COST_DISABLED_TITLE());
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getBASIC_COLOUR_COST_DISABLED_DESCRIPTION().formatted(), meta);
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getBASIC_COLOUR_COST_DISABLED_TITLE());
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getBASIC_COLOUR_COST_DISABLED_DESCRIPTION().formatted(), meta);
 
         item.setItemMeta(meta);
         this.noColourCostItem = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);

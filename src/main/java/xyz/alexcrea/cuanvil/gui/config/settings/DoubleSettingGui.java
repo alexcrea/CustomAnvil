@@ -80,7 +80,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
         meta.setDisplayName("<red>Disable item being repaired ?");
         meta.setLore(Arrays.asList("<gray>Confirm disabling unit repair for this item..",
-                "§4Cation: This action can't be canceled."));
+                "<dark_red>Cation: This action can't be canceled."));
 
         DELETE_ITEM_STACK.setItemMeta(meta);
     }
@@ -208,8 +208,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>" + displayValue(now) + " §f-> <yellow>" + displayValue(planned)
-                + " §r(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "§r)"));
+        meta.setDisplayName("<yellow>" + displayValue(now) + " <white>-> <yellow>" + displayValue(planned)
+                + " <reset>(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "<reset>)"));
         ComponentUtil.INSTANCE.applyLore(setLoreItem, meta);
         item.setItemMeta(meta);
 

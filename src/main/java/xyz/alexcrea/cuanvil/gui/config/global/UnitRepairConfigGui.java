@@ -16,9 +16,9 @@ import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -80,11 +80,8 @@ public class UnitRepairConfigGui extends
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>Repaired by " + materialName);
-        meta.setLore(Arrays.asList(
-                "<gray>There is currently <yellow>" + reparableItemCount + " <gray>reparable item with " + materialName,
-                "<gray>Click here to open the menu to edit reparable item by " + materialName
-        ));
+        ComponentUtil.setMessageName(meta, MsgUI.UNIT_REPAIR_ELEMENT_NAME, materialName);
+        ComponentUtil.applyLore(meta, MsgUI.UNIT_REPAIR_ELEMENT_LORE, materialName, reparableItemCount);
 
         item.setItemMeta(meta);
 
@@ -132,11 +129,8 @@ public class UnitRepairConfigGui extends
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("<green>Select a new unit material");
-        createMeta.setLore(Arrays.asList(
-                "<gray>Select a new unit material to be used.",
-                "<gray>You will be asked the material to use."
-        ));
+        ComponentUtil.setMessageName(createMeta, MsgUI.UNIT_REPAIR_NEW_NAME);
+        ComponentUtil.applyLore(createMeta, MsgUI.UNIT_REPAIR_NEW_LORE);
 
         createItem.setItemMeta(createMeta);
 
@@ -144,11 +138,11 @@ public class UnitRepairConfigGui extends
             clickEvent.setCancelled(true);
 
             new SelectItemTypeGui(
-                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_TITLE(), "",
-                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_DESCRIPTION(), "",
+                    MsgUI.UNIT_REPAIR_NEW_TITLE, "",
+                    MsgUI.UNIT_REPAIR_NEW_DESCRIPTION, "",
                     this,
                     (itemStack, player) -> {
-                        NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
+                        NamespacedKey type = MaterialUtil.getCustomType(itemStack);
                         // Add new material
                         updateValueForGeneric(type, true);
 

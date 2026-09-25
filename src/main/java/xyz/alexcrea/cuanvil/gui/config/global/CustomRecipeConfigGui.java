@@ -66,11 +66,11 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        ComponentUtil.INSTANCE.setMessageName(meta,
+        ComponentUtil.setMessageName(meta,
                 MsgUI.INSTANCE.getCUSTOM_RECIPE_NAME(),
                 CasedStringUtil.snakeToUpperSpacedCase(recipe.toString())
         );
-        ComponentUtil.INSTANCE.applyLore(getRecipeLore(recipe), meta);
+        ComponentUtil.applyLore(getRecipeLore(recipe), meta);
 
         displayedItem.setItemMeta(meta);
         return displayedItem;

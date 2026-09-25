@@ -89,8 +89,8 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         meta.addItemFlags(ItemFlag.values());
         var name = CasedStringUtil.snakeToUpperSpacedCase(conflict.toString());
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_NAME(), name);
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_LORE().formatted(
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_NAME(), name);
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_LORE().formatted(
                 conflict.getEnchants().size(),
                 conflict.getCantConflictGroup().getGroups().size(),
                 conflict.getMinBeforeBlock()

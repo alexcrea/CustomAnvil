@@ -41,7 +41,7 @@ object MiniMessageUtil {
 
     @JvmStatic
     fun fromLegacyWithCorrectReset(legacyText: String): Component {
-        val parts = legacyText.split("§r")
+        val parts = legacyText.split("<reset>")
         if(parts.isEmpty()) return Component.empty()
 
         var start = legacy_mm.deserialize(parts[0])

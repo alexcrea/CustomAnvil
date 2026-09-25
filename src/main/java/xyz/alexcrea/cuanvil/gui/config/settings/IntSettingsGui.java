@@ -148,7 +148,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         var nowDisplay = holder.valueDisplayName(type, now);
         var plannedDisplay = holder.valueDisplayName(type, planned);
         var deltaDisplay = holder.deltaDisplay(type, now, planned);
-        meta.setDisplayName("<yellow>" + nowDisplay + " §f-> <yellow>" + plannedDisplay + " §r(<red>" + deltaDisplay + "§r)");//TODO MESSAGE
+        meta.setDisplayName("<yellow>" + nowDisplay + " <white>-> <yellow>" + plannedDisplay + " <reset>(<red>" + deltaDisplay + "<reset>)");//TODO MESSAGE
 
         ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
         item.setItemMeta(meta);
