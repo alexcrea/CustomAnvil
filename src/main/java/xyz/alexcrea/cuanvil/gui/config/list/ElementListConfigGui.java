@@ -21,6 +21,8 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -227,7 +229,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
                 ItemMeta leftMeta = leftItem.getItemMeta();
 
                 assert leftMeta != null;
-                leftMeta.setDisplayName("<yellow>Return to page " + (page));
+                ComponentUtil.setMessageName(leftMeta, MsgUI.ELEMENT_LIST_GO_LEFT, page);
 
                 leftItem.setItemMeta(leftMeta);
                 this.goLeftItem.setItem(leftItem);
@@ -245,7 +247,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
                 ItemMeta rightMeta = rightItem.getItemMeta();
                 assert rightMeta != null;
 
-                rightMeta.setDisplayName("<yellow>Go to page " + (page + 2));
+                ComponentUtil.setMessageName(rightMeta, MsgUI.ELEMENT_LIST_GO_RIGHT, page + 2);
 
                 rightItem.setItemMeta(rightMeta);
                 this.goRightItem.setItem(rightItem);

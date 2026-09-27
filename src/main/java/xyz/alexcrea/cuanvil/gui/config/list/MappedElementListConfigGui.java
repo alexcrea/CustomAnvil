@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -40,12 +40,9 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName("<green>Create new " + genericDisplayedName());
-        createMeta.setLore(Arrays.asList(
-                "<gray>Create a new " + genericDisplayedName() + ".",
-                "<gray>You will be asked to name the " + genericDisplayedName() + " in chat.",
-                "<gray>Then, you should edit the " + genericDisplayedName() + " config as you need"
-        ));
+        var type = genericDisplayedName();
+        ComponentUtil.setMessageName(createMeta, MsgUI.ELEMENT_LIST_NEW_TITLE, type);
+        ComponentUtil.applyLore(createMeta, MsgUI.ELEMENT_LIST_NEW_LORE, type);
 
         createItem.setItemMeta(createMeta);
 

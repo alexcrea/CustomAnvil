@@ -44,9 +44,13 @@ object MsgUI {
 
     val SELECT_ITEM_TYPE_PLACE_HERE = Message("select-item-type.place-here")
 
-    val ELEMENT_LIST_INSTRUCTION_NEW = Message("element-list.instruction-new", "type")
+    val ELEMENT_LIST_INSTRUCTION_NEW = Message("element-list.new.instruction", "type")
     val ELEMENT_LIST_CANCELLED_NEW = Message("element-list.cancelled-new", "type")
     val ELEMENT_LIST_DUPLICATED_NEW = Message("element-list.duplicated-new", "type")
+    @JvmField val ELEMENT_LIST_GO_LEFT = Message("element-list.go-left", "page")
+    @JvmField val ELEMENT_LIST_GO_RIGHT = Message("element-list.go-right", "page")
+    @JvmField val ELEMENT_LIST_NEW_TITLE = Message("element-list.new.title", "type")
+    @JvmField val ELEMENT_LIST_NEW_LORE = Message("element-list.new.lore", "type")
 
     val UNIT_REPAIR_TITLE = Message("unit-repair.title", null, "page", "max_page")
     val UNIT_REPAIR_ITEM = Message("unit-repair.item", "name", "unit")

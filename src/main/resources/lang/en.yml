@@ -147,11 +147,19 @@ config-ui.select-item-type:
     place-here: "<yellow>Place an item here"
 
 config-ui.element-list:
-    instruction-new:
-      1: "<yellow>Write the %type name you want to create in the chat."
-      2: "<yellow>Or write <red>cancel <yellow>to go back to %type config menu"
     cancelled-new: "%type creation cancelled..."
     duplicated-new: "<red>Please enter a %type name that do not already exist..."
+    go-lest: "<yellow>Return to page %page"
+    go-right: "<yellow>Go to page %page"
+    new:
+      title: "<green>Create new %type"
+      lore:
+        1: "<gray>Create a new %type."
+        2: "<gray>You will be asked to name the %type in chat."
+        3: "<gray>Then, you should edit the %type config as you need"
+      instruction:
+        1: "<yellow>Write the %type name you want to create in the chat."
+        2: "<yellow>Or write <red>cancel <yellow>to go back to %type config menu"
 
 config-ui.main:
   title: "<dark_gray>Anvil Config"
