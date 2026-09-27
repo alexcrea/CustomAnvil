@@ -147,7 +147,7 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
     }
 
     // return a list of AT LEAST 1 element. calling first is safe
-    fun formatted(vararg params: Any?): MutableList<Component> {
+    open fun formatted(vararg params: Any?): MutableList<Component> {
         val section = Lang.getSection(key)
         if(section != null) return formattedMultiline(section, *params)
 
@@ -232,4 +232,17 @@ class ErrorMessage(key: String, vararg params: String?): Message("error.$key", *
 }
 
 class CommandMessage(key: String, vararg params: String?): Message("command.$key", *params)
-class UIMessage(key: String, vararg params: String?): Message("config-ui.$key", *params)
+class UIMessage(key: String, vararg params: String?): Message("config-ui.$key", *params) {
+
+    // Make it not italic by default
+    override fun formatted(vararg params: Any?): MutableList<Component> {
+        val result = super.formatted(*params)
+
+        for((i, component) in result.withIndex()) {
+            result[i] = MiniMessageUtil.RESET_STYLE.append(component)
+        }
+
+        return result;
+    }
+
+}
