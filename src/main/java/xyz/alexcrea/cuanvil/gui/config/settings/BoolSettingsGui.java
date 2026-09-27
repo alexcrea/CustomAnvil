@@ -114,7 +114,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         // create & set Value item
         ArrayList<Component> valueLore = new ArrayList<>();
         if(holder.displayLore != null) {
-            valueLore.addAll(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param));
+            valueLore.addAll(ComponentUtil.asComponents(holder.displayLore, holder.param));
             valueLore.add(Component.empty());
         }
         valueLore.addAll(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted());
@@ -124,7 +124,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         assert valueMeta != null;
 
         valueMeta.setDisplayName(displayedName);//TODO MESSAGE ?
-        ComponentUtil.INSTANCE.applyLore(valueLore, valueMeta);
+        ComponentUtil.applyLore(valueLore, valueMeta);
         valueItemStack.setItemMeta(valueMeta);
 
         GuiItem resultItem = new GuiItem(valueItemStack, inverseNowConsumer(), CustomAnvil.instance);

@@ -366,6 +366,21 @@ config-ui.material-select:
       confirm:
         title: "Remove %name"
         description: "<dark_gray>Confirm Remove %name from this list."
+    add:
+      name: "<green>Add Item"
+      lore:
+        1: "<gray>Click here with an item to add"
+        2: "<gray>it's Material to the list."
+    insta-remove:
+      enabled:
+        name: "<yellow>Instant remove is <green>Enabled <yellow>!"
+        lore: "<gray>Click here to disable the instant remove"
+      disabled:
+        name: "<yellow>Instant remove is <red>Disabled <yellow>!"
+        lore: "<gray>Click here to enable the instant remove"
+    item:
+      name: "<green>%name"
+      lore: "<gray>Click here to remove this material from the list"
 
 config-ui.enchant-config:
   title: "Configuring %name"

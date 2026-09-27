@@ -23,12 +23,11 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgError;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -101,10 +100,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta selectMeta = selectItem.getItemMeta();
         assert selectMeta != null;
 
-        selectMeta.setDisplayName("<green>Add Item");
-        selectMeta.setLore(Arrays.asList(
-                "<gray>Click here with an item to add",
-                "<gray>it's Material to the list."));
+        ComponentUtil.setMessageName(selectMeta, MsgUI.MATERIAL_SELECT_ADD_NAME);
+        ComponentUtil.applyLore(selectMeta, MsgUI.MATERIAL_SELECT_ADD_LORE);
 
         selectItem.setItemMeta(selectMeta);
 
@@ -121,9 +118,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta instantRemoveOnMeta = instantRemoveOnItem.getItemMeta();
         assert instantRemoveOnMeta != null;
 
-        instantRemoveOnMeta.setDisplayName("<yellow>Instant remove is <green>Enabled <yellow>!");
-        instantRemoveOnMeta.setLore(
-                Collections.singletonList("<gray>Click here to disable the instant remove"));
+        ComponentUtil.setMessageName(instantRemoveOnMeta, MsgUI.MATERIAL_SELECT_INSTA_REMOVE_ENABLED_NAME);
+        ComponentUtil.applyLore(instantRemoveOnMeta, MsgUI.MATERIAL_SELECT_INSTA_REMOVE_ENABLED_LORE);
 
         instantRemoveOnItem.setItemMeta(instantRemoveOnMeta);
 
@@ -132,9 +128,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta instantRemoveOffMeta = instantRemoveOffItem.getItemMeta();
         assert instantRemoveOffMeta != null;
 
-        instantRemoveOffMeta.setDisplayName("<yellow>Instant remove is <red>Disabled <yellow>!");
-        instantRemoveOffMeta.setLore(
-                Collections.singletonList("<gray>Click here to enable the instant remove"));
+        ComponentUtil.setMessageName(instantRemoveOffMeta, MsgUI.MATERIAL_SELECT_INSTA_REMOVE_DISABLED_NAME);
+        ComponentUtil.applyLore(instantRemoveOffMeta, MsgUI.MATERIAL_SELECT_INSTA_REMOVE_DISABLED_LORE);
 
         instantRemoveOffItem.setItemMeta(instantRemoveOffMeta);
 
@@ -159,7 +154,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta saveMeta = saveItemStack.getItemMeta();
         assert saveMeta != null;
 
-        saveMeta.setDisplayName("<green>Save");
+        ComponentUtil.setMessageName(saveMeta, MsgUI.SHARED_SAVE_ITEM_TITLE);
 
         saveItemStack.setItemMeta(saveMeta);
 
@@ -199,8 +194,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             ItemStack cursor = player.getItemOnCursor();
 
             // Test if cursor material allowed
-            NamespacedKey cursorMat = MaterialUtil.INSTANCE.getCustomType(cursor);
-            if(MaterialUtil.INSTANCE.isAir(cursorMat)) return;
+            NamespacedKey cursorMat = MaterialUtil.getCustomType(cursor);
+            if(MaterialUtil.isAir(cursorMat)) return;
             if(this.illegalMaterials.contains(cursorMat)) return;
 
             // Update gui only if item did not exist before.
@@ -220,8 +215,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null) return item;
-        meta.setDisplayName("<green>" + CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()));
-        meta.setLore(Collections.singletonList("<gray>Click here to remove this material from the list"));
+        var name = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
+        ComponentUtil.setMessageName(meta, MsgUI.MATERIAL_SELECT_ITEM_TITLE, name);
+        ComponentUtil.setMessageName(meta, MsgUI.MATERIAL_SELECT_ITEM_LORE);
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);
@@ -249,8 +245,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
-                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_TITLE(), materialName,
-                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_DESCRIPTION(), materialName.toLowerCase(),
+                        MsgUI.MATERIAL_SELECT_CONFIRM_TITLE, materialName,
+                        MsgUI.MATERIAL_SELECT_CONFIRM_DESCRIPTION, materialName.toLowerCase(),
                         this, this,
                         () -> {
                             removeMaterial(material);

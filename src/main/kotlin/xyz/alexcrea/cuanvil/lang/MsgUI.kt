@@ -159,8 +159,18 @@ object MsgUI {
     @JvmField val MATERIAL_GROUP_ELEMENT_SELECT_MATERIALS = Message("material-group.element.select.materials")
     @JvmField val MATERIAL_GROUP_ELEMENT_SELECT_GROUPS = Message("material-group.element.select.groups")
 
-    val MATERIAL_SELECT_CONFIRM_TITLE = Message("material-select.new.confirm.title", "name")
-    val MATERIAL_SELECT_CONFIRM_DESCRIPTION = Message("material-select.new.confirm.description", "name")
+    @JvmField val MATERIAL_SELECT_CONFIRM_TITLE = Message("material-select.new.confirm.title", "name")
+    @JvmField val MATERIAL_SELECT_CONFIRM_DESCRIPTION = Message("material-select.new.confirm.description", "name")
+    @JvmField val MATERIAL_SELECT_ADD_NAME = Message("material-select.add.name")
+    @JvmField val MATERIAL_SELECT_ADD_LORE = Message("material-select.add.lore")
+
+    @JvmField val MATERIAL_SELECT_INSTA_REMOVE_ENABLED_NAME = Message("material-select.insta-remove.enabled.name")
+    @JvmField val MATERIAL_SELECT_INSTA_REMOVE_ENABLED_LORE = Message("material-select.insta-remove.enabled.lore")
+    @JvmField val MATERIAL_SELECT_INSTA_REMOVE_DISABLED_NAME = Message("material-select.insta-remove.disabled.name")
+    @JvmField val MATERIAL_SELECT_INSTA_REMOVE_DISABLED_LORE = Message("material-select.insta-remove.disabled.lore")
+
+    @JvmField val MATERIAL_SELECT_ITEM_TITLE = Message("material-select.item.name", "name")
+    @JvmField val MATERIAL_SELECT_ITEM_LORE = Message("material-select.item.lore")
 
     val ENCHANT_CONFIG_TITLE = Message("enchant-config.title", "name")
     val ENCHANT_CONFIG_NAME = Message("enchant-config.name", "name")
