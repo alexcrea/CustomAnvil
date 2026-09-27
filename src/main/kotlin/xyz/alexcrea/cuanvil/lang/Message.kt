@@ -176,7 +176,7 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
 
         val stb = StringBuilder()
         for(component in formated) {
-            if(!stb.isEmpty()) stb.append('\n')
+            if(stb.isNotEmpty()) stb.append('\n')
             stb.append(component.serializeLegacy())
         }
         return stb.toString()

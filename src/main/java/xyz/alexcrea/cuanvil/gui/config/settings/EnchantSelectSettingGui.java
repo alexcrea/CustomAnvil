@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -211,7 +212,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     }
 
     @Override
-    protected List<String> getCreateItemLore() {
+    protected List<Component> getCreateItemLore() {
         throw new IllegalStateException("Using a method intended to not be used");
     }
 
@@ -221,7 +222,7 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
     }
 
     @Override
-    protected String createItemName() {
+    protected Component createItemName() {
         throw new IllegalStateException("Using a method intended to not be used");
     }
 

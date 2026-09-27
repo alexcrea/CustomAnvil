@@ -68,6 +68,8 @@ object MsgUI {
 
     val UNIT_REPAIR_NEW_ELEMENT_TITLE = Message("unit-repair.element.new.title", null)
     val UNIT_REPAIR_NEW_ELEMENT_DESCRIPTION = Message("unit-repair.element.new.description", "name")
+    @JvmField val UNIT_REPAIR_NEW_ELEMENT_NAME = Message("unit-repair.element.new.name", "name")
+    @JvmField val UNIT_REPAIR_NEW_ELEMENT_LORE = Message("unit-repair.element.new.lore")
     val UNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR = Message("unit-repair.element.new.cannot-damage")
     val UNIT_REPAIR_NEW_ELEMENT_SAME_TYPE = Message("unit-repair.element.new.same-type")
 

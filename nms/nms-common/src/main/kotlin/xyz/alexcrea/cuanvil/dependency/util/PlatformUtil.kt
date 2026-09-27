@@ -51,6 +51,7 @@ object PlatformUtil {
         return lore ?: ArrayList()
     }
 
+    @JvmStatic
     fun ItemMeta.setComponentLore(lore: List<Component?>) {
         if (isPaper) {
             this.lore(lore)
@@ -70,6 +71,7 @@ object PlatformUtil {
     // Display name
     private val useCustomName = hasMethod(ItemMeta::class.java, "customName")
 
+    @JvmStatic
     fun ItemMeta.componentDisplayName(): Component? {
         if (useCustomName) {
             if (!this.hasCustomName()) return null
@@ -84,6 +86,7 @@ object PlatformUtil {
         }
     }
 
+    @JvmStatic
     fun ItemMeta.setComponentDisplayName(component: Component?, fallback: String? = null) {
         if (useCustomName) {
             this.customName(component)
@@ -113,12 +116,7 @@ object PlatformUtil {
         }
 
         return false
-    }    /**
-     * Try to send paper component to the player
-     *
-     * @param component The used component
-     * @return true if sent, else otherwise
-     */
+    }
 
     /**
      * Try to set component lore of an item

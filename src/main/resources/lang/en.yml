@@ -35,7 +35,7 @@ error.confirm-action:
     generic: "Could not process confirmation."
 error.ui:
     save-failed: "<red>Something went wrong while saving the change of value."
-
+    config-deleted: "This config do not exist anymore"
 
 command.shared:
     no-diag-permission: "<red>You do not have permission to diagnostic this server"
@@ -216,6 +216,10 @@ config-ui.unit-repair:
         description:
           1: "<gray>Click here with an item to set the item"
           2: "<gray>You like to be repaired by %name"
+        name: "<green>Add a new item reparable by %name"
+        lore:
+          1: "<gray>Select a new item to be repairable."
+          2: "<gray>You will be asked the material to use."
         cannot-damage: "<red>This item can't be damaged, so it can't be repaired."
         same-type: "<red>Item can't repair something of the same type."
 

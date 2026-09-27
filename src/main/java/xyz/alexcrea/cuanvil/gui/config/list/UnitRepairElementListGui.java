@@ -2,6 +2,7 @@ package xyz.alexcrea.cuanvil.gui.config.list;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,11 +19,11 @@ import xyz.alexcrea.cuanvil.gui.config.list.elements.ElementMappedToListGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.DoubleSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.MsgError;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -58,11 +59,8 @@ public class UnitRepairElementListGui
 
     // SettingGuiListConfigGui methods
     @Override
-    protected List<String> getCreateItemLore() {
-        return Arrays.asList(//TODO MESSAGE
-                "<gray>Select a new item to be repairable.",
-                "<gray>You will be asked the material to use."
-        );
+    protected List<Component> getCreateItemLore() {
+        return MsgUI.UNIT_REPAIR_NEW_ELEMENT_LORE.formatted();
     }
 
     @Override
@@ -80,7 +78,7 @@ public class UnitRepairElementListGui
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
-                        NamespacedKey type = MaterialUtil.INSTANCE.getCustomType(itemStack);
+                        NamespacedKey type = MaterialUtil.getCustomType(itemStack);
 
                         if(!(meta instanceof Damageable)) {
                             MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR().send(player);
@@ -118,8 +116,8 @@ public class UnitRepairElementListGui
     }
 
     @Override
-    protected String createItemName() {
-        return "<green>Add a new item reparable by " + this.materialName; //TODO MESSAGE ?
+    protected Component createItemName() {
+        return MsgUI.UNIT_REPAIR_NEW_ELEMENT_NAME.formattedConcatenated(this.materialName);
     }
 
     @Override
@@ -207,7 +205,7 @@ public class UnitRepairElementListGui
         this.backgroundPane.bindItem('R', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
 
         for(HumanEntity viewer : getViewers()) {
-            viewer.sendMessage("This config do not exist anymore");
+            MsgError.UI_CONFIG_DELETED.send(viewer);
             this.parentGui.show(viewer);
         }
     }

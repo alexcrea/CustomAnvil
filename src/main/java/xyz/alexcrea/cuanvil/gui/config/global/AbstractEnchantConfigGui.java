@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.gui.config.global;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import net.kyori.adventure.text.Component;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
@@ -106,7 +107,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     }
 
     @Override
-    protected List<String> getCreateItemLore() {
+    protected List<Component> getCreateItemLore() {
         throw new IllegalStateException("Using a method intended to not be used");
     }
 
@@ -116,7 +117,7 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
     }
 
     @Override
-    protected String createItemName() {
+    protected Component createItemName() {
         throw new IllegalStateException("Using a method intended to not be used");
     }
 

@@ -3,15 +3,18 @@ package xyz.alexcrea.cuanvil.gui.config.list;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
+import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,8 +53,8 @@ public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGui
         ItemMeta createMeta = createItem.getItemMeta();
         assert createMeta != null;
 
-        createMeta.setDisplayName(createItemName());
-        createMeta.setLore(getCreateItemLore());
+        PlatformUtil.setComponentDisplayName(createMeta, createItemName(), null);
+        ComponentUtil.applyLore(getCreateItemLore(), createMeta);
 
         createItem.setItemMeta(createMeta);
         return new GuiItem(createItem, getCreateClickConsumer(), CustomAnvil.instance);
@@ -109,11 +112,11 @@ public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGui
         throw new IllegalStateException("Using a method intended to not be used");
     }
 
-    protected abstract List<String> getCreateItemLore();
+    protected abstract List<Component> getCreateItemLore();
 
     protected abstract Consumer<InventoryClickEvent> getCreateClickConsumer();
 
-    protected abstract String createItemName();
+    protected abstract Component createItemName();
 
     protected abstract S createFactory(T generic);
 

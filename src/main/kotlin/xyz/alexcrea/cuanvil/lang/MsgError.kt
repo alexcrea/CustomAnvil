@@ -25,5 +25,6 @@ object MsgError {
      */
     val CONFIRM_ACTION_GENERIC = ErrorMessage("confirm-action.generic")
     @JvmField val UI_SAVE_FAILED = ErrorMessage("ui.save-failed")
+    @JvmField val UI_CONFIG_DELETED = ErrorMessage("ui.config-deleted")
 
 }
