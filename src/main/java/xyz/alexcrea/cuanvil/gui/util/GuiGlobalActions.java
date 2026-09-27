@@ -4,9 +4,12 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
+import xyz.alexcrea.cuanvil.lang.MsgError;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -15,9 +18,9 @@ import java.util.function.Consumer;
 /**
  * A utility class to store function that create generic GUI actions.
  */
+@SuppressWarnings("unused")
+@NotNullByDefault
 public class GuiGlobalActions {
-
-    public static final String NO_EDIT_PERM = "§cYou do not have permission to edit the config";
 
     /**
      * A Consumer that should be used if the item goal is to do nothing on click.
@@ -34,17 +37,19 @@ public class GuiGlobalActions {
      * @param args     Arguments for the constructor the GUI class.
      * @return A consumer to create a new gui and open it.
      */
-    public static @NotNull Consumer<InventoryClickEvent> openGuiAction(
-            @NotNull Class<? extends Gui> clazz,
-            @NotNull Class<?>[] argClass,
-            @NotNull Object... args) {
+    @Contract(pure = true)
+    public static Consumer<InventoryClickEvent> openGuiAction(
+            Class<? extends Gui> clazz,
+            Class<?>[] argClass,
+            Object... args
+    ) {
         return event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to open inventory if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             try {
@@ -53,8 +58,8 @@ public class GuiGlobalActions {
                 Gui gui = constructor.newInstance(args);
                 gui.show(player);
 
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
-                     InstantiationException e) {
+            } catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+                    InstantiationException e) {
                 throw new RuntimeException(e);
             }
         };
@@ -68,8 +73,9 @@ public class GuiGlobalActions {
      *              It is assumed this class contain a constructor with no argument.
      * @return A consumer to create a new gui and open it.
      */
-    public static @NotNull Consumer<InventoryClickEvent> openGuiAction(
-            @NotNull Class<? extends Gui> clazz) {
+    @Contract(pure = true)
+    public static Consumer<InventoryClickEvent> openGuiAction(
+            Class<? extends Gui> clazz) {
         return openGuiAction(clazz, new Class<?>[0]);
     }
 
@@ -80,7 +86,8 @@ public class GuiGlobalActions {
      * @param factory The setting gui factory.
      * @return A consumer to create and open a new setting GUI.
      */
-    public static @NotNull Consumer<InventoryClickEvent> openSettingGuiAction(SettingGui.SettingGuiFactory factory) {
+    @Contract(pure = true)
+    public static Consumer<InventoryClickEvent> openSettingGuiAction(SettingGui.SettingGuiFactory factory) {
         return event -> {
             event.setCancelled(true);
             Gui gui = factory.create();
@@ -95,14 +102,15 @@ public class GuiGlobalActions {
      * @param goal The gui to open when consumer is run.
      * @return A consumer to open a global GUI.
      */
-    public static @NotNull Consumer<InventoryClickEvent> openGuiAction(@NotNull Gui goal) {
+    @Contract(pure = true)
+    public static Consumer<InventoryClickEvent> openGuiAction(Gui goal) {
         return event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to open inventory if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             goal.show(player);
@@ -118,23 +126,25 @@ public class GuiGlobalActions {
      * @param goal    The gui to update and open when consumer is run.
      * @return A consumer to open a global GUI.
      */
-    public static @NotNull Consumer<InventoryClickEvent> saveSettingAction(
-            @NotNull SettingGui setting,
-            @NotNull ValueUpdatableGui goal) {
+    @Contract(pure = true)
+    public static Consumer<InventoryClickEvent> saveSettingAction(
+            SettingGui setting,
+            ValueUpdatableGui goal
+    ) {
         return event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
             // Do not allow to save configuration if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
 
             // Save setting
-            if (!setting.onSave()) {
-                player.sendMessage("§cSomething went wrong while saving the change of value.");
-            }
+            if(!setting.onSave())
+                MsgError.UI_SAVE_FAILED.send(player);
+
             // Update gui for those who have it open.
             goal.updateGuiValues();
             // Then show

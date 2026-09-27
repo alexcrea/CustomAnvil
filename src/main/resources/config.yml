@@ -16,6 +16,11 @@ metric_type: auto
 # Accept true or false (true by default)
 metric_collect_errors: true
 
+# Which language should the plugin should be
+# If you like to add language yourself see TODO link to guide
+# Currently available languages: en
+language: en
+
 # All anvil cost will be capped to limit_repair_value if enabled.
 #
 # In other words:

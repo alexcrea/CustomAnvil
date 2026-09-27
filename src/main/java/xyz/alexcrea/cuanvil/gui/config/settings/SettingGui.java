@@ -1,7 +1,9 @@
 package xyz.alexcrea.cuanvil.gui.config.settings;
 
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
+import org.jetbrains.annotations.NotNullByDefault;
 
+@NotNullByDefault
 public interface SettingGui {
 
     /**

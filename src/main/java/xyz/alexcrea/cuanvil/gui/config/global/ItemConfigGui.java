@@ -9,28 +9,32 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 
+@NotNullByDefault
 public class ItemConfigGui extends ChestGui {
 
-    private EnchantConflictGui enchantConflictGui;
-    private GroupConfigGui groupConfigGui;
-    private UnitRepairConfigGui unitRepairConfigGui;
-    private CustomRecipeConfigGui customRecipeConfigGui;
+    //TODO #130 part 3
+    private @Nullable EnchantConflictGui enchantConflictGui;
+    private @Nullable GroupConfigGui groupConfigGui;
+    private @Nullable UnitRepairConfigGui unitRepairConfigGui;
+    private @Nullable CustomRecipeConfigGui customRecipeConfigGui;
 
-    public ItemConfigGui(@NotNull Material display, @NotNull NamespacedKey material) {
-        super(3,
+    public ItemConfigGui(Material display, NamespacedKey material) {
+        super(3, MsgUI.INSTANCE.getITEM_CONFIG_TITLE().textHolder(
                 CasedStringUtil.snakeToUpperSpacedCase(
                         material.getKey().toLowerCase()
-                ) + " Config",
+                )),
                 CustomAnvil.instance);
 
         Pattern pattern = new Pattern(
@@ -47,7 +51,7 @@ public class ItemConfigGui extends ChestGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        displayMeta.setDisplayName("§aConfiguring " + material);
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getITEM_CONFIG_NAME().formatted(material), displayMeta);
         displayItemstack.setItemMeta(displayMeta);
         pane.bindItem('D', new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
 
@@ -71,7 +75,7 @@ public class ItemConfigGui extends ChestGui {
         pane.bindItem('Q', MainConfigGui.quitItem());
     }
 
-    private EnchantConflictGui getEnchantConflictGui(@NotNull NamespacedKey material) {
+    private EnchantConflictGui getEnchantConflictGui(NamespacedKey material) {
         if (enchantConflictGui == null) {
             enchantConflictGui = new EnchantConflictGui(this);
             enchantConflictGui.setFilter(group ->
@@ -83,7 +87,7 @@ public class ItemConfigGui extends ChestGui {
         return enchantConflictGui;
     }
 
-    private GroupConfigGui getGroupConfigGui(@NotNull NamespacedKey material) {
+    private GroupConfigGui getGroupConfigGui(NamespacedKey material) {
         if (groupConfigGui == null) {
             groupConfigGui = new GroupConfigGui(this);
             groupConfigGui.setFilter(group ->
@@ -95,12 +99,12 @@ public class ItemConfigGui extends ChestGui {
         return groupConfigGui;
     }
 
-    private UnitRepairConfigGui getUnitRepairConfigGui(@NotNull NamespacedKey material) {
+    private UnitRepairConfigGui getUnitRepairConfigGui(NamespacedKey material) {
         if (unitRepairConfigGui == null) {
             unitRepairConfigGui = new UnitRepairConfigGui(this);
             unitRepairConfigGui.setFilter(otherMat ->
                     otherMat.equals(material) || UnitRepairUtil.INSTANCE.findRawRepairValue(
-                            material, otherMat, ConfigHolder.UNIT_REPAIR_HOLDER.getConfig()) != null
+                            material, otherMat, ConfigHolder.UNIT_REPAIR) != null
             );
             unitRepairConfigGui.init();
         }
@@ -108,7 +112,7 @@ public class ItemConfigGui extends ChestGui {
         return unitRepairConfigGui;
     }
 
-    private CustomRecipeConfigGui getCustomRecipeConfigGui(@NotNull NamespacedKey material) {
+    private CustomRecipeConfigGui getCustomRecipeConfigGui(NamespacedKey material) {
         if (customRecipeConfigGui == null) {
             customRecipeConfigGui = new CustomRecipeConfigGui(this);
             customRecipeConfigGui.setFilter(recipe -> {
@@ -123,10 +127,10 @@ public class ItemConfigGui extends ChestGui {
         return customRecipeConfigGui;
     }
 
-    private boolean isMaterial(@Nullable ItemStack item, @NotNull NamespacedKey material) {
+    private boolean isMaterial(@Nullable ItemStack item, NamespacedKey material) {
         if (item == null) return false;
 
-        return material.equals(MaterialUtil.INSTANCE.getCustomType(item));
+        return material.equals(MaterialUtil.getCustomType(item));
     }
 
 }

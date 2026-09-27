@@ -11,19 +11,31 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.gui.config.SelectMaterialContainer;
 import xyz.alexcrea.cuanvil.gui.config.ask.ConfirmActionGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedElementListConfigGui;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgError;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
+@NotNullByDefault
 public class MaterialSelectSettingGui extends MappedElementListConfigGui<NamespacedKey, GuiItem> {
 
     private final SelectMaterialContainer selector;
@@ -36,10 +48,12 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     private int nowMaterialHash;
 
     public MaterialSelectSettingGui(
-            @NotNull SelectMaterialContainer selector,
-            @NotNull String title,
-            @NotNull Gui backGui) {
-        super(title);
+            SelectMaterialContainer selector,
+            Message title,
+            String param,
+            Gui backGui
+    ) {
+        super(title, param);
         this.selector = selector;
         this.backGui = backGui;
         this.instantRemove = false;
@@ -57,7 +71,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     @Override
-    protected Pattern getBackgroundPattern(){
+    protected Pattern getBackgroundPattern() {
         return new Pattern(
                 GuiSharedConstant.UPPER_FILLER_FULL_PLANE,
                 GuiSharedConstant.EMPTY_FILLER_FULL_LINE,
@@ -68,11 +82,11 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         );
     }
 
-    private GuiItem saveItem;
-    private GuiItem noChangeItem;
+    private @UnknownNullability GuiItem saveItem;
+    private @UnknownNullability GuiItem noChangeItem;
 
-    private GuiItem instantRemoveOn;
-    private GuiItem instantRemoveOff;
+    private @UnknownNullability GuiItem instantRemoveOn;
+    private @UnknownNullability GuiItem instantRemoveOff;
 
     @Override
     protected void prepareStaticValues() {
@@ -87,10 +101,10 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta selectMeta = selectItem.getItemMeta();
         assert selectMeta != null;
 
-        selectMeta.setDisplayName("§aAdd Item");
+        selectMeta.setDisplayName("<green>Add Item");
         selectMeta.setLore(Arrays.asList(
-                "§7Click here with an item to add",
-                "§7it's Material to the list."));
+                "<gray>Click here with an item to add",
+                "<gray>it's Material to the list."));
 
         selectItem.setItemMeta(selectMeta);
 
@@ -107,9 +121,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta instantRemoveOnMeta = instantRemoveOnItem.getItemMeta();
         assert instantRemoveOnMeta != null;
 
-        instantRemoveOnMeta.setDisplayName("§eInstant remove is §aEnabled §e!");
+        instantRemoveOnMeta.setDisplayName("<yellow>Instant remove is <green>Enabled <yellow>!");
         instantRemoveOnMeta.setLore(
-                Collections.singletonList("§7Click here to disable the instant remove"));
+                Collections.singletonList("<gray>Click here to disable the instant remove"));
 
         instantRemoveOnItem.setItemMeta(instantRemoveOnMeta);
 
@@ -118,9 +132,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta instantRemoveOffMeta = instantRemoveOffItem.getItemMeta();
         assert instantRemoveOffMeta != null;
 
-        instantRemoveOffMeta.setDisplayName("§eInstant remove is §cDisabled §e!");
+        instantRemoveOffMeta.setDisplayName("<yellow>Instant remove is <red>Disabled <yellow>!");
         instantRemoveOffMeta.setLore(
-                Collections.singletonList("§7Click here to enable the instant remove"));
+                Collections.singletonList("<gray>Click here to enable the instant remove"));
 
         instantRemoveOffItem.setItemMeta(instantRemoveOffMeta);
 
@@ -145,7 +159,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta saveMeta = saveItemStack.getItemMeta();
         assert saveMeta != null;
 
-        saveMeta.setDisplayName("§aSave");
+        saveMeta.setDisplayName("<green>Save");
 
         saveItemStack.setItemMeta(saveMeta);
 
@@ -154,9 +168,9 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
             HumanEntity player = event.getWhoClicked();
             // Do not allow to save configuration if player do not have edit configuration permission
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
+            if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
+                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
                 return;
             }
             if(testCantSave()) return;
@@ -165,14 +179,13 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             // Save setting
             Set<NamespacedKey> result = new HashSet<>(this.elementGuiMap.keySet());
 
-            if(!this.selector.setSelectedMaterials(result)){
-                player.sendMessage("§cSomething went wrong while saving the change of value.");
-            }
+            if(!this.selector.setSelectedMaterials(result))
+                MsgError.UI_SAVE_FAILED.send(player);
 
             // Return to parent
             this.backGui.show(player);
 
-            }, CustomAnvil.instance);
+        }, CustomAnvil.instance);
     }
 
     /**
@@ -191,7 +204,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             if(this.illegalMaterials.contains(cursorMat)) return;
 
             // Update gui only if item did not exist before.
-            if(!this.elementGuiMap.containsKey(cursorMat)){
+            if(!this.elementGuiMap.containsKey(cursorMat)) {
                 updateValueForGeneric(cursorMat, true);
                 this.nowMaterialHash ^= cursorMat.hashCode();
 
@@ -207,8 +220,8 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         ItemMeta meta = item.getItemMeta();
 
         if(meta == null) return item;
-        meta.setDisplayName("§a" + CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()));
-        meta.setLore(Collections.singletonList("§7Click here to remove this material from the list"));
+        meta.setDisplayName("<green>" + CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase()));
+        meta.setLore(Collections.singletonList("<gray>Click here to remove this material from the list"));
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);
@@ -229,15 +242,15 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     @Override
     protected GuiItem newElementRequested(NamespacedKey material, GuiItem newItem) {
         newItem.setAction(event -> {
-            if(this.instantRemove){
+            if(this.instantRemove) {
                 removeMaterial(material);
-            }else {
+            } else {
                 String materialName = CasedStringUtil.snakeToUpperSpacedCase(material.getKey().toLowerCase());
 
                 // Create and show confirm remove gui.
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
-                        "Remove " + materialName,
-                        "§7Confirm Remove " + materialName.toLowerCase() + " from this list.",
+                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_TITLE(), materialName,
+                        MsgUI.INSTANCE.getMATERIAL_SELECT_CONFIRM_DESCRIPTION(), materialName.toLowerCase(),
                         this, this,
                         () -> {
                             removeMaterial(material);
@@ -252,7 +265,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     private void removeMaterial(NamespacedKey material) {
-        if(this.elementGuiMap.containsKey(material)){
+        if(this.elementGuiMap.containsKey(material)) {
             this.nowMaterialHash ^= material.hashCode();
             setSaveItem();
             removeGeneric(material);
@@ -270,18 +283,18 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
         return element;
     }
 
-    private static int hashFromMaterialList(List<NamespacedKey> materialList){
+    private static int hashFromMaterialList(List<NamespacedKey> materialList) {
         int defaultMaterialHash = 0;
-        for (NamespacedKey material : materialList) {
+        for(NamespacedKey material : materialList) {
             defaultMaterialHash ^= material.hashCode();
         }
         return defaultMaterialHash;
     }
 
     private void setSaveItem() {
-        if(testCantSave()){
+        if(testCantSave()) {
             this.backgroundPane.bindItem('S', this.noChangeItem);
-        }else{
+        } else {
             this.backgroundPane.bindItem('S', this.saveItem);
         }
 
@@ -294,16 +307,18 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
 
     // Unused functions.
     @Override
+    @Nullable
     protected GuiItem prepareCreateNewItem() {// Not used
-        return null;
-    }
-    @Override
-    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {// Not used
         return null;
     }
 
     @Override
-    protected String genericDisplayedName() {// Not Used
-        return null;
+    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {// Not used
+        throw new IllegalStateException("Using a method intended to not be used");
+    }
+
+    @Override
+    protected Message genericDisplayedName() {// Not Used
+        throw new IllegalStateException("Using a method intended to not be used");
     }
 }

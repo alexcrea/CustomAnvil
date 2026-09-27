@@ -115,7 +115,7 @@ public interface CAEnchantment {
      * Get current level of the enchantment.
      *
      * @param item Item to search the level for. Should not get changed.
-     * @return Current leve of this enchantment on item. or 0 if absent.
+     * @return Current level of this enchantment on item. or 0 if absent.
      */
     default int getLevel(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
@@ -129,7 +129,7 @@ public interface CAEnchantment {
      *
      * @param item Item to search the level for. Should not get changed.
      * @param meta Meta of the provided item. Should not get changed.
-     * @return Current leve of this enchantment on item. or 0 if absent.
+     * @return Current level of this enchantment on item. or 0 if absent.
      */
     int getLevel(ItemStack item, ItemMeta meta);
 

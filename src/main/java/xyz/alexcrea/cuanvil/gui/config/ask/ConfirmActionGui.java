@@ -8,67 +8,80 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
+import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
-import xyz.alexcrea.cuanvil.util.MetricsUtil;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgError;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
+@NotNullByDefault
 public class ConfirmActionGui extends AbstractAskGui {
 
-    public ConfirmActionGui(@NotNull String title, String actionDescription,
-                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
-                            boolean permanent) {
-        super(3, title, backOnCancel);
+    public ConfirmActionGui(
+            Message title, String titleParam,
+            @Nullable Message actionDescription, String actionParam,
+            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
+            boolean permanent
+    ) {
+        super(3, title, titleParam, backOnCancel);
 
         // Save item
-        this.pane.bindItem('S', new GuiItem(
-                (permanent ? GuiSharedConstant.CONFIRM_PERMANENT_ITEM : GuiSharedConstant.CONFIRM_ITEM),
+        var saveItem = GuiGlobalItems.confirmItem(permanent,
                 event -> {
-            event.setCancelled(true);
-            HumanEntity player = event.getWhoClicked();
+                    event.setCancelled(true);
+                    HumanEntity player = event.getWhoClicked();
 
-            if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
-                player.closeInventory();
-                player.sendMessage(GuiGlobalActions.NO_EDIT_PERM);
-                return;
-            }
+                    if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
+                        player.closeInventory();
+                        MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                        return;
+                    }
 
-            boolean success;
-            try {
-                success = onConfirm.get();
-            } catch (Exception e) {
-                CustomAnvil.instance.getLogger().log(Level.WARNING, "Could not process confirmation supplier.", e);
-                MetricsUtil.INSTANCE.trackError(e);
-                success = false;
-            }
+                    boolean success;
+                    try {
+                        success = onConfirm.get();
+                    } catch(Exception e) {
+                        CustomAnvil.Companion.logError(MsgError.INSTANCE.getCONFIRM_ACTION_GENERIC().unformatted(), e, true, Level.WARNING);
+                        success = false;
+                    }
 
-            if (!success) {
-                event.getWhoClicked().sendMessage("§cAction could not be completed. ");
-            }
-            backOnConfirm.show(player);
+                    if(!success) {
+                        MsgUI.INSTANCE.getCONFIRM_ACTION_FAILED().send(player);
+                    }
+                    backOnConfirm.show(player);
+                }
+        );
 
-        }, CustomAnvil.instance));
+        this.pane.bindItem('S', saveItem);
 
         // Info item
         ItemStack infoItem = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = infoItem.getItemMeta();
+        assert infoMeta != null;
 
-        infoMeta.setDisplayName("§eAre you sure ?");
-        if(actionDescription != null){
-            infoMeta.setLore(Arrays.asList(actionDescription.split("\n")));
+        ComponentUtil.setMessageName(infoMeta, MsgUI.INSTANCE.getCONFIRM_ACTION_ARE_YOU_SURE());
+        if(actionDescription != null) {
+            ComponentUtil.applyLore(actionDescription.formatted(actionParam), infoMeta);
         }
 
         infoItem.setItemMeta(infoMeta);
 
         pane.bindItem('I', new GuiItem(infoItem, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
     }
-    public ConfirmActionGui(@NotNull String title, String actionDescription,
-                            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm){
-        this(title, actionDescription, backOnCancel, backOnConfirm, onConfirm, true);
+
+    public ConfirmActionGui(
+            Message title, String titleParam,
+            @Nullable Message actionDescription, String actionParam,
+            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm
+    ) {
+        this(title, titleParam, actionDescription, actionParam, backOnCancel, backOnConfirm, onConfirm, true);
     }
 
 

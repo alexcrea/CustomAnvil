@@ -11,13 +11,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,11 +31,12 @@ import java.util.function.Consumer;
 /**
  * An instance of a gui used to edit an item setting.
  */
+@NotNullByDefault
 public class ItemSettingGui extends AbstractSettingGui {
 
     private final ItemSettingFactory holder;
-    private final ItemStack before;
-    private ItemStack now;
+    private final @Nullable ItemStack before;
+    private @Nullable ItemStack now;
 
     /**
      * Create an item setting config gui.
@@ -39,8 +44,8 @@ public class ItemSettingGui extends AbstractSettingGui {
      * @param holder Configuration factory of this setting.
      * @param now    The defined value of this setting.
      */
-    protected ItemSettingGui(ItemSettingFactory holder, ItemStack now) {
-        super(3, holder.getTitle(), holder.parent);
+    protected ItemSettingGui(ItemSettingFactory holder, @Nullable ItemStack now) {
+        super(3, holder.getTitle(), holder.parent, holder.param);
         this.holder = holder;
         this.before = now;
         this.now = now;
@@ -59,7 +64,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     }
 
 
-    public void prepareStaticItems(){
+    public void prepareStaticItems() {
         prepareReturnToDefault();
 
         GuiItem temporaryLeave = GuiGlobalItems.temporaryCloseGuiToSelectItem(Material.YELLOW_STAINED_GLASS_PANE, this);
@@ -67,7 +72,7 @@ public class ItemSettingGui extends AbstractSettingGui {
     }
 
 
-    protected GuiItem returnToDefault;
+    protected @UnknownNullability GuiItem returnToDefault;
 
     /**
      * Prepare "return to default value" gui item.
@@ -77,8 +82,8 @@ public class ItemSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("§eReset to default value");
-        meta.setLore(Collections.singletonList("§7Default value is §e" + holder.defaultVal));
+        meta.setDisplayName("<yellow>Reset to default value");
+        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" + holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -88,7 +93,7 @@ public class ItemSettingGui extends AbstractSettingGui {
         }, CustomAnvil.instance);
     }
 
-    protected final static List<String> CLICK_LORE = Collections.singletonList("§7Click Here with an item to change the value");
+    protected final static List<String> CLICK_LORE = Collections.singletonList("<gray>Click Here with an item to change the value");
 
     /**
      * Update item using the setting value to match the new value
@@ -98,14 +103,14 @@ public class ItemSettingGui extends AbstractSettingGui {
 
         // Get displayed value for this config.
         ItemStack displayedItem;
-        if(this.now != null){
+        if(this.now != null) {
             displayedItem = this.now.clone();
-        }else{
+        } else {
             displayedItem = new ItemStack(Material.BARRIER);
             ItemMeta valueMeta = displayedItem.getItemMeta();
             assert valueMeta != null;
 
-            valueMeta.setDisplayName("§4NO ITEM SET");
+            valueMeta.setDisplayName("<dark_red*NO ITEM SET");
             valueMeta.setLore(CLICK_LORE);
 
             displayedItem.setItemMeta(valueMeta);
@@ -116,7 +121,7 @@ public class ItemSettingGui extends AbstractSettingGui {
 
         // reset to default
         GuiItem returnToDefault;
-        if (now != holder.defaultVal) {
+        if(now != holder.defaultVal) {
             returnToDefault = this.returnToDefault;
         } else {
             returnToDefault = GuiGlobalItems.backgroundItem();
@@ -146,10 +151,13 @@ public class ItemSettingGui extends AbstractSettingGui {
 
     @Override
     public boolean onSave() {
-        holder.config.getConfig().set(holder.configPath, this.now);
+        try(var lock = holder.getHolder().write) {
+            var config = lock.get();
+            config.getConfig().set(holder.configPath, this.now);
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            return holder.config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                return config.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
         return true;
     }
@@ -167,18 +175,13 @@ public class ItemSettingGui extends AbstractSettingGui {
      * A factory for an item setting gui that hold setting's information.
      */
     public static class ItemSettingFactory extends SettingGuiFactory {
-        @NotNull
-        final
-        String title;
-        @NotNull
-        final
-        ValueUpdatableGui parent;
+        final Message title;
+        final ValueUpdatableGui parent;
         @Nullable
-        final
-        ItemStack defaultVal;
-        @NotNull
-        final
-        List<String> displayLore;
+        final ItemStack defaultVal;
+        final List<Message> displayLore;
+        @Nullable
+        final Object param;
 
         /**
          * Constructor for an item setting gui factory.
@@ -186,40 +189,43 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param title       The title of the gui.
          * @param parent      Parent gui to go back when completed.
          * @param configPath  Configuration path of this setting.
-         * @param config      Configuration holder of this setting.
+         * @param holder      Configuration holder of this setting.
          * @param defaultVal  Default value if not found on the config.
          * @param displayLore Gui display item lore.
          */
         public ItemSettingFactory(
-                @NotNull String title, @NotNull ValueUpdatableGui parent,
-                @NotNull String configPath, @NotNull ConfigHolder config,
+                Message title, ValueUpdatableGui parent,
+                String configPath,
+                LockedObjectProvider<? extends ConfigHolder> holder,
                 @Nullable ItemStack defaultVal,
-                String... displayLore) {
-            super(configPath, config);
+                @Nullable Object param, Message... displayLore) {
+            super(configPath, holder);
             this.title = title;
             this.parent = parent;
 
             this.defaultVal = defaultVal;
             this.displayLore = Arrays.asList(displayLore);
+            this.param = param;
         }
 
         /**
          * @return Get setting's gui title.
          */
-        @NotNull
-        public String getTitle() {
+        public Message getTitle() {
             return title;
         }
 
         /**
          * @return The configured value for the associated setting.
          */
+        @Nullable
         public ItemStack getConfiguredValue() {
-            return this.config.getConfig().getItemStack(this.configPath, this.defaultVal);
+            try(var lock = getHolder().read) {
+                return lock.get().getConfig().getItemStack(this.configPath, this.defaultVal);
+            }
         }
 
-        @NotNull
-        public List<String> getDisplayLore() {
+        public List<Message> getDisplayLore() {
             return this.displayLore;
         }
 
@@ -239,18 +245,19 @@ public class ItemSettingGui extends AbstractSettingGui {
          * @param name Name of the item.
          * @return A formatted GuiItem that will create and open a GUI for the item setting.
          */
-        public GuiItem getItem(@NotNull String name) {
+        public GuiItem getItem(String name) {
             ItemStack item = getConfiguredValue();
-            if(item == null || item.getType().isAir()){
+            if(item == null || item.getType().isAir()) {
                 item = new ItemStack(Material.BARRIER);
-            }else{
+            } else {
                 item = item.clone();
             }
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("§a" + name);
-            meta.setLore(getDisplayLore());
+            //TODO MESSAGE name ?
+            meta.setDisplayName("<green>" + name);
+            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(getDisplayLore(), param), meta);
             meta.addItemFlags(ItemFlag.values());
 
             item.setItemMeta(meta);

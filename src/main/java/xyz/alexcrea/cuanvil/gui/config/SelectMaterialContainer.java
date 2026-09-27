@@ -1,13 +1,16 @@
 package xyz.alexcrea.cuanvil.gui.config;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNullByDefault;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+@NotNullByDefault
 public interface SelectMaterialContainer {
 
     Set<NamespacedKey> getSelectedMaterials();
@@ -16,28 +19,30 @@ public interface SelectMaterialContainer {
 
     Set<NamespacedKey> illegalMaterials();
 
-    static List<String> getMaterialLore(SelectMaterialContainer container, String containerType, String action){
+    static List<Component> getMaterialLore(SelectMaterialContainer container, String containerType, String action) {
         // Prepare material lore
-        ArrayList<String> groupLore = new ArrayList<>();
-        groupLore.add("§7Allow you to select a list of §ematerials §7that this " + containerType + " should " + action);
+        List<Component> groupLore = MsgUI.SELECT_MATERIAL_HEADER.formatted(containerType, action);
+
         Set<NamespacedKey> materialSet = container.getSelectedMaterials();
-        if (materialSet.isEmpty()) {
-            groupLore.add("§7There is no "+action+"d material for this "+containerType+".");
-        } else {
-            groupLore.add("§7List of "+action+"d materials for this "+containerType+":");
-            Iterator<NamespacedKey> materialIterator = materialSet.iterator();
+        if(materialSet.isEmpty()) {
+            groupLore.addAll(MsgUI.SELECT_MATERIAL_EMPTY.formatted(containerType, action));
+            return groupLore;
+        }
 
-            boolean greaterThanMax = materialSet.size() > 5;
-            int maxindex = (greaterThanMax ? 4 : materialSet.size());
-            for (int i = 0; i < maxindex; i++) {
-                // format string like "- Stone Sword"
-                String formattedName = CasedStringUtil.snakeToUpperSpacedCase(materialIterator.next().getKey().toLowerCase());
-                groupLore.add("§7- §e" + formattedName);
+        groupLore.addAll(MsgUI.SELECT_MATERIAL_NOT_EMPTY.formatted(containerType, action));
+        Iterator<NamespacedKey> materialIterator = materialSet.iterator();
 
-            }
-            if (greaterThanMax) {
-                groupLore.add("§7And " + (materialSet.size() - 4) + " more...");
-            }
+        boolean greaterThanMax = materialSet.size() > 5;
+        int maxIndex = (greaterThanMax ? 4 : materialSet.size());
+        for(int i = 0; i < maxIndex; i++) {
+            // format string like "- Stone Sword"
+            String formattedName = CasedStringUtil.snakeToUpperSpacedCase(materialIterator.next().getKey().toLowerCase());
+            groupLore.addAll(MsgUI.SELECT_MATERIAL_ITEM.formatted(formattedName));
+
+        }
+        if(greaterThanMax) {
+            var count = materialSet.size() - maxIndex;
+            groupLore.addAll(MsgUI.SELECT_MATERIAL_AND_MORE.formatted(count));
         }
         return groupLore;
     }

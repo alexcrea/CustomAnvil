@@ -11,12 +11,13 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
 
-class ChatEventListener : Listener {
+//TODO #130 part 3 check if everything is correct
+class ChatEventListener: Listener {
 
     private val playerListenMap: ConcurrentHashMap<UUID, Consumer<String?>> = ConcurrentHashMap()
 
-    fun setListenedCallback(playeruuid: UUID, callback: Consumer<String?>) {
-        playerListenMap[playeruuid] = callback
+    fun setListenedCallback(uuid: UUID, callback: Consumer<String?>) {
+        playerListenMap[uuid] = callback
     }
 
     fun setListenedCallback(player: HumanEntity, callback: Consumer<String?>) {
@@ -32,7 +33,7 @@ class ChatEventListener : Listener {
 
     @EventHandler
     fun onChat(event: AsyncPlayerChatEvent) {
-        if (event.isCancelled) return
+        if(event.isCancelled) return
         val player = event.player
         val eventCallback = playerListenMap.remove(player.uniqueId) ?: return
 

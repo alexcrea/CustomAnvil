@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
@@ -14,35 +14,38 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.Arrays;
 import java.util.Collection;
 
+@NotNullByDefault
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup,
         MappedGuiListConfigGui.LazyElement<EnchantConflictSubSettingGui>> {
 
-    private static EnchantConflictGui INSTANCE;
+    //TODO #130 part 3
+    private static @Nullable EnchantConflictGui INSTANCE;
 
     @Nullable
     public static EnchantConflictGui getCurrentInstance() {
         return INSTANCE;
     }
 
-    @NotNull
     public static EnchantConflictGui getInstance() {
-        if (INSTANCE == null) INSTANCE = new EnchantConflictGui();
+        if(INSTANCE == null) INSTANCE = new EnchantConflictGui();
 
         return INSTANCE;
     }
 
     // Need to init myself
     public EnchantConflictGui(Gui parent) {
-        super("Conflict Config", parent);
+        super(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_TITLE(), parent);
     }
 
     private EnchantConflictGui() {
-        super("Conflict Config");
+        super(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_TITLE());
 
         init();
     }
@@ -52,21 +55,25 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         // Create new empty conflict and display it to the admin
         EnchantConflictGroup conflict = new EnchantConflictGroup(
                 name,
-                new IncludeGroup("new_group"),
+                new IncludeGroup(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_DEFAULT_NEW().unformatted()),
                 0);
 
-        ConfigHolder.CONFLICT_HOLDER.getConflictManager().addConflict(conflict);
+        try(var lock = ConfigHolder.CONFLICT.write) {
+            var holder = lock.get();
 
-        // save empty conflict in config
-        String[] emptyStringArray = new String[0];
+            holder.getConflictManager().addConflict(conflict);
 
-        FileConfiguration config = ConfigHolder.CONFLICT_HOLDER.getConfig();
-        config.set(name + ".enchantments", emptyStringArray);
-        config.set(name + ".notAffectedGroups", emptyStringArray);
-        config.set(name + ".maxEnchantmentBeforeConflict", 0);
+            // save empty conflict in config
+            String[] emptyStringArray = new String[0];
 
-        if (GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
-            ConfigHolder.CONFLICT_HOLDER.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            FileConfiguration config = holder.getConfig();
+            config.set(name + ".enchantments", emptyStringArray);
+            config.set(name + ".notAffectedGroups", emptyStringArray);
+            config.set(name + ".maxEnchantmentBeforeConflict", 0);
+
+            if(GuiSharedConstant.TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE) {
+                holder.saveToDisk(GuiSharedConstant.TEMPORARY_DO_BACKUP_EVERY_SAVE);
+            }
         }
 
         return conflict;
@@ -80,12 +87,14 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         assert meta != null;
 
         meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName("§e" + CasedStringUtil.snakeToUpperSpacedCase(conflict.toString()) + " §fConflict");
-        meta.setLore(Arrays.asList(
-                "§7Enchantment count:       §e" + conflict.getEnchants().size(),
-                "§7Group count:               §e" + conflict.getCantConflictGroup().getGroups().size(),
-                "§7Min enchantments count: §e" + conflict.getMinBeforeBlock()
-        ));
+        var name = CasedStringUtil.snakeToUpperSpacedCase(conflict.toString());
+
+        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_NAME(), name);
+        ComponentUtil.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_LORE().formatted(
+                conflict.getEnchants().size(),
+                conflict.getCantConflictGroup().getGroups().size(),
+                conflict.getMinBeforeBlock()
+        ), meta);
 
         item.setItemMeta(meta);
         return item;
@@ -97,13 +106,15 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
     }
 
     @Override
-    protected String genericDisplayedName() {
-        return "conflict";
+    protected Message genericDisplayedName() {
+        return MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_GENERIC_NAME();
     }
 
     @Override
     protected Collection<EnchantConflictGroup> getEveryInstanceOfGeneric() {
-        return ConfigHolder.CONFLICT_HOLDER.getConflictManager().getConflictList();
+        try(var lock = ConfigHolder.CONFLICT.read) {
+            return lock.get().getConflictManager().getConflictList();
+        }
     }
 
 }

@@ -372,7 +372,7 @@ object ConfigOptions {
         }
 
     /**
-     * Should suffix colour and hex code a reset tag (§r or <reset> for minimessage)
+     * Should suffix colour and hex code a reset tag (<reset> or <reset> for minimessage)
      */
     val shouldResetOnColourCode: Boolean
         get() {
