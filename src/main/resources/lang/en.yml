@@ -149,7 +149,7 @@ config-ui.select-item-type:
 config-ui.element-list:
     cancelled-new: "%type creation cancelled..."
     duplicated-new: "<red>Please enter a %type name that do not already exist..."
-    go-lest: "<yellow>Return to page %page"
+    go-left: "<yellow>Return to page %page"
     go-right: "<yellow>Go to page %page"
     new:
       title: "<green>Create new %type"

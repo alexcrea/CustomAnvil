@@ -30,7 +30,8 @@ object MiniMessageUtil {
     @JvmField val legacy_mm = LegacyComponentSerializer.legacySection()
     @JvmField val plain_text_mm = PlainTextComponentSerializer.plainText()
 
-    private val RESET_STYLE = Component.empty().style(Style.style(
+
+    val RESET_STYLE = Component.empty().style(Style.style(
         TextColor.color(256, 256, 256),
         TextDecoration.BOLD.withState(false),
         TextDecoration.ITALIC.withState(false),

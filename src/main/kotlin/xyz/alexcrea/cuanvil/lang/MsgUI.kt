@@ -130,11 +130,11 @@ object MsgUI {
     val ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM = Message("enchant-conflict.element.min-before-count.item")
 
     @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_TITLE = Message("enchant-conflict.element.title")
-    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_HEADER = Message("enchant-conflict.element.lore.header")
-    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_EMPTY = Message("enchant-conflict.element.lore.empty")
-    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_NOT_EMPTY = Message("enchant-conflict.element.lore.not-empty")
-    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_ITEM = Message("enchant-conflict.element.lore.item", "name")
-    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_AND_MORE = Message("enchant-conflict.element.lore.and-more", "count")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_HEADER = Message("enchant-conflict.element.enchantments.lore.header")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_EMPTY = Message("enchant-conflict.element.enchantments.lore.empty")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_NOT_EMPTY = Message("enchant-conflict.element.enchantments.lore.not-empty")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_ITEM = Message("enchant-conflict.element.enchantments.lore.item", "name")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_AND_MORE = Message("enchant-conflict.element.enchantments.lore.and-more", "count")
 
     @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_EXCLUDED_GROUPS_TITLE = Message("enchant-conflict.element.excluded-groups.title")
 

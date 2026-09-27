@@ -134,7 +134,7 @@ object AnvilColourUtil {
         while(matcher.find(startIndex)) {
             startIndex = matcher.start()
 
-            builder.insert(startIndex, "<reset>")
+            builder.insert(startIndex, "§r")
             startIndex+=4
         }
     }
@@ -253,7 +253,7 @@ object AnvilColourUtil {
                 continue
             }
 
-            val replacement = "${if(ConfigOptions.shouldResetOnColourCode)"<reset>" else ""}§x"
+            val replacement = "${if(ConfigOptions.shouldResetOnColourCode)"§r" else ""}§x"
 
             builder.replace(startIndex, startIndex + 1, replacement)
             startIndex += replacement.length
