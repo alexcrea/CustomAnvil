@@ -122,6 +122,9 @@ config-ui.shared:
     no-change-item-title: "<gray>No change. can't save."
 
     quit: "<red>Quit"
+    reset: "<yellow>Reset to default value"
+    reset-default-lore: "<gray>Default value is <yellow>%value"
+    empty-item: "Empty"
 
     temporary-close:
       title: "<yellow>Temporary close this menu"
@@ -516,6 +519,11 @@ config-ui.basic-config.work-penalty:
         additive: "<yellow>Additive<gray>: will penalty be added to the cost"
         shared: "<yellow>Shared<gray>: Vanilla, shared penalty. it will be kept from before the plugin installation."
         exclusive: "<yellow>Exclusive<gray>: Custom, per anvil use type penalty. it will be lost after plugin uninstallation"
+      penalty-increasing:
+        disabled: 
+        enabled:
+      penalty-additive:
+
 
 config-ui.material-selector:
     header: "<gray>Allow you to select a list of <yellow>materials <gray>that this %type should %action"

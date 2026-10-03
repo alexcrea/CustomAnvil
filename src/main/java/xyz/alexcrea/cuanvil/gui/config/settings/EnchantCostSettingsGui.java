@@ -121,7 +121,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         // assume holder is an instance of EnchantCostSettingFactory
         EnchantCostSettingFactory holder = (EnchantCostSettingFactory) this.holder;
 
-        meta.setDisplayName("<yellow>Reset to default value");
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
         meta.setLore(Arrays.asList(
                 "<gray>Default item  value is: <yellow>" + holder.defaultVal,
                 "<gray>Default book value is: <yellow>" + holder.defaultBookVal));

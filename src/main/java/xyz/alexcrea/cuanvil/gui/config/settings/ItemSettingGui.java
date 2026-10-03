@@ -19,6 +19,7 @@ import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
@@ -82,8 +83,12 @@ public class ItemSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>Reset to default value");
-        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" + holder.defaultVal));
+        Object value = holder.defaultVal;
+        if(value == null)
+            value = MsgUI.SHARED_EMPTY_ITEM;
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_RESET_DEFAULT_LORE, value);
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);

@@ -204,7 +204,7 @@ tasks {
         archiveFileName.set(name)
 
         // Shadow necessary dependency
-        val basePackage = "${project.group}.cuanvi"
+        val basePackage = "${project.group}.cuanvil"
         relocate("com.github.stefvanschie.inventoryframework", "$basePackage.inventoryframework")
         relocate("dev.faststats", "$basePackage.faststats")
         relocate("org.bstats",  "$basePackage.bstats")

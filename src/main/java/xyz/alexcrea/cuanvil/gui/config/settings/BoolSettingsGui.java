@@ -83,7 +83,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>Reset to default value");
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
         meta.setLore(Collections.singletonList(defaultValueLore));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {

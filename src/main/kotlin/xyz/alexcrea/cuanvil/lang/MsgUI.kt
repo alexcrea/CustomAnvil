@@ -31,6 +31,9 @@ object MsgUI {
     @JvmField val SHARED_CONFIRM_PERMANENT_LORE = Message("shared.confirm.permanent-lore")
 
     @JvmField val SHARED_QUIT = Message("shared.quit")
+    @JvmField val SHARED_RESET = Message("shared.reset")
+    @JvmField val SHARED_RESET_DEFAULT_LORE = Message("shared.reset-default-lore", "value")
+    @JvmField val SHARED_EMPTY_ITEM = Message("shared.empty-item")
 
     fun booleanMessage(bool: Boolean): Message {
         return if(bool) SHARED_FORMATED_YES else SHARED_FORMATED_NO

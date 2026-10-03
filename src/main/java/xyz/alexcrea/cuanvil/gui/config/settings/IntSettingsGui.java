@@ -76,9 +76,10 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>Reset to default value");//TODO MESSAGE
-        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" +//TODO MESSAGE
-                holder.valueDisplayName(ValueDisplayType.RESET, holder.defaultVal)));
+        var defaultV = holder.valueDisplayName(ValueDisplayType.RESET, holder.defaultVal);
+
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_RESET_DEFAULT_LORE, defaultV);
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);

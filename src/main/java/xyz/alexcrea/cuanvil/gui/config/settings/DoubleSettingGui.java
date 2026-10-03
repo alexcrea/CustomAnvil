@@ -132,8 +132,8 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>Reset to default value");
-        meta.setLore(Collections.singletonList("<gray>Default value is <yellow>" + displayValue(holder.defaultVal)));
+        ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
+        ComponentUtil.applyLore(meta, MsgUI.SHARED_RESET_DEFAULT_LORE, displayValue(holder.defaultVal));
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -210,7 +210,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
         meta.setDisplayName("<yellow>" + displayValue(now) + " <white>-> <yellow>" + displayValue(planned)
                 + " <reset>(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "<reset>)"));
-        ComponentUtil.INSTANCE.applyLore(setLoreItem, meta);
+        ComponentUtil.applyLore(setLoreItem, meta);
         item.setItemMeta(meta);
 
         return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
