@@ -6,6 +6,7 @@ import io.delilaheve.CustomAnvil
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.ConfigurationSection
+import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.util.ComponentUtil.send
 import xyz.alexcrea.cuanvil.util.ComponentUtil.serializeLegacy
 import xyz.alexcrea.cuanvil.util.ComponentUtil.serializePlain
@@ -54,7 +55,7 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
             }
 
             var replacement = replacements[i]
-            if(replacement == null){
+            if(replacement == null) {
                 replacement = findReplacement(value)
                 replacements[i] = replacement
             }
@@ -195,7 +196,8 @@ open class Message(val key: String, vararg val params: String?, register: Boolea
     }
 
     override fun toString(): String {
-        CustomAnvil.logError("Invalid string concatenation with $key")
+        if(!DependencyManager.externGuiTester.isInTest())
+            CustomAnvil.logError("Invalid string concatenation with $key")
         return key
     }
 

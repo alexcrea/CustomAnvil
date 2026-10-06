@@ -7,18 +7,30 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import xyz.alexcrea.cuanvil.tests.SharedCustomAnvilTest;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Checks the integrity between the registered {@link Message} keys
- * (MsgCommand, MsgUI, MsgError, MsgWarning) and the default language resource (lang/en.yml).
+ * (MsgCommand, MsgUI, MsgError, MsgWarning) and the language resources (lang/*.yml).
+ *
+ * <p>The default language (lang/en.yml) is checked in both directions: every registered key
+ * must exist in it, and every key in it must be registered.
+ *
+ * <p>Non-default languages are only checked one way: every key in the file must be registered.
+ * Missing registered keys are allowed, since a partial translation is expected.
  *
  * <p>The plugin is initialised once by {@link SharedCustomAnvilTest#setUp()}, so the
  * default language is loaded and available for the whole test class.
@@ -26,6 +38,7 @@ import java.util.stream.Collectors;
 public class DefaultLanguageIntegrityTest extends SharedCustomAnvilTest {
 
     private static final Message[] MESSAGES = collectMessages();
+    private static final Set<String> REGISTERED = Arrays.stream(MESSAGES).map(Message::getKey).collect(Collectors.toSet());
 
     private static Message[] collectMessages() {
         // just load them
@@ -99,15 +112,58 @@ public class DefaultLanguageIntegrityTest extends SharedCustomAnvilTest {
 
     @Test
     public void defaultLanguageKeysAreAllRegistered() {
-        var registered = Arrays.stream(MESSAGES).map(Message::getKey).collect(Collectors.toSet());
-
         List<String> unregistered = new ArrayList<>();
         for(String key : Lang.INSTANCE.getKeys()) {
-            if(!registered.contains(key)) unregistered.add(key);
+            if(!REGISTERED.contains(key)) unregistered.add(key);
         }
 
         Assertions.assertTrue(unregistered.isEmpty(),
                 "Key(s) in the default language file (lang/en.yml) are not registered in any Message provider:\n  "
+                        + String.join("\n  ", unregistered));
+    }
+
+    /*
+     * Non-default languages
+     */
+
+    public static List<String> provideLanguages() throws IOException, URISyntaxException {
+        Set<String> languages = new LinkedHashSet<>();
+
+        // Enumerate every lang/ directory on the classpath (main + test resources)
+        Enumeration<URL> urls = DefaultLanguageIntegrityTest.class.getClassLoader().getResources("lang");
+        while (urls.hasMoreElements()) {
+            URL url = urls.nextElement();
+            if (!"file".equalsIgnoreCase(url.getProtocol())) continue;
+
+            File dir = new File(url.toURI());
+            String[] files = dir.list();
+            if (files == null) continue;
+
+            for (String file : files) {
+                if (!file.toLowerCase(Locale.ROOT).endsWith(".yml")) continue;
+
+                String id = file.substring(0, file.length() - ".yml".length());
+                if (Lang.DEFAULT_LANG.equals(id)) continue; // default language is already covered above
+
+                languages.add(id);
+            }
+        }
+
+        return new ArrayList<>(languages);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideLanguages")
+    public void languageKeysAreAllRegistered(String languageId) {
+        Language language = new Language(languageId, false);
+
+        List<String> unregistered = new ArrayList<>();
+        for (String key : language.getFilteredKeys()) {
+            if (!REGISTERED.contains(key)) unregistered.add(key);
+        }
+
+        Assertions.assertTrue(unregistered.isEmpty(),
+                "Key(s) in the '" + languageId + "' language file are not registered in any Message provider:\n  "
                         + String.join("\n  ", unregistered));
     }
 

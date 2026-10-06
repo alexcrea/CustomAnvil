@@ -544,8 +544,8 @@ config-ui.setting:
 
 config-ui.bool-setting:
     default-value:
-      yes: "<green>Yes <gray>Is the default value"
-      no: "<red>No <gray>Is the default value"
+      "yes": "<green>Yes <gray>Is the default value"
+      "no": "<red>No <gray>Is the default value"
 
 config-ui.double-setting:
     delete-name: "<red>Disable item being repaired ?"
