@@ -14,7 +14,7 @@ public abstract class MappedToListSubSettingGui extends ChestGui implements Valu
             int rows,
             String type
     ) {
-        super(rows, MsgUI.INSTANCE.getSHARED_TYPED_CONFIG_TITLE().textHolder(type), CustomAnvil.instance);
+        super(rows, MsgUI.SHARED_TYPED_CONFIG_TITLE.textHolder(type), CustomAnvil.instance);
     }
 
     @Override

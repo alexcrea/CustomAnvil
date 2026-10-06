@@ -31,7 +31,7 @@ public class ItemConfigGui extends ChestGui {
     private @Nullable CustomRecipeConfigGui customRecipeConfigGui;
 
     public ItemConfigGui(Material display, NamespacedKey material) {
-        super(3, MsgUI.INSTANCE.getITEM_CONFIG_TITLE().textHolder(
+        super(3, MsgUI.ITEM_CONFIG_TITLE.textHolder(
                 CasedStringUtil.snakeToUpperSpacedCase(
                         material.getKey().toLowerCase()
                 )),
@@ -51,7 +51,7 @@ public class ItemConfigGui extends ChestGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        ComponentUtil.applyLore(MsgUI.INSTANCE.getITEM_CONFIG_NAME().formatted(material), displayMeta);
+        ComponentUtil.applyLore(MsgUI.ITEM_CONFIG_NAME.formatted(material), displayMeta);
         displayItemstack.setItemMeta(displayMeta);
         pane.bindItem('D', new GuiItem(displayItemstack, GuiGlobalActions.stayInPlace, CustomAnvil.instance));
 

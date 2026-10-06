@@ -80,13 +80,13 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
         Consumer<String> selfCallback = (message) -> {
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
 
             message = message.toLowerCase(Locale.ROOT);
             if ("cancel".equalsIgnoreCase(message)) {
-                MsgUI.INSTANCE.getELEMENT_LIST_CANCELLED_NEW().send(player, genericDisplayedName());
+                MsgUI.ELEMENT_LIST_CANCELLED_NEW.send(player, genericDisplayedName());
                 show(player);
                 return;
             }
@@ -97,7 +97,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
             // Not the most efficient on large number of conflict, but it should not run often.
             for (T generic : getDisplayableInstanceOfGeneric()) {
                 if (generic.toString().equalsIgnoreCase(message)) {
-                    MsgUI.INSTANCE.getELEMENT_LIST_DUPLICATED_NEW().send(player, genericDisplayedName());
+                    MsgUI.ELEMENT_LIST_DUPLICATED_NEW.send(player, genericDisplayedName());
                     // wait next message.
                     CustomAnvil.Companion.getChatListener().setListenedCallback(player, selfRef.get());
                     return;

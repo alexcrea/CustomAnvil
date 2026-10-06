@@ -49,7 +49,7 @@ public class GuiGlobalActions {
             // Do not allow to open inventory if player do not have edit configuration permission
             if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
             try {
@@ -110,7 +110,7 @@ public class GuiGlobalActions {
             // Do not allow to open inventory if player do not have edit configuration permission
             if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
             goal.show(player);
@@ -137,7 +137,7 @@ public class GuiGlobalActions {
             // Do not allow to save configuration if player do not have edit configuration permission
             if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
 

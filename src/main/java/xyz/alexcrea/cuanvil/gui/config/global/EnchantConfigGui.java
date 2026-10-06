@@ -48,12 +48,12 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
             return enchantments.stream().findFirst().get().getPrettyName();
         }
 
-        return MsgUI.INSTANCE.getENCHANT_CONFIG_MULTIPLES_NAME().unformatted();
+        return MsgUI.ENCHANT_CONFIG_MULTIPLES_NAME.unformatted();
     }
 
     public EnchantConfigGui(Set<CAEnchantment> enchantments) {
         super(3,
-                MsgUI.INSTANCE.getENCHANT_CONFIG_TITLE().textHolder(selectName(enchantments)),
+                MsgUI.ENCHANT_CONFIG_TITLE.textHolder(selectName(enchantments)),
                 CustomAnvil.instance);
         this.enchantments = enchantments;
 
@@ -71,7 +71,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         ItemMeta displayMeta = displayItemstack.getItemMeta();
         assert displayMeta != null;
 
-        ComponentUtil.setMessageName(displayMeta, MsgUI.INSTANCE.getENCHANT_CONFIG_NAME(), selectName(enchantments));
+        ComponentUtil.setMessageName(displayMeta, MsgUI.ENCHANT_CONFIG_NAME, selectName(enchantments));
         displayItemstack.setItemMeta(displayMeta);
 
         // Set enchantments

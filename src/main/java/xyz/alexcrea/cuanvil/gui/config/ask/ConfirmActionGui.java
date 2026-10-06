@@ -40,7 +40,7 @@ public class ConfirmActionGui extends AbstractAskGui {
 
                     if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                         player.closeInventory();
-                        MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                        MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                         return;
                     }
 
@@ -48,12 +48,12 @@ public class ConfirmActionGui extends AbstractAskGui {
                     try {
                         success = onConfirm.get();
                     } catch(Exception e) {
-                        CustomAnvil.Companion.logError(MsgError.INSTANCE.getCONFIRM_ACTION_GENERIC().unformatted(), e, true, Level.WARNING);
+                        CustomAnvil.Companion.logError(MsgError.CONFIRM_ACTION_GENERIC.unformatted(), e, true, Level.WARNING);
                         success = false;
                     }
 
                     if(!success) {
-                        MsgUI.INSTANCE.getCONFIRM_ACTION_FAILED().send(player);
+                        MsgUI.CONFIRM_ACTION_FAILED.send(player);
                     }
                     backOnConfirm.show(player);
                 }
@@ -66,7 +66,7 @@ public class ConfirmActionGui extends AbstractAskGui {
         ItemMeta infoMeta = infoItem.getItemMeta();
         assert infoMeta != null;
 
-        ComponentUtil.setMessageName(infoMeta, MsgUI.INSTANCE.getCONFIRM_ACTION_ARE_YOU_SURE());
+        ComponentUtil.setMessageName(infoMeta, MsgUI.CONFIRM_ACTION_ARE_YOU_SURE);
         if(actionDescription != null) {
             ComponentUtil.applyLore(actionDescription.formatted(actionParam), infoMeta);
         }

@@ -194,7 +194,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
             setLoreItem.addAll(holder.displayLore.formatted(holder.param, holder.param2));
             setLoreItem.add(Component.empty());
         }
-        setLoreItem.addAll(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted());
+        setLoreItem.addAll(MsgUI.SHARED_CLICK_TO_CHANGE.formatted());
 
         // Create & return set value item
         ItemStack item = new ItemStack(mat);
@@ -477,7 +477,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
             return GuiGlobalItems.createGuiItemFromProperties(
                     this, itemMat, itemName,
-                    MsgUI.INSTANCE.getSHARED_YELLOW_GET_ITEM().formattedConcatenated(
+                    MsgUI.SHARED_YELLOW_GET_ITEM.formattedConcatenated(
                             displayValue(value, this.asPercentage)
                     ),
                     lore, true,
@@ -489,7 +489,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
             // Get item properties
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
 
-            return getItem(itemMat, MsgUI.INSTANCE.getSHARED_GREEN_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(itemMat, MsgUI.SHARED_GREEN_GET_ITEM, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

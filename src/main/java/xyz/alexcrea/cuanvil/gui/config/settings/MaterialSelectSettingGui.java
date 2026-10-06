@@ -165,7 +165,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             // Do not allow to save configuration if player do not have edit configuration permission
             if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
             if(testCantSave()) return;

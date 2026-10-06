@@ -35,14 +35,14 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantLimitConfigGui() {
-        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_TITLE());
+        super(MsgUI.ENCHANTMENT_LEVEL_LIMIT_TITLE);
         if(INSTANCE == null) INSTANCE = this;
 
         init();
     }
 
     public EnchantLimitConfigGui(Gui parent) {
-        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_TITLE(), parent);
+        super(MsgUI.ENCHANTMENT_LEVEL_LIMIT_TITLE, parent);
     }
 
     @Override
@@ -58,9 +58,9 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
         var defaultValueStr = String.valueOf(enchant.defaultMaxLevel());
 
         return new IntSettingsGui.IntSettingFactory(
-                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_TITLE(), parent,
+                MsgUI.ENCHANTMENT_LEVEL_LIMIT_ELEMENT_TITLE, parent,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT,
-                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_LIMIT_ELEMENT_DESCRIPTION(), prettyKey,
+                MsgUI.ENCHANTMENT_LEVEL_LIMIT_ELEMENT_DESCRIPTION, prettyKey,
                 -1, 255, -1,
                 1, 5, 10, 50, 100) {
 
@@ -74,9 +74,9 @@ public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsG
             public String valueDisplayName(IntSettingsGui.ValueDisplayType type, int value) {
                 if(value < 0) {
                     return switch(type) {
-                        case CURRENT -> MsgUI.INSTANCE.getSHARED_VALUED_DEFAULT().unformatted(defaultValueStr);
+                        case CURRENT -> MsgUI.SHARED_VALUED_DEFAULT.unformatted(defaultValueStr);
                         case RESET -> defaultValueStr;
-                        default -> MsgUI.INSTANCE.getSHARED_DEFAULT().unformatted();
+                        default -> MsgUI.SHARED_DEFAULT.unformatted();
                     };
 
                 } else return super.valueDisplayName(type, value);

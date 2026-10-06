@@ -32,7 +32,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantMergeLimitConfigGui() {
-        super(MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_TITLE());
+        super(MsgUI.ENCHANTMENT_MERGE_LIMIT_TITLE);
         if(INSTANCE == null) INSTANCE = this;
 
         init();
@@ -42,7 +42,7 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
      * Constructor of this Global gui for enchantment level limit settings.
      */
     public EnchantMergeLimitConfigGui(Gui parent) {
-        super(MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_TITLE(), parent);
+        super(MsgUI.ENCHANTMENT_MERGE_LIMIT_TITLE, parent);
     }
 
 
@@ -56,9 +56,9 @@ public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSett
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
         return new IntSettingsGui.IntSettingFactory(
-                MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_ELEMENT_TITLE(), parent,
+                MsgUI.ENCHANTMENT_MERGE_LIMIT_ELEMENT_TITLE, parent,
                 SECTION_NAME + '.' + key, ConfigHolder.DEFAULT,
-                MsgUI.INSTANCE.getENCHANTMENT_MERGE_LIMIT_ELEMENT_DESCRIPTION(), prettyKey,
+                MsgUI.ENCHANTMENT_MERGE_LIMIT_ELEMENT_DESCRIPTION, prettyKey,
                 -1, 255, -1,
                 1, 5, 10, 50, 100) {
 

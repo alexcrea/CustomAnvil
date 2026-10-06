@@ -151,7 +151,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         var deltaDisplay = holder.deltaDisplay(type, now, planned);
         ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME, nowDisplay, plannedDisplay, deltaDisplay);
 
-        ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
+        ComponentUtil.INSTANCE.applyLore(MsgUI.SHARED_CLICK_TO_CHANGE.formatted(), meta);
         item.setItemMeta(meta);
         return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
     }
@@ -397,7 +397,7 @@ public class IntSettingsGui extends AbstractSettingGui {
                 Material itemMat
         ) {
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
-            return getItem(itemMat, MsgUI.INSTANCE.getSHARED_GREEN_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(itemMat, MsgUI.SHARED_GREEN_GET_ITEM, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
         protected String valueDisplayName(ValueDisplayType type, int value) {

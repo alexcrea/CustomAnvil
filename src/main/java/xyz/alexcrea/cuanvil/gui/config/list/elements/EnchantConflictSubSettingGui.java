@@ -77,8 +77,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        ComponentUtil.setMessageName(deleteMeta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_NAME());
-        ComponentUtil.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
+        ComponentUtil.setMessageName(deleteMeta, MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_NAME);
+        ComponentUtil.applyLore(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_BUTTON_LORE.formatted(), deleteMeta);
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -88,7 +88,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             event.setCancelled(true);
             var type = CasedStringUtil.snakeToUpperSpacedCase(enchantConflict.toString());
             EnchantSelectSettingGui enchantGui = new EnchantSelectSettingGui(
-                    MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_ENCHANTMENTS(), type,
+                    MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_ENCHANTMENTS, type,
                     this, this);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
@@ -97,15 +97,15 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
             event.setCancelled(true);
             var type = CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString());
             GroupSelectSettingGui enchantGui = new GroupSelectSettingGui(
-                    MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_SUB_GROUPS(), type,
+                    MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_SUB_GROUPS, type,
                     this, this, 0);
             enchantGui.show(event.getWhoClicked());
         }, CustomAnvil.instance);
 
         this.minBeforeActiveSettingFactory = new IntSettingsGui.IntSettingFactory(
-                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_TITLE(),
+                MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_TITLE,
                 this, this.enchantConflict + ".maxEnchantmentBeforeConflict", ConfigHolder.CONFLICT,
-                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION(), null,
+                MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION, null,
                 0, 255, 0, 1
         );
 
@@ -119,8 +119,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
     private ConfirmActionGui createDeleteGui() {
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString());
-        return new ConfirmActionGui(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_TITLE(), type,
-                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_DELETE_DESCRIPTION(), type,
+        return new ConfirmActionGui(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_TITLE, type,
+                MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_DESCRIPTION, type,
                 this, this.parent, this::deleteHandler
         );
     }
@@ -226,7 +226,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
         this.pane.bindItem('M', this.minBeforeActiveSettingFactory.getItem(
                 Material.COMMAND_BLOCK,
-                MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM()
+                MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM
         ));
         update();
     }

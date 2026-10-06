@@ -53,12 +53,12 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
             player.closeInventory();
 
-            MsgUI.INSTANCE.getELEMENT_LIST_INSTRUCTION_NEW().send(player, genericDisplayedName());
+            MsgUI.ELEMENT_LIST_INSTRUCTION_NEW.send(player, genericDisplayedName());
 
             CustomAnvil.Companion.getChatListener().setListenedCallback(player, prepareCreateItemConsumer(player));
 

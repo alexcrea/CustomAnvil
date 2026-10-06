@@ -105,7 +105,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
 
         if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
             player.closeInventory();
-            MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+            MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
             return;
         }
 
@@ -120,7 +120,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.INSTANCE.getSELECT_ITEM_TYPE_PLACE_HERE());
+        ComponentUtil.INSTANCE.setMessageName(meta, MsgUI.SELECT_ITEM_TYPE_PLACE_HERE);
         ComponentUtil.INSTANCE.applyLore(actionDescription.formatted(param), meta);
 
         item.setItemMeta(meta);

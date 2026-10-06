@@ -41,13 +41,13 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
     }
 
     private CustomRecipeConfigGui() {
-        super(MsgUI.INSTANCE.getCUSTOM_RECIPE_TITLE());
+        super(MsgUI.CUSTOM_RECIPE_TITLE);
 
         init();
     }
 
     public CustomRecipeConfigGui(Gui parent) {
-        super(MsgUI.INSTANCE.getCUSTOM_RECIPE_TITLE(), parent);
+        super(MsgUI.CUSTOM_RECIPE_TITLE, parent);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
         meta.addItemFlags(ItemFlag.values());
         ComponentUtil.setMessageName(meta,
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_NAME(),
+                MsgUI.CUSTOM_RECIPE_NAME,
                 CasedStringUtil.snakeToUpperSpacedCase(recipe.toString())
         );
         ComponentUtil.applyLore(getRecipeLore(recipe), meta);
@@ -82,7 +82,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
         var shouldWorkMsg = MsgUI.INSTANCE.booleanMessage(shouldWork);
         var exactCount = MsgUI.INSTANCE.booleanMessage(recipe.getExactCount());
 
-        ArrayList<Component> lore = new ArrayList<>(MsgUI.INSTANCE.getCUSTOM_RECIPE_LORE_DEFAULT()
+        ArrayList<Component> lore = new ArrayList<>(MsgUI.CUSTOM_RECIPE_LORE_DEFAULT
                 .formatted(
                         shouldWorkMsg.formattedConcatenated(),
                         exactCount,
@@ -92,7 +92,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
         if(recipe.getXpCostPerCraft() != 0) {
             var removeExact = MsgUI.INSTANCE.booleanMessage(recipe.getRemoveExactLinearXp());
-            lore.addAll(MsgUI.INSTANCE.getCUSTOM_RECIPE_LORE_LINEAR().formatted(removeExact));
+            lore.addAll(MsgUI.CUSTOM_RECIPE_LORE_LINEAR.formatted(removeExact));
         }
         return lore;
     }
@@ -104,7 +104,7 @@ public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRec
 
     @Override
     protected Message genericDisplayedName() {
-        return MsgUI.INSTANCE.getCUSTOM_RECIPE_GENERIC_NAME();
+        return MsgUI.CUSTOM_RECIPE_GENERIC_NAME;
     }
 
     @Override

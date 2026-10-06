@@ -212,8 +212,8 @@ public class GuiGlobalItems {
     ) {
         // Prepare lore
         var loreHeader = (displayValuePrefix ?
-                MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX() :
-                MsgUI.INSTANCE.getGLOBAL_ITEM_ITEM_LORE_PREFIX_ALONE());
+                MsgUI.GLOBAL_ITEM_ITEM_LORE_PREFIX :
+                MsgUI.GLOBAL_ITEM_ITEM_LORE_PREFIX_ALONE);
 
         List<Component> lore = loreHeader.formatted(value);
         if(displayLore != null) {

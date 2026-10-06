@@ -42,7 +42,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     public EnchantCostConfigGui() {
-        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_TITLE());
+        super(MsgUI.ENCHANTMENT_LEVEL_COST_TITLE);
         if (INSTANCE == null) INSTANCE = this;
 
         init();
@@ -52,7 +52,7 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
      * Constructor of this Global gui for enchantment cost settings.
      */
     public EnchantCostConfigGui(Gui parent) {
-        super(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_TITLE(), parent);
+        super(MsgUI.ENCHANTMENT_LEVEL_COST_TITLE, parent);
     }
 
     @Override
@@ -65,9 +65,9 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
         String prettyKey = CasedStringUtil.snakeToUpperSpacedCase(key.replace(":", "_"));
 
         return new EnchantCostSettingsGui.EnchantCostSettingFactory(
-                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_TITLE(), parent,
+                MsgUI.ENCHANTMENT_LEVEL_COST_ELEMENT_TITLE, parent,
                 ENCHANT_VALUES_ROOT + '.' + key, ConfigHolder.DEFAULT,
-                MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_DESCRIPTION(), prettyKey,
+                MsgUI.ENCHANTMENT_LEVEL_COST_ELEMENT_DESCRIPTION, prettyKey,
                 enchant, 0, 255,
                 1, 10, 50);
     }
@@ -85,8 +85,8 @@ public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSe
 
         // Prepare lore
         List<Component> lore = new ArrayList<>();
-        lore.addAll(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_ITEM_COST().formatted(itemCost));
-        lore.addAll(MsgUI.INSTANCE.getENCHANTMENT_LEVEL_COST_ELEMENT_BOOK_COST().formatted(bookCost));
+        lore.addAll(MsgUI.ENCHANTMENT_LEVEL_COST_ELEMENT_ITEM_COST.formatted(itemCost));
+        lore.addAll(MsgUI.ENCHANTMENT_LEVEL_COST_ELEMENT_BOOK_COST.formatted(bookCost));
 
         List<Message> displayLore = factory.getDisplayLore();
         if (displayLore != null) {

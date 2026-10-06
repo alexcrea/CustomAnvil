@@ -79,9 +79,9 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        ComponentUtil.setMessageName(deleteMeta, MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME());
+        ComponentUtil.setMessageName(deleteMeta, MsgUI.MATERIAL_GROUP_ELEMENT_DELETE_BUTTON_NAME);
         ComponentUtil.applyLore(
-                MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_BUTTON_LORE().formatted(),
+                MsgUI.MATERIAL_GROUP_ELEMENT_DELETE_BUTTON_LORE.formatted(),
                 deleteMeta
         );
 
@@ -89,7 +89,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.pane.bindItem('D', new GuiItem(deleteItem, openGuiAndCheckAction(), CustomAnvil.instance));
 
         // Displayed item will be updated later
-        var materialSelectionName = MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_SELECTED_MATERIALS();
+        var materialSelectionName = MsgUI.MATERIAL_GROUP_ELEMENT_SELECTED_MATERIALS;
         var name = CasedStringUtil.snakeToUpperSpacedCase(group.getName());
 
         ItemStack selectItem = new ItemStack(Material.DIAMOND_SWORD);
@@ -108,7 +108,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
 
         }, CustomAnvil.instance);
 
-        var selectGroupName = MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_SELECTED_SUB_GROUPS();
+        var selectGroupName = MsgUI.MATERIAL_GROUP_ELEMENT_SELECTED_SUB_GROUPS;
         ItemStack selectGroup = new ItemStack(Material.CHEST);
         ItemMeta selectGroupMeta = selectGroup.getItemMeta();
         assert selectGroupMeta != null;
@@ -136,7 +136,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
             // Do not allow to open inventory if player do not have edit configuration permission
             if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
             // test if group is used & cancel & warn user if so
@@ -181,8 +181,8 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         };
 
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.group.toString());
-        return new ConfirmActionGui(MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_TITLE(), type,
-                MsgUI.INSTANCE.getMATERIAL_GROUP_ELEMENT_DELETE_DESCRIPTION(), type,
+        return new ConfirmActionGui(MsgUI.MATERIAL_GROUP_ELEMENT_DELETE_TITLE, type,
+                MsgUI.MATERIAL_GROUP_ELEMENT_DELETE_DESCRIPTION, type,
                 this, this.parent, deleteSupplier
         );
     }

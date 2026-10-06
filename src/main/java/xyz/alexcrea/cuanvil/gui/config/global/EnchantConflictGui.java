@@ -41,11 +41,11 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     // Need to init myself
     public EnchantConflictGui(Gui parent) {
-        super(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_TITLE(), parent);
+        super(MsgUI.ENCHANTMENT_CONFLICT_TITLE, parent);
     }
 
     private EnchantConflictGui() {
-        super(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_TITLE());
+        super(MsgUI.ENCHANTMENT_CONFLICT_TITLE);
 
         init();
     }
@@ -55,7 +55,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         // Create new empty conflict and display it to the admin
         EnchantConflictGroup conflict = new EnchantConflictGroup(
                 name,
-                new IncludeGroup(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_DEFAULT_NEW().unformatted()),
+                new IncludeGroup(MsgUI.ENCHANTMENT_CONFLICT_DEFAULT_NEW.unformatted()),
                 0);
 
         try(var lock = ConfigHolder.CONFLICT.write) {
@@ -89,8 +89,8 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
         meta.addItemFlags(ItemFlag.values());
         var name = CasedStringUtil.snakeToUpperSpacedCase(conflict.toString());
 
-        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_NAME(), name);
-        ComponentUtil.applyLore(MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_LORE().formatted(
+        ComponentUtil.setMessageName(meta, MsgUI.ENCHANTMENT_CONFLICT_NAME, name);
+        ComponentUtil.applyLore(MsgUI.ENCHANTMENT_CONFLICT_LORE.formatted(
                 conflict.getEnchants().size(),
                 conflict.getCantConflictGroup().getGroups().size(),
                 conflict.getMinBeforeBlock()
@@ -107,7 +107,7 @@ public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGr
 
     @Override
     protected Message genericDisplayedName() {
-        return MsgUI.INSTANCE.getENCHANTMENT_CONFLICT_GENERIC_NAME();
+        return MsgUI.ENCHANTMENT_CONFLICT_GENERIC_NAME;
     }
 
     @Override

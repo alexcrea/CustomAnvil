@@ -31,7 +31,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
     private final Map<AnvilUseType, WorkPenaltyType.WorkPenaltyPart> items;
 
     public WorkPenaltyTypeSettingGui(BasicConfigGui parent) {
-        super(4, MsgUI.INSTANCE.getBASIC_WORK_PENALTY_TITLE(), parent);
+        super(4, MsgUI.BASIC_WORK_PENALTY_TITLE, parent);
 
         this.currentType = ConfigOptions.INSTANCE.getWorkPenaltyType();
         this.items = new EnumMap<>(this.currentType.partMap());
@@ -52,12 +52,12 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         assert meta != null;
 
         var lore = new ArrayList<Message>();
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_LORE());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_LORE_BREAK());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
+        lore.add(MsgUI.BASIC_WORK_PENALTY_LORE);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_INCREASING);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_ADDITIVE);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_LORE_BREAK);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_SHARED);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE);
 
         ComponentUtil.setMessageName(meta, name);
         ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
@@ -71,7 +71,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
             // Do not allow to open inventory if player do not have edit configuration permission
             if(!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 player.closeInventory();
-                MsgUI.INSTANCE.getSHARED_CONFIG_NO_EDIT_PERM().send(player);
+                MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
             new WorkPenaltyTypeSettingGui(parent).show(player);
@@ -137,8 +137,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ComponentUtil.setMessageName(meta, increasing);
 
         var lore = new ArrayList<Message>();
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_INCREASING);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_SHARED);
 
         ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         incrementItem.setItemMeta(meta);
@@ -162,8 +162,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ComponentUtil.setMessageName(meta, additiveMsg);
 
         lore.clear();
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_SHARED());
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_ADDITIVE);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_SHARED);
 
         ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         additiveItem.setItemMeta(meta);
@@ -187,8 +187,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ComponentUtil.setMessageName(meta, exclusiveIncreasing);
 
         lore.clear();
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_INCREASING);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE);
 
         ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         exclusiveIncrementItem.setItemMeta(meta);
@@ -212,8 +212,8 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         ComponentUtil.setMessageName(meta, exclusiveAdditiveMsg);
 
         lore.clear();
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
-        lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE());
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_ADDITIVE);
+        lore.add(MsgUI.BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE);
 
         ComponentUtil.applyLore(ComponentUtil.asComponents(lore), meta);
         exclusiveAdditiveItem.setItemMeta(meta);

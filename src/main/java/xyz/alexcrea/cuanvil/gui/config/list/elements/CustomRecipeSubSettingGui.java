@@ -75,8 +75,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta deleteMeta = deleteItem.getItemMeta();
         assert deleteMeta != null;
 
-        ComponentUtil.setMessageName(deleteMeta, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_NAME());
-        ComponentUtil.applyLore(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_LORE().formatted(), deleteMeta);
+        ComponentUtil.setMessageName(deleteMeta, MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_NAME);
+        ComponentUtil.applyLore(MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_LORE.formatted(), deleteMeta);
 
         deleteItem.setItemMeta(deleteMeta);
         this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
@@ -84,14 +84,14 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         // Displayed item will be updated later
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
         this.exactCountFactory = new BoolSettingsGui.BoolSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_EXACT_COUNT_TITLE(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_EXACT_COUNT_TITLE, this,
                 ConfigHolder.CUSTOM_RECIPE,
                 this.anvilRecipe + "." + AnvilCustomRecipe.EXACT_COUNT_CONFIG, AnvilCustomRecipe.DEFAULT_EXACT_COUNT_CONFIG,
                 null
         );
 
         this.removeExactLinearXpFactory = new BoolSettingsGui.BoolSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_TITLE(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_LINEAR_XP_TITLE, this,
                 ConfigHolder.CUSTOM_RECIPE,
                 this.anvilRecipe + "." + AnvilCustomRecipe.REMOVE_EXACT_XP_CONFIG, AnvilCustomRecipe.DEFAULT_REMOVE_EXACT_XP_CONFIG,
                 null
@@ -101,14 +101,14 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        ComponentUtil.setMessageName(meta, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_NAME());
-        ComponentUtil.applyLore(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_LINEAR_XP_LORE().formatted(), meta);
+        ComponentUtil.setMessageName(meta, MsgUI.CUSTOM_RECIPE_ELEMENT_LINEAR_XP_NAME);
+        ComponentUtil.applyLore(MsgUI.CUSTOM_RECIPE_ELEMENT_LINEAR_XP_LORE.formatted(), meta);
 
         item.setItemMeta(meta);
         this.noRemoveExactLinearXp = new GuiItem(item, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
         this.levelCostFactory = new IntSettingsGui.IntSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_COST_LEVEL_XP(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_COST_LEVEL_XP, this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.XP_LEVEL_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE,
                 null, null,
@@ -116,7 +116,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         );
 
         this.linearXpCostFactory = new IntSettingsGui.IntSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_COST_LINEAR_XP(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_COST_LINEAR_XP, this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LINEAR_XP_COST_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE,
                 null, null,
@@ -126,27 +126,27 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
         // Right part of the gui
         this.leftItemFactory = new ItemSettingGui.ItemSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_LEFT_TITLE(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_ITEM_LEFT_TITLE, this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.LEFT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE,
                 AnvilCustomRecipe.Companion.getDEFAULT_LEFT_ITEM_CONFIG(),
-                null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_LEFT_DESCRIPTION()
+                null, MsgUI.CUSTOM_RECIPE_ELEMENT_ITEM_LEFT_DESCRIPTION
         );
 
         this.rightItemFactory = new ItemSettingGui.ItemSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_TITLE(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_TITLE, this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RIGHT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE,
                 AnvilCustomRecipe.Companion.getDEFAULT_RIGHT_ITEM_CONFIG(),
-                null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_DESCRIPTION()
+                null, MsgUI.CUSTOM_RECIPE_ELEMENT_ITEM_RIGHT_DESCRIPTION
         );
 
         this.resultItemFactory = new ItemSettingGui.ItemSettingFactory(
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RESULT_TITLE(), this,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_ITEM_RESULT_TITLE, this,
                 this.anvilRecipe + "." + AnvilCustomRecipe.RESULT_ITEM_CONFIG,
                 ConfigHolder.CUSTOM_RECIPE,
                 AnvilCustomRecipe.Companion.getDEFAULT_RESULT_ITEM_CONFIG(),
-                null, MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_ITEM_RESULT_DESCRIPTION()
+                null, MsgUI.CUSTOM_RECIPE_ELEMENT_ITEM_RESULT_DESCRIPTION
         );
 
         // Now we update the items
@@ -155,8 +155,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
 
     private ConfirmActionGui createDeleteGui() {
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString());
-        return new ConfirmActionGui(MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_TITLE(), type,
-                MsgUI.INSTANCE.getCUSTOM_RECIPE_ELEMENT_DELETE_DESCRIPTION(), type,
+        return new ConfirmActionGui(MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_TITLE, type,
+                MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_DESCRIPTION, type,
                 this, this.parent, this::deleteRecipe
         );
     }

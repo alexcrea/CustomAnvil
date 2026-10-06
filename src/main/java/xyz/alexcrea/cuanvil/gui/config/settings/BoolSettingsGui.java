@@ -103,10 +103,10 @@ public class BoolSettingsGui extends AbstractSettingGui {
         Message displayedName;
         Material displayedMat;
         if(now) {
-            displayedName = MsgUI.INSTANCE.getSHARED_FORMATED_YES();
+            displayedName = MsgUI.SHARED_FORMATED_YES;
             displayedMat = Material.GREEN_TERRACOTTA;
         } else {
-            displayedName = MsgUI.INSTANCE.getSHARED_FORMATED_NO();
+            displayedName = MsgUI.SHARED_FORMATED_NO;
             displayedMat = Material.RED_TERRACOTTA;
         }
 
@@ -116,7 +116,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
             valueLore.addAll(ComponentUtil.asComponents(holder.displayLore, holder.param));
             valueLore.add(Component.empty());
         }
-        valueLore.addAll(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted());
+        valueLore.addAll(MsgUI.SHARED_CLICK_TO_CHANGE.formatted());
 
         ItemStack valueItemStack = new ItemStack(displayedMat);
         ItemMeta valueMeta = valueItemStack.getItemMeta();
@@ -257,10 +257,10 @@ public class BoolSettingsGui extends AbstractSettingGui {
             Message finalValue;
             if(value) {
                 itemMat = Material.GREEN_TERRACOTTA;
-                finalValue = MsgUI.INSTANCE.getSHARED_FORMATED_YES();
+                finalValue = MsgUI.SHARED_FORMATED_YES;
             } else {
                 itemMat = Material.RED_TERRACOTTA;
-                finalValue = MsgUI.INSTANCE.getSHARED_FORMATED_NO();
+                finalValue = MsgUI.SHARED_FORMATED_NO;
             }
 
             return GuiGlobalItems.createGuiItemFromProperties(
@@ -285,7 +285,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
             // Get item properties
             String configPath = GuiGlobalItems.getConfigNameFromPath(getConfigPath());
 
-            return getItem(MsgUI.INSTANCE.getSHARED_YELLOW_GET_ITEM(), CasedStringUtil.detectToUpperSpacedCase(configPath));
+            return getItem(MsgUI.SHARED_YELLOW_GET_ITEM, CasedStringUtil.detectToUpperSpacedCase(configPath));
         }
 
     }

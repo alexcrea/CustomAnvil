@@ -49,7 +49,7 @@ public class UnitRepairElementListGui
             NamespacedKey parentMaterial,
             UnitRepairConfigGui parentGui
     ) {
-        super(MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_TITLE(), prettifiedName(parentMaterial));
+        super(MsgUI.UNIT_REPAIR_ELEMENT_TITLE, prettifiedName(parentMaterial));
         this.parentMaterial = parentMaterial;
         this.parentGui = parentGui;
         this.materialName = prettifiedName(parentMaterial);
@@ -73,19 +73,19 @@ public class UnitRepairElementListGui
             event.setCancelled(true);
 
             new SelectItemTypeGui(
-                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_TITLE(), this.materialName,
-                    MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_DESCRIPTION(), this.materialName,
+                    MsgUI.UNIT_REPAIR_NEW_ELEMENT_TITLE, this.materialName,
+                    MsgUI.UNIT_REPAIR_NEW_ELEMENT_DESCRIPTION, this.materialName,
                     this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
                         NamespacedKey type = MaterialUtil.getCustomType(itemStack);
 
                         if(!(meta instanceof Damageable)) {
-                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR().send(player);
+                            MsgUI.UNIT_REPAIR_NEW_ELEMENT_CANNOT_REPAIR.send(player);
                             return;
                         }
                         if(type.equals(this.parentMaterial)) {
-                            MsgUI.INSTANCE.getUNIT_REPAIR_NEW_ELEMENT_SAME_TYPE().send(player);
+                            MsgUI.UNIT_REPAIR_NEW_ELEMENT_SAME_TYPE.send(player);
                             return;
                         }
 
@@ -125,11 +125,11 @@ public class UnitRepairElementListGui
         String materialDisplayName = CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey());
 
         return new DoubleSettingGui.DoubleSettingFactory(
-                MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_TITLE(),
+                MsgUI.UNIT_REPAIR_ELEMENT_VALUE_TITLE,
                 this,
                 ConfigHolder.UNIT_REPAIR,
                 this.parentMaterial.toString().toLowerCase() + "." + materialName,
-                MsgUI.INSTANCE.getUNIT_REPAIR_ELEMENT_VALUE_DESCRIPTION(),
+                MsgUI.UNIT_REPAIR_ELEMENT_VALUE_DESCRIPTION,
                 materialDisplayName, this.materialName,
                 2,
                 true, true,
@@ -144,7 +144,7 @@ public class UnitRepairElementListGui
     protected GuiItem itemFromFactory(NamespacedKey materialName, DoubleSettingGui.DoubleSettingFactory factory) {
         return factory.getItem(
                 materialFromName(materialName),
-                MsgUI.INSTANCE.getUNIT_REPAIR_ITEM(),
+                MsgUI.UNIT_REPAIR_ITEM,
                 CasedStringUtil.snakeToUpperSpacedCase(materialName.getKey()),
                 this.materialName
         );

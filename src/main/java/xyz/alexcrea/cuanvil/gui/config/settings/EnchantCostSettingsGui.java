@@ -151,7 +151,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             assert meta != null;
 
             ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME_PREFIXED, nowBook, planned, "<red>-", (nowBook - planned));
-            ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
+            ComponentUtil.INSTANCE.applyLore(MsgUI.SHARED_CLICK_TO_CHANGE.formatted(), meta);
             item.setItemMeta(meta);
 
             minusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);
@@ -169,7 +169,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             assert meta != null;
 
             ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME_PREFIXED, nowBook, planned, "<green>+", (planned - nowBook));
-            ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
+            ComponentUtil.INSTANCE.applyLore(MsgUI.SHARED_CLICK_TO_CHANGE.formatted(), meta);
             item.setItemMeta(meta);
 
             plusItem = new GuiItem(item, updateNowBookConsumer(planned), CustomAnvil.instance);

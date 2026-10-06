@@ -42,13 +42,13 @@ public class UnitRepairConfigGui extends
     }
 
     private UnitRepairConfigGui() {
-        super(MsgUI.INSTANCE.getUNIT_REPAIR_TITLE());
+        super(MsgUI.UNIT_REPAIR_TITLE);
 
         init();
     }
 
     public UnitRepairConfigGui(Gui parent) {
-        super(MsgUI.INSTANCE.getUNIT_REPAIR_TITLE(), parent);
+        super(MsgUI.UNIT_REPAIR_TITLE, parent);
     }
 
     @Override

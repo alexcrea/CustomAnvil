@@ -41,13 +41,13 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
     }
 
     public GroupConfigGui() {
-        super(MsgUI.INSTANCE.getMATERIAL_GROUP_TITLE());
+        super(MsgUI.MATERIAL_GROUP_TITLE);
 
         init();
     }
 
     public GroupConfigGui(Gui parent) {
-        super(MsgUI.INSTANCE.getMATERIAL_GROUP_TITLE(), parent);
+        super(MsgUI.MATERIAL_GROUP_TITLE, parent);
     }
 
     @Override
@@ -59,11 +59,11 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
         meta.addItemFlags(ItemFlag.values());
         ComponentUtil.setMessageName(
                 meta,
-                MsgUI.INSTANCE.getMATERIAL_GROUP_NAME(),
+                MsgUI.MATERIAL_GROUP_NAME,
                 CasedStringUtil.snakeToUpperSpacedCase(group.getName())
         );
         ComponentUtil.applyLore(
-                MsgUI.INSTANCE.getMATERIAL_GROUP_LORE().formatted(
+                MsgUI.MATERIAL_GROUP_LORE.formatted(
                         group.getGroups().size(),
                         group.getNonGroupInheritedMaterials().size(),
                         group.getMaterials().size()
@@ -97,7 +97,7 @@ public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedG
 
     @Override
     protected Message genericDisplayedName() {
-        return MsgUI.INSTANCE.getMATERIAL_GROUP_GENERIC_NAME();
+        return MsgUI.MATERIAL_GROUP_GENERIC_NAME;
     }
 
     @Override
