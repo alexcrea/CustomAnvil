@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 @NotNullByDefault
@@ -106,23 +108,22 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
         char exclusiveAdditive = typeVals.charAt(4);
 
         WorkPenaltyType.WorkPenaltyPart part = items.get(type);
-        //TODO MESSAGE
-        String increasingStr = (part.penaltyIncrease() ? "<green>" : "<red>") + "Increasing";
-        String additiveStr = (part.penaltyAdditive() ? "<green>" : "<red>") + "Additive";
-        String exclusiveIncreasingStr = (part.exclusivePenaltyIncrease() ? "<green>" : "<red>") + "Increasing";
-        String exclusiveAdditiveStr = (part.exclusivePenaltyAdditive() ? "<green>" : "<red>") + "Additive";
+        Message increasing = part.penaltyIncrease() ? MsgUI.WORK_PENALTY_INCREASING_ENABLED : MsgUI.WORK_PENALTY_INCREASING_DISABLED;
+        Message additiveMsg = part.penaltyAdditive() ? MsgUI.WORK_PENALTY_ADDITIVE_ENABLED : MsgUI.WORK_PENALTY_ADDITIVE_DISABLED;
+        Message exclusiveIncreasing = part.exclusivePenaltyIncrease() ? MsgUI.WORK_PENALTY_INCREASING_ENABLED : MsgUI.WORK_PENALTY_INCREASING_DISABLED;
+        Message exclusiveAdditiveMsg = part.exclusivePenaltyAdditive() ? MsgUI.WORK_PENALTY_ADDITIVE_ENABLED : MsgUI.WORK_PENALTY_ADDITIVE_DISABLED;
 
         // Display item
         ItemStack displayItem = new ItemStack(type.getDisplayMat());
 
-        ArrayList<String> displayLore = new ArrayList<>();
-        displayLore.add("<yellow>Shared<gray>: " + additiveStr + " <gray>| " + increasingStr);
-        displayLore.add("<yellow>Exclusive<gray>: " + exclusiveAdditiveStr + " <gray>| " + exclusiveIncreasingStr);
+        List<Component> displayLore = new ArrayList<>();
+        displayLore.addAll(MsgUI.WORK_PENALTY_LORE_SHARED.formatted(additiveMsg, increasing));
+        displayLore.addAll(MsgUI.WORK_PENALTY_LORE_EXCLUSIVE.formatted(exclusiveAdditiveMsg, exclusiveIncreasing));
 
         ItemMeta meta = displayItem.getItemMeta();
         assert meta != null;
-        meta.setDisplayName("<yellow>" + type.getDisplayName());
-        meta.setLore(displayLore);
+        ComponentUtil.setMessageName(meta, MsgUI.WORK_PENALTY_TYPE_NAME, type.getDisplayName());
+        ComponentUtil.applyLore(displayLore, meta);
         displayItem.setItemMeta(meta);
 
         pane.bindItem(display, new GuiItem(displayItem, (event) -> event.setCancelled(true)));
@@ -133,7 +134,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
         meta = incrementItem.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(increasingStr);
+        ComponentUtil.setMessageName(meta, increasing);
 
         var lore = new ArrayList<Message>();
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
@@ -158,7 +159,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
         meta = additiveItem.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(additiveStr);
+        ComponentUtil.setMessageName(meta, additiveMsg);
 
         lore.clear();
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());
@@ -183,7 +184,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
         meta = exclusiveIncrementItem.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(exclusiveIncreasingStr);
+        ComponentUtil.setMessageName(meta, exclusiveIncreasing);
 
         lore.clear();
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_INCREASING());
@@ -208,7 +209,7 @@ public class WorkPenaltyTypeSettingGui extends AbstractSettingGui {
 
         meta = exclusiveAdditiveItem.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(exclusiveAdditiveStr);
+        ComponentUtil.setMessageName(meta, exclusiveAdditiveMsg);
 
         lore.clear();
         lore.add(MsgUI.INSTANCE.getBASIC_WORK_PENALTY_EXPLAIN_ADDITIVE());

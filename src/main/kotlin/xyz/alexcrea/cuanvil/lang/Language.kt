@@ -84,7 +84,7 @@ class Language(private val id: String, private val default: Boolean = false) {
     private fun exploreDeeper(section: ConfigurationSection, root: String, result: ArrayList<String>) {
         for(key in section.getKeys(false)) {
             val newRoot = "$root.$key"
-            if(has(key)) {
+            if(has(newRoot)) {
                 result.add(newRoot)
                 continue
             }

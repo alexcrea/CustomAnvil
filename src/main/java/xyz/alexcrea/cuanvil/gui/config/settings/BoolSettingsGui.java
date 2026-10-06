@@ -24,7 +24,6 @@ import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -71,11 +70,11 @@ public class BoolSettingsGui extends AbstractSettingGui {
      */
     protected void prepareReturnToDefault() {
         // Prepare default Value text
-        String defaultValueLore;
+        Message defaultValueLore;
         if(holder.defaultVal) {
-            defaultValueLore = "<green>Yes <gray>Is the default value";
+            defaultValueLore = MsgUI.BOOL_SETTING_DEFAULT_YES;
         } else {
-            defaultValueLore = "<red>No <gray>Is the default value";
+            defaultValueLore = MsgUI.BOOL_SETTING_DEFAULT_NO;
         }
 
         // Create reset to default item
@@ -84,7 +83,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         assert meta != null;
 
         ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
-        meta.setLore(Collections.singletonList(defaultValueLore));
+        ComponentUtil.applyLore(meta, defaultValueLore);
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -101,13 +100,13 @@ public class BoolSettingsGui extends AbstractSettingGui {
         PatternPane pane = getPane();
 
         // Get displayed value for this config.
-        String displayedName;
+        Message displayedName;
         Material displayedMat;
         if(now) {
-            displayedName = "<green>Yes";
+            displayedName = MsgUI.INSTANCE.getSHARED_FORMATED_YES();
             displayedMat = Material.GREEN_TERRACOTTA;
         } else {
-            displayedName = "<red>No";
+            displayedName = MsgUI.INSTANCE.getSHARED_FORMATED_NO();
             displayedMat = Material.RED_TERRACOTTA;
         }
 
@@ -123,7 +122,7 @@ public class BoolSettingsGui extends AbstractSettingGui {
         ItemMeta valueMeta = valueItemStack.getItemMeta();
         assert valueMeta != null;
 
-        valueMeta.setDisplayName(displayedName);//TODO MESSAGE ?
+        ComponentUtil.setMessageName(valueMeta, displayedName);
         ComponentUtil.applyLore(valueLore, valueMeta);
         valueItemStack.setItemMeta(valueMeta);
 
@@ -255,13 +254,13 @@ public class BoolSettingsGui extends AbstractSettingGui {
             Material itemMat;
             Component itemName = name.formattedConcatenated(params);
 
-            String finalValue;
+            Message finalValue;
             if(value) {
                 itemMat = Material.GREEN_TERRACOTTA;
-                finalValue = "<green>Yes";//TODO MESSAGE
+                finalValue = MsgUI.INSTANCE.getSHARED_FORMATED_YES();
             } else {
                 itemMat = Material.RED_TERRACOTTA;
-                finalValue = "<red>No";//TODO MESSAGE
+                finalValue = MsgUI.INSTANCE.getSHARED_FORMATED_NO();
             }
 
             return GuiGlobalItems.createGuiItemFromProperties(

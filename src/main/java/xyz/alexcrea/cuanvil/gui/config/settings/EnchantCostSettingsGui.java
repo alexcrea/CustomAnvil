@@ -89,10 +89,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta bookMeta = bookItemstack.getItemMeta();
         assert bookMeta != null;
 
-        bookMeta.setDisplayName("<green>Cost of an Enchantment by Book");
-        bookMeta.setLore(Arrays.asList(
-                "<gray>Cost per result item level of an sacrifice enchantment",
-                "<gray>Only apply if sacrificed item <red>is <gray>a book"));
+        ComponentUtil.setMessageName(bookMeta, MsgUI.ENCHANT_COST_BOOK_NAME);
+        ComponentUtil.applyLore(bookMeta, MsgUI.ENCHANT_COST_BOOK_LORE);
         bookItemstack.setItemMeta(bookMeta);
 
         // sword display
@@ -101,10 +99,8 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         assert swordMeta != null;
 
         swordMeta.addItemFlags(ItemFlag.values());
-        swordMeta.setDisplayName("<green>Cost of an Enchantment by Item");
-        swordMeta.setLore(Arrays.asList(
-                "<gray>Cost per result item level of an sacrifice enchantment",
-                "<gray>Only apply if sacrificed item <red>is not <gray>a book"));
+        ComponentUtil.setMessageName(swordMeta, MsgUI.ENCHANT_COST_ITEM_NAME);
+        ComponentUtil.applyLore(swordMeta, MsgUI.ENCHANT_COST_ITEM_LORE);
         swordItemstack.setItemMeta(swordMeta);
 
         pane.bindItem('1', GuiGlobalItems.backgroundItem(Material.BLACK_STAINED_GLASS_PANE));
@@ -122,9 +118,10 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         EnchantCostSettingFactory holder = (EnchantCostSettingFactory) this.holder;
 
         ComponentUtil.setMessageName(meta, MsgUI.SHARED_RESET);
-        meta.setLore(Arrays.asList(
-                "<gray>Default item  value is: <yellow>" + holder.defaultVal,
-                "<gray>Default book value is: <yellow>" + holder.defaultBookVal));
+        ComponentUtil.applyLore(Arrays.asList(
+                MsgUI.ENCHANT_COST_DEFAULT_ITEM.formattedConcatenated(holder.defaultVal),
+                MsgUI.ENCHANT_COST_DEFAULT_BOOK.formattedConcatenated(holder.defaultBookVal)
+        ), meta);
         item.setItemMeta(meta);
         returnToDefault = new GuiItem(item, event -> {
             event.setCancelled(true);
@@ -153,7 +150,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("<yellow>" + nowBook + " <white>-> <yellow>" + planned + " <reset>(<red>-" + (nowBook - planned) + "<reset>)");
+            ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME_PREFIXED, nowBook, planned, "<red>-", (nowBook - planned));
             ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
@@ -171,7 +168,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            meta.setDisplayName("<yellow>" + nowBook + " <white>-> <yellow>" + planned + " <reset>(<green>+" + (planned - nowBook) + "<reset>)");//TODO MESSAGE
+            ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME_PREFIXED, nowBook, planned, "<green>+", (planned - nowBook));
             ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
             item.setItemMeta(meta);
 
@@ -186,7 +183,7 @@ public class EnchantCostSettingsGui extends IntSettingsGui {
         ItemMeta nowMeta = nowPaper.getItemMeta();
         assert nowMeta != null;
 
-        nowMeta.setDisplayName("<white>Value: <yellow>" + nowBook);//TODO MESSAGE
+        ComponentUtil.setMessageName(nowMeta, MsgUI.SETTING_VALUE_NAME, nowBook);
         if(holder.displayLore != null) {
             ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), nowMeta);
         }

@@ -120,7 +120,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("<white>Value: <yellow>" + holder.valueDisplayName(ValueDisplayType.CURRENT, now));//TODO MESSAGE
+        ComponentUtil.setMessageName(resultMeta, MsgUI.SETTING_VALUE_NAME, holder.valueDisplayName(ValueDisplayType.CURRENT, now));
         if(holder.displayLore != null)
             ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), resultMeta);
 
@@ -149,7 +149,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         var nowDisplay = holder.valueDisplayName(type, now);
         var plannedDisplay = holder.valueDisplayName(type, planned);
         var deltaDisplay = holder.deltaDisplay(type, now, planned);
-        meta.setDisplayName("<yellow>" + nowDisplay + " <white>-> <yellow>" + plannedDisplay + " <reset>(<red>" + deltaDisplay + "<reset>)");//TODO MESSAGE
+        ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME, nowDisplay, plannedDisplay, deltaDisplay);
 
         ComponentUtil.INSTANCE.applyLore(MsgUI.INSTANCE.getSHARED_CLICK_TO_CHANGE().formatted(), meta);
         item.setItemMeta(meta);
@@ -222,29 +222,28 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         // Get material properties
         Material stepMat;
-        StringBuilder stepName = new StringBuilder("§");
-        List<String> stepLore;
+        Message stepName;
+        Message stepLore;
         Consumer<InventoryClickEvent> clickEvent;
         if(stepValue == step) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
-            stepName.append('a');
-            stepLore = Collections.singletonList("<gray>Value is changing by " + stepValue);
+            stepName = MsgUI.SETTING_STEP_NAME_SELECTED;
+            stepLore = MsgUI.SETTING_STEP_LORE_CHANGE;
             clickEvent = GuiGlobalActions.stayInPlace;
         } else {
             stepMat = Material.RED_STAINED_GLASS_PANE;
-            stepName.append('c');
-            stepLore = Collections.singletonList("<gray>Click here to change the value by " + stepValue);
+            stepName = MsgUI.SETTING_STEP_NAME_OTHER;
+            stepLore = MsgUI.SETTING_STEP_LORE_CLICK;
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of: <yellow>").append(stepValue);
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName(stepName.toString());
-        meta.setLore(stepLore);
+        ComponentUtil.setMessageName(meta, stepName, stepValue);
+        ComponentUtil.applyLore(meta, stepLore, stepValue);
         item.setItemMeta(meta);
 
         return new GuiItem(item, clickEvent, CustomAnvil.instance);

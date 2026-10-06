@@ -20,11 +20,11 @@ import xyz.alexcrea.cuanvil.gui.config.SelectGroupContainer;
 import xyz.alexcrea.cuanvil.gui.config.list.ElementListConfigGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
+import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -104,9 +104,6 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
         return guiItem;
     }
 
-    private static final List<String> TRUE_LORE = Collections.singletonList("<gray>Value: <green>Selected");
-    private static final List<String> FALSE_LORE = Collections.singletonList("<gray>Value: <red>Not Selected");
-
     public void setGroupItemMeta(ItemStack item, String name, boolean isIn) {
         ItemMeta meta = item.getItemMeta();
 
@@ -118,14 +115,19 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             assert meta != null;
         }
 
-        meta.setDisplayName("§" + (isIn ? 'a' : 'c') + CasedStringUtil.snakeToUpperSpacedCase(name));
+        Message nameMsg;
+        Message loreMsg;
         if(isIn) {
             meta.addEnchant(Enchantment.SHARPNESS, 1, true);
-            meta.setLore(TRUE_LORE);
+            nameMsg = MsgUI.SETTING_SELECTED_NAME;
+            loreMsg = MsgUI.SETTING_SELECTED;
         } else {
             meta.removeEnchant(Enchantment.SHARPNESS);
-            meta.setLore(FALSE_LORE);
+            nameMsg = MsgUI.SETTING_UNSELECTED_NAME;
+            loreMsg = MsgUI.SETTING_NOT_SELECTED;
         }
+        ComponentUtil.setMessageName(meta, nameMsg, CasedStringUtil.snakeToUpperSpacedCase(name));
+        ComponentUtil.applyLore(meta, loreMsg);
         meta.addItemFlags(ItemFlag.values());
 
         item.setItemMeta(meta);

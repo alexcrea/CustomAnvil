@@ -25,7 +25,6 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -98,8 +97,6 @@ public class ItemSettingGui extends AbstractSettingGui {
         }, CustomAnvil.instance);
     }
 
-    protected final static List<String> CLICK_LORE = Collections.singletonList("<gray>Click Here with an item to change the value");
-
     /**
      * Update item using the setting value to match the new value
      */
@@ -115,8 +112,8 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemMeta valueMeta = displayedItem.getItemMeta();
             assert valueMeta != null;
 
-            valueMeta.setDisplayName("<dark_red*NO ITEM SET");
-            valueMeta.setLore(CLICK_LORE);
+            ComponentUtil.setMessageName(valueMeta, MsgUI.ITEM_SETTING_NO_ITEM_NAME);
+            ComponentUtil.applyLore(valueMeta, MsgUI.ITEM_SETTING_CLICK_WITH_ITEM);
 
             displayedItem.setItemMeta(valueMeta);
         }
@@ -260,8 +257,7 @@ public class ItemSettingGui extends AbstractSettingGui {
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
 
-            //TODO MESSAGE name ?
-            meta.setDisplayName("<green>" + name);
+            ComponentUtil.setMessageName(meta, MsgUI.ITEM_SETTING_NAME, name);
             ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(getDisplayLore(), param), meta);
             meta.addItemFlags(ItemFlag.values());
 

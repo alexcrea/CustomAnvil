@@ -132,7 +132,7 @@ object MsgUI {
     val ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_DESCRIPTION = Message("enchant-conflict.element.min-before-count.description", null)
     val ENCHANTMENT_CONFLICT_ELEMENT_MIN_BEFORE_COUNT_ITEM = Message("enchant-conflict.element.min-before-count.item")
 
-    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_TITLE = Message("enchant-conflict.element.title")
+    @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_TITLE = Message("enchant-conflict.element.enchantments.title")
     @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_HEADER = Message("enchant-conflict.element.enchantments.lore.header")
     @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_EMPTY = Message("enchant-conflict.element.enchantments.lore.empty")
     @JvmField val ENCHANTMENT_CONFLICT_ELEMENT_LORE_NOT_EMPTY = Message("enchant-conflict.element.enchantments.lore.not-empty")
@@ -265,6 +265,48 @@ object MsgUI {
     val BASIC_WORK_PENALTY_EXPLAIN_ADDITIVE = Message("basic-config.work-penalty.explanation.additive")
     val BASIC_WORK_PENALTY_EXPLAIN_SHARED = Message("basic-config.work-penalty.explanation.shared")
     val BASIC_WORK_PENALTY_EXPLAIN_EXCLUSIVE = Message("basic-config.work-penalty.explanation.exclusive")
+
+    @JvmField val WORK_PENALTY_INCREASING_ENABLED = Message("basic-config.work-penalty.penalty-increasing.enabled")
+    @JvmField val WORK_PENALTY_INCREASING_DISABLED = Message("basic-config.work-penalty.penalty-increasing.disabled")
+    @JvmField val WORK_PENALTY_ADDITIVE_ENABLED = Message("basic-config.work-penalty.penalty-additive.enabled")
+    @JvmField val WORK_PENALTY_ADDITIVE_DISABLED = Message("basic-config.work-penalty.penalty-additive.disabled")
+    @JvmField val WORK_PENALTY_LORE_SHARED = Message("basic-config.work-penalty.lore-shared", "additive", "increasing")
+    @JvmField val WORK_PENALTY_LORE_EXCLUSIVE = Message("basic-config.work-penalty.lore-exclusive", "additive", "increasing")
+    @JvmField val WORK_PENALTY_TYPE_NAME = Message("basic-config.work-penalty.type-name", "name")
+
+    @JvmField val SETTING_VALUE_NAME = Message("setting.value-name", "value")
+    @JvmField val SETTING_VALUE_ARROW_NAME = Message("setting.value-arrow-name", "now", "planned", "delta")
+    @JvmField val SETTING_VALUE_ARROW_NAME_PREFIXED = Message("setting.value-arrow-name-prefixed", "now", "planned", "prefix", "delta")
+    @JvmField val SETTING_STEP_NAME_SELECTED = Message("setting.step-name-selected", "value")
+    @JvmField val SETTING_STEP_NAME_OTHER = Message("setting.step-name-other", "value")
+    @JvmField val SETTING_STEP_LORE_CHANGE = Message("setting.step-lore-change", "value")
+    @JvmField val SETTING_STEP_LORE_CLICK = Message("setting.step-lore-click", "value")
+    @JvmField val SETTING_SELECTED = Message("setting.selected")
+    @JvmField val SETTING_NOT_SELECTED = Message("setting.not-selected")
+    @JvmField val SETTING_SELECTED_NAME = Message("setting.selected-name", "name")
+    @JvmField val SETTING_UNSELECTED_NAME = Message("setting.unselected-name", "name")
+
+    @JvmField val BOOL_SETTING_DEFAULT_YES = Message("bool-setting.default-value.yes")
+    @JvmField val BOOL_SETTING_DEFAULT_NO = Message("bool-setting.default-value.no")
+
+    @JvmField val DOUBLE_SETTING_DELETE_NAME = Message("double-setting.delete-name")
+    @JvmField val DOUBLE_SETTING_DELETE_LORE = Message("double-setting.delete-lore")
+
+    @JvmField val ITEM_SETTING_CLICK_WITH_ITEM = Message("item-setting.click-with-item")
+    @JvmField val ITEM_SETTING_NO_ITEM_NAME = Message("item-setting.no-item-name")
+    @JvmField val ITEM_SETTING_NAME = Message("item-setting.name", "name")
+
+    @JvmField val ENCHANT_COST_BOOK_NAME = Message("enchant-cost-setting.book-name")
+    @JvmField val ENCHANT_COST_BOOK_LORE = Message("enchant-cost-setting.book-lore")
+    @JvmField val ENCHANT_COST_ITEM_NAME = Message("enchant-cost-setting.item-name")
+    @JvmField val ENCHANT_COST_ITEM_LORE = Message("enchant-cost-setting.item-lore")
+    @JvmField val ENCHANT_COST_DEFAULT_ITEM = Message("enchant-cost-setting.default-item", "value")
+    @JvmField val ENCHANT_COST_DEFAULT_BOOK = Message("enchant-cost-setting.default-book", "value")
+
+    @JvmField val ENCHANT_SELECT_SHOW_ALL_NAME = Message("enchant-select-setting.show-all-name")
+    @JvmField val ENCHANT_SELECT_SHOW_SELECTED_NAME = Message("enchant-select-setting.show-selected-name")
+    @JvmField val ENCHANT_SELECT_TOGGLE_LORE_ONLY_SELECTED = Message("enchant-select-setting.show-toggle-lore-only-selected")
+    @JvmField val ENCHANT_SELECT_TOGGLE_LORE_EVERY = Message("enchant-select-setting.show-toggle-lore-every")
 
     @JvmField val SELECT_MATERIAL_HEADER = Message("material-selector.header", "type", "action")
     @JvmField val SELECT_MATERIAL_EMPTY = Message("material-selector.empty", "type", "action")

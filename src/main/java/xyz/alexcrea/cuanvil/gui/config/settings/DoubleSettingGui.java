@@ -28,7 +28,6 @@ import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -72,26 +71,20 @@ public class DoubleSettingGui extends AbstractSettingGui {
         updateValueDisplay();
     }
 
-    private static final ItemStack DELETE_ITEM_STACK = new ItemStack(Material.RED_TERRACOTTA);
-
-    static {
-        ItemMeta meta = DELETE_ITEM_STACK.getItemMeta();
-        assert meta != null;
-
-        meta.setDisplayName("<red>Disable item being repaired ?");
-        meta.setLore(Arrays.asList("<gray>Confirm disabling unit repair for this item..",
-                "<dark_red>Cation: This action can't be canceled."));
-
-        DELETE_ITEM_STACK.setItemMeta(meta);
-    }
-
     private @UnknownNullability GuiItem askDelete;
 
     @Override
     protected void initBase(ValueUpdatableGui parent) {
         super.initBase(parent);
 
-        this.askDelete = new GuiItem(DELETE_ITEM_STACK,
+        ItemStack deleteStack = new ItemStack(Material.RED_TERRACOTTA);
+        ItemMeta meta = deleteStack.getItemMeta();
+        assert meta != null;
+        ComponentUtil.setMessageName(meta, MsgUI.DOUBLE_SETTING_DELETE_NAME);
+        ComponentUtil.applyLore(meta, MsgUI.DOUBLE_SETTING_DELETE_LORE);
+        deleteStack.setItemMeta(meta);
+
+        this.askDelete = new GuiItem(deleteStack,
                 GuiGlobalActions.saveSettingAction(this, parent),
                 CustomAnvil.instance);
     }
@@ -177,7 +170,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta resultMeta = resultPaper.getItemMeta();
         assert resultMeta != null;
 
-        resultMeta.setDisplayName("<white>Value: <yellow>" + displayValue(now));
+        ComponentUtil.setMessageName(resultMeta, MsgUI.SETTING_VALUE_NAME, displayValue(now));
         resultPaper.setItemMeta(resultMeta);
         GuiItem resultItem = new GuiItem(resultPaper, GuiGlobalActions.stayInPlace, CustomAnvil.instance);
 
@@ -208,8 +201,7 @@ public class DoubleSettingGui extends AbstractSettingGui {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName("<yellow>" + displayValue(now) + " <white>-> <yellow>" + displayValue(planned)
-                + " <reset>(" + numberPrefix + (displayValue(planned.subtract(now).abs()) + "<reset>)"));
+        ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME_PREFIXED, displayValue(now), displayValue(planned), numberPrefix, displayValue(planned.subtract(now).abs()));
         ComponentUtil.applyLore(setLoreItem, meta);
         item.setItemMeta(meta);
 
@@ -282,29 +274,29 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
         // Get material properties
         Material stepMat;
-        StringBuilder stepName = new StringBuilder("§");
-        List<String> stepLore;
+        Message stepName;
+        Message stepLore;
         Consumer<InventoryClickEvent> clickEvent;
         if(stepValue.compareTo(step) == 0) {
             stepMat = Material.GREEN_STAINED_GLASS_PANE;
-            stepName.append('a');
-            stepLore = Collections.singletonList("<gray>Value is changing by " + displayValue(stepValue));
+            stepName = MsgUI.SETTING_STEP_NAME_SELECTED;
+            stepLore = MsgUI.SETTING_STEP_LORE_CHANGE;
             clickEvent = GuiGlobalActions.stayInPlace;
         } else {
             stepMat = Material.RED_STAINED_GLASS_PANE;
-            stepName.append('c');
-            stepLore = Collections.singletonList("<gray>Click here to change the value by " + displayValue(stepValue));
+            stepName = MsgUI.SETTING_STEP_NAME_OTHER;
+            stepLore = MsgUI.SETTING_STEP_LORE_CLICK;
             clickEvent = updateStepValue(stepValue);
         }
-        stepName.append("Step of <yellow>").append(displayValue(stepValue));
 
         // Create item stack then gui item
         ItemStack item = new ItemStack(stepMat);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName(stepName.toString());
-        meta.setLore(stepLore);
+        var value = displayValue(stepValue);
+        ComponentUtil.setMessageName(meta, stepName, value);
+        ComponentUtil.applyLore(meta, stepLore, value);
         item.setItemMeta(meta);
 
         return new GuiItem(item, clickEvent, CustomAnvil.instance);
@@ -485,7 +477,9 @@ public class DoubleSettingGui extends AbstractSettingGui {
 
             return GuiGlobalItems.createGuiItemFromProperties(
                     this, itemMat, itemName,
-                    "<yellow>" + displayValue(value, this.asPercentage), //TODO MESSAGE ? maybe ?
+                    MsgUI.INSTANCE.getSHARED_YELLOW_GET_ITEM().formattedConcatenated(
+                            displayValue(value, this.asPercentage)
+                    ),
                     lore, true,
                     this.param, this.param2
             );

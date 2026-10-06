@@ -520,10 +520,61 @@ config-ui.basic-config.work-penalty:
         shared: "<yellow>Shared<gray>: Vanilla, shared penalty. it will be kept from before the plugin installation."
         exclusive: "<yellow>Exclusive<gray>: Custom, per anvil use type penalty. it will be lost after plugin uninstallation"
       penalty-increasing:
-        disabled: 
-        enabled:
+        disabled: "<red>Increasing"
+        enabled: "<green>Increasing"
       penalty-additive:
+        disabled: "<red>Additive"
+        enabled: "<green>Additive"
+      lore-shared: "<yellow>Shared<gray>: %additive <gray>| %increasing"
+      lore-exclusive: "<yellow>Exclusive<gray>: %additive <gray>| %increasing"
+      type-name: "<yellow>%name"
 
+config-ui.setting:
+    value-name: "<white>Value: <yellow>%value"
+    value-arrow-name: "<yellow>%now <white>-> <yellow>%planned <reset>(%delta<reset>)"
+    value-arrow-name-prefixed: "<yellow>%now <white>-> <yellow>%planned <reset>(%prefix%delta<reset>)"
+    step-name-selected: "<green>Step of: <yellow>%value"
+    step-name-other: "<red>Step of: <yellow>%value"
+    step-lore-change: "<gray>Value is changing by %value"
+    step-lore-click: "<gray>Click here to change the value by %value"
+    selected: "<gray>Value: <green>Selected"
+    not-selected: "<gray>Value: <red>Not Selected"
+    selected-name: "<green>%name"
+    unselected-name: "<red>%name"
+
+config-ui.bool-setting:
+    default-value:
+      yes: "<green>Yes <gray>Is the default value"
+      no: "<red>No <gray>Is the default value"
+
+config-ui.double-setting:
+    delete-name: "<red>Disable item being repaired ?"
+    delete-lore:
+      1: "<gray>Confirm disabling unit repair for this item.."
+      2: "<dark_red>Cation: This action can't be canceled."
+
+config-ui.item-setting:
+    click-with-item: "<gray>Click Here with an item to change the value"
+    no-item-name: "<dark_red>NO ITEM SET"
+    name: "<green>%name"
+
+config-ui.enchant-cost-setting:
+    book-name: "<green>Cost of an Enchantment by Book"
+    book-lore:
+      1: "<gray>Cost per result item level of an sacrifice enchantment"
+      2: "<gray>Only apply if sacrificed item <red>is <gray>a book"
+    item-name: "<green>Cost of an Enchantment by Item"
+    item-lore:
+      1: "<gray>Cost per result item level of an sacrifice enchantment"
+      2: "<gray>Only apply if sacrificed item <red>is not <gray>a book"
+    default-item: "<gray>Default item value is: <yellow>%value"
+    default-book: "<gray>Default book value is: <yellow>%value"
+
+config-ui.enchant-select-setting:
+    show-all-name: "<green>Everything displayed"
+    show-selected-name: "<yellow>Only selected displayed"
+    show-toggle-lore-only-selected: "<gray>Click here to see only selected enchantments"
+    show-toggle-lore-every: "<gray>Click here to see every enchantments"
 
 config-ui.material-selector:
     header: "<gray>Allow you to select a list of <yellow>materials <gray>that this %type should %action"
