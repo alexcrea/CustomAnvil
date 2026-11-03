@@ -2,7 +2,7 @@ package xyz.alexcrea.cuanvil.dependency.util
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
-import org.bukkit.inventory.ItemStack
+import org.bukkit.command.CommandSender
 import org.bukkit.inventory.meta.ItemMeta
 
 // Mostly made for paper, spigot and folia support
@@ -51,6 +51,7 @@ object PlatformUtil {
         return lore ?: ArrayList()
     }
 
+    @JvmStatic
     fun ItemMeta.setComponentLore(lore: List<Component?>) {
         if (isPaper) {
             this.lore(lore)
@@ -70,6 +71,7 @@ object PlatformUtil {
     // Display name
     private val useCustomName = hasMethod(ItemMeta::class.java, "customName")
 
+    @JvmStatic
     fun ItemMeta.componentDisplayName(): Component? {
         if (useCustomName) {
             if (!this.hasCustomName()) return null
@@ -84,6 +86,7 @@ object PlatformUtil {
         }
     }
 
+    @JvmStatic
     fun ItemMeta.setComponentDisplayName(component: Component?, fallback: String? = null) {
         if (useCustomName) {
             this.customName(component)
@@ -98,6 +101,36 @@ object PlatformUtil {
             val legacy = fallback ?: legacy_mm.serialize(component)
             this.setDisplayName(legacy)
         }
+    }
+
+    /**
+     * Try to send paper component to the player
+     *
+     * @param component The used component
+     * @return true if sent, else otherwise
+     */
+    fun CommandSender.sendPaperMessage(component: Component): Boolean {
+        if(isPaper) {
+            this.sendMessage(component)
+            return true
+        }
+
+        return false
+    }
+
+    /**
+     * Try to set component lore of an item
+     *
+     * @param components The used component lore
+     * @return true if sent, else otherwise
+     */
+    fun ItemMeta.setPaperLore(components: List<Component>): Boolean {
+        if(isPaper) {
+            this.lore(components)
+            return true
+        }
+
+        return false
     }
 
 }

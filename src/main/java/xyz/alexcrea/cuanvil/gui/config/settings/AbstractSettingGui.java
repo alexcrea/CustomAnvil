@@ -1,23 +1,24 @@
 package xyz.alexcrea.cuanvil.gui.config.settings;
 
-import com.github.stefvanschie.inventoryframework.adventuresupport.StringHolder;
 import com.github.stefvanschie.inventoryframework.adventuresupport.TextHolder;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import io.delilaheve.CustomAnvil;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.lang.Message;
+import xyz.alexcrea.cuanvil.util.LockedObjectProvider;
 
 /**
  * An instance gui used to edit a setting.
  */
+@NotNullByDefault
 public abstract class AbstractSettingGui extends ChestGui implements SettingGui {
-
-    public static final String CLICK_LORE = "§7Click Here to change the value";
 
     private PatternPane pane;
 
@@ -28,7 +29,7 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    protected AbstractSettingGui(int rows, @NotNull TextHolder title, ValueUpdatableGui parent) {
+    protected AbstractSettingGui(int rows, TextHolder title, ValueUpdatableGui parent) {
         super(rows, title, CustomAnvil.instance);
         initBase(parent);
     }
@@ -40,8 +41,8 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * @param title  Title of this gui.
      * @param parent Parent gui to go back when completed.
      */
-    protected AbstractSettingGui(int rows, @NotNull String title, ValueUpdatableGui parent) {
-        this(rows, StringHolder.of(title), parent);
+    protected AbstractSettingGui(int rows, Message title, ValueUpdatableGui parent, @Nullable Object... params) {
+        this(rows, title.textHolder(params), parent);
     }
 
     protected GuiItem saveItem;
@@ -61,13 +62,13 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
 
         saveItem = GuiGlobalItems.saveItem(this, parent);
 
-        pane.bindItem('S',  GuiGlobalItems.noChangeItem());
+        pane.bindItem('S', GuiGlobalItems.noChangeItem());
 
     }
 
     @Override
     public void update() {
-        pane.bindItem('S', hadChange() ? saveItem :  GuiGlobalItems.noChangeItem());
+        pane.bindItem('S', hadChange() ? saveItem : GuiGlobalItems.noChangeItem());
         super.update();
     }
 
@@ -100,26 +101,23 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      * It is better to keep a factory that hold setting data than find what parameters to use every time.
      */
     public abstract static class SettingGuiFactory implements SettingGui.SettingGuiFactory {
-        @NotNull
         protected final String configPath;
-        @NotNull
-        protected final ConfigHolder config;
+        private final LockedObjectProvider<? extends ConfigHolder> holder;
 
         /**
          * Constructor for settings gui factory
          *
          * @param configPath Configuration path of this setting.
-         * @param config     Configuration holder of this setting.
+         * @param holder     Configuration holder of this setting.
          */
-        protected SettingGuiFactory(@NotNull String configPath, @NotNull ConfigHolder config) {
+        protected SettingGuiFactory(String configPath, LockedObjectProvider<? extends ConfigHolder> holder) {
             this.configPath = configPath;
-            this.config = config;
+            this.holder = holder;
         }
 
         /**
          * @return Configuration path of this setting.
          */
-        @NotNull
         public String getConfigPath() {
             return configPath;
         }
@@ -127,9 +125,8 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
         /**
          * @return Configuration holder of this setting.
          */
-        @NotNull
-        public ConfigHolder getConfigHolder() {
-            return config;
+        public LockedObjectProvider<? extends ConfigHolder> getHolder() {
+            return holder;
         }
 
     }

@@ -1,7 +1,6 @@
 package xyz.alexcrea.cuanvil.util
 
 import org.bukkit.NamespacedKey
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.inventory.ItemStack
 import xyz.alexcrea.cuanvil.config.ConfigHolder
@@ -57,12 +56,15 @@ object UnitRepairUtil {
     fun findRawRepairValue(
         self: NamespacedKey,
         other: NamespacedKey,
-        config: FileConfiguration,
+        holder: LockedObjectProvider<out ConfigHolder>,
     ): Double? {
-        val result = checkSection(config, other.toString(), self)
-        if(result != null) return result
+        holder.read.use { lock ->
+            val config = lock.get().config
+            val result = checkSection(config, other.toString(), self)
+            if(result != null) return result
 
-        return checkSection(config, other.key, self)
+            return checkSection(config, other.key, self)
+        }
     }
 
     fun checkSection(

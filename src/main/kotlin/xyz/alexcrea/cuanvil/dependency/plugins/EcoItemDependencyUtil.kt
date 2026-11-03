@@ -10,9 +10,9 @@ import org.bukkit.inventory.ItemStack
 object EcoItemDependencyUtil {
 
     fun ecoItemNamespace(item: ItemStack): NamespacedKey? {
-        val ecoi = item.ecoItem ?: return null
+        val ecoItem = item.ecoItem ?: return null
 
-        return ecoi.id
+        return ecoItem.id
     }
 
     fun ecoItemFromKey(key: NamespacedKey): EcoItem? {
@@ -20,15 +20,15 @@ object EcoItemDependencyUtil {
     }
 
     fun ecoItemMaterialFromKey(key: NamespacedKey): Material? {
-        val ecoi = ecoItemFromKey(key) ?: return null
+        val ecoItem = ecoItemFromKey(key) ?: return null
 
-        return ecoi.itemStack.type
+        return ecoItem.itemStack.type
     }
 
     fun newEcoItemstack(key: NamespacedKey): ItemStack? {
-        val ecoi = ecoItemFromKey(key) ?: return null
+        val ecoItem = ecoItemFromKey(key) ?: return null
 
-        return ecoi.itemStack
+        return ecoItem.itemStack
     }
 
     fun getItems(): List<NamespacedKey> {

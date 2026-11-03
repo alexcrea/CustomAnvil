@@ -8,29 +8,36 @@ import xyz.alexcrea.cuanvil.api.event.CAConfigReadyEvent
 import xyz.alexcrea.cuanvil.config.ConfigHolder
 import xyz.alexcrea.cuanvil.dependency.DependencyManager
 import xyz.alexcrea.cuanvil.gui.config.global.*
+import xyz.alexcrea.cuanvil.lang.Lang
+import xyz.alexcrea.cuanvil.lang.Message
+import xyz.alexcrea.cuanvil.lang.MsgCommand
 import xyz.alexcrea.cuanvil.update.UpdateHandler
 
 class ReloadExecutor : CASubCommand {
+
+    override fun description(): Message {
+        return MsgCommand.RELOAD_DESCRIPTION
+    }
 
     override fun executeCommand(
         sender: CommandSender,
         cmd: Command,
         cmdstr: String,
-        args: Array<out String>
+        args: Array<out String>,
     ): Boolean {
-        if (!allowed(sender)) {
-            sender.sendMessage("§cYou do not have permission to reload the config")
+        if(!allowed(sender)) {
+            MsgCommand.SHARED_NO_PERMISSION.send(sender)
             return false
         }
-        sender.sendMessage("§eReloading config...")
+        MsgCommand.RELOAD_START.send(sender)
         val hardfail = args.isNotEmpty() && ("hard".equals(args[0], true))
         val commandSuccess = commandBody(hardfail)
-        if (commandSuccess) {
-            sender.sendMessage("§aConfig reloaded !")
+        if(commandSuccess) {
+            MsgCommand.RELOAD_SUCCESS.send(sender)
         } else {
-            sender.sendMessage("§cConfig was not able to be reloaded...")
-            if (hardfail) {
-                sender.sendMessage("§4Hard fail, plugin disabled")
+            MsgCommand.RELOAD_FAIL.send(sender)
+            if(hardfail) {
+                MsgCommand.RELOAD_HARD_FAIL.send(sender)
             }
         }
         return commandSuccess
@@ -43,12 +50,8 @@ class ReloadExecutor : CASubCommand {
     override fun tabCompleter(
         sender: CommandSender,
         args: Array<out String>,
-        list: MutableList<String>
+        list: MutableList<String>,
     ) {
-    }
-
-    override fun description(): String {
-        return "Reload the configuration of this plugin"
     }
 
     /**
@@ -56,7 +59,10 @@ class ReloadExecutor : CASubCommand {
      */
     private fun commandBody(hardfail: Boolean): Boolean {
         try {
-            if (!ConfigHolder.reloadAllFromDisk(hardfail)) return false
+            if(!ConfigHolder.reloadAllFromDisk(hardfail)) return false
+
+            // reload language config
+            if(!Lang.reload()) return false
 
             // Then update all global gui containing value from config
             BasicConfigGui.getInstance()?.updateGuiValues()
@@ -79,7 +85,7 @@ class ReloadExecutor : CASubCommand {
             Bukkit.getServer().pluginManager.callEvent(configReadyEvent)
 
             return true
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             e.printStackTrace()
             return false
         }

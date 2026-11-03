@@ -1,0 +1,23 @@
+# Testing language (subset of the default language) used to verify that every key of a
+# non-default language file is registered in the Message providers.
+#
+# A partial translation is expected, so only a subset of the default keys is present.
+name: "Test Language"
+
+warning.load:
+  legacy:
+    old-name:
+      1: "<yellow>An old version of this plugin was detected"
+      2: "<yellow>Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus"
+
+command.config:
+  folia-issue:
+    1: "<red>It look like you are using Folia."
+    2: "<yellow>It is may come in a future version."
+
+error.reload:
+  resource:
+    fail: "<red>An error occurred while reloading <yellow>%path<red>."
+
+command.shared:
+  hover-copy: "<gray>Right click to copy"

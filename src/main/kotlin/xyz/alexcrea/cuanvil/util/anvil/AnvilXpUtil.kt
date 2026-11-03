@@ -121,7 +121,7 @@ object AnvilXpUtil {
         val has = player.gameMode == GameMode.CREATIVE ||
                 EconomyManager.economy!!.has(player, finalCost)
 
-        val text = "Cost: " + (if (has) "§2" else "§4") +
+        val text = "Cost: " + (if (has) "<dark_green>" else "<dark_red>") +
                 EconomyManager.economy!!.format(finalCost)
         AnvilTitleUtil.rename(
             view, text,

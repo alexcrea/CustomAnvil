@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -284,6 +285,17 @@ public class MaterialGroupApi {
     public static Map<String, AbstractMaterialGroup> getRegisteredGroups() {
         try(var lock = ConfigHolder.ITEM_GROUP.read) {
             return Collections.unmodifiableMap(lock.get().getItemGroupsManager().getGroupMap());
+        }
+    }
+
+    /**
+     * Get every registered material groups as a collection.
+     *
+     * @return An immutable collection of currently registered groups.
+     */
+    public static Collection<AbstractMaterialGroup> getRegisteredGroupCollection() {
+        try(var lock = ConfigHolder.ITEM_GROUP.read) {
+            return Collections.unmodifiableCollection(lock.get().getItemGroupsManager().getGroupMap().values());
         }
     }
 

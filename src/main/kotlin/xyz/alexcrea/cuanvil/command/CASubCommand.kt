@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.command
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import xyz.alexcrea.cuanvil.enchant.CAEnchantmentRegistry
+import xyz.alexcrea.cuanvil.lang.Message
 
 interface CASubCommand {
 
@@ -21,7 +22,7 @@ interface CASubCommand {
         list: MutableList<String>
     )
 
-    fun description(): String
+    fun description(): Message
 
     fun allEnchantmentsByName(): Collection<String> {
         val names = mutableSetOf<String>()

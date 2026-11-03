@@ -144,8 +144,7 @@ public class CAEnchantmentRegistry {
      * @return If the operation was successful.
      */
 
-    public boolean unregister(@Nullable CAEnchantment enchantment) {
-        if(enchantment == null) return false;
+    public boolean unregister(CAEnchantment enchantment) {
         byKeyMap.remove(enchantment.getKey());
         byNameMap.get(enchantment.getName()).remove(enchantment);
 

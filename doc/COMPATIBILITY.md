@@ -63,4 +63,4 @@ Custom Items support is considered unstable. If you find issue please report it 
 
 If you like Custom Anvil to support a specific plugin (custom enchant or anvil mechanic).
 You can ask, but please note implementing compatibility will be considered
-as low priority as I work for the plugin as an hobby on my free time for free.
+as low priority as I work for the plugin as a hobby on my free time for free.
