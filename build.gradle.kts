@@ -16,7 +16,7 @@ plugins {
     signing
     id("cn.lalaki.central").version("2.0.8")
     // Paper
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.23" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.24" apply false
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
@@ -65,7 +65,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 
     // fast stats
-    implementation("dev.faststats.metrics:bukkit:0.30.1")
+    implementation("dev.faststats.metrics:bukkit:0.31.0")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:3.2.1")
