@@ -76,7 +76,7 @@ dependencies {
     implementation("net.kyori:adventure-text-serializer-plain:4.25.0")
 
     // Gui library
-    val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.12.2.2"
+    val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.12.2.3"
     implementation(inventoryFramework)
 
     // EnchantsSquaredRewritten
