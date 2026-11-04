@@ -217,7 +217,7 @@ object AnvilXpUtil {
     ) {
         val key = exclusivePenaltyKey(useType)
 
-        val meta = result.itemMeta!!
+        val meta = result.itemMeta ?: return
         meta.persistentDataContainer.set(key, PersistentDataType.INTEGER, resultPenalty)
         result.itemMeta = meta
     }

@@ -300,6 +300,10 @@ class AnvilResultListener : Listener {
                 CustomAnvil.verboseLog("Player do not have enough xp ${player.level} < $xpCost")
                 return false
             }
+            if(xpCost < 0) {
+                CustomAnvil.verboseLog("Negative xp..... how ? $xpCost $cost")
+                return false
+            }
 
             player.level -= xpCost
         }
@@ -495,7 +499,7 @@ class AnvilResultListener : Listener {
         rightItem: ItemStack,
         result: LoreEditResult
     ) {
-        val bookMeta = rightItem.itemMeta as BookMeta? ?: return
+        val bookMeta = rightItem.itemMeta as? BookMeta ?: return
 
         // Remove pages to book
         val clearedBook: ItemStack?
@@ -523,7 +527,7 @@ class AnvilResultListener : Listener {
         rightItem: ItemStack,
         result: LoreEditResult
     ) {
-        val bookMeta = rightItem.itemMeta as BookMeta? ?: return
+        val bookMeta = rightItem.itemMeta as? BookMeta ?: return
 
         // fill book meta
         val lore = DependencyManager.stripLore(leftItem)

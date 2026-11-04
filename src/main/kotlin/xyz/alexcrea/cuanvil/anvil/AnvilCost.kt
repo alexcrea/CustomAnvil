@@ -60,6 +60,14 @@ open class AnvilCost {
             .add(BigDecimal(recipe).multiply(moneyMultiplier("recipe")))
             .multiply(moneyMultiplier("global"))
     }
+
+    override fun toString(): String {
+        return "AnvilCost(isAlone=$isAlone, valid=$valid, isMonetary=$isMonetary, " +
+               "generic=$generic, enchantment=$enchantment, repair=$repair, " +
+               "rename=$rename, lore=$lore, illegalPenalty=$illegalPenalty, " +
+               "workPenalty=$workPenalty, recipe=$recipe)"
+    }
+
 }
 
 class CustomCraftCost(val rawCost: Int): AnvilCost() {
