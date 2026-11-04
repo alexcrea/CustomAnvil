@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
@@ -54,8 +55,8 @@ public abstract class AbstractSettingGui extends ChestGui implements SettingGui 
      */
     protected void initBase(ValueUpdatableGui parent) {
         Pattern pattern = getGuiPattern();
-        pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
-        addPane(pane);
+        pane = new PatternPane(pattern.getLength(), pattern.getHeight(), pattern);
+        addPane(Slot.fromXY(0, 0), pane);
 
         GuiGlobalItems.addBackItem(pane, parent.getConnectedGui());
         GuiGlobalItems.addBackgroundItem(pane);

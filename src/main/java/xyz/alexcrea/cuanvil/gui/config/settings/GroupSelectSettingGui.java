@@ -68,8 +68,6 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
     protected void initGroups() {
         // Add enchantment gui item
         OutlinePane filledEnchant = new OutlinePane(
-                ElementListConfigGui.LIST_FILLER_START_X,
-                ElementListConfigGui.LIST_FILLER_START_Y,
                 ElementListConfigGui.LIST_FILLER_LENGTH,
                 ElementListConfigGui.LIST_FILLER_HEIGHT);
         filledEnchant.setPriority(Pane.Priority.HIGH);
@@ -87,7 +85,7 @@ public class GroupSelectSettingGui extends AbstractSettingGui {
             }
         }
 
-        addPane(filledEnchant);
+        addPane(ElementListConfigGui.LIST_FILLER_SLOT, filledEnchant);
 
     }
 

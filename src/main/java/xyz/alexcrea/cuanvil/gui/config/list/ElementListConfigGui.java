@@ -8,6 +8,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -33,8 +34,7 @@ import java.util.function.Predicate;
 @NotNullByDefault
 public abstract class ElementListConfigGui<T> extends ChestGui implements ValueUpdatableGui {
 
-    public static final int LIST_FILLER_START_X = 1;
-    public static final int LIST_FILLER_START_Y = 1;
+    public static final Slot LIST_FILLER_SLOT = Slot.fromXY(1, 1);
     public static final int LIST_FILLER_LENGTH = 7;
     public static final int LIST_FILLER_HEIGHT = 4;
 
@@ -53,7 +53,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
 
         // Back item panel
         Pattern pattern = getBackgroundPattern();
-        this.backgroundPane = new PatternPane(0, 0, 9, 6, Pane.Priority.LOW, pattern);
+        this.backgroundPane = new PatternPane(9, 6, Pane.Priority.LOW, pattern);
         GuiGlobalItems.addBackItem(this.backgroundPane, parent);
 
     }
@@ -82,7 +82,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     public void init() {
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
         this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
-        addPane(this.backgroundPane);
+        addPane(Slot.fromXY(0, 0), this.backgroundPane);
 
         // Page init
         this.pages = new ArrayList<>();
@@ -157,7 +157,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     protected abstract GuiItem prepareCreateNewItem();
 
     protected OutlinePane createEmptyPage() {
-        OutlinePane page = new OutlinePane(LIST_FILLER_START_X, LIST_FILLER_START_Y, LIST_FILLER_LENGTH, LIST_FILLER_HEIGHT);
+        OutlinePane page = new OutlinePane(LIST_FILLER_LENGTH, LIST_FILLER_HEIGHT);
         page.align(OutlinePane.Alignment.BEGIN);
         page.setOrientation(Orientable.Orientation.HORIZONTAL);
 
@@ -222,7 +222,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     public void placeArrow(int page, boolean customise) {
 
         // Place left arrow
-        addPane(this.backgroundPane);
+        addPane(Slot.fromXY(0, 0), this.backgroundPane);
         if (page > 0) {
             if (customise) {
                 ItemStack leftItem = this.goLeftItem.getItem();
@@ -269,7 +269,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         // display the page arrow pane
         placeArrow(pageID, true);
         // and add actual page
-        addPane(page);
+        addPane(LIST_FILLER_SLOT, page);
 
         // intended parameter: (page/max_page) //TODO MESSAGE CHECK CHILDS
         int pagesSize = this.pages.size();
@@ -290,7 +290,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         // set the page arrow pane
         placeArrow(pageID, false);
         // and add actual page
-        addPane(page);
+        addPane(LIST_FILLER_SLOT, page);
 
         super.click(event);
     }

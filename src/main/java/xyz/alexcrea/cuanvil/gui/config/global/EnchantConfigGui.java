@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -62,8 +63,8 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
                 "023405600",
                 "Q00000000"
         );
-        pane = new PatternPane(0, 0, 9, 3, pattern);
-        addPane(pane);
+        pane = new PatternPane(9, 3, pattern);
+        addPane(Slot.fromXY(0, 0), pane);
 
         GuiGlobalItems.addBackgroundItem(pane);
 

@@ -21,7 +21,7 @@ plugins {
 }
 
 group = "xyz.alexcrea"
-version = "2.2.0"
+version = "2.2.1"
 
 val isDevBuild = System.getenv("SMALL_COMMIT_HASH") != null
 val isPreRelease = System.getenv("IS_GITHUB_PRERELEASE") == "true"
@@ -76,9 +76,8 @@ dependencies {
     implementation("net.kyori:adventure-text-serializer-plain:4.25.0")
 
     // Gui library
-    val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.10.18.2"
+    val inventoryFramework = "xyz.alexcrea.cuanvil.inventoryframework:IF-CustomAnvil:0.12.2.2"
     implementation(inventoryFramework)
-    testRuntimeOnly(inventoryFramework)
 
     // EnchantsSquaredRewritten
     compileOnly(files("libs/EnchantsSquared.jar"))
@@ -337,7 +336,7 @@ publishing {
                     developer {
                         id.set("alexcrea")
                         name.set("alexcrea")
-                        email.set("alexcrea.of@laposte.net")
+                        email.set("contact@alexcrea.xyz")
                         url.set("https://github.com/alexcrea")
                     }
                 }

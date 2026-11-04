@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import io.delilaheve.util.ConfigOptions;
 import kotlin.ranges.IntRange;
@@ -68,8 +69,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
                 "CR0U0r0hP",
                 "B00000000"
         );
-        pane = new PatternPane(0, 0, 9, 4, pattern);
-        addPane(pane);
+        pane = new PatternPane(9, 4, pattern);
+        addPane(Slot.fromXY(0, 0), pane);
 
         GuiGlobalItems.addBackItem(pane, MainConfigGui.getInstance());
         GuiGlobalItems.addBackgroundItem(pane);

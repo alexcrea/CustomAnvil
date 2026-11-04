@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.gui.config.list.elements;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import kotlin.ranges.IntRange;
 import org.bukkit.Material;
@@ -47,8 +48,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
                 "0ab000000",
                 "B00000000"
         );
-        this.pane = new PatternPane(0, 0, 9, 4, pattern);
-        addPane(this.pane);
+        this.pane = new PatternPane(9, 4, pattern);
+        addPane(Slot.fromXY(0, 0), this.pane);
 
         prepareStaticValues();
     }
