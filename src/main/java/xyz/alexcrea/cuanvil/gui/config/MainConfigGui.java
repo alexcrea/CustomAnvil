@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -44,8 +45,8 @@ public class MainConfigGui extends ChestGui {
                 "012345678",
                 "Q00000000"
         );
-        PatternPane pane = new PatternPane(0, 0, 9, 3, pattern);
-        addPane(pane);
+        PatternPane pane = new PatternPane(9, 3, pattern);
+        addPane(Slot.fromXY(0, 0), pane);
 
         GuiGlobalItems.addBackgroundItem(pane);
 

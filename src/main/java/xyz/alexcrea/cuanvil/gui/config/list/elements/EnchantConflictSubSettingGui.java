@@ -3,6 +3,7 @@ package xyz.alexcrea.cuanvil.gui.config.list.elements;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -57,8 +58,8 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
                 "00EGM000D",
                 "B00000000"
         );
-        this.pane = new PatternPane(0, 0, 9, 3, pattern);
-        addPane(this.pane);
+        this.pane = new PatternPane(9, 3, pattern);
+        addPane(Slot.fromXY(0, 0), this.pane);
 
         prepareStaticValues();
     }

@@ -1,15 +1,13 @@
 package xyz.alexcrea.cuanvil.gui.config.ask;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNullByDefault;
-import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
-import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.Message;
 
 @NotNullByDefault
@@ -25,8 +23,8 @@ public abstract class AbstractAskGui extends ChestGui {
         super(rows, name.textHolder(param), CustomAnvil.instance);
 
         Pattern pattern = getGuiPattern();
-        this.pane = new PatternPane(0, 0, pattern.getLength(), pattern.getHeight(), pattern);
-        addPane(this.pane);
+        this.pane = new PatternPane(pattern.getLength(), pattern.getHeight(), pattern);
+        addPane(Slot.fromXY(0, 0), this.pane);
 
         this.pane.bindItem('0', GuiGlobalItems.backgroundItem());
         this.pane.bindItem('B', GuiGlobalItems.cancelAndGoBackItem(backOnCancel));
