@@ -1,10 +1,12 @@
 package xyz.alexcrea.cuanvil.util;
 
+import io.delilaheve.CustomAnvil;
 import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 @NotNullByDefault
 public class LockedObjectProvider<T> {
@@ -22,13 +24,8 @@ public class LockedObjectProvider<T> {
 
     private static boolean APPLY_LOCK() {
         var status = System.getenv("CUSTOMANVIL_LOCK_STATUS");
-        if("false".equalsIgnoreCase(status))
-            return false;
 
-        if("true".equalsIgnoreCase(status))
-            return true;
-
-        return PlatformUtil.INSTANCE.isFolia();
+        return !"false".equalsIgnoreCase(status);
     }
 
     public static class LockedRead<T> implements AutoCloseable {
@@ -68,12 +65,28 @@ public class LockedObjectProvider<T> {
         }
 
         public void lock() {
-            if(APPLY_LOCK()) this.parent.lock.writeLock().lock();
+            if(!APPLY_LOCK()) return;
+
+            if(this.parent.lock.getReadHoldCount() > 0 && !this.parent.lock.isWriteLockedByCurrentThread()) {
+                CustomAnvil.logError(
+                        "Error while acquiring write lock: read lock already acquired... for configuration " + parent.unsafe().getClass(),
+                        null,
+                        true,
+                        Level.SEVERE
+                );
+                return;
+            }
+
+            this.parent.lock.writeLock().lock();
         }
 
         @Override
         public void close() {
-            if(APPLY_LOCK()) parent.lock.writeLock().unlock();
+            if(!APPLY_LOCK()) return;
+            // can be skipped if there was an issue
+            if(!this.parent.lock.isWriteLockedByCurrentThread()) return;
+
+            parent.lock.writeLock().unlock();
         }
     }
 

@@ -74,7 +74,8 @@ object DataPackDependency: IDataPackDependency {
     }
 
     private fun handlePackInitialConfig(pack: String) {
-        ConfigHolder.DEFAULT.read.use { lock ->
+        // Cannot be a read lock: defConfig.saveToDisk(true) below acquires the write lock, so use this as a write lock
+        ConfigHolder.DEFAULT.write.use { lock ->
             val defConfig = lock.get()
 
             val version = LATEST_VERSION[pack]
