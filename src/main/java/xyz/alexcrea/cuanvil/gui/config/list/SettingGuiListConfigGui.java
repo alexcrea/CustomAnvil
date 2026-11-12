@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.dependency.util.PlatformUtil;
-import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.SettingGui;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
@@ -19,6 +18,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGuiFactory> extends ElementListConfigGui<T> {
@@ -26,24 +26,16 @@ public abstract class SettingGuiListConfigGui<T, S extends SettingGui.SettingGui
     protected final HashMap<T, GuiItem> guiItemMap;
     protected final HashMap<T, S> factoryMap;
 
-    protected SettingGuiListConfigGui(Message title, Gui parent) {
+    protected SettingGuiListConfigGui(Message title, Supplier<? extends Gui> parent) {
         super(title, "", parent);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
     }
 
-    protected SettingGuiListConfigGui(Message title) {
-        this(title, MainConfigGui.getInstance());
-    }
-
-    protected SettingGuiListConfigGui(Message title, String param, Gui parent) {
+    protected SettingGuiListConfigGui(Message title, String param, Supplier<? extends Gui> parent) {
         super(title, param, parent);
         this.guiItemMap = new HashMap<>();
         this.factoryMap = new HashMap<>();
-    }
-
-    protected SettingGuiListConfigGui(Message title, String param) {
-        this(title, param, MainConfigGui.getInstance());
     }
 
     @Override

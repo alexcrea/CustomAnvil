@@ -72,7 +72,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
     private GuiItem groupSelection;
 
     private void prepareStaticValues() {
-        GuiGlobalItems.addBackItem(this.pane, this.parent);
+        GuiGlobalItems.addBackItem(this.pane, () -> this.parent);
         GuiGlobalItems.addBackgroundItem(this.pane);
 
         // Delete item
@@ -100,11 +100,11 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         ComponentUtil.setMessageName(selectItemMeta, materialSelectionName, name, null, null);
 
         selectItem.setItemMeta(selectItemMeta);
-        this.materialSelection = new GuiItem(selectItem, (event) -> {
+        this.materialSelection = new GuiItem(selectItem, event -> {
             event.setCancelled(true);
             MaterialSelectSettingGui selectGui = new MaterialSelectSettingGui(this,
                     materialSelectionName, name//TODO MESSAGE maybe need (%page/%max_page)
-                    , this);
+                    , () -> this, () -> this);
             selectGui.show(event.getWhoClicked());
 
         }, CustomAnvil.instance);
@@ -184,7 +184,7 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.group.toString());
         return new ConfirmActionGui(MsgUI.MATERIAL_GROUP_ELEMENT_DELETE_TITLE, type,
                 MsgUI.MATERIAL_GROUP_ELEMENT_DELETE_DESCRIPTION, type,
-                this, this.parent, deleteSupplier
+                () -> this, this.parent, deleteSupplier
         );
     }
 

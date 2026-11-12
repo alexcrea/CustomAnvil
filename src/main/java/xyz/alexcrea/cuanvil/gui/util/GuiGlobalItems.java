@@ -23,6 +23,7 @@ import xyz.alexcrea.cuanvil.util.MiniMessageUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * A utility class to store function that create generic GUI item.
@@ -44,7 +45,7 @@ public class GuiGlobalItems {
      * @param goal The GUI to open on click.
      * @return An GuiItem that open goal on click.
      */
-    public static GuiItem goToGuiItem(ItemStack item, Gui goal) {
+    public static GuiItem goToGuiItem(ItemStack item, Supplier<? extends Gui> goal) {
         return new GuiItem(item, GuiGlobalActions.openGuiAction(goal), CustomAnvil.instance);
     }
 
@@ -66,7 +67,7 @@ public class GuiGlobalItems {
      * @param goal The GUI to go back to.
      * @return An GuiItem that go back to goal on click.
      */
-    public static GuiItem backItem(Gui goal) {
+    public static GuiItem backItem(Supplier<? extends Gui> goal) {
         return goToGuiItem(getBackItemStack(), goal);
     }
 
@@ -79,7 +80,7 @@ public class GuiGlobalItems {
      */
     public static void addBackItem(
             PatternPane target,
-            Gui goal
+            Supplier<? extends Gui> goal
     ) {
         target.bindItem('B', backItem(goal));
     }
@@ -277,7 +278,7 @@ public class GuiGlobalItems {
         }, CustomAnvil.instance);
     }
 
-    public static GuiItem cancelAndGoBackItem(Gui backOnCancel) {
+    public static GuiItem cancelAndGoBackItem(Supplier<? extends Gui> backOnCancel) {
         var item = new ItemStack(Material.RED_TERRACOTTA);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;

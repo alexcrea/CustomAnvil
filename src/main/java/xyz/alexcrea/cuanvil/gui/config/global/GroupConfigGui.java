@@ -15,6 +15,7 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.GroupConfigSubSettingGui;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -22,31 +23,14 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class GroupConfigGui extends MappedGuiListConfigGui<IncludeGroup, MappedGuiListConfigGui.LazyElement<GroupConfigSubSettingGui>> {
 
-    //TODO #130 part 3
-    private static @Nullable GroupConfigGui INSTANCE;
+    public static final UpdateGuiStorage<GroupConfigGui> INSTANCES = new UpdateGuiStorage<>();
 
-    @Nullable
-    public static GroupConfigGui getCurrentInstance() {
-        return INSTANCE;
-    }
-
-    public static GroupConfigGui getInstance() {
-        if(INSTANCE == null) INSTANCE = new GroupConfigGui();
-
-        return INSTANCE;
-    }
-
-    public GroupConfigGui() {
-        super(MsgUI.MATERIAL_GROUP_TITLE);
-
-        init();
-    }
-
-    public GroupConfigGui(Gui parent) {
+    public GroupConfigGui(Supplier<? extends Gui> parent) {
         super(MsgUI.MATERIAL_GROUP_TITLE, parent);
     }
 

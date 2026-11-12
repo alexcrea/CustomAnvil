@@ -13,22 +13,22 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
-import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
-import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.BoolSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.WorkPenaltyTypeSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalActions;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 /**
  * Global config to edit basic settings.
@@ -36,25 +36,23 @@ import java.util.ArrayList;
 @NotNullByDefault
 public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
 
-    //TODO #130 part 3
-    private static @Nullable BasicConfigGui INSTANCE = null;
-
-    @Nullable
-    public static BasicConfigGui getInstance() {
-        return INSTANCE;
-    }
+    public static final UpdateGuiStorage<BasicConfigGui> INSTANCES = new UpdateGuiStorage<>();
 
     private final PacketManager packetManager;
 
     /**
      * Constructor of this Global gui for basic settings.
      */
-    public BasicConfigGui(PacketManager packetManager) {
+    public BasicConfigGui(Supplier<? extends Gui> parent, PacketManager packetManager) {
         super(4, MsgUI.BASIC_TITLE.textHolder(), CustomAnvil.instance);
-        if(INSTANCE == null) INSTANCE = this;
+        INSTANCES.add(this);
 
         this.packetManager = packetManager;
-        init();
+
+        init(parent);
+
+        prepareValues();
+        updateGuiValues();
     }
 
     PatternPane pane;
@@ -62,7 +60,7 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     /**
      * Initialise Basic gui
      */
-    private void init() {
+    private void init(Supplier<? extends Gui> parent) {
         Pattern pattern = new Pattern(
                 GuiSharedConstant.EMPTY_GUI_FULL_LINE,
                 "LT0IWS0cp",
@@ -72,34 +70,31 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         pane = new PatternPane(9, 4, pattern);
         addPane(Slot.fromXY(0, 0), pane);
 
-        GuiGlobalItems.addBackItem(pane, MainConfigGui.getInstance());
+        GuiGlobalItems.addBackItem(pane, parent);
         GuiGlobalItems.addBackgroundItem(pane);
-
-        prepareValues();
-        updateGuiValues();
     }
 
-    //TODO #130 part 3
-    private @Nullable BoolSettingsGui.BoolSettingFactory capAnvilCost; // L character
-    private @Nullable GuiItem noCapRepairItem;
-    private @Nullable IntSettingsGui.IntSettingFactory maxAnvilCost; // C character
-    private @Nullable GuiItem noMaxCostItem;
 
-    private @Nullable BoolSettingsGui.BoolSettingFactory removeAnvilCostLimit; // R character
-    private @Nullable BoolSettingsGui.BoolSettingFactory replaceTooExpensive; // T character
+    private BoolSettingsGui.BoolSettingFactory capAnvilCost; // L character
+    private GuiItem noCapRepairItem;
+    private IntSettingsGui.IntSettingFactory maxAnvilCost; // C character
+    private GuiItem noMaxCostItem;
 
-    private @Nullable IntSettingsGui.IntSettingFactory itemRepairCost; // I character
-    private @Nullable IntSettingsGui.IntSettingFactory unitRepairCost; // U character
-    private @Nullable IntSettingsGui.IntSettingFactory itemRenameCost; // r character
-    private @Nullable IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
+    private BoolSettingsGui.BoolSettingFactory removeAnvilCostLimit; // R character
+    private BoolSettingsGui.BoolSettingFactory replaceTooExpensive; // T character
 
-    private @Nullable BoolSettingsGui.BoolSettingFactory allowColourCode; // c character
-    private @Nullable BoolSettingsGui.BoolSettingFactory allowHexColour; // h character
+    private IntSettingsGui.IntSettingFactory itemRepairCost; // I character
+    private IntSettingsGui.IntSettingFactory unitRepairCost; // U character
+    private IntSettingsGui.IntSettingFactory itemRenameCost; // r character
+    private IntSettingsGui.IntSettingFactory sacrificeIllegalEnchantCost; // S character
 
-    private @Nullable BoolSettingsGui.BoolSettingFactory permissionNeededForColour; // p character
-    private @Nullable GuiItem noPermissionNeededItem;
-    private @Nullable IntSettingsGui.IntSettingFactory useOfColourCost; // P character
-    private @Nullable GuiItem noColourCostItem;
+    private BoolSettingsGui.BoolSettingFactory allowColourCode; // c character
+    private BoolSettingsGui.BoolSettingFactory allowHexColour; // h character
+
+    private BoolSettingsGui.BoolSettingFactory permissionNeededForColour; // p character
+    private GuiItem noPermissionNeededItem;
+    private IntSettingsGui.IntSettingFactory useOfColourCost; // P character
+    private GuiItem noColourCostItem;
 
     /**
      * Prepare basic gui displayed items factory and static items...
@@ -287,24 +282,6 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
         GuiItem capAnvilCostItem;
         GuiItem maxAnvilCostItem;
 
-        //TODO #130 part 3
-        assert this.removeAnvilCostLimit != null;
-        assert this.capAnvilCost != null;
-        assert this.maxAnvilCost != null;
-        assert this.noCapRepairItem != null;
-        assert this.noMaxCostItem != null;
-        assert this.replaceTooExpensive != null;
-        assert this.itemRepairCost != null;
-        assert this.unitRepairCost != null;
-        assert this.itemRenameCost != null;
-        assert this.sacrificeIllegalEnchantCost != null;
-        assert this.allowColourCode != null;
-        assert this.allowHexColour != null;
-        assert this.permissionNeededForColour != null;
-        assert this.useOfColourCost != null;
-        assert this.noPermissionNeededItem != null;
-        assert this.noColourCostItem != null;
-
         if(!this.removeAnvilCostLimit.getConfiguredValue()) {
             capAnvilCostItem = this.capAnvilCost.getItem(
                     MsgUI.BASIC_CAP_ANVIL_COST_ITEM
@@ -385,8 +362,8 @@ public class BasicConfigGui extends ChestGui implements ValueUpdatableGui {
     }
 
     @Override
-    public Gui getConnectedGui() {
-        return this;
+    public Supplier<? extends Gui> getConnectedGui() {
+        return () -> this;
     }
 
 }

@@ -7,12 +7,12 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
-import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.EnchantCostSettingsGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -21,6 +21,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 import static io.delilaheve.util.ConfigOptions.ENCHANT_VALUES_ROOT;
 
@@ -30,29 +31,14 @@ import static io.delilaheve.util.ConfigOptions.ENCHANT_VALUES_ROOT;
 @NotNullByDefault
 public class EnchantCostConfigGui extends AbstractEnchantConfigGui<EnchantCostSettingsGui.EnchantCostSettingFactory> {
 
-    //TODO #130 part 3
-    private static @Nullable EnchantCostConfigGui INSTANCE = null;
-
-    @Nullable
-    public static EnchantCostConfigGui getInstance() {
-        return INSTANCE;
-    }
+    public static final UpdateGuiStorage<EnchantCostConfigGui> INSTANCES = new UpdateGuiStorage<>();
 
     /**
      * Constructor of this Global gui for enchantment cost settings.
      */
-    public EnchantCostConfigGui() {
-        super(MsgUI.ENCHANTMENT_LEVEL_COST_TITLE);
-        if (INSTANCE == null) INSTANCE = this;
-
-        init();
-    }
-
-    /**
-     * Constructor of this Global gui for enchantment cost settings.
-     */
-    public EnchantCostConfigGui(Gui parent) {
+    public EnchantCostConfigGui(Supplier<? extends Gui> parent) {
         super(MsgUI.ENCHANTMENT_LEVEL_COST_TITLE, parent);
+        INSTANCES.add(this);
     }
 
     @Override

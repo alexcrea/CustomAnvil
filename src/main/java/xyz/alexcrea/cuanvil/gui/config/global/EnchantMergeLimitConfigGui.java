@@ -14,34 +14,17 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Locale;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class EnchantMergeLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
     private static final String SECTION_NAME = "disable-merge-over";
 
-    //TODO #130 part 3
-    private static @Nullable EnchantMergeLimitConfigGui INSTANCE = null;
-
-    @Nullable
-    public static EnchantMergeLimitConfigGui getInstance() {
-        return INSTANCE;
-    }
-
     /**
      * Constructor of this Global gui for enchantment level limit settings.
      */
-    public EnchantMergeLimitConfigGui() {
-        super(MsgUI.ENCHANTMENT_MERGE_LIMIT_TITLE);
-        if(INSTANCE == null) INSTANCE = this;
-
-        init();
-    }
-
-    /**
-     * Constructor of this Global gui for enchantment level limit settings.
-     */
-    public EnchantMergeLimitConfigGui(Gui parent) {
+    public EnchantMergeLimitConfigGui(Supplier<? extends Gui> parent) {
         super(MsgUI.ENCHANTMENT_MERGE_LIMIT_TITLE, parent);
     }
 

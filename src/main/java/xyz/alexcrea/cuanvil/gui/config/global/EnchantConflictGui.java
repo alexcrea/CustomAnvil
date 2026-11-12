@@ -14,40 +14,25 @@ import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.EnchantConflictSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class EnchantConflictGui extends MappedGuiListConfigGui<EnchantConflictGroup,
         MappedGuiListConfigGui.LazyElement<EnchantConflictSubSettingGui>> {
 
-    //TODO #130 part 3
-    private static @Nullable EnchantConflictGui INSTANCE;
-
-    @Nullable
-    public static EnchantConflictGui getCurrentInstance() {
-        return INSTANCE;
-    }
-
-    public static EnchantConflictGui getInstance() {
-        if(INSTANCE == null) INSTANCE = new EnchantConflictGui();
-
-        return INSTANCE;
-    }
+    public static final UpdateGuiStorage<EnchantConflictGui> INSTANCES = new UpdateGuiStorage<>();
 
     // Need to init myself
-    public EnchantConflictGui(Gui parent) {
+    public EnchantConflictGui(Supplier<? extends Gui> parent) {
         super(MsgUI.ENCHANTMENT_CONFLICT_TITLE, parent);
-    }
-
-    private EnchantConflictGui() {
-        super(MsgUI.ENCHANTMENT_CONFLICT_TITLE);
-
-        init();
+        INSTANCES.add(this);
     }
 
     @Override
