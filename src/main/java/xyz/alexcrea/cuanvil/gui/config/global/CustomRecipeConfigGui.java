@@ -12,6 +12,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.elements.CustomRecipeSubSettingGui;
 import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.recipe.AnvilCustomRecipe;
@@ -21,33 +22,18 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class CustomRecipeConfigGui extends MappedGuiListConfigGui<AnvilCustomRecipe,
         MappedGuiListConfigGui.LazyElement<CustomRecipeSubSettingGui>> {
 
-    //TODO #130 part 3
-    private static final CustomRecipeConfigGui INSTANCE = new CustomRecipeConfigGui();
 
-    //@Nullable
-    public static CustomRecipeConfigGui getCurrentInstance() {
-        return INSTANCE;
-    }
+    public static final UpdateGuiStorage<CustomRecipeConfigGui> INSTANCES = new UpdateGuiStorage<>();
 
-    public static CustomRecipeConfigGui getInstance() {
-        //if(INSTANCE == null) INSTANCE = new CustomRecipeConfigGui();
-
-        return INSTANCE;
-    }
-
-    private CustomRecipeConfigGui() {
-        super(MsgUI.CUSTOM_RECIPE_TITLE);
-
-        init();
-    }
-
-    public CustomRecipeConfigGui(Gui parent) {
+    public CustomRecipeConfigGui(Supplier<? extends Gui> parent) {
         super(MsgUI.CUSTOM_RECIPE_TITLE, parent);
+        INSTANCES.add(this);
     }
 
     @Override

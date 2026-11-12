@@ -65,10 +65,8 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
     private ItemSettingGui.ItemSettingFactory rightItemFactory;
     private ItemSettingGui.ItemSettingFactory resultItemFactory;
 
-    //TODO #130 part 3
     private void prepareStaticValues() {
-
-        GuiGlobalItems.addBackItem(this.pane, this.parent);
+        GuiGlobalItems.addBackItem(this.pane, () -> this.parent);
         GuiGlobalItems.addBackgroundItem(this.pane);
 
         // Delete item
@@ -80,7 +78,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         ComponentUtil.applyLore(MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_BUTTON_LORE.formatted(), deleteMeta);
 
         deleteItem.setItemMeta(deleteMeta);
-        this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(createDeleteGui()), CustomAnvil.instance));
+        this.pane.bindItem('D', new GuiItem(deleteItem, GuiGlobalActions.openGuiAction(this::createDeleteGui), CustomAnvil.instance));
 
         // Displayed item will be updated later
         IntRange costRange = AnvilCustomRecipe.Companion.getXP_COST_CONFIG_RANGE();
@@ -158,7 +156,7 @@ public class CustomRecipeSubSettingGui extends MappedToListSubSettingGui {
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.anvilRecipe.toString());
         return new ConfirmActionGui(MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_TITLE, type,
                 MsgUI.CUSTOM_RECIPE_ELEMENT_DELETE_DESCRIPTION, type,
-                this, this.parent, this::deleteRecipe
+                () -> this, this.parent, this::deleteRecipe
         );
     }
 

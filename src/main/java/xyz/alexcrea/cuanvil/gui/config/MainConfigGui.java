@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNullByDefault;
+import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.dependency.packet.PacketManager;
 import xyz.alexcrea.cuanvil.gui.config.global.BasicConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.global.CustomRecipeConfigGui;
@@ -25,18 +26,14 @@ import xyz.alexcrea.cuanvil.gui.util.GuiSharedConstant;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
+import java.util.function.Supplier;
+
 @NotNullByDefault
 public class MainConfigGui extends ChestGui {
 
-    //TODO #130 part 3
-    private static final MainConfigGui INSTANCE = new MainConfigGui();
-
-    public static MainConfigGui getInstance() {
-        return INSTANCE;
-    }
-
-    private MainConfigGui() {
+    public MainConfigGui() {
         super(3, MsgUI.MAIN_TITLE.textHolder(), CustomAnvil.instance);
+        init(DependencyManager.packetManager);
     }
 
     public void init(PacketManager packetManager) {
@@ -51,42 +48,72 @@ public class MainConfigGui extends ChestGui {
         GuiGlobalItems.addBackgroundItem(pane);
 
         // Basic config item
-        var basicConfigItem = basicConfigItem(new BasicConfigGui(packetManager));
+        var basicConfigItem = basicConfigItem(() -> new BasicConfigGui(() -> this, packetManager));
         pane.bindItem('1', basicConfigItem);
 
         // enchant level limit item
-        var enchantLimitItem = enchantLimitItem(new EnchantLimitConfigGui());
+        var enchantLimitItem = enchantLimitItem(() -> {
+            var value = new EnchantLimitConfigGui(() -> this);
+            value.init();
+
+            return value;
+        });
         pane.bindItem('2', enchantLimitItem);
 
         // enchant level limit item
-        var enchantMergeLimitItem = enchantMergeLimitItem(new EnchantMergeLimitConfigGui());
+        var enchantMergeLimitItem = enchantMergeLimitItem(() -> new EnchantMergeLimitConfigGui(() -> this));
         pane.bindItem('3', enchantMergeLimitItem);
 
         // enchant cost item
-        var enchantCostItem = enchantCostItem(new EnchantCostConfigGui());
+        var enchantCostItem = enchantCostItem(() -> {
+            var value = new EnchantCostConfigGui(() -> this);
+            value.init();
+
+            return value;
+        });
         pane.bindItem('4', enchantCostItem);
 
         // Enchantment Conflicts item
-        var enchantConflictItem = enchantConflictItem(EnchantConflictGui.getInstance());
+        var enchantConflictItem = enchantConflictItem(() -> {
+            var value = new EnchantConflictGui(() -> this);
+            value.init();
+
+            return value;
+        });
         pane.bindItem('5', enchantConflictItem);
 
         // Group config items
-        var groupConfigItem = groupConfigItem(GroupConfigGui.getInstance());
+        var groupConfigItem = groupConfigItem(() -> {
+            var gui = new GroupConfigGui(() -> this);
+            gui.init();
+
+            return gui;
+        });
         pane.bindItem('6', groupConfigItem);
 
         // Unit repair item
-        var unitRepairItem = unitRepairItem(UnitRepairConfigGui.getInstance());
+        var unitRepairItem = unitRepairItem(() -> {
+            var gui = new UnitRepairConfigGui(() -> this);
+            gui.init();
+
+            return gui;
+        });
         pane.bindItem('7', unitRepairItem);
 
         // Custom recipe item
-        var customRecipeItem = customRecipeItem(CustomRecipeConfigGui.getInstance());
+        var customRecipeItem = customRecipeItem(() -> {
+            var gui = new CustomRecipeConfigGui(() -> this);
+            gui.init();
+
+            return gui;
+        });
         pane.bindItem('8', customRecipeItem);
 
         // quit item
         pane.bindItem('Q', quitItem());
     }
 
-    public static GuiItem basicConfigItem(Gui target) {
+    public static GuiItem basicConfigItem(Supplier<? extends Gui> target) {
         var item = new ItemStack(Material.COMMAND_BLOCK);
         var meta = item.getItemMeta();
         assert meta != null;
@@ -97,7 +124,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem enchantLimitItem(Gui target) {
+    public static GuiItem enchantLimitItem(Supplier<? extends Gui> target) {
         var item = new ItemStack(Material.ENCHANTED_BOOK);
         var meta = item.getItemMeta();
         assert meta != null;
@@ -108,7 +135,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem enchantMergeLimitItem(Gui target) {
+    public static GuiItem enchantMergeLimitItem(Supplier<? extends Gui> target) {
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
@@ -119,7 +146,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem enchantCostItem(Gui target) {
+    public static GuiItem enchantCostItem(Supplier<? extends Gui> target) {
         ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
@@ -130,7 +157,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem enchantConflictItem(Gui target) {
+    public static GuiItem enchantConflictItem(Supplier<? extends Gui> target) {
         var item = new ItemStack(Material.OAK_FENCE);
         var meta = item.getItemMeta();
         assert meta != null;
@@ -141,7 +168,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem groupConfigItem(Gui target) {
+    public static GuiItem groupConfigItem(Supplier<? extends Gui> target) {
         var item = new ItemStack(Material.CHEST);
         var meta = item.getItemMeta();
         assert meta != null;
@@ -152,7 +179,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem unitRepairItem(Gui target) {
+    public static GuiItem unitRepairItem(Supplier<? extends Gui> target) {
         var item = new ItemStack(Material.DIAMOND);
         var meta = item.getItemMeta();
         assert meta != null;
@@ -164,7 +191,7 @@ public class MainConfigGui extends ChestGui {
         return GuiGlobalItems.goToGuiItem(item, target);
     }
 
-    public static GuiItem customRecipeItem(Gui target) {
+    public static GuiItem customRecipeItem(Supplier<? extends Gui> target) {
         var item = new ItemStack(Material.CRAFTING_TABLE);
         var meta = item.getItemMeta();
         assert meta != null;

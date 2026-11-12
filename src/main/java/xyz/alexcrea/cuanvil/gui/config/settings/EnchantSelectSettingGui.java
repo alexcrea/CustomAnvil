@@ -49,7 +49,8 @@ public class EnchantSelectSettingGui extends SettingGuiListConfigGui<CAEnchantme
             Message title, String param,
             ValueUpdatableGui parent, SelectEnchantmentContainer enchantContainer
     ) {
-        super(title, param, parent instanceof Gui parentGui ? parentGui : MainConfigGui.getInstance());
+        // TODO find out why MainConfigGui::new because ???? why ???
+        super(title, param, parent instanceof Gui parentGui ? () -> parentGui : MainConfigGui::new);
         this.enchantContainer = enchantContainer;
 
         this.selectedEnchant = new HashSet<>(enchantContainer.getSelectedEnchantments());

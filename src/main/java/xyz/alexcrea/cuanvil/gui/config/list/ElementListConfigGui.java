@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public abstract class ElementListConfigGui<T> extends ChestGui implements ValueUpdatableGui {
@@ -46,7 +47,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     private Predicate<T> filter = (t) -> true;
     private boolean hasDefaultFilter = true;
 
-    protected ElementListConfigGui(Message title, String param, Gui parent) {
+    protected ElementListConfigGui(Message title, String param, Supplier<? extends Gui> parent) {
         super(6, title.textHolder(param, "", ""), CustomAnvil.instance);
         this.rawTitle = title;
         this.param = param;
@@ -340,8 +341,8 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     }
 
     @Override
-    public Gui getConnectedGui() {
-        return this;
+    public Supplier<? extends Gui> getConnectedGui() {
+        return () -> this;
     }
 
 }

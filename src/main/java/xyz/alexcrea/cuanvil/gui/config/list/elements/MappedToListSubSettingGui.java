@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 
+import java.util.function.Supplier;
+
 @NotNullByDefault
 public abstract class MappedToListSubSettingGui extends ChestGui implements ValueUpdatableGui, ElementMappedToListGui {
 
@@ -23,8 +25,8 @@ public abstract class MappedToListSubSettingGui extends ChestGui implements Valu
     }
 
     @Override
-    public Gui getConnectedGui() {
-        return this;
+    public Supplier<? extends Gui> getConnectedGui() {
+        return () -> this;
     }
 
 }

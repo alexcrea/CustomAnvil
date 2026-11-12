@@ -36,7 +36,7 @@ public class UnitRepairElementListGui
         implements ElementMappedToListGui {
 
     private final NamespacedKey parentMaterial;
-    private final UnitRepairConfigGui parentGui;
+    private final UnitRepairConfigGui parent;
     private final String materialName;
 
     private boolean shouldWork = true;
@@ -47,14 +47,15 @@ public class UnitRepairElementListGui
 
     public UnitRepairElementListGui(
             NamespacedKey parentMaterial,
-            UnitRepairConfigGui parentGui
+            UnitRepairConfigGui parent
     ) {
-        super(MsgUI.UNIT_REPAIR_ELEMENT_TITLE, prettifiedName(parentMaterial));
+        super(MsgUI.UNIT_REPAIR_ELEMENT_TITLE, prettifiedName(parentMaterial), () -> parent);
         this.parentMaterial = parentMaterial;
-        this.parentGui = parentGui;
+        this.parent = parent;
         this.materialName = prettifiedName(parentMaterial);
 
-        GuiGlobalItems.addBackItem(this.backgroundPane, parentGui);
+        // TODO do I need this ????
+        //GuiGlobalItems.addBackItem(this.backgroundPane, () -> parent);
     }
 
     // SettingGuiListConfigGui methods
@@ -75,7 +76,7 @@ public class UnitRepairElementListGui
             new SelectItemTypeGui(
                     MsgUI.UNIT_REPAIR_NEW_ELEMENT_TITLE, this.materialName,
                     MsgUI.UNIT_REPAIR_NEW_ELEMENT_DESCRIPTION, this.materialName,
-                    this,
+                    () -> this,
                     (itemStack, player) -> {
                         ItemMeta meta = itemStack.getItemMeta();
                         NamespacedKey type = MaterialUtil.getCustomType(itemStack);
@@ -103,7 +104,7 @@ public class UnitRepairElementListGui
 
                         // Update gui
                         updateValueForGeneric(type, true);
-                        this.parentGui.updateValueForGeneric(this.parentMaterial, true);
+                        this.parent.updateValueForGeneric(this.parentMaterial, true);
 
 
                         // Display material edit setting
@@ -188,7 +189,7 @@ public class UnitRepairElementListGui
     @Override
     public void updateGuiValues() {
         super.updateGuiValues();
-        this.parentGui.updateValueForGeneric(this.parentMaterial, true);
+        this.parent.updateValueForGeneric(this.parentMaterial, true);
     }
 
     // ElementMappedToListGui methods
@@ -206,7 +207,7 @@ public class UnitRepairElementListGui
 
         for(HumanEntity viewer : getViewers()) {
             MsgError.UI_CONFIG_DELETED.send(viewer);
-            this.parentGui.show(viewer);
+            this.parent.show(viewer);
         }
     }
 

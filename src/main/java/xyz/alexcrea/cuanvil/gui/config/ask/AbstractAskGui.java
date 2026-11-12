@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNullByDefault;
 import xyz.alexcrea.cuanvil.gui.util.GuiGlobalItems;
 import xyz.alexcrea.cuanvil.lang.Message;
 
+import java.util.function.Supplier;
+
 @NotNullByDefault
 public abstract class AbstractAskGui extends ChestGui {
 
@@ -18,7 +20,7 @@ public abstract class AbstractAskGui extends ChestGui {
     AbstractAskGui(
             int rows,
             Message name, String param,
-            Gui backOnCancel
+            Supplier<? extends Gui> backOnCancel
     ) {
         super(rows, name.textHolder(param), CustomAnvil.instance);
 

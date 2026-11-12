@@ -5,15 +5,16 @@ import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import io.delilaheve.util.ConfigOptions;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNullByDefault;
-import org.jetbrains.annotations.Nullable;
 import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.enchant.CAEnchantment;
 import xyz.alexcrea.cuanvil.gui.ValueUpdatableGui;
 import xyz.alexcrea.cuanvil.gui.config.settings.IntSettingsGui;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
 
 import java.util.Locale;
+import java.util.function.Supplier;
 
 /**
  * Global Config gui for enchantment level limit settings.
@@ -21,27 +22,14 @@ import java.util.Locale;
 @NotNullByDefault
 public class EnchantLimitConfigGui extends AbstractEnchantConfigGui<IntSettingsGui.IntSettingFactory> {
 
-    //TODO #130 part 3
     private static final String SECTION_NAME = ConfigOptions.ENCHANT_LIMIT_ROOT;
 
-    private static @Nullable EnchantLimitConfigGui INSTANCE = null;
-
-    @Nullable
-    public static EnchantLimitConfigGui getInstance() {
-        return INSTANCE;
-    }
+    public static final UpdateGuiStorage<EnchantLimitConfigGui> INSTANCES = new UpdateGuiStorage<>();
 
     /**
      * Constructor of this Global gui for enchantment level limit settings.
      */
-    public EnchantLimitConfigGui() {
-        super(MsgUI.ENCHANTMENT_LEVEL_LIMIT_TITLE);
-        if(INSTANCE == null) INSTANCE = this;
-
-        init();
-    }
-
-    public EnchantLimitConfigGui(Gui parent) {
+    public EnchantLimitConfigGui(Supplier<? extends Gui> parent) {
         super(MsgUI.ENCHANTMENT_LEVEL_LIMIT_TITLE, parent);
     }
 

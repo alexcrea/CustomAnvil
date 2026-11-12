@@ -95,7 +95,7 @@ class EditConfigExecutor: CASubCommand {
     }
 
     private fun processOpen(sender: HumanEntity) {
-        MainConfigGui.getInstance().show(sender)
+        MainConfigGui().show(sender)
     }
 
     // ---------------

@@ -81,8 +81,9 @@ public class CustomAnvilRecipeApi {
         prepareSaveTask();
 
         // Add from gui
-        CustomRecipeConfigGui recipeConfigGui = CustomRecipeConfigGui.getCurrentInstance();
-        if(recipeConfigGui != null) recipeConfigGui.updateValueForGeneric(recipe, true);
+        CustomRecipeConfigGui.INSTANCES.forAll(recipeConfigGui ->
+                recipeConfigGui.updateValueForGeneric(recipe, true)
+        );
 
         return true;
     }
@@ -108,8 +109,9 @@ public class CustomAnvilRecipeApi {
         prepareSaveTask();
 
         // Remove from gui
-        CustomRecipeConfigGui recipeConfigGui = CustomRecipeConfigGui.getCurrentInstance();
-        if(recipeConfigGui != null) recipeConfigGui.removeGeneric(recipe);
+        CustomRecipeConfigGui.INSTANCES.forAll(recipeConfigGui ->
+                recipeConfigGui.removeGeneric(recipe)
+        );
 
         return true;
     }

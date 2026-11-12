@@ -33,12 +33,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class MaterialSelectSettingGui extends MappedElementListConfigGui<NamespacedKey, GuiItem> {
 
     private final SelectMaterialContainer selector;
-    private final Gui backGui;
+    private final Supplier<? extends Gui> backGui;
     private boolean instantRemove;
 
     private final List<NamespacedKey> defaultMaterials;
@@ -50,9 +51,10 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
             SelectMaterialContainer selector,
             Message title,
             String param,
-            Gui backGui
+            Supplier<? extends Gui> backGui,
+            Supplier<? extends Gui> parent
     ) {
-        super(title, param);
+        super(title, param, parent);
         this.selector = selector;
         this.backGui = backGui;
         this.instantRemove = false;
@@ -178,7 +180,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
                 MsgError.UI_SAVE_FAILED.send(player);
 
             // Return to parent
-            this.backGui.show(player);
+            this.backGui.get().show(player);
 
         }, CustomAnvil.instance);
     }
@@ -247,7 +249,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
                 ConfirmActionGui confirmGui = new ConfirmActionGui(
                         MsgUI.MATERIAL_SELECT_CONFIRM_TITLE, materialName,
                         MsgUI.MATERIAL_SELECT_CONFIRM_DESCRIPTION, materialName.toLowerCase(),
-                        this, this,
+                        () -> this, this,
                         () -> {
                             removeMaterial(material);
                             return true;

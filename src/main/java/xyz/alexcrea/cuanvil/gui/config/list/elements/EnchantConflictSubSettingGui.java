@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 @NotNullByDefault
@@ -70,7 +71,7 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
     private void prepareStaticValues() {
 
-        GuiGlobalItems.addBackItem(this.pane, this.parent);
+        GuiGlobalItems.addBackItem(this.pane, () -> this.parent);
         GuiGlobalItems.addBackgroundItem(this.pane);
 
         // Delete item
@@ -118,11 +119,11 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
 
     }
 
-    private ConfirmActionGui createDeleteGui() {
+    private Supplier<ConfirmActionGui> createDeleteGui() {
         var type = CasedStringUtil.snakeToUpperSpacedCase(this.enchantConflict.toString());
-        return new ConfirmActionGui(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_TITLE, type,
+        return () -> new ConfirmActionGui(MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_TITLE, type,
                 MsgUI.ENCHANTMENT_CONFLICT_ELEMENT_DELETE_DESCRIPTION, type,
-                this, this.parent, this::deleteHandler
+                () -> this, this.parent, this::deleteHandler
         );
     }
 

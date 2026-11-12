@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
@@ -87,11 +88,11 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
         updateGuiValues();
 
         // Enchantment Conflicts item
-        var enchantConflictItem = MainConfigGui.enchantConflictItem(getEnchantConflictGui());
+        var enchantConflictItem = MainConfigGui.enchantConflictItem(this::getEnchantConflictGui);
         pane.bindItem('5', enchantConflictItem);
 
         // Group config items
-        var groupConfigItem = MainConfigGui.groupConfigItem(getGroupConfigGui());
+        var groupConfigItem = MainConfigGui.groupConfigItem(this::getGroupConfigGui);
         pane.bindItem('6', groupConfigItem);
 
         // quit item
@@ -100,7 +101,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private GuiItem enchantLimitConfigGui() {
         if (enchantLimitConfigGui == null) {
-            enchantLimitConfigGui = new EnchantLimitConfigGui(this);
+            enchantLimitConfigGui = new EnchantLimitConfigGui(() -> this);
             enchantLimitConfigGui.setFilter(enchantments::contains);
             enchantLimitConfigGui.init();
         }
@@ -113,12 +114,15 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
             return enchantLimitConfigGui.itemFromFactory(enchant, factory);
         }
 
-        return MainConfigGui.enchantLimitItem(enchantLimitConfigGui);
+        return MainConfigGui.enchantLimitItem(() -> {
+            assert enchantLimitConfigGui != null;
+            return enchantLimitConfigGui;
+        });
     }
 
     private GuiItem enchantMergeLimitConfigGui() {
         if (enchantMergeLimitConfigGui == null) {
-            enchantMergeLimitConfigGui = new EnchantMergeLimitConfigGui(this);
+            enchantMergeLimitConfigGui = new EnchantMergeLimitConfigGui(() -> this);
             enchantMergeLimitConfigGui.setFilter(enchantments::contains);
             enchantMergeLimitConfigGui.init();
         }
@@ -131,12 +135,15 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
             return enchantMergeLimitConfigGui.itemFromFactory(enchant, factory);
         }
 
-        return MainConfigGui.enchantMergeLimitItem(enchantMergeLimitConfigGui);
+        return MainConfigGui.enchantMergeLimitItem(() -> {
+            assert enchantMergeLimitConfigGui != null;
+            return enchantMergeLimitConfigGui;
+        });
     }
 
     private GuiItem enchantCostConfigGui() {
         if (enchantCostConfigGui == null) {
-            enchantCostConfigGui = new EnchantCostConfigGui(this);
+            enchantCostConfigGui = new EnchantCostConfigGui(() -> this);
             enchantCostConfigGui.setFilter(enchantments::contains);
             enchantCostConfigGui.init();
         }
@@ -149,7 +156,10 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
             return enchantCostConfigGui.itemFromFactory(enchant, factory);
         }
 
-        return MainConfigGui.enchantCostItem(enchantCostConfigGui);
+        return MainConfigGui.enchantCostItem(() -> {
+            assert enchantCostConfigGui != null;
+            return enchantCostConfigGui;
+        });
     }
 
     @Contract(pure = true)
@@ -161,7 +171,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private EnchantConflictGui getEnchantConflictGui() {
         if (enchantConflictGui == null) {
-            enchantConflictGui = new EnchantConflictGui(this);
+            enchantConflictGui = new EnchantConflictGui(() -> this);
             enchantConflictGui.setFilter(getGroupFilter());
             enchantConflictGui.init();
         }
@@ -171,7 +181,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
 
     private GroupConfigGui getGroupConfigGui() {
         if (groupConfigGui == null) {
-            groupConfigGui = new GroupConfigGui(this);
+            groupConfigGui = new GroupConfigGui(() -> this);
 
             // Get all the conflict related to this enchantment
             var groups = getGroups();
@@ -210,7 +220,7 @@ public class EnchantConfigGui extends ChestGui implements ValueUpdatableGui {
     }
 
     @Override
-    public Gui getConnectedGui() {
-        return this;
+    public Supplier<? extends Gui> getConnectedGui() {
+        return () -> this;
     }
 }

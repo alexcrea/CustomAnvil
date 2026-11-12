@@ -9,6 +9,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.dependency.DependencyManager;
 import xyz.alexcrea.cuanvil.group.EnchantConflictGroup;
 import xyz.alexcrea.cuanvil.gui.config.global.EnchantConflictGui;
+import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,8 +66,9 @@ public class ConflictAPI {
             holder.getConflictManager().addConflict(conflict);
 
             // Add conflict to gui
-            EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
-            if(conflictGui != null) conflictGui.updateValueForGeneric(conflict, true);
+            EnchantConflictGui.INSTANCES.forAll(conflictGui ->
+                    conflictGui.updateValueForGeneric(conflict, true)
+            );
         }
 
         return true;
@@ -161,8 +163,9 @@ public class ConflictAPI {
         prepareSaveTask();
 
         // Remove from gui
-        EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
-        if(conflictGui != null) conflictGui.removeGeneric(conflict);
+        EnchantConflictGui.INSTANCES.forAll(conflictGui ->
+                conflictGui.removeGeneric(conflict)
+        );
 
         return true;
     }
@@ -195,8 +198,7 @@ public class ConflictAPI {
         var task = DependencyManager.scheduler.scheduleGlobally(CustomAnvil.instance, () -> {
             try(var lock = ConfigHolder.CONFLICT.write) {
                 lock.get().reload();
-                EnchantConflictGui conflictGui = EnchantConflictGui.getCurrentInstance();
-                if(conflictGui != null) conflictGui.reloadValues();
+                EnchantConflictGui.INSTANCES.forAll(MappedGuiListConfigGui::reloadValues);
 
                 reloadChangeTask = null;
             }

@@ -22,19 +22,11 @@ import java.util.function.Supplier;
 public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui.LazyElement<?>>
         extends MappedElementListConfigGui<T, S> {
 
-    protected MappedGuiListConfigGui(Message title, String param) {
-        super(title, param);
-    }
-
-    protected MappedGuiListConfigGui(Message title, String param, Gui parent) {
+    protected MappedGuiListConfigGui(Message title, String param, Supplier<? extends Gui> parent) {
         super(title, param, parent);
     }
 
-    protected MappedGuiListConfigGui(Message title) {
-        super(title, "");
-    }
-
-    protected MappedGuiListConfigGui(Message title, Gui parent) {
+    protected MappedGuiListConfigGui(Message title, Supplier<? extends Gui> parent) {
         super(title, "", parent);
     }
 
@@ -139,7 +131,7 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
             this.parentItem = parentItem;
 
             this.lazyOpenConsumer = new LazyValue<>(() ->
-                    GuiGlobalActions.openGuiAction(this.get().getMappedGui()))
+                    GuiGlobalActions.openGuiAction(() -> this.get().getMappedGui()))
             ;
         }
 

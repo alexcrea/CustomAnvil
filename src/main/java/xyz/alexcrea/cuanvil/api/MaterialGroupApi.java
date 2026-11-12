@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.group.ExcludeGroup;
 import xyz.alexcrea.cuanvil.group.IncludeGroup;
 import xyz.alexcrea.cuanvil.group.ItemGroupManager;
 import xyz.alexcrea.cuanvil.gui.config.global.GroupConfigGui;
+import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -73,8 +74,9 @@ public class MaterialGroupApi {
         if(!writeMaterialGroup(group, false)) return false;
 
         if(group instanceof IncludeGroup includeGroup) {
-            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
-            if(configGui != null) configGui.updateValueForGeneric(includeGroup, true);
+            GroupConfigGui.INSTANCES.forAll(configGui ->
+                    configGui.updateValueForGeneric(includeGroup, true)
+            );
         }
 
         if(ConfigOptions.INSTANCE.getVerboseDebugLog()) {
@@ -219,8 +221,9 @@ public class MaterialGroupApi {
 
         // Remove from gui
         if(group instanceof IncludeGroup includeGroup) {
-            GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
-            if(configGui != null) configGui.removeGeneric(includeGroup);
+            GroupConfigGui.INSTANCES.forAll(configGui ->
+                    configGui.removeGeneric(includeGroup)
+            );
         }
 
         return true;
@@ -254,8 +257,7 @@ public class MaterialGroupApi {
             try(var lock = ConfigHolder.ITEM_GROUP.write) {
                 lock.get().reload();
 
-                GroupConfigGui configGui = GroupConfigGui.getCurrentInstance();
-                if(configGui != null) configGui.reloadValues();
+                GroupConfigGui.INSTANCES.forAll(MappedGuiListConfigGui::reloadValues);
 
                 reloadChangeTask = null;
             }

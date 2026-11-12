@@ -16,20 +16,17 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public abstract class MappedElementListConfigGui<T, S> extends ElementListConfigGui<T> {
 
     protected final HashMap<T, S> elementGuiMap;
 
-    protected MappedElementListConfigGui(Message title, String param, Gui parent) {
+    protected MappedElementListConfigGui(Message title, String param, Supplier<? extends Gui> parent) {
         super(title, param, parent);
         this.elementGuiMap = new HashMap<>();
 
-    }
-
-    protected MappedElementListConfigGui(Message title, String param) {
-        this(title, param, MainConfigGui.getInstance());
     }
 
     @Override

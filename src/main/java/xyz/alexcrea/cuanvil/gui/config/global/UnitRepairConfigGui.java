@@ -13,6 +13,7 @@ import xyz.alexcrea.cuanvil.config.ConfigHolder;
 import xyz.alexcrea.cuanvil.gui.config.ask.SelectItemTypeGui;
 import xyz.alexcrea.cuanvil.gui.config.list.MappedGuiListConfigGui;
 import xyz.alexcrea.cuanvil.gui.config.list.UnitRepairElementListGui;
+import xyz.alexcrea.cuanvil.gui.util.UpdateGuiStorage;
 import xyz.alexcrea.cuanvil.lang.Message;
 import xyz.alexcrea.cuanvil.lang.MsgUI;
 import xyz.alexcrea.cuanvil.util.CasedStringUtil;
@@ -22,33 +23,17 @@ import xyz.alexcrea.cuanvil.util.MaterialUtil;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class UnitRepairConfigGui extends
         MappedGuiListConfigGui<NamespacedKey, MappedGuiListConfigGui.LazyElement<UnitRepairElementListGui>> {
 
-    //TODO #130 part 3
-    private static @Nullable UnitRepairConfigGui INSTANCE;
+    public static final UpdateGuiStorage<UnitRepairConfigGui> INSTANCES = new UpdateGuiStorage<>();
 
-    @Nullable
-    public static UnitRepairConfigGui getCurrentInstance() {
-        return INSTANCE;
-    }
-
-    public static UnitRepairConfigGui getInstance() {
-        if(INSTANCE == null) INSTANCE = new UnitRepairConfigGui();
-
-        return INSTANCE;
-    }
-
-    private UnitRepairConfigGui() {
-        super(MsgUI.UNIT_REPAIR_TITLE);
-
-        init();
-    }
-
-    public UnitRepairConfigGui(Gui parent) {
+    public UnitRepairConfigGui(Supplier<? extends Gui> parent) {
         super(MsgUI.UNIT_REPAIR_TITLE, parent);
+        INSTANCES.add(this);
     }
 
     @Override
@@ -140,7 +125,7 @@ public class UnitRepairConfigGui extends
             new SelectItemTypeGui(
                     MsgUI.UNIT_REPAIR_NEW_TITLE, "",
                     MsgUI.UNIT_REPAIR_NEW_DESCRIPTION, "",
-                    this,
+                    () -> this,
                     (itemStack, player) -> {
                         NamespacedKey type = MaterialUtil.getCustomType(itemStack);
                         // Add new material
@@ -154,6 +139,7 @@ public class UnitRepairConfigGui extends
         }, CustomAnvil.instance);
     }
 
+    //TODO AAAAAA
     public LazyElement<UnitRepairElementListGui> getInstanceOrCreate(NamespacedKey mat) {
         LazyElement<UnitRepairElementListGui> element = this.elementGuiMap.get(mat);
         if(element == null) {

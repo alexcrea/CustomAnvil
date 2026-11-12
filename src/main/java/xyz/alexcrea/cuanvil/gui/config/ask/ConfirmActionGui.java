@@ -27,7 +27,7 @@ public class ConfirmActionGui extends AbstractAskGui {
     public ConfirmActionGui(
             Message title, String titleParam,
             @Nullable Message actionDescription, String actionParam,
-            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
+            Supplier<? extends Gui> backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm,
             boolean permanent
     ) {
         super(3, title, titleParam, backOnCancel);
@@ -79,7 +79,7 @@ public class ConfirmActionGui extends AbstractAskGui {
     public ConfirmActionGui(
             Message title, String titleParam,
             @Nullable Message actionDescription, String actionParam,
-            Gui backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm
+            Supplier<? extends Gui> backOnCancel, Gui backOnConfirm, Supplier<Boolean> onConfirm
     ) {
         this(title, titleParam, actionDescription, actionParam, backOnCancel, backOnConfirm, onConfirm, true);
     }
