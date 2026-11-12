@@ -74,10 +74,12 @@ public abstract class MappedGuiListConfigGui<T, S extends MappedGuiListConfigGui
     }
 
     @Override
-    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {
+    protected Consumer<@Nullable String> prepareCreateItemConsumer(HumanEntity player) {
         @SuppressWarnings("NullableProblems") // Will be set just after that
-        AtomicReference<Consumer<String>> selfRef = new AtomicReference<>();
-        Consumer<String> selfCallback = (message) -> {
+        AtomicReference<Consumer<@Nullable  String>> selfRef = new AtomicReference<>();
+        Consumer<@Nullable String> selfCallback = (message) -> {
+            if(message == null) return;
+
             // check permission
             if (!player.hasPermission(CustomAnvil.editConfigPermission)) {
                 MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);

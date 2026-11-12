@@ -106,7 +106,7 @@ public abstract class MappedElementListConfigGui<T, S> extends ElementListConfig
 
     protected abstract GuiItem findGuiItemForRemoval(T generic, S element);
 
-    protected abstract Consumer<String> prepareCreateItemConsumer(HumanEntity player);
+    protected abstract Consumer<@Nullable String> prepareCreateItemConsumer(HumanEntity player);
 
     protected abstract Message genericDisplayedName();
 

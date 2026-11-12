@@ -309,7 +309,7 @@ public class MaterialSelectSettingGui extends MappedElementListConfigGui<Namespa
     }
 
     @Override
-    protected Consumer<String> prepareCreateItemConsumer(HumanEntity player) {// Not used
+    protected Consumer<@Nullable String> prepareCreateItemConsumer(HumanEntity player) {// Not used
         throw new IllegalStateException("Using a method intended to not be used");
     }
 
