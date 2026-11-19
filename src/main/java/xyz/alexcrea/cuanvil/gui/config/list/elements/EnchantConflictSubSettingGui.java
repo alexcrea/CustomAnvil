@@ -315,7 +315,6 @@ public class EnchantConflictSubSettingGui extends MappedToListSubSettingGui impl
         return this.enchantConflict.getCantConflictGroup().getGroups();
     }
 
-    // TODO hell for #130 part 3
     @Override
     public boolean setSelectedGroups(Set<AbstractMaterialGroup> groups) {
         if(!this.shouldWork) {

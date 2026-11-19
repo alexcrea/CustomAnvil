@@ -61,7 +61,12 @@ public class MainConfigGui extends ChestGui {
         pane.bindItem('2', enchantLimitItem);
 
         // enchant level limit item
-        var enchantMergeLimitItem = enchantMergeLimitItem(() -> new EnchantMergeLimitConfigGui(() -> this));
+        var enchantMergeLimitItem = enchantMergeLimitItem(() -> {
+            var value = new EnchantMergeLimitConfigGui(() -> this);
+            value.init();
+
+            return value;
+        });
         pane.bindItem('3', enchantMergeLimitItem);
 
         // enchant cost item

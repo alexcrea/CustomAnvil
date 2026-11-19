@@ -174,7 +174,6 @@ public class BoolSettingsGui extends AbstractSettingGui {
     /**
      * A factory for a boolean setting gui that hold setting's information.
      */
-    // TODO maybe record #130 part 3
     public static class BoolSettingFactory extends SettingGuiFactory {
         final Message title;
         final ValueUpdatableGui parent;

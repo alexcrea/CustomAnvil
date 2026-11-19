@@ -451,7 +451,6 @@ public class GroupConfigSubSettingGui extends MappedToListSubSettingGui implemen
         this.parent.update();
 
         // Update conflict group
-        //TODO #130 part 3 should make this outdated
         for(AbstractMaterialGroup conflictGroup : conflictGroupPlanned) {
             conflictGroup.updateMaterials();
         }

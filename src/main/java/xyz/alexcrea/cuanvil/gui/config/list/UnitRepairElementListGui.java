@@ -53,9 +53,6 @@ public class UnitRepairElementListGui
         this.parentMaterial = parentMaterial;
         this.parent = parent;
         this.materialName = prettifiedName(parentMaterial);
-
-        // TODO do I need this ????
-        //GuiGlobalItems.addBackItem(this.backgroundPane, () -> parent);
     }
 
     // SettingGuiListConfigGui methods

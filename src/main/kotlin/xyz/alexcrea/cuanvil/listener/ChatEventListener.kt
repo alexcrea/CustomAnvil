@@ -11,7 +11,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
 
-//TODO #130 part 3 check if everything is correct
 class ChatEventListener: Listener {
 
     private val playerListenMap: ConcurrentHashMap<UUID, Consumer<String?>> = ConcurrentHashMap()
@@ -31,15 +30,14 @@ class ChatEventListener: Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun onChat(event: AsyncPlayerChatEvent) {
-        if(event.isCancelled) return
         val player = event.player
         val eventCallback = playerListenMap.remove(player.uniqueId) ?: return
 
         event.isCancelled = true
 
-        // sync callback with default server thread
+        // sync callback with player's server thread
         DependencyManager.scheduler.scheduleOnEntity(
             CustomAnvil.instance, player,
             {

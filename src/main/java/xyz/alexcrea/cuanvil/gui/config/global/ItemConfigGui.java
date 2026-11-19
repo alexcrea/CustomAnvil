@@ -25,12 +25,6 @@ import xyz.alexcrea.cuanvil.util.UnitRepairUtil;
 @NotNullByDefault
 public class ItemConfigGui extends ChestGui {
 
-    //TODO #130 part 3
-    private @Nullable EnchantConflictGui enchantConflictGui;
-    private @Nullable GroupConfigGui groupConfigGui;
-    private @Nullable UnitRepairConfigGui unitRepairConfigGui;
-    private @Nullable CustomRecipeConfigGui customRecipeConfigGui;
-
     public ItemConfigGui(Material display, NamespacedKey material) {
         super(3, MsgUI.ITEM_CONFIG_TITLE.textHolder(
                 CasedStringUtil.snakeToUpperSpacedCase(
@@ -77,53 +71,45 @@ public class ItemConfigGui extends ChestGui {
     }
 
     private EnchantConflictGui getEnchantConflictGui(NamespacedKey material) {
-        if (enchantConflictGui == null) {
-            enchantConflictGui = new EnchantConflictGui(() -> this);
-            enchantConflictGui.setFilter(group ->
-                    group.getCantConflictGroup().contain(material)
-            );
-            enchantConflictGui.init();
-        }
+        var enchantConflictGui = new EnchantConflictGui(() -> this);
+        enchantConflictGui.setFilter(group ->
+                group.getCantConflictGroup().contain(material)
+        );
+        enchantConflictGui.init();
 
         return enchantConflictGui;
     }
 
     private GroupConfigGui getGroupConfigGui(NamespacedKey material) {
-        if (groupConfigGui == null) {
-            groupConfigGui = new GroupConfigGui(() -> this);
-            groupConfigGui.setFilter(group ->
-                    group.contain(material)
-            );
-            groupConfigGui.init();
-        }
+        var groupConfigGui = new GroupConfigGui(() -> this);
+        groupConfigGui.setFilter(group ->
+                group.contain(material)
+        );
+        groupConfigGui.init();
 
         return groupConfigGui;
     }
 
     private UnitRepairConfigGui getUnitRepairConfigGui(NamespacedKey material) {
-        if (unitRepairConfigGui == null) {
-            unitRepairConfigGui = new UnitRepairConfigGui(() -> this);
-            unitRepairConfigGui.setFilter(otherMat ->
-                    otherMat.equals(material) || UnitRepairUtil.INSTANCE.findRawRepairValue(
-                            material, otherMat, ConfigHolder.UNIT_REPAIR) != null
-            );
-            unitRepairConfigGui.init();
-        }
+        var unitRepairConfigGui = new UnitRepairConfigGui(() -> this);
+        unitRepairConfigGui.setFilter(otherMat ->
+                otherMat.equals(material) || UnitRepairUtil.INSTANCE.findRawRepairValue(
+                        material, otherMat, ConfigHolder.UNIT_REPAIR) != null
+        );
+        unitRepairConfigGui.init();
 
         return unitRepairConfigGui;
     }
 
     private CustomRecipeConfigGui getCustomRecipeConfigGui(NamespacedKey material) {
-        if (customRecipeConfigGui == null) {
-            customRecipeConfigGui = new CustomRecipeConfigGui(() -> this);
-            customRecipeConfigGui.setFilter(recipe -> {
-                        if (isMaterial(recipe.getLeftItem(), material)) return true;
-                        if (isMaterial(recipe.getRightItem(), material)) return true;
-                        return isMaterial(recipe.getResultItem(), material);
-                    }
-            );
-            customRecipeConfigGui.init();
-        }
+        var customRecipeConfigGui = new CustomRecipeConfigGui(() -> this);
+        customRecipeConfigGui.setFilter(recipe -> {
+                    if (isMaterial(recipe.getLeftItem(), material)) return true;
+                    if (isMaterial(recipe.getRightItem(), material)) return true;
+                    return isMaterial(recipe.getResultItem(), material);
+                }
+        );
+        customRecipeConfigGui.init();
 
         return customRecipeConfigGui;
     }
