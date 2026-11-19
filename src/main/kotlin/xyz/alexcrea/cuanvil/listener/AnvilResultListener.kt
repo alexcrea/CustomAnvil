@@ -6,6 +6,7 @@ import io.delilaheve.util.ItemUtil.canMergeWith
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.data.Directional
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -211,7 +212,7 @@ class AnvilResultListener : Listener {
     private fun handleCustomCraftClick(
         view: AnvilView, player: Player,
         leftItem: ItemStack, rightItem: ItemStack?,
-        result: CustomCraftResult
+        result: CustomCraftResult,
     ): Boolean {
         val amount = result.amount
         val recipe = result.recipe!!
@@ -319,7 +320,7 @@ class AnvilResultListener : Listener {
         leftRemoveCount: Int,
         rightItem: ItemStack?,
         rightRemoveCount: Int,
-        result: AnvilResult
+        result: AnvilResult,
     ): Boolean {
         if (result.isEmpty()) {
             CustomAnvil.verboseLog("Merge result is empty")
@@ -423,12 +424,19 @@ class AnvilResultListener : Listener {
             else -> return false
         }
 
+        val direction = (block.blockData as Directional).facing
+
         block.type = next
 
         if (next == Material.AIR) {
             view.close()
             return true
         }
+
+        // this is to preserve orientation
+        val data = block.blockData as Directional
+        data.facing = direction
+        block.setBlockData(data, false)
 
         return false
     }
@@ -484,7 +492,7 @@ class AnvilResultListener : Listener {
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
-        result: LoreEditResult
+        result: LoreEditResult,
     ) {
         if (result.type.isAppend)
             handleBookLoreAppend(event, view, player, rightItem, result)
@@ -497,7 +505,7 @@ class AnvilResultListener : Listener {
         view: AnvilView,
         player: Player,
         rightItem: ItemStack,
-        result: LoreEditResult
+        result: LoreEditResult,
     ) {
         val bookMeta = rightItem.itemMeta as? BookMeta ?: return
 
@@ -525,7 +533,7 @@ class AnvilResultListener : Listener {
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
-        result: LoreEditResult
+        result: LoreEditResult,
     ) {
         val bookMeta = rightItem.itemMeta as? BookMeta ?: return
 
@@ -570,7 +578,7 @@ class AnvilResultListener : Listener {
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
-        result: LoreEditResult
+        result: LoreEditResult,
     ) {
         if (result.type.isAppend)
             handlePaperLoreAppend(event, view, player, rightItem, result)
@@ -583,7 +591,7 @@ class AnvilResultListener : Listener {
         view: AnvilView,
         player: Player,
         rightItem: ItemStack,
-        result: LoreEditResult
+        result: LoreEditResult,
     ) {
         val paperMeta = rightItem.itemMeta ?: return
 
@@ -626,7 +634,7 @@ class AnvilResultListener : Listener {
         player: Player,
         leftItem: ItemStack,
         rightItem: ItemStack,
-        result: LoreEditResult
+        result: LoreEditResult,
     ) {
         val leftMeta = leftItem.itemMeta
         if (leftMeta == null || !leftMeta.hasLore()) return
