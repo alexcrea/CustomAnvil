@@ -72,12 +72,6 @@ command.diagnostic:
 
 command.config:
     description: "Used to edit the configuration of the plugin"
-    folia-issue:
-      1: "<red>It look like you are using Folia. Sadly Custom Anvil do not support Config gui for Folia."
-      2: "<yellow>It is may come in a future version."
-      3: ""
-      4: "<yellow>Currently you need to edit manually the config or copy from another server (spigot or better)"
-      5: "<yellow>Then /ca reload after config file is edited"
     enchantment:
       no_hand: "No enchantment found in the item you are holding"
       no_name: "No enchantment found with the name %name"

@@ -122,7 +122,7 @@ public class IntSettingsGui extends AbstractSettingGui {
 
         ComponentUtil.setMessageName(resultMeta, MsgUI.SETTING_VALUE_NAME, holder.valueDisplayName(ValueDisplayType.CURRENT, now));
         if(holder.displayLore != null)
-            ComponentUtil.INSTANCE.applyLore(ComponentUtil.INSTANCE.asComponents(holder.displayLore, holder.param), resultMeta);
+            ComponentUtil.applyLore(ComponentUtil.asComponents(holder.displayLore, holder.param), resultMeta);
 
         resultPaper.setItemMeta(resultMeta);
 
@@ -151,7 +151,7 @@ public class IntSettingsGui extends AbstractSettingGui {
         var deltaDisplay = holder.deltaDisplay(type, now, planned);
         ComponentUtil.setMessageName(meta, MsgUI.SETTING_VALUE_ARROW_NAME, nowDisplay, plannedDisplay, deltaDisplay);
 
-        ComponentUtil.INSTANCE.applyLore(MsgUI.SHARED_CLICK_TO_CHANGE.formatted(), meta);
+        ComponentUtil.applyLore(MsgUI.SHARED_CLICK_TO_CHANGE.formatted(), meta);
         item.setItemMeta(meta);
         return new GuiItem(item, updateNowConsumer(planned), CustomAnvil.instance);
     }

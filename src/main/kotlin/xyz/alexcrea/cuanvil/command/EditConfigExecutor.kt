@@ -41,10 +41,6 @@ class EditConfigExecutor: CASubCommand {
             MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(sender)
             return false
         }
-        if(PlatformUtil.isFolia) {
-            MsgCommand.CONFIG_FOLIA_ISSUE.send(sender)
-            return false
-        }
 
         if("gui".equals(cmdstr, ignoreCase = true)) {
             MsgCommand.CONFIG_LEGACY_NAME_WARNING.send(sender)
