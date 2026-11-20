@@ -14,6 +14,7 @@ import xyz.alexcrea.cuanvil.lang.MsgUI;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * A utility class to store function that create generic GUI actions.
@@ -103,7 +104,7 @@ public class GuiGlobalActions {
      * @return A consumer to open a global GUI.
      */
     @Contract(pure = true)
-    public static Consumer<InventoryClickEvent> openGuiAction(Gui goal) {
+    public static Consumer<InventoryClickEvent> openGuiAction(Supplier<? extends Gui> goal) {
         return event -> {
             event.setCancelled(true);
             HumanEntity player = event.getWhoClicked();
@@ -113,7 +114,7 @@ public class GuiGlobalActions {
                 MsgUI.SHARED_CONFIG_NO_EDIT_PERM.send(player);
                 return;
             }
-            goal.show(player);
+            goal.get().show(player);
         };
     }
 
@@ -148,7 +149,7 @@ public class GuiGlobalActions {
             // Update gui for those who have it open.
             goal.updateGuiValues();
             // Then show
-            goal.getConnectedGui().show(player);
+            goal.getConnectedGui().get().show(player);
         };
     }
 

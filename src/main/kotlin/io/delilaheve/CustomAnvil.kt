@@ -293,8 +293,7 @@ open class CustomAnvil : JavaPlugin() {
         val configReadyEvent = CAConfigReadyEvent()
         server.pluginManager.callEvent(configReadyEvent)
 
-        // Load gui constants //TODO maybe something better later
-        MainConfigGui.getInstance().init(DependencyManager.packetManager)
+        // Load gui constants
         GuiSharedConstant.loadConstants()
 
         // Prepare economy if possible

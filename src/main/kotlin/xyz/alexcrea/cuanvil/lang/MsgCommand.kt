@@ -37,7 +37,6 @@ object MsgCommand {
     // Config
     @JvmField val CONFIG_DESCRIPTION = Message("config.description")
     @JvmField val CONFIG_LEGACY_NAME_WARNING = Message("config.warning.legacy-name")
-    @JvmField val CONFIG_FOLIA_ISSUE = Message("config.folia-issue")
 
     @JvmField val CONFIG_ENCHANTMENT_NO_IN_HAND = Message("config.enchantment.no_hand")
     @JvmField val CONFIG_ENCHANTMENT_NO_NAME = Message("config.enchantment.no_name", "name")

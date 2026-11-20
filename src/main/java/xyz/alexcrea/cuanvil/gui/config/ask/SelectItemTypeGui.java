@@ -18,6 +18,7 @@ import xyz.alexcrea.cuanvil.util.ComponentUtil;
 import xyz.alexcrea.cuanvil.util.MaterialUtil;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public class SelectItemTypeGui extends AbstractAskGui {
@@ -36,7 +37,7 @@ public class SelectItemTypeGui extends AbstractAskGui {
             String titleParam,
             Message actionDescription,
             String descriptionParam,
-            Gui backOnCancel,
+            Supplier<? extends Gui> backOnCancel,
             BiConsumer<ItemStack, HumanEntity> onSave,
             boolean materialOnly
     ) {

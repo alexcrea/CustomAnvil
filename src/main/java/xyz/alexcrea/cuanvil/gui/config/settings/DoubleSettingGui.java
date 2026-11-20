@@ -365,7 +365,6 @@ public class DoubleSettingGui extends AbstractSettingGui {
     /**
      * A factory for a double setting gui that hold setting's information.
      */
-    //TODO record ? #130 part 3
     public static class DoubleSettingFactory extends SettingGuiFactory {
         final Message title;
         final ValueUpdatableGui parent;

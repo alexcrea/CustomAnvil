@@ -52,6 +52,7 @@ class ReloadExecutor : CASubCommand {
         args: Array<out String>,
         list: MutableList<String>,
     ) {
+        // No sub arguments
     }
 
     /**
@@ -65,14 +66,14 @@ class ReloadExecutor : CASubCommand {
             if(!Lang.reload()) return false
 
             // Then update all global gui containing value from config
-            BasicConfigGui.getInstance()?.updateGuiValues()
-            EnchantCostConfigGui.getInstance()?.updateGuiValues()
-            EnchantLimitConfigGui.getInstance()?.updateGuiValues()
+            BasicConfigGui.INSTANCES.forAll { it.updateGuiValues() }
+            EnchantCostConfigGui.INSTANCES.forAll { it.updateGuiValues() }
+            EnchantLimitConfigGui.INSTANCES.forAll { it.updateGuiValues() }
 
-            EnchantConflictGui.getCurrentInstance()?.reloadValues()
-            GroupConfigGui.getCurrentInstance()?.reloadValues()
-            UnitRepairConfigGui.getCurrentInstance()?.reloadValues()
-            CustomRecipeConfigGui.getCurrentInstance()?.reloadValues()
+            EnchantConflictGui.INSTANCES.forAll { it.reloadValues() }
+            GroupConfigGui.INSTANCES.forAll { it.reloadValues() }
+            UnitRepairConfigGui.INSTANCES.forAll { it.reloadValues() }
+            CustomRecipeConfigGui.INSTANCES.forAll { it.reloadValues() }
 
             // handle minecraft version update
             UpdateHandler.handleUpdates()

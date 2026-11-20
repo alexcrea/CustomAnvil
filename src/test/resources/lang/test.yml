@@ -10,11 +10,6 @@ warning.load:
       1: "<yellow>An old version of this plugin was detected"
       2: "<yellow>Please note CustomAnvil is a more recent version of UnsafeEnchantsPlus"
 
-command.config:
-  folia-issue:
-    1: "<red>It look like you are using Folia."
-    2: "<yellow>It is may come in a future version."
-
 error.reload:
   resource:
     fail: "<red>An error occurred while reloading <yellow>%path<red>."

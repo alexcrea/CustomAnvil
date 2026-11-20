@@ -22,7 +22,7 @@ the plugin can be downloaded on
 - Can handle some custom enchantment plugins (see below for more information)
 - Gui to configure the plugin in game.
 - Support use of colour code, hexadecimal colour and minimessage for colour/decoration
-- (Experimental) Folia support (gui do not work)
+- (Experimental) Folia support
 - (Experimental) Dialogue rename (allows longer rename)
 - (Experimental) Anvil with monetary cost (using vault) (require dialogue rename)
   
@@ -100,8 +100,7 @@ faststats is in beta testing please report me or them any error you encounter
 Credits and thanks can be seen [here](doc/CREDITS.md)
 
 ### Planned:
-- Better Folia support (make gui work. fix some dirty handled parts)
-- Get restriction on unknown enchantments (planned for V2)
+- Get restriction on unknown enchantments
 - More features for custom anvil craft
 
 ### Known issue:

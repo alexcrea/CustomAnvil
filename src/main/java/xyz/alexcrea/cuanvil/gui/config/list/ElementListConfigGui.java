@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @NotNullByDefault
 public abstract class ElementListConfigGui<T> extends ChestGui implements ValueUpdatableGui {
@@ -46,7 +47,7 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     private Predicate<T> filter = (t) -> true;
     private boolean hasDefaultFilter = true;
 
-    protected ElementListConfigGui(Message title, String param, Gui parent) {
+    protected ElementListConfigGui(Message title, String param, Supplier<? extends Gui> parent) {
         super(6, title.textHolder(param, "", ""), CustomAnvil.instance);
         this.rawTitle = title;
         this.param = param;
@@ -74,22 +75,17 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
         );
     }
 
-    //TODO #130 part 3
-    protected @UnknownNullability OutlinePane firstPage;
-    protected @UnknownNullability ArrayList<OutlinePane> pages;
-    protected @UnknownNullability HashMap<UUID, Integer> pageMap;
+    protected final OutlinePane firstPage = createEmptyPage();;
+    protected final ArrayList<OutlinePane> pages = new ArrayList<>();
+    protected final HashMap<UUID, Integer> pageMap = new HashMap<>();
 
+    // init MUST be called once and only once
     public void init() {
         GuiGlobalItems.addBackgroundItem(this.backgroundPane);
         this.backgroundPane.bindItem('1', GuiSharedConstant.SECONDARY_BACKGROUND_ITEM);
         addPane(Slot.fromXY(0, 0), this.backgroundPane);
 
-        // Page init
-        this.pages = new ArrayList<>();
-        this.pageMap = new HashMap<>();
-
         // enchant item panel
-        this.firstPage = createEmptyPage();
         this.pages.add(this.firstPage);
 
         prepareStaticValues();
@@ -280,7 +276,9 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
 
     }
 
-    @Override // assume will not be called in multiple thread TODO will this hold true ? #130 part 2
+    // assume will not be called in multiple thread
+    // This should be true as a new instance should be made per player
+    @Override
     public void click(InventoryClickEvent event) {
         int pageID = getPlayerPageID(event.getWhoClicked().getUniqueId());
         OutlinePane page = this.pages.get(pageID);
@@ -340,8 +338,8 @@ public abstract class ElementListConfigGui<T> extends ChestGui implements ValueU
     }
 
     @Override
-    public Gui getConnectedGui() {
-        return this;
+    public Supplier<? extends Gui> getConnectedGui() {
+        return () -> this;
     }
 
 }

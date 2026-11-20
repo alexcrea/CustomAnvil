@@ -17,6 +17,7 @@ import xyz.alexcrea.cuanvil.lang.Message;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Abstract Global Config gui for enchantment setting configuration.
@@ -30,12 +31,9 @@ public abstract class AbstractEnchantConfigGui<T extends SettingGui.SettingGuiFa
      * Constructor for a gui displaying available enchantment to edit an enchantment setting.
      *
      * @param title Title of the gui.
+     * @param parent The parent to go back to
      */
-    protected AbstractEnchantConfigGui(Message title) {
-        super(title);
-    }
-
-    protected AbstractEnchantConfigGui(Message title, Gui parent) {
+    protected AbstractEnchantConfigGui(Message title, Supplier<? extends Gui> parent) {
         super(title, parent);
     }
 

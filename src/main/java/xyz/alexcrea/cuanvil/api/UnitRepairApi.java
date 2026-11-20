@@ -179,13 +179,13 @@ public class UnitRepairApi {
         prepareSaveTask();
 
         // Add to gui
-        UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
-        if(repairConfigGui != null) {
+        UnitRepairConfigGui.INSTANCES.forAll(repairConfigGui -> {
+            //TODO may not be usefull if the gui is only created dynamically
             UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
             if(elementGui != null) elementGui.updateValueForGeneric(repairable, true);
             repairConfigGui.updateValueForGeneric(unit, true);
-        }
+        });
 
         return true;
     }
@@ -257,15 +257,15 @@ public class UnitRepairApi {
         prepareSaveTask();
 
         // Remove from gui
-        UnitRepairConfigGui repairConfigGui = UnitRepairConfigGui.getCurrentInstance();
-        if(repairConfigGui != null) {
+        var finalLastValue = lastValue;
+        UnitRepairConfigGui.INSTANCES.forAll(repairConfigGui -> {
             UnitRepairElementListGui elementGui = repairConfigGui.getInstanceOrCreate(unit).getStored();
 
             if(elementGui != null) elementGui.removeGeneric(repairable);
-            if(lastValue) {
+            if(finalLastValue) {
                 repairConfigGui.removeGeneric(unit);
             }
-        }
+        });
 
         return true;
     }

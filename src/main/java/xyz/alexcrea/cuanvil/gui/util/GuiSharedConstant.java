@@ -11,8 +11,7 @@ import xyz.alexcrea.cuanvil.gui.config.MainConfigGui;
 @NotNullByDefault
 public class GuiSharedConstant {
 
-    private GuiSharedConstant() {
-    }
+    private GuiSharedConstant() {}
 
     public static final Material SECONDARY_BACKGROUND_MATERIAL = Material.BLACK_STAINED_GLASS_PANE;
     public static final GuiItem SECONDARY_BACKGROUND_ITEM = GuiGlobalItems.backgroundItem(GuiSharedConstant.SECONDARY_BACKGROUND_MATERIAL);
@@ -25,6 +24,7 @@ public class GuiSharedConstant {
     public static final boolean TEMPORARY_DO_SAVE_TO_DISK_EVERY_CHANGE = true;
     public static final boolean TEMPORARY_DO_BACKUP_EVERY_SAVE = true;
 
+    //TODO why ?
     public static void loadConstants() {
     }
 
