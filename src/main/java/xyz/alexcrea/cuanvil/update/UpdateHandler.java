@@ -42,6 +42,7 @@ public class UpdateHandler {
 
         if(updatedMC || latest != null)
             toSave.cleanup(latest);
+        toSave.unlock();
     }
 
     private static final List<PluginUpdate> pluginUpdateList = List.of(
@@ -133,8 +134,9 @@ public class UpdateHandler {
             for(ConfigHolder configHolder : toSave) {
                 configHolder.reload();
             }
+        }
 
-            // then unlock
+        public void unlock() {
             for(LockedWrite<? extends ConfigHolder> lock : used) {
                 lock.close();
             }
