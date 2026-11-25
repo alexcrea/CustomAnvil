@@ -107,4 +107,4 @@ Credits and thanks can be seen [here](doc/CREDITS.md)
 Most unknown registered enchantments (by unsupported custom enchantment plugin & datapacks) will not have restriction by default. Planned but no eta.
 
 ### Do you need help with the plugin, or have any issue or suggestion?
-You can ask on the discussion page, create a [GitHub issue](https://github.com/alexcrea/CustomAnvil/issues) or join my [discord](https://discord.gg/KHUNsUfRYJ)​
+You can ask on the discussion page, create a [GitHub issue](https://github.com/alexcrea/CustomAnvil/issues) , join my [discord](https://discord.gg/KHUNsUfRYJ) or [fluxer](https://fluxer.gg/fsOsofQT)
