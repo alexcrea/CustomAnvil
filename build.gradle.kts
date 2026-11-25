@@ -377,16 +377,9 @@ publishing {
     }
 }
 
-// hangar publish
-fun latestCommitMessage(): Provider<String> {
-    return providers.exec {
-        commandLine("git", "log", "-1", "--pretty=%B")
-    }.standardOutput.asText.map(String::trim)
-}
 
 fun changelog(isOnline: Boolean): Provider<String> {
-    val changelog = if(isDevBuild) latestCommitMessage()
-    else providers.environmentVariable("RELEASE_CHANGELOG")
+    val changelog = providers.environmentVariable("RELEASE_CHANGELOG")
 
     return changelog
         .filter{it.isNotEmpty()}
@@ -407,7 +400,7 @@ hangarPublish {
         if(!isOnline) versionName+= "-offline"
 
         version.set(versionName)
-        var finalReleaseChannel = if (isDevBuild || isPreRelease) devChannel else releaseChannel
+        var finalReleaseChannel = if (isPreRelease) devChannel else releaseChannel
         if(finalReleaseChannel == null) return
         channel.set(finalReleaseChannel)
 
@@ -461,10 +454,8 @@ hangarPublish {
         configure(true, "DevSnapshot", "Release")
     }
 
-    if(!isDevBuild) {
-        publications.register("offline") {
-            configure(false, null, "OfflineRelease")
-        }
+    publications.register("offline") {
+        configure(false, null, "OfflineRelease")
     }
 
 }
